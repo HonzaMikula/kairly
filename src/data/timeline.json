@@ -1,0 +1,106 @@
+{
+    "posts": [  
+
+        {
+            "id": 3,
+            "author": {
+                "name": "Jan Mikula",
+                "picture": "https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY.jpeg",
+                "medium": "Independent blogger",
+                "bio": "Pocházím ze svobodného Jablonce. Jsem fanoušek povídavé ekonomie, kognitivní psychologie a UX. Líbí se mi koncepty jako svoboda učení a svoboda v práci."                
+            },
+            "type": "newspaper",
+            "testType": "post-newspaper",
+            "postType": "article", 
+            "time": "1 hour ago",
+            "timeRead": "5 min read",
+            "content": {
+               "title": "Celé to začala moje bývalá zhrzená zaměstnankyně, říká Babiš",
+               "content": "<p>Ministr financí Andrej Babiš dostal čas do konce dubna vysvětlit nejasnosti kolem svých příjmů a daní. Všechno už jsem řekl, reagoval šéf hnutí ANO. Ať mě Sobotka klidně odvolá.</p><p>Ministr financí Andrej Babiš (ANO) by měl vyvrátit do konce dubna vážná podezření z daňových úniků v souvislosti se svými obchody se skupinou Agrofert, kterou dříve vlastnil. V usnesení to ve středu požaduje Sněmovna.</p><p>Pokud předseda hnutí ANO požadavek nenaplní, premiér Bohuslav Sobotka (ČSSD) by měl podle dokumentu, pro který hlasovali také koaliční lidovci, vyvodit vůči Babišovi důsledky.</p>"
+            },
+            "favorites": "1.2k"
+        }, 
+
+        {
+            "id": 8,
+            "author": {
+                "name": "Rachael Bade",
+                "picture": "http://s3-origin-images.politico.com/2014/08/15/20140813js_rachel_bade_009.jpg",
+                "medium": "Politico",
+                "bio": "Rachael Bade covers House leadership for POLITICO. In addition to her congressional correspondence, Bade has also followed and written in depth on the various investigations surrounding Hillary Clinton, including the FBI’s probe of her emails set-up as well as the House Benghazi Committee’s work."                
+            },
+            "type": "newspaper",
+            "testType": "post-newspaper",
+            "postType": "article", 
+            "time": "1 hour ago",
+            "timeRead": "8 min read",
+            "content": {
+               "title": "Trump goes after Freedom Caucus ringleaders",
+               "content": "<p class='perex'>The president turns his Twitter firepower on the conservatives that helped tank the House GOP Obamacare replacement.</p><p>For years, the House Freedom Caucus has pushed around House Republican leaders, even driving a speaker out of office. But now they’ve messed with the president of the United States, and Donald Trump is coming at them in full force. </p><p>Trump on Thursday evening turned his Twitter firepower on the ringleaders of the conservative group that helped tank the House GOP Obamacare replacement — a direct assault that could undermine the group’s influence going forward</p><p>While Freedom Caucus Chairman Mark Meadows (R-N.C.), Vice Chairman Jim Jordan (R-Ohio) and group member Raúl Labrador (R-Idaho) have long been the darlings of the far right, Trump's offensive could hurt them in their home districts, where he's extremely popular.</p><img src='http://static.politico.com/dims4/default/0ba91b9/2147483647/resize/1160x%3E/quality/90/?url=http%3A%2F%2Fstatic.politico.com%2Fd1%2Ff6%2F1c5bb14d497c8bbe01a9a4deccd8%2F170320-rand-paul-ap-1160.jpg' alt='Rand Paul'/><p>“If @RepMarkMeadows, @Jim_Jordan and @Raul_Labrador would get on board we would have both great healthcare and massive tax cuts & reform,” Trump tweeted Thursday afternoon. “Where are @RepMarkMeadows, @Jim_Jordan and @Raul_Labrador? #RepealANDReplace #Obamacare,” the president added.</p><p>Trump's Thursday tweetstorm against the group marks an escalation in the faceoff between the White House and conservative purists. Trump previously tried to offer the Freedom Caucus concessions on health care, but the group rejected his carrot approach. Now, he's reached for the stick. </p><p>His message also come as stories of White House primary threats against Freedom Caucus members are starting to trickle out. Freedom Caucus member Mark Sanford said Trump asked Office of Management and Budget Director Mick Mulvaney, a founding caucus member and fellow South Carolina Republican, to threaten him politically. </p>"
+            },
+            "favorites": "1.2k"
+        }, 
+        
+        
+
+        {
+            "id": 7,
+            "author": {
+                "name": "Nassim Nicholas Taleb",
+                "picture": "https://pbs.twimg.com/profile_images/764806062545436672/chnF2k5l.jpg",
+                "medium":"Independent blogger",
+                "bio": "Flaneur, with focus on probability (philosophy), probability (mathematics), probability (logic),probability (reallife), deadlifts, Lebanese wine, dead languages"
+            },
+            "type": "tweet",
+            "testType": "post-tweet",
+            "postType": "tweet",
+            "time": "47 min ago",
+            "content": "1) Never read a book that can be adequately summarized <br /> 2) Never read a book you would not reread <br /> 3) No book that can be shortened survives",
+            "favorites": 27
+        },
+ 
+        
+
+        {
+            "id": 5,
+            "author": {
+                "name": "Jan Mikula",
+                "picture": "https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY.jpeg",
+                "medium": "Independent blogger",
+                "bio": "Pocházím ze svobodného Jablonce. Jsem fanoušek povídavé ekonomie, kognitivní psychologie a UX. Líbí se mi koncepty jako svoboda učení a svoboda v práci."                
+            },
+            "type": "blog",
+            "testType": "post-blog",
+            "postType": "article",
+            "time": "1 hour ago",
+            "timeRead": "5 min read",
+            "content": {
+               "title": "Jak zreformovat školství bez politiků? Začněme věřit dětem",
+               "picture": "https://www.honzamikula.cz/thumbs/713x0c/2016-11/playing-kids.jpg",
+               "content": "Vyrůstá nám tu nová ztracená generace. Není pozůstatkem světové války. Je důsledkem školského systému, který nejen neodpovídá současné době a jejím možnostem, ale hlavně neodpovídá lidské přirozenosti, obzvláště té dětské. Výsledkem je utrpení nejen dětí, ale i rodičů a učitelů."
+            },
+            "favorites": "1.2k"
+        },
+        
+        {
+            "id": 2,
+            "author": {
+                "name": "Jan Mikula",
+                "picture": "https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY.jpeg",
+                "medium": "Independent blogger",
+                "bio": "Pocházím ze svobodného Jablonce. Jsem fanoušek povídavé ekonomie, kognitivní psychologie a UX. Líbí se mi koncepty jako svoboda učení a svoboda v práci."                
+            },
+            "type": "article",
+            "testType": "post-article",
+            "postType": "article",
+            "time": "1 hour ago",
+            "timeRead": "5 min read",
+            "content": {
+               "title": "Jak zreformovat školství bez politiků? Začněme věřit dětem",
+               "perex": "O ztracené generaci dětí, kterým školství vštípilo, že na to nemají nebo je vrhlo do života zmatené, čeho v životě vlastně chtějí dosáhnout.",
+               "picture": "https://www.honzamikula.cz/thumbs/713x0c/2016-11/playing-kids.jpg"
+            },
+            "favorites": 33
+        }
+    ]
+}

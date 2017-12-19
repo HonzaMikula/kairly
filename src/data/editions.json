@@ -1,0 +1,51 @@
+{
+    "editions": [
+        {
+            "id": 1,
+            "title": "The New York Times",
+            "edition": "Evening Edition",
+            "time": "Today at 19:00 PM",
+            "author": {
+                "name": "Dean Baquet",
+                "picture": "https://www.thewrap.com/wp-content/uploads/2014/05/dean.baquet.140529.jpg"
+            },
+            "postsId": 5
+        },
+
+        {
+            "id": 1,
+            "title": "Politico",
+            "edition": "Morning Edition",
+            "time": "Today at 6:00 AM",
+            "author": {
+                "name": "Elena Schor",
+                "picture": "http://s3-origin-images.politico.com/2015/01/14/elana-schor06_20.jpg"
+            },
+            "postsId": 1
+        },
+
+        {
+            "id": 1,
+            "title": "CNN: War in Syria",
+            "edition": "Special Edition",
+            "time": "Today at 6:00 AM",
+             "author": {
+                "name": "Andrew Kaczynski",
+                "picture": "https://pbs.twimg.com/profile_images/924713341263556608/Tz1t121l_400x400.jpg"
+            },
+            "postsId": 2
+        },
+
+        {
+            "id": 1,
+            "title": "Hospodářské noviny",
+            "time": "Today at 6:00 AM",
+            "author": {
+                "name": "Filip Horký",
+                "picture": "https://pbs.twimg.com/profile_images/834166512814546950/0aHs76MB_400x400.jpg"
+            },
+            "postsId": 3
+
+        }
+    ]
+}

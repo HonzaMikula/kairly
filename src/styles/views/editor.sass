@@ -1,0 +1,104 @@
+//- EDITOR -//
+
+editor-view
+  display: block
+  padding: $baseline
+  margin: 0 auto
+  width: 900px
+
+  background: #fff
+
+
+//- Editor Switcher
+editor-switcher
+  display: flex
+  justify-content: center
+  margin-bottom: $baseline
+
+//- Editor switcher item
+editor-switcher--item
+  height: $baseline * 1.25
+  padding: 0 $baseline
+
+  border: 1px solid $c-base
+  background: #fff
+
+  cursor: pointer
+  line-height: $baseline * 1.25
+
+  &:first-of-type
+    border-radius: $baseline/2 0 0 $baseline/2
+
+  &:last-of-type  
+    border-radius: 0 $baseline/2 $baseline/2 0
+
+  &.is-active
+    background: $c-base
+    color: #fff
+
+
+
+//- Article -//
+
+
+
+
+
+//- Title
+editor-title
+  display: block
+  margin-bottom: $baseline
+
+  input
+    height: $baseline * 2
+    width: 100%
+
+    border: 0
+    outline: 0
+
+    font-family: $ff-serif
+    font-size: $fs-3    
+
+
+//- Content
+editor-content
+  display: block
+  margin-bottom: $baseline
+  height: 500px
+
+  textarea
+    width: 100%
+    height: auto
+    min-height: 500px
+
+    border: 0
+    outline: 0
+
+    columns: 3
+
+    font-family: $ff-serif
+    font-size: $fs-1
+
+
+//- Publish Post
+editor-footer
+  display: block
+  
+  text-align: center
+
+  button-with-icon
+    display: inline-block  
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    padding: 0 $baseline
+
+    background: $c-base
+    color: #fff
+
+    cursor: pointer
+    font-size: $fs-0
+    line-height: $baseline * 1.5
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)

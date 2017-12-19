@@ -1,0 +1,88 @@
+[  
+    {
+        "id": 12,
+        "author": {
+            "name": "Andrew Kaczynski",
+            "picture": "https://pbs.twimg.com/profile_images/924713341263556608/Tz1t121l_400x400.jpg",
+            "medium": "CNN",
+            "bio": "Andrew Kaczynski is the senior editor and founding member of CNN's KFILE — the leading investigation team for the social, mobile generation."                
+        },
+        "type": "newspaper",
+        "testType": "post-newspaper",
+        "postType": "article", 
+        "time": "1 hour ago",
+        "timeRead": "3 min read",
+        "content": {
+            "title": "Rand Paul: Military action in Syria needs Congressional approval",
+            "content": "<p>Republican Sen. Rand Paul said Thursday Congress would need to approve military action in Syria.</p><h3>Obey the Constitution</h3><p>\"The first thing we ought to do is probably obey the Constitution,\" Paul said on \"Kilmeade and Friends.\" \"When Nikki Haley came before my committee and I voted for her, I asked her that question. 'Will you try to take us to war? Will you advocate for war without constitutional or congressional authority?' And she said no. So I assumed what she means by this is that, the President, if he decides to do something in Syria, he would come to Congress and ask for a declaration of war. Short of Congress voting on it, I'm opposed to illegal and unconstitutional wars.\"</p><p>Paul said he had sympathy for the images coming out of Syria, but any action would need to be carefully weighed.</p><h3>War make things worse</h3><p>\"I have the greatest amount of sympathy, I can't see those pictures, it's heartrending to see those pictures,\" he said. \"But going to war we have to decide, will it be better or worse? Will we improve our national security? Are we threatened currently by Syria, and if we go to war is (Syrian President Bashar al-)Assad likely to use less chemical weapons or more? There's some argument for the more cornered and the more defeated in some ways more likely they are to use chemical weapons and actually for the less defeated they are that they're less likely to use them. The bottom line is it's horrific.\"</p>"
+        },
+        "favorites": "1.2k"
+    },
+
+    {
+        "id": 10,
+        "author": {
+            "name": "Rand Paul",
+            "picture": "https://pbs.twimg.com/profile_images/681152691461042177/_PrgDgFA_400x400.jpg",
+            "medium": "Senator from Kentucky",
+            "bio": "U.S. Senator for Kentucky | I fight for the Constitution, individual liberty and the freedoms that make this country great."
+        },
+        "type": "tweet",
+        "testType": "post-tweet",
+        "postType": "tweet",
+        "time": "47 min ago",
+        "content": "While we all condemn the atrocities in Syria, the United States was not attacked.",
+        "favorites": 131
+    },
+
+    {
+        "id": 10,
+        "author": {
+            "name": "Rand Paul",
+            "picture": "https://pbs.twimg.com/profile_images/681152691461042177/_PrgDgFA_400x400.jpg",
+            "medium": "Senator from Kentucky",
+            "bio": "U.S. Senator for Kentucky | I fight for the Constitution, individual liberty and the freedoms that make this country great."
+        },
+        "type": "tweet",
+        "testType": "post-tweet",
+        "postType": "tweet",
+        "time": "47 min ago",
+        "content": "The President needs Congressional authorization for military action as required by the Constitution.",
+        "favorites": 131
+    },
+
+    {
+        "id": 10,
+        "author": {
+            "name": "Rand Paul",
+            "picture": "https://pbs.twimg.com/profile_images/681152691461042177/_PrgDgFA_400x400.jpg",
+            "medium": "Senator from Kentucky",
+            "bio": "U.S. Senator for Kentucky | I fight for the Constitution, individual liberty and the freedoms that make this country great."
+        },
+        "type": "tweet",
+        "testType": "post-tweet",
+        "postType": "tweet",
+        "time": "47 min ago",
+        "content": "Our prior interventions in this region have done nothing to make us safer and Syria will be no different.",
+        "favorites": 131
+    },
+
+    {
+        "id": 16,
+        "author": {
+            "name": "Daniel Larison",
+            "picture": "https://pbs.twimg.com/profile_images/2604305944/l5f9ydrqp3f4e9s59rbg_400x400.jpeg",
+            "medium": "The American Conservative",
+            "bio": "Andrew Kaczynski is the senior editor and founding member of CNN's KFILE — the leading investigation team for the social, mobile generation."                
+        },
+        "type": "newspaper",
+        "testType": "post-newspaper",
+        "postType": "article", 
+        "time": "1 hour ago",
+        "content": {
+            "title": "McCain and Graham’s Predictable Warmongering",
+            "content": "<p>As usual, McCain and Graham want to fight on two sides of a civil war at the same time. They said this in a recent statement:</p><blockquote><p>Our strategy cannot presume to separate the fight against [ISIS] from the Syrian people’s fight against the Assad regime. They are inextricably connected.</p><footer>— McCain and Graham</footer></blockquote><p>McCain and Graham’s assumption that the two fights can’t be separated is proven wrong by the fact that they have been kept separate for years and need to be kept separate if the anti-ISIS campaign is to continue as it has. If the U.S. followed their recommendations, it would mean exposing U.S. forces to much greater risks from Syrian and Russian air defenses as they try to ground Syria’s air force, and that would necessarily limit what the U.S. could do in its fight against ISIS.</p><p>American forces will also be exposed to greater danger as they try to create safe zones inside Syria, and they would be exposed to attacks from both jihadists and regime forces if McCain and Graham had their way.</p><p>The danger of accidental or deliberate clashes with Russian and Iranian forces would also increase significantly with all of the risks of escalation such clashes would entail. The more success the U.S. has against the regime and its allies, the more jihadist groups in the country benefit and the longer the conflict will drag on.</p><p>The larger, unanswered question that their remarks raises is a simple one: what does either one of these fights have to do with keeping the U.S. secure? McCain and Graham predictably want “greater military action” against the Syrian government because that is always their answer to everything, but it is completely divorced from any compelling reason for the U.S. to embark on a new, potentially very costly war alongside another unnecessary war that our government is already fighting.</p><p>The senators are engaged in their same tiresome warmongering, and if Trump doesn’t want to destroy his presidency he should ignore everything they say.</p>"
+        },
+        "favorites": "1.2k"
+    }
+]
