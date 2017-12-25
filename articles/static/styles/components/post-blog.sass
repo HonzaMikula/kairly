@@ -1,0 +1,27 @@
+//- BLOG -//
+timeline-post--blog
+  display: grid 
+  grid-template-areas: "blog-title blog-title blog-title" "blog-picture blog-picture blog-text"   
+
+  font-family: $ff-serif 
+
+  //-- title
+  h2
+    grid-area: blog-title
+    margin-bottom: $baseline / 2 
+
+    font-family: $ff-serif
+    font-size: $fs-1
+    font-weight: 600
+
+  //-- picture  
+  img
+    grid-area: blog-picture
+    margin-right: $baseline
+    width: 580px
+
+
+  //-- text
+  p
+    grid-area: blog-text  
+    

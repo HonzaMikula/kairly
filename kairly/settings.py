@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'articles'
+    'sass_processor',
+    'articles',
 ]
 
 MIDDLEWARE = [
@@ -118,4 +119,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+PROJECT_DIR = os.path.dirname(__file__)
+
+STATIC_ROOT = os.path.abspath(os.path.join(PROJECT_DIR, '..', 'static'))
+
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_DIR, 'static'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'sass_processor.finders.CssFinder',
+)
+
+#SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^style.sass$'

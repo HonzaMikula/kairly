@@ -1,0 +1,107 @@
+//- NEWSPAPER -//
+
+timeline-post--newspaper
+  font-family: $ff-serif
+  
+  //- Title
+  h2
+    display: block
+    margin-bottom: $baseline / 2 
+
+    font-size: $fs-1
+    font-weight: 600
+
+  a
+    color: $c-base
+
+    &:hover,
+    &:focus
+      text-decoration: none
+
+//- Content
+timeline-post--newspaper--content
+  position: relative
+  
+  column-count: 3
+  column-rule: 1px dotted #ddd
+  column-gap: $baseline
+  display: block
+
+  line-height: $baseline * 0.9    
+  text-align: justify
+  hyphens: auto
+
+
+  //-- heading
+  h3
+    margin: $baseline / 4 0
+    font-weight: 600
+
+  //-- paragraph
+  > p 
+    text-indent: $baseline
+
+  //-- illustration image
+  img 
+    display: block
+    margin: $baseline / 4 0
+    width: 100%
+
+  //-- quotes
+  blockquote
+    margin: ($baseline / 4 - 2rem) 0
+    padding: $baseline / 4 0
+
+    border-bottom: 1px solid #eee
+    border-top: 1px solid #eee
+    color: #999
+
+    font-size: $fs-1
+
+    p
+      &::before
+        content: "„"
+
+      &::after
+        content: "“"
+
+  //-- test image
+  @supports(-ms-wrap-flow: both)
+    @media(min-width: 1080px)
+      .test
+        position: absolute
+        width: 580px
+        top: 0
+        left: 0
+        margin: 0
+        -ms-wrap-margin: $baseline / 2
+        -ms-wrap-flow: both
+
+
+//- Continue Reading
+timeline-post--continue-reading
+  display: block
+
+  color: #999
+
+  font-family: $ff-sans  
+  font-size: $fs--2
+  text-align: center
+
+  a 
+    display: table
+    border-radius: 15px
+    clear: both
+    margin: $baseline / 2 auto 0 auto
+    padding: 0 $baseline / 2
+
+    border: 1px solid transparent
+
+    font-size: $fs--2
+    line-height: $baseline
+    text-transform: uppercase
+
+    &:focus,
+    &:hover
+      background: $c-base
+      color: #fff

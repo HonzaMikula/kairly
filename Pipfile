@@ -13,6 +13,9 @@ name = "pypi"
 
 django = "*"
 mysqlclient = "*"
+libsass = "*"
+django-compressor = "*"
+django-sass-processor = "*"
 
 
 [requires]
