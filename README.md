@@ -2,7 +2,9 @@
 
 > New way how we consume and produce news
 
-## Build Setup
+http://kairly.honzamikula.cz/
+
+## Build Vue prototype
 
 ``` bash
 # install dependencies
