@@ -6,37 +6,38 @@
     <link href="{% sass_src 'styles/style.sass' %}" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <app-header>
-      <div>
-        <app-header--nav role="navigation">
-          <ul>
-            <li class="home"><router-link to="/">Home</router-link></li>
-            <li class="new-post"><router-link to="/editor">New Post</router-link></li>
-            <li class="your-editions"><router-link to="/editions">Your Editions</router-link></li>
-            <li class="reading-list"><router-link to="/read-later">Reading List</router-link></li>
-          </ul>
-          </app-header--nav>
-
-          <app-header--search>
-            <input type="search" placeholder="Search"/>
-          </app-header--search>
-
-          <app-header--user-profile v-on:click="openDropDownMenu()">
-            <img src="https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY.jpeg" alt="Jan Mikula"/>
-          </app-header--user-profile>
-
-          <app-header--user-profile-menu v-if="isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu()">
-            <h3>Jan Mikula</h3>
+    <app-view>
+      <app-header>
+        <div>
+          <app-header--nav role="navigation">
             <ul>
-              <li><a href="">Profile</a></li>
-              <li><a href="">Settings</a></li>
-              <li><a href="">Logout</a></li>
+              <li class="home"><a href="/">Home</a></li>
+              <li class="new-post"><a href="/editor">New Post</a></li>
+              <li class="your-editions"><a href="/editions">Your Editions</a></li>
+              <li class="reading-list"><a href="/read-later">Reading List</a></li>
             </ul>
-          </app-header--user-profile-menu>
-      </div>
-    </app-header>
-    {% block content %}
+            </app-header--nav>
 
-    {% endblock %}
+            <app-header--search>
+              <input type="search" placeholder="Search"/>
+            </app-header--search>
+
+            <app-header--user-profile v-on:click="openDropDownMenu()">
+              <img src="https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY.jpeg" alt="Jan Mikula"/>
+            </app-header--user-profile>
+
+            <app-header--user-profile-menu v-if="isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu()">
+              <h3>Jan Mikula</h3>
+              <ul>
+                <li><a href="">Profile</a></li>
+                <li><a href="">Settings</a></li>
+                <li><a href="">Logout</a></li>
+              </ul>
+            </app-header--user-profile-menu>
+        </div>
+      </app-header>
+      {% block content %}
+      {% endblock %}
+    </app-view>
   </body>
 </html>
