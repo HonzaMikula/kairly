@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sass_processor',
     'articles',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -136,4 +137,4 @@ STATICFILES_FINDERS = (
     'sass_processor.finders.CssFinder',
 )
 
-#SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^style.sass$'
+AUTH_USER_MODEL = 'users.User'

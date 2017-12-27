@@ -24,13 +24,14 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 ## Setup Python Environment
 
-Install pipenv, then
+Install [pipenv](https://docs.pipenv.org/), then
 
 ```
 pipenv install
 ```
 
-Create your settings with database config. Then setup env variable.
+Create your settings with database config. Then setup env variable
+(with your own settings file, you can use settings_farin.py as template)
 ```
 echo "DJANGO_SETTINGS_MODULE=kairly.settings_myconf" > .env
 ```
@@ -38,6 +39,11 @@ echo "DJANGO_SETTINGS_MODULE=kairly.settings_myconf" > .env
 Create database and sync tables.
 ```
 pipenv run ./manage.py migrate
+```
+
+Create your admin account
+```
+pipenv run ./manage.py createsuperuser
 ```
 
 ## Run Python Devserver
