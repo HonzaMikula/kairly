@@ -1,4 +1,4 @@
-from .settings import *  # NOQA
+from .settings_dev import *  # NOQA
 
 DEBUG = True
 
