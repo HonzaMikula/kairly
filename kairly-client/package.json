@@ -10,6 +10,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "superagent": "^3.8.2",
     "vue": "^2.5.3",
     "vue-clickaway": "^2.1.0",
     "vue-custom-element": "^1.4.1",

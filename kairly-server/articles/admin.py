@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from .models import Post, Edition, UserEdition
+from .models import Author, Post, Edition, UserEdition
+
+
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'medium')
 
 
 @admin.register(Post)

@@ -12,6 +12,20 @@ def index(request):
 
 @login_required
 def timeline(request):
-    # editions = Edition.objects.filter(useredition__user=request.user)
+    def edition_json(edition):
+        return {
+            "id": edition.id,
+            "title": edition.title,
+            "edition": edition.edition,
+            "time": str(edition.published),
+            "author": {
+                "name": edition.editor.name,
+                "picture": edition.editor.picture,
+            },
+            "posts": [],
+        }
 
-    return JsonResponse({'ok': 1})
+    editions = Edition.objects.filter(useredition__user=request.user).select_related('editor')
+    return JsonResponse({
+        'editions': [edition_json(e) for e in editions]
+    })
