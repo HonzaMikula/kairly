@@ -38,10 +38,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def template(self):
-        return f"articles/post/{self.kind}.html"
-
 
 class Edition(models.Model):
     title = models.CharField(max_length=160)
