@@ -5,7 +5,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': 'store4.rosti.cz',
         'NAME': 'kairly_2_265101',
-        'USER': 'root',
+        'USER': 'kairly_2_265101',
         'PASSWORD': 'RV3by6&#qg8@',
         'CONN_MAX_AGE': 570,
         'OPTIONS': {
