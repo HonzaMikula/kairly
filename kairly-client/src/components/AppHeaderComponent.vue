@@ -4,7 +4,7 @@
       <app-header--nav role="navigation">
         <ul>
           <li class="home"><router-link to="/">Home</router-link></li>
-          <li class="new-post"><router-link to="/editor">New Post</router-link></li>
+          <!--li class="new-post"><router-link to="/editor">New Post</router-link></li-->
           <li class="your-editions"><router-link to="/editions">Your Editions</router-link></li>
           <li class="reading-list"><router-link to="/read-later">Reading List</router-link></li>
         </ul>
