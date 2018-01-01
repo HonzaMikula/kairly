@@ -1,26 +1,26 @@
 <template>
   <post-detail role="article">
 
-  <post-detail--back-button 
+  <post-detail--back-button
     v-tooltip.right="'Back to Browsing Editions'"
     v-on:click="$router.push('/')">
   </post-detail--back-button>
 
     <div>
       <post-detail--header>
-        <img :src="postDetail.author.picture" :alt="postDetail.author.name"/>
-        <author-name>{{postDetail.author.name}}</author-name>
+        <img :src="post.author.picture" :alt="post.author.name"/>
+        <author-name>{{post.author.name}}</author-name>
         <author-follow>Follow</author-follow>
-        <author-description>{{postDetail.author.description}}</author-description>
+        <author-description>{{post.author.bio}}</author-description>
 
         <button-read-later></button-read-later>
       </post-detail--header>
-      
+
       <post-detail--title>
-        <h1>{{postDetail.title}}</h1>
+        <h1>{{post.content.title}}</h1>
       </post-detail--title>
 
-      <post-detail--content v-html="postDetail.content"></post-detail--content>
+      <post-detail--content v-html="post.content.content"></post-detail--content>
 
       <post-detail--footer>
         <button-icon class="favorite" v-tooltip.top="'Favorite'"></button-icon>
@@ -34,14 +34,23 @@
 </template>
 
 <script>
-import postDetail from '@/data/postDetail.json'
+import request from 'superagent'
 
 export default {
   name: 'hello',
   data: function() {
     return {
-      postDetail
+      post: null
     }
+  },
+  created: function () {
+    const postId = this.$route.params.postId;
+    request
+      .get(process.env.BACKEND_BASE + '/api/post/' + postId)
+      .then(res => {
+        this.post = res.body.post
+      })
   }
+
 }
 </script>

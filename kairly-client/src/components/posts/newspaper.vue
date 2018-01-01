@@ -5,7 +5,8 @@
       <timeline-post--newspaper--content >
         <div v-html="post.content.content"></div>
         <timeline-post--continue-reading v-if="post.timeRead">
-          <a href="/post">Continue reading</a> ({{ post.timeRead }})
+          <router-link :to="{ name: 'Post', params: { postId: post.id }}">Continue reading</router-link>
+          ({{ post.timeRead }})
         </timeline-post--continue-reading>
       </timeline-post--newspaper--content>
     </timeline-post--newspaper>

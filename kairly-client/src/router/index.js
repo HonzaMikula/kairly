@@ -16,7 +16,7 @@ export default new Router({
       name: 'Timeline',
       component: Timeline
     }, {
-      path: '/post',
+      path: '/post/:postId',
       name: 'Post',
       component: Post
     }, {
