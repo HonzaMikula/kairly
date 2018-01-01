@@ -23,4 +23,6 @@ STATICFILES_DIRS = (
     '/srv/kairly/kairly-client/dist/static',
 )
 
-TEMPLATES[0]['DIRS'] = '/srv/kairly/kairly-client/dist'
+TEMPLATES[0]['DIRS'] = (
+    '/srv/kairly/kairly-client/dist',
+)

@@ -6,4 +6,6 @@ STATICFILES_DIRS = (
     os.path.abspath(os.path.join(BASE_DIR, '..', 'kairly-client', 'dist', 'static')),
 )
 
-TEMPLATES[0]['DIRS'] = os.path.abspath(os.path.join(BASE_DIR, '..', 'kairly-client', 'dist')),
+TEMPLATES[0]['DIRS'] = (
+    os.path.abspath(os.path.join(BASE_DIR, '..', 'kairly-client', 'dist')),
+)
