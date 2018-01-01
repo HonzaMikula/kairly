@@ -63,7 +63,7 @@ export default {
 
   created: function () {
     request
-      .get('/api/timeline')
+      .get(process.env.BACKEND_BASE + '/api/timeline')
       .then(res => {
         this.editions = res.body.editions
       })

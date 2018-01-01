@@ -14,28 +14,34 @@
           <input type="search" placeholder="Search"/>
         </app-header--search>
 
-        <app-header--user-profile v-on:click="openDropDownMenu()">
-          <img src="https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY.jpeg" alt="Jan Mikula"/>
+        <app-header--user-profile v-if="user" v-on:click="openDropDownMenu()">
+          <img :src="user.picture" :alt="user.name"/>
         </app-header--user-profile>
 
-        <app-header--user-profile-menu v-if="isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu()">
-          <h3>Jan Mikula</h3>
+        <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu()">
+          <h3>{{ user.name }}</h3>
           <ul>
-            <li><a href="">Profile</a></li>
-            <li><a href="">Settings</a></li>
-            <li><a href="">Logout</a></li>
+            <!--li><a href="">Profile</a></li>
+            <li><a href="">Settings</a></li-->
+            <li><a href="/accounts/logout/">Logout</a></li>
           </ul>
         </app-header--user-profile-menu>
+
+        <app-header--user-profile v-if="!user">
+          <a href="/accounts/login/">Login</a>
+        </app-header--user-profile>
     </div>
   </app-header>
 </template>
 
 <script>
+import request from 'superagent'
 
 export default {
   name: 'AppHeaderComponent',
   data: function() {
     return {
+      user: null,
       isDropDownMenuOpen: false
     }
   },
@@ -50,5 +56,13 @@ export default {
       this.$forceUpdate();
     }
   },
+
+  created: function () {
+    request
+      .get(process.env.BACKEND_BASE + '/api/profile')
+      .then(res => {
+        this.user = res.body.user
+      })
+  }
 }
 </script>

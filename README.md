@@ -46,7 +46,13 @@ Create your admin account
 pipenv run ./manage.py createsuperuser
 ```
 
-## Run Python Devserver
+## Run Dev server
+
+First run Webpack on client
+
+```
+webpack --watch --config build/webpack.prod.conf.js
+```
 
 ```
 pipenv run ./manage.py runserver

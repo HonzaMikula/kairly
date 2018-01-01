@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "09f9f0102b2f4f0dba81759bded7f3b661a13f16ecf9c143b1ab93044db5e1b6"
+            "sha256": "e2d4390dc77b71f451651dde34804b2ea4771de03f6e4c227c2de99d12c0aa7b"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -35,6 +35,19 @@
                 "sha256:9614851d4a7ff8cbd32b73c6076441f377c45a5bbff7e771798fb02c43c31f47"
             ],
             "version": "==2.0"
+        },
+        "django-cors-headers": {
+            "hashes": [
+                "sha256:4e02be61ffaaab5917f1fd7cc3c305c4fb7ccd0156a649c96f49bc0a09c5f572",
+                "sha256:451bc37a514792c2b46c52362368f7985985933ecdbf1a85f82652579a5cbe01"
+            ],
+            "version": "==2.1.0"
+        },
+        "libgravatar": {
+            "hashes": [
+                "sha256:5d17eb60447ff0b1c523d7e03945c7086242678b77f42ee25e50b1ffe2f3cb16"
+            ],
+            "version": "==0.2.2"
         },
         "mysqlclient": {
             "hashes": [
