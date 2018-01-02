@@ -16,7 +16,8 @@ DATABASES = {
 
 ALLOWED_HOSTS = [
     'kairly-2648.rostiapp.cz',
-    'kairly.honzamikula.cz/'
+    'kairly.honzamikula.cz',
+    'kairly.com'
 ]
 
 STATICFILES_DIRS = (
