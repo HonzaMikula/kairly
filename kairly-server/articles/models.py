@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
+from ckeditor.fields import RichTextField
+
 
 class Author(models.Model):
     name = models.CharField(_("Name"), max_length=160)
@@ -31,8 +33,8 @@ class Post(models.Model):
 
     title = models.CharField(max_length=160)
     picture = models.CharField(_("Picture"), max_length=300, blank=True, null=True)
-    perex = models.TextField(_("Perex"), blank=True, null=True)
-    content = models.TextField(_("Content"), blank=True, null=True)
+    perex = RichTextField(_("Perex"), blank=True, null=True)
+    content = RichTextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(Author, models.PROTECT)
 
     def __str__(self):

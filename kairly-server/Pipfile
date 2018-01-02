@@ -15,6 +15,7 @@ django = "*"
 mysqlclient = "*"
 django-cors-headers = "*"
 libgravatar = "*"
+django-ckeditor = "*"
 
 
 [requires]
