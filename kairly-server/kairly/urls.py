@@ -16,8 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from jwtauth.views import get_token
+
 urlpatterns = [
     path('', include('articles.urls')),
+    path('api/token', get_token),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
 ]
