@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'ReadLaterView',
+  name: 'ReadLater',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'

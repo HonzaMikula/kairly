@@ -12,7 +12,7 @@
           •
           {{ edition.edition }}
           •
-          {{edition.time}}
+          {{edition.time | moment('MMMM Do, h:mm a')}}
         </p>
       </timeline-edition>
 

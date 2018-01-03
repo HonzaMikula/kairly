@@ -4,7 +4,7 @@ import Timeline from '@/components/Timeline'
 import Post from '@/components/Post'
 import Editions from '@/components/Editions'
 import Editor from '@/components/Editor'
-import ReadLater from '@/components/Readlater'
+import ReadLater from '@/components/ReadLater'
 
 Vue.use(Router)
 
@@ -29,7 +29,7 @@ export default new Router({
       component: Editor
     }, {
       path: '/read-later',
-      name: 'Read Later',
+      name: 'ReadLater',
       component: ReadLater
     }
   ],

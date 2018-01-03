@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Tooltip from 'vue-directive-tooltip'
+import VueMoment from 'vue-moment-jalaali'
 //import VueMce from 'vue-mce'
 
 Vue.config.productionTip = false
@@ -11,6 +12,7 @@ Vue.config.ignoredElements = [/.*/]
 
 Vue.use(Tooltip)
 //Vue.use(VueMce)
+Vue.use(VueMoment)
 
 /* eslint-disable no-new */
 new Vue({

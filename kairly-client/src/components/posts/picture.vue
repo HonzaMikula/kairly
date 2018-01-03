@@ -1,8 +1,11 @@
 <template>
   <post :post="post" v-on:readlater="readLaterMessage(el)">
     <timeline-post--picture>
-      <h2>{{ post.content.title }}</h2>
-      <img :src="post.content.picture" :alt="post.content.title" />
+      <figure>
+        <img :src="post.content.picture" :alt="post.content.title" />
+        
+        <figcaption>{{ post.content.title }}</figcaption>
+      </figure>
     </timeline-post--picture>
   </post>
 </template>
