@@ -144,3 +144,56 @@ app-header--user-profile-menu
     &:focus,
     &:hover
       background: #eee
+
+//- User Profile Login
+app-header--user-profile-login
+  position: absolute
+  left: 50%
+  top: 50vh  
+
+  border-radius: 5px
+  box-sizing: border-box
+  padding: $baseline
+  margin: -150px 0 0 -150px
+  width: 300px
+
+  background: $c-base
+
+  line-height: $baseline
+
+  input     
+    height: $baseline * 1.25
+    margin-bottom: $baseline / 2
+    width: 100%
+
+    border: 0
+
+  button
+    height: $baseline * 1.25
+    margin-bottom: $baseline / 2
+    width: 100%
+
+    border: 0
+    background: darken($c-base, 10%)
+    color: #fff
+
+    cursor: pointer
+    font-weight: 600
+    font-size: $fs--1
+
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 15%)
+
+  h3
+    margin-bottom: $baseline
+
+    font-size: $fs-1
+    text-align: center
+  p
+    font-size: $fs--2
+    line-height: $baseline * 0.75
+
+    a 
+      color: #fff

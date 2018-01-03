@@ -27,18 +27,17 @@
           </ul>
         </app-header--user-profile-menu>
 
-        <app-header--user-profile v-if="!user" v-on:click="openDropDownMenu">
-          Login
-        </app-header--user-profile>
-
-        <app-header--user-profile-menu v-if="!user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
+        <app-header--user-profile-login v-if="!user">
+          <h3>Sign In to Kairly</h3>
           <form method="POST" v-on:submit="get_token">
             <input name="username" v-model="username" placeholder="Username" /><br>
             <input name="password" type="password" v-model="password" placeholder="Password" /><br>
-            <input type="submit" />
+            <button type="submit">Sign In</button>
           </form>
 
-        </app-header--user-profile-menu>
+          <p>Do you want to try Kairly? <br> Write at <a href="mailto:jan.mikula@hotmail.com">jan.mikula@hotmail.com</a>.</p>
+
+        </app-header--user-profile-login>
     </div>
   </app-header>
 </template>

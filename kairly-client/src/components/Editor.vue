@@ -29,7 +29,7 @@ export default {
   name: 'Editor',
 
   components: {
-    'vue-mce': component,
+    'vue-mce': component
   },
 
   data: function () {
@@ -40,7 +40,7 @@ export default {
         insert_toolbar: 'quickimage quicktable media codesample',
         selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
         inline: true,
-        paste_data_images: true,
+        paste_data_images: true
       }
     }
   }
