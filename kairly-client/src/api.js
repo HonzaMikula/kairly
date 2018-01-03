@@ -1,14 +1,10 @@
 import request from 'superagent'
-import Prefix from 'superagent-prefix'
 import store from '@/store'
-
-const prefix = Prefix(process.env.BACKEND_BASE)
 
 
 function getToken(username, password) {
   return request
-    .post('/api/token')
-    .use(prefix)
+    .post(process.env.BACKEND_BASE + '/api/token')
     .send({username, password})
     .then(res => {
        store.token = res.body.token
@@ -20,8 +16,7 @@ function getToken(username, password) {
 function getProfile() {
   if (!store.token) return Promise.reject();
   return request
-    .get('/api/profile')
-    .use(prefix)
+    .get(process.env.BACKEND_BASE + '/api/profile')
     .set('Authorization', 'Bearer ' + store.token)
     .then(res => {
       store.user = res.body.user
@@ -32,8 +27,7 @@ function getProfile() {
 function getTimeline() {
   if (!store.token) return Promise.reject();
   return request
-    .get('/api/timeline')
-    .use(prefix)
+    .get(process.env.BACKEND_BASE + '/api/timeline')
     .set('Authorization', 'Bearer ' + store.token)
     .then(res => res.body)
 }
