@@ -1,5 +1,6 @@
 import jwt
 import json
+import time
 
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -14,7 +15,10 @@ def get_token(request):
     data = json.loads(request.body)
     user = authenticate(request, username=data.get('username'), password=data.get('password'))
     if user:
-        payload = {'user_id': user.id}
+        payload = {
+            'uid': user.id,
+            'iat': int(time.time()),
+        }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
         return JsonResponse({
             'token': token.decode('ascii')

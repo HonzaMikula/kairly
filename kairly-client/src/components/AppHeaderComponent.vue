@@ -14,11 +14,11 @@
           <input type="search" placeholder="Search"/>
         </app-header--search>
 
-        <app-header--user-profile v-if="user" v-on:click="openDropDownMenu()">
+        <app-header--user-profile v-if="user" v-on:click="openDropDownMenu">
           <img :src="user.picture" :alt="user.name"/>
         </app-header--user-profile>
 
-        <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu()">
+        <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
           <h3>{{ user.name }}</h3>
           <ul>
             <!--li><a href="">Profile</a></li>
@@ -27,15 +27,26 @@
           </ul>
         </app-header--user-profile-menu>
 
-        <app-header--user-profile v-if="!user">
-          <a href="/accounts/login/">Login</a>
+        <app-header--user-profile v-if="!user" v-on:click="openDropDownMenu">
+          Login
         </app-header--user-profile>
+
+        <app-header--user-profile-menu v-if="!user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
+          <form method="POST" v-on:submit="get_token">
+            <input name="username" v-model="username" placeholder="Username" /><br>
+            <input name="password" type="password" v-model="password" placeholder="Password" /><br>
+            <input type="submit" />
+          </form>
+
+        </app-header--user-profile-menu>
     </div>
   </app-header>
 </template>
 
 <script>
 import request from 'superagent'
+import store from '@/store'
+import * as api from '@/api'
 
 export default {
   name: 'AppHeaderComponent',
@@ -46,6 +57,15 @@ export default {
     }
   },
   methods: {
+    get_token: function(ev) {
+      ev.preventDefault()
+      api
+        .getToken(this.username, this.password)
+        .then(() => {
+          api.getProfile().then(user => { this.user = user })
+        })
+    },
+
     openDropDownMenu: function () {
       this.isDropDownMenuOpen = true
       this.$forceUpdate()
@@ -58,11 +78,7 @@ export default {
   },
 
   created: function () {
-    request
-      .get(process.env.BACKEND_BASE + '/api/profile')
-      .then(res => {
-        this.user = res.body.user
-      })
+    api.getProfile().then(user => { this.user = user })
   }
 }
 </script>

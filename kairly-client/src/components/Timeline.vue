@@ -30,13 +30,7 @@
 
 <script>
 import request from 'superagent'
-
-// import editionData from '@/data/editions.json'
-// import timelineData from '@/data/timeline.json'
-// import politicoEdtionData from '@/data/politicoEdition.json'
-// import cnnEdtionData from '@/data/cnnEdition.json'
-// import hnEdtionData from '@/data/hnEdition.json'
-// import newYorkTimeEditionData from '@/data/newYorkTimesEdition.json'
+import * as api from '@/api'
 
 import postArticle from '@/components/posts/article'
 import postBlog from '@/components/posts/blog'
@@ -62,11 +56,9 @@ export default {
   },
 
   created: function () {
-    request
-      .get(process.env.BACKEND_BASE + '/api/timeline')
-      .then(res => {
-        this.editions = res.body.editions
-      })
+    api.getTimeline().then(timeline => {
+      this.editions = timeline.editions
+    })
   }
 }
 </script>

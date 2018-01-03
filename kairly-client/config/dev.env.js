@@ -3,5 +3,5 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  BACKEND_BASE: '"http://localhost:8000"'
+  BACKEND_BASE: '"http://kairly.com"'
 })
