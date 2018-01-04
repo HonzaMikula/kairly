@@ -14,7 +14,7 @@
         </cAuthorWidget>
 
         <timeline-post--header--info>
-          {{ post.type }} • {{ post.time | moment('MMMM Do, h:mm a') }}
+          {{ post.time | moment('calendar') }}
           • <span class="responses">{{ post.favorites }}</span>
         </timeline-post--header--info>
 
