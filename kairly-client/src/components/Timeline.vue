@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import request from 'superagent'
 import * as api from '@/api'
 
 import postArticle from '@/components/posts/article'

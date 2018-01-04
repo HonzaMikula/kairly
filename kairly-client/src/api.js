@@ -1,43 +1,45 @@
 import request from 'superagent'
-import store from '@/store'
 
+let token = localStorage.getItem("token")
 
-function getToken(username, password) {
+function clearToken() {
+  localStorage.removeItem("token")
+  token = null;
+}
+
+function createToken(username, password) {
   return request
     .post(process.env.BACKEND_BASE + '/api/token')
     .send({username, password})
     .then(res => {
-       store.token = res.body.token
-       localStorage.setItem('token', store.token)
-       return store.token
+       token = res.body.token
+       localStorage.setItem('token', token)
+       return token;
     })
 }
 
 function getProfile() {
-  if (!store.token) return Promise.reject();
+  if (!token) return Promise.reject();
   return request
     .get(process.env.BACKEND_BASE + '/api/profile')
-    .set('Authorization', 'Bearer ' + store.token)
-    .then(res => {
-      store.user = res.body.user
-      return store.user
-    })
+    .set('Authorization', 'Bearer ' + token)
+    .then(res => res.body.user)
 }
 
 function getTimeline() {
-  if (!store.token) return Promise.reject();
+  if (!token) return Promise.reject();
   return request
     .get(process.env.BACKEND_BASE + '/api/timeline')
-    .set('Authorization', 'Bearer ' + store.token)
+    .set('Authorization', 'Bearer ' + token)
     .then(res => res.body)
 }
 
 function getPost(postId) {
-  if (!store.token) return Promise.reject();
+  if (!token) return Promise.reject();
   return request
     .get(process.env.BACKEND_BASE + '/api/post/'  + postId)
-    .set('Authorization', 'Bearer ' + store.token)
+    .set('Authorization', 'Bearer ' + token)
     .then(res => res.body.post)
 }
 
-export { getToken, getProfile, getTimeline, getPost }
+export { clearToken, createToken, getProfile, getTimeline, getPost }

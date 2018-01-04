@@ -23,13 +23,13 @@
           <ul>
             <!--li><a href="">Profile</a></li>
             <li><a href="">Settings</a></li-->
-            <li><a href="/accounts/logout/">Logout</a></li>
+            <li><a href="" v-on:click.prevent="logout">Logout</a></li>
           </ul>
         </app-header--user-profile-menu>
 
-        <app-header--user-profile-login v-if="!user">
+        <app-header--user-profile-login v-if="!user && !loadingUser">
           <h3>Sign In to Kairly</h3>
-          <form method="POST" v-on:submit="get_token">
+          <form method="POST" v-on:submit.prevent="login({username, password})">
             <input name="username" v-model="username" placeholder="Username" /><br>
             <input name="password" type="password" v-model="password" placeholder="Password" /><br>
             <button type="submit">Sign In</button>
@@ -43,29 +43,26 @@
 </template>
 
 <script>
-import request from 'superagent'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import store from '@/store'
-import * as api from '@/api'
 
 export default {
   name: 'AppHeaderComponent',
   data: function() {
     return {
-      user: null,
       username: null,
       password: null,
       isDropDownMenuOpen: false
     }
   },
+  computed: {
+    ...mapState({
+      user: state => state.user
+    }),
+    ...mapGetters(['loadingUser'])
+  },
   methods: {
-    get_token: function(ev) {
-      ev.preventDefault()
-      api
-        .getToken(this.username, this.password)
-        .then(() => {
-          api.getProfile().then(user => { this.user = user })
-        })
-    },
+    ...mapActions(['login', 'logout']),
 
     openDropDownMenu: function () {
       this.isDropDownMenuOpen = true
@@ -76,10 +73,6 @@ export default {
       this.isDropDownMenuOpen = false;
       this.$forceUpdate();
     }
-  },
-
-  created: function () {
-    api.getProfile().then(user => { this.user = user })
   }
 }
 </script>
