@@ -7,7 +7,7 @@ from ckeditor.fields import RichTextField
 
 class Author(models.Model):
     name = models.CharField(_("Name"), max_length=160)
-    medium = models.CharField(_("Medium"), max_length=160)
+    medium = models.CharField(_("Medium"), max_length=160, blank=True)
     picture = models.CharField(_("Picture"), max_length=300)
     bio = models.TextField(_("Bio"), blank=True)
 
