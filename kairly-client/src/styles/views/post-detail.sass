@@ -105,11 +105,44 @@ post-detail--title
   font-weight: 600
   line-height: $baseline * 1.25
 
-//- Content
-post-detail--content
-  display: block
 
-  border-bottom: 1px solid #eee
+//- Continue Reading
+post-detail--continue-reading
+  position: relative
+
+  display: block
+  margin: $baseline*1.5 0
+
+  color: #999
+
+  font-family: $ff-serif
+  font-size: $fs-1
+  font-weight: 600
+  text-align: center
+
+  &::after,
+  &::before
+    position: absolute
+    top: $baseline / 2
+
+    height: 1px
+    width: 30%
+
+    background: #eee
+
+    content: ''
+
+  &::before   
+    left: 0
+
+  &::after
+    right: 0   
+
+
+//- Content
+post-detail--content,
+post-detail--perex
+  display: block
 
   font-family: $ff-serif
   font-size: $fs-1

@@ -15,7 +15,7 @@
         </app-header--search>
 
         <app-header--user-profile v-if="user" v-on:click="openDropDownMenu">
-          <img :src="user.picture" :alt="user.name"/>
+          <img src="../assets/user.png" :alt="user.name"/>
         </app-header--user-profile>
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
@@ -52,6 +52,8 @@ export default {
   data: function() {
     return {
       user: null,
+      username: null,
+      password: null,
       isDropDownMenuOpen: false
     }
   },

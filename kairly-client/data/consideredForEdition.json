@@ -1,0 +1,56 @@
+[
+    {
+    "id": 9,
+    "author": {
+        "name": "Aidan Quigley",
+        "picture": "http://s3-origin-images.politico.com/2014/08/15/20140813js_rachel_bade_009.jpg",
+        "medium": "Politico",
+        "bio": "Rachael Bade covers House leadership for POLITICO. In addition to her congressional correspondence, Bade has also followed and written in depth on the various investigations surrounding Hillary Clinton, including the FBI’s probe of her emails set-up as well as the House Benghazi Committee’s work."                
+    },
+    "type": "newspaper",
+    "testType": "post-newspaper",
+    "postType": "article", 
+    "time": "1 hour ago",
+    "timeRead": "8 min read",
+    "content": {
+        "title": "Rand Paul's latest lonely fight incenses fellow senators",
+        "content": "<p>Rand Paul is at it again. It’s not enough for the Kentucky Republican to try to tank House Speaker Paul Ryan’s Obamacare repeal bill. He’s also driving his Senate colleagues crazy by holding up the one thing the Senate could do to quickly rebuke Russian President Vladimir Putin: pass a popular treaty ratifying Montenegro’s membership in NATO.</p><p>The dispute exploded on the Senate floor this month as Paul blocked Sen. John McCain (R-Ariz.) from bringing up the treaty. McCain said Paul is “working for” Putin; Paul responded that McCain is “past his prime.” But the anger toward Paul goes much deeper than just McCain — nearly the entire Senate wants to pass the treaty immediately.</p><blockquote><p>If you bring Georgia to NATO, you have to be prepared to go to war with Russia.</p><footer>— Senator Rand Paul</footer></blockquote><p>“It’s a minority position, yeah,” Paul conceded with a smile. That’s an understatement. Senators and aides said the treaty could be passed easily if Paul would release his hold, sending a swift message to Russia that the United States isn’t stepping away from Eastern Europe, even with a NATO skeptic like Donald Trump as president. While Sen. Mike Lee (R-Utah) is demanding a roll-call vote rather than passing the treaty with a quick request to do so unanimously, Paul is far more implacable and doesn’t want it to move forward at all.</p><p>“Montenegro doesn’t add a great deal to the national security of the United States,” Paul said in an interview. “For people who want Montenegro [in NATO], many of them want Ukraine and Georgia in there. And I think if you do that you have to be prepared to go to war with Russia.”</p>"
+    },
+    "favorites": "1.2k"
+    }, {
+        "id": 10,
+        "author": {
+            "name": "Rand Paul",
+            "picture": "https://pbs.twimg.com/profile_images/681152691461042177/_PrgDgFA_400x400.jpg",
+            "medium": "Senator from Kentucky",
+            "bio": "U.S. Senator for Kentucky | I fight for the Constitution, individual liberty and the freedoms that make this country great."
+        },
+        "type": "tweet",
+        "testType": "post-tweet",
+        "postType": "tweet",
+        "time": "47 min ago",
+        "content": {
+            "title": "Nobody wanted to have this debate. They want to rubber stamp. They want no debates and they want to send your kids to war.",
+            "content": "<p>Rand Paul is at it again. It’s not enough for the Kentucky Republican to try to tank House Speaker Paul Ryan’s Obamacare repeal bill. He’s also driving his Senate colleagues crazy by holding up the one thing the Senate could do to quickly rebuke Russian President Vladimir Putin: pass a popular treaty ratifying Montenegro’s membership in NATO.</p><p>The dispute exploded on the Senate floor this month as Paul blocked Sen. John McCain (R-Ariz.) from bringing up the treaty. McCain said Paul is “working for” Putin; Paul responded that McCain is “past his prime.” But the anger toward Paul goes much deeper than just McCain — nearly the entire Senate wants to pass the treaty immediately.</p><blockquote><p>If you bring Georgia to NATO, you have to be prepared to go to war with Russia.</p><footer>— Senator Rand Paul</footer></blockquote><p>“It’s a minority position, yeah,” Paul conceded with a smile. That’s an understatement. Senators and aides said the treaty could be passed easily if Paul would release his hold, sending a swift message to Russia that the United States isn’t stepping away from Eastern Europe, even with a NATO skeptic like Donald Trump as president. While Sen. Mike Lee (R-Utah) is demanding a roll-call vote rather than passing the treaty with a quick request to do so unanimously, Paul is far more implacable and doesn’t want it to move forward at all.</p><p>“Montenegro doesn’t add a great deal to the national security of the United States,” Paul said in an interview. “For people who want Montenegro [in NATO], many of them want Ukraine and Georgia in there. And I think if you do that you have to be prepared to go to war with Russia.”</p>"
+        },
+        "favorites": 131
+    }, {
+        "id": 12,
+        "author": {
+            "name": "Andrew Kaczynski",
+            "picture": "https://pbs.twimg.com/profile_images/924713341263556608/Tz1t121l_400x400.jpg",
+            "medium": "CNN",
+            "bio": "Andrew Kaczynski is the senior editor and founding member of CNN's KFILE — the leading investigation team for the social, mobile generation."                
+        },
+        "type": "newspaper",
+        "testType": "post-newspaper",
+        "postType": "article", 
+        "time": "1 hour ago",
+        "timeRead": "3 min read",
+        "content": {
+            "title": "Rand Paul: Military action in Syria needs Congressional approval",
+            "content": "<p>Republican Sen. Rand Paul said Thursday Congress would need to approve military action in Syria.</p><h3>Obey the Constitution</h3><p>\"The first thing we ought to do is probably obey the Constitution,\" Paul said on \"Kilmeade and Friends.\" \"When Nikki Haley came before my committee and I voted for her, I asked her that question. 'Will you try to take us to war? Will you advocate for war without constitutional or congressional authority?' And she said no. So I assumed what she means by this is that, the President, if he decides to do something in Syria, he would come to Congress and ask for a declaration of war. Short of Congress voting on it, I'm opposed to illegal and unconstitutional wars.\"</p><p>Paul said he had sympathy for the images coming out of Syria, but any action would need to be carefully weighed.</p><h3>War make things worse</h3><p>\"I have the greatest amount of sympathy, I can't see those pictures, it's heartrending to see those pictures,\" he said. \"But going to war we have to decide, will it be better or worse? Will we improve our national security? Are we threatened currently by Syria, and if we go to war is (Syrian President Bashar al-)Assad likely to use less chemical weapons or more? There's some argument for the more cornered and the more defeated in some ways more likely they are to use chemical weapons and actually for the less defeated they are that they're less likely to use them. The bottom line is it's horrific.\"</p>"
+        },
+        "favorites": "1.2k"
+    }
+]

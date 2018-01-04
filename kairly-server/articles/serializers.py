@@ -32,6 +32,7 @@ def post_json(post, short=False):
         j['content'] = {
             'title': post.title,
             'content': post.perex if short else post.content,
+            'perex': post.perex
         }
     return j
 

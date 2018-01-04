@@ -19,7 +19,13 @@
       <post-detail--title>
         <h1>{{post.content.title}}</h1>
       </post-detail--title>
+      
+      <post-detail--content v-html="post.content.perex"></post-detail--content>
 
+      <post-detail--continue-reading>
+        continue reading
+      </post-detail--continue-reading>
+ 
       <post-detail--content v-html="post.content.content"></post-detail--content>
 
       <post-detail--footer>

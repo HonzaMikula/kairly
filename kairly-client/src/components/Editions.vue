@@ -85,7 +85,6 @@ export default {
 
   created: function () { 
     this.consideredPost = consideredPosts
-    console.log(consideredPost)
   }
 }
 </script>

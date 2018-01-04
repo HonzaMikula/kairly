@@ -67,6 +67,26 @@ timeline-post--newspaper--content
       &::after
         content: "“"
 
+  //-- cite
+  cite      
+    display: block
+    margin: ($baseline / 4 - 2rem) 0
+    padding: $baseline / 4 0
+
+    border-bottom: 1px solid #eee
+    border-top: 1px solid #eee
+    color: #999
+
+    font-size: $fs-1
+    text-indent: 0
+    
+    &::before
+      content: "„"
+
+    &::after
+      content: "“"
+
+
   //-- test image
   @supports(-ms-wrap-flow: both)
     @media(min-width: 1080px)
