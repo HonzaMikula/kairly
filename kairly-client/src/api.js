@@ -32,4 +32,12 @@ function getTimeline() {
     .then(res => res.body)
 }
 
-export { getToken, getProfile, getTimeline }
+function getPost(postId) {
+  if (!store.token) return Promise.reject();
+  return request
+    .get(process.env.BACKEND_BASE + '/api/post/'  + postId)
+    .set('Authorization', 'Bearer ' + store.token)
+    .then(res => res.body.post)
+}
+
+export { getToken, getProfile, getTimeline, getPost }

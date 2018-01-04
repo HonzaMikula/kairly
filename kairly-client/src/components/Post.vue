@@ -6,7 +6,7 @@
     v-on:click="$router.push('/')">
   </post-detail--back-button>
 
-    <div>
+    <div v-if="post">
       <post-detail--header>
         <img :src="post.author.picture" :alt="post.author.name"/>
         <author-name>{{post.author.name}}</author-name>
@@ -19,13 +19,13 @@
       <post-detail--title>
         <h1>{{post.content.title}}</h1>
       </post-detail--title>
-      
+
       <post-detail--content v-html="post.content.perex"></post-detail--content>
 
       <post-detail--continue-reading>
         continue reading
       </post-detail--continue-reading>
- 
+
       <post-detail--content v-html="post.content.content"></post-detail--content>
 
       <post-detail--footer>
@@ -34,13 +34,13 @@
         <button-icon class="edition" v-tooltip.top="'Consider for Edition'"></button-icon>
       </post-detail--footer>
 
-
     </div>
   </post-detail>
 </template>
 
 <script>
 import request from 'superagent'
+import * as api from '@/api'
 
 export default {
   name: 'hello',
@@ -50,12 +50,7 @@ export default {
     }
   },
   created: function () {
-    const postId = this.$route.params.postId;
-    request
-      .get(process.env.BACKEND_BASE + '/api/post/' + postId)
-      .then(res => {
-        this.post = res.body.post
-      })
+    api.getPost(this.$route.params.postId).then(post => this.post = post)
   }
 
 }
