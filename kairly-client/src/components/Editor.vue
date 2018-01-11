@@ -11,7 +11,6 @@
     </editor-title>
       
     <editor-content>
-      <vue-mce :config="config" />
     </editor-content>
 
     <editor-footer>
@@ -23,13 +22,11 @@
 
 <script>
 
-import { component } from 'vue-mce'
 
 export default {
   name: 'Editor',
 
   components: {
-    'vue-mce': component
   },
 
   data: function () {

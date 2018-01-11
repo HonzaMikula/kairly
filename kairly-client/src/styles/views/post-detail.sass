@@ -172,15 +172,30 @@ post-detail--perex
 
   //- Italic
   em
-    font-style: italic    
+    font-style: italic  
+
+  //- Lists
+  ul
+    margin: 0 0 $baseline $baseline    
+
+  //- Bullet points
+  ul li
+    list-style: disc
+
+  //- Ordered list
+  ol li
+    list-style: decimal
+
+  //- Image
+  img
+    max-width: 100%      
 
   //- Link
   a
     color: $c-base
 
-    &:hover,
-    &:focus
-      text-decoration: none  
+    text-decoration: none 
+       
 
 
     

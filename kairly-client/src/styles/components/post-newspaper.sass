@@ -37,6 +37,8 @@ timeline-post--newspaper--content
     margin: $baseline / 4 0
     font-weight: 600
 
+    break-after: avoid-column
+
   //-- paragraph
   p 
     text-indent: $baseline
@@ -46,6 +48,32 @@ timeline-post--newspaper--content
     display: block
     margin: $baseline / 4 0
     width: 100%
+
+  //-- link
+  a
+    text-decoration: none
+
+  //-- strong
+  strong 
+    font-weight: 600
+
+  //-- italic
+  em
+    font-style: italic
+
+  //-- bullet points
+  ul li
+    list-style: disc      
+
+  //-- ordered list
+  ol li
+    list-style: decimal
+
+  //-- horizontal line
+  hr
+    border: 0
+    height: 1px
+    background: #ddd      
 
   //-- quotes
   blockquote

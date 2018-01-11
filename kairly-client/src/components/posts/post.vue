@@ -3,8 +3,8 @@
       <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
         <img :src="post.author.picture" :alt="post.author.name" />
        
-        <timeline-post--header--author>
-          <span v-on:mouseover="openAuthorWidget()">{{ post.author.name }}, {{post.author.medium}}</span>
+        <timeline-post--header--author v-on:mouseover="openAuthorWidget()">
+          {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
         </timeline-post--header--author>
 
         <cAuthorWidget 
@@ -20,8 +20,7 @@
 
         <timeline-post--header--action-buttons v-on-clickaway="closePostWidgets">
           <button-icon class="edition"
-            v-tooltip.top="'Consider for Edition'"
-            v-on:click="openEditionWidget()">
+            v-tooltip.top="'Consider for Edition'">
           </button-icon>
           <button-icon class="read-later"
             v-bind:class="{ 'is-active': isReadLaterActive }"
@@ -49,7 +48,6 @@
 import { directive as onClickaway } from 'vue-clickaway'
 import cAuthorWidget from './cAuthorWidget'
 import cReadLaterWidget from './cReadLaterWidget'
-import cEditionWidget from './cEditionWidget'
 
 export default {
   name: 'post',
@@ -100,30 +98,12 @@ export default {
     closePostWidgets: function () {
       this.closeReadLaterWidget()
       this.closeEditionWidget()
-    },
-
-    openEditionWidget: function () {
-      this.isEditionWidgetOpen = true;
-    },
-
-    closeEditionWidget: function () {
-      if (this.isEditionWidgetOpen) {
-        this.isEditionWidgetOpen = false
-        this.$forceUpdate()
-      }
-    },
-
-    away: function () {
-      if (this.isReadLaterWidgetOpen == true) {
-        alert(34)
-      }
     }
   },
 
   components: {
     cAuthorWidget,
-    cReadLaterWidget,
-    cEditionWidget
+    cReadLaterWidget
   }
 }
 </script>

@@ -30,7 +30,7 @@
 
       <author-widget--follow--choose-time v-if="showPeriods">
         <div>
-          How often do you want to read?
+          <h3>How often do you want to read?</h3>
           <button 
             v-for="(period, periodIndex) in periods" :key="period"
             v-bind:class="{ 'is-active': isPeriodActive[periodIndex] }"
@@ -41,7 +41,7 @@
 
  
         <div v-if="showDays">
-          Which day do you want to read it?
+          <h3>Which day do you want to read it?</h3>
           <button 
             v-for="(day, dayIndex) in days" :key="day"
             v-bind:class="{ 'is-active': isDayActive[dayIndex] }"
@@ -53,7 +53,7 @@
     
 
         <div v-if="showDaysInMonth">
-          Which day in the month do you want to read it? 
+          <h3>Which day in the month do you want to read it?</h3>
           <button 
             v-for="(dayInMonth, dayInMonthIndex) in daysInMonth" :key="dayInMonth"
             v-bind:class="{ 'is-active': isDayInMonthActive[dayInMonthIndex] }"
@@ -63,7 +63,7 @@
         </div>
 
         <div v-if="showTimes">
-          Which day time?
+          <h3>Which day time?</h3>
           <button 
             v-for="(time, timeIndex) in times" :key="time"
             v-bind:class="{ 'is-active': isTimeActive[timeIndex] }"

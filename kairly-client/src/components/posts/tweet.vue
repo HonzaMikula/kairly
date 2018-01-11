@@ -1,7 +1,8 @@
 <template>
   <post :post="post" v-on:readlater="readLaterMessage()">
     <timeline-post--tweet>
-      <p v-html="post.content"></p>
+      <p v-html="post.content.content"></p>
+      <img :src="post.content.picture" v-if="post.content.picture" />
     </timeline-post--tweet>
   </post>
 </template>

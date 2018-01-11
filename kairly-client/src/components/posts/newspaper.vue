@@ -2,7 +2,7 @@
   <post :post="post" v-on:readlater="readLaterMessage()">
     <timeline-post--newspaper>
       <h2>{{ post.content.title }}</h2>
-      <timeline-post--newspaper--content >
+      <timeline-post--newspaper--content>
         <div v-html="post.content.content"></div>
         <timeline-post--continue-reading v-if="post.timeRead">
           <router-link :to="{ name: 'Post', params: { postId: post.id }}">Continue reading</router-link>

@@ -26,7 +26,10 @@ def post_json(post, short=False):
             'picture': post.picture,
         }
     elif post.kind == Post.TWEET:
-        j['content'] = post.content
+        j['content'] = {
+            'content': post.content,
+            'picture': post.picture,
+        }
     elif post.kind == Post.NEWSPAPER:
         j['timeRead'] = post.read_time
         j['content'] = {
