@@ -75,8 +75,8 @@ export default {
     },
 
     closeAuthorWidget: function () {
+      clearTimeout(this.timer)
       if (this.isAuthorWidgetOpen) {
-        clearTimeout(this.timer)
         this.isAuthorWidgetOpen = false
         this.$forceUpdate()
       }
