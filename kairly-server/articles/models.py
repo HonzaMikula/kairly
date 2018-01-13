@@ -28,6 +28,9 @@ class Post(models.Model):
         (PICTURE, _('Picture')),
     )
 
+    class Meta:
+        ordering = ('-published',)
+
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
     published = models.DateTimeField(_('Published'), default=now)
     read_time = models.CharField(max_length=160, blank=True)
