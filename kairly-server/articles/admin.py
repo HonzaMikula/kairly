@@ -10,7 +10,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'kind', 'author', 'published')
+    list_display = ('title', 'kind', 'author', 'published', 'read_time')
 
 
 @admin.register(Edition)

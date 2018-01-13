@@ -18,6 +18,8 @@ libgravatar = "*"
 django-ckeditor = "*"
 pyjwt = "*"
 django-taggit = "*"
+nltk = "*"
+"beautifulsoup4" = "*"
 
 
 [requires]

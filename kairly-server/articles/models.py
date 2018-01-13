@@ -1,3 +1,6 @@
+import math
+
+from bs4 import BeautifulSoup
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -33,7 +36,6 @@ class Post(models.Model):
 
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
     published = models.DateTimeField(_('Published'), default=now)
-    read_time = models.CharField(max_length=160, blank=True)
 
     title = models.CharField(max_length=160)
     picture = models.CharField(_("Picture"), max_length=300, blank=True, null=True)
@@ -43,6 +45,16 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def read_time(self):
+        soup = BeautifulSoup(self.content)
+        for script in soup(["script", "style"]):
+            script.extract()
+
+        text = soup.get_text()
+        words = len(text.split())
+        return '{} min'.format(math.ceil(words / 275))
 
 
 class Edition(models.Model):
