@@ -61,3 +61,6 @@ class Edition(models.Model):
 class UserTags(models.Model):
     tags = TaggableManager()
     user = models.ForeignKey('auth.User', models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'User Tags'

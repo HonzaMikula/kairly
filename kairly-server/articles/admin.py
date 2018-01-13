@@ -26,7 +26,7 @@ class EditionAdmin(admin.ModelAdmin):
 
 
 @admin.register(UserTags)
-class UserEditionAdmin(admin.ModelAdmin):
+class UserTagsAdmin(admin.ModelAdmin):
     list_display = ('user', 'tag_list')
 
     def get_queryset(self, request):
