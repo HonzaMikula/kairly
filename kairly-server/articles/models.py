@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
+from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 
 
@@ -48,6 +49,7 @@ class Edition(models.Model):
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
     posts = models.ManyToManyField(Post, blank=True)
+    tags = TaggableManager()
 
     class Meta:
         ordering = ('-published',)
@@ -56,6 +58,6 @@ class Edition(models.Model):
         return self.title
 
 
-class UserEdition(models.Model):
-    edition = models.ForeignKey(Edition, models.CASCADE)
+class UserTags(models.Model):
+    tags = TaggableManager()
     user = models.ForeignKey('auth.User', models.CASCADE)

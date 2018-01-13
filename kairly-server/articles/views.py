@@ -3,7 +3,7 @@ from libgravatar import Gravatar
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
-from .models import Edition, Post
+from .models import Edition, Post, UserTags
 from .serializers import edition_json, post_json
 from utils.decorators import ajax_login_required
 
@@ -14,7 +14,8 @@ def index(request, *args, **kwargs):
 
 @ajax_login_required
 def timeline(request):
-    editions = Edition.objects.filter(useredition__user=request.user).select_related('editor')
+    tags = UserTags.objects.get(user=request.user).tags.all()
+    editions = Edition.objects.filter(tags__in=tags).select_related('editor')
     return JsonResponse({
         'editions': [edition_json(e) for e in editions]
     })

@@ -17,6 +17,7 @@ django-cors-headers = "*"
 libgravatar = "*"
 django-ckeditor = "*"
 pyjwt = "*"
+django-taggit = "*"
 
 
 [requires]
