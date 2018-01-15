@@ -14,7 +14,8 @@ def index(request, *args, **kwargs):
 
 @ajax_login_required
 def timeline(request):
-    tags = UserTags.objects.get(user=request.user).tags.all()
+    tags = UserTags.objects.get(user=request.user).tags.all() \
+        .order_by('ordering', '-published')
     editions = Edition.objects.filter(tags__in=tags).select_related('editor')
     return JsonResponse({
         'editions': [edition_json(e) for e in editions]

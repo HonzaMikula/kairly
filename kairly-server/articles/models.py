@@ -63,7 +63,7 @@ class Edition(models.Model):
     description = models.TextField(blank=True)
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
-    posts = models.ManyToManyField(Post, blank=True)
+    posts = models.ManyToManyField(Post, blank=True, through='EditionPost')
     tags = TaggableManager()
 
     class Meta:
@@ -71,6 +71,15 @@ class Edition(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class EditionPost(models.Model):
+    edition = models.ForeignKey(Edition, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    ordering = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.post.title
 
 
 class UserTags(models.Model):
