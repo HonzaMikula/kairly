@@ -15,7 +15,6 @@ class PostAdmin(admin.ModelAdmin):
 
 class PostInline(admin.TabularInline):
     model = EditionPost
-    #filter_horizontal = ('post', )
 
 
 @admin.register(Edition)
