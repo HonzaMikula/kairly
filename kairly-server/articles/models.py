@@ -1,7 +1,11 @@
+import math
+
+from bs4 import BeautifulSoup
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
+from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 
 
@@ -27,9 +31,11 @@ class Post(models.Model):
         (PICTURE, _('Picture')),
     )
 
+    class Meta:
+        ordering = ('-published',)
+
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
     published = models.DateTimeField(_('Published'), default=now)
-    read_time = models.CharField(max_length=160, blank=True)
 
     title = models.CharField(max_length=160)
     picture = models.CharField(_("Picture"), max_length=300, blank=True, null=True)
@@ -40,6 +46,16 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def read_time(self):
+        soup = BeautifulSoup(self.content)
+        for script in soup(["script", "style"]):
+            script.extract()
+
+        text = soup.get_text()
+        words = len(text.split())
+        return '{} min'.format(math.ceil(words / 275))
+
 
 class Edition(models.Model):
     title = models.CharField(max_length=160)
@@ -47,7 +63,8 @@ class Edition(models.Model):
     description = models.TextField(blank=True)
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
-    posts = models.ManyToManyField(Post, blank=True)
+    posts = models.ManyToManyField(Post, blank=True, through='EditionPost')
+    tags = TaggableManager()
 
     class Meta:
         ordering = ('-published',)
@@ -56,6 +73,18 @@ class Edition(models.Model):
         return self.title
 
 
-class UserEdition(models.Model):
-    edition = models.ForeignKey(Edition, models.CASCADE)
+class EditionPost(models.Model):
+    edition = models.ForeignKey(Edition, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    ordering = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.post.title
+
+
+class UserTags(models.Model):
+    tags = TaggableManager()
     user = models.ForeignKey('auth.User', models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'User Tags'
