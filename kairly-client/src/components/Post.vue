@@ -22,7 +22,7 @@
 
       <post-detail--content v-html="post.content.perex"></post-detail--content>
 
-      <post-detail--continue-reading>
+      <post-detail--continue-reading id="continue">
         continue reading
       </post-detail--continue-reading>
 
@@ -51,7 +51,16 @@ export default {
   },
   created: function () {
     api.getPost(this.$route.params.postId).then(post => this.post = post)
+  },
+  updated: function() {
+    // TODO dangerous if more component properties exists and updated called more
+    // then once
+    if (this.$route.hash) {
+      const anchor = document.querySelector(this.$route.hash)
+      if (anchor) {
+        anchor.scrollIntoView(true)
+      }
+    }
   }
-
 }
 </script>
