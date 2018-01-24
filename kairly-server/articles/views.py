@@ -1,5 +1,6 @@
 from libgravatar import Gravatar
 
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
@@ -15,9 +16,14 @@ def index(request, *args, **kwargs):
 @ajax_login_required
 def timeline(request):
     tags = UserTags.objects.get(user=request.user).tags.all()
-    editions = Edition.objects.filter(tags__in=tags).select_related('editor')
+    query = Edition.objects.filter(tags__in=tags).select_related('editor')
+    paginator = Paginator(query, 5)
+    page = request.GET.get('page')
+    editions = paginator.get_page(page)
     return JsonResponse({
-        'editions': [edition_json(e) for e in editions]
+        'editions': [edition_json(e) for e in editions],
+        'page': editions.number,
+        'last_page': editions.paginator.num_pages
     })
 
 

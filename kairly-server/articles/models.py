@@ -1,7 +1,11 @@
 import math
 
 from bs4 import BeautifulSoup
+
+from django.core.cache import cache
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -31,6 +35,8 @@ class Post(models.Model):
         (PICTURE, _('Picture')),
     )
 
+    READ_TIME_CACHE_KEY = 'read_time_{id}'
+
     class Meta:
         ordering = ('-published',)
 
@@ -48,13 +54,20 @@ class Post(models.Model):
 
     @property
     def read_time(self):
-        soup = BeautifulSoup(self.content)
-        for script in soup(["script", "style"]):
-            script.extract()
+        if self.kind != Post.NEWSPAPER:
+            return None
+        cache_key = Post.READ_TIME_CACHE_KEY.format(id=self.id)
+        value = cache.get(cache_key)
+        if value is None:
+            soup = BeautifulSoup(self.content)
+            for script in soup(["script", "style"]):
+                script.extract()
 
-        text = soup.get_text()
-        words = len(text.split())
-        return '{} min'.format(math.ceil(words / 275))
+            text = soup.get_text()
+            words = len(text.split())
+            value = math.ceil(words / 275)
+            cache.set(cache_key, value, None)
+        return '{} min'.format(value)
 
 
 class Edition(models.Model):
@@ -88,3 +101,9 @@ class UserTags(models.Model):
 
     class Meta:
         verbose_name_plural = 'User Tags'
+
+
+@receiver(post_save, sender=Post)
+def clear_post_cache(sender, instance, **kwargs):
+    cache_key = Post.READ_TIME_CACHE_KEY.format(id=instance.id)
+    cache.delete(cache_key)
