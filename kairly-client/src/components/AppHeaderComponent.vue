@@ -2,7 +2,7 @@
   <app-header>
     <div>
       <app-header--nav role="navigation">
-        <ul>
+        <ul v-if="user">
           <li class="home"><router-link to="/">Home</router-link></li>
           <li class="your-editions"><router-link to="/my-editions">My Subscription</router-link></li>
           <!-- li class="new-post"><router-link to="/editor">New Post</router-link></li -->
@@ -17,6 +17,11 @@
 
         <app-header--user-profile v-if="user" v-on:click="openDropDownMenu">
           <img src="../assets/user.png" :alt="user.name"/>
+          <!--
+            Gravatar url handles default itself (it can generate 404 url or some dafault),
+            but it is problematic handle it on client side identify default and replace it with own default
+          -->
+          <!--img :src="user.picture" :alt="user.name"/-->
         </app-header--user-profile>
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
@@ -27,18 +32,6 @@
             <li><a href="" v-on:click.prevent="logout">Logout</a></li>
           </ul>
         </app-header--user-profile-menu>
-
-        <app-header--user-profile-login v-if="!user && !loadingUser">
-          <h3>Sign In to Kairly</h3>
-          <form method="POST" v-on:submit.prevent="login({username, password})">
-            <input name="username" v-model="username" placeholder="Username" /><br>
-            <input name="password" type="password" v-model="password" placeholder="Password" /><br>
-            <button type="submit">Sign In</button>
-          </form>
-
-          <p>Do you want to try Kairly? <br> Write at <a href="mailto:jan.mikula@hotmail.com">jan.mikula@hotmail.com</a>.</p>
-
-        </app-header--user-profile-login>
     </div>
   </app-header>
 </template>

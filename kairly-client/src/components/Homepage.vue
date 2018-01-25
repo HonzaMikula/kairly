@@ -3,21 +3,21 @@
     <homepage--cover>
       <h1>Kairly</h1>
 
-      <p>We stand for exceptional journalism<br /> & great reading experience.</p>
+      <p>We stand for exceptional journalism<br /> &amp; great reading experience.</p>
     </homepage--cover>
 
     <homepage--login>
-      <form>
+      <form v-on:submit.prevent="login({username, password})">
         <div>
           <label>Login</label>
-          <input type="text"/>
+          <input name="username" v-model="username" />
         </div>
 
         <div>
           <label>Passoword</label>
-          <input type="password"/>
+          <input name="password" type="password" v-model="password" />
         </div>
-        
+
         <button type="submit">Sign In</button>
       </form>
     </homepage--login>
@@ -32,12 +32,12 @@
       <p>In the world full of censorship and propaganda, we stand for <strong>free speach</strong>.</p>
 
       <p>
-        In the world full of distraction and lack of focus, we stand for 
+        In the world full of distraction and lack of focus, we stand for
         <strong>control of your time and undistracted reading experience</strong>.
       </p>
 
       <p>
-        In the world where journalist are dependent on advertisment or big corporations with their interests, 
+        In the world where journalist are dependent on advertisment or big corporations with their interests,
         we stand for <strong>fair reward for high-quality content</strong>.
       </p>
 
@@ -52,18 +52,18 @@
       </p>
 
       <p>
-        In modern world of social media we lost professional editors and authors are dependent on advertisment. 
+        In modern world of social media we lost professional editors and authors are dependent on advertisment.
         Now it's your friends who are selecting the content in your timeline. The result is not good.
         Exceptional journalism depends on professional editors and authors, who will get paid fairly.
       </p>
-     
+
       <div>
         <img src="../assets/kairly-screenshot.png" alt="Kairly Screenshot"/>
         <img src="../assets/kairly-screenshot2.png" alt="Kairly Screenshot"/>
       </div>
 
       <p>
-        In Kairly readers are subsribing editions and paying for them. 
+        In Kairly readers are subsribing editions and paying for them.
         Those money are then shared between editors and authors.
       </p>
     </homepage--how-it-works>
@@ -84,7 +84,7 @@
         <section>
           <h3>Editors</h3>
           <p>
-            Do you want to change how current journalism and its business models work? 
+            Do you want to change how current journalism and its business models work?
             Start creating editions in our private beta program.
           </p>
         </section>
@@ -115,7 +115,18 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex'
+
 export default {
-  name: 'Homepage'
+  name: 'Homepage',
+  data: function() {
+    return {
+      username: null,
+      password: null
+    }
+  },
+  methods: {
+    ...mapActions(['login']),
+  }
 }
 </script>

@@ -37,10 +37,10 @@ def post(request, post_id):
 @ajax_login_required
 def profile(request):
     g = Gravatar(request.user.email)
+    g = Gravatar('a@b.cz')
     return JsonResponse({
         "user": {
             "name": request.user.get_full_name(),
-            'picture': g.get_image(use_ssl=True)
-            # "picture": "https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY.jpeg"
+            'picture': g.get_image(use_ssl=True, default='blank')
         }
     })
