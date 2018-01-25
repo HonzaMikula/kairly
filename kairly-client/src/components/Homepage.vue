@@ -6,6 +6,22 @@
       <p>We stand for exceptional journalism<br /> & great reading experience.</p>
     </homepage--cover>
 
+    <homepage--login>
+      <form>
+        <div>
+          <label>Login</label>
+          <input type="text"/>
+        </div>
+
+        <div>
+          <label>Passoword</label>
+          <input type="password"/>
+        </div>
+        
+        <button type="submit">Sign In</button>
+      </form>
+    </homepage--login>
+
     <homepage--values>
       <h2>What we believe in?</h2>
 
@@ -36,9 +52,9 @@
       </p>
 
       <p>
-        In modern world of social media we lost proffesional editors and authors are dependent on advertisment. 
+        In modern world of social media we lost professional editors and authors are dependent on advertisment. 
         Now it's your friends who are selecting the content in your timeline. The result is not good.
-        Exceptional journalism depends on proffesional editors and authors, who will get paid fairly.
+        Exceptional journalism depends on professional editors and authors, who will get paid fairly.
       </p>
      
       <div>
@@ -47,7 +63,7 @@
       </div>
 
       <p>
-        In Kairly readers are subsribing editions and paying for them from their credit small amount of money. 
+        In Kairly readers are subsribing editions and paying for them. 
         Those money are then shared between editors and authors.
       </p>
     </homepage--how-it-works>
