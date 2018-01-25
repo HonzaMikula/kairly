@@ -2,12 +2,12 @@
   <timeline-post role="article" :class="post.postType">
       <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
         <img :src="post.author.picture" :alt="post.author.name" />
-       
+
         <timeline-post--header--author v-on:mouseover="openAuthorWidget()">
           {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
         </timeline-post--header--author>
 
-        <cAuthorWidget 
+        <cAuthorWidget
           :author="post.author"
           v-if="isAuthorWidgetOpen"
           v-on:authorwidgetclose="closeAuthorWidget()">
@@ -33,7 +33,7 @@
             v-on:readlaterwidgetclose="closeReadLaterWidget()">
           </cReadLaterWidget>
 
-          <cEditionWidget 
+          <cEditionWidget
             v-if="isEditionWidgetOpen"
             v-on:editionwidgetclose="closeEditionWidget()">
           </cEditionWidget>
