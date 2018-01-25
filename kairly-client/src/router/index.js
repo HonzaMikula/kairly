@@ -6,6 +6,7 @@ import Editions from '@/components/Editions'
 import Editor from '@/components/Editor'
 import ReadLater from '@/components/ReadLater'
 import Homepage from '@/components/Homepage'
+import MyEditions from '@/components/MyEditions'
 
 Vue.use(Router)
 
@@ -36,6 +37,10 @@ export default new Router({
       path: '/homepage',
       name: 'Homepage',
       component: Homepage
+    }, {
+      path: '/my-editions',
+      name: 'MyEditions',
+      component: MyEditions
     }
   ],
   linkActiveClass: '',

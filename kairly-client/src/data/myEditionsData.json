@@ -1,0 +1,48 @@
+[
+  {
+    "id": 1,
+    "author": {
+        "name": "Aidan Quigley",
+        "picture": "http://s3-origin-images.politico.com/2014/08/15/20140813js_rachel_bade_009.jpg",
+        "medium": "Politico",
+        "bio": "Rachael Bade covers House leadership for POLITICO. In addition to her congressional correspondence, Bade has also followed and written in depth on the various investigations surrounding Hillary Clinton, including the FBI’s probe of her emails set-up as well as the House Benghazi Committee’s work."                
+    },
+    "title": "Prezidentské volby",
+    "description": "Nejdůležitější informace z probíhajících prezidentských voleb.",
+    "periodicity": "Daily",
+    "picture": "https://img.cncenter.cz/img/12/full/3811517_.jpg",
+    "subscribers": 231,
+    "issues": 16,
+    "likes": "12,453"
+  }, {
+    "id": 1,
+    "author": {
+        "name": "Aidan Quigley",
+        "picture": "http://s3-origin-images.politico.com/2014/08/15/20140813js_rachel_bade_009.jpg",
+        "medium": "Politico",
+        "bio": "Rachael Bade covers House leadership for POLITICO. In addition to her congressional correspondence, Bade has also followed and written in depth on the various investigations surrounding Hillary Clinton, including the FBI’s probe of her emails set-up as well as the House Benghazi Committee’s work."                
+    },
+    "title": "Olympijský zápisník",
+    "description": "Aktuality z olympijského dění.",
+    "periodicity": "Daily",
+    "picture": "http://img.ct24.cz/cache/900x700/article/73/7213/721203.jpg?1515941652",
+    "subscribers": 43,
+    "issues": 2,
+    "likes": "321"
+  }, {
+    "id": 1,
+    "author": {
+        "name": "Aidan Quigley",
+        "picture": "http://s3-origin-images.politico.com/2014/08/15/20140813js_rachel_bade_009.jpg",
+        "medium": "Politico",
+        "bio": "Rachael Bade covers House leadership for POLITICO. In addition to her congressional correspondence, Bade has also followed and written in depth on the various investigations surrounding Hillary Clinton, including the FBI’s probe of her emails set-up as well as the House Benghazi Committee’s work."                
+    },
+    "title": "Bits on the Block",
+    "description": "Your shortcut to the crypto world.",
+    "periodicity": "Daily",
+    "picture": "https://us.123rf.com/450wm/danielfela/danielfela1602/danielfela160200005/52701747-bitcoin-on-newspaper-background.jpg?ver=6",
+    "subscribers": 231,
+    "issues": 16,
+    "likes": "12,453"
+  }
+]

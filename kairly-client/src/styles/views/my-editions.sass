@@ -1,0 +1,84 @@
+//- MY EDITIONS -//
+
+
+my-editions-view
+  display: block
+  max-width: 1000px
+  margin: $baseline auto
+
+  //- wrapper
+  > div
+    display: flex
+    flex-wrap: wrap
+
+  //- heading
+  h1
+    margin-bottom: $baseline
+
+    font-family: $ff-serif
+    font-size: $fs-2  
+
+my-editions--item
+  border-radius: $baseline / 4
+  margin-right: $baseline
+  overflow: hidden
+  width: 300px
+
+  border: 1px solid #eee
+
+  //- header picture
+  picture
+    display: block
+    height: 150px
+
+    img
+      height: 100%
+      width: 100%
+      object-fit: cover
+
+  //- wrapper
+  > div
+    padding: $baseline / 4
+
+    //- title
+    h2
+      font-family: $ff-serif
+      font-size: $fs-1
+      font-weight: 600
+
+    //- description
+    > p
+      color: #777 
+
+      font-family: $ff-serif
+      font-size: $fs--1    
+      line-height: $baseline * 0.8    
+
+//- Subscribe Edition
+my-editions--item--subscribe
+  display: block
+  padding: $baseline / 2 0 0 0
+
+  text-align: center
+
+  //- button
+  button
+    border-radius: $baseline / 2
+    padding: 0 $baseline
+    
+    background: $c-base
+    border: 0
+    color: #fff  
+
+    cursor: pointer
+    line-height: $baseline
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+
+  //- info
+  p
+    font-size: $fs--2
+    font-family: $ff-serif  
+    
