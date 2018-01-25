@@ -1,0 +1,175 @@
+//- HOMEPAGE -//
+
+//- Cover
+homepage--cover
+  display: block
+  height: 480px
+  padding: $baseline * 2
+
+  background: url(./assets/homepage2.png) center center no-repeat
+  background-size: cover
+
+  color: #fff
+
+  font-family: $ff-serif
+
+  //- kairly Heading
+  h1
+    margin-bottom: $baseline
+    
+    font-size: 60rem
+    line-height: $baseline * 3
+
+  //- motto
+  p  
+    font-size: $fs-3
+    line-height: $baseline * 1.25
+    
+    
+//- Values
+homepage--values
+  display: block
+  padding: $baseline * 2 $baseline 
+
+  text-align: center
+
+  //- heading
+  h2
+    margin-bottom: $baseline * 2
+    font-size: $fs-3
+    font-family: $ff-serif
+
+  //- values
+  p 
+    margin: 0 auto $baseline auto
+    max-width: 700px
+
+    font-size: $fs-1
+    font-family: $ff-serif
+
+    strong
+      font-weight: 600
+
+    &:last-of-type
+      margin-top: $baseline * 2
+      font-size: $fs-3  
+
+
+homepage--how-it-works
+  display: block
+  padding: $baseline * 2 $baseline 
+
+  background: lighten($c-base, 20%)
+
+  font-family: $ff-serif
+  text-align: center
+
+  //- heading
+  h2
+    margin-bottom: $baseline * 2
+    font-size: $fs-3
+    font-family: $ff-serif
+
+  p
+    max-width: 700px
+    margin: 0 auto $baseline auto
+
+    font-size: $fs-1  
+
+  > div
+    display: table
+    margin: 0 auto $baseline auto
+
+  img
+    display: block
+    float: left
+    margin-right: $baseline
+    
+    width: 300px  
+
+
+
+//- Help Us
+homepage--help-us
+  display: block
+  padding: $baseline
+  
+  background: lighten($c-base, 40%)
+
+  font-family: $ff-serif
+
+  //- Heading
+  h2
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-family: $ff-serif
+    text-align: center
+
+  > p
+    text-align: center
+
+
+  //- wrapper
+  > div
+    display: flex
+    max-width: 1200px
+    margin: $baseline*2 auto
+
+  //- section
+  section
+    flex: 1
+    margin-right: $baseline * 2
+
+    &:last-of-type
+      margin-right: 0
+
+    h3
+      margin-bottom: $baseline / 2
+
+      font-weight: 600   
+      text-align: center 
+
+      &::before
+        +fa-icon()
+
+        display: block
+        margin-bottom: $baseline / 2
+
+        font-size: 60px
+        text-align: center
+
+  section:nth-of-type(1) h3::before
+    content: $fa-var-book
+
+  section:nth-of-type(2) h3::before
+   content: $fa-var-newspaper-o
+
+  section:nth-of-type(3) h3::before
+    content: $fa-var-pencil
+
+  section:nth-of-type(4) h3::before
+   content: $fa-var-money     
+
+
+//- Contact us button
+homepage--help-us--contact-us
+  display: block
+  
+  text-align: center
+
+  a
+    display: inline-block
+    border-radius: 5px
+    padding: 0 $baseline
+
+    background: $c-base
+    color: #fff
+
+    font-size: $fs-1
+    line-height: $baseline * 1.5
+    text-decoration: none
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)

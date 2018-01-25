@@ -5,6 +5,7 @@ import Post from '@/components/Post'
 import Editions from '@/components/Editions'
 import Editor from '@/components/Editor'
 import ReadLater from '@/components/ReadLater'
+import Homepage from '@/components/Homepage'
 
 Vue.use(Router)
 
@@ -31,6 +32,10 @@ export default new Router({
       path: '/read-later',
       name: 'ReadLater',
       component: ReadLater
+    }, {
+      path: '/homepage',
+      name: 'Homepage',
+      component: Homepage
     }
   ],
   linkActiveClass: '',
