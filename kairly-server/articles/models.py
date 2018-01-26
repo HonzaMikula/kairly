@@ -108,7 +108,6 @@ class UserSubscription(models.Model):
     subscription = models.ForeignKey(Subscription, models.CASCADE)
 
 
-
 @receiver(post_save, sender=Post)
 def clear_post_cache(sender, instance, **kwargs):
     cache_key = Post.READ_TIME_CACHE_KEY.format(id=instance.id)

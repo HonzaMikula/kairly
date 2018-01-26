@@ -34,6 +34,14 @@ function getTimeline() {
     .then(res => res.body)
 }
 
+function getSubscription() {
+  if (!token) return Promise.reject();
+  return request
+    .get(process.env.BACKEND_BASE + '/api/subscription')
+    .set('Authorization', 'Bearer ' + token)
+    .then(res => res.body)
+}
+
 function getPost(postId) {
   if (!token) return Promise.reject();
   return request
@@ -42,4 +50,4 @@ function getPost(postId) {
     .then(res => res.body.post)
 }
 
-export { clearToken, createToken, getProfile, getTimeline, getPost }
+export { clearToken, createToken, getProfile, getTimeline, getPost, getSubscription }

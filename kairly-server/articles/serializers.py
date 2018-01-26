@@ -50,3 +50,15 @@ def edition_json(edition):
         "posts": [post_json(p, short=True) for p in
                   edition.posts.all().order_by('editionpost__ordering', '-published')],
     }
+
+
+def subscription_json(subscription):
+    return {
+        "id": subscription.id,
+        "title": subscription.title,
+        "description": subscription.description,
+        "editor": author_json(subscription.editor),
+        "isSubscribed": subscription.is_subscribed,
+        "issues": subscription.issues,
+        "likes": subscription.likes,
+    }

@@ -1,11 +1,12 @@
 from libgravatar import Gravatar
 
+from django.db.models import Count
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
 from .models import Edition, Post, Subscription
-from .serializers import edition_json, post_json
+from .serializers import edition_json, post_json, subscription_json
 from utils.decorators import ajax_login_required
 
 
@@ -25,6 +26,22 @@ def timeline(request):
         'page': editions.number,
         'last_page': editions.paginator.num_pages
     })
+
+
+@ajax_login_required
+def subscription(request):
+    subscriptions = Subscription.objects.all().select_related('editor') \
+        .annotate(issues=Count('edition', distinct=True)) \
+        .annotate(likes=Count('usersubscription', distinct=True))
+    subscribed = set(Subscription.objects
+                     .filter(usersubscription__user=request.user)
+                     .values_list('id', flat=True))
+
+    def add_flag(subscription):
+        subscription.is_subscribed = subscription.id in subscribed
+        return subscription
+
+    return JsonResponse([subscription_json(add_flag(s)) for s in subscriptions], safe=False)
 
 
 @ajax_login_required

@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('api/timeline', views.timeline, name='timeline'),
+    path('api/subscription', views.subscription, name='subscription'),
     path('api/profile', views.profile, name='profile'),
     path('api/post/<int:post_id>', views.post, name='post'),
 
