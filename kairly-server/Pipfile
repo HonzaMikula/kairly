@@ -11,13 +11,12 @@ name = "pypi"
 
 [packages]
 
-django = "*"
+Django = "*"
 mysqlclient = "*"
 django-cors-headers = "*"
 libgravatar = "*"
 django-ckeditor = "*"
-pyjwt = "*"
-django-taggit = "*"
+PyJWT = "*"
 nltk = "*"
 "beautifulsoup4" = "*"
 

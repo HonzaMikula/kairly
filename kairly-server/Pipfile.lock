@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5234d3129a8b48e584cdd4c368ee8a611c234f33c34bde140a7ac6c3318199ca"
+            "sha256": "89daa9a9f886cfecb7b89ccd83f2f653c185849a870ef4ec66d23e3eec3d61f3"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -59,17 +59,10 @@
         },
         "django-js-asset": {
             "hashes": [
-                "sha256:0dd2c5f64f2b24eb8a7270a6a59cb914a03f205335bd0eb6207bf61cf7410828",
-                "sha256:c6637e4f3fef12024564057a48bef484db6491c610273d76d25d8dbe6ecc4ac1"
+                "sha256:bcd00d7dc67f86cad1dac4bf7b43fa4b75088c214d2c92002b8705c6a7362e7e",
+                "sha256:38fc1de7a93a2f667fe7ee34acc53d682bac5ce6c73ac6f0ecb4ff77d0f61f1b"
             ],
-            "version": "==0.1.1"
-        },
-        "django-taggit": {
-            "hashes": [
-                "sha256:58aa3e59e0643446e102523f22d137300298e2a537b1c5b0c310d99143f2c2b8",
-                "sha256:fd13e304ba37ff09e601c4797d893fb7d3e699a789b5afb0b09d686f94470441"
-            ],
-            "version": "==0.22.2"
+            "version": "==1.0.0"
         },
         "libgravatar": {
             "hashes": [
