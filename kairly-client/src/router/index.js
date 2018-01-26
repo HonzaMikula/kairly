@@ -34,11 +34,7 @@ export default new Router({
       name: 'ReadLater',
       component: ReadLater
     }, {
-      path: '/homepage',
-      name: 'Homepage',
-      component: Homepage
-    }, {
-      path: '/my-editions',
+      path: '/my-subscription',
       name: 'MyEditions',
       component: MyEditions
     }
