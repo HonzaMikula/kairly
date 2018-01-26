@@ -19,16 +19,25 @@ my-editions-view
     font-size: $fs-2  
 
 my-editions--item
+  position: relative
+
+  display: flex
+  flex-direction: column
+  padding: 0 $baseline / 4
   border-radius: $baseline / 4
   margin-right: $baseline
   overflow: hidden
-  width: 300px
+  width: 280px
 
   border: 1px solid #eee
 
+  font-family: $ff-serif
+
   //- header picture
   picture
+    order: 1
     display: block
+    margin: 0 (-$baseline)/4 0 (-$baseline)/4
     height: 150px
 
     img
@@ -36,28 +45,44 @@ my-editions--item
       width: 100%
       object-fit: cover
 
-  //- wrapper
-  > div
-    padding: $baseline / 4
+  //- title
+  > h2
+    order: 3
+    font-size: $fs-1
+    font-weight: 600
 
-    //- title
-    h2
-      font-family: $ff-serif
-      font-size: $fs-1
-      font-weight: 600
+  //- description
+  > p
+    flex: 1
+    order: 4
+    
+    color: #777 
 
-    //- description
-    > p
-      color: #777 
+    font-size: $fs--1    
+    line-height: $baseline * 0.8    
 
-      font-family: $ff-serif
-      font-size: $fs--1    
-      line-height: $baseline * 0.8    
+//- Author + Periodicity
+my-editions--item--author
+
+  order: 2
+  
+  margin: $baseline/2 0
+  
+  img
+    border-radius: 100%
+    float: left
+    height: $baseline
+    margin-right: $baseline / 4
+    width: $baseline
+
+    object-fit: cover
+    
 
 //- Subscribe Edition
 my-editions--item--subscribe
   display: block
   padding: $baseline / 2 0 0 0
+  order: 4
 
   text-align: center
 
@@ -66,19 +91,28 @@ my-editions--item--subscribe
     border-radius: $baseline / 2
     padding: 0 $baseline
     
-    background: $c-base
-    border: 0
-    color: #fff  
+    background: #fff
+    border: 1px solid $c-base
 
     cursor: pointer
+    font-family: $ff-serif
+    font-size: $fs-0
     line-height: $baseline
 
     &:hover,
     &:focus
-      background: darken($c-base, 10%)
+      background: $c-base
+      color: #fff 
+
+    &.is-subscribed
+      background: $c-base
+      color: #fff 
+
+      &:hover,
+      &:focus
+        background: $c-red
 
   //- info
   p
     font-size: $fs--2
-    font-family: $ff-serif  
     

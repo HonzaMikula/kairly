@@ -8,17 +8,26 @@
           <img :src="edition.picture" alt="" />
         </picture>
 
-        <div>
-          <h2>{{ edition.title }}</h2>
+        <h2>{{ edition.title }}</h2>
 
-          <p>{{ edition.description }}</p>
+        <p>{{ edition.description }}</p>
 
-          <my-editions--item--subscribe>
-            <button>Subscribe</button>
-            <p>10 CZK per month</p>
-          </my-editions--item--subscribe>
+        <my-editions--item--author>
+          <img :src="edition.author.picture" :alt="edition.author.name"/>
+          {{ edition.author.name }}
+        </my-editions--item--author>
+
+        <my-editions--item--subscribe>
+          <button v-bind:class="{ 'is-subscribed': edition.isSubscribed }">{{ edition.isSubscribed ? 'Subscribed' : 'Subscribe'}}</button>
+          <p>
+            10 CZK per month
+             • 
+            {{ edition.subscribers }} subscribers
+            •
+            #{{ edition.issues }}  
+          </p>
+        </my-editions--item--subscribe>
           
-        </div>
       </my-editions--item>
     </div>
     
