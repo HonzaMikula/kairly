@@ -11,7 +11,7 @@ urlpatterns = [
     # frontend paths
     path('', views.index, name='index'),
     path('post/<int:post_id>', views.index),
-    path('my-subscription', views.index),
     path('editions', views.index),
+    path('my-editions', views.index),
     path('read-later', views.index),
 ]
