@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
-from .models import Edition, Post, UserTags
+from .models import Edition, Post, Subscription
 from .serializers import edition_json, post_json
 from utils.decorators import ajax_login_required
 
@@ -15,8 +15,8 @@ def index(request, *args, **kwargs):
 
 @ajax_login_required
 def timeline(request):
-    tags = UserTags.objects.get(user=request.user).tags.all()
-    query = Edition.objects.filter(tags__in=tags).select_related('editor')
+    subscriptions = Subscription.objects.filter(usersubscription__user=request.user)
+    query = Edition.objects.filter(subscription__in=subscriptions).select_related('editor')
     paginator = Paginator(query, 5)
     page = request.GET.get('page')
     editions = paginator.get_page(page)

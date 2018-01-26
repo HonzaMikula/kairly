@@ -9,7 +9,6 @@ from django.dispatch import receiver
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
-from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 
 
@@ -70,6 +69,15 @@ class Post(models.Model):
         return '{} min'.format(value)
 
 
+class Subscription(models.Model):
+    title = models.CharField(max_length=160)
+    description = models.TextField(blank=True)
+    editor = models.ForeignKey(Author, models.PROTECT)
+
+    def __str__(self):
+        return self.title
+
+
 class Edition(models.Model):
     title = models.CharField(max_length=160)
     edition = models.CharField(max_length=160)
@@ -77,7 +85,7 @@ class Edition(models.Model):
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
     posts = models.ManyToManyField(Post, blank=True, through='EditionPost')
-    tags = TaggableManager()
+    subscription = models.ForeignKey(Subscription, models.SET_NULL, null=True)
 
     class Meta:
         ordering = ('-published',)
@@ -95,12 +103,10 @@ class EditionPost(models.Model):
         return self.post.title
 
 
-class UserTags(models.Model):
-    tags = TaggableManager()
+class UserSubscription(models.Model):
     user = models.ForeignKey('auth.User', models.CASCADE)
+    subscription = models.ForeignKey(Subscription, models.CASCADE)
 
-    class Meta:
-        verbose_name_plural = 'User Tags'
 
 
 @receiver(post_save, sender=Post)

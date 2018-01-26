@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Author, Post, Edition, EditionPost, UserTags
+from .models import (Author, Post, Edition, EditionPost, Subscription,
+                     UserSubscription)
 
 
 @admin.register(Author)
@@ -19,7 +20,7 @@ class PostInline(admin.TabularInline):
 
 @admin.register(Edition)
 class EditionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'edition', 'editor', 'published', 'tag_list')
+    list_display = ('title', 'edition', 'editor', 'published', 'subscription')
     inlines = [
         PostInline,
     ]
@@ -31,12 +32,11 @@ class EditionAdmin(admin.ModelAdmin):
         return ", ".join(o.name for o in obj.tags.all())
 
 
-@admin.register(UserTags)
-class UserTagsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'tag_list')
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description')
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('tags')
 
-    def tag_list(self, obj):
-        return ", ".join(o.name for o in obj.tags.all())
+@admin.register(UserSubscription)
+class UserSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'subscription')
