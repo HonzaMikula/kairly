@@ -10,7 +10,7 @@
             {{issue.author.name}}
           </timeline-edition--editor>
           •
-          {{issue.edition}}
+          {{issue.period}}
           •
           {{issue.time | moment('calendar')}}
         </p>

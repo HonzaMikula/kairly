@@ -69,9 +69,10 @@ class Post(models.Model):
         return '{} min'.format(value)
 
 
-class Subscription(models.Model):
+class Edition(models.Model):
     title = models.CharField(max_length=160)
     description = models.TextField(blank=True)
+    period = models.CharField(max_length=160)
     editor = models.ForeignKey(Author, models.PROTECT)
 
     def __str__(self):
@@ -80,12 +81,11 @@ class Subscription(models.Model):
 
 class EditionIssue(models.Model):
     title = models.CharField(max_length=160)
-    edition = models.CharField(max_length=160)
     description = models.TextField(blank=True)
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
     posts = models.ManyToManyField(Post, blank=True, through='EditionIssuePost')
-    subscription = models.ForeignKey(Subscription, models.SET_NULL, null=True)
+    edition = models.ForeignKey(Edition, models.SET_NULL, null=True)
 
     class Meta:
         ordering = ('-published',)
@@ -103,9 +103,9 @@ class EditionIssuePost(models.Model):
         return self.post.title
 
 
-class UserSubscription(models.Model):
+class Subscription(models.Model):
     user = models.ForeignKey('auth.User', models.CASCADE)
-    subscription = models.ForeignKey(Subscription, models.CASCADE)
+    edition = models.ForeignKey(Edition, models.CASCADE)
 
 
 @receiver(post_save, sender=Post)

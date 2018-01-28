@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import (Author, Post, EditionIssue, EditionIssuePost, Subscription,
-                     UserSubscription)
+from .models import (Author, Post, EditionIssue, EditionIssuePost, Edition,
+                     Subscription)
 
 
 @admin.register(Author)
@@ -20,7 +20,7 @@ class PostInline(admin.TabularInline):
 
 @admin.register(EditionIssue)
 class EditionIssueAdmin(admin.ModelAdmin):
-    list_display = ('title', 'edition', 'editor', 'published', 'subscription')
+    list_display = ('title', 'editor', 'published', 'edition')
     inlines = [
         PostInline,
     ]
@@ -29,11 +29,11 @@ class EditionIssueAdmin(admin.ModelAdmin):
         return ", ".join(o.name for o in obj.tags.all())
 
 
+@admin.register(Edition)
+class EditionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description', 'period')
+
+
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description')
-
-
-@admin.register(UserSubscription)
-class UserSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'subscription')
+    list_display = ('user', 'edition')

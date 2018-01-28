@@ -40,25 +40,25 @@ def post_json(post, short=False):
     return j
 
 
-def edition_issue_json(edition):
+def edition_issue_json(issue):
     return {
-        "id": edition.id,
-        "title": edition.title,
-        "edition": edition.edition,
-        "time": str(edition.published),
-        "author": author_json(edition.editor),
+        "id": issue.id,
+        "title": issue.title,
+        "period": issue.edition.period,
+        "time": str(issue.published),
+        "author": author_json(issue.editor),
         "posts": [post_json(p, short=True) for p in
-                  edition.posts.all().order_by('editionissuepost__ordering', '-published')],
+                  issue.posts.all().order_by('editionissuepost__ordering', '-published')],
     }
 
 
-def subscription_json(subscription):
+def edition_json(edition):
     return {
-        "id": subscription.id,
-        "title": subscription.title,
-        "description": subscription.description,
-        "editor": author_json(subscription.editor),
-        "isSubscribed": subscription.is_subscribed,
-        "issues": subscription.issues,
-        "likes": subscription.likes,
+        "id": edition.id,
+        "title": edition.title,
+        "description": edition.description,
+        "editor": author_json(edition.editor),
+        "isSubscribed": edition.is_subscribed,
+        "issues": edition.issues,
+        "likes": edition.likes,
     }
