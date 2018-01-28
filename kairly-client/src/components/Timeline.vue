@@ -1,23 +1,23 @@
 <template>
   <timeline-view>
-    <div v-for="edition in editions" :key="edition.id">
+    <div v-for="issue in issues" :key="issue.id">
       <timeline-edition>
-        <h1>{{edition.title}}</h1>
+        <h1>{{issue.title}}</h1>
 
         <p>
           <timeline-edition--editor>
-            <img v-if="edition.author.picture" :src="edition.author.picture" :alt="edition.author.name" />
-            {{edition.author.name}}
+            <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
+            {{issue.author.name}}
           </timeline-edition--editor>
           •
-          {{ edition.edition }}
+          {{issue.edition}}
           •
-          {{edition.time | moment('calendar')}}
+          {{issue.time | moment('calendar')}}
         </p>
       </timeline-edition>
 
       <component
-        v-for="post in edition.posts"
+        v-for="post in issue.posts"
         :is="post.testType"
         :post="post"
         :key="post.id"
@@ -42,7 +42,7 @@ export default {
 
   data: function () {
     return {
-      'editions': []
+      'issues': []
     }
   },
 
@@ -56,7 +56,7 @@ export default {
 
   created: function () {
     api.getTimeline().then(timeline => {
-      this.editions = timeline.editions
+      this.issues = timeline.issues
     })
   }
 }

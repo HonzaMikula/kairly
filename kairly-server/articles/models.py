@@ -78,13 +78,13 @@ class Subscription(models.Model):
         return self.title
 
 
-class Edition(models.Model):
+class EditionIssue(models.Model):
     title = models.CharField(max_length=160)
     edition = models.CharField(max_length=160)
     description = models.TextField(blank=True)
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
-    posts = models.ManyToManyField(Post, blank=True, through='EditionPost')
+    posts = models.ManyToManyField(Post, blank=True, through='EditionIssuePost')
     subscription = models.ForeignKey(Subscription, models.SET_NULL, null=True)
 
     class Meta:
@@ -94,8 +94,8 @@ class Edition(models.Model):
         return self.title
 
 
-class EditionPost(models.Model):
-    edition = models.ForeignKey(Edition, on_delete=models.CASCADE)
+class EditionIssuePost(models.Model):
+    edition = models.ForeignKey(EditionIssue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     ordering = models.IntegerField(default=1)
 

@@ -40,7 +40,7 @@ def post_json(post, short=False):
     return j
 
 
-def edition_json(edition):
+def edition_issue_json(edition):
     return {
         "id": edition.id,
         "title": edition.title,
@@ -48,7 +48,7 @@ def edition_json(edition):
         "time": str(edition.published),
         "author": author_json(edition.editor),
         "posts": [post_json(p, short=True) for p in
-                  edition.posts.all().order_by('editionpost__ordering', '-published')],
+                  edition.posts.all().order_by('editionissuepost__ordering', '-published')],
     }
 
 

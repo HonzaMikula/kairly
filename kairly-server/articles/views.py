@@ -5,8 +5,8 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
-from .models import Edition, Post, Subscription
-from .serializers import edition_json, post_json, subscription_json
+from .models import EditionIssue, Post, Subscription
+from .serializers import edition_issue_json, post_json, subscription_json
 from utils.decorators import ajax_login_required
 
 
@@ -17,12 +17,12 @@ def index(request, *args, **kwargs):
 @ajax_login_required
 def timeline(request):
     subscriptions = Subscription.objects.filter(usersubscription__user=request.user)
-    query = Edition.objects.filter(subscription__in=subscriptions).select_related('editor')
+    query = EditionIssue.objects.filter(subscription__in=subscriptions).select_related('editor')
     paginator = Paginator(query, 5)
     page = request.GET.get('page')
     editions = paginator.get_page(page)
     return JsonResponse({
-        'editions': [edition_json(e) for e in editions],
+        'issues': [edition_issue_json(e) for e in editions],
         'page': editions.number,
         'last_page': editions.paginator.num_pages
     })
@@ -31,7 +31,7 @@ def timeline(request):
 @ajax_login_required
 def subscription(request):
     subscriptions = Subscription.objects.all().select_related('editor') \
-        .annotate(issues=Count('edition', distinct=True)) \
+        .annotate(issues=Count('editionissue', distinct=True)) \
         .annotate(likes=Count('usersubscription', distinct=True))
     subscribed = set(Subscription.objects
                      .filter(usersubscription__user=request.user)

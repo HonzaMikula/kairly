@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (Author, Post, Edition, EditionPost, Subscription,
+from .models import (Author, Post, EditionIssue, EditionIssuePost, Subscription,
                      UserSubscription)
 
 
@@ -15,11 +15,11 @@ class PostAdmin(admin.ModelAdmin):
 
 
 class PostInline(admin.TabularInline):
-    model = EditionPost
+    model = EditionIssuePost
 
 
-@admin.register(Edition)
-class EditionAdmin(admin.ModelAdmin):
+@admin.register(EditionIssue)
+class EditionIssueAdmin(admin.ModelAdmin):
     list_display = ('title', 'edition', 'editor', 'published', 'subscription')
     inlines = [
         PostInline,
