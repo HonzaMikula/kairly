@@ -14,3 +14,5 @@ DATABASES = {
         }
     },
 }
+
+MEDIA_SITE = 'http://localhost:8000'

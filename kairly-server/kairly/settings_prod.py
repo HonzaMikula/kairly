@@ -27,3 +27,5 @@ STATICFILES_DIRS = (
 TEMPLATES[0]['DIRS'] = (
     '/srv/kairly/kairly-client/dist',
 )
+
+MEDIA_ROOT = '/srv/kairly/kairly-server/media'

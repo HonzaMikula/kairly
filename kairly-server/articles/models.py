@@ -72,6 +72,7 @@ class Post(models.Model):
 class Edition(models.Model):
     title = models.CharField(max_length=160)
     description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='editions', null=True)  # temporary allow null
     period = models.CharField(max_length=160)
     editor = models.ForeignKey(Author, models.PROTECT)
 

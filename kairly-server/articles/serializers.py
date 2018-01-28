@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from .models import Post
 
 
@@ -56,6 +58,7 @@ def edition_json(edition):
     return {
         "id": edition.id,
         "title": edition.title,
+        "picture": settings.MEDIA_SITE + edition.image.url,
         "description": edition.description,
         "editor": author_json(edition.editor),
         "isSubscribed": edition.is_subscribed,

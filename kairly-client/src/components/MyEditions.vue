@@ -5,7 +5,7 @@
     <div>
       <my-editions--item v-for="edition in myEditions" :key="edition.id">
         <picture>
-          <img src="http://img.ct24.cz/cache/900x700/article/73/7213/721203.jpg?1515941652" alt="" />
+          <img :src="edition.picture" :alt="edition.title" />
         </picture>
 
         <h2>{{ edition.title }}</h2>
