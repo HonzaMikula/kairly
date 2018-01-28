@@ -107,6 +107,9 @@ class Subscription(models.Model):
     user = models.ForeignKey('auth.User', models.CASCADE)
     edition = models.ForeignKey(Edition, models.CASCADE)
 
+    class Meta:
+        unique_together = (("user", "edition"),)
+
 
 @receiver(post_save, sender=Post)
 def clear_post_cache(sender, instance, **kwargs):

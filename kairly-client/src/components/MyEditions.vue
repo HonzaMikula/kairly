@@ -18,7 +18,10 @@
         </my-editions--item--author>
 
         <my-editions--item--subscribe>
-          <button v-bind:class="{ 'is-subscribed': edition.isSubscribed }">{{ edition.isSubscribed ? 'Subscribed' : 'Subscribe'}}</button>
+          <button
+            v-bind:class="{ 'is-subscribed': edition.isSubscribed }"
+            v-on:click="subscribe(edition.id, !edition.isSubscribed, $event)"
+          >{{ edition.isSubscribed ? 'Subscribed' : 'Subscribe'}}</button>
           <p>
             10 CZK per month
              •
@@ -44,8 +47,21 @@ export default {
       myEditions: []
     }
   },
+  methods: {
+    subscribe(editionId, subscribe, ev) {
+      api.postSubscription(editionId, subscribe).then(edition => {
+        for (let i = 0; i < this.myEditions.length; i++) {
+          if (this.myEditions[i].id === edition.id) {
+            this.myEditions.splice(i, 1, edition) // call splice to trigger update
+            break
+          }
+        }
+      })
+      ev.target.blur()
+    }
+  },
   created: function () {
-    api.getSubscription().then(myEditions => {
+    api.getEditions().then(myEditions => {
       this.myEditions = myEditions
     })
   }

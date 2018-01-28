@@ -1,11 +1,14 @@
+import json
 from libgravatar import Gravatar
 
 from django.db.models import Count
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
-from .models import EditionIssue, Post, Edition
+
+from .models import EditionIssue, Post, Edition, Subscription
 from .serializers import edition_issue_json, post_json, edition_json
 from utils.decorators import ajax_login_required
 
@@ -31,7 +34,7 @@ def timeline(request):
 
 
 @ajax_login_required
-def subscription(request):
+def editions(request):
     editions = Edition.objects.all().select_related('editor') \
         .annotate(issues=Count('editionissue', distinct=True)) \
         .annotate(likes=Count('subscription', distinct=True))
@@ -44,6 +47,23 @@ def subscription(request):
         return edition
 
     return JsonResponse([edition_json(add_flag(e)) for e in editions], safe=False)
+
+
+@ajax_login_required
+@require_POST
+def subscribe(request, edition_id):
+    edition = Edition.objects.get(id=edition_id)
+    payload = json.loads(request.body)
+    subscribe = payload['subscribe']
+    if subscribe:
+        Subscription.objects.create(user=request.user, edition=edition)
+    else:
+        Subscription.objects.filter(user=request.user, edition=edition).delete()
+
+    edition.is_subscribed = subscribe
+    edition.issues = edition.editionissue_set.count()
+    edition.likes = edition.subscription_set.count()
+    return JsonResponse(edition_json(edition))
 
 
 @ajax_login_required
