@@ -53,7 +53,7 @@ def editions(request):
 @require_POST
 def subscribe(request, edition_id):
     edition = Edition.objects.get(id=edition_id)
-    payload = json.loads(request.body)
+    payload = json.loads(request.body.decode('utf-8'))
     subscribe = payload['subscribe']
     if subscribe:
         Subscription.objects.create(user=request.user, edition=edition)
