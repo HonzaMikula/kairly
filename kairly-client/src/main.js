@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import Tooltip from 'vue-directive-tooltip'
 import VueMoment from 'vue-moment-jalaali'
+import InfiniteScroll from 'vue-infinite-scroll'
 
 import store from '@/store'
 
@@ -13,6 +14,7 @@ Vue.config.ignoredElements = [/.*/]
 
 Vue.use(Tooltip)
 Vue.use(VueMoment)
+Vue.use(InfiniteScroll)
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,5 +1,8 @@
 <template>
-  <timeline-view>
+  <timeline-view v-infinite-scroll="loadMore"
+    infinite-scroll-disabled="loading"
+    infinite-scroll-distance="100"
+  >
     <div v-for="issue in issues" :key="issue.id">
       <timeline-edition>
         <h1>{{issue.title}}</h1>
@@ -24,6 +27,7 @@
         v-on:readlater="readLaterMessage()">
       </component>
 
+      <div v-if="loading">Loading...</div>
     </div>
   </timeline-view>
 </template>
@@ -42,6 +46,9 @@ export default {
 
   data: function () {
     return {
+      'loading': true,
+      'page': 1,
+      'lastPage': null,
       'issues': []
     }
   },
@@ -54,10 +61,24 @@ export default {
     postPicture
   },
 
+  methods: {
+    handleTimelineData: function(timeline) {
+      timeline.issues.forEach(issue => this.issues.push(issue))
+      this.lastPage = timeline.last_page
+      this.loading = false
+    },
+
+    loadMore: function() {
+      if (this.page < this.lastPage) {
+        this.page += 1
+        this.loading = true
+        api.getTimeline(this.page).then(this.handleTimelineData)
+      }
+    }
+  },
+
   created: function () {
-    api.getTimeline().then(timeline => {
-      this.issues = timeline.issues
-    })
+    api.getTimeline().then(this.handleTimelineData)
   }
 }
 </script>

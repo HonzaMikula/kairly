@@ -26,10 +26,14 @@ function getProfile() {
     .then(res => res.body.user)
 }
 
-function getTimeline() {
+function getTimeline(page) {
   if (!token) return Promise.reject();
+  let url = process.env.BACKEND_BASE + '/api/timeline'
+  if (page) {
+    url += '?page=' + page
+  }
   return request
-    .get(process.env.BACKEND_BASE + '/api/timeline')
+    .get(url)
     .set('Authorization', 'Bearer ' + token)
     .then(res => res.body)
 }
