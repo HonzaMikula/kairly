@@ -38,6 +38,8 @@
 
       <timeline-welcome--more-editions>
         <router-link to='/my-editions'>View more editions</router-link>
+        <br />
+        <button>Show me editions</button>
       </timeline-welcome--more-editions>
     </timeline-welcome>
 

@@ -30,15 +30,39 @@ timeline-welcome--my-editions
   my-editions--item
     flex: 1
 
-timeline-welcome--more-editions a
-  display: inline-block
+timeline-welcome--more-editions
+  //- View more editions link
+  a
+    display: inline-block
 
-  color: #000
+    color: #000
 
-  &:hover,
-  &:focus
-    text-decoration: none
-  
+    &:hover,
+    &:focus
+      text-decoration: none
+
+  //- Done button
+  button
+    display: inline-block
+    border-radius: $baseline
+    height: $baseline * 1.25
+    padding: 0 $baseline
+    margin-top: $baseline
+
+    background: $c-base
+    border: 0
+    color: #fff
+ 
+    font-family: $ff-sans
+    font-size: $fs--1
+    cursor: pointer
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+
+
+
 
 //- Edition
 timeline-edition
