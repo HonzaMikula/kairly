@@ -7,6 +7,38 @@ timeline-view
   width: 900px
 
 
+//- Welcome Edition
+timeline-welcome
+  display: block
+  margin: $baseline*2 0 $baseline
+  
+  font-family: $ff-serif
+  text-align: center
+
+  h1
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-3
+
+  > p
+    margin-bottom: $baseline  
+  
+timeline-welcome--my-editions
+  display: flex
+  flex-wrap: wrap
+
+  my-editions--item
+    flex: 1
+
+timeline-welcome--more-editions a
+  display: inline-block
+
+  color: #000
+
+  &:hover,
+  &:focus
+    text-decoration: none
+  
 
 //- Edition
 timeline-edition
