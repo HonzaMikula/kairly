@@ -29,7 +29,7 @@ def timeline(request):
     return JsonResponse({
         'issues': [edition_issue_json(e) for e in issues],
         'page': issues.number,
-        'last_page': issues.paginator.num_pages
+        'lastPage': issues.paginator.num_pages
     })
 
 
@@ -37,7 +37,8 @@ def timeline(request):
 def editions(request):
     editions = Edition.objects.all().select_related('editor') \
         .annotate(issues=Count('editionissue', distinct=True)) \
-        .annotate(likes=Count('subscription', distinct=True))
+        .annotate(likes=Count('subscription', distinct=True)) \
+        .order_by('-likes')
     subscribed = set(Edition.objects
                      .filter(subscription__user=request.user)
                      .values_list('id', flat=True))

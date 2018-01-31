@@ -36,6 +36,7 @@
 
 <script>
 import * as api from '@/api'
+import { mapState } from 'vuex'
 
 import Welcome from '@/components/Welcome'
 import postArticle from '@/components/posts/article'
@@ -65,10 +66,16 @@ export default {
     Welcome,
   },
 
+  computed: {
+    ...mapState({
+      editions: state => state.editions || []
+    })
+  },
+
   methods: {
     handleTimelineData: function(timeline) {
       timeline.issues.forEach(issue => this.issues.push(issue))
-      this.lastPage = timeline.last_page
+      this.lastPage = timeline.lastPage
       this.loading = false
     },
 
@@ -82,7 +89,13 @@ export default {
   },
 
   created: function () {
-    api.getTimeline().then(this.handleTimelineData)
+    if (this.editions === []) {
+      this.issues = []
+      this.lastPage = 1
+      this.loading = false
+    } else {
+      api.getTimeline().then(this.handleTimelineData)
+    }
   }
 }
 </script>

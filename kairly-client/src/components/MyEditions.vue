@@ -15,7 +15,7 @@
 
 <script>
 import * as api from '@/api'
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import MyEditionsItem from '@/components/MyEditionsItem'
 

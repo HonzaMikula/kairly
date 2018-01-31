@@ -34,8 +34,7 @@ export default {
   computed: {
     ...mapState({
       editions: state => {
-        const editions = [...(state.editions || [])]
-        editions.sort((a, b) => b.likes - a.likes)
+        const editions = (state.editions || []).filter(item => item.issues)
         if (editions.length > 3) {
           editions.splice(0, editions.length - 3)
         }
