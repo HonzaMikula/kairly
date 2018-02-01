@@ -6,6 +6,9 @@ my-editions-view
   max-width: 1000px
   margin: $baseline auto
 
+  @media (max-width: $mobile)
+    padding: 0 $baseline
+
   //- wrapper
   > div
     display: flex
@@ -38,6 +41,14 @@ my-editions--item
 
   &:nth-of-type(3n)
     margin-right: 0
+
+  @media (max-width: $mobile)
+    width: 260px
+    
+    &:nth-of-type(3n)
+      margin-right: $baseline
+    &:nth-of-type(2n)
+      margin-right: 0
 
   //- header picture
   picture
