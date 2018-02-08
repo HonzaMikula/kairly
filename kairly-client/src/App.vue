@@ -1,6 +1,6 @@
 <template>
   <app-view>
-    <AppHeaderComponent />
+    <AppHeaderComponent v-if="user" />
 
     <span v-if="loadingUser">Loading...</span>
     <app-main v-else>
