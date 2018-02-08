@@ -2,7 +2,7 @@
   <app-view>
     <AppHeaderComponent v-if="user" />
 
-    <span v-if="loadingUser">Loading...</span>
+    <loading-spinner v-if="loadingUser"></loading-spinner>
     <app-main v-else>
       <router-view v-if="user"></router-view>
       <Homepage v-else></Homepage>

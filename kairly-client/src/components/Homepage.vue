@@ -58,8 +58,8 @@
       </p>
 
       <div>
-        <img src="../assets/kairly-screenshot.png" alt="Kairly Screenshot"/>
-        <img src="../assets/kairly-screenshot2.png" alt="Kairly Screenshot"/>
+        <img src="../assets/homepage/kairly-screenshot.png" alt="Kairly Screenshot"/>
+        <img src="../assets/homepage/kairly-screenshot2.png" alt="Kairly Screenshot"/>
       </div>
 
       <p>

@@ -29,7 +29,7 @@
         v-on:readlater="readLaterMessage()">
       </component>
 
-      <div v-if="loading">Loading...</div>
+      <loading-spinner v-if="loading"></loading-spinner>
     </div>
   </timeline-view>
 </template>
