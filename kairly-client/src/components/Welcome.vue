@@ -36,7 +36,8 @@ export default {
       editions: state => {
         const editions = (state.editions || []).filter(item => item.issues)
         if (editions.length > 3) {
-          editions.splice(0, editions.length - 3)
+          console.log(editions)
+          editions.splice(3, editions.length - 3)
         }
         return editions
       }
