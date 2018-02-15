@@ -129,7 +129,7 @@ homepage--how-it-works
     float: left
     margin-right: $baseline
     
-    width: 300px  
+    max-width: 300px  
 
 
 
@@ -164,6 +164,10 @@ homepage--help-us
   section
     flex: 1
     margin-right: $baseline * 2
+
+    @media (max-width: $mobile)
+      flex: 1 50%
+      flex-wrap: wrap
 
     &:last-of-type
       margin-right: 0
