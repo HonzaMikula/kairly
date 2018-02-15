@@ -8,6 +8,7 @@ import router from './router'
 import Tooltip from 'vue-directive-tooltip'
 import VueMoment from 'vue-moment-jalaali'
 import InfiniteScroll from 'vue-infinite-scroll'
+import VueAnalytics from 'vue-analytics'
 
 import store from '@/store'
 
@@ -17,6 +18,11 @@ Vue.config.ignoredElements = [/.*/]
 Vue.use(Tooltip)
 Vue.use(VueMoment)
 Vue.use(InfiniteScroll)
+
+Vue.use(VueAnalytics, {
+  id: 'UA-114180015-1',
+  router
+})
 
 /* eslint-disable no-new */
 new Vue({

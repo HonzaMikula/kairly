@@ -8,8 +8,6 @@ import ReadLater from '@/components/ReadLater'
 import Homepage from '@/components/Homepage'
 import MyEditions from '@/components/MyEditions'
 
-import VueAnalytics from 'vue-analytics'
-
 Vue.use(Router)
 
 export default new Router({
@@ -49,7 +47,5 @@ export default new Router({
   linkExactActiveClass: 'is-active'
 })
 
-Vue.use(VueAnalytics, {
-  id: 'UA-114180015-1',
-  Router
-})
+console.log(Router)
+
