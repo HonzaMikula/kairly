@@ -3,7 +3,7 @@
       <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
         <img :src="post.author.picture" :alt="post.author.name" />
 
-        <timeline-post--header--author v-on:mouseover="openAuthorWidget()">
+        <timeline-post--header--author>
           {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
         </timeline-post--header--author>
 
@@ -18,7 +18,7 @@
           • <span class="responses">{{ post.favorites }}</span>
         </timeline-post--header--info>
 
-        <timeline-post--header--action-buttons v-on-clickaway="closePostWidgets">
+        <!--timeline-post--header--action-buttons v-on-clickaway="closePostWidgets">
           <button-icon class="edition"
             v-tooltip.top="'Consider for Edition'">
           </button-icon>
@@ -37,7 +37,7 @@
             v-if="isEditionWidgetOpen"
             v-on:editionwidgetclose="closeEditionWidget()">
           </cEditionWidget>
-        </timeline-post--header--action-buttons>
+        </timeline-post--header--action-buttons -->
       </timeline-post--header>
 
       <slot></slot>

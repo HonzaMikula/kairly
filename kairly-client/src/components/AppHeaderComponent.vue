@@ -6,14 +6,14 @@
           <li class="home"><router-link to="/">Home</router-link></li>
           <li class="your-editions"><router-link to="/my-editions">My Subscription</router-link></li>
           <!-- li class="new-post"><router-link to="/editor">New Post</router-link></li -->
-          <!-- li class="your-editions"><router-link to="/editions">Create Edition</router-link></li -->
-          <li class="reading-list"><router-link to="/read-later">Reading List</router-link></li>
+          <!-- li class="your-editions"><router-link to="/editions">Create Edition</router-link></li>
+          <li class="reading-list"><router-link to="/read-later">Reading List</router-link></li -->
         </ul>
         </app-header--nav>
 
-        <app-header--search>
+        <!--app-header--search>
           <input type="search" placeholder="Search"/>
-        </app-header--search>
+        </app-header--search-->
 
         <app-header--user-profile v-if="user" v-on:click="openDropDownMenu">
           <img src="../assets/user.png" :alt="user.name"/>
