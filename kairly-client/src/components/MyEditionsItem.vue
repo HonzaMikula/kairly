@@ -1,10 +1,12 @@
 <template>
   <my-editions--item>
     <picture>
+      <router-link to="/edition-detail">
       <img :src="edition.picture" :alt="edition.title" />
+      </router-link>
     </picture>
 
-    <h2>{{ edition.title }}</h2>
+    <h2><router-link to="/edition-detail">{{ edition.title }}</router-link></h2>
 
     <p>{{ edition.description }}</p>
 
