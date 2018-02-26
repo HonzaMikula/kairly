@@ -4,6 +4,7 @@ import Timeline from '@/components/Timeline'
 import Post from '@/components/Post'
 import Editions from '@/components/Editions'
 import EditionDetail from '@/components/EditionDetail'
+import AuthorDetail from '@/components/AuthorDetail'
 import Editor from '@/components/Editor'
 import ReadLater from '@/components/ReadLater'
 import Homepage from '@/components/Homepage'
@@ -30,6 +31,10 @@ export default new Router({
       path: '/edition-detail',
       name: 'Edition Detail',
       component: EditionDetail
+    }, {
+      path: '/author-detail',
+      name: 'Author Detail',
+      component: AuthorDetail
     }, {
       path: '/editor',
       name: 'Editor',

@@ -27,13 +27,13 @@
             <p>23</p>
           </div>
         </div>
-
-        <h3>Price</h3>
-        <p>10 CZK per month</p>
-
-        <button>Subscribe</button>
       </edition-detail--description>
 
+      <edition-detail--subscribe>
+        <button>Subscribe Edition</button>
+        <p>10 CZK per month</p>
+      </edition-detail--subscribe>
+      
       <edition-detail--picture>
         <img src="http://kairly.com/media/editions/malostranskenoviny.jpg" alt="Malostranské noviny"/>
       </edition-detail--picture>

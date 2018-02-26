@@ -7,10 +7,10 @@ edition-detail-view
   
   > div
     display: grid
-    grid-template-areas: "edition-detail-header edition-detail-header" "edition-detail-description edition-detail-picture"
+    grid-template-areas: "edition-detail-header edition-detail-header" "edition-detail-description edition-detail-picture" "edition-detail-subscribe edition-detail-subscribe "
     grid-template-columns: 50% 50%
     grid-template-rows: auto
-    padding: $baseline
+    padding: $baseline $baseline 0 $baseline
 
     background: #fff
 
@@ -55,24 +55,24 @@ edition-detail--description
 
     font-weight: 600  
 
+
+//- Subscribe
+edition-detail--subscribe
+  grid-area: edition-detail-subscribe    
+  justify-self: center
+  margin-top: $baseline
+
   button
+    +subscribe-button
+
     border-radius: $baseline * 0.75
     height: $baseline * 1.5
-    padding: 0 $baseline
 
-    background: #fff
-    border: 1px solid $c-base
+    font-size: $fs-1
 
-    cursor: pointer
-    font-family: $ff-sans
-    font-size: $fs-0
-
-    &:hover,
-    &:focus
-      background: $c-base
-      color: #fff
-
-    
+  button + p
+    font-size: $fs--2  
+    text-align: center
 
 
 //- Edition Picture
