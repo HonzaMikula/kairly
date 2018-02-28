@@ -1,0 +1,82 @@
+//- AUTHOR DETAIL -//
+
+author-detail-view
+  display: block
+  margin: 0 auto
+  width: 900px
+
+
+
+//- Header
+author-detail--header
+  display: block
+  padding: $baseline 0
+
+  font-family: $ff-serif
+  text-align: center
+
+  //- Author name
+  h1
+    margin-bottom: $baseline
+    
+    font-size: $fs-4
+    line-height: $baseline * 2
+
+  picture
+    display: table
+    margin: 0 auto
+
+    img
+      border-radius: 100%
+      height: $baseline * 4
+      width: $baseline * 4
+
+//- Subsribe 
+author-detail--subscribe  
+  display: block
+  margin-bottom: $baseline
+
+  text-align: center
+  
+  button
+    +subscribe-button
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    margin: 0 $baseline / 2
+
+    font-size: $fs-1
+
+
+//- Editions
+author-detail--editions
+  display: block
+  margin-bottom: $baseline
+
+  h2
+    margin-bottom: $baseline / 2
+    
+    font-family: $ff-serif
+    font-size: $fs-1
+    font-weight: 600
+
+  img
+    max-width: 100%  
+
+
+
+//- Posts
+author-detail--posts
+  display: block
+  margin-bottom: $baseline
+
+  h2
+    margin-bottom: $baseline / 2
+
+    font-family: $ff-serif
+    font-size: $fs-1
+    font-weight: 600
+    
+
+  img
+    max-width: 100%    
