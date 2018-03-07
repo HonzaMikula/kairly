@@ -57,7 +57,7 @@
               {{issue.author.name}}
             </timeline-edition--editor>
             •
-            {{issue.period}}
+            {{edition.period}}
             •
             {{issue.time | moment('calendar')}}
           </p>

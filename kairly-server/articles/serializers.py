@@ -59,6 +59,7 @@ def edition_json(edition):
         "picture": settings.MEDIA_SITE + edition.image.url,
         "description": edition.description,
         "editor": author_json(edition.editor),
+        "period": edition.period,
         "isSubscribed": edition.is_subscribed,
         "issues": edition.issues,
         "likes": edition.likes,
