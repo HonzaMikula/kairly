@@ -5,14 +5,8 @@
 from invoke import task, Collection
 
 # Production
-HOST = 'app@alpha-node-6.rosti.cz'
+HOST = 'app@node-13.rosti.cz'
 PORT = 14076
-
-
-# # QA
-# HOST = 'app@alpha-node-2.rosti.cz'
-# PORT = 11357
-# CELERY = False
 
 
 @task
