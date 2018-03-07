@@ -13,7 +13,7 @@ import post from './post';
 
 export default {
   name: 'post-article',
-  props: ["post"],
+  props: ["post", "isSubscribed"],
   components: { post },
   methods: {
     readLaterMessage: function() {

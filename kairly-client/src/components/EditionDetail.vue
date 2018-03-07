@@ -14,7 +14,7 @@
         <div>
           <div>
             <h3>Periodicity</h3>
-            <p>Daily</p>
+            <p>{{ edition.period }}</p>
           </div>
 
           <div>
@@ -47,7 +47,31 @@
     <edition-detail--last-edition>
       <h2><span>Check the Last Issue</span></h2>
 
-      <p>Here will be last edition without access to detail of the articles</p>
+      <div>
+        <timeline-edition>
+          <h1>{{issue.title}}</h1>
+
+          <p>
+            <timeline-edition--editor>
+              <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
+              {{issue.author.name}}
+            </timeline-edition--editor>
+            •
+            {{issue.period}}
+            •
+            {{issue.time | moment('calendar')}}
+          </p>
+        </timeline-edition>
+
+        <component
+          v-for="post in issue.posts"
+          :is="post.testType"
+          :post="post"
+          :key="post.id"
+          :isSubscribed="edition.isSubscribed"
+          v-on:readlater="readLaterMessage()">
+        </component>
+      </div>
     </edition-detail--last-edition>
   </edition-detail-view>
 </template>
@@ -56,13 +80,29 @@
 <script>
 import * as api from '@/api'
 
+import postArticle from '@/components/posts/article'
+import postBlog from '@/components/posts/blog'
+import postNewspaper from '@/components/posts/newspaper'
+import postTweet from '@/components/posts/tweet'
+import postPicture from '@/components/posts/picture'
+
+
 export default {
   name: 'EditionDetail',
+
+  components: {
+    postArticle,
+    postBlog,
+    postNewspaper,
+    postTweet,
+    postPicture
+  },
 
   data: function () {
     return {
       'loading': true,
       'edition': null,
+      'issue': null,
     }
   },
 
@@ -78,8 +118,9 @@ export default {
   },
 
   created() {
-    api.getEditionDetail(this.$route.params.editionId).then(edition => {
-      this.edition = edition
+    api.getEditionDetail(this.$route.params.editionId).then(resp => {
+      this.edition = resp.edition
+      this.issue = resp.issue
       this.loading = false
     })
   }

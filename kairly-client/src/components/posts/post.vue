@@ -51,7 +51,7 @@ import cReadLaterWidget from './cReadLaterWidget'
 
 export default {
   name: 'post',
-  props: ["post"],
+  props: ["post", "isSubscribed"],
   directives: {
     onClickaway: onClickaway,
   },

@@ -5,7 +5,12 @@
       <timeline-post--newspaper--content>
         <div v-html="post.content.content"></div>
         <timeline-post--continue-reading v-if="post.timeRead && post.timeRead !='0 min'">
-          <router-link :to="{ name: 'Post', params: { postId: post.id }, hash: '#continue'}">Continue reading</router-link>
+          <div v-if="isSubscribed">
+            <router-link :to="{ name: 'Post', params: { postId: post.id }, hash: '#continue'}">Continue reading</router-link>
+          </div>
+          <div v-else>
+            Subscribe edition to continue reading
+          </div>
           ({{ post.timeRead }} read)
         </timeline-post--continue-reading>
       </timeline-post--newspaper--content>
@@ -18,7 +23,7 @@ import post from './post';
 
 export default {
   name: 'post-newspaper',
-  props: ["post"],
+  props: ["post", "isSubscribed"],
   components: { post },
   created: function() {
   },

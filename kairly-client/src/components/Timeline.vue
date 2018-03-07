@@ -25,6 +25,7 @@
         v-for="post in issue.posts"
         :is="post.testType"
         :post="post"
+        :isSubscribed="true"
         :key="post.id"
         v-on:readlater="readLaterMessage()">
       </component>

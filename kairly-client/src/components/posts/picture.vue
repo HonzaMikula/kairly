@@ -3,7 +3,7 @@
     <timeline-post--picture>
       <figure>
         <img :src="post.content.picture" :alt="post.content.title" />
-        
+
         <figcaption>{{ post.content.title }}</figcaption>
       </figure>
     </timeline-post--picture>
@@ -15,7 +15,7 @@ import post from './post';
 
 export default {
   name: 'post-picture',
-  props: ["post"],
+  props: ["post", "isSubscribed"],
   components: { post },
   methods: {
     readLaterMessage: function() {

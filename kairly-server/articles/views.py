@@ -4,7 +4,7 @@ from libgravatar import Gravatar
 from django.db.models import Count
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 
 
@@ -56,6 +56,17 @@ def edition(request, editor_slug, edition_slug):
     edition.is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
+
+    try:
+        issue = EditionIssue.objects.filter(edition=edition).select_related('editor')[0]
+    except IndexError:
+        issue = None
+
+    return JsonResponse({
+        'edition': edition_json(edition),
+        'issue': edition_issue_json(issue) if issue else None,
+    })
+
     return JsonResponse(edition_json(edition))
 
 
@@ -78,8 +89,15 @@ def subscribe(request, editor_slug, edition_slug):
 
 @ajax_login_required
 def post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    edition = EditionIssue.objects.get(posts=post).edition
+    is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
+    if not is_subscribed:
+        return HttpResponse('402 Payment Required', status=402)
+
     return JsonResponse({
-        'post': post_json(get_object_or_404(Post, id=post_id))
+        'post': post_json(post)
     })
 
 
