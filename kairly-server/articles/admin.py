@@ -6,7 +6,8 @@ from .models import (Author, Post, EditionIssue, EditionIssuePost, Edition,
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'medium')
+    list_display = ('name', 'slug', 'medium')
+    prepopulated_fields = {'slug': ('name',)}
 
 
 @admin.register(Post)
@@ -31,7 +32,7 @@ class EditionIssueAdmin(admin.ModelAdmin):
 
 @admin.register(Edition)
 class EditionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'period', 'description')
+    list_display = ('title', 'slug', 'period', 'description')
 
 
 @admin.register(Subscription)

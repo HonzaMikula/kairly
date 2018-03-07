@@ -14,6 +14,7 @@ from ckeditor.fields import RichTextField
 
 class Author(models.Model):
     name = models.CharField(_("Name"), max_length=160)
+    slug = models.SlugField(_('Slug'), unique=True)
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
     picture = models.CharField(_("Picture"), max_length=300)
     bio = models.TextField(_("Bio"), blank=True)
@@ -71,6 +72,7 @@ class Post(models.Model):
 
 class Edition(models.Model):
     title = models.CharField(max_length=160)
+    slug = models.SlugField(_('Slug'), unique=True, help_text="should be slugified editor/title, fill it manually now")
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True)  # temporary allow null
     period = models.CharField(max_length=160)
