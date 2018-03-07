@@ -17,8 +17,11 @@ export default new Vuex.Store({
       state.editions = editions
     },
     edition (state, edition) {
+      if (state.editions === null) return
       const i = state.editions.findIndex(item => item.id === edition.id)
-      state.editions.splice(i, 1, edition) // call splice to trigger update
+      if (i !== -1) {
+        state.editions.splice(i, 1, edition) // call splice to trigger update
+      }
     }
   },
   getters: {

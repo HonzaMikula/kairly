@@ -46,6 +46,14 @@ function getEditions() {
     .then(res => res.body)
 }
 
+function getEditionDetail(editionId) {
+  if (!token) return Promise.reject();
+  return request
+    .get(process.env.BACKEND_BASE + '/api/editions/' + editionId)
+    .set('Authorization', 'Bearer ' + token)
+    .then(res => res.body)
+}
+
 function getPost(postId) {
   if (!token) return Promise.reject();
   return request
@@ -65,5 +73,5 @@ function postSubscription(editionId, subscribe) {
 
 export {
   clearToken, createToken, getProfile, getTimeline, getPost,
-  getEditions, postSubscription
+  getEditions, getEditionDetail, postSubscription
 }

@@ -51,6 +51,15 @@ def editions(request):
 
 
 @ajax_login_required
+def edition(request, editor_slug, edition_slug):
+    edition = Edition.objects.get(editor__slug=editor_slug, slug=edition_slug)
+    edition.is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
+    edition.issues = edition.editionissue_set.count()
+    edition.likes = edition.subscription_set.count()
+    return JsonResponse(edition_json(edition))
+
+
+@ajax_login_required
 @require_POST
 def subscribe(request, editor_slug, edition_slug):
     edition = Edition.objects.get(editor__slug=editor_slug, slug=edition_slug)

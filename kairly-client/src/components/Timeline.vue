@@ -88,7 +88,7 @@ export default {
     }
   },
 
-  created: function () {
+  created() {
     if (this.editions === []) {
       this.issues = []
       this.lastPage = 1

@@ -28,7 +28,7 @@ export default new Router({
       name: 'Editions',
       component: Editions
     }, {
-      path: '/edition-detail',
+      path: '/editions/:editionId+',
       name: 'Edition Detail',
       component: EditionDetail
     }, {
@@ -56,4 +56,3 @@ export default new Router({
   linkActiveClass: '',
   linkExactActiveClass: 'is-active'
 })
-
