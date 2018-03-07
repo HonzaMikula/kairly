@@ -52,8 +52,8 @@ def editions(request):
 
 @ajax_login_required
 @require_POST
-def subscribe(request, edition_id):
-    edition = Edition.objects.get(id=edition_id)
+def subscribe(request, editor_slug, edition_slug):
+    edition = Edition.objects.get(editor__slug=editor_slug, slug=edition_slug)
     payload = json.loads(request.body.decode('utf-8'))
     subscribe = payload['subscribe']
     if subscribe:

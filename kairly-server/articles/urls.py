@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path('api/timeline', views.timeline, name='timeline'),
     path('api/editions', views.editions, name='editions'),
-    path('api/editions/<int:edition_id>/subscribe', views.subscribe, name='subscribe'),
+    path('api/editions/<slug:editor_slug>/<slug:edition_slug>/subscribe', views.subscribe, name='subscribe'),
     path('api/profile', views.profile, name='profile'),
     path('api/post/<int:post_id>', views.post, name='post'),
 

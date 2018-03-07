@@ -56,7 +56,7 @@ def edition_issue_json(issue):
 
 def edition_json(edition):
     return {
-        "id": edition.id,
+        "id": "{}/{}".format(edition.editor.slug, edition.slug),
         "title": edition.title,
         "picture": settings.MEDIA_SITE + edition.image.url,
         "description": edition.description,

@@ -72,11 +72,14 @@ class Post(models.Model):
 
 class Edition(models.Model):
     title = models.CharField(max_length=160)
-    slug = models.SlugField(_('Slug'), unique=True, help_text="should be slugified editor/title, fill it manually now")
+    slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True)  # temporary allow null
     period = models.CharField(max_length=160)
     editor = models.ForeignKey(Author, models.PROTECT)
+
+    class Meta:
+        unique_together = (("slug", "editor"),)
 
     def __str__(self):
         return self.title
