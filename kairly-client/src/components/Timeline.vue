@@ -23,7 +23,7 @@
 
       <component
         v-for="post in issue.posts"
-        :is="post.testType"
+        :is="'post-' + post.type"
         :post="post"
         :isSubscribed="true"
         :key="post.id"
@@ -40,8 +40,6 @@ import * as api from '@/api'
 import { mapState } from 'vuex'
 
 import Welcome from '@/components/Welcome'
-import postArticle from '@/components/posts/article'
-import postBlog from '@/components/posts/blog'
 import postNewspaper from '@/components/posts/newspaper'
 import postTweet from '@/components/posts/tweet'
 import postPicture from '@/components/posts/picture'
@@ -59,8 +57,6 @@ export default {
   },
 
   components: {
-    postArticle,
-    postBlog,
     postNewspaper,
     postTweet,
     postPicture,

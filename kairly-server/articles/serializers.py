@@ -17,8 +17,6 @@ def post_json(post, short=False):
         'id': post.id,
         "author": author_json(post.author),
         "type": post.kind,
-        "testType": "post-" + post.kind,
-        "postType": 'article' if post.kind == Post.NEWSPAPER else post.kind,
         "time": str(post.published),
         "favorites": 131
     }

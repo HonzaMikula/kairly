@@ -44,7 +44,7 @@
     </div>
 
 
-    <edition-detail--last-edition>
+    <edition-detail--last-edition v-if="issue">
       <h2><span>Check the Last Issue</span></h2>
 
       <div>
@@ -65,7 +65,7 @@
 
         <component
           v-for="post in issue.posts"
-          :is="post.testType"
+          :is="'post-' + post.type"
           :post="post"
           :key="post.id"
           :isSubscribed="edition.isSubscribed"
@@ -80,8 +80,6 @@
 <script>
 import * as api from '@/api'
 
-import postArticle from '@/components/posts/article'
-import postBlog from '@/components/posts/blog'
 import postNewspaper from '@/components/posts/newspaper'
 import postTweet from '@/components/posts/tweet'
 import postPicture from '@/components/posts/picture'
@@ -91,8 +89,6 @@ export default {
   name: 'EditionDetail',
 
   components: {
-    postArticle,
-    postBlog,
     postNewspaper,
     postTweet,
     postPicture
