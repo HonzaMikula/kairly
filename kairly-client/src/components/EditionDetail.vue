@@ -14,7 +14,7 @@
         <div>
           <div>
             <h3>Periodicity</h3>
-            <p>{{ edition.period }}</p>
+            <p>{{ issue.period }}</p>
           </div>
 
           <div>
@@ -57,7 +57,7 @@
               {{issue.author.name}}
             </timeline-edition--editor>
             •
-            {{edition.period}}
+            {{issue.period}}
             •
             {{issue.time | moment('calendar')}}
           </p>
