@@ -27,7 +27,7 @@ homepage--cover
     
 
 //- Login Form
-homepage--login
+homepage--login 
   display: block
   padding: $baseline / 4 0 $baseline / 2 0
 
@@ -35,6 +35,8 @@ homepage--login
 
   //- wrapper
   form
+    position: relative
+
     display: table
     margin: auto
 
@@ -67,7 +69,38 @@ homepage--login
 
     box-sizing: border-box
     height: $baseline
-    padding: 0 $baseline/2
+    padding: 0 $baseline / 2
+
+    cursor: pointer
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+
+//-- Error message  
+homepage--login--error-message
+  position: absolute
+  left: 0
+  top: -$baseline * 2.5
+
+  box-sizing: border-box
+  padding: $baseline / 2
+  width: 100%
+  opacity: 0
+
+  background: rgba($c-red, 0.7)
+  border: 1px solid darken($c-red, 10%)
+  color: #fff
+
+  text-align: center
+
+  transition: 0.15s opacity
+
+  //- when added to DOM
+  &:not(:empty)    
+    opacity: 1
+
+
 
     
 //- Values

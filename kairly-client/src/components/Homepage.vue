@@ -7,10 +7,6 @@
     </homepage--cover>
 
     <homepage--login>
-      <div v-if="invalidCredentials" style="background: LightSalmon; text-align: center; width: 100%;">
-        Invalid credentials
-      </div>
-
       <form v-on:submit.prevent="login">
         <div>
           <label>Login</label>
@@ -23,6 +19,10 @@
         </div>
 
         <button type="submit">Sign In</button>
+
+        <homepage--login--error-message v-if="invalidCredentials">
+          Wrong login or password
+        </homepage--login--error-message>
       </form>
     </homepage--login>
 
