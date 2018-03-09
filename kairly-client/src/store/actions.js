@@ -10,12 +10,6 @@ export const getProfile = ({ commit, state }) => {
     )
 }
 
-export const login = ({ commit, dispatch }, { username, password }) => {
-  api
-    .createToken(username, password)
-    .then(() => dispatch('getProfile'))
-}
-
 export const logout = ({ commit }) => {
   api.clearToken()
   commit('user', false)

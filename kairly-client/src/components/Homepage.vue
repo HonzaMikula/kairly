@@ -7,14 +7,18 @@
     </homepage--cover>
 
     <homepage--login>
-      <form v-on:submit.prevent="login({username, password})">
+      <div v-if="invalidCredentials" style="background: LightSalmon; text-align: center; width: 100%;">
+        Invalid credentials
+      </div>
+
+      <form v-on:submit.prevent="login">
         <div>
           <label>Login</label>
           <input name="username" v-model="username" />
         </div>
 
         <div>
-          <label>Passoword</label>
+          <label>Password</label>
           <input name="password" type="password" v-model="password" />
         </div>
 
@@ -117,16 +121,27 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 
+import * as api from '@/api'
+
 export default {
   name: 'Homepage',
   data: function() {
     return {
+      invalidCredentials: false,
       username: null,
       password: null
     }
   },
   methods: {
-    ...mapActions(['login']),
+    login() {
+      this.invalidCredentials = false
+      const { username, password } = this
+      api.createToken(username, password)
+      .then(this.getProfile)
+      .catch(err => this.invalidCredentials = true)
+    },
+
+    ...mapActions(['getProfile']),
   }
 }
 </script>
