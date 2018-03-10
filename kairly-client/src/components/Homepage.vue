@@ -9,13 +9,11 @@
     <homepage--login>
       <form v-on:submit.prevent="login">
         <div>
-          <label>Login</label>
-          <input name="username" v-model="username" />
+          <input name="username" placeholder="Username" v-model="username" />
         </div>
 
         <div>
-          <label>Password</label>
-          <input name="password" type="password" v-model="password" />
+          <input name="password" type="password" placeholder="Password" v-model="password" />
         </div>
 
         <button type="submit">Sign In</button>

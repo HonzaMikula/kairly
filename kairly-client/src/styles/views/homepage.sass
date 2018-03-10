@@ -3,8 +3,9 @@
 //- Cover
 homepage--cover
   display: block
-  height: 480px
-  padding: $baseline * 2
+  box-sizing: border-box
+  height: 580px
+  padding: $baseline*2 $baseline*2 $baseline*2 $baseline*2
 
   background: url(./assets/homepage/hero.png) center center no-repeat
   background-size: cover
@@ -28,10 +29,15 @@ homepage--cover
 
 //- Login Form
 homepage--login 
-  display: block
-  padding: $baseline / 4 0 $baseline / 2 0
+  position: absolute
+  right: $baseline / 2
+  top: $baseline / 2
 
-  background: #555
+  border-radius: 5px
+  display: block
+  padding: $baseline / 2
+
+  background: rgba(#555, 0.7)
 
   //- wrapper
   form
@@ -42,65 +48,72 @@ homepage--login
 
   div
     display: inline-block  
-    margin-right: $baseline
-
-  label
-    display: table
-
-    color: #fff
-
-    font-family: $ff-sans
-    font-size: $fs--2
-    font-weight: 300
+    margin-right: $baseline / 2
 
   //- input
   input
+    border-radius: 3px
     box-sizing: border-box
-    height: $baseline
+    height: $baseline * 1.25
+    padding: 0 $baseline / 4
 
     border: 0
-    background: #fff
+    background: rgba(#fff, 0.7)
+
+    font-weight: 600
+
+    transition: all 0.15s
+
+    &:focus,
+    &:hover
+      background: #fff
 
   //- button
   button
+    border-radius: 3px
+    box-sizing: border-box
+    height: $baseline * 1.25
+    padding: 0 $baseline / 2
+
     background: $c-base
     border: 0
     color: #fff
 
-    box-sizing: border-box
-    height: $baseline
-    padding: 0 $baseline / 2
-
     cursor: pointer
+    font-weight: 600
 
     &:hover,
     &:focus
       background: darken($c-base, 10%)
 
 //-- Error message  
+@keyframes homepage-login-error-message
+  from 
+    opacity: 0
+
+
 homepage--login--error-message
   position: absolute
   left: 0
-  top: -$baseline * 2.5
+  bottom: -$baseline * 3
 
+  border-radius: 3px
   box-sizing: border-box
   padding: $baseline / 2
   width: 100%
   opacity: 0
 
-  background: rgba($c-red, 0.7)
+  background: rgba($c-red, 0.8)
   border: 1px solid darken($c-red, 10%)
   color: #fff
 
   text-align: center
 
-  transition: 0.15s opacity
+  animation: homepage-login-error-message .15s
 
   //- when added to DOM
   &:not(:empty)    
     opacity: 1
-
-
 
     
 //- Values
