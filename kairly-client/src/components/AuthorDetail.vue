@@ -11,8 +11,7 @@
       </author-detail--header>
 
       <author-detail--subscribe>
-        <button v-if="editions.length">Subscribe Editions</button>
-
+        <button>Subscribe Editions</button>
         <button>Subscribe Posts</button>
       </author-detail--subscribe>
 
@@ -29,10 +28,15 @@
 
       </author-detail--editions>
 
-      <author-detail--posts>
+      <author-detail--posts v-if="posts.length">
         <h2>{{ author.name }}'s Posts</h2>
 
-        <img src="../assets/kairly-temp-posts.png" />
+        <PostWrapper
+          v-for="post in posts"
+          :post="post"
+          :isSubscribed="false"
+          :key="post.id"
+        />
       </author-detail--posts>
     </div>
 
@@ -44,19 +48,22 @@
 import * as api from '@/api'
 
 import MyEditionsItem from '@/components/MyEditionsItem'
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
   name: 'AuthorDetail',
 
   components: {
-    MyEditionsItem
+    MyEditionsItem,
+    PostWrapper
   },
 
   data: function () {
     return {
       'loading': true,
       'author': null,
-      'editions': null,
+      'editions': [],
+      'posts': []
     }
   },
 
@@ -64,6 +71,7 @@ export default {
     api.getAuthorDetail(this.$route.params.authorId).then(resp => {
       this.author = resp.author
       this.editions = resp.editions
+      this.posts = resp.posts
       this.loading = false
     })
   }

@@ -17,36 +17,24 @@
       </p>
     </timeline-edition>
 
-    <component
+    <PostWrapper
       v-for="post in issue.posts"
-      :is="'post-' + post.type"
       :post="post"
       :isSubscribed="isSubscribed"
       :key="post.id"
-      v-on:readlater="readLaterMessage()">
-    </component>
+    />
   </div>
 </template>
 
 <script>
-import postNewspaper from '@/components/posts/newspaper'
-import postTweet from '@/components/posts/tweet'
-import postPicture from '@/components/posts/picture'
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
   name: 'Issue',
   props: ['issue', 'isSubscribed'],
 
   components: {
-    postNewspaper,
-    postTweet,
-    postPicture,
-  },
-
-  methods: {
-    readLaterMessage() {
-      console.log('TODO')
-    }
+    PostWrapper
   }
 }
 </script>

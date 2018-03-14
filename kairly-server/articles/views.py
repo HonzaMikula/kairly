@@ -82,10 +82,11 @@ def edition(request, editor_slug, edition_slug):
 def author(request, author_slug):
     author = Author.objects.get(slug=author_slug)
     editions = Edition.objects.filter(editor=author).order_by('-likes')
+    posts = Post.objects.filter(author=author)
     return JsonResponse({
         'author': author_json(author),
         'editions': [edition_json(e) for e in annotate_editions(request, editions)],
-        'posts': []
+        'posts': [post_json(post, short=True) for post in posts]
     })
 
 
