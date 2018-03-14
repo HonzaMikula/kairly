@@ -8,7 +8,8 @@ def author_json(author):
         "name": author.name,
         "picture": author.picture,
         "medium": author.medium,
-        "bio": author.bio
+        "bio": author.bio,
+        "url": '/author/{}'.format(author.slug),
     }
 
 

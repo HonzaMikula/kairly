@@ -47,31 +47,7 @@
     <edition-detail--last-edition v-if="issue">
       <h2><span>Check the Last Issue</span></h2>
 
-      <div>
-        <timeline-edition>
-          <h1>{{issue.title}}</h1>
-
-          <p>
-            <timeline-edition--editor>
-              <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
-              {{issue.author.name}}
-            </timeline-edition--editor>
-            •
-            {{issue.period}}
-            •
-            {{issue.time | moment('calendar')}}
-          </p>
-        </timeline-edition>
-
-        <component
-          v-for="post in issue.posts"
-          :is="'post-' + post.type"
-          :post="post"
-          :key="post.id"
-          :isSubscribed="edition.isSubscribed"
-          v-on:readlater="readLaterMessage()">
-        </component>
-      </div>
+      <Issue :issue="issue" :isSubscribed="edition.isSubscribed" />
     </edition-detail--last-edition>
   </edition-detail-view>
 </template>
@@ -80,18 +56,14 @@
 <script>
 import * as api from '@/api'
 
-import postNewspaper from '@/components/posts/newspaper'
-import postTweet from '@/components/posts/tweet'
-import postPicture from '@/components/posts/picture'
+import Issue from '@/components/Issue'
 
 
 export default {
   name: 'EditionDetail',
 
   components: {
-    postNewspaper,
-    postTweet,
-    postPicture
+    Issue
   },
 
   data: function () {

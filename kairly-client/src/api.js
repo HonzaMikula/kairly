@@ -54,6 +54,15 @@ function getEditionDetail(editionId) {
     .then(res => res.body)
 }
 
+function getAuthorDetail(authorId) {
+  if (!token) return Promise.reject();
+  return request
+    .get(process.env.BACKEND_BASE + '/api/author/' + authorId)
+    .set('Authorization', 'Bearer ' + token)
+    .then(res => res.body)
+}
+
+
 function getPost(postId) {
   if (!token) return Promise.reject();
   return request
@@ -73,5 +82,5 @@ function postSubscription(editionId, subscribe) {
 
 export {
   clearToken, createToken, getProfile, getTimeline, getPost,
-  getEditions, getEditionDetail, postSubscription
+  getEditions, getEditionDetail, getAuthorDetail, postSubscription
 }

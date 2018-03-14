@@ -25,7 +25,7 @@ timeline-post--header
     display: block
 
   //-- author image
-  > img
+  > a img
     grid-area: picture
     border-radius: 100%
     height: $baseline * 1.5
@@ -67,16 +67,16 @@ timeline-post--header--info
   .responses
     &::before
       +fa-icon()
-      
+
       margin-right: $baseline / 8
 
-      content: $fa-var-bookmark-o 
+      content: $fa-var-bookmark-o
 
 
 //-- favorites
-timeline-post--header--action-buttons   
+timeline-post--header--action-buttons
   position: relative
-  
+
   grid-area: favorites
 
   cursor: pointer
@@ -97,7 +97,7 @@ timeline-post--header--action-buttons
     opacity: 0.1
 
     transition: 0.15s all
-    
+
     &:focus,
     &:hover
       opacity: 1
@@ -112,16 +112,16 @@ timeline-post--header--action-buttons
     &::before
       +fa-icon()
 
-      content: $fa-var-newspaper-o  
-  
+      content: $fa-var-newspaper-o
+
   button-icon.read-later
 
     &::after
       +fa-icon()
 
-      content: $fa-var-clock-o  
+      content: $fa-var-clock-o
 
-  
+
   button-icon.remove
 
     &::after

@@ -1,10 +1,14 @@
 <template>
   <timeline-post role="article" :class="post.type">
       <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
-        <img :src="post.author.picture" :alt="post.author.name" />
+        <router-link :to="post.author.url">
+          <img :src="post.author.picture" :alt="post.author.name" />
+        </router-link>
 
         <timeline-post--header--author>
-          {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+          <router-link :to="post.author.url">
+            {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+          </router-link>
         </timeline-post--header--author>
 
         <cAuthorWidget

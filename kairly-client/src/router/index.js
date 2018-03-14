@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Timeline from '@/components/Timeline'
-import Post from '@/components/Post'
+import PostDetail from '@/components/PostDetail'
 import Editions from '@/components/Editions'
 import EditionDetail from '@/components/EditionDetail'
 import AuthorDetail from '@/components/AuthorDetail'
@@ -22,7 +22,7 @@ export default new Router({
     }, {
       path: '/post/:postId',
       name: 'Post',
-      component: Post
+      component: PostDetail
     }, {
       path: '/editions',
       name: 'Editions',
@@ -32,7 +32,7 @@ export default new Router({
       name: 'Edition Detail',
       component: EditionDetail
     }, {
-      path: '/author-detail',
+      path: '/author/:authorId',
       name: 'Author Detail',
       component: AuthorDetail
     }, {

@@ -12,7 +12,7 @@
 
     <my-editions--item--author>
       <img :src="edition.editor.picture" :alt="edition.editor.name"/>
-      <router-link to="/author-detail">{{ edition.editor.name }}</router-link>
+      <router-link :to="edition.editor.url">{{ edition.editor.name }}</router-link>
     </my-editions--item--author>
 
     <my-editions--item--subscribe>

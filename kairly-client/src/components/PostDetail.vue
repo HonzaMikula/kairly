@@ -10,7 +10,7 @@
       <post-detail--header>
         <img :src="post.author.picture" :alt="post.author.name"/>
         <author-name>{{post.author.name}}</author-name>
-        <author-follow>Follow</author-follow>
+        <author-follow><router-link :to="post.author.url">Author detail</router-link></author-follow>
         <author-description>{{post.author.bio}}</author-description>
 
         <button-read-later></button-read-later>
@@ -43,7 +43,7 @@ import request from 'superagent'
 import * as api from '@/api'
 
 export default {
-  name: 'hello',
+  name: 'PostDetail',
   data: function() {
     return {
       post: null

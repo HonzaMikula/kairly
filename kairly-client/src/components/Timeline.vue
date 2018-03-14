@@ -5,33 +5,12 @@
   >
     <Welcome v-if="!loading && issues.length === 0"/>
 
-    <div v-for="issue in issues" :key="issue.id">
-      <timeline-edition>
-        <h1>{{issue.title}}</h1>
+    <Issue v-for="issue in issues"
+      :key="issue.id"
+      :issue="issue"
+      :isSubscribed="true" />
 
-        <p>
-          <timeline-edition--editor>
-            <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
-            {{issue.author.name}}
-          </timeline-edition--editor>
-          •
-          {{issue.period}}
-          •
-          {{issue.time | moment('calendar')}}
-        </p>
-      </timeline-edition>
-
-      <component
-        v-for="post in issue.posts"
-        :is="'post-' + post.type"
-        :post="post"
-        :isSubscribed="true"
-        :key="post.id"
-        v-on:readlater="readLaterMessage()">
-      </component>
-
-      <loading-spinner v-if="loading"></loading-spinner>
-    </div>
+    <loading-spinner v-if="loading"></loading-spinner>
   </timeline-view>
 </template>
 
@@ -39,10 +18,8 @@
 import * as api from '@/api'
 import { mapState } from 'vuex'
 
+import Issue from '@/components/Issue'
 import Welcome from '@/components/Welcome'
-import postNewspaper from '@/components/posts/newspaper'
-import postTweet from '@/components/posts/tweet'
-import postPicture from '@/components/posts/picture'
 
 export default {
   name: 'Timeline',
@@ -57,9 +34,7 @@ export default {
   },
 
   components: {
-    postNewspaper,
-    postTweet,
-    postPicture,
+    Issue,
     Welcome,
   },
 

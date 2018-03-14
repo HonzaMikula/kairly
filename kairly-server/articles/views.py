@@ -8,8 +8,8 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 
 
-from .models import EditionIssue, Post, Edition, Subscription
-from .serializers import edition_issue_json, post_json, edition_json
+from .models import EditionIssue, Post, Edition, Subscription, Author
+from .serializers import edition_issue_json, post_json, edition_json, author_json
 from utils.decorators import ajax_login_required
 
 
@@ -33,21 +33,29 @@ def timeline(request):
     })
 
 
-@ajax_login_required
-def editions(request):
-    editions = Edition.objects.all().select_related('editor') \
+def annotate_editions(request, editions):
+    editions = editions \
         .annotate(issues=Count('editionissue', distinct=True)) \
-        .annotate(likes=Count('subscription', distinct=True)) \
-        .order_by('-likes')
+        .annotate(likes=Count('subscription', distinct=True))
+
     subscribed = set(Edition.objects
                      .filter(subscription__user=request.user)
                      .values_list('id', flat=True))
 
-    def add_flag(edition):
+    def annotate(edition):
         edition.is_subscribed = edition.id in subscribed
         return edition
 
-    return JsonResponse([edition_json(add_flag(e)) for e in editions], safe=False)
+    for edition in editions:
+        yield annotate(edition)
+
+
+@ajax_login_required
+def editions(request):
+    editions = Edition.objects.all().select_related('editor').order_by('-likes')
+
+    return JsonResponse([edition_json(e) for e in annotate_editions(request, editions)],
+                        safe=False)
 
 
 @ajax_login_required
@@ -68,6 +76,17 @@ def edition(request, editor_slug, edition_slug):
     })
 
     return JsonResponse(edition_json(edition))
+
+
+@ajax_login_required
+def author(request, author_slug):
+    author = Author.objects.get(slug=author_slug)
+    editions = Edition.objects.filter(editor=author).order_by('-likes')
+    return JsonResponse({
+        'author': author_json(author),
+        'editions': [edition_json(e) for e in annotate_editions(request, editions)],
+        'posts': []
+    })
 
 
 @ajax_login_required
