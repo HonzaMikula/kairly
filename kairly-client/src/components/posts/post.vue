@@ -1,5 +1,5 @@
 <template>
-  <timeline-post role="article">
+  <timeline-post role="article" :class="post.type">
       <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
         <img :src="post.author.picture" :alt="post.author.name" />
 
