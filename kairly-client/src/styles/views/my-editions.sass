@@ -3,7 +3,7 @@
 
 my-editions-view
   display: block
-  max-width: 1000px
+  max-width: 900px
   margin: $baseline auto
 
   @media (max-width: $mobile)
@@ -13,6 +13,7 @@ my-editions-view
   > div
     display: flex
     flex-wrap: wrap
+    margin: 0 -$baseline/4
 
   //- heading
   h1
@@ -27,11 +28,12 @@ my-editions--item
 
   display: flex
   flex-direction: column
+  flex: 1 0 270px
   padding: 0 $baseline / 4
   border-radius: $baseline / 4
-  margin: 0 $baseline $baseline 0
+  margin: 0 $baseline/4 $baseline $baseline/4
   overflow: hidden
-  width: 280px
+  max-width: 280px
 
   background: #fff
   border: 1px solid #eee
@@ -39,16 +41,8 @@ my-editions--item
   font-family: $ff-serif
   text-align: left
 
-  &:nth-of-type(3n)
-    margin-right: 0
-
   @media (max-width: $mobile)
     width: 260px
-    
-    &:nth-of-type(3n)
-      margin-right: $baseline
-    &:nth-of-type(2n)
-      margin-right: 0
 
   //- header picture
   picture
