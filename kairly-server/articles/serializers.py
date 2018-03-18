@@ -4,13 +4,17 @@ from .models import Post
 
 
 def author_json(author):
-    return {
+    res = {
         "name": author.name,
         "picture": author.picture,
         "medium": author.medium,
         "bio": author.bio,
         "url": '/author/{}'.format(author.slug),
+        "followUrl": '/api/subscribe/{}'.format(author.slug),
     }
+    if hasattr(author, 'is_subscribed'):
+        res['isSubscribed'] = author.is_subscribed
+    return res
 
 
 def post_json(post, short=False):

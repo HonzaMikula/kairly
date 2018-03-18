@@ -11,8 +11,10 @@
       </author-detail--header>
 
       <author-detail--subscribe>
-        <button>Subscribe Editions</button>
-        <button>Subscribe Posts</button>
+        <button
+          v-bind:class="{ 'is-subscribed': author.isSubscribed }"
+          v-on:click="subscribe($event)"
+        >{{ author.isSubscribed ? 'Unfollow Author' : 'Follow Author'}}</button>
       </author-detail--subscribe>
 
       <author-detail--editions v-if="editions.length">
@@ -64,6 +66,15 @@ export default {
       'author': null,
       'editions': [],
       'posts': []
+    }
+  },
+
+  methods: {
+    subscribe(ev) {
+      const value = !this.author.isSubscribed
+      api.postAuthorSubsription(this.author, value).then(author => this.author)
+      this.author.isSubscribed = value
+      ev.target.blur()
     }
   },
 

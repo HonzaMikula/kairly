@@ -74,7 +74,16 @@ function getPost(postId) {
 function postSubscription(editionId, subscribe) {
   if (!token) return Promise.reject();
   return request
-    .post(process.env.BACKEND_BASE + '/api/editions/' + editionId + '/subscribe')
+    .post(process.env.BACKEND_BASE + '/api/subscribe/' + editionId)
+    .set('Authorization', 'Bearer ' + token)
+    .send({subscribe})
+    .then(res => res.body)
+}
+
+function postAuthorSubsription(author, subscribe) {
+  if (!token) return Promise.reject();
+  return request
+    .post(process.env.BACKEND_BASE + author.followUrl)
     .set('Authorization', 'Bearer ' + token)
     .send({subscribe})
     .then(res => res.body)
@@ -82,5 +91,6 @@ function postSubscription(editionId, subscribe) {
 
 export {
   clearToken, createToken, getProfile, getTimeline, getPost,
-  getEditions, getEditionDetail, getAuthorDetail, postSubscription
+  getEditions, getEditionDetail, getAuthorDetail, postSubscription,
+  postAuthorSubsription
 }

@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 
 
-from .models import EditionIssue, Post, Edition, Subscription, Author
+from .models import EditionIssue, Post, Edition, Subscription, SubscriptionToAuthor, Author
 from .serializers import edition_issue_json, post_json, edition_json, author_json
 from utils.decorators import ajax_login_required
 
@@ -60,7 +60,7 @@ def editions(request):
 
 @ajax_login_required
 def edition(request, editor_slug, edition_slug):
-    edition = Edition.objects.get(editor__slug=editor_slug, slug=edition_slug)
+    edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
     edition.is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
@@ -80,7 +80,8 @@ def edition(request, editor_slug, edition_slug):
 
 @ajax_login_required
 def author(request, author_slug):
-    author = Author.objects.get(slug=author_slug)
+    author = get_object_or_404(Author, slug=author_slug)
+    author.is_subscribed = SubscriptionToAuthor.objects.filter(user=request.user, author=author).count() > 0
     editions = Edition.objects.filter(editor=author).order_by('-likes')
     posts = Post.objects.filter(author=author)
     return JsonResponse({
@@ -93,7 +94,7 @@ def author(request, author_slug):
 @ajax_login_required
 @require_POST
 def subscribe(request, editor_slug, edition_slug):
-    edition = Edition.objects.get(editor__slug=editor_slug, slug=edition_slug)
+    edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
     payload = json.loads(request.body.decode('utf-8'))
     subscribe = payload['subscribe']
     if subscribe:
@@ -105,6 +106,20 @@ def subscribe(request, editor_slug, edition_slug):
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
     return JsonResponse(edition_json(edition))
+
+
+@ajax_login_required
+@require_POST
+def subscribe_author(request, editor_slug):
+    author = get_object_or_404(Author, slug=editor_slug)
+    payload = json.loads(request.body.decode('utf-8'))
+    subscribe = payload['subscribe']
+    if subscribe:
+        SubscriptionToAuthor.objects.create(user=request.user, author=author)
+    else:
+        SubscriptionToAuthor.objects.filter(user=request.user, author=author).delete()
+    author.is_subscribed = subscribe
+    return JsonResponse(author_json(author))
 
 
 @ajax_login_required

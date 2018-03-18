@@ -117,6 +117,14 @@ class Subscription(models.Model):
         unique_together = (("user", "edition"),)
 
 
+class SubscriptionToAuthor(models.Model):
+    user = models.ForeignKey('auth.User', models.CASCADE)
+    author = models.ForeignKey(Author, models.CASCADE)
+
+    class Meta:
+        unique_together = (("user", "author"),)
+
+
 @receiver(post_save, sender=Post)
 def clear_post_cache(sender, instance, **kwargs):
     cache_key = Post.READ_TIME_CACHE_KEY.format(id=instance.id)
