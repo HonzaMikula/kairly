@@ -27,8 +27,7 @@ export default {
   data: function () {
     return {
       'loading': true,
-      'page': 1,
-      'lastPage': null,
+      'cursor': null,
       'issues': []
     }
   },
@@ -47,15 +46,14 @@ export default {
   methods: {
     handleTimelineData: function(timeline) {
       timeline.issues.forEach(issue => this.issues.push(issue))
-      this.lastPage = timeline.lastPage
+      this.cursor = timeline.cursor
       this.loading = false
     },
 
     loadMore: function() {
-      if (this.page < this.lastPage) {
-        this.page += 1
+      if (this.cursor) {
         this.loading = true
-        api.getTimeline(this.page).then(this.handleTimelineData)
+        api.getTimeline(this.cursor).then(this.handleTimelineData)
       }
     }
   },
@@ -63,7 +61,6 @@ export default {
   created() {
     if (this.editions === []) {
       this.issues = []
-      this.lastPage = 1
       this.loading = false
     } else {
       api.getTimeline().then(this.handleTimelineData)

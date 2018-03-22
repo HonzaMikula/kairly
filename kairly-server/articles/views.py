@@ -1,6 +1,9 @@
 import json
+from collections import namedtuple
+
 from libgravatar import Gravatar
 
+from django.db import connection
 from django.db.models import Count
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
@@ -17,19 +20,81 @@ def index(request, *args, **kwargs):
     return render(request, 'index.html')
 
 
+PAGE_SIZE = 5
+TIMELINE_QUERY = """
+SELECT * FROM (
+(
+    (
+    SELECT
+        DATE(published) as published,
+        p.author_id AS author_id,
+        GROUP_CONCAT(p.id) as posts,
+        NULL as editionissue_id,
+        NULL as edition_id
+    FROM articles_post p
+    JOIN articles_subscriptiontoauthor sa ON (p.author_id = sa.author_id)
+    WHERE sa.user_id = %s
+    GROUP BY p.author_id, DATE(published)
+    )
+    UNION
+    (
+    SELECT
+        published,
+        NULL,
+        NULL,
+        ei.id,
+        ei.edition_id
+    FROM articles_editionissue ei
+    JOIN articles_subscription se ON (ei.edition_id = se.edition_id)
+    WHERE ei.edition_id IS NOT NULL AND se.user_id = %s
+    )
+) AS u
+) ORDER by published DESC LIMIT %s OFFSET %s
+"""
+
+
+def namedtuplefetchall(cursor):
+    "Return all rows from a cursor as a namedtuple"
+    desc = cursor.description
+    nt_result = namedtuple('Result', [col[0] for col in desc])
+    return [nt_result(*row) for row in cursor.fetchall()]
+
+
 @ajax_login_required
 def timeline(request):
-    editions = Edition.objects.filter(subscription__user=request.user)
-    query = EditionIssue.objects \
-        .filter(edition__in=editions) \
-        .select_related('editor', 'edition')
-    paginator = Paginator(query, 5)
-    page = request.GET.get('page')
-    issues = paginator.get_page(page)
+    try:
+        offset = int(request.GET.get('cursor', 0))
+    except ValueError:
+        offset = 0
+
+    user_id = request.user.id
+    with connection.cursor() as cursor:
+        cursor.execute(TIMELINE_QUERY, [user_id, user_id, PAGE_SIZE, offset])
+        results = namedtuplefetchall(cursor)
+
+    issues = []
+    for row in results:
+        print(row)
+        if row.editionissue_id:
+            # TODO nice to have load all issues together
+            issue = EditionIssue.objects.get(id=row.editionissue_id)
+            issues.append(edition_issue_json(issue))
+        else:
+            author = Author.objects.get(id=row.author_id)
+            issues.append({
+                'id': '{}-{}'.format(author.slug, str(row.published)),
+                "title": 'New posts on {:%x}'.format(row.published),
+                "period": 'Posts',
+                "time": str(row.published),
+                "author": author_json(author),
+                "posts": [
+                    post_json(p, short=True) for p in
+                    Post.objects.filter(id__in=map(int, row.posts.split(',')))],
+            })
+
     return JsonResponse({
-        'issues': [edition_issue_json(e) for e in issues],
-        'page': issues.number,
-        'lastPage': issues.paginator.num_pages
+        'issues': issues,
+        'cursor': offset + PAGE_SIZE if len(results) == PAGE_SIZE else None
     })
 
 
