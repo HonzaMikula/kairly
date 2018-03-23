@@ -1,10 +1,9 @@
 <template>
   <post-detail role="article">
-
-  <post-detail--back-button
-    v-tooltip.right="'Back to Browsing Editions'"
-    v-on:click="$router.go(-1)">
-  </post-detail--back-button>
+    <post-detail--back-button
+      v-tooltip.right="'Back to Browsing Editions'"
+      v-on:click="$router.go(-1)">
+    </post-detail--back-button>
 
     <div v-if="post">
       <post-detail--header>
@@ -43,7 +42,7 @@ import request from 'superagent'
 import * as api from '@/api'
 
 export default {
-  name: 'PostDetail',
+  name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
   data: function() {
     return {
       post: null

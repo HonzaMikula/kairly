@@ -5,7 +5,6 @@ from libgravatar import Gravatar
 
 from django.db import connection
 from django.db.models import Count
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
@@ -74,7 +73,6 @@ def timeline(request):
 
     issues = []
     for row in results:
-        print(row)
         if row.editionissue_id:
             # TODO nice to have load all issues together
             issue = EditionIssue.objects.get(id=row.editionissue_id)
