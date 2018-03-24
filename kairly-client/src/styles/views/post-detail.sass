@@ -42,6 +42,36 @@ post-detail--back-button
 
     content: $fa-var-arrow-left
 
+
+//- Read Later Button
+post-detail--read-later
+  position: sticky
+  top: $baseline
+
+  display: inline-block
+  border-radius: 100%
+  height: $baseline * 2
+  float: right
+  width: $baseline * 2
+
+  background: #eee
+
+  cursor: pointer
+  font-size: $fs-1
+  line-height: $baseline * 2
+  text-align: center
+
+  &:focus,
+  &:hover
+    background: $c-base
+    color: #fff
+
+  &::before
+    +fa-icon()
+
+    content: $fa-var-bookmark
+
+
 //- Header
 post-detail--header
   display: table
@@ -49,51 +79,20 @@ post-detail--header
   margin-top: -$baseline * 2
   width: 100%
 
-  //- author picture
-  > img
-    border-radius: 100%
-    float: left
-    height: $baseline * 3
-    margin-right: $baseline / 2
-    width: $baseline * 3
+  a
+    color: #555
 
-  //- author name
-  author-name
-    display: inline-block
-    margin-bottom: $baseline / 4
+    line-height: $baseline * 1.25
+    text-decoration: none
 
-    font-weight: 600  
+    //- author picture
+    img
+      border-radius: 100%
+      float: left
+      height: $baseline * 1.25
+      margin-right: $baseline / 4
+      width: $baseline * 1.25
 
-    &::after
-      display: inline-block
-      width: $baseline
-      
-      text-align: center
-
-      content: '·'
-
-
-  //- author follow
-  author-follow  
-    display: inline-block
-    
-    color: $c-base
-
-    cursor: pointer
-    font-size: $fs--2
-    text-decoration: underline
-
-    &:focus,
-    &:hover
-      text-decoration: none
-    
-
-  //- author description
-  author-description
-    display: block
-    
-    font-size: $fs--1
-    line-height: $baseline * 0.75
 
 //- Title
 post-detail--title
@@ -198,4 +197,72 @@ post-detail--perex
        
 
 
+//- Post Footer    
+post-detail--footer
+  display: block
+  padding-bottom: $baseline / 2
+  margin-bottom: $baseline / 2
+
+  border-bottom: 1px solid #eee
+
+  button-icon
+    border-radius: 5px
+    display: inline-block
+    height: $baseline * 1.25
+    margin-right: $baseline / 2
+    padding: 0 $baseline/4
     
+    background: #eee
+
+    cursor: pointer
+    font-size: $fs--2
+    line-height: $baseline * 1.25
+    vertical-align: middle
+
+    &::before
+      position: relative
+      top: -1px
+
+      margin-right: $baseline / 4
+      vertical-align: middle
+
+      font-size: $fs-1
+
+    &:focus,
+    &:hover
+      background: #bbb
+      color: #000  
+
+//- Post Author
+post-detail--author
+  display: grid
+  grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-bio"
+  grid-template-columns: $baseline*3 auto
+  grid-gap: 0 $baseline/2
+
+  //- picture
+  picture
+    grid-area: post-detail-author-image
+    
+    img
+      border-radius: 100%
+      height: $baseline * 3
+      width: $baseline * 3
+
+  //- name
+  h3
+    grid-area: post-detail-author-name
+
+    font-size: $fs-0
+    font-weight: 600
+
+    a
+      color: #000
+
+      text-decoration: none
+
+  //- bio
+  p
+    grid-area: post-detail-author-bio 
+
+    font-size: $fs--1

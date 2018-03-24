@@ -26,3 +26,19 @@
     &:hover,
     &:focus
       background: $c-red  
+
+
+
+//- Buttons with Icons
+button-icon
+  &::before
+    +fa-icon()
+  
+  &.recommend::before
+    content: $fa-var-star
+
+  &.share::before
+    content: $fa-var-retweet
+
+  &.consider-for-edition::before
+    content: $fa-var-newspaper-o    
