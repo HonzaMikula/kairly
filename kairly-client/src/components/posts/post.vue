@@ -11,11 +11,11 @@
           </router-link>
         </timeline-post--header--author>
 
-        <cAuthorWidget
+        <authorWidget
           :author="post.author"
           v-if="isAuthorWidgetOpen"
           v-on:authorwidgetclose="closeAuthorWidget()">
-        </cAuthorWidget>
+        </authorWidget>
 
         <timeline-post--header--info>
           {{ post.time | moment('calendar') }}
@@ -50,8 +50,8 @@
 
 <script>
 import { directive as onClickaway } from 'vue-clickaway'
-import cAuthorWidget from './cAuthorWidget'
-import cReadLaterWidget from './cReadLaterWidget'
+import AuthorWidget from '@/components/widgets/author'
+import ReadLaterWidget from '@/components/widgets/readLater'
 
 export default {
   name: 'post',
@@ -106,8 +106,8 @@ export default {
   },
 
   components: {
-    cAuthorWidget,
-    cReadLaterWidget
+    AuthorWidget,
+    ReadLaterWidget
   }
 }
 </script>

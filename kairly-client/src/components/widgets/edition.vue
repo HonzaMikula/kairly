@@ -32,7 +32,7 @@
 <script>
 
 export default {
-  name: 'cEditionWidget',
+  name: 'EditionWidget',
   methods: {
     closeEditionMessage: function () {
       this.$emit('editionwidgetclose');

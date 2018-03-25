@@ -13,11 +13,11 @@
               <span v-on:mouseover="openAuthorWidget()">{{ consideredPost.author.name }}, {{consideredPost.author.medium}}</span>
             </timeline-post--header--author>
 
-            <cAuthorWidget 
+            <authorWidget 
               :post="consideredPost"
               v-if="isAuthorWidgetOpen"
               v-on:authorwidgetclose="closeAuthorWidget()">
-            </cAuthorWidget>
+            </authorWidget>
 
             <timeline-post--header--info>
               {{ consideredPost.type }} • {{ consideredPost.time }}

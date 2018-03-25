@@ -79,7 +79,7 @@
 <script>
 
 export default {
-  name: 'cAuthorWidget',
+  name: 'AuthorWidget',
   props: ["author"],
   created: function () {
     // set all 'active' arrays to false

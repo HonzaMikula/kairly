@@ -30,7 +30,7 @@
 import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: 'Issue',
+  name: 'issue-edition',
   props: ['issue', 'isSubscribed'],
 
   components: {

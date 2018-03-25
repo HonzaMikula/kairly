@@ -56,7 +56,7 @@
 <script>
 import * as api from '@/api'
 
-import Issue from '@/components/Issue'
+import Issue from '@/components/IssueWrapper'
 
 
 export default {

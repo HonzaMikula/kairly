@@ -5,7 +5,7 @@
   >
     <Welcome v-if="!loading && issues.length === 0"/>
 
-    <Issue v-for="issue in issues"
+    <IssueWrapper v-for="issue in issues"
       :key="issue.id"
       :issue="issue"
       :isSubscribed="true" />
@@ -18,7 +18,7 @@
 import * as api from '@/api'
 import { mapState } from 'vuex'
 
-import Issue from '@/components/Issue'
+import IssueWrapper from '@/components/IssueWrapper'
 import Welcome from '@/components/Welcome'
 
 export default {
@@ -33,7 +33,7 @@ export default {
   },
 
   components: {
-    Issue,
+    IssueWrapper,
     Welcome,
   },
 

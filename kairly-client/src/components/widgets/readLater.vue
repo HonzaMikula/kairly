@@ -20,7 +20,7 @@
 <script>
 
 export default {
-  name: 'cReadLaterWidget',
+  name: 'ReadLaterWidget',
   methods: {
     closeReadLaterMessage: function () {
       this.$emit('readlaterwidgetclose');
