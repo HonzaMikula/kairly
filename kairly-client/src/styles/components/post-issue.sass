@@ -1,41 +1,45 @@
 //- POST ISSUE -//
 post-issue
-  display: grid
-  grid-template-areas: "post-issue-picture post-issue-title" "post-issue-picture post-issue-description"
-  grid-gap: 0 $baseline/2
-
+  display: block
   padding: $baseline / 2
   width: 576px
 
   background: #fff
+  
 
-  font-family: $ff-serif
+  //- content
+  > div
+    display: grid
+    grid-template-areas: "post-issue-picture post-issue-title" "post-issue-picture post-issue-description"
+    grid-gap: 0 $baseline/2
 
-  //- issue title
-  h2
-    grid-area: post-issue-title
+    font-family: $ff-serif
 
-    font-size: $fs-1
-    font-weight: 600
+    //- issue title
+    h2
+      grid-area: post-issue-title
 
-    a
-      color: #000
+      font-size: $fs-1
+      font-weight: 600
 
-      text-decoration: none
+      a
+        color: #000
 
-  //- issue picture
-  picture
-    grid-area: post-issue-picture
+        text-decoration: none
 
-  img 
-    height: $baseline * 3
-    width: $baseline * 5
+    //- issue picture
+    picture
+      grid-area: post-issue-picture
 
-    object-fit: cover  
+    img 
+      height: $baseline * 3
+      width: $baseline * 5
 
-  //- description
-  p
-    grid-area: post-issue-description  
+      object-fit: cover  
+
+    //- description
+    p
+      grid-area: post-issue-description  
 
 
       
