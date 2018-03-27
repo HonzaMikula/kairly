@@ -68,6 +68,26 @@ author-detail--editions
     flex-wrap: wrap
     margin: 0 -$baseline/4
 
+  //- show/hide more editions
+  > button  
+    display: table
+    border-radius: $baseline
+    height: $baseline * 1.25
+    padding: 0 $baseline
+    margin: 0 auto
+
+    background: $c-base
+    border: 0
+    color: #fff
+ 
+    font-family: $ff-sans
+    font-size: $fs--1
+    cursor: pointer
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+
 
 
 //- Posts
