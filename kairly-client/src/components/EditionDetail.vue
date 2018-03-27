@@ -4,6 +4,11 @@
     <div>
       <edition-detail--header>
         <h1>{{ edition.title }}</h1>
+
+        <router-link :to="edition.editor.url">
+          <img :src="edition.editor.picture" :alt="edition.editor.name"/>
+          {{ edition.editor.name }}
+        </router-link>
       </edition-detail--header>
 
       <edition-detail--description>

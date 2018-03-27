@@ -24,10 +24,31 @@ edition-detail--header
 
   font-family: $ff-serif
 
+  //- Title
   h1
+    margin-bottom: $baseline / 2
+
     font-size: $fs-4
     line-height: $baseline * 2
     text-align: center
+
+  //- Editor
+  > a
+    display: table
+    margin: 0 auto
+
+    color: #999
+
+    font-size: $fs-1
+    text-decoration: none
+
+    img
+      border-radius: 100%
+      height: $baseline * 1.5
+      width: $baseline * 1.5  
+
+      object-fit: cover
+      vertical-align: middle 
 
 
 //- Editorial Intro
