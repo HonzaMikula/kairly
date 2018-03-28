@@ -212,10 +212,11 @@ def subscribe_author(request, editor_slug):
 def post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
-    edition = EditionIssue.objects.get(posts=post).edition
-    is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
-    if not is_subscribed:
-        return HttpResponse('402 Payment Required', status=402)
+    # Doesn't work, post can be part of multiple issues or just related to author
+    # edition = EditionIssue.objects.get(posts=post).edition
+    # is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
+    # if not is_subscribed:
+    #     return HttpResponse('402 Payment Required', status=402)
 
     return JsonResponse({
         'post': post_json(post)
