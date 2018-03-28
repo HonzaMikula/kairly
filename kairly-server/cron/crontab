@@ -1,0 +1,1 @@
+*/10 * * * * /srv/app/cron/importrss.sh >> /srv/logs/cron.log 2>&1
