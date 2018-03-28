@@ -125,7 +125,7 @@ class Command(BaseCommand):
                     if options.get('force'):
                         update = True
                     else:
-                        self.stdout.write('Skipping {}. Already imported'.format(entry.title))
+                        self.stdout.write('Skipping {}. Already imported'.format(url))
                         continue
 
                 if channel.parse_content_from_rss:
@@ -164,5 +164,5 @@ class Command(BaseCommand):
                 else:
                     Post.objects.create(**args)
 
-                self.stdout.write('Imported {}'.format(entry.title))
+                self.stdout.write('Imported {}'.format(url))
                 time.sleep(0.1)

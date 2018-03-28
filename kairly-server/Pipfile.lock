@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5ac67cb23d4cda9cf6ca2a0665a8faed6ef5f601b684e23bffd6227bcf0f57a4"
+            "sha256": "776704244cb8f62b8eb9b43bc10788a436035a4dafd5fec8fbec26a5f4021a74"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -29,13 +29,6 @@
         ]
     },
     "default": {
-        "argparse": {
-            "hashes": [
-                "sha256:c31647edb69fd3d465a847ea3157d37bed1f95f19760b11a47aa91c04b666314",
-                "sha256:62b089a55be1d8949cd2bc7e0df0bddb9e028faefc8c32038cc84862aefdd6e4"
-            ],
-            "version": "==1.4.0"
-        },
         "beautifulsoup4": {
             "hashes": [
                 "sha256:7015e76bf32f1f574636c4288399a6de66ce08fb7b2457f628a8d70c0fbabb11",
@@ -58,11 +51,12 @@
             ],
             "version": "==3.0.4"
         },
-        "dateutils": {
+        "cssselect": {
             "hashes": [
-                "sha256:c94a8e77d743abac79ed91f99f5ef594a972a527e05145cbb7aba59beced8a71"
+                "sha256:3b5103e8789da9e936a68d993b70df732d06b8bb9a337a05ed4eb52c17ef7206",
+                "sha256:066d8bc5229af09617e24b3ca4d52f1f9092d9e061931f4184cd572885c23204"
             ],
-            "version": "==0.6.6"
+            "version": "==1.0.3"
         },
         "django": {
             "hashes": [

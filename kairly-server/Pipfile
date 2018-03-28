@@ -25,6 +25,7 @@ lxml = "*"
 requests = "*"
 pyyaml = "*"
 python-dateutil = "*"
+cssselect = "*"
 
 
 [requires]

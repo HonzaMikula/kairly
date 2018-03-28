@@ -56,4 +56,12 @@ webpack --watch --config build/webpack.prod.conf.js
 
 ```
 pipenv run ./manage.py runserver
+
+```
+
+## Rosti
+
+Run command, eg.
+```
+DJANGO_SETTINGS_MODULE=kairly.settings_prod ./manage.py importrss --provider=janmikula
 ```
