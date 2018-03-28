@@ -105,7 +105,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         channels = Channel.objects.filter(enabled=True).exclude(author__isnull=True)
-        if 'provider' in options:
+        if options.get('provider'):
             channels = channels.filter(provider=options['provider'])
 
         for channel in channels:
