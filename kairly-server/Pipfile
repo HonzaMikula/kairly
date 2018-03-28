@@ -24,7 +24,6 @@ feedparser = "*"
 lxml = "*"
 requests = "*"
 pyyaml = "*"
-dateutils = "*"
 python-dateutil = "*"
 
 
