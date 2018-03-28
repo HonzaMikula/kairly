@@ -4,7 +4,7 @@
     :issue="issue"
     :isSubscribed="true"
     :key="issue.id">
-  </component> 
+  </component>
 </template>
 
 <script>
@@ -18,13 +18,6 @@ export default {
   components: {
     issueEdition,
     issueAuthor
-  },
-
-  created() {
-    if (this.issue.period == 'Posts') // Hack till we have issue type from API
-      this.issue.type = 'author'
-    else
-      this.issue.type = 'edition'
   }
 }
 </script>

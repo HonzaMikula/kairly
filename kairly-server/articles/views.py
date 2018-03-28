@@ -21,34 +21,47 @@ def index(request, *args, **kwargs):
 
 PAGE_SIZE = 5
 TIMELINE_QUERY = """
-SELECT * FROM (
-(
-    (
-    SELECT
-        DATE(published) as published,
-        p.author_id AS author_id,
-        GROUP_CONCAT(p.id) as posts,
-        NULL as editionissue_id,
-        NULL as edition_id
-    FROM articles_post p
-    JOIN articles_subscriptiontoauthor sa ON (p.author_id = sa.author_id)
-    WHERE sa.user_id = %s
-    GROUP BY p.author_id, DATE(published)
-    )
-    UNION
-    (
-    SELECT
-        published,
-        NULL,
-        NULL,
-        ei.id,
-        ei.edition_id
-    FROM articles_editionissue ei
-    JOIN articles_subscription se ON (ei.edition_id = se.edition_id)
-    WHERE ei.edition_id IS NOT NULL AND se.user_id = %s
-    )
-) AS u
-) ORDER by published DESC LIMIT %s OFFSET %s
+SELECT *
+FROM ((
+         ( SELECT published,
+                  author_id,
+                  GROUP_CONCAT(posts) AS posts,
+                  GROUP_CONCAT(issues) AS issues,
+                  NULL AS editionissue_id,
+                  NULL AS edition_id
+          FROM (
+                  (SELECT DATE(published) AS published,
+                          p.author_id AS author_id,
+                          GROUP_CONCAT(p.id) AS posts,
+                          NULL AS issues
+                   FROM articles_post p
+                   JOIN articles_subscriptiontoauthor sa ON (p.author_id = sa.author_id)
+                   WHERE sa.user_id = %s
+                   GROUP BY p.author_id,
+                            DATE(published))
+                UNION
+                  (SELECT DATE(published) AS published,
+                          aei.editor_id AS author_id,
+                          NULL AS posts,
+                          GROUP_CONCAT(aei.id) AS issues
+                   FROM articles_editionissue aei
+                   JOIN articles_subscriptiontoauthor sa ON (aei.editor_id = sa.author_id)
+                   WHERE sa.user_id = %s
+                   GROUP BY aei.editor_id,
+                            DATE(published))) AS au
+          GROUP BY published, author_id )
+       UNION
+         ( SELECT published,
+                  NULL,
+                  NULL,
+                  NULL,
+                  ei.id,
+                  ei.edition_id
+          FROM articles_editionissue ei
+          JOIN articles_subscription se ON (ei.edition_id = se.edition_id)
+          WHERE ei.edition_id IS NOT NULL
+            AND se.user_id = %s )) AS u)
+ORDER BY published DESC LIMIT %s OFFSET %s
 """
 
 
@@ -68,7 +81,7 @@ def timeline(request):
 
     user_id = request.user.id
     with connection.cursor() as cursor:
-        cursor.execute(TIMELINE_QUERY, [user_id, user_id, PAGE_SIZE, offset])
+        cursor.execute(TIMELINE_QUERY, [user_id, user_id, user_id, PAGE_SIZE, offset])
         results = namedtuplefetchall(cursor)
 
     issues = []
@@ -79,15 +92,25 @@ def timeline(request):
             issues.append(edition_issue_json(issue))
         else:
             author = Author.objects.get(id=row.author_id)
+            if row.posts:
+                posts = Post.objects.filter(id__in=map(int, row.posts.split(',')))
+            else:
+                posts = []
+            if row.issues:
+                author_issues = EditionIssue.objects \
+                    .filter(id__in=row.issues.split(',')) \
+                    .select_related('edition')
+            else:
+                author_issues = []
             issues.append({
                 'id': '{}-{}'.format(author.slug, str(row.published)),
-                "title": 'New posts on {:%x}'.format(row.published),
-                "period": 'Posts',
-                "time": str(row.published),
-                "author": author_json(author),
-                "posts": [
-                    post_json(p, short=True) for p in
-                    Post.objects.filter(id__in=map(int, row.posts.split(',')))],
+                'type': 'author',
+                'title': 'New posts on {:%x}'.format(row.published),
+                'period': 'Posts',
+                'time': str(row.published),
+                'author': author_json(author),
+                'posts': [post_json(p, short=True) for p in posts],
+                'issues': [edition_issue_json(i, posts=False) for i in author_issues]
             })
 
     return JsonResponse({

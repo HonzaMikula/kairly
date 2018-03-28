@@ -11,7 +11,7 @@
           </router-link>
         </timeline-edition--editor>
         •
-        {{issue.period}}
+        {{issue.edition.period}}
         •
         {{issue.time | moment('calendar')}}
       </p>

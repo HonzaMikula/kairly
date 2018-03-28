@@ -45,16 +45,27 @@ def post_json(post, short=False):
     return j
 
 
-def edition_issue_json(issue):
-    return {
+def edition_issue_json(issue, posts=True):
+    edition = issue.edition
+    result = {
         "id": issue.id,
+        "type": 'edition',
         "title": issue.title,
-        "period": issue.edition.period,
+        "edition": {
+            "id": "{}/{}".format(edition.editor.slug, edition.slug),
+            "period": edition.period,
+            "picture": settings.MEDIA_SITE + edition.image.url,
+            "description": edition.description,
+        },
         "time": str(issue.published),
         "author": author_json(issue.editor),
-        "posts": [post_json(p, short=True) for p in
-                  issue.posts.all().order_by('editionissuepost__ordering', '-published')],
     }
+    if posts:
+        result["posts"] = [
+            post_json(p, short=True) for p in
+            issue.posts.all().order_by('editionissuepost__ordering', '-published')
+        ]
+    return result
 
 
 def edition_json(edition):
