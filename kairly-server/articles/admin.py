@@ -8,11 +8,15 @@ from .models import (Author, Post, EditionIssue, EditionIssuePost, Edition,
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'medium')
     prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name', 'medium')
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'kind', 'author', 'published', 'read_time')
+    list_display = ('title', 'kind', 'author', 'draft', 'published', 'read_time')
+    exclude = ('guid',)
+    readonly_fields = ('source',)
+    search_fields = ('title',)
 
 
 class PostInline(admin.TabularInline):

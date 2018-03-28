@@ -20,6 +20,12 @@ pyjwt = "*"
 nltk = "*"
 "beautifulsoup4" = "*"
 pillow = "*"
+feedparser = "*"
+lxml = "*"
+requests = "*"
+pyyaml = "*"
+dateutils = "*"
+python-dateutil = "*"
 
 
 [requires]

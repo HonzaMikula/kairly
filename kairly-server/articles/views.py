@@ -36,7 +36,7 @@ FROM ((
                           NULL AS issues
                    FROM articles_post p
                    JOIN articles_subscriptiontoauthor sa ON (p.author_id = sa.author_id)
-                   WHERE sa.user_id = %s
+                   WHERE sa.user_id = %s AND p.draft = 0
                    GROUP BY p.author_id,
                             DATE(published))
                 UNION
@@ -169,7 +169,7 @@ def author(request, author_slug):
     author = get_object_or_404(Author, slug=author_slug)
     author.is_subscribed = SubscriptionToAuthor.objects.filter(user=request.user, author=author).count() > 0
     editions = Edition.objects.filter(editor=author).order_by('-likes')
-    posts = Post.objects.filter(author=author)
+    posts = Post.objects.filter(author=author, draft=False)
     return JsonResponse({
         'author': author_json(author),
         'editions': [edition_json(e) for e in annotate_editions(request, editions)],

@@ -19,6 +19,9 @@ class Author(models.Model):
     picture = models.CharField(_("Picture"), max_length=300)
     bio = models.TextField(_("Bio"), blank=True)
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return self.name
 
@@ -42,6 +45,10 @@ class Post(models.Model):
 
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
     published = models.DateTimeField(_('Published'), default=now)
+    draft = models.BooleanField(_('Draft'), default=False)
+
+    guid = models.CharField(_('External ID'), max_length=255, null=True, unique=True)
+    source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True)
 
     title = models.CharField(max_length=160)
     picture = models.CharField(_("Picture"), max_length=300, blank=True, null=True)
@@ -54,7 +61,7 @@ class Post(models.Model):
 
     @property
     def read_time(self):
-        if self.kind != Post.NEWSPAPER:
+        if self.kind != Post.NEWSPAPER or not self.content:
             return None
         cache_key = Post.READ_TIME_CACHE_KEY.format(id=self.id)
         value = cache.get(cache_key)

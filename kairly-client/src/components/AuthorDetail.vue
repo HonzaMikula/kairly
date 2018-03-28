@@ -39,7 +39,7 @@
         <PostWrapper
           v-for="post in posts"
           :post="post"
-          :isSubscribed="author.isSubscribed"
+          :isSubscribed="true"
           :key="post.id"
         />
       </author-detail--posts>
