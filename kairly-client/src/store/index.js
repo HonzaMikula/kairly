@@ -7,25 +7,27 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: null,
-    editions: null,
+    editions: {},
+    allEditionsLoaded: false
   },
   mutations: {
     user (state, user) {
       state.user = user
     },
-    editions (state, editions) {
-      state.editions = editions
+    allEditions (state, editions) {
+      editions.forEach(edition => {
+        state.editions[edition.id] = edition
+      })
+      state.allEditionsLoaded = true
     },
     edition (state, edition) {
-      if (state.editions === null) return
-      const i = state.editions.findIndex(item => item.id === edition.id)
-      if (i !== -1) {
-        state.editions.splice(i, 1, edition) // call splice to trigger update
-      }
+      state.editions = {...state.editions, [edition.id]: edition}
     }
   },
   getters: {
-    loadingUser: state => state.user === null // Unauthorized -> user === false
+    loadingUser: state => state.user === null, // Unauthorized -> user === false
+    allEditions: state => state.allEditionsLoaded ? Object.values(state.editions) : null,
+    edition: state => id => state.editions[id],
   },
   actions,
   strict: process.env.NODE_ENV !== 'production'

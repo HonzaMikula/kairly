@@ -29,7 +29,7 @@
           />
         </div>
 
-        <button v-if="allEditions.length > 3" v-on:click="toggleEditions()">{{ !isAllEditionsOpened ? 'Show all editions' : 'Hide editions' }}</button>
+        <button v-if="editionIds.length > 3" v-on:click="toggleEditions()">{{ !showAllEditions ? 'Show all editions' : 'Hide editions' }}</button>
 
       </author-detail--editions>
 
@@ -65,13 +65,18 @@ export default {
 
   data: function () {
     return {
-      'loading': true,
-      'author': null,
-      'isAllEditionsOpened': false,
-      'ellEditions': [],
-      'topEditions': [],
-      'editions': [],
-      'posts': []
+      loading: true,
+      author: null,
+      showAllEditions: false,
+      editionIds: [],
+      posts: []
+    }
+  },
+
+  computed: {
+    editions() {
+      const ids = this.showAllEditions ? this.editionIds : this.editionIds.slice(0, 3)
+      return ids.map(id => this.$store.getters.edition(id))
     }
   },
 
@@ -84,22 +89,16 @@ export default {
     },
 
     toggleEditions() {
-      if (!this.isAllEditionsOpened)
-        this.editions = this.allEditions
-      else
-        this.editions = this.topEditions 
-
-      this.isAllEditionsOpened = !this.isAllEditionsOpened  
+      this.showAllEditions = !this.showAllEditions
     }
   },
 
   created() {
     api.getAuthorDetail(this.$route.params.authorId).then(resp => {
+      resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
       this.author = resp.author
-      this.allEditions = resp.editions
-      this.topEditions = resp.editions.slice(0, 3)
+      this.editionIds = resp.editions.map(e => e.id)
       this.posts = resp.posts
-      this.editions = this.topEditions
       this.loading = false
     })
   }

@@ -40,9 +40,10 @@ export default {
   props: ['edition'],
   methods: {
     subscribe(ev) {
+      const value = !this.edition.isSubscribed
       this.$store.dispatch('subscribe', {
         edition: this.edition,
-        value: !this.edition.isSubscribed
+        value
       })
       ev.target.blur()
     }

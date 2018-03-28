@@ -1,7 +1,6 @@
 <template>
   <my-editions-view>
     <h1>My Subscription</h1>
-
     <div>
       <MyEditionsItem
         v-for="edition in editions"
@@ -15,7 +14,7 @@
 
 <script>
 import * as api from '@/api'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import MyEditionsItem from '@/components/MyEditionsItem'
 
@@ -25,8 +24,8 @@ export default {
     MyEditionsItem
   },
   computed: {
-    ...mapState({
-      editions: state => state.editions || []
+    ...mapGetters({
+      editions: 'allEditions'
     })
   },
   created: function () {

@@ -16,12 +16,12 @@ export const logout = ({ commit }) => {
 }
 
 export const getEditions = ({ commit, state }) => {
-  if (state.editions == null) {
+  if (!state.allEditionsLoaded) {
     api
       .getEditions()
       .then(
-        editions => commit('editions', editions),
-        () => commit('editions', null)
+        editions => commit('allEditions', editions),
+        () => commit('allEditions', null)
       )
   }
 }
@@ -32,4 +32,8 @@ export const subscribe = ({ commit }, { edition, value}) => {
     .then(
       edition => commit('edition', edition)
     )
+}
+
+export const editionUpdated = ({ commit }, edition) => {
+  commit('edition', edition)
 }
