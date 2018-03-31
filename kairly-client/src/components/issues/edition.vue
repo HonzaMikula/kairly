@@ -17,24 +17,13 @@
       </p>
     </timeline-edition>
 
-    <PostWrapper
-      v-for="post in issue.posts"
-      :post="post"
-      :isSubscribed="isSubscribed"
-      :key="post.id"
-    />
+    <slot></slot>
   </div>
 </template>
 
 <script>
-import PostWrapper from '@/components/PostWrapper'
-
 export default {
   name: 'issue-edition',
-  props: ['issue', 'isSubscribed'],
-
-  components: {
-    PostWrapper
-  }
+  props: ['issue']
 }
 </script>

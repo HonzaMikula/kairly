@@ -47,6 +47,7 @@ FROM ((
                    FROM articles_editionissue aei
                    JOIN articles_subscriptiontoauthor sa ON (aei.editor_id = sa.author_id)
                    WHERE sa.user_id = %s
+                     AND aei.edition_id IS NOT NULL
                    GROUP BY aei.editor_id,
                             DATE(published))) AS au
           GROUP BY published, author_id )
@@ -97,6 +98,7 @@ def timeline(request):
             else:
                 posts = []
             if row.issues:
+                print(row.issues)
                 author_issues = EditionIssue.objects \
                     .filter(id__in=row.issues.split(',')) \
                     .select_related('edition')
