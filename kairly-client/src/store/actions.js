@@ -37,3 +37,10 @@ export const subscribe = ({ commit }, { edition, value}) => {
 export const editionUpdated = ({ commit }, edition) => {
   commit('edition', edition)
 }
+
+export const loadMoreTimeline = ({ commit, state }) => {
+  commit('timelineRequested')
+  api
+    .getTimeline(state.timeline.cursor)
+    .then(timeline => commit('timelineReceived', timeline) )
+}

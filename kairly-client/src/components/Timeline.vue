@@ -24,14 +24,6 @@ import Welcome from '@/components/Welcome'
 export default {
   name: 'Timeline',
 
-  data: function () {
-    return {
-      'loading': true,
-      'cursor': null,
-      'issues': []
-    }
-  },
-
   components: {
     IssueWrapper,
     Welcome,
@@ -39,31 +31,20 @@ export default {
 
   computed: {
     ...mapState({
-      editions: state => state.editions || []
+      issues: state => state.timeline.issues,
+      loading: state => state.timeline.loading
     })
   },
 
   methods: {
-    handleTimelineData: function(timeline) {
-      timeline.issues.forEach(issue => this.issues.push(issue))
-      this.cursor = timeline.cursor
-      this.loading = false
-    },
-
     loadMore: function() {
-      if (this.cursor) {
-        this.loading = true
-        api.getTimeline(this.cursor).then(this.handleTimelineData)
-      }
+      this.$store.dispatch('loadMoreTimeline')
     }
   },
 
   created() {
-    if (this.editions === []) {
-      this.issues = []
-      this.loading = false
-    } else {
-      api.getTimeline().then(this.handleTimelineData)
+    if (!loading && !issues.length) {
+      this.$store.dispatch('loadMoreTimeline')
     }
   }
 }

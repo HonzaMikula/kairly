@@ -8,7 +8,12 @@ export default new Vuex.Store({
   state: {
     user: null,
     editions: {},
-    allEditionsLoaded: false
+    allEditionsLoaded: false,
+    timeline: {
+      issues: [],
+      cursor: null,
+      loading: false
+    }
   },
   mutations: {
     user (state, user) {
@@ -22,6 +27,14 @@ export default new Vuex.Store({
     },
     edition (state, edition) {
       state.editions = {...state.editions, [edition.id]: edition}
+    },
+    timelineRequested (state) {
+      state.timeline.loading = true
+    },
+    timelineReceived (state, { issues, cursor }) {
+      issues.forEach(issue => state.timeline.issues.push(issue))
+      state.timeline.cursor = cursor
+      state.timeline.loading = false
     }
   },
   getters: {
