@@ -6,7 +6,7 @@ from libgravatar import Gravatar
 from django.db import connection
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
 
@@ -19,7 +19,8 @@ def index(request, *args, **kwargs):
     return render(request, 'index.html')
 
 
-PAGE_SIZE = 5
+AUTOR_POSTS_PAGE_SIZE = 20
+TIMELINE_PAGE_SIZE = 5
 TIMELINE_QUERY = """
 SELECT *
 FROM ((
@@ -82,7 +83,7 @@ def timeline(request):
 
     user_id = request.user.id
     with connection.cursor() as cursor:
-        cursor.execute(TIMELINE_QUERY, [user_id, user_id, user_id, PAGE_SIZE, offset])
+        cursor.execute(TIMELINE_QUERY, [user_id, user_id, user_id, TIMELINE_PAGE_SIZE, offset])
         results = namedtuplefetchall(cursor)
 
     issues = []
@@ -117,7 +118,7 @@ def timeline(request):
 
     return JsonResponse({
         'issues': issues,
-        'cursor': offset + PAGE_SIZE if len(results) == PAGE_SIZE else None
+        'cursor': offset + TIMELINE_PAGE_SIZE if len(results) == TIMELINE_PAGE_SIZE else None
     })
 
 
@@ -171,11 +172,26 @@ def author(request, author_slug):
     author = get_object_or_404(Author, slug=author_slug)
     author.is_subscribed = SubscriptionToAuthor.objects.filter(user=request.user, author=author).count() > 0
     editions = Edition.objects.filter(editor=author).order_by('-likes')
-    posts = Post.objects.filter(author=author, draft=False)
     return JsonResponse({
         'author': author_json(author),
         'editions': [edition_json(e) for e in annotate_editions(request, editions)],
-        'posts': [post_json(post, short=True) for post in posts]
+    })
+
+
+@ajax_login_required
+def author_posts(request, author_slug):
+    try:
+        offset = int(request.GET.get('cursor', 0))
+    except ValueError:
+        offset = 0
+
+    author = get_object_or_404(Author, slug=author_slug)
+    posts_query = Post.objects.filter(author=author, draft=False) \
+        .order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
+    posts = [post_json(post, short=True) for post in posts_query]
+    return JsonResponse({
+        'posts': posts,
+        'cursor': offset + AUTOR_POSTS_PAGE_SIZE if len(posts) == AUTOR_POSTS_PAGE_SIZE else None
     })
 
 

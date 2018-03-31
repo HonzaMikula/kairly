@@ -1,6 +1,10 @@
 <template>
-  <author-detail-view>
-    <loading-spinner v-if="loading"></loading-spinner>
+  <author-detail-view
+    v-infinite-scroll="loadMore"
+    infinite-scroll-disabled="loadingPosts"
+    infinite-scroll-distance="100"
+  >
+    <loading-spinner v-if="loadingProfile"></loading-spinner>
 
     <div v-else>
       <author-detail--header>
@@ -43,6 +47,8 @@
           :key="post.id"
         />
       </author-detail--posts>
+
+      <loading-spinner v-if="loadingPosts"></loading-spinner>
     </div>
 
   </author-detail-view>
@@ -65,11 +71,13 @@ export default {
 
   data: function () {
     return {
-      loading: true,
+      loadingProfile: true,
+      loadingPosts: true,
       author: null,
       showAllEditions: false,
       editionIds: [],
-      posts: []
+      posts: [],
+      cursor: null
     }
   },
 
@@ -90,6 +98,19 @@ export default {
 
     toggleEditions() {
       this.showAllEditions = !this.showAllEditions
+    },
+
+    handlePostsData: function(resp) {
+      resp.posts.forEach(post => this.posts.push(post))
+      this.cursor = resp.cursor
+      this.loadingPosts = false
+    },
+
+    loadMore() {
+      if (this.cursor) {
+        this.loadingPosts = true
+        api.getAuthorPosts(this.$route.params.authorId, this.cursor).then(this.handlePostsData)
+      }
     }
   },
 
@@ -98,9 +119,9 @@ export default {
       resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
       this.author = resp.author
       this.editionIds = resp.editions.map(e => e.id)
-      this.posts = resp.posts
-      this.loading = false
+      this.loadingProfile = false
     })
+    api.getAuthorPosts(this.$route.params.authorId, null).then(this.handlePostsData)
   }
 }
 </script>

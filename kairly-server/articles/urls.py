@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/subscribe/<slug:editor_slug>/<slug:edition_slug>', views.subscribe, name='subscribe'),
     path('api/subscribe/<slug:editor_slug>', views.subscribe_author, name='subscribe_author'),
     path('api/author/<slug:author_slug>', views.author, name='author'),
+    path('api/author/<slug:author_slug>/posts', views.author_posts, name='author_posts'),
     path('api/profile', views.profile, name='profile'),
     path('api/post/<int:post_id>', views.post, name='post'),
 

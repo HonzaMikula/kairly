@@ -62,6 +62,17 @@ function getAuthorDetail(authorId) {
     .then(res => res.body)
 }
 
+function getAuthorPosts(authorId, cursor) {
+  if (!token) return Promise.reject();
+  let url = process.env.BACKEND_BASE + '/api/author/' + authorId + '/posts'
+  if (cursor) {
+    url += '?cursor=' + cursor
+  }
+  return request
+    .get(url)
+    .set('Authorization', 'Bearer ' + token)
+    .then(res => res.body)
+}
 
 function getPost(postId) {
   if (!token) return Promise.reject();
@@ -91,6 +102,6 @@ function postAuthorSubsription(author, subscribe) {
 
 export {
   clearToken, createToken, getProfile, getTimeline, getPost,
-  getEditions, getEditionDetail, getAuthorDetail, postSubscription,
-  postAuthorSubsription
+  getEditions, getEditionDetail, getAuthorDetail, getAuthorPosts,
+  postSubscription, postAuthorSubsription
 }
