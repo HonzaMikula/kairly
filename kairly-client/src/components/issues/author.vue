@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <timeline-edition>
+  <timeline-edition>
+    <header>
       <h1>
         <router-link :to="issue.author.url">
           <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
@@ -13,7 +13,8 @@
         •
         {{issue.time | moment('calendar')}}
       </p>
-    </timeline-edition>
+    </header>
+    
 
     <slot></slot>
 
@@ -28,8 +29,7 @@
         <p>{{ item.edition.description }}</p>
       </div>
     </post-issue>
-
-  </div>
+  </timeline-edition>
 </template>
 
 <script>

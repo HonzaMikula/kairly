@@ -11,19 +11,18 @@
       :key="post.id"
     />
 
-    <a href="#" v-if="hasMore"
-      v-on:click.prevent="togglePosts">
-        ---------------
-        {{ showAllPosts ? "Hide more posts" : "Show more posts" }}
-        ---------------
-    </a>
-
     <PostWrapper
       v-for="post in tailPosts"
       :post="post"
       :isSubscribed="true"
       :key="post.id"
     />
+
+    <footer>
+      <button v-if="tailPostsCount > 0 && !showAllPosts" v-on:click.prevent="togglePosts">
+        Show more ({{tailPostsCount}})
+      </button>
+    </footer>
 
   </component>
 </template>
@@ -60,9 +59,10 @@ export default {
       return this.showAllPosts ? this.issue.posts.slice(POST_LIMIT) : []
     },
 
-    hasMore() {
-      return this.issue.posts.length > POST_LIMIT
+    tailPostsCount() {
+      return this.issue.posts.length - POST_LIMIT
     }
+
   },
 
   methods: {

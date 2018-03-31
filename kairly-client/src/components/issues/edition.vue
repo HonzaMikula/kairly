@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <timeline-edition>
+  <timeline-edition>
+    <header>
       <h1>{{issue.title}}</h1>
 
       <p>
@@ -15,10 +15,9 @@
         •
         {{issue.time | moment('calendar')}}
       </p>
-    </timeline-edition>
-
+    </header>
     <slot></slot>
-  </div>
+  </timeline-edition>
 </template>
 
 <script>
