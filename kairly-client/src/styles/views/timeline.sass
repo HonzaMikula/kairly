@@ -17,24 +17,39 @@ timeline-welcome
   margin-bottom: $baseline
   
   font-family: $ff-serif
-  text-align: center
+  
 
-  h1
+  > h1
     margin-bottom: $baseline / 2
 
     font-size: $fs-3
+    text-align: center
 
   > p
     margin-bottom: $baseline  
+    text-align: center
   
 timeline-welcome--my-editions
-  display: flex
-  flex-wrap: wrap
+
+  > h2
+    margin-top: $baseline 
+
+    font-weight: 600
+    font-size: $fs-1
+    text-align: left
+
+  > div
+    display: flex
+    flex-wrap: wrap
+    margin: 0 (-$baseline/4)
 
   my-editions--item
     flex: 1
 
 timeline-welcome--more-editions
+  display: block
+  text-align: center
+
   //- View more editions link
   a
     display: inline-block
@@ -76,7 +91,7 @@ timeline-edition
   &:first-of-type
     margin-top: 0
   
-  header
+  > header
     margin-bottom: $baseline 
 
     font-family: $ff-serif

@@ -17,7 +17,6 @@ Vue.config.productionTip = false
 Vue.config.ignoredElements = [/.*/]
 
 Vue.use(Tooltip)
-Vue.use(VueMoment)
 Vue.use(InfiniteScroll)
 Vue.use(VueKeepScroll)
 

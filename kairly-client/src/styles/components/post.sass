@@ -1,5 +1,5 @@
 //- Post -//
-timeline-post
+post-component
   display: block
   border-radius: 6px
   margin-bottom: $baseline / 2
@@ -12,126 +12,52 @@ timeline-post
 
 
 //- Post header
-timeline-post--header
+post-component > header
   position: relative
 
   display: grid
-  grid-template-areas: "picture author favorites" "picture info favorites"
-  grid-template-columns: 52px auto min-content
+  grid-template-areas: "picture author" "picture info"
+  grid-template-columns: 52px auto
+  grid-template-rows: 0.75*$baseline 0.75*$baseline
   margin-bottom: $baseline / 2
 
-  // fix fo Edge
-  @supports not (grid-template-areas: "picture")
-    display: block
+  font-family: $ff-sans
 
   //-- author image
-  > a:first-of-type
+  picture
     grid-area: picture
 
-  > a img
-    border-radius: 100%
-    height: $baseline * 1.5
-    margin-right: $baseline / 2
-    width: $baseline * 1.5
+    img
+      border-radius: 100%
+      height: $baseline * 1.5
+      margin-right: $baseline / 2
+      width: $baseline * 1.5
 
-    object-fit: cover
+      object-fit: cover
 
-    // fix fo Edge
-    @supports not (grid-template-areas: "picture")
-      display: block
-      float: left
 
-//-- author
-timeline-post--header--author
-  grid-area: author
-  max-width: max-content
+  //-- author
+  h3
+    grid-area: author
+    max-width: max-content
 
-  color: $c-base
-
-  font-size: $fs--2
-  line-height: $baseline * 0.75
-
-  // fix fo Edge
-  @supports not (grid-template-areas: "picture")
-    display: block
-
-  a 
     color: $c-base
 
-    text-decoration: none  
+    font-size: $fs--2
+    line-height: $baseline * 0.75
 
-
-//-- info
-timeline-post--header--info
-  grid-area: info
-  width: 100%
-
-  color: #999
-
-  font-size: $fs--2
-  line-height: $baseline * 0.75
-
-  .responses
-    &::before
-      +fa-icon()
-
-      margin-right: $baseline / 8
-
-      content: $fa-var-bookmark-o
-
-
-//-- favorites
-timeline-post--header--action-buttons
-  position: relative
-
-  grid-area: favorites
-
-  cursor: pointer
-  white-space: nowrap
-
-  transition: 0.2s opacity
-
-  // fix fo Edge
-  @supports not (grid-template-areas: "picture")
-    position: absolute
-    right: 0
-    top: 0
-
-
-  button-icon
-    position: relative
-
-    opacity: 0.1
-
-    transition: 0.15s all
-
-    &:focus,
-    &:hover
-      opacity: 1
-
-    &.is-active
-      opacity: 1
+    a 
       color: $c-base
 
-  button-icon.edition
-    margin-right: $baseline / 2
-
-    &::before
-      +fa-icon()
-
-      content: $fa-var-newspaper-o
-
-  button-icon.read-later
-
-    &::after
-      +fa-icon()
-
-      content: $fa-var-clock-o
+      text-decoration: none  
 
 
-  button-icon.remove
+  //-- date of publication
+  time
+    grid-area: info
+    width: 100%
 
-    &::after
-      +fa-icon()
+    color: #999
 
-      content: $fa-var-times
+    font-size: $fs--2
+    line-height: $baseline * 0.75
