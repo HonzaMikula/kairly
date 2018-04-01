@@ -2,13 +2,15 @@
   <timeline-view v-infinite-scroll="loadMore"
     infinite-scroll-disabled="loading"
     infinite-scroll-distance="100"
+    v-keep-scroll
   >
     <Welcome v-if="!loading && issues.length === 0"/>
 
     <IssueWrapper v-for="issue in issues"
       :key="issue.id"
       :issue="issue"
-      :isSubscribed="true" />
+      :isSubscribed="true"
+      :expanded="expandedIssues[issue.id]" />
 
     <loading-spinner v-if="loading"></loading-spinner>
   </timeline-view>
@@ -32,7 +34,8 @@ export default {
   computed: {
     ...mapState({
       issues: state => state.timeline.issues,
-      loading: state => state.timeline.loading
+      loading: state => state.timeline.loading,
+      expandedIssues: state => state.timeline.expandedIssues
     })
   },
 

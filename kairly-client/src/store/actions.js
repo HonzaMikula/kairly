@@ -44,3 +44,7 @@ export const loadMoreTimeline = ({ commit, state }) => {
     .getTimeline(state.timeline.cursor)
     .then(timeline => commit('timelineReceived', timeline) )
 }
+
+export const expandIssue = ({ commit }, issueId) => {
+  commit('expandIssue', issueId)
+}

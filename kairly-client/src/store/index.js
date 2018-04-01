@@ -12,7 +12,8 @@ export default new Vuex.Store({
     timeline: {
       issues: [],
       cursor: null,
-      loading: false
+      loading: false,
+      expandedIssues: {}
     }
   },
   mutations: {
@@ -35,6 +36,12 @@ export default new Vuex.Store({
       issues.forEach(issue => state.timeline.issues.push(issue))
       state.timeline.cursor = cursor
       state.timeline.loading = false
+    },
+    expandIssue (state, issueId) {
+      state.timeline.expandedIssues = {
+        ...state.timeline.expandedIssues,
+        [issueId]: true
+      }
     }
   },
   getters: {

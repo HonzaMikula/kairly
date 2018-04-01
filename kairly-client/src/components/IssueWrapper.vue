@@ -19,7 +19,7 @@
     />
 
     <footer>
-      <button v-if="tailPostsCount > 0 && !showAllPosts" v-on:click.prevent="togglePosts">
+      <button v-if="tailPostsCount > 0 && !expanded" v-on:click.prevent="expandIssue">
         Show more ({{tailPostsCount}})
       </button>
     </footer>
@@ -36,7 +36,7 @@ const POST_LIMIT = 5
 
 export default {
   name: 'IssueWrapper',
-  props: ['issue'],
+  props: ['issue', 'expanded'],
 
   components: {
     issueEdition,
@@ -56,18 +56,18 @@ export default {
     },
 
     tailPosts() {
-      return this.showAllPosts ? this.issue.posts.slice(POST_LIMIT) : []
+      return this.expanded ? this.issue.posts.slice(POST_LIMIT) : []
     },
 
     tailPostsCount() {
-      return this.issue.posts.length - POST_LIMIT
+      return Math.max(0, this.issue.posts.length - POST_LIMIT)
     }
 
   },
 
   methods: {
-    togglePosts() {
-      this.showAllPosts = !this.showAllPosts
+    expandIssue() {
+      this.$store.dispatch('expandIssue', this.issue.id)
     }
   }
 }
