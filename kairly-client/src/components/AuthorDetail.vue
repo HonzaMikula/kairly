@@ -90,6 +90,7 @@ export default {
 
   methods: {
     subscribe(ev) {
+      this.$store.dispatch('invalidateTimeline')
       const value = !this.author.isSubscribed
       api.postAuthorSubsription(this.author, value).then(author => this.author)
       this.author.isSubscribed = value

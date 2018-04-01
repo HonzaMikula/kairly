@@ -22,26 +22,25 @@
 
 <script>
 import * as api from '@/api'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import MyEditionsItem from '@/components/MyEditionsItem'
 
 export default {
   name: 'Welcome',
+
   components: {
     MyEditionsItem
   },
+
   computed: {
-    ...mapState({
-      editions: state => {
-        const editions = Object.values(state.editions || [])
-        if (editions.length > 3) {
-          editions.splice(3, editions.length - 3)
-        }
-        return editions
-      }
-    })
+    ...mapGetters(['allEditions']),
+
+    editions() {
+      return (this.allEditions || []).slice(0, 3)
+    }
   },
+
   created() {
     this.$store.dispatch('getEditions')
   }
