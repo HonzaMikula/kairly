@@ -69,7 +69,7 @@ export default {
     PostWrapper
   },
 
-  data: function () {
+  data() {
     return {
       loadingProfile: true,
       loadingPosts: true,
@@ -100,7 +100,7 @@ export default {
       this.showAllEditions = !this.showAllEditions
     },
 
-    handlePostsData: function(resp) {
+    handlePostsData(resp) {
       resp.posts.forEach(post => this.posts.push(post))
       this.cursor = resp.cursor
       this.loadingPosts = false

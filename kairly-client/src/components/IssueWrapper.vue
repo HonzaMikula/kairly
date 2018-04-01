@@ -44,7 +44,7 @@ export default {
     PostWrapper,
   },
 
-  data: function() {
+  data() {
     return {
       showAllPosts: false
     }

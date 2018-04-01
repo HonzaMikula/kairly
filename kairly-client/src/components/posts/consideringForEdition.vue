@@ -1,5 +1,5 @@
 <template>
-  <post :post="post" v-on:readlater="readLaterMessage()">
+  <post :post="post">
     <timeline-post--tweet>
       <p v-html="post.content"></p>
     </timeline-post--tweet>
@@ -14,10 +14,5 @@ export default {
   name: 'consideringForEdition',
   props: ["post"],
   components: { post },
-  methods: {
-    readLaterMessage: function() {
-      this.$emit('readlater')
-    }
-  }
 }
 </script>

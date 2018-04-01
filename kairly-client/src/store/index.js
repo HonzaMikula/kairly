@@ -16,6 +16,7 @@ export default new Vuex.Store({
       expandedIssues: {}
     }
   },
+
   mutations: {
     user (state, user) {
       state.user = user
@@ -44,11 +45,13 @@ export default new Vuex.Store({
       }
     }
   },
+
   getters: {
     loadingUser: state => state.user === null, // Unauthorized -> user === false
     allEditions: state => state.allEditionsLoaded ? Object.values(state.editions) : null,
     edition: state => id => state.editions[id],
   },
+
   actions,
   strict: process.env.NODE_ENV !== 'production'
 })

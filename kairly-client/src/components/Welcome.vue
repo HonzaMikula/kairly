@@ -42,7 +42,7 @@ export default {
       }
     })
   },
-  created: function () {
+  created() {
     this.$store.dispatch('getEditions')
   }
 }

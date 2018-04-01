@@ -38,6 +38,7 @@ import * as api from '@/api'
 export default {
   name: 'MyEditionsItem',
   props: ['edition'],
+
   methods: {
     subscribe(ev) {
       const value = !this.edition.isSubscribed

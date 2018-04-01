@@ -1,6 +1,6 @@
 <template>
   <editor-view>
-    
+
     <editor-switcher>
       <editor-switcher--item class="is-active">Article</editor-switcher--item>
       <editor-switcher--item>Tweet</editor-switcher--item>
@@ -9,7 +9,7 @@
     <editor-title>
       <input type="text" placeholder="Title" />
     </editor-title>
-      
+
     <editor-content>
     </editor-content>
 
@@ -26,10 +26,7 @@
 export default {
   name: 'Editor',
 
-  components: {
-  },
-
-  data: function () {
+  data() {
     return {
       config: {
         theme: 'inlite',

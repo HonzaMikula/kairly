@@ -71,11 +71,11 @@ export default {
     Issue
   },
 
-  data: function () {
+  data() {
     return {
-      'loading': true,
-      'edition': null,
-      'issue': null,
+      loading: true,
+      edition: null,
+      issue: null,
     }
   },
 

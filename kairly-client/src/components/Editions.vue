@@ -3,17 +3,17 @@
     <editions-considered-posts>
       <h1>Considered Posts</h1>
       <draggable v-model="consideredPosts">
-        <considered-post 
+        <considered-post
           v-for="consideredPost in consideredPosts"
           :key="consideredPost.id">
           <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
             <img :src="consideredPost.author.picture" :alt="consideredPost.author.name" />
-          
+
             <timeline-post--header--author>
               <span v-on:mouseover="openAuthorWidget()">{{ consideredPost.author.name }}, {{consideredPost.author.medium}}</span>
             </timeline-post--header--author>
 
-            <authorWidget 
+            <authorWidget
               :post="consideredPost"
               v-if="isAuthorWidgetOpen"
               v-on:authorwidgetclose="closeAuthorWidget()">
@@ -40,7 +40,7 @@
               Put it to Edition
             </consider-post--footer--button>
           </consider-post--footer>
-          
+
         </considered-post>
       </draggable>
 
@@ -54,7 +54,7 @@
       </editions-upcoming-edition--header>
 
       <editions-upcoming-edition--posts>
-        
+
         <edition-upcoming-edition--post></edition-upcoming-edition--post>
         <edition-upcoming-edition--post></edition-upcoming-edition--post>
         <edition-upcoming-edition--post></edition-upcoming-edition--post>
@@ -73,7 +73,7 @@ import draggable from 'vuedraggable'
 export default {
   name: 'Editions',
 
-  data: function () {
+  data() {
     return {
       consideredPosts
     }
@@ -83,7 +83,7 @@ export default {
     draggable
   },
 
-  created: function () { 
+  created() {
     this.consideredPost = consideredPosts
   }
 }

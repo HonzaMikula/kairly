@@ -40,7 +40,7 @@ export default {
   },
 
   methods: {
-    loadMore: function() {
+    loadMore() {
       this.$store.dispatch('loadMoreTimeline')
     }
   },

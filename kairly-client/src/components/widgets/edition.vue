@@ -4,7 +4,7 @@
       <h1>When you want to read this edition?</h1>
 
       <edition-widget--buttons>
-        <button 
+        <button
           v-for="(day, dayIndex) in days" :key="day"
           v-bind:class="{ 'is-active': isDayActive[dayIndex] }"
           v-on:click="setActiveDay(dayIndex)">
@@ -13,7 +13,7 @@
       </edition-widget--buttons>
 
       <edition-widget--buttons>
-        <button 
+        <button
           v-for="(time, timeIndex) in times" :key="time"
           v-bind:class="{ 'is-active': isTimeActive[timeIndex] }"
           v-on:click="setActiveTime(timeIndex)">
@@ -34,11 +34,11 @@
 export default {
   name: 'EditionWidget',
   methods: {
-    closeEditionMessage: function () {
+    closeEditionMessage() {
       this.$emit('editionwidgetclose');
     },
 
-    setActiveDay: function (activeDay) {
+    setActiveDay(activeDay) {
       // set all values false
       this.isDayActive.fill(false)
 
@@ -49,7 +49,7 @@ export default {
       this.$forceUpdate()
     },
 
-    setActiveTime: function (activeTime) {
+    setActiveTime(activeTime) {
       // set all values false
       this.isTimeActive.fill(false)
 
@@ -61,7 +61,7 @@ export default {
     }
   },
 
-  data: function() {
+  data() {
     return {
       days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       times: ['Morning', 'Noon', 'Afternoon', 'Evening', 'Night'],

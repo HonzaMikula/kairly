@@ -1,5 +1,5 @@
 <template>
-  <post :post="post" v-on:readlater="readLaterMessage()">
+  <post :post="post">
     <timeline-post--newspaper>
       <h2>{{ post.content.title }}</h2>
       <timeline-post--newspaper--content>
@@ -24,13 +24,6 @@ import post from './post';
 export default {
   name: 'post-newspaper',
   props: ["post", "isSubscribed"],
-  components: { post },
-  created: function() {
-  },
-  methods: {
-    readLaterMessage: function() {
-      this.$emit('readlater')
-    }
-  }
+  components: { post }
 }
 </script>

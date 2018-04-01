@@ -1,63 +1,41 @@
 <template>
   <timeline-post role="article" :class="post.type">
-      <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
+    <timeline-post--header v-on:mouseleave="closeAuthorWidget()">
+      <router-link :to="post.author.url">
+        <img :src="post.author.picture" :alt="post.author.name" />
+      </router-link>
+
+      <timeline-post--header--author>
         <router-link :to="post.author.url">
-          <img :src="post.author.picture" :alt="post.author.name" />
+          {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
         </router-link>
+      </timeline-post--header--author>
 
-        <timeline-post--header--author>
-          <router-link :to="post.author.url">
-            {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-          </router-link>
-        </timeline-post--header--author>
+      <authorWidget
+        :author="post.author"
+        v-if="isAuthorWidgetOpen"
+        v-on:authorwidgetclose="closeAuthorWidget()">
+      </authorWidget>
 
-        <authorWidget
-          :author="post.author"
-          v-if="isAuthorWidgetOpen"
-          v-on:authorwidgetclose="closeAuthorWidget()">
-        </authorWidget>
+      <timeline-post--header--info>
+        {{ post.time | moment('calendar') }}
+        • <span class="responses">{{ post.favorites }}</span>
+      </timeline-post--header--info>
+    </timeline-post--header>
 
-        <timeline-post--header--info>
-          {{ post.time | moment('calendar') }}
-          • <span class="responses">{{ post.favorites }}</span>
-        </timeline-post--header--info>
-
-        <!--timeline-post--header--action-buttons v-on-clickaway="closePostWidgets">
-          <button-icon class="edition"
-            v-tooltip.top="'Consider for Edition'">
-          </button-icon>
-          <button-icon class="read-later"
-            v-bind:class="{ 'is-active': isReadLaterActive }"
-            v-tooltip.top="'Read it later'"
-            v-on:click="openReadLaterWidget()">
-          </button-icon>
-
-          <cReadLaterWidget
-            v-if="isReadLaterWidgetOpen"
-            v-on:readlaterwidgetclose="closeReadLaterWidget()">
-          </cReadLaterWidget>
-
-          <cEditionWidget
-            v-if="isEditionWidgetOpen"
-            v-on:editionwidgetclose="closeEditionWidget()">
-          </cEditionWidget>
-        </timeline-post--header--action-buttons -->
-      </timeline-post--header>
-
-      <slot></slot>
-    </timeline-post>
+    <slot></slot>
+  </timeline-post>
 </template>
 
 <script>
 import { directive as onClickaway } from 'vue-clickaway'
 import AuthorWidget from '@/components/widgets/author'
-import ReadLaterWidget from '@/components/widgets/readLater'
 
 export default {
   name: 'post',
   props: ["post", "isSubscribed"],
   directives: {
-    onClickaway: onClickaway,
+    onClickaway,
   },
   data: function () {
     return {
@@ -65,49 +43,27 @@ export default {
       isReadLaterWidgetOpen: false,
       isEditionWidgetOpen: false,
       timer: null,
-      isReadLaterActive: false
     }
   },
   methods: {
-
-    openAuthorWidget: function () {
-      var x = this;
-      this.timer = setTimeout(function() {
-        x.isAuthorWidgetOpen = true;
-        x.$forceUpdate();
+    openAuthorWidget() {
+      this.timer = setTimeout(() => {
+        this.isAuthorWidgetOpen = true;
+        this.$forceUpdate();
       }, 500);
     },
 
-    closeAuthorWidget: function () {
+    closeAuthorWidget() {
       clearTimeout(this.timer)
       if (this.isAuthorWidgetOpen) {
         this.isAuthorWidgetOpen = false
         this.$forceUpdate()
       }
-    },
-
-    openReadLaterWidget: function () {
-      this.isReadLaterActive = true
-      this.isReadLaterWidgetOpen = true
-      this.$forceUpdate()
-    },
-
-    closeReadLaterWidget: function () {
-      if (this.isReadLaterWidgetOpen) {
-        this.isReadLaterWidgetOpen = false
-        this.$forceUpdate()
-      }
-    },
-
-    closePostWidgets: function () {
-      this.closeReadLaterWidget()
-      this.closeEditionWidget()
     }
   },
 
   components: {
-    AuthorWidget,
-    ReadLaterWidget
+    AuthorWidget
   }
 }
 </script>

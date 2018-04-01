@@ -2,7 +2,7 @@
   <author-widget v-on:mouseleave="closeWidget()">
     <author-widget--name>{{ author.name }}</author-widget--name>
     <author-widget--medium>{{ author.medium }}</author-widget--medium>
-    <img :src="author.picture" :alt="author.name" />  
+    <img :src="author.picture" :alt="author.name" />
 
     <author-widget--stats>
       <div>
@@ -31,7 +31,7 @@
       <author-widget--follow--choose-time v-if="showPeriods">
         <div>
           <h3>How often do you want to read?</h3>
-          <button 
+          <button
             v-for="(period, periodIndex) in periods" :key="period"
             v-bind:class="{ 'is-active': isPeriodActive[periodIndex] }"
             v-on:click="setActivePeriod(periodIndex)">
@@ -39,10 +39,10 @@
           </button>
         </div>
 
- 
+
         <div v-if="showDays">
           <h3>Which day do you want to read it?</h3>
-          <button 
+          <button
             v-for="(day, dayIndex) in days" :key="day"
             v-bind:class="{ 'is-active': isDayActive[dayIndex] }"
             v-on:click="setActiveDay(dayIndex)">
@@ -50,11 +50,11 @@
           </button>
         </div>
 
-    
+
 
         <div v-if="showDaysInMonth">
           <h3>Which day in the month do you want to read it?</h3>
-          <button 
+          <button
             v-for="(dayInMonth, dayInMonthIndex) in daysInMonth" :key="dayInMonth"
             v-bind:class="{ 'is-active': isDayInMonthActive[dayInMonthIndex] }"
             v-on:click="setActiveDayInMonth(dayInMonthIndex)">
@@ -64,7 +64,7 @@
 
         <div v-if="showTimes">
           <h3>Which day time?</h3>
-          <button 
+          <button
             v-for="(time, timeIndex) in times" :key="time"
             v-bind:class="{ 'is-active': isTimeActive[timeIndex] }"
             v-on:click="setActiveTime(timeIndex)">
@@ -81,7 +81,8 @@
 export default {
   name: 'AuthorWidget',
   props: ["author"],
-  created: function () {
+
+  created() {
     // set all 'active' arrays to false
     this.isPeriodActive.fill(false)
     this.isDayActive.fill(false)
@@ -90,11 +91,11 @@ export default {
   },
 
   methods: {
-    closeWidget: function () {
+    closeWidget() {
       this.$emit('authorwidgetclose');
     },
 
-    setActivePeriod: function (activePeriod) {
+    setActivePeriod(activePeriod) {
       // set all values false
       this.isPeriodActive.fill(false)
       this.showDaysInMonth = false
@@ -119,7 +120,7 @@ export default {
       this.$forceUpdate()
     },
 
-    setActiveDay: function (activeDay) {
+    setActiveDay(activeDay) {
       // set all values false
       this.isDayActive.fill(false)
 
@@ -130,7 +131,7 @@ export default {
       this.$forceUpdate()
     },
 
-    setActiveDayInMonth: function (activeDayInMonth) {
+    setActiveDayInMonth(activeDayInMonth) {
       // set all values false
       this.isDayInMonthActive.fill(false)
 
@@ -141,7 +142,7 @@ export default {
       this.$forceUpdate()
     },
 
-    setActiveTime: function (activeTime) {
+    setActiveTime(activeTime) {
       // set all values false
       this.isTimeActive.fill(false)
 
@@ -152,7 +153,8 @@ export default {
       this.$forceUpdate()
     }
   },
-  data: function () {
+
+  data() {
     return {
       showPeriods: false,
       showDays: false,

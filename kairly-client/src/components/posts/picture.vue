@@ -1,5 +1,5 @@
 <template>
-  <post :post="post" v-on:readlater="readLaterMessage(el)">
+  <post :post="post">
     <timeline-post--picture>
       <figure>
         <img :src="post.content.picture" :alt="post.content.title" />
@@ -16,11 +16,6 @@ import post from './post';
 export default {
   name: 'post-picture',
   props: ["post", "isSubscribed"],
-  components: { post },
-  methods: {
-    readLaterMessage: function() {
-      this.$emit('readlater')
-    }
-  }
+  components: { post }
 }
 </script>

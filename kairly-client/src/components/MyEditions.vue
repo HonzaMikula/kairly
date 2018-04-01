@@ -20,15 +20,18 @@ import MyEditionsItem from '@/components/MyEditionsItem'
 
 export default {
   name: 'MyEditions',
+
   components: {
     MyEditionsItem
   },
+
   computed: {
     ...mapGetters({
       editions: 'allEditions'
     })
   },
-  created: function () {
+
+  created() {
     this.$store.dispatch('getEditions')
   }
 }

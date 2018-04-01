@@ -22,7 +22,7 @@
 export default {
   name: 'ReadLaterWidget',
   methods: {
-    closeReadLaterMessage: function () {
+    closeReadLaterMessage() {
       this.$emit('readlaterwidgetclose');
     }
   }

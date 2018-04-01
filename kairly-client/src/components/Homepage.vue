@@ -123,13 +123,15 @@ import * as api from '@/api'
 
 export default {
   name: 'Homepage',
-  data: function() {
+
+  data() {
     return {
       invalidCredentials: false,
       username: null,
       password: null
     }
   },
+
   methods: {
     login() {
       this.invalidCredentials = false

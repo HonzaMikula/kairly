@@ -4,7 +4,7 @@
     :post="post"
     :isSubscribed="isSubscribed"
     :key="post.id"
-    v-on:readlater="readLaterMessage()">
+  >
   </component>
 </template>
 
@@ -21,12 +21,6 @@ export default {
     postNewspaper,
     postTweet,
     postPicture,
-  },
-
-  methods: {
-    readLaterMessage() {
-      console.log('TODO')
-    }
   }
 }
 </script>

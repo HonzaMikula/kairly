@@ -46,7 +46,7 @@
               <img :src="post.author.picture" :alt="post.author.name"/>
             </router-link>
           </picture>
-          
+
           <h3>
             <router-link :to="post.author.url">
               {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
@@ -66,15 +66,18 @@ import * as api from '@/api'
 
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
-  data: function() {
+
+  data() {
     return {
       post: null
     }
   },
-  created: function () {
+
+  created() {
     api.getPost(this.$route.params.postId).then(post => this.post = post)
   },
-  updated: function() {
+
+  updated() {
     // TODO dangerous if more component properties exists and updated called more
     // then once
     if (this.$route.hash) {
