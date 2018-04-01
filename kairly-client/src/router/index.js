@@ -21,10 +21,6 @@ export default new Router({
       name: 'Post',
       component: PostDetail
     }, {
-      path: '/editions',
-      name: 'Editions',
-      component: Editions
-    }, {
       path: '/editions/:editionId+',
       name: 'Edition Detail',
       component: EditionDetail
@@ -32,14 +28,6 @@ export default new Router({
       path: '/author/:authorId',
       name: 'Author Detail',
       component: AuthorDetail
-    }, {
-      path: '/editor',
-      name: 'Editor',
-      component: Editor
-    }, {
-      path: '/read-later',
-      name: 'ReadLater',
-      component: ReadLater
     }, {
       path: '/homepage',
       name: 'Homepage',

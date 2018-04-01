@@ -13,7 +13,7 @@
         </app-header--search-->
 
         <app-header--user-profile v-if="user" v-on:click="openDropDownMenu">
-          <img src="../assets/user.png" :alt="user.name"/>
+          <img src="../../assets/user.png" :alt="user.name"/>
           <!--
             Gravatar url handles default itself (it can generate 404 url or some dafault),
             but it is problematic handle it on client side identify default and replace it with own default

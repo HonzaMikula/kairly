@@ -49,7 +49,7 @@ exports.cssLoaders = function (options) {
     css: generateLoaders(),
     postcss: generateLoaders(),
     less: generateLoaders('less'),
-    sass: generateLoaders('sass').concat(
+    sass: generateLoaders('sass', { indentedSyntax: true }).concat(
       {
         loader: 'sass-resources-loader',
         options: {

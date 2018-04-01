@@ -17,3 +17,24 @@ export default {
   components: { post },
 }
 </script>
+
+<style lang="sass">
+timeline-post--tweet
+  display: block
+  margin-bottom: $baseline / 2
+
+  font-family: $ff-serif
+  font-size: $fs-1
+
+  a 
+    color: $c-base
+
+    text-decoration: none
+
+  //- picture
+  img
+    display: block
+    margin-top: $baseline / 2
+    max-width: 100%
+
+</style>

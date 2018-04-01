@@ -1,6 +1,6 @@
 <template>
   <app-view>
-    <AppHeaderComponent v-if="user" />
+    <Header v-if="user" />
 
     <loading-spinner v-if="loadingUser"></loading-spinner>
     <app-main v-else>
@@ -13,13 +13,13 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import AppHeaderComponent from '@/components/AppHeaderComponent'
+import Header from '@/components/layout/Header'
 import Homepage from '@/components/Homepage'
 
 export default {
   name: 'app',
   components: {
-    AppHeaderComponent,
+    Header,
     Homepage
   },
   computed: {
