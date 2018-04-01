@@ -27,6 +27,7 @@ export const getEditions = ({ commit, state }) => {
 }
 
 export const subscribe = ({ commit }, { edition, value}) => {
+  commit('invalidateTimeline')
   api
     .postSubscription(edition.id, value)
     .then(
@@ -43,6 +44,10 @@ export const loadMoreTimeline = ({ commit, state }) => {
   api
     .getTimeline(state.timeline.cursor)
     .then(timeline => commit('timelineReceived', timeline) )
+}
+
+export const invalidateTimeline = ({ commit }) => {
+  commit('invalidateTimeline')
 }
 
 export const expandIssue = ({ commit }, issueId) => {

@@ -10,7 +10,7 @@ export default new Vuex.Store({
     editions: {},
     allEditionsLoaded: false,
     timeline: {
-      issues: [],
+      issues: null, //null - not loaded, [] - loaded but empty
       cursor: null,
       loading: false,
       expandedIssues: {}
@@ -18,25 +18,34 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    user (state, user) {
+    user(state, user) {
       state.user = user
     },
-    allEditions (state, editions) {
+    allEditions(state, editions) {
       editions.forEach(edition => {
         state.editions[edition.id] = edition
       })
       state.allEditionsLoaded = true
     },
-    edition (state, edition) {
+    edition(state, edition) {
       state.editions = {...state.editions, [edition.id]: edition}
     },
-    timelineRequested (state) {
+    timelineRequested(state) {
       state.timeline.loading = true
     },
-    timelineReceived (state, { issues, cursor }) {
+    timelineReceived(state, { issues, cursor }) {
+      if (state.timeline.issues === null) {
+        state.timeline.issues = []
+      }
       issues.forEach(issue => state.timeline.issues.push(issue))
       state.timeline.cursor = cursor
       state.timeline.loading = false
+    },
+    invalidateTimeline(state) {
+      state.timeline.issues = null
+      state.timeline.cursor = null
+      state.timeline.loading = false
+      state.timeline.expandedIssues = {}
     },
     expandIssue (state, issueId) {
       state.timeline.expandedIssues = {
