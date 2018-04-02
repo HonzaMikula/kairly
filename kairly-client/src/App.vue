@@ -35,5 +35,15 @@ export default {
 </script>
 
 <style lang="sass">
-  @import 'styles/style'
+//- Libraries
+@import '../node_modules/node-reset-scss/scss/_reset'
+@import '../node_modules/font-awesome/scss/font-awesome'
+
+//- Scaffolding
+@import 'styles/scaffolding/layout'
+@import 'styles/scaffolding/typography'
+
+//- Components
+@import 'styles/components/loading-spinner'
+@import 'styles/components/tooltip'
 </style>

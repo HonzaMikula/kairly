@@ -57,3 +57,15 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+timeline-view 
+  display: block
+  padding: $baseline
+  margin: 0 auto
+  width: 900px
+
+  @media (max-width: $mobile)
+    padding: $baseline 0
+    width: $mobile
+</style>

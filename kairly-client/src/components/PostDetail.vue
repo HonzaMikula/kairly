@@ -89,3 +89,291 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+//- POST DETAIL -//
+
+post-detail
+  position: relative
+
+  display: block
+  padding: 0 $baseline/2
+  min-height: calc(100vh - (#{$baseline} * 2))
+  
+  background: #fff
+
+  //- wrapper
+  > div
+    padding: $baseline 0
+    margin: 0 auto
+    max-width: 900px
+
+  main
+    margin: 0 auto
+    max-width: 700px
+
+
+//- Back Button
+post-detail--back-button
+  position: sticky
+  left: $baseline
+  top: $baseline
+
+  display: inline-block
+  border-radius: 100%
+  height: $baseline * 2
+  width: $baseline * 2
+
+  background: #eee
+
+  cursor: pointer
+  font-size: $fs-1
+  line-height: $baseline * 2
+  text-align: center
+
+  &:focus,
+  &:hover
+    background: $c-base
+    color: #fff
+
+  &::before
+    +fa-icon()
+
+    content: $fa-var-arrow-left
+
+  @media (max-width: $mobile)
+    position: static  
+
+
+//- Read Later Button
+post-detail--read-later
+  position: sticky
+  top: $baseline
+
+  display: inline-block
+  border-radius: 100%
+  height: $baseline * 2
+  float: right
+  width: $baseline * 2
+
+  background: #eee
+
+  cursor: pointer
+  font-size: $fs-1
+  line-height: $baseline * 2
+  text-align: center
+
+  &:focus,
+  &:hover
+    background: $c-base
+    color: #fff
+
+  &::before
+    +fa-icon()
+
+    content: $fa-var-bookmark
+
+  @media (max-width: $mobile)
+    position: static    
+
+
+//- Header
+post-detail--header
+  display: table
+  margin-bottom: $baseline
+  margin-top: -$baseline * 2
+  width: 100%
+
+  a
+    color: #555
+
+    line-height: $baseline * 1.25
+    text-decoration: none
+
+    //- author picture
+    img
+      border-radius: 100%
+      float: left
+      height: $baseline * 1.25
+      margin-right: $baseline / 4
+      width: $baseline * 1.25
+
+      object-fit: cover
+
+
+//- Title
+post-detail--title
+  display: block
+  margin-bottom: $baseline
+
+  font-family: $ff-serif
+  font-size: $fs-3
+  font-weight: 600
+  line-height: $baseline * 1.25
+
+
+//- Continue Reading
+post-detail--continue-reading
+  position: relative
+
+  display: block
+  margin: $baseline*1.5 0
+
+  color: #999
+
+  font-family: $ff-serif
+  font-size: $fs-1
+  font-weight: 600
+  text-align: center
+
+  &::after,
+  &::before
+    position: absolute
+    top: $baseline / 2
+
+    height: 1px
+    width: 30%
+
+    background: #eee
+
+    content: ''
+
+  &::before   
+    left: 0
+
+  &::after
+    right: 0   
+
+
+//- Content
+post-detail--content,
+post-detail--perex
+  display: block
+
+  font-family: $ff-serif
+  font-size: $fs-1
+  line-height: $baseline * 1.25
+    
+  //- title
+  h1
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
+
+  //- Headings
+  h2,
+  h3
+    margin-bottom: $baseline
+    
+    font-weight: 600  
+
+  //- Paragraph
+  p
+    margin-bottom: $baseline  
+
+  //- Strong
+  strong 
+    font-weight: 600
+
+  //- Italic
+  em
+    font-style: italic  
+
+  //- Lists
+  ul
+    margin: 0 0 $baseline $baseline    
+
+  //- Bullet points
+  ul li
+    list-style: disc
+
+  //- Ordered list
+  ol li
+    list-style: decimal
+
+  //- Image
+  img
+    max-width: 100%      
+
+  //- Link
+  a
+    color: $c-base
+
+    text-decoration: none 
+       
+
+
+//- Post Footer    
+post-detail--footer
+  display: block
+  padding-bottom: $baseline / 2
+  margin-bottom: $baseline / 2
+
+  border-bottom: 1px solid #eee
+
+  button-icon
+    border-radius: 5px
+    display: inline-block
+    height: $baseline * 1.25
+    margin-right: $baseline / 2
+    padding: 0 $baseline/4
+    
+    background: #eee
+
+    cursor: pointer
+    font-size: $fs--2
+    line-height: $baseline * 1.25
+    vertical-align: middle
+
+    &::before
+      position: relative
+      top: -1px
+
+      margin-right: $baseline / 4
+      vertical-align: middle
+
+      font-size: $fs-1
+
+    &:focus,
+    &:hover
+      background: #bbb
+      color: #000  
+
+//- Post Author
+post-detail--author
+  display: grid
+  grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-bio"
+  grid-template-columns: $baseline*3 auto
+  grid-template-rows: $baseline auto
+  grid-gap: 0 $baseline/2
+
+  //- picture
+  picture
+    grid-area: post-detail-author-image
+    
+    img
+      border-radius: 100%
+      height: $baseline * 3
+      width: $baseline * 3
+
+      object-fit: cover
+
+  //- name
+  h3
+    grid-area: post-detail-author-name
+
+    font-size: $fs-0
+    font-weight: 600
+
+    a
+      color: #000
+
+      text-decoration: none
+
+  //- bio
+  p
+    grid-area: post-detail-author-bio 
+
+    font-size: $fs--1
+</style>

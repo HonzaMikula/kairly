@@ -65,3 +65,163 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+//- HEADER -//
+app-header 
+  display: block
+  height: $baseline * 2
+  padding: 0 $baseline
+
+  background: $c-base
+  color: #fff
+
+  font-size: $fs--1
+  line-height: $baseline * 2
+
+  @media (max-width: $mobile)
+    padding: 0 $baseline/2 0 0
+
+  //- wrapper
+  > div
+    position: relative
+
+    display: flex
+    margin: 0 auto
+    max-width: 900px
+
+
+//- Main Navigation
+app-header--nav
+  margin-right: auto
+
+  ul
+    display: flex
+
+  a
+    display: block
+    padding: 0 $baseline / 2
+
+    color: #fff
+
+    text-decoration: none
+
+    &:focus,
+    &:hover
+      background: darken($c-base, 10%)
+
+    &.is-active
+      background: darken($c-base, 15%)
+
+  li a::before
+    +fa-icon()
+
+    margin-right: $baseline / 4
+
+  li.home a::before 
+    content: $fa-var-home
+
+  li.new-post a::before
+    content: $fa-var-pencil-square-o  
+
+  li.your-editions a::before 
+    content: $fa-var-newspaper-o
+
+  li.notification a::before 
+    content: $fa-var-bell
+
+  li.reading-list a::before 
+    content: $fa-var-clock-o
+      
+
+//- Search
+app-header--search
+  position: relative
+  margin-right: $baseline
+
+  @media (max-width: $mobile)
+    display: none
+
+  &::after
+    position: absolute
+    right: $baseline / 2
+    top: 50%
+
+    margin-top: -7px 
+
+    +fa-icon()
+    opacity: 0.5
+
+    content: $fa-var-search
+
+  input
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.25
+    padding: 0 $baseline / 2
+
+    background: lighten($c-base, 10%)
+    border: 0
+    outline: 0
+
+    font-family: $ff-sans
+
+    transition: 0.15s background
+
+    &:focus
+      background: #fff
+
+    
+
+//- User Profile
+app-header--user-profile
+  cursor: pointer
+
+  //- profile picture
+  img
+    border-radius: 100%
+    height: $baseline * 1.25
+    width: $baseline * 1.25
+    vertical-align: middle
+
+    object-fit: cover
+        
+
+//- User Profile Menu
+app-header--user-profile-menu
+  position: absolute
+  right: 0
+  top: $baseline * 2   
+  z-index: 1
+
+  padding: $baseline / 4 0  
+  min-width: 150px  
+
+  background: #fff
+  border: 1px solid #eee
+  box-shadow: 1px 1px 3px #999
+
+  font-size: $fs--2
+  line-height: $baseline
+
+  h3
+    padding: 0 $baseline / 2 
+
+    color: #000
+
+    font-weight: 600
+
+  a 
+    display: block
+    padding: 0 $baseline / 2
+
+    color: #555
+
+    text-decoration: none
+  
+    &:focus,
+    &:hover
+      background: #eee
+
+
+</style>
+

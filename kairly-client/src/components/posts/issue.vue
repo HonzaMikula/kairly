@@ -1,5 +1,28 @@
+<template>
+  <post--issue role="article"> 
+    <div>
+      <h2><a :href="'/editions/' + post.edition.id">{{ post.title }}</a></h2>
+      <picture>
+        <a :href="'/editions/' + post.edition.id">
+          <img :src="post.edition.picture"/>
+        </a>
+      </picture>
+      <p>{{ post.edition.description }}</p>
+    </div>
+  </post--issue>
+</template>
+
+<script>
+
+export default {
+  name: 'PostIssue',
+  props: ["post"]
+}
+</script>
+
+<style lang="sass">
 //- POST ISSUE -//
-post-issue
+post--issue
   display: block
   padding: $baseline / 2
   width: 576px
@@ -41,6 +64,4 @@ post-issue
     //- description
     p
       grid-area: post-issue-description  
-
-
-      
+</style>

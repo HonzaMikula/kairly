@@ -72,3 +72,75 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+//- Edition
+timeline-edition
+  display: block
+  margin: $baseline*2 0 $baseline
+
+  &:first-of-type
+    margin-top: 0
+  
+  > header
+    margin-bottom: $baseline 
+
+    font-family: $ff-serif
+    text-align: center
+
+    h1
+      margin-bottom: $baseline / 2
+
+      font-size: $fs-3
+
+      img
+        height: $baseline * 1.5
+        width: $baseline * 1.5
+
+        vertical-align: middle
+
+      a
+        color: #000
+
+        text-decoration: none
+
+    img
+      border-radius: 100%
+      height: $baseline
+      width: $baseline
+
+      object-fit: cover
+      vertical-align: bottom
+
+    p
+      font-size: $fs-0
+
+      color: #999
+
+      a
+        color: #999
+        
+        text-decoration: none 
+
+  footer
+    text-align: center
+
+    button  
+      display: table
+      border-radius: $baseline
+      height: $baseline * 1.25
+      padding: 0 $baseline
+      margin: 0 auto
+
+      background: $c-base
+      border: 0
+      color: #fff
+  
+      font-family: $ff-sans
+      font-size: $fs--1
+      cursor: pointer
+
+      &:hover,
+      &:focus
+        background: darken($c-base, 10%)  
+</style>

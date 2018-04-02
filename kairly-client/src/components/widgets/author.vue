@@ -172,3 +172,167 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+//- AUTHOR WIDGET -//
+
+author-widget
+  position: absolute  
+  left: $baseline * 2
+  top: $baseline * 1.25
+  z-index: 1
+  
+  display: grid
+  grid-template-areas: "author-widget-picture author-widget-name" "author-widget-picture author-widget-medium" "author-widget-picture author-widget-stats" "author-widget-bio author-widget-bio" "author-widget-follow author-widget-follow"
+  grid-template-columns: $baseline * 3 auto
+  grid-template-rows: $baseline * 0.75 $baseline * 0.75 $baseline * 1.5 auto
+  grid-column-gap: $baseline / 2
+
+  border-radius: 5px
+  padding: $baseline / 4
+  width: 400px
+
+  background: #fff
+  border: 1px solid #eee
+  box-shadow: 1px 1px 3px #999
+
+  font-size: $fs--2
+  line-height: 22rem
+
+  //- arrow
+  &::after
+    position: absolute
+    bottom: 100%
+    left: 0
+
+    border: solid transparent
+    border-color: transparent
+    border-bottom-color: #eee
+    border-width: 15px
+
+    height: 0
+    margin-left: $baseline
+    width: 0
+
+    content: ""
+    pointer-events: none  
+
+  //- Image
+  img
+    grid-area: author-widget-picture
+
+    border-radius: $baseline / 4
+    width: $baseline * 3 
+
+//- Name
+author-widget--name
+  grid-area: author-widget-name
+
+  font-size: $fs--1
+  font-weight: 600
+  line-height: 18px
+
+
+//- Medium  
+author-widget--medium
+  grid-area: author-widget-medium
+  align-self: center
+
+  color: #555
+
+  font-size: $fs--2
+  line-height: 18px
+
+
+//- Bio
+author-widget--bio
+  grid-area: author-widget-bio  
+
+  margin-top: $baseline / 2
+
+  font-size: $fs--2
+  line-height: 20px
+
+//- Stats
+author-widget--stats
+  position: relative
+  top: 3px
+
+  display: flex
+  grid-area: author-widget-stats
+  align-self: end
+
+  //- containers
+  > div
+    margin-right: $baseline
+
+    white-space: nowrap
+    
+  
+  //- labels
+  h3
+    color: #999
+
+    line-height: 18px
+
+  //- values
+  p
+    font-weight: 600  
+    font-size: $fs--1
+    line-height: 18px
+
+
+//- Follow button
+author-widget--follow
+  grid-area: author-widget-follow
+  
+  > button
+    border-radius: 13px
+    height: $baseline
+    padding: 0 $baseline
+
+    background: #fff
+    border: 1px solid $c-base
+
+    cursor: pointer
+
+    &:focus,
+    &:hover,
+    &.is-active
+      background: $c-base
+      border: 1px solid $c-base
+      color: #fff   
+
+
+
+//-- Chose time    
+author-widget--follow--choose-time    
+  display: block
+  padding-top: $baseline / 2
+
+  > div
+    margin-bottom: $baseline / 2
+
+    &:last-of-type
+      margin-bottom: 0
+
+  h3
+    font-weight: 600
+
+  button
+    border-radius: $baseline/4
+    padding: 0 $baseline/4
+
+   
+    background: #fff
+    border: 0
+    color: #000
+
+    cursor: pointer
+
+    &.is-active
+      background: $c-base
+      color: #fff
+
+      font-weight: 600
+</style>

@@ -59,7 +59,7 @@
       </header>
       <timeline-post--tweet>
         <p>
-          Co chystáme na Kairly v nejbližší době?<br />
+          Co na Kairly chystáme v nejbližší době?<br />
           - Každý se bude moci stát editorem a sestavovat vlastní edice.<br />
           - Když sledujete autora, budete si moci nastavit, jak často a kdy budete dostávat souhrn autorových příspěvků.
         </p> 
@@ -113,3 +113,74 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+//- Welcome Edition
+timeline-welcome
+  display: block
+  margin-bottom: $baseline
+  
+  font-family: $ff-serif
+  
+
+  > h1
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-3
+    text-align: center
+
+  > p
+    margin-bottom: $baseline  
+    text-align: center
+  
+timeline-welcome--my-editions
+
+  > h2
+    margin-top: $baseline 
+
+    font-weight: 600
+    font-size: $fs-1
+    text-align: left
+
+  > div
+    display: flex
+    flex-wrap: wrap
+    margin: 0 (-$baseline/4)
+
+  my-editions--item
+    flex: 1
+
+timeline-welcome--more-editions
+  display: block
+  text-align: center
+
+  //- View more editions link
+  a
+    display: inline-block
+
+    color: #000
+
+    &:hover,
+    &:focus
+      text-decoration: none
+
+  //- Done button
+  button
+    display: inline-block
+    border-radius: $baseline
+    height: $baseline * 1.25
+    padding: 0 $baseline
+    margin-top: $baseline
+
+    background: $c-base
+    border: 0
+    color: #fff
+ 
+    font-family: $ff-sans
+    font-size: $fs--1
+    cursor: pointer
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+</style>

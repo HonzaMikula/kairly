@@ -28,3 +28,110 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+read-later-widget
+  position: absolute
+  left: -160px
+  top: $baseline * 1.5
+  z-index: 1
+
+  margin-left: $baseline * 1.75
+
+  color: #fff
+
+  font-size: $fs--1
+  font-weight: 100
+  line-height: 20px
+  white-space: normal
+
+  //- Arrow
+  &::after
+    position: absolute
+    bottom: 100%
+    left: 50%
+    
+    height: 0;
+    margin-left: -$baseline / 2
+    width: 0;
+    
+    border: solid transparent;
+    border-bottom-color: transparentize($c-base, 0.05)
+    border-width: $baseline / 2
+    
+    content: " ";
+    pointer-events: none;
+
+  //- Wrapper
+  > div
+    border-radius: $baseline / 4
+    box-sizing: border-box
+    padding: $baseline / 2
+    width: 320px
+
+    background: transparentize($c-base, 0.1)
+    backdrop-filter: blur(5px)
+
+
+//- Buttons wrapper
+read-later-widget--buttons
+  display: block
+  margin-top: $baseline / 2
+
+  text-align: center
+
+  //- Buttons
+  button
+    display: inline-block
+    border-radius: $baseline / 2
+    height: $baseline
+    padding: 0 $baseline / 2
+    margin: 0 $baseline / 8
+
+    background: transparent
+    border: 1px solid #fff
+    color: #fff
+    opacity: 0.7
+
+    font-family: $ff-sans
+    font-size: $fs--2
+    font-weight: 100
+
+    cursor: pointer
+    transition: 0.15s opacity
+
+    &:focus,
+    &:hover
+      opacity: 1
+
+    &:active
+      background: #fff;
+      color: $c-base
+      opacity: 1  
+
+
+//- Close Button
+read-later-widget--close-button
+  position: absolute
+  right: 0
+  top: 0
+
+  height: $baseline
+  width: $baseline
+
+  opacity: 0.5
+
+  cursor: pointer
+  text-align: center
+
+  transition: 0.15s opacity
+
+  &:focus,
+  &:hover
+    opacity: 1
+
+  &::after
+    +fa-icon()
+
+    content: $fa-var-times    
+</style>
