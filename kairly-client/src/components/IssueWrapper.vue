@@ -38,11 +38,11 @@ export default {
   name: 'IssueWrapper',
   props: ['issue', 'expanded'],
 
-  components: {
-    issueEdition,
-    issueAuthor,
-    PostWrapper,
-  },
+    components: {
+      issueEdition,
+      issueAuthor,
+      PostWrapper,
+    },
 
   data() {
     return {
@@ -138,6 +138,7 @@ timeline-edition
   
       font-family: $ff-sans
       font-size: $fs--1
+      line-height: $baseline * 1.25
       cursor: pointer
 
       &:hover,
