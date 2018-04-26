@@ -65,3 +65,14 @@ Run command, eg.
 ```
 DJANGO_SETTINGS_MODULE=kairly.settings_prod ./manage.py importrss --provider=janmikula
 ```
+
+## Import RSS
+Fetch & import all
+```
+pipenv run ./manage.py importrss --force
+```
+
+Fetch & import specific source
+```
+pipenv run ./manage.py importrss --provider=idnescz
+```
