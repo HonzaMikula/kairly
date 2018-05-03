@@ -294,15 +294,15 @@ post-detail--perex
 
   //- Image
   img
+    height: auto
     max-width: 100%      
 
   //- Link
-  a
+  a[href]
     color: $c-base
 
     text-decoration: none 
        
-
 
 //- Post Footer    
 post-detail--footer

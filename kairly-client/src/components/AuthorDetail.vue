@@ -223,14 +223,11 @@ author-detail--posts
   display: block
   margin-bottom: $baseline
 
-  h2
+  > h2
     margin-bottom: $baseline / 2
 
     font-family: $ff-serif
     font-size: $fs-1
     font-weight: 600
-    
-
-  img
-    max-width: 100%    
+      
 </style>

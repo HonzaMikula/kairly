@@ -1,7 +1,7 @@
 <template>
   <post :post="post">
     <timeline-post--newspaper>
-      <h2>{{ post.content.title }}</h2>
+      <h2><router-link :to="{ name: 'Post', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
       <timeline-post--newspaper--content>
         <div v-html="post.content.content"></div>
         <timeline-post--continue-reading v-if="post.timeRead && post.timeRead !='0 min'">
@@ -34,12 +34,16 @@ timeline-post--newspaper
   font-family: $ff-serif
   
   //- Title
-  h2
+  > h2
     display: block
     margin-bottom: $baseline / 2 
 
     font-size: $fs-1
     font-weight: 600
+
+    a
+      color: #000
+      text-decoration: none
 
   a
     color: $c-base
@@ -66,7 +70,7 @@ timeline-post--newspaper--content
 
 
   //-- heading
-  h3
+  h1, h2, h3
     margin: $baseline / 4 0
     font-weight: 600
 
@@ -80,10 +84,12 @@ timeline-post--newspaper--content
   img 
     display: block
     margin: $baseline / 4 0
-    width: 100%
+    height: auto
+    max-height: 200px
+    max-width: 100%
 
   //-- link
-  a
+  a[href]
     text-decoration: none
 
   //-- strong
