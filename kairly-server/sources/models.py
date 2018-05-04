@@ -16,7 +16,6 @@ class Channel(models.Model):
     provider = models.CharField(max_length=32, unique=True, help_text="Source identifier (namespace for guid)")
     rss = models.CharField(max_length=250)
     parse_content_from_rss = models.BooleanField(default=False)
-    parsing_rules = models.TextField(help_text="YAML with perex and content keys")
     parser = models.TextField(help_text="Parse rules to get content from webpage.", blank=True)
     skip_rules = models.TextField(help_text="YAML", blank=True)
     author = models.ForeignKey('articles.Author', models.SET_NULL, blank=True, null=True)
