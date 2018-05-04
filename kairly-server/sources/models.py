@@ -11,6 +11,7 @@ class Channel(models.Model):
     parse_content_from_rss = models.BooleanField(default=False)
     parsing_rules = models.TextField(help_text="YAML with perex and content keys")
     parser = models.TextField(help_text="Parse rules to get content from webpage.", blank=True)
+    skip_rules = models.TextField(help_text="YAML", blank=True)
     author = models.ForeignKey('articles.Author', models.SET_NULL, blank=True, null=True)
     enabled = models.BooleanField(default=True)
 
@@ -18,9 +19,9 @@ class Channel(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        rules = yaml.load(self.parsing_rules)
-        assert 'perex' in rules, 'perex key is missing'
-        assert 'content' in rules, 'content key is missing'
+        # validate skip rules
+        if self.skip_rules:
+            yaml.load(self.skip_rules)
         super(Channel, self).save(*args, **kwargs)
 
     def parse_rss(self):
