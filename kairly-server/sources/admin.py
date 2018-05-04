@@ -28,7 +28,8 @@ class ChannelAdmin(admin.ModelAdmin):
         perex, content = channel.parse_entry(entry)
 
         if len(entries) > index + 1:
-            next_link = '/admin/sources/channel/13/preview/{}/'.format(index + 1)
+            next_link = '/admin/sources/channel/{}/preview/{}/'.format(
+                channel_id, index + 1)
         else:
             next_link = None
 
