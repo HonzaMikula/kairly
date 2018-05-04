@@ -129,11 +129,11 @@ class Command(BaseCommand):
                         continue
 
                 if channel.parse_content_from_rss:
-                    if hasattr(entry , 'content'):
+                    if hasattr(entry, 'content'):
                         htmltree = lxml.html.fromstring(entry.content[0].value)
-                    else: 
-                        htmltree = lxml.html.fromstring(entry.description) 
-                        
+                    else:
+                        htmltree = lxml.html.fromstring(entry.description)
+
                 else:
                     resp = requests.get(url)
                     resp_content = resp.content.decode(resp.encoding)

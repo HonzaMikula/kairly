@@ -1,7 +1,13 @@
+from urllib.parse import urlparse
+
 import feedparser
+import requests
 import yaml
+import lxml.html
 
 from django.db import models
+
+from .parser import ArticleParser
 
 
 class Channel(models.Model):
@@ -26,3 +32,36 @@ class Channel(models.Model):
 
     def parse_rss(self):
         return feedparser.parse(self.rss)
+
+    def parse_content_from_entry(self, entry):
+        url = entry.link.split('#', maxsplit=1)[0]
+        if self.parse_content_from_rss:
+            if hasattr(entry, 'content'):
+                html = entry.content[0].value
+            else:
+                html = entry.description
+        else:
+            resp = requests.get(url)
+            html = resp.content.decode(resp.encoding)
+
+        htmltree = lxml.html.fromstring(html)
+        self.fix_images(htmltree, url)
+        parser = ArticleParser(self.parser)
+        return parser.parse(htmltree)
+
+    def is_url_valid(self, url):
+        if not self.skip_rules:
+            return True
+        skip_rules = yaml.load(self.skip_rules)
+        domain = skip_rules.get('domain')
+        if domain:
+            url = url.split('#', maxsplit=1)[0]
+            return urlparse(url).hostname != domain
+        return True
+
+    def fix_images(self, htmltree, url):
+        host = '//' + urlparse(url).hostname
+        for el in htmltree.cssselect('img'):
+            src = el.attrib.get('src')
+            if src and src.startswith('/') and not src.startswith('//'):
+                el.attrib['src'] = host + el.attrib['src']

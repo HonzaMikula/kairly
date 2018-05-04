@@ -1,0 +1,47 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<style>
+#content {
+  padding: 0;
+}
+
+.preview-header {
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #eee;
+  display: flex;
+}
+
+.preview-header .url {
+  flex: 1;
+}
+
+.preview {
+  font-family: serif;
+  font-size: 16px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.preview h1 {
+  font-family: serif;
+  font-size: 24px;
+  font-weight: bold;
+}
+</style>
+
+<div class="preview-header">
+  <div class="url">
+    Preview of <a href="{{ url }}">{{ url }}</a>
+  </div>
+  {% if next_link %}
+    <a href="{{ next_link }}">Next article</a>
+  {% endif %}
+</div>
+
+<article class="preview">
+  <h1>{{ article_title }}</h1>
+  {{ content|safe }}
+</article>
+
+{% endblock %}
