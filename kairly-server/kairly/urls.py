@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic.base import RedirectView
 
 from jwtauth.views import get_token
 
@@ -24,6 +25,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('api/token', get_token),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('admin',  RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
     path('', include('articles.urls')),
 ]
