@@ -32,7 +32,7 @@ class ArticleParser:
 
         def parse_property(line):
             if ':' in line:
-                prop, value = line.split(':')
+                prop, value = line.split(':', maxsplit=1)
                 d = {}
                 d[prop.strip()] = value.strip()
                 return d
