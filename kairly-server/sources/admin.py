@@ -25,13 +25,12 @@ class ChannelAdmin(admin.ModelAdmin):
                 entries.append(entry)
 
         entry = entries[index]
-        content = channel.parse_content_from_entry(entry)
+        perex, content = channel.parse_entry(entry)
 
         if len(entries) > index + 1:
             next_link = '/admin/sources/channel/13/preview/{}/'.format(index + 1)
         else:
             next_link = None
-
 
         context = dict(
            # Include common variables for rendering the admin template.
@@ -39,6 +38,7 @@ class ChannelAdmin(admin.ModelAdmin):
            # Anything else you want in the context...
            url=entry.link.split('#', maxsplit=1)[0],
            article_title=entry.title,
+           perex=perex,
            content=content,
            next_link=next_link
         )

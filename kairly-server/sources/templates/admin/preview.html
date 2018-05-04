@@ -28,6 +28,10 @@
   font-size: 24px;
   font-weight: bold;
 }
+
+.hr {
+  text-align: center;
+}
 </style>
 
 <div class="preview-header">
@@ -41,6 +45,9 @@
 
 <article class="preview">
   <h1>{{ article_title }}</h1>
+  {{ perex|safe }}
+  <div class="hr">--------------- continue reading ---------------</div>
+
   {{ content|safe }}
 </article>
 

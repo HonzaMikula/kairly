@@ -4,6 +4,7 @@ import feedparser
 import requests
 import yaml
 import lxml.html
+from lxml.etree import tostring
 
 from django.db import models
 
@@ -33,7 +34,30 @@ class Channel(models.Model):
     def parse_rss(self):
         return feedparser.parse(self.rss)
 
-    def parse_content_from_entry(self, entry):
+    def parse_entry(self, entry):
+        article = self.parse_article_from_entry(entry)
+        htmltree = lxml.html.fromstring(article)
+        chars = 0
+        perex = []
+        nocontent = False
+        for i, el in enumerate(htmltree):
+            if el.tag == 'img':
+                chars += 180
+            else:
+                chars += len(el.text_content())
+            perex.append(tostring(el, encoding='utf-8').decode('utf-8'))
+            el.getparent().remove(el)
+
+            if chars >= 1200:
+                break
+        else:
+            nocontent = True
+
+        perex = '\n\n'.join(perex)
+        content = '' if nocontent else tostring(htmltree, encoding='utf-8').decode('utf-8')
+        return perex, content
+
+    def parse_article_from_entry(self, entry):
         url = entry.link.split('#', maxsplit=1)[0]
         if self.parse_content_from_rss:
             if hasattr(entry, 'content'):
