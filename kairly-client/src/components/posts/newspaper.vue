@@ -153,6 +153,22 @@ timeline-post--newspaper--content
     &::after
       content: "“"
 
+  //-- code inline
+  code
+    background: #fafafa
+    font-family: "courier new", courier, monospace
+    font-size: $fs--1
+
+  //-- code block
+  pre 
+    overflow: auto
+
+    background: #fafafa
+    border: 1px solid #eee
+
+    font-family: "courier new", courier, monospace
+    font-size: $fs--2
+
 
 //- Continue Reading
 timeline-post--continue-reading
