@@ -295,13 +295,34 @@ post-detail--perex
   //- Image
   img
     height: auto
-    max-width: 100%      
+    max-width: 100%   
+
+  //- Video
+  video
+    height: auto
+    max-width: 100%       
 
   //- Link
   a[href]
     color: $c-base
 
     text-decoration: none 
+
+  //-- code inline
+  code
+    background: #fafafa
+    font-family: "courier new", courier, monospace
+    font-size: $fs--1
+
+  //-- code block
+  pre 
+    overflow: auto
+
+    background: #fafafa
+    border: 1px solid #eee
+
+    font-family: "courier new", courier, monospace
+    font-size: $fs--2  
        
 
 //- Post Footer    

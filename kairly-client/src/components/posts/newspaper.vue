@@ -88,6 +88,11 @@ timeline-post--newspaper--content
     max-height: 200px
     max-width: 100%
 
+  //- Video
+  video
+    height: auto
+    max-width: 100%    
+
   //-- link
   a[href]
     text-decoration: none
