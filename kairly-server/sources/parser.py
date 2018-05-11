@@ -96,7 +96,11 @@ class ArticleParser:
 
         for rule in self.flatten_rules():
             wrap_into = rule.props.get('as')
-            for el in self.cssselect_with_slice(htmltree, rule.selector, rule.props.get('slice')):
+            if rule.selector == '*':
+                elements = htmltree
+            else:
+                elements = self.cssselect_with_slice(htmltree, rule.selector, rule.props.get('slice'))
+            for el in elements:
                 if wrap_into == 'img':
                     result.append('<img alt="{alt}" title="{title}" src="{src}" />'.format(
                         alt=el.attrib.get('alt'),

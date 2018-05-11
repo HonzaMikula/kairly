@@ -24,7 +24,14 @@ class ChannelAdmin(admin.ModelAdmin):
             if channel.is_url_valid(entry.link):
                 entries.append(entry)
 
-        entry = entries[index]
+        try:
+            entry = entries[index]
+        except IndexError:
+            context = dict(
+               self.admin_site.each_context(request),
+            )
+            return TemplateResponse(request, "admin/preview-empty.html", context)
+
         perex, content = channel.parse_entry(entry)
 
         if len(entries) > index + 1:

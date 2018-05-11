@@ -53,16 +53,17 @@ class Channel(models.Model):
         nocontent = False
         for i, el in enumerate(flatten_tree(htmltree)):
             if el.tag == 'img':
-                chars += 180
+                element_size = 180
             else:
-                chars += len(el.text_content())
+                element_size = len(el.text_content())
+
+            if perex and chars + element_size > 1600:
+                break
 
             t = (el.tag, tostring(el, encoding='utf-8').decode('utf-8'))
+            chars += element_size
             perex.append(t)
             el.getparent().remove(el)
-
-            if chars >= 1200:
-                break
         else:
             nocontent = True
 
