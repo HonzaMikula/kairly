@@ -11,6 +11,18 @@ from django.db import models
 from .parser import ArticleParser
 
 
+def flatten_tree(htmltree):
+    childs = list(htmltree)
+    if childs:
+        for el in childs:
+            if el.tag == 'div':
+                yield from flatten_tree(el)
+            else:
+                yield el
+    else:
+        yield htmltree
+
+
 class Channel(models.Model):
     name = models.CharField(max_length=160)
     provider = models.CharField(max_length=32, unique=True, help_text="Source identifier (namespace for guid)")
@@ -39,12 +51,14 @@ class Channel(models.Model):
         chars = 0
         perex = []
         nocontent = False
-        for i, el in enumerate(htmltree):
+        for i, el in enumerate(flatten_tree(htmltree)):
             if el.tag == 'img':
                 chars += 180
             else:
                 chars += len(el.text_content())
-            perex.append(tostring(el, encoding='utf-8').decode('utf-8'))
+
+            t = (el.tag, tostring(el, encoding='utf-8').decode('utf-8'))
+            perex.append(t)
             el.getparent().remove(el)
 
             if chars >= 1200:
@@ -52,7 +66,13 @@ class Channel(models.Model):
         else:
             nocontent = True
 
-        perex = '\n\n'.join(perex)
+        def is_hx(tag):
+            return tag[0] == 'h' and len(tag) == 2
+
+        while perex and is_hx(perex[-1][0]):
+            perex.pop()
+
+        perex = '\n\n'.join(p[1] for p in perex)
         content = '' if nocontent else tostring(htmltree, encoding='utf-8').decode('utf-8')
         return perex, content
 
