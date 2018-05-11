@@ -1,4 +1,5 @@
 import time
+import traceback
 import dateutil.parser
 
 from django.core.management.base import BaseCommand
@@ -31,12 +32,14 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        verbosity = options.get('verbosity')
         channels = Channel.objects.filter(enabled=True).exclude(author__isnull=True)
         if options.get('provider'):
             channels = channels.filter(provider=options['provider'])
 
         for channel in channels:
-            self.stdout.write('Fetching {}'.format(channel.rss))
+            if verbosity > 0:
+                self.stdout.write('Fetching {}'.format(channel.rss))
 
             for entry in channel.parse_rss().entries:
                 guid = "{}|{}".format(channel.provider, entry.id)
@@ -45,34 +48,41 @@ class Command(BaseCommand):
                     continue
 
                 url = entry.link.split('#', maxsplit=1)[0]
-                perex, content = channel.parse_entry(entry)
-                update = False
 
                 if Post.objects.filter(guid=guid).exists():
                     if options.get('force'):
                         update = True
                     else:
-                        self.stdout.write('Skipping {}. Already imported'.format(url))
+                        if verbosity > 1:
+                            self.stdout.write('Skipping {}. Already imported'.format(url))
                         continue
 
-                args = dict(
-                    kind=Post.NEWSPAPER,
-                    published=dateutil.parser.parse(entry.published),
-                    draft=options.get('draft'),
-                    guid=guid,
-                    source=url,
-                    title=entry.title,
-                    perex=perex,
-                    content=content,
-                    author=channel.author
-                )
+                if verbosity > 0:
+                    self.stdout.write('Importing {}'.format(url))
 
-                if update:
-                    post = Post.objects.get(guid=guid)
-                    post.__dict__.update(args)
-                    post.save()
-                else:
-                    Post.objects.create(**args)
+                try:
+                    perex, content = channel.parse_entry(entry)
+                    update = False
 
-                self.stdout.write('Imported {}'.format(url))
+                    args = dict(
+                        kind=Post.NEWSPAPER,
+                        published=dateutil.parser.parse(entry.published),
+                        draft=options.get('draft'),
+                        guid=guid,
+                        source=url,
+                        title=entry.title,
+                        perex=perex,
+                        content=content,
+                        author=channel.author
+                    )
+
+                    if update:
+                        post = Post.objects.get(guid=guid)
+                        post.__dict__.update(args)
+                        post.save()
+                    else:
+                        Post.objects.create(**args)
+                except Exception:
+                    traceback.print_exc()
+
                 time.sleep(0.1)
