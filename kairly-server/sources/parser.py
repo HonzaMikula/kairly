@@ -129,7 +129,7 @@ class ArticleParser:
                     el.insert(i, subchild)
                 if tail:
                     try:
-                        el[i].tail += tail
+                        el[i].tail = (el[i].tail or '') + tail
                     except IndexError:
                         el.text += tail
             else:
