@@ -157,6 +157,10 @@ class ArticleParser:
         for el in htmltree.cssselect('script, style, iframe, applet, object, canvas, noscript, audio, form'):
             el.getparent().remove(el)
 
+        # fix self closing A tags
+        for el in htmltree.xpath('//a[not(text())]'):
+            el.getparent().remove(el)
+
         for rule in self.flatten_rules():
             if rule.selector == '*':
                 elements = [htmltree]
@@ -176,12 +180,19 @@ class ArticleParser:
                 props.update({'tag': 'auto'})
                 props.update(rule.props)
 
+                print(el.tag, (etree.tostring(el, encoding='utf-8').decode('utf-8')))
+
                 if move_after is not None:
                     el.getparent().remove(el)
                     parent = move_after.getparent()
                     parent.insert(parent.index(move_after) + 1, el)
 
         elements = self._find_elements(htmltree)
+
+        print("-----------")
+        for el in elements:
+            print(el.tag, (etree.tostring(el, encoding='utf-8').decode('utf-8')))
+
         self.props = None
         return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in elements)
 
