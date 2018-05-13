@@ -2,7 +2,7 @@ import re
 from collections import namedtuple, defaultdict
 from itertools import product
 
-from lxml.etree import tostring
+from lxml import etree
 
 Rule = namedtuple('Rule', ['props', 'selector'])
 NestingLevel = namedtuple('NestingLevel', ['indent', 'parts'])
@@ -150,6 +150,9 @@ class ArticleParser:
     def parse(self, htmltree):
         self.props = defaultdict(dict)
 
+        for comment in htmltree.xpath('//comment()'):
+            comment.getparent().remove(comment)
+
         # first remove dangerous elements
         for el in htmltree.cssselect('script, iframe, applet, object, canvas, noscript, audio, form'):
             el.getparent().remove(el)
@@ -169,7 +172,7 @@ class ArticleParser:
 
         elements = self._find_elements(htmltree)
         self.props = None
-        return ''.join(tostring(el, encoding='utf-8').decode('utf-8') for el in elements)
+        return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in elements)
 
     def cssselect_with_slice(self, root, selector):
         result = []
