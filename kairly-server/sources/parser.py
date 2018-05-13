@@ -1,5 +1,5 @@
 import re
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from itertools import product
 
 from lxml.etree import tostring
@@ -91,42 +91,110 @@ class ArticleParser:
 
         return rules
 
+    def _getprop(self, el, name):
+        return self.props[id(el)].get(name)
+
+    def _strip_attibutes(self, el):
+        if el.tag == 'img':
+            preserve = {'title', 'src', 'alt'}
+        elif el.tag == 'a':
+            preserve = {'title', 'href'}
+        else:
+            preserve = {'title'}
+        for attr in el.attrib.keys():
+            if attr not in preserve:
+                del el.attrib[attr]
+
+    def _prune(self, el):
+        def reverse_enumerate(arr):
+            size = len(arr)
+            for i, n in enumerate(arr):
+                yield size - i - 1, n
+
+        tag = self._getprop(el, 'tag')
+        if tag and tag != 'auto':
+            el.tag = tag.lower()
+
+        self._strip_attibutes(el)
+
+        for i, child in reverse_enumerate(list(el)):
+            tag = self._getprop(child, 'tag')
+            if tag == 'none':
+                # remove element (and may be be replaced with content in
+                # subtree which is marked for inclusion
+                tail = el[i].tail
+                del el[i]
+                for subchild in reversed(self._find_elements(child)):
+                    subchild.tail = ''
+                    el.insert(i, subchild)
+                if tail:
+                    try:
+                        el[i].tail += tail
+                    except IndexError:
+                        el.text += tail
+            else:
+                self._prune(child)
+
+        return el
+
+    def _find_elements(self, root):
+        tag = self._getprop(root, 'tag')
+        if tag and tag != 'none':
+            return [self._prune(root)]
+
+        elements = []
+        for child in root:
+            elements.extend(self._find_elements(child))
+        return elements
+
     def parse(self, htmltree):
-        result = []
+        self.props = defaultdict(dict)
+
+        # first remove dangerous elements
+        for el in htmltree.cssselect('script, iframe, applet, object, canvas, noscript, audio, form'):
+            el.getparent().remove(el)
+
+        # TODO strip img properties
 
         for rule in self.flatten_rules():
-            wrap_into = rule.props.get('as')
+            props = {'tag': 'auto'}
+            props.update(rule.props)
             if rule.selector == '*':
                 elements = htmltree
             else:
-                elements = self.cssselect_with_slice(htmltree, rule.selector, rule.props.get('slice'))
-            for el in elements:
-                if wrap_into == 'img':
-                    result.append('<img alt="{alt}" title="{title}" src="{src}" />'.format(
-                        alt=el.attrib.get('alt'),
-                        title=el.attrib.get('title'),
-                        src=el.attrib.get('src')))
-                else:
-                    # content = el.text_content().strip()
-                    content = tostring(el, encoding='utf-8').decode('utf-8')
-                    if wrap_into:
-                        result.append("<{tag}>{content}</{tag}>".format(tag=wrap_into, content=content))
-                    else:
-                        result.append(content)
-        return '\n\n'.join(result)
+                elements = self.cssselect_with_slice(htmltree, rule.selector)
 
-    def cssselect_with_slice(self, htmltree, selector, slice_prop):
-        sl = None
-        if slice_prop:
-            m = re.match(r"\[(\d*)(:)?(\d*)\]", slice_prop)
-            if m:
+            for el in elements:
+                self.props[id(el)].update(props)
+
+        elements = self._find_elements(htmltree)
+        self.props = None
+        return ''.join(tostring(el, encoding='utf-8').decode('utf-8') for el in elements)
+
+    def cssselect_with_slice(self, root, selector):
+        result = []
+        for plain_selector in selector.split(','):
+            plain_selector = plain_selector.strip()
+            # replace "div [0]" to "div *[0]"
+            plain_selector = re.sub(r"\s(\[\d)", r" *\1", plain_selector)
+
+            items = re.split(r"(\[\d[:\d]*\])", plain_selector)
+            items = [x for x in items if x]
+            if len(items) > 2:
+                raise ValueError("Only one slice is currently allowed ({})".format(plain_selector))
+
+            elements = root.cssselect(items[0])
+            if len(items) == 2:
+                m = re.match(r"\[(\d*)(:)?(\d*)\]", items[1])
+                assert m, "Second token should be slice"
                 b1 = int(m.group(1)) if m.group(1) else None
                 b2 = int(m.group(3)) if m.group(3) else None
                 if m.group(2) == ':':
                     sl = slice(b1, b2)
                 else:
                     sl = slice(b1, b1 + 1)
-        elements = htmltree.cssselect(selector)
-        if sl:
-            return elements[sl]
-        return elements
+
+                elements = elements[sl]
+            result.extend(elements)
+
+        return result

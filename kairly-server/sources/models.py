@@ -89,6 +89,12 @@ class Channel(models.Model):
             html = resp.content.decode(resp.encoding)
 
         htmltree = lxml.html.fromstring(html)
+        try:
+            # if descrption contains full html, dive into
+            htmltree = htmltree.cssselect("body")[0]
+        except IndexError:
+            pass
+
         self.fix_images(htmltree, url)
         parser = ArticleParser(self.parser)
         return parser.parse(htmltree)
