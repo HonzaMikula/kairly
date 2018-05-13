@@ -92,7 +92,7 @@ class ArticleParser:
         return rules
 
     def _getprop(self, el, name):
-        return self.props[id(el)].get(name)
+        return self.props[el].get(name)
 
     def _strip_attibutes(self, el):
         if el.tag == 'img':
@@ -154,21 +154,19 @@ class ArticleParser:
             comment.getparent().remove(comment)
 
         # first remove dangerous elements
-        for el in htmltree.cssselect('script, iframe, applet, object, canvas, noscript, audio, form'):
+        for el in htmltree.cssselect('script, style, iframe, applet, object, canvas, noscript, audio, form'):
             el.getparent().remove(el)
 
-        # TODO strip img properties
-
         for rule in self.flatten_rules():
-            props = {'tag': 'auto'}
-            props.update(rule.props)
             if rule.selector == '*':
-                elements = htmltree
+                elements = [htmltree]
             else:
                 elements = self.cssselect_with_slice(htmltree, rule.selector)
 
             for el in elements:
-                self.props[id(el)].update(props)
+                props = self.props[el]
+                props.update({'tag': 'auto'})
+                props.update(rule.props)
 
         elements = self._find_elements(htmltree)
         self.props = None

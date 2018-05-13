@@ -89,3 +89,14 @@ b[0]
         parser = ArticleParser(rules)
         article = parser.parse(lxml.html.fromstring(doc))
         self.assertEqual(article, expected)
+
+    def test_parse_notroot(self):
+        doc = '<div><div><b>B</b></div></div>'
+        rules = """
+b
+"""
+        expected = '<b>B</b>'
+
+        parser = ArticleParser(rules)
+        article = parser.parse(lxml.html.fromstring(doc))
+        self.assertEqual(article, expected)
