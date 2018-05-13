@@ -101,6 +101,7 @@ class ArticleParser:
             preserve = {'title', 'href'}
         else:
             preserve = {'title'}
+
         for attr in el.attrib.keys():
             if attr not in preserve:
                 del el.attrib[attr]
@@ -117,11 +118,12 @@ class ArticleParser:
 
         self._strip_attibutes(el)
 
-        for i, child in reverse_enumerate(list(el)):
+        for child in list(el):
             tag = self._getprop(child, 'tag')
             if tag == 'none':
                 # remove element (and may be be replaced with content in
                 # subtree which is marked for inclusion
+                i = el.index(child)
                 tail = el[i].tail
                 del el[i]
                 for subchild in reversed(self._find_elements(child)):
@@ -135,12 +137,11 @@ class ArticleParser:
             else:
                 self._prune(child)
 
-        return el
-
     def _find_elements(self, root):
         tag = self._getprop(root, 'tag')
         if tag and tag != 'none':
-            return [self._prune(root)]
+            self._prune(root)
+            return [root]
 
         elements = []
         for child in root:
@@ -162,6 +163,7 @@ class ArticleParser:
             el.getparent().remove(el)
 
         for rule in self.flatten_rules():
+
             if rule.selector == '*':
                 elements = [htmltree]
             else:
@@ -180,18 +182,12 @@ class ArticleParser:
                 props.update({'tag': 'auto'})
                 props.update(rule.props)
 
-                print(el.tag, (etree.tostring(el, encoding='utf-8').decode('utf-8')))
-
                 if move_after is not None:
                     el.getparent().remove(el)
                     parent = move_after.getparent()
                     parent.insert(parent.index(move_after) + 1, el)
 
         elements = self._find_elements(htmltree)
-
-        print("-----------")
-        for el in elements:
-            print(el.tag, (etree.tostring(el, encoding='utf-8').decode('utf-8')))
 
         self.props = None
         return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in elements)
