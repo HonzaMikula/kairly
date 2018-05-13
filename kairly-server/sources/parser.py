@@ -163,10 +163,23 @@ class ArticleParser:
             else:
                 elements = self.cssselect_with_slice(htmltree, rule.selector)
 
+            move_after = None
+            move_after_selector = rule.props.get('move-after')
+            if move_after_selector:
+                try:
+                    move_after = htmltree.cssselect(move_after_selector)[0]
+                except IndexError:
+                    pass
+
             for el in elements:
                 props = self.props[el]
                 props.update({'tag': 'auto'})
                 props.update(rule.props)
+
+                if move_after is not None:
+                    el.getparent().remove(el)
+                    parent = move_after.getparent()
+                    parent.insert(parent.index(move_after) + 1, el)
 
         elements = self._find_elements(htmltree)
         self.props = None
