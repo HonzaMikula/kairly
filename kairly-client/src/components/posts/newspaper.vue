@@ -70,7 +70,7 @@ timeline-post--newspaper--content
 
 
   //-- heading
-  h1, h2, h3
+  h1, h2, h3, h4, h5, h6
     margin: $baseline / 4 0
     font-weight: 600
 
@@ -98,20 +98,22 @@ timeline-post--newspaper--content
     text-decoration: none
 
   //-- strong
-  strong 
+  strong, b 
     font-weight: 600
 
   //-- italic
-  em
+  em, i
     font-style: italic
 
   //-- bullet points
   ul li
-    list-style: disc inside      
+    margin-left: $baseline
+    list-style: disc outside      
 
   //-- ordered list
   ol li
-    list-style: decimal inside
+    margin-left: $baseline
+    list-style: decimal outside
 
   //-- horizontal line
   hr
@@ -173,6 +175,16 @@ timeline-post--newspaper--content
 
     font-family: "courier new", courier, monospace
     font-size: $fs--2
+
+
+  //-- pictures
+  figure 
+    text-align: center
+
+  figcaption
+    color: #999
+    font-family: $ff-sans
+    font-size: $fs--2    
 
 
 //- Continue Reading

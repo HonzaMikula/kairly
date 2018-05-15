@@ -262,8 +262,7 @@ post-detail--perex
     font-weight: 600
 
   //- Headings
-  h2,
-  h3
+  h2, h3, h4, h5, h6
     margin-bottom: $baseline
     
     font-weight: 600  
@@ -273,24 +272,26 @@ post-detail--perex
     margin-bottom: $baseline  
 
   //- Strong
-  strong 
+  strong, b 
     font-weight: 600
 
   //- Italic
-  em
+  em, i
     font-style: italic  
 
   //- Lists
   ul
     margin: 0 0 $baseline $baseline    
 
-  //- Bullet points
+  //-- bullet points
   ul li
-    list-style: disc
+    margin-left: $baseline
+    list-style: disc outside      
 
-  //- Ordered list
+  //-- ordered list
   ol li
-    list-style: decimal
+    margin-left: $baseline
+    list-style: decimal outside
 
   //- Image
   img
@@ -322,6 +323,17 @@ post-detail--perex
     border: 1px solid #eee
 
     font-family: "courier new", courier, monospace
+    font-size: $fs--2  
+
+
+  //-- pictures
+  figure 
+    margin-bottom: $baseline
+    
+    text-align: center
+
+  figcaption
+    font-family: $ff-sans
     font-size: $fs--2  
        
 
