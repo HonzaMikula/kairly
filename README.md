@@ -101,7 +101,7 @@ or
 p
 
 img:fist-child
-  move-after: p:first-child\
+  move-after: p:first-child
 ```
 
 ### Renaming tags
