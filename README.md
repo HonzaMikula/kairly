@@ -76,3 +76,29 @@ Fetch & import specific source
 ```
 pipenv run ./manage.py importrss --provider=idnescz
 ```
+
+## Import RSS Rules
+
+### Exclude tag
+```*
+
+h1:
+  exclude: 1```
+
+### Changing order of tags
+```p
+
+img:fist-child
+    odering: 1```
+
+or
+
+```p
+
+img:fist-child
+  move-after: p:first-child```
+
+### Renaming tags
+```div#main-content
+  h3
+    as: p```
