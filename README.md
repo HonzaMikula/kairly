@@ -80,25 +80,32 @@ pipenv run ./manage.py importrss --provider=idnescz
 ## Import RSS Rules
 
 ### Exclude tag
-```*
+```
+*
 
 h1:
-  exclude: 1```
+  exclude: 1
+```
 
 ### Changing order of tags
-```p
+```
+p
 
 img:fist-child
     odering: 1```
 
 or
 
-```p
+```
+p
 
 img:fist-child
-  move-after: p:first-child```
+  move-after: p:first-child\
+```
 
 ### Renaming tags
-```div#main-content
+```
+div#main-content
   h3
-    as: p```
+    as: p
+```
