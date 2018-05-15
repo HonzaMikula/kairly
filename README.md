@@ -83,7 +83,7 @@ pipenv run ./manage.py importrss --provider=idnescz
 ```
 *
 
-h1:
+h1
   exclude: 1
 ```
 
