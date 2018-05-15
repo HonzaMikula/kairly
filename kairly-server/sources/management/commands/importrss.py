@@ -64,9 +64,14 @@ class Command(BaseCommand):
                     perex, content = channel.parse_entry(entry)
                     update = False
 
+                    try:
+                        published = entry.published
+                    except AttributeError:
+                        published = entry.date
+
                     args = dict(
                         kind=Post.NEWSPAPER,
-                        published=dateutil.parser.parse(entry.published),
+                        published=dateutil.parser.parse(published),
                         draft=options.get('draft'),
                         guid=guid,
                         source=url,
