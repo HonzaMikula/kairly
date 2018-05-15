@@ -88,14 +88,6 @@ h1
 ```
 
 ### Changing order of tags
-```
-p
-
-img:fist-child
-    odering: 1
-```
-
-or
 
 ```
 p
@@ -107,6 +99,6 @@ img:fist-child
 ### Renaming tags
 ```
 div#main-content
-  h3
-    as: p
+  h1
+    tag: h2
 ```
