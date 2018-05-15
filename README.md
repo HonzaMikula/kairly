@@ -92,7 +92,8 @@ h1:
 p
 
 img:fist-child
-    odering: 1```
+    odering: 1
+```
 
 or
 
