@@ -84,7 +84,7 @@ pipenv run ./manage.py importrss --provider=idnescz
 *
 
 h1
-  exclude: 1
+  tag: none
 ```
 
 ### Changing order of tags
