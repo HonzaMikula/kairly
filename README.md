@@ -92,8 +92,8 @@ h1
 ```
 p
 
-img:fist-child
-  move-after: p:first-child
+img[0]
+  move-after: p[1]
 ```
 
 ### Renaming tags
