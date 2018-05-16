@@ -96,7 +96,7 @@ class ArticleParser:
 
     def _strip_attibutes(self, el):
         if el.tag == 'img':
-            preserve = {'title', 'src', 'alt'}
+            preserve = {'title', 'src', 'alt', 'srcset', 'sizes'}
         elif el.tag == 'a':
             preserve = {'title', 'href'}
         else:

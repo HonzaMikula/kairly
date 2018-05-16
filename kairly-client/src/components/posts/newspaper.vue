@@ -83,7 +83,7 @@ timeline-post--newspaper--content
   //-- illustration image
   img 
     display: block
-    margin: $baseline / 4 0
+    margin: $baseline / 4 auto
     height: auto
     max-height: 200px
     max-width: 100%
