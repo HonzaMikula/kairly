@@ -150,7 +150,7 @@ class ArticleParser:
 
     def _print(self, htmltree, label="HTML tree"):
         """Debug helper"""
-        print("──────────────── {} ────────────────".format('label'))
+        print("──────────────── {} ────────────────".format(label))
         print(etree.tostring(htmltree, pretty_print=True).decode('utf-8'))
         print("────────────────────────────────")
 

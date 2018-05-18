@@ -80,9 +80,23 @@ class Channel(models.Model):
     def parse_article_from_entry(self, entry):
         url = entry.link.split('#', maxsplit=1)[0]
         if self.parse_content_from_rss:
+            # some feeds has full article in content attribute, see issue #40
+            # eg http://www.mindtheproduct.com/feed/ or https://blogs.windows.com/msedgedev/feed/
+            #
+            # On the other hand content may contains only shortened text
+            # like https://www.blog.google/products/search/rss/ for which feedparser
+            # returns text/plain summary inside content attr, see issue #44
+            #
+            # This means that sometimes descrption is proper source otherways
+            # content must be used. For now best approach seems to be use
+            # content only if contains text/html type.
+            html = None
             if hasattr(entry, 'content'):
-                html = entry.content[0].value
-            else:
+                for content in entry.content:
+                    if content.type == 'text/html':
+                        html = content.value
+                        break
+            if html is None:
                 html = entry.description
         else:
             resp = requests.get(url)
