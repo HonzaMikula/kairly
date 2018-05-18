@@ -148,8 +148,16 @@ class ArticleParser:
             elements.extend(self._find_elements(child))
         return elements
 
+    def _print(self, htmltree, label="HTML tree"):
+        """Debug helper"""
+        print("──────────────── {} ────────────────".format('label'))
+        print(etree.tostring(htmltree, pretty_print=True).decode('utf-8'))
+        print("────────────────────────────────")
+
     def parse(self, htmltree):
         self.props = defaultdict(dict)
+
+        # self._print(htmltree, "Raw HTML")
 
         for comment in htmltree.xpath('//comment()'):
             comment.getparent().remove(comment)
@@ -160,7 +168,8 @@ class ArticleParser:
 
         # fix self closing A tags
         for el in htmltree.xpath('//a[not(text())]'):
-            el.getparent().remove(el)
+            if not list(el):  # if not child elements exists
+                el.getparent().remove(el)
 
         for rule in self.flatten_rules():
 
