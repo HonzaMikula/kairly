@@ -45,8 +45,9 @@ def post_json(post, short=False):
     return j
 
 
-def edition_issue_json(issue, posts=True):
-    edition = issue.edition
+def edition_issue_json(issue, posts=True, edition=None):
+    if edition is None:
+        edition = issue.edition
     result = {
         "id": issue.id,
         "type": 'edition',

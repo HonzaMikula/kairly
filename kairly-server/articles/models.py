@@ -1,4 +1,5 @@
 import math
+import datetime
 
 from bs4 import BeautifulSoup
 
@@ -127,6 +128,7 @@ class Subscription(models.Model):
 class SubscriptionToAuthor(models.Model):
     user = models.ForeignKey('auth.User', models.CASCADE)
     author = models.ForeignKey(Author, models.CASCADE)
+    time = models.TimeField(default=datetime.time(9, 0))
 
     class Meta:
         unique_together = (("user", "author"),)

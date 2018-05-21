@@ -1,16 +1,11 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
 
-
-
 [packages]
-
 django = "*"
 mysqlclient = "*"
 django-cors-headers = "*"
@@ -26,8 +21,7 @@ requests = "*"
 pyyaml = "*"
 python-dateutil = "*"
 cssselect = "*"
-
+more-itertools = "*"
 
 [requires]
-
 python_version = "3.6"

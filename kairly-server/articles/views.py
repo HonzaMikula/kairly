@@ -1,12 +1,12 @@
 import json
-from collections import namedtuple
+import datetime
 
 from libgravatar import Gravatar
+from dateutil.parser import parse
 
-from django.db import connection
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 
 
@@ -21,105 +21,108 @@ def index(request, *args, **kwargs):
 
 AUTOR_POSTS_PAGE_SIZE = 20
 TIMELINE_PAGE_SIZE = 5
-TIMELINE_QUERY = """
-SELECT *
-FROM (
-         ( SELECT published,
-                  author_id,
-                  GROUP_CONCAT(posts) AS posts,
-                  GROUP_CONCAT(issues) AS issues,
-                  NULL AS editionissue_id,
-                  NULL AS edition_id
-          FROM (
-                  (SELECT DATE(published) AS published,
-                          p.author_id AS author_id,
-                          GROUP_CONCAT(p.id) AS posts,
-                          NULL AS issues
-                   FROM articles_post p
-                   JOIN articles_subscriptiontoauthor sa ON (p.author_id = sa.author_id)
-                   WHERE sa.user_id = %s AND p.draft = 0
-                   GROUP BY p.author_id,
-                            DATE(published))
-                UNION
-                  (SELECT DATE(published) AS published,
-                          aei.editor_id AS author_id,
-                          NULL AS posts,
-                          GROUP_CONCAT(aei.id) AS issues
-                   FROM articles_editionissue aei
-                   JOIN articles_subscriptiontoauthor sa ON (aei.editor_id = sa.author_id)
-                   WHERE sa.user_id = %s
-                     AND aei.edition_id IS NOT NULL
-                   GROUP BY aei.editor_id,
-                            DATE(published))) AS au
-          GROUP BY published, author_id )
-       UNION
-         ( SELECT published,
-                  NULL,
-                  NULL,
-                  NULL,
-                  ei.id,
-                  ei.edition_id
-          FROM articles_editionissue ei
-          JOIN articles_subscription se ON (ei.edition_id = se.edition_id)
-          WHERE ei.edition_id IS NOT NULL
-            AND se.user_id = %s )) AS u
-ORDER BY published DESC LIMIT %s OFFSET %s
-"""
 
 
-def namedtuplefetchall(cursor):
-    "Return all rows from a cursor as a namedtuple"
-    desc = cursor.description
-    nt_result = namedtuple('Result', [col[0] for col in desc])
-    return [nt_result(*row) for row in cursor.fetchall()]
+def get_timeline_issues(user, end):
+    editions = {e.id: e for e in Edition.objects.filter(subscription__user=user)}
+    author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(user=user)}
+    author_ids = [asub.author_id for asub in author_subscriptions.values()]
+    authors = {a.id: a for a in Author.objects.filter(id__in=author_ids)}
+
+    edition_issues = EditionIssue.objects.filter(published__lt=end, edition_id__in=editions.keys())[:TIMELINE_PAGE_SIZE]
+
+    def get_interval(author_subscription, dt):
+        sub_time = author_subscription.time
+        start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
+        if start > dt:
+            start -= datetime.timedelta(days=1)
+        return start, start + datetime.timedelta(days=1)
+
+    def get_author_issues(begin, end):
+        author_issues = []
+
+        for asub in author_subscriptions.values():
+            author = authors[asub.author_id]
+
+            abegin = get_interval(asub, begin)[0]
+            aend = get_interval(asub, end)[1]
+
+            if aend < end:
+                continue
+
+            posts = Post.objects.filter(
+                author_id=author.id,
+                published__gte=abegin,
+                published__lt=aend
+            ).order_by('-published').values('id', 'published')
+
+            bucket_begin = None
+            post_ids = None
+
+            def flush():
+                if post_ids:
+                    author_issues.append({
+                        'time': b,
+                        'author': author,
+                        'posts': post_ids
+                    })
+
+            for post in posts:
+                b = get_interval(asub, post['published'])[0]
+                if bucket_begin != b:
+                    flush()
+                    post_ids = []
+                    bucket_begin = b
+                post_ids.append(post['id'])
+            flush()
+
+        author_issues.sort(key=lambda x: x['time'], reverse=True)
+        return author_issues
+
+    def serialize_author_issues(begin, end):
+        for issue in get_author_issues(begin, end):
+            author = issue['author']
+            published = issue['time']
+            posts = Post.objects.filter(id__in=issue['posts'])
+            yield {
+                'id': '{}-{}'.format(author.slug, str(published)),
+                'type': 'author',
+                'title': 'New posts on {:%x}'.format(published),
+                'time': str(published),
+                'author': author_json(author),
+                'posts': [post_json(p, short=True) for p in posts],
+            }
+
+    prev_end = end
+    for ei in edition_issues:
+        yield from serialize_author_issues(ei.published, prev_end)
+        yield edition_issue_json(ei, edition=editions[ei.edition_id])
+        prev_end = ei.published
+    yield from serialize_author_issues(datetime.datetime(2017, 1, 1), prev_end)
 
 
 @ajax_login_required
 def timeline(request):
     try:
-        offset = int(request.GET.get('cursor', 0))
-    except ValueError:
-        offset = 0
-
-    user_id = request.user.id
-    with connection.cursor() as cursor:
-        print(TIMELINE_QUERY % (user_id, user_id, user_id, TIMELINE_PAGE_SIZE, offset))
-        cursor.execute(TIMELINE_QUERY, [user_id, user_id, user_id, TIMELINE_PAGE_SIZE, offset])
-        results = namedtuplefetchall(cursor)
+        ts = int(request.GET.get('cursor'))
+        end = datetime.datetime.fromtimestamp(ts, datetime.timezone.utc)
+    except (ValueError, TypeError):
+        end = datetime.datetime.now(datetime.timezone.utc)
 
     issues = []
-    for row in results:
-        if row.editionissue_id:
-            # TODO nice to have load all issues together
-            issue = EditionIssue.objects.get(id=row.editionissue_id)
-            issues.append(edition_issue_json(issue))
-        else:
-            author = Author.objects.get(id=row.author_id)
-            if row.posts:
-                posts = Post.objects.filter(id__in=map(int, row.posts.split(',')))
-            else:
-                posts = []
-            if row.issues:
-                print(row.issues)
-                author_issues = EditionIssue.objects \
-                    .filter(id__in=row.issues.split(',')) \
-                    .select_related('edition')
-            else:
-                author_issues = []
-            issues.append({
-                'id': '{}-{}'.format(author.slug, str(row.published)),
-                'type': 'author',
-                'title': 'New posts on {:%x}'.format(row.published),
-                'period': 'Posts',
-                'time': str(row.published),
-                'author': author_json(author),
-                'posts': [post_json(p, short=True) for p in posts],
-                'issues': [edition_issue_json(i, posts=False) for i in author_issues]
-            })
+    stop_on_next = None
+    for issue in get_timeline_issues(request.user, end):
+        if stop_on_next and issue['time'] != stop_on_next:
+            break
+        issues.append(issue)
+        if len(issues) >= TIMELINE_PAGE_SIZE:
+            # include all other issues with same published time
+            # this is requeire to make cursor working
+            stop_on_next = issue['time']
 
     return JsonResponse({
         'issues': issues,
-        'cursor': offset + TIMELINE_PAGE_SIZE if len(results) == TIMELINE_PAGE_SIZE else None
+        'cursor': parse(stop_on_next).timestamp() if stop_on_next else None  # TODO avoid parsing
     })
 
 
@@ -218,9 +221,16 @@ def subscribe(request, editor_slug, edition_slug):
 def subscribe_author(request, editor_slug):
     author = get_object_or_404(Author, slug=editor_slug)
     payload = json.loads(request.body.decode('utf-8'))
-    subscribe = payload['subscribe']
+    subscribe = payload.get('subscribe')
+    if subscribe is None:
+        return HttpResponseBadRequest('Subscribe field is missing')
+
     if subscribe:
-        SubscriptionToAuthor.objects.create(user=request.user, author=author)
+        time = payload.get('time')
+        if time not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
+            return HttpResponseBadRequest('Invalid time format')
+        time = datetime.time(*map(int, time.split(':', maxsplit=1)))
+        SubscriptionToAuthor.objects.create(user=request.user, author=author, time=time)
     else:
         SubscriptionToAuthor.objects.filter(user=request.user, author=author).delete()
     author.is_subscribed = subscribe
@@ -245,7 +255,6 @@ def post(request, post_id):
 @ajax_login_required
 def profile(request):
     g = Gravatar(request.user.email)
-    g = Gravatar('a@b.cz')
     return JsonResponse({
         "user": {
             "name": request.user.get_full_name(),
