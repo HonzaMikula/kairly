@@ -23,7 +23,7 @@ AUTOR_POSTS_PAGE_SIZE = 20
 TIMELINE_PAGE_SIZE = 5
 TIMELINE_QUERY = """
 SELECT *
-FROM ((
+FROM (
          ( SELECT published,
                   author_id,
                   GROUP_CONCAT(posts) AS posts,
@@ -62,7 +62,7 @@ FROM ((
           FROM articles_editionissue ei
           JOIN articles_subscription se ON (ei.edition_id = se.edition_id)
           WHERE ei.edition_id IS NOT NULL
-            AND se.user_id = %s )) AS u)
+            AND se.user_id = %s )) AS u
 ORDER BY published DESC LIMIT %s OFFSET %s
 """
 
@@ -83,6 +83,7 @@ def timeline(request):
 
     user_id = request.user.id
     with connection.cursor() as cursor:
+        print(TIMELINE_QUERY % (user_id, user_id, user_id, TIMELINE_PAGE_SIZE, offset))
         cursor.execute(TIMELINE_QUERY, [user_id, user_id, user_id, TIMELINE_PAGE_SIZE, offset])
         results = namedtuplefetchall(cursor)
 
