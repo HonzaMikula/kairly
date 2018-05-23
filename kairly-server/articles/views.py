@@ -96,7 +96,7 @@ def get_timeline_issues(user, end, tz):
                 published__lt=aend
             ).order_by('-published').values('id', 'published')
 
-            bucket_begin = None
+            bucket_end = None
             bucket_title = None
             post_ids = None
 
@@ -104,17 +104,17 @@ def get_timeline_issues(user, end, tz):
                 if post_ids:
                     author_issues.append({
                         'title': bucket_title,
-                        'time': bucket_begin,
+                        'time': bucket_end,
                         'author': author,
                         'posts': post_ids
                     })
 
             for post in posts:
-                b, _, title = get_interval(asub, post['published'].astimezone(tz))
-                if bucket_begin != b:
+                _, iend, title = get_interval(asub, post['published'].astimezone(tz))
+                if bucket_end != iend:
                     flush()
                     post_ids = []
-                    bucket_begin = b
+                    bucket_end = iend
                     bucket_title = title
                 post_ids.append(post['id'])
             flush()
