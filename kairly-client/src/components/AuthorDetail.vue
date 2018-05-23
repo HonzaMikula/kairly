@@ -17,9 +17,21 @@
 
       <author-detail--subscribe>
         <button
-          v-bind:class="{ 'is-subscribed': author.isSubscribed }"
-          v-on:click="subscribe($event)"
-        >{{ author.isSubscribed ? 'Unfollow author' : 'Follow author'}}</button>
+          v-if="author.isSubscribed"
+          class="is-subscribed"
+          v-on:click="unfollow($event)"
+        >Unfollow author</button>
+        <div v-else>
+          <button>Follow author (TODO widget)</button>
+          <br/><a href="#" v-on:click.prevent="follow('3X')">3x per day</a>
+          <br/><a href="#" v-on:click.prevent="follow('D', '6:00')">Daily / Early morning (6:00)</a>
+          <br/><a href="#" v-on:click.prevent="follow('D', '9:00')">Daily / Morning (9:00)</a>
+          <br/><a href="#" v-on:click.prevent="follow('D', '12:00')">Daily / Noon (12:00)</a>
+          <br/><a href="#" v-on:click.prevent="follow('D', '15:00')">Daily / Afternoon (15:00)</a>
+          <br/><a href="#" v-on:click.prevent="follow('D', '18:00')">Daily / Evening (18:00)</a>
+          <br/><a href="#" v-on:click.prevent="follow('D', '21:00')">Daily / Night (21:00)</a>
+        </div>
+
       </author-detail--subscribe>
 
       <author-detail--editions v-if="editions.length">
@@ -89,16 +101,18 @@ export default {
   },
 
   methods: {
-    subscribe(ev) {
+    follow(period, time, dow) {
       // TODO split handlers
       this.$store.dispatch('invalidateTimeline')
-      const value = !this.author.isSubscribed
-      if (value) {
-        api.subscribeAuthor(this.author, 'D').then(author => this.author)
-      } else {
-        api.unsubscribeAuthor(this.author).then(author => this.author)
-      }
-      this.author.isSubscribed = value
+      api.subscribeAuthor(this.author, period, time, dow).then(author => this.author)
+      this.author.isSubscribed = true
+    },
+
+    unfollow(ev) {
+      // TODO split handlers
+      this.$store.dispatch('invalidateTimeline')
+      api.unsubscribeAuthor(this.author).then(author => this.author)
+      this.author.isSubscribed = false
       ev.target.blur()
     },
 

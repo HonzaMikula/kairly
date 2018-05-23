@@ -31,12 +31,40 @@ def get_timeline_issues(user, end, tz):
 
     edition_issues = EditionIssue.objects.filter(published__lt=end, edition_id__in=editions.keys())[:TIMELINE_PAGE_SIZE]
 
-    def get_interval(author_subscription, dt):
-        sub_time = author_subscription.period_time
-        start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
-        if start > dt:
-            start -= timedelta(days=1)
-        return start, start + timedelta(days=1)
+    def get_interval(asub, dt):
+        if asub.period == SubscriptionToAuthor.X3_PER_DAY:
+            if dt.hour < 6:
+                return (
+                    dt.replace(hour=18, minute=0, second=0, microsecond=0) - timedelta(days=1),
+                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
+                    'Evening summary'
+                )
+            elif dt.hour >= 6 and dt.hour < 12:
+                return (
+                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
+                    'Morning summary'
+                )
+            elif dt.hour >= 12 and dt.hour < 18:
+                return (
+                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
+                    'Afternoon summary'
+                )
+            else:
+                return (
+                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=6, minute=0, second=0, microsecond=0) + timedelta(days=1),
+                    'Evening summary'
+                )
+        elif asub.period == SubscriptionToAuthor.DAILY:
+            sub_time = asub.period_time
+            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
+            if start > dt:
+                start -= timedelta(days=1)
+            return start, start + timedelta(days=1), 'Daily summary'
+        else:
+            raise ValueError()
 
     def get_author_issues(begin, end):
         author_issues = []
@@ -57,22 +85,25 @@ def get_timeline_issues(user, end, tz):
             ).order_by('-published').values('id', 'published')
 
             bucket_begin = None
+            bucket_title = None
             post_ids = None
 
             def flush():
                 if post_ids:
                     author_issues.append({
+                        'title': bucket_title,
                         'time': bucket_begin,
                         'author': author,
                         'posts': post_ids
                     })
 
             for post in posts:
-                b = get_interval(asub, post['published'].astimezone(tz))[0]
+                b, _, title = get_interval(asub, post['published'].astimezone(tz))
                 if bucket_begin != b:
                     flush()
                     post_ids = []
                     bucket_begin = b
+                    bucket_title = title
                 post_ids.append(post['id'])
             flush()
 
@@ -87,7 +118,7 @@ def get_timeline_issues(user, end, tz):
             yield {
                 'id': '{}-{}'.format(author.slug, str(published)),
                 'type': 'author',
-                'title': 'New posts on {:%x}'.format(published),
+                'title': issue['title'],
                 'time': str(published),
                 'author': author_json(author),
                 'posts': [post_json(p, short=True, tzinfo=tz) for p in posts],
@@ -236,13 +267,29 @@ def subscribe_author(request, editor_slug):
     author = get_object_or_404(Author, slug=editor_slug)
     payload = json.loads(request.body.decode('utf-8'))
 
-    period_time = payload.get('time', '9:00')
-    if period_time not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
-        return HttpResponseBadRequest('Invalid time format')
-    period_time = time(*map(int, period_time.split(':', maxsplit=1)))
+    period = payload.get('period')
+    if period not in (SubscriptionToAuthor.X3_PER_DAY, SubscriptionToAuthor.DAILY, SubscriptionToAuthor.WEEKLY):
+        return HttpResponseBadRequest('Invalid period')
+
+    if period == SubscriptionToAuthor.X3_PER_DAY:
+        period_time = None
+        period_dow = None
+    else:
+        period_time = payload.get('time')
+        if period_time not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
+            return HttpResponseBadRequest('Invalid time format')
+        period_time = time(*map(int, period_time.split(':', maxsplit=1)))
+
+        if period == SubscriptionToAuthor.WEEKLY:
+            period_dow = int(payload.get('dow'))
+            if period_dow < 1 or period_dow > 7:
+                return HttpResponseBadRequest('Invalid day of week')
+        else:
+            period_dow = None
+
     SubscriptionToAuthor.objects.create(
         user=request.user, author=author,
-        period=SubscriptionToAuthor.DAILY, period_time=period_time
+        period=period, period_time=period_time, period_dow=period_dow
     )
 
     author.is_subscribed = True

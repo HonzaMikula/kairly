@@ -101,11 +101,11 @@ export const unsubscribeEdition = editionId => {
     .then(res => res.body)
 }
 
-export const subscribeAuthor = (author, period) => {
+export const subscribeAuthor = (author, period, time, dow) => {
   if (!token) return Promise.reject();
   return agent
     .post(process.env.BACKEND_BASE + author.followUrl)
-    .send({period})
+    .send({period, time, dow})
     .then(res => res.body)
 }
 
