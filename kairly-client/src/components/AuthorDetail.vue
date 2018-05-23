@@ -23,13 +23,30 @@
         >Unfollow author</button>
         <div v-else>
           <button>Follow author (TODO widget)</button>
-          <br/><a href="#" v-on:click.prevent="follow('3X')">3x per day</a>
-          <br/><a href="#" v-on:click.prevent="follow('D', '6:00')">Daily / Early morning (6:00)</a>
-          <br/><a href="#" v-on:click.prevent="follow('D', '9:00')">Daily / Morning (9:00)</a>
-          <br/><a href="#" v-on:click.prevent="follow('D', '12:00')">Daily / Noon (12:00)</a>
-          <br/><a href="#" v-on:click.prevent="follow('D', '15:00')">Daily / Afternoon (15:00)</a>
-          <br/><a href="#" v-on:click.prevent="follow('D', '18:00')">Daily / Evening (18:00)</a>
-          <br/><a href="#" v-on:click.prevent="follow('D', '21:00')">Daily / Night (21:00)</a>
+          <h6 style="font-weight: bold; margin-botton: 15px">3x per day</h6>
+          <a href="#" v-on:click.prevent="follow('3X')">3x per day</a>
+          <h6 style="font-weight: bold; margin-botton: 15px">Daily</h6>
+          <a href="#" v-on:click.prevent="follow('D', '6:00')">Early morning (6:00)</a> |
+          <a href="#" v-on:click.prevent="follow('D', '9:00')">Morning (9:00)</a> |
+          <a href="#" v-on:click.prevent="follow('D', '12:00')">Noon (12:00)</a> |
+          <a href="#" v-on:click.prevent="follow('D', '15:00')">Afternoon (15:00)</a> |
+          <a href="#" v-on:click.prevent="follow('D', '18:00')">Evening (18:00)</a> |
+          <a href="#" v-on:click.prevent="follow('D', '21:00')">Night (21:00)</a>
+          <h6 style="font-weight: bold; margin-botton: 15px">Weekly</h6>
+          <a href="#" v-on:click.prevent="follow('W', '9:00', 1)">Monday 9:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '12:00', 1)">Monday 12:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '9:00', 2)">Tuesday 9:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '12:00', 2)">Tuesday 12:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '9:00', 3)">Wednesday 9:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '12:00', 3)">Wednesday 12:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '9:00', 4)">Thursday 9:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '12:00', 4)">Thursday 12:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '9:00', 5)">Friday 9:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '12:00', 5)">Friday 12:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '9:00', 6)">Saturay 9:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '12:00', 6)">Saturay 12:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '9:00', 6)">Sunday 9:00</a> |
+          <a href="#" v-on:click.prevent="follow('W', '12:00', 6)">Sunday 12:00</a>
         </div>
 
       </author-detail--subscribe>

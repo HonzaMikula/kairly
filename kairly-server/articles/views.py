@@ -31,7 +31,11 @@ def get_timeline_issues(user, end, tz):
 
     edition_issues = EditionIssue.objects.filter(published__lt=end, edition_id__in=editions.keys())[:TIMELINE_PAGE_SIZE]
 
+    # TODO move to SubscriptionToAuthor class
     def get_interval(asub, dt):
+        """Construct time interval which includes given datetime and matches
+        period of author subscription.
+        """
         if asub.period == SubscriptionToAuthor.X3_PER_DAY:
             if dt.hour < 6:
                 return (
@@ -63,6 +67,14 @@ def get_timeline_issues(user, end, tz):
             if start > dt:
                 start -= timedelta(days=1)
             return start, start + timedelta(days=1), 'Daily summary'
+        elif asub.period == SubscriptionToAuthor.WEEKLY:
+            sub_time = asub.period_time
+            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
+            if start > dt:
+                start -= timedelta(days=1)
+            while start.isoweekday() != asub.period_dow:
+                start -= timedelta(days=1)
+            return start, start + timedelta(days=7), 'Weekly summary'
         else:
             raise ValueError()
 
