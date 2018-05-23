@@ -14,7 +14,7 @@ def compile_js(ctx):
     print("Deleting previous webpack build...")
     ctx.run("cd kairly-client && rm -rf dist")
     print("Running webpack...")
-    ctx.run("cd kairly-client && webpack --config build/webpack.prod.conf.js")
+    ctx.run("cd kairly-client && ./node_modules/.bin/webpack --config build/webpack.prod.conf.js")
 
 
 @task
