@@ -28,11 +28,15 @@ export const getEditions = ({ commit, state }) => {
 
 export const subscribe = ({ commit }, { edition, value}) => {
   commit('invalidateTimeline')
-  api
-    .postSubscription(edition.id, value)
-    .then(
-      edition => commit('edition', edition)
-    )
+  let p
+  if (value) {
+    p = api.subscribeEdition(edition.id)
+  } else {
+    p = api.unsubscribeEdition(edition.id)
+  }
+  p.then(
+    edition => commit('edition', edition)
+  )
 }
 
 export const editionUpdated = ({ commit }, edition) => {

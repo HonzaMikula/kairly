@@ -13,6 +13,7 @@ def author_json(author):
         "bio": author.bio,
         "url": '/author/{}'.format(author.slug),
         "followUrl": '/api/subscribe/{}'.format(author.slug),
+        "unfollowUrl": '/api/unsubscribe/{}'.format(author.slug),
     }
     if hasattr(author, 'is_subscribed'):
         res['isSubscribed'] = author.is_subscribed

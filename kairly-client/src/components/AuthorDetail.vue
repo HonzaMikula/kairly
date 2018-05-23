@@ -90,9 +90,14 @@ export default {
 
   methods: {
     subscribe(ev) {
+      // TODO split handlers
       this.$store.dispatch('invalidateTimeline')
       const value = !this.author.isSubscribed
-      api.postAuthorSubsription(this.author, value).then(author => this.author)
+      if (value) {
+        api.subscribeAuthor(this.author, 'D').then(author => this.author)
+      } else {
+        api.unsubscribeAuthor(this.author).then(author => this.author)
+      }
       this.author.isSubscribed = value
       ev.target.blur()
     },
@@ -146,7 +151,7 @@ author-detail--header
   //- Author name
   h1
     margin-bottom: $baseline
-    
+
     font-size: $fs-4
     line-height: $baseline * 2
 
@@ -161,13 +166,13 @@ author-detail--header
 
       object-fit: cover
 
-//- Subsribe 
-author-detail--subscribe  
+//- Subsribe
+author-detail--subscribe
   display: block
   margin-bottom: $baseline
 
   text-align: center
-  
+
   button
     +subscribe-button
 
@@ -184,22 +189,22 @@ author-detail--editions
 
   h2
     margin-bottom: $baseline / 2
-    
+
     font-family: $ff-serif
     font-size: $fs-1
     font-weight: 600
 
   img
-    max-width: 100%  
+    max-width: 100%
 
   //- wrapper for edition items
-  > div  
+  > div
     display: flex
     flex-wrap: wrap
     margin: 0 -$baseline/4
 
   //- show/hide more editions
-  > button  
+  > button
     display: table
     border-radius: $baseline
     height: $baseline * 1.25
@@ -209,7 +214,7 @@ author-detail--editions
     background: $c-base
     border: 0
     color: #fff
- 
+
     font-family: $ff-sans
     font-size: $fs--1
     cursor: pointer
@@ -229,5 +234,5 @@ author-detail--posts
     font-family: $ff-serif
     font-size: $fs-1
     font-weight: 600
-      
+
 </style>

@@ -32,7 +32,7 @@ def get_timeline_issues(user, end, tz):
     edition_issues = EditionIssue.objects.filter(published__lt=end, edition_id__in=editions.keys())[:TIMELINE_PAGE_SIZE]
 
     def get_interval(author_subscription, dt):
-        sub_time = author_subscription.time
+        sub_time = author_subscription.period_time
         start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
         if start > dt:
             start -= timedelta(days=1)
@@ -210,14 +210,21 @@ def author_posts(request, author_slug):
 @require_POST
 def subscribe(request, editor_slug, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
-    payload = json.loads(request.body.decode('utf-8'))
-    subscribe = payload['subscribe']
-    if subscribe:
-        Subscription.objects.create(user=request.user, edition=edition)
-    else:
-        Subscription.objects.filter(user=request.user, edition=edition).delete()
+    Subscription.objects.create(user=request.user, edition=edition)
 
-    edition.is_subscribed = subscribe
+    edition.is_subscribed = True
+    edition.issues = edition.editionissue_set.count()
+    edition.likes = edition.subscription_set.count()
+    return JsonResponse(edition_json(edition))
+
+
+@ajax_login_required
+@require_POST
+def unsubscribe(request, editor_slug, edition_slug):
+    edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
+    Subscription.objects.filter(user=request.user, edition=edition).delete()
+
+    edition.is_subscribed = False
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
     return JsonResponse(edition_json(edition))
@@ -228,19 +235,27 @@ def subscribe(request, editor_slug, edition_slug):
 def subscribe_author(request, editor_slug):
     author = get_object_or_404(Author, slug=editor_slug)
     payload = json.loads(request.body.decode('utf-8'))
-    subscribe = payload.get('subscribe')
-    if subscribe is None:
-        return HttpResponseBadRequest('Subscribe field is missing')
 
-    if subscribe:
-        time = payload.get('time')
-        if time not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
-            return HttpResponseBadRequest('Invalid time format')
-        time = time(*map(int, time.split(':', maxsplit=1)))
-        SubscriptionToAuthor.objects.create(user=request.user, author=author, time=time)
-    else:
-        SubscriptionToAuthor.objects.filter(user=request.user, author=author).delete()
-    author.is_subscribed = subscribe
+    period_time = payload.get('time', '9:00')
+    if period_time not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
+        return HttpResponseBadRequest('Invalid time format')
+    period_time = time(*map(int, period_time.split(':', maxsplit=1)))
+    SubscriptionToAuthor.objects.create(
+        user=request.user, author=author,
+        period=SubscriptionToAuthor.DAILY, period_time=period_time
+    )
+
+    author.is_subscribed = True
+    return JsonResponse(author_json(author))
+
+
+@ajax_login_required
+@require_POST
+def unsubscribe_author(request, editor_slug):
+    author = get_object_or_404(Author, slug=editor_slug)
+    SubscriptionToAuthor.objects.filter(user=request.user, author=author).delete()
+
+    author.is_subscribed = False
     return JsonResponse(author_json(author))
 
 

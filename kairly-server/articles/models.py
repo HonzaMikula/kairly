@@ -126,9 +126,20 @@ class Subscription(models.Model):
 
 
 class SubscriptionToAuthor(models.Model):
+    X3_PER_DAY = '3X'
+    DAILY = 'D'
+    WEEKLY = 'W'
+    PERIOD_CHOICES = (
+        (X3_PER_DAY, '3x per day'),
+        (DAILY, 'Daily'),
+        (WEEKLY, 'Weekly'),
+    )
+
     user = models.ForeignKey('auth.User', models.CASCADE)
     author = models.ForeignKey(Author, models.CASCADE)
-    time = models.TimeField(default=datetime.time(9, 0))
+    period = models.CharField(max_length=2, choices=PERIOD_CHOICES, default=DAILY)
+    period_time = models.TimeField(null=True)  # time for daily and weekly period
+    period_dow = models.IntegerField(null=True)  # ISO week day for weekly period
 
     class Meta:
         unique_together = (("user", "author"),)
