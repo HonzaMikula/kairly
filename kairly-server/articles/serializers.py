@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.conf import settings
 
 from .models import Post
@@ -17,12 +19,12 @@ def author_json(author):
     return res
 
 
-def post_json(post, short=False):
+def post_json(post, short=False, tzinfo=timezone.utc):
     j = {
         'id': post.id,
         "author": author_json(post.author),
         "type": post.kind,
-        "time": str(post.published),
+        "time": str(post.published.astimezone(tzinfo)),
         "favorites": 131
     }
     if post.kind == Post.PICTURE:
@@ -45,7 +47,7 @@ def post_json(post, short=False):
     return j
 
 
-def edition_issue_json(issue, posts=True, edition=None):
+def edition_issue_json(issue, posts=True, edition=None, tzinfo=timezone.utc):
     if edition is None:
         edition = issue.edition
     result = {
@@ -58,12 +60,12 @@ def edition_issue_json(issue, posts=True, edition=None):
             "picture": settings.MEDIA_SITE + edition.image.url,
             "description": edition.description,
         },
-        "time": str(issue.published),
+        "time": str(issue.published.astimezone(tzinfo)),
         "author": author_json(issue.editor),
     }
     if posts:
         result["posts"] = [
-            post_json(p, short=True) for p in
+            post_json(p, short=True, tzinfo=tzinfo) for p in
             issue.posts.all().order_by('editionissuepost__ordering', '-published')
         ]
     return result

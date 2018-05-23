@@ -1,5 +1,5 @@
 import json
-import datetime
+from datetime import datetime, timedelta, timezone, time
 
 from libgravatar import Gravatar
 from dateutil.parser import parse
@@ -23,7 +23,7 @@ AUTOR_POSTS_PAGE_SIZE = 20
 TIMELINE_PAGE_SIZE = 5
 
 
-def get_timeline_issues(user, end):
+def get_timeline_issues(user, end, tz):
     editions = {e.id: e for e in Edition.objects.filter(subscription__user=user)}
     author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(user=user)}
     author_ids = [asub.author_id for asub in author_subscriptions.values()]
@@ -35,8 +35,8 @@ def get_timeline_issues(user, end):
         sub_time = author_subscription.time
         start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
         if start > dt:
-            start -= datetime.timedelta(days=1)
-        return start, start + datetime.timedelta(days=1)
+            start -= timedelta(days=1)
+        return start, start + timedelta(days=1)
 
     def get_author_issues(begin, end):
         author_issues = []
@@ -62,13 +62,13 @@ def get_timeline_issues(user, end):
             def flush():
                 if post_ids:
                     author_issues.append({
-                        'time': b,
+                        'time': bucket_begin,
                         'author': author,
                         'posts': post_ids
                     })
 
             for post in posts:
-                b = get_interval(asub, post['published'])[0]
+                b = get_interval(asub, post['published'].astimezone(tz))[0]
                 if bucket_begin != b:
                     flush()
                     post_ids = []
@@ -79,7 +79,7 @@ def get_timeline_issues(user, end):
         author_issues.sort(key=lambda x: x['time'], reverse=True)
         return author_issues
 
-    def serialize_author_issues(begin, end):
+    def serialize_author_issues(begin, endm):
         for issue in get_author_issues(begin, end):
             author = issue['author']
             published = issue['time']
@@ -90,28 +90,35 @@ def get_timeline_issues(user, end):
                 'title': 'New posts on {:%x}'.format(published),
                 'time': str(published),
                 'author': author_json(author),
-                'posts': [post_json(p, short=True) for p in posts],
+                'posts': [post_json(p, short=True, tzinfo=tz) for p in posts],
             }
 
-    prev_end = end
+    iend = end
     for ei in edition_issues:
-        yield from serialize_author_issues(ei.published, prev_end)
-        yield edition_issue_json(ei, edition=editions[ei.edition_id])
-        prev_end = ei.published
-    yield from serialize_author_issues(datetime.datetime(2017, 1, 1), prev_end)
+        ibegin = ei.published.astimezone(tz)
+        yield from serialize_author_issues(ibegin, iend)
+        yield edition_issue_json(ei, edition=editions[ei.edition_id], tzinfo=tz)
+        iend = ibegin
+    yield from serialize_author_issues(datetime(2017, 1, 1, tzinfo=tz), iend)
 
 
 @ajax_login_required
 def timeline(request):
+    # Group author issues by period defined by client local zone
+    # It means that timeline for same user may differ when user is in different
+    # timezone
+    timezone_offset = int(request.META.get('HTTP_X_TIMEZONE', 0))
+    tz = timezone(timedelta(minutes=-timezone_offset))
+
     try:
         ts = int(request.GET.get('cursor'))
-        end = datetime.datetime.fromtimestamp(ts, datetime.timezone.utc)
+        end = datetime.fromtimestamp(ts, tz)
     except (ValueError, TypeError):
-        end = datetime.datetime.now(datetime.timezone.utc)
+        end = datetime.now(tz)
 
     issues = []
     stop_on_next = None
-    for issue in get_timeline_issues(request.user, end):
+    for issue in get_timeline_issues(request.user, end, tz):
         if stop_on_next and issue['time'] != stop_on_next:
             break
         issues.append(issue)
@@ -229,7 +236,7 @@ def subscribe_author(request, editor_slug):
         time = payload.get('time')
         if time not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
             return HttpResponseBadRequest('Invalid time format')
-        time = datetime.time(*map(int, time.split(':', maxsplit=1)))
+        time = time(*map(int, time.split(':', maxsplit=1)))
         SubscriptionToAuthor.objects.create(user=request.user, author=author, time=time)
     else:
         SubscriptionToAuthor.objects.filter(user=request.user, author=author).delete()

@@ -23,6 +23,7 @@ export const getProfile = () => {
   return request
     .get(process.env.BACKEND_BASE + '/api/profile')
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .then(res => res.body.user)
 }
 
@@ -35,6 +36,7 @@ export const getTimeline = (cursor) => {
   return request
     .get(url)
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .then(res => res.body)
 }
 
@@ -43,6 +45,7 @@ export const getEditions = () => {
   return request
     .get(process.env.BACKEND_BASE + '/api/editions')
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .then(res => res.body)
 }
 
@@ -51,6 +54,7 @@ export const getEditionDetail = (editionId) => {
   return request
     .get(process.env.BACKEND_BASE + '/api/editions/' + editionId)
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .then(res => res.body)
 }
 
@@ -59,6 +63,7 @@ export const getAuthorDetail = (authorId) => {
   return request
     .get(process.env.BACKEND_BASE + '/api/author/' + authorId)
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .then(res => res.body)
 }
 
@@ -71,6 +76,7 @@ export const getAuthorPosts = (authorId, cursor) => {
   return request
     .get(url)
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .then(res => res.body)
 }
 
@@ -79,6 +85,7 @@ export const getPost = (postId) => {
   return request
     .get(process.env.BACKEND_BASE + '/api/post/'  + postId)
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .then(res => res.body.post)
 }
 
@@ -87,6 +94,7 @@ export const postSubscription = (editionId, subscribe) => {
   return request
     .post(process.env.BACKEND_BASE + '/api/subscribe/' + editionId)
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .send({subscribe})
     .then(res => res.body)
 }
@@ -96,6 +104,7 @@ export const postAuthorSubsription = (author, subscribe) => {
   return request
     .post(process.env.BACKEND_BASE + author.followUrl)
     .set('Authorization', 'Bearer ' + token)
+    .set('X-Timezone', new Date().getTimezoneOffset())
     .send({subscribe})
     .then(res => res.body)
 }
