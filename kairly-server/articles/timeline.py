@@ -141,7 +141,10 @@ class AuthorStream(TimelineStream):
             published = post['published'].astimezone(self.tzinfo)
             _, end, title = self.subscription.get_issue_interval(published)
             if issue_end != end:
-                if post_ids:
+                # Post from "unpublished" summary may already exists in database
+                # Or due paging, some post individua may be published before self.before
+                # but their interval belong to prev page and not match time condition
+                if post_ids and issue_end < self.before:
                     yield AuthorIssueItem(issue_end, issue_title, self.author, post_ids, self.tzinfo)
                 post_ids = []
                 issue_end = end
