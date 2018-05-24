@@ -1,0 +1,205 @@
+from datetime import datetime, timedelta, timezone
+
+from more_itertools import peekable
+
+from django.http import JsonResponse
+
+from .models import EditionIssue, Post, Edition, SubscriptionToAuthor, Author
+from .serializers import edition_issue_json, post_json, author_json
+from utils.decorators import ajax_login_required
+
+
+TIMELINE_PAGE_SIZE = 6
+
+
+class QueryIterator:
+
+    def __init__(self, query, page_size):
+        self.query = query
+        self.page_size = page_size
+
+    def __iter__(self):
+        page = 0
+        while True:
+            offset = page * self.page_size
+            items = self.query[offset:offset + self.page_size]
+            if items:
+                yield from items
+                page += 1
+            else:
+                break
+
+
+class TimelineItem:
+    """Lazy converts to JSON"""
+
+    def __init__(self, published):
+        self.published = published
+
+    def json(self):
+        raise NotImplementedError
+
+
+class TimelineStream:
+
+    def __init__(self, before, tzinfo):
+        self.before = before
+        self.tzinfo = tzinfo
+
+    @staticmethod
+    def merge(*streams):
+        streams = [peekable(s) for s in streams]
+
+        while True:
+            items = [s.peek(None) for s in streams]
+            mx = datetime.fromtimestamp(1, timezone.utc)
+            mx_idx = None
+            for idx, item in enumerate(items):
+                if item and item.published > mx:
+                    mx = item.published
+                    mx_idx = idx
+            if mx_idx is None:
+                break
+            yield next(streams[mx_idx])
+
+
+class EditionIssueItem(TimelineItem):
+
+    def __init__(self, issue, edition, tzinfo):
+        super().__init__(issue.published.astimezone(tzinfo))
+        self.issue = issue
+        self.edition = edition
+        self.tzinfo = tzinfo
+
+    @property
+    def json(self):
+        return edition_issue_json(
+            self.issue,
+            edition=self.edition,
+            tzinfo=self.tzinfo
+        )
+
+
+class EditionIssueStream(TimelineStream):
+
+    QUERY_PAGE_SIZE = TIMELINE_PAGE_SIZE
+
+    def __init__(self, user, before, tzinfo):
+        super().__init__(before, tzinfo)
+        self.user = user
+
+    def __iter__(self):
+        editions = {e.id: e for e in Edition.objects.filter(subscription__user=self.user)}
+        query = EditionIssue.objects.filter(published__lt=self.before, edition_id__in=editions.keys())
+        for issue in QueryIterator(query, self.QUERY_PAGE_SIZE):
+            yield EditionIssueItem(issue, editions[issue.edition_id], self.tzinfo)
+
+
+class AuthorIssueItem(TimelineItem):
+
+    def __init__(self, published, title, author, post_ids, tzinfo):
+        super().__init__(published)
+        self.title = title
+        self.author = author
+        self.post_ids = post_ids
+        self.tzinfo = tzinfo
+
+    @property
+    def json(self):
+        posts = Post.objects.filter(id__in=self.post_ids)
+        isodate = str(self.published)
+        return {
+            'id': '{}-{}'.format(self.author.slug, isodate),
+            'type': 'author',
+            'title': self.title,
+            'time': isodate,
+            'author': author_json(self.author),
+            'posts': [post_json(p, short=True, tzinfo=self.tzinfo) for p in posts],
+        }
+
+
+class AuthorStream(TimelineStream):
+
+    QUERY_PAGE_SIZE = 100
+
+    def __init__(self, author, subscription, before, tzinfo):
+        super().__init__(before, tzinfo)
+        self.author = author
+        self.subscription = subscription
+
+    def __iter__(self):
+        posts_query = Post.objects.filter(
+            author_id=self.author.id,
+            published__lt=self.before
+        ).order_by('-published').values('id', 'published')
+
+        issue_end = None
+        issue_title = None
+        post_ids = None
+
+        for post in QueryIterator(posts_query, self.QUERY_PAGE_SIZE):
+            published = post['published'].astimezone(self.tzinfo)
+            _, end, title = self.subscription.get_issue_interval(published)
+            if issue_end != end:
+                if post_ids:
+                    yield AuthorIssueItem(issue_end, issue_title, self.author, post_ids, self.tzinfo)
+                post_ids = []
+                issue_end = end
+                issue_title = title
+            post_ids.append(post['id'])
+
+        if post_ids:
+            yield AuthorIssueItem(issue_end, issue_title, self.author, post_ids, self.tzinfo)
+
+
+class AuthorsStream(TimelineStream):
+
+    def __init__(self, user, before, tzinfo):
+        super().__init__(before, tzinfo)
+        self.user = user
+
+    def __iter__(self):
+        author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(user=self.user)}
+        author_ids = [asub.author_id for asub in author_subscriptions.values()]
+        authors = {a.id: a for a in Author.objects.filter(id__in=author_ids)}
+
+        streams = [
+            AuthorStream(authors[asub.author_id], asub, self.before, self.tzinfo)
+            for asub in author_subscriptions.values()
+        ]
+        yield from TimelineStream.merge(*streams)
+
+
+@ajax_login_required
+def timeline(request):
+    # Group author issues by period defined by client local zone
+    # It means that timeline for same user may differ when user is in different
+    # timezone
+    timezone_offset = int(request.META.get('HTTP_X_TIMEZONE', 0))
+    tzinfo = timezone(timedelta(minutes=-timezone_offset))
+
+    try:
+        ts = int(request.GET.get('cursor'))
+        before = datetime.fromtimestamp(ts, tzinfo)
+    except (ValueError, TypeError):
+        before = datetime.now(tzinfo)
+
+    issues = []
+    stop_on_next = None
+    timeline_stream = TimelineStream.merge(
+        EditionIssueStream(request.user, before, tzinfo),
+        AuthorsStream(request.user, before, tzinfo)
+    )
+    for item in timeline_stream:
+        if stop_on_next and item.published != stop_on_next:
+            break
+        issues.append(item.json)
+        if len(issues) >= TIMELINE_PAGE_SIZE:
+            # include all other issues with same published time
+            # this is requeire to make cursor working
+            stop_on_next = item.published
+
+    return JsonResponse({
+        'issues': issues,
+        'cursor': stop_on_next.timestamp() if stop_on_next else None
+    })
