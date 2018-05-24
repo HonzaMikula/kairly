@@ -1,5 +1,5 @@
 import math
-import datetime
+from datetime import timedelta
 
 from bs4 import BeautifulSoup
 
@@ -143,6 +143,52 @@ class SubscriptionToAuthor(models.Model):
 
     class Meta:
         unique_together = (("user", "author"),)
+
+    def get_issue_interval(self, dt):
+        """Construct time interval which includes given datetime and matches
+        period of author subscription.
+        """
+        if self.period == SubscriptionToAuthor.X3_PER_DAY:
+            if dt.hour < 6:
+                return (
+                    dt.replace(hour=18, minute=0, second=0, microsecond=0) - timedelta(days=1),
+                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
+                    'Evening summary'
+                )
+            elif dt.hour >= 6 and dt.hour < 12:
+                return (
+                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
+                    'Morning summary'
+                )
+            elif dt.hour >= 12 and dt.hour < 18:
+                return (
+                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
+                    'Afternoon summary'
+                )
+            else:
+                return (
+                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=6, minute=0, second=0, microsecond=0) + timedelta(days=1),
+                    'Evening summary'
+                )
+        elif self.period == SubscriptionToAuthor.DAILY:
+            sub_time = self.period_time
+            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
+            if start > dt:
+                start -= timedelta(days=1)
+            return start, start + timedelta(days=1), 'Daily summary'
+        elif self.period == SubscriptionToAuthor.WEEKLY:
+            sub_time = self.period_time
+            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
+            if start > dt:
+                start -= timedelta(days=1)
+            while start.isoweekday() != self.period_dow:
+                start -= timedelta(days=1)
+            return start, start + timedelta(days=7), 'Weekly summary'
+        else:
+            raise ValueError()
 
 
 @receiver(post_save, sender=Post)

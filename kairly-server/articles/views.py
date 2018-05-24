@@ -31,61 +31,14 @@ def get_timeline_issues(user, end, tz):
 
     edition_issues = EditionIssue.objects.filter(published__lt=end, edition_id__in=editions.keys())[:TIMELINE_PAGE_SIZE]
 
-    # TODO move to SubscriptionToAuthor class
-    def get_interval(asub, dt):
-        """Construct time interval which includes given datetime and matches
-        period of author subscription.
-        """
-        if asub.period == SubscriptionToAuthor.X3_PER_DAY:
-            if dt.hour < 6:
-                return (
-                    dt.replace(hour=18, minute=0, second=0, microsecond=0) - timedelta(days=1),
-                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
-                    'Evening summary'
-                )
-            elif dt.hour >= 6 and dt.hour < 12:
-                return (
-                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
-                    'Morning summary'
-                )
-            elif dt.hour >= 12 and dt.hour < 18:
-                return (
-                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
-                    'Afternoon summary'
-                )
-            else:
-                return (
-                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=6, minute=0, second=0, microsecond=0) + timedelta(days=1),
-                    'Evening summary'
-                )
-        elif asub.period == SubscriptionToAuthor.DAILY:
-            sub_time = asub.period_time
-            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
-            if start > dt:
-                start -= timedelta(days=1)
-            return start, start + timedelta(days=1), 'Daily summary'
-        elif asub.period == SubscriptionToAuthor.WEEKLY:
-            sub_time = asub.period_time
-            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
-            if start > dt:
-                start -= timedelta(days=1)
-            while start.isoweekday() != asub.period_dow:
-                start -= timedelta(days=1)
-            return start, start + timedelta(days=7), 'Weekly summary'
-        else:
-            raise ValueError()
-
     def get_author_issues(begin, end):
         author_issues = []
 
         for asub in author_subscriptions.values():
             author = authors[asub.author_id]
 
-            abegin = get_interval(asub, begin)[0]
-            aend = get_interval(asub, end)[1]
+            abegin = asub.get_issue_interval(begin)[0]
+            aend = asub.get_issue_interval(end)[1]
 
             if aend < end:
                 continue
@@ -110,7 +63,7 @@ def get_timeline_issues(user, end, tz):
                     })
 
             for post in posts:
-                _, iend, title = get_interval(asub, post['published'].astimezone(tz))
+                _, iend, title = asub.get_issue_interval(post['published'].astimezone(tz))
                 if bucket_end != iend:
                     flush()
                     post_ids = []
