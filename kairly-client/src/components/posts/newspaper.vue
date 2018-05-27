@@ -181,10 +181,12 @@ timeline-post--newspaper--content
   figure 
     text-align: center
 
-  figcaption
-    color: #999
-    font-family: $ff-sans
-    font-size: $fs--2    
+    figcaption, p
+      color: #999
+      
+      font-family: $ff-sans
+      font-size: $fs--2    
+      line-height: $baseline * 0.9
 
 
 //- Continue Reading

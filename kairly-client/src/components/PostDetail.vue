@@ -332,11 +332,14 @@ post-detail--perex
     
     text-align: center
 
-  figcaption
-    font-family: $ff-sans
-    font-size: $fs--2  
-       
+    figcaption, p
+      color: #999
 
+      font-family: $ff-sans
+      font-size: $fs--2  
+      line-height: $baseline * 0.9
+
+      
 //- Post Footer    
 post-detail--footer
   display: block
