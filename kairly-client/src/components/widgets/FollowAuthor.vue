@@ -6,13 +6,13 @@
     <section v-if="period === null">
       <header>How often?</header>
       <ul>
-        <li><a href="" v-on:click.prevent="selectHowOften('3X', $event)">3x per day</a></li>
-        <li><a href="" v-on:click.prevent="selectHowOften('D', $event)">Daily</a></li>
-        <li><a href="" v-on:click.prevent="selectHowOften('W', $event)">Weekly</a></li>
+        <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
+        <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
+        <li><a href="" v-on:click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
       </ul>
     </section>
 
-    <section v-else-if="period === 'W' && dow === null">
+    <section v-else-if="period === 'weekly' && dow === null">
       <header>
         Which day?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
@@ -28,7 +28,7 @@
       </ul>
     </section>
 
-    <section v-else-if="(period === 'W' || period === 'D') && time === null">
+    <section v-else-if="(period === 'weekly' || period === 'daily') && time === null">
       <header>
         What time?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
@@ -112,7 +112,7 @@ export default {
       ev.target.blur()
       this.period = period
 
-      if (period == '3X') {
+      if (period == '3x_per_day') {
         this.submit()
       }
     },

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="period == '3X'">
+    <div v-if="period == '3x_per_day'">
       <p>
         You will be receiving <strong>{{ name }}</strong> 3x time per day:
       </p>
@@ -11,14 +11,14 @@
       </ul>
     </div>
 
-    <div v-else-if="period == 'D'">
+    <div v-else-if="period == 'daily'">
       <p>
         You will be receiving <strong>{{ name }}</strong> daily at
         <strong>{{ time }}</strong>.
       </p>
     </div>
 
-    <div v-else-if="period == 'W'">
+    <div v-else-if="period == 'weekly'">
       <p>
         You will be receiving <strong>{{ name }}</strong> weekly on
         <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
