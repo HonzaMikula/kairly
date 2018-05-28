@@ -31,7 +31,9 @@ def annotate_editions(request, editions):
                      .values_list('id', flat=True))
 
     def annotate(edition):
-        edition.is_subscribed = edition.id in subscribed
+        # HACK passing boolean instead full Subscription object
+        # currenly value is only tested to not null
+        edition.user_subscription = edition.id in subscribed
         return edition
 
     for edition in editions:
@@ -49,7 +51,10 @@ def editions(request):
 @ajax_login_required
 def edition(request, editor_slug, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
-    edition.is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
+    try:
+        edition.user_subscription = Subscription.objects.get(user=request.user, edition=edition)
+    except Subscription.DoesNotExist:
+        edition.user_subscription = None
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
 
@@ -69,7 +74,11 @@ def edition(request, editor_slug, edition_slug):
 @ajax_login_required
 def author(request, author_slug):
     author = get_object_or_404(Author, slug=author_slug)
-    author.is_subscribed = SubscriptionToAuthor.objects.filter(user=request.user, author=author).count() > 0
+    try:
+        author.user_subscription = SubscriptionToAuthor.objects.get(user=request.user, author=author)
+    except SubscriptionToAuthor.DoesNotExist:
+        author.user_subscription = None
+
     editions = Edition.objects.filter(editor=author).order_by('-likes')
     return JsonResponse({
         'author': author_json(author),
@@ -100,7 +109,7 @@ def subscribe(request, editor_slug, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
     Subscription.objects.create(user=request.user, edition=edition)
 
-    edition.is_subscribed = True
+    edition.user_subscription = True
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
     return JsonResponse(edition_json(edition))
@@ -112,7 +121,7 @@ def unsubscribe(request, editor_slug, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
     Subscription.objects.filter(user=request.user, edition=edition).delete()
 
-    edition.is_subscribed = False
+    edition.user_subscription = False
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
     return JsonResponse(edition_json(edition))
@@ -144,12 +153,12 @@ def subscribe_author(request, editor_slug):
         else:
             period_dow = None
 
-    SubscriptionToAuthor.objects.create(
+    subscription = SubscriptionToAuthor.objects.create(
         user=request.user, author=author,
         period=period, period_time=period_time, period_dow=period_dow
     )
 
-    author.is_subscribed = True
+    author.user_subscription = subscription
     return JsonResponse(author_json(author))
 
 
@@ -159,7 +168,7 @@ def unsubscribe_author(request, editor_slug):
     author = get_object_or_404(Author, slug=editor_slug)
     SubscriptionToAuthor.objects.filter(user=request.user, author=author).delete()
 
-    author.is_subscribed = False
+    author.user_subscription = None
     return JsonResponse(author_json(author))
 
 

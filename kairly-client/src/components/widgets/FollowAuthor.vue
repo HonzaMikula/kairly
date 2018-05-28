@@ -7,12 +7,12 @@
       <header>How often?</header>
       <ul>
         <li><a href="" v-on:click.prevent="selectHowOften('3X', $event)">3x per day</a></li>
-        <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
-        <li><a href="" v-on:click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
+        <li><a href="" v-on:click.prevent="selectHowOften('D', $event)">Daily</a></li>
+        <li><a href="" v-on:click.prevent="selectHowOften('W', $event)">Weekly</a></li>
       </ul>
     </section>
 
-    <section v-else-if="period === 'weekly' && dow === null">
+    <section v-else-if="period === 'W' && dow === null">
       <header>
         Which day?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
@@ -28,7 +28,7 @@
       </ul>
     </section>
 
-    <section v-else-if="(period === 'weekly' || period === 'daily') && time === null">
+    <section v-else-if="(period === 'W' || period === 'D') && time === null">
       <header>
         What time?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
@@ -45,30 +45,9 @@
 
     <section v-else>
       <header>You're subscribed!</header>
-      <div v-if="period == '3X'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
-        </p>
-        <ul class="text">
-          <li>Early morning (6:00)</li>
-          <li>Noon (12:00)</li>
-          <li>Evening (18:00)</li>
-        </ul>
-      </div>
-
-      <div v-else-if="period == 'daily'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> daily at
-          <strong>{{time}}</strong>.
-        </p>
-      </div>
-
-      <div v-else-if="period == 'weekly'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> weekly on
-          <strong>{{DAYS[dow - 1]}}</strong> at <strong>{{time}}</strong>.
-        </p>
-      </div>
+      <AuthorSubscription
+        :name="author.name" :subscription="{period, time, dow}"
+      />
     </section>
   </div>
 </template>
@@ -78,12 +57,20 @@ import * as api from '@/api'
 
 import { directive as onClickaway } from 'vue-clickaway'
 
+import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+
 export default {
   name: 'FollowAuthor',
+
   props: {
     'author': Object,
     'onSelect': Function
   },
+
+  components: {
+    AuthorSubscription
+  },
+
   directives: {
     onClickaway,
   },
@@ -93,8 +80,7 @@ export default {
       show: false,
       period: null,
       dow: null,
-      time: null,
-      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+      time: null
     }
   },
 

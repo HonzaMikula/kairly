@@ -9,7 +9,7 @@
     <IssueWrapper v-for="issue in issues"
       :key="issue.id"
       :issue="issue"
-      :isSubscribed="true"
+      :subscription="true"
       :expanded="expandedIssues[issue.id]" />
 
     <loading-spinner v-if="loading"></loading-spinner>
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="sass">
-timeline-view 
+timeline-view
   display: block
   padding: $baseline
   margin: 0 auto

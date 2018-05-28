@@ -36,9 +36,9 @@
 
       <edition-detail--subscribe>
         <button
-          v-bind:class="{ 'is-subscribed': edition.isSubscribed }"
+          v-bind:class="{ 'is-subscribed': edition.subscription }"
           v-on:click="subscribe($event)"
-        >{{ edition.isSubscribed ? 'Subscribed' : 'Subscribe Edition'}}</button>
+        >{{ edition.subscription ? 'Subscribed' : 'Subscribe Edition'}}</button>
 
         <p>10 CZK per month</p>
       </edition-detail--subscribe>
@@ -52,7 +52,7 @@
     <edition-detail--last-edition v-if="issue">
       <h2><span>Check the Last Issue</span></h2>
 
-      <Issue :issue="issue" :isSubscribed="edition.isSubscribed" />
+      <Issue :issue="issue" :subscription="edition.subscription" />
     </edition-detail--last-edition>
   </edition-detail-view>
 </template>
@@ -83,9 +83,9 @@ export default {
     subscribe(ev) {
       this.$store.dispatch('subscribe', {
         edition: this.edition,
-        value: !this.edition.isSubscribed
+        value: !this.edition.subscription
       })
-      this.edition.isSubscribed = !this.edition.isSubscribed
+      this.edition.subscription = !this.edition.subscription
       ev.target.blur()
     }
   },
@@ -105,7 +105,7 @@ edition-detail-view
   display: block
   margin: 0 auto
   max-width: 900px
-  
+
   > div
     display: grid
     grid-template-areas: "edition-detail-header edition-detail-header" "edition-detail-description edition-detail-picture" "edition-detail-subscribe edition-detail-picture"
@@ -146,10 +146,10 @@ edition-detail--header
     img
       border-radius: 100%
       height: $baseline * 1.5
-      width: $baseline * 1.5  
+      width: $baseline * 1.5
 
       object-fit: cover
-      vertical-align: middle 
+      vertical-align: middle
 
 
 //- Editorial Intro
@@ -162,13 +162,13 @@ edition-detail--description
     margin-bottom: $baseline
 
   > div
-    display: flex  
+    display: flex
 
   > div > div
     margin-right: $baseline
 
     &:last-of-type
-      margin-right: 0  
+      margin-right: 0
 
   h3
     font-size: $fs--1
@@ -177,12 +177,12 @@ edition-detail--description
   h3 + p
     margin-bottom: $baseline / 2
 
-    font-weight: 600  
+    font-weight: 600
 
 
 //- Subscribe
 edition-detail--subscribe
-  grid-area: edition-detail-subscribe    
+  grid-area: edition-detail-subscribe
   justify-self: center
   margin-top: $baseline
 
@@ -197,20 +197,20 @@ edition-detail--subscribe
   button + p
     color: #777
 
-    font-size: $fs--2  
+    font-size: $fs--2
     text-align: center
 
 
 //- Edition Picture
 edition-detail--picture
-  grid-area: edition-detail-picture       
+  grid-area: edition-detail-picture
 
   img
     max-width: 100%
 
 
 //- Last Edition
-edition-detail--last-edition    
+edition-detail--last-edition
   display: block
   margin-top: $baseline
 
@@ -223,7 +223,7 @@ edition-detail--last-edition
     text-align: center
     text-transform: uppercase
 
-    span 
+    span
       position: relative
       z-index: 1
 

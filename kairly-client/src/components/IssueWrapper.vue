@@ -36,13 +36,16 @@ const POST_LIMIT = 5
 
 export default {
   name: 'IssueWrapper',
-  props: ['issue', 'expanded'],
+  props: {
+    subscription: Boolean,
+    expanded: Boolean
+  },
 
-    components: {
-      issueEdition,
-      issueAuthor,
-      PostWrapper,
-    },
+  components: {
+    issueEdition,
+    issueAuthor,
+    PostWrapper,
+  },
 
   data() {
     return {
@@ -81,9 +84,9 @@ timeline-edition
 
   &:first-of-type
     margin-top: 0
-  
+
   > header
-    margin-bottom: $baseline 
+    margin-bottom: $baseline
 
     font-family: $ff-serif
     text-align: center
@@ -119,13 +122,13 @@ timeline-edition
 
       a
         color: #999
-        
-        text-decoration: none 
+
+        text-decoration: none
 
   footer
     text-align: center
 
-    button  
+    button
       display: table
       border-radius: $baseline
       height: $baseline * 1.25
@@ -135,7 +138,7 @@ timeline-edition
       background: $c-base
       border: 0
       color: #fff
-  
+
       font-family: $ff-sans
       font-size: $fs--1
       line-height: $baseline * 1.25
@@ -143,5 +146,5 @@ timeline-edition
 
       &:hover,
       &:focus
-        background: darken($c-base, 10%)  
+        background: darken($c-base, 10%)
 </style>

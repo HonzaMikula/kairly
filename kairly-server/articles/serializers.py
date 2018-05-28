@@ -15,8 +15,16 @@ def author_json(author):
         "followUrl": '/api/subscribe/{}'.format(author.slug),
         "unfollowUrl": '/api/unsubscribe/{}'.format(author.slug),
     }
-    if hasattr(author, 'is_subscribed'):
-        res['isSubscribed'] = author.is_subscribed
+    if hasattr(author, 'user_subscription'):
+        sub = author.user_subscription
+        if sub:
+            res['subscription'] = {
+                'period': sub.period,
+                'dow': sub.period_dow,
+                'time': sub.period_time,
+            }
+        else:
+            res['subscription'] = None
     return res
 
 
@@ -80,7 +88,7 @@ def edition_json(edition):
         "description": edition.description,
         "editor": author_json(edition.editor),
         "period": edition.period,
-        "isSubscribed": edition.is_subscribed,
+        "subscription": edition.user_subscription is not None,
         "issues": edition.issues,
         "likes": edition.likes,
     }

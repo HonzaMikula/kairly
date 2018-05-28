@@ -17,7 +17,7 @@
 
       <author-detail--subscribe>
         <button
-          v-if="author.isSubscribed"
+          v-if="author.subscription"
           class="is-subscribed"
           @click="unfollow($event)">
           Unsubscribe author
@@ -33,6 +33,11 @@
           ref="followWidget"
           :author="author"
           :onSelect="follow" />
+
+        <AuthorSubscription if="author.subscription"
+          :name="author.name"
+          :subscription="author.subscription"
+        />
       </author-detail--subscribe>
 
       <author-detail--editions v-if="editions.length">
@@ -74,13 +79,15 @@ import * as api from '@/api'
 import MyEditionsItem from '@/components/MyEditionsItem'
 import PostWrapper from '@/components/PostWrapper'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
+import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 
 export default {
   name: 'AuthorDetail',
   components: {
     MyEditionsItem,
     PostWrapper,
-    FollowAuthor
+    FollowAuthor,
+    AuthorSubscription
   },
 
   data() {
@@ -107,14 +114,14 @@ export default {
       // TODO split handlers
       this.$store.dispatch('invalidateTimeline')
       api.subscribeAuthor(this.author, period, time, dow).then(author => this.author)
-      this.author.isSubscribed = true
+      this.author.subscription = { period, time, dow }
     },
 
     unfollow(ev) {
       // TODO split handlers
       this.$store.dispatch('invalidateTimeline')
       api.unsubscribeAuthor(this.author).then(author => this.author)
-      this.author.isSubscribed = false
+      this.author.subscription = null
       ev.target.blur()
     },
 

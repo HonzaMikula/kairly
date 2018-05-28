@@ -17,9 +17,9 @@
 
     <my-editions--item--subscribe>
       <button
-        v-bind:class="{ 'is-subscribed': edition.isSubscribed }"
+        v-bind:class="{ 'is-subscribed': edition.subscription }"
         v-on:click="subscribe($event)"
-      >{{ edition.isSubscribed ? 'Subscribed' : 'Subscribe'}}</button>
+      >{{ edition.subscription ? 'Subscribed' : 'Subscribe'}}</button>
       <p>
         10 CZK per month
          •
@@ -101,19 +101,19 @@ my-editions--item
   > p
     flex: 1
     order: 4
-    
-    color: #777 
 
-    font-size: $fs--1    
-    line-height: $baseline * 0.8    
+    color: #777
+
+    font-size: $fs--1
+    line-height: $baseline * 0.8
 
 //- Author + Periodicity
 my-editions--item--author
 
   order: 2
-  
+
   margin: $baseline/2 0
-  
+
   img
     border-radius: 100%
     float: left
@@ -126,8 +126,8 @@ my-editions--item--author
   a
     color: #000
 
-    text-decoration: none  
-    
+    text-decoration: none
+
 
 //- Subscribe Edition
 my-editions--item--subscribe
