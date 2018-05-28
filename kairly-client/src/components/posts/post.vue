@@ -1,12 +1,12 @@
 <template>
-  <post-component role="article" :class="post.type"> 
+  <post-component role="article" :class="post.type">
     <header v-on:mouseleave="closeAuthorWidget()">
       <picture>
         <router-link :to="post.author.url">
           <img :src="post.author.picture" :alt="post.author.name" />
         </router-link>
       </picture>
-      
+
       <h3>
         <router-link :to="post.author.url">
           {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
@@ -30,7 +30,7 @@
 
 <script>
 import { directive as onClickaway } from 'vue-clickaway'
-import AuthorWidget from '@/components/widgets/author'
+import AuthorWidget from '@/components/widgets/AuthorWidget'
 
 export default {
   name: 'post',
@@ -118,10 +118,10 @@ post-component > header
     font-size: $fs--2
     line-height: $baseline * 0.75
 
-    a 
+    a
       color: $c-base
 
-      text-decoration: none  
+      text-decoration: none
 
 
   //-- date of publication

@@ -1,4 +1,7 @@
 <template>
+  <!--
+    Widget is currently unused
+  -->
   <edition-widget>
     <div>
       <h1>When you want to read this edition?</h1>
@@ -96,15 +99,15 @@ edition-widget
     position: absolute
     bottom: 100%
     left: 50%
-    
+
     height: 0
     margin-left: -$baseline / 2
     width: 0
-    
+
     border: solid transparent
     border-bottom-color: transparentize($c-base, 0.05)
     border-width: $baseline / 2
-    
+
     content: " "
     pointer-events: none
 
@@ -119,8 +122,8 @@ edition-widget
     backdrop-filter: blur(5px)
 
   //- Heading
-  h1 
-    text-align: center  
+  h1
+    text-align: center
 
 
 //- Buttons wrapper
@@ -183,5 +186,5 @@ edition-widget--close-button
   &::after
     +fa-icon()
 
-    content: $fa-var-times    
+    content: $fa-var-times
 </style>

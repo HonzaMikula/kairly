@@ -1,4 +1,7 @@
 <template>
+  <!--
+    Widget is currently unused
+  -->
   <read-later-widget>
     <div>
       Article is saved in your Reading List. Do you want to remind it?
@@ -50,15 +53,15 @@ read-later-widget
     position: absolute
     bottom: 100%
     left: 50%
-    
+
     height: 0;
     margin-left: -$baseline / 2
     width: 0;
-    
+
     border: solid transparent;
     border-bottom-color: transparentize($c-base, 0.05)
     border-width: $baseline / 2
-    
+
     content: " ";
     pointer-events: none;
 
@@ -107,7 +110,7 @@ read-later-widget--buttons
     &:active
       background: #fff;
       color: $c-base
-      opacity: 1  
+      opacity: 1
 
 
 //- Close Button
@@ -133,5 +136,5 @@ read-later-widget--close-button
   &::after
     +fa-icon()
 
-    content: $fa-var-times    
+    content: $fa-var-times
 </style>
