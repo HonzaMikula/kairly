@@ -37,6 +37,7 @@ const POST_LIMIT = 5
 export default {
   name: 'IssueWrapper',
   props: {
+    issue: Object,
     subscription: Boolean,
     expanded: Boolean
   },
