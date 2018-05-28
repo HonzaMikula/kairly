@@ -1,9 +1,9 @@
 <template>
   <div class="follow-author"
-    v-if="subscribeStep != null"
+    v-if="show"
     v-on-clickaway="() => closeSubscribeWidget()">
 
-    <section v-if="subscribeStep == 1">
+    <section v-if="period === null">
       <header>How often?</header>
       <ul>
         <li><a href="" v-on:click.prevent="selectHowOften('3X', $event)">3x per day</a></li>
@@ -12,35 +12,23 @@
       </ul>
     </section>
 
-    <section v-if="subscribeStep == 4">
-      <header>You're subscribed!</header>
-      <div v-if="subscribePeriod == '3X'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
-        </p>
-        <ul class="text">
-          <li>Early morning (6:00)</li>
-          <li>Noon (12:00)</li>
-          <li>Evening (18:00)</li>
-        </ul>
-      </div>
-
-      <div v-if="subscribePeriod == 'daily'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> daily at
-          <strong>{{subscribeTime}}</strong>.
-        </p>
-      </div>
-
-      <div v-if="subscribePeriod == 'weekly'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> weekly on
-          <strong>{{dow[subscribeDow - 1]}}</strong> at <strong>{{subscribeTime}}</strong>.
-        </p>
-      </div>
+    <section v-else-if="period === 'weekly' && dow === null">
+      <header>
+        Which day?
+        <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
+      </header>
+      <ul>
+        <li><a href="" v-on:click.prevent="selectWhatDay('1', $event)">Monday</a></li>
+        <li><a href="" v-on:click.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
+        <li><a href="" v-on:click.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
+        <li><a href="" v-on:click.prevent="selectWhatDay('4', $event)">Thursday</a></li>
+        <li><a href="" v-on:click.prevent="selectWhatDay('5', $event)">Friday</a></li>
+        <li><a href="" v-on:click.prevent="selectWhatDay('6', $event)">Saturday</a></li>
+        <li><a href="" v-on:click.prevent="selectWhatDay('7', $event)">Sunday</a></li>
+      </ul>
     </section>
 
-    <section v-if="subscribeStep == 3">
+    <section v-else-if="(period === 'weekly' || period === 'daily') && time === null">
       <header>
         What time?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
@@ -55,20 +43,32 @@
       </ul>
     </section>
 
-    <section v-if="subscribeStep == 2">
-      <header>
-        Which day?
-        <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
-      </header>
-      <ul>
-        <li><a href="" v-on:click.prevent="selectWhatDay('1', $event)">Monday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('4', $event)">Thursday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('5', $event)">Friday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('6', $event)">Saturday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('7', $event)">Sunday</a></li>
-      </ul>
+    <section v-else>
+      <header>You're subscribed!</header>
+      <div v-if="period == '3X'">
+        <p>
+          You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
+        </p>
+        <ul class="text">
+          <li>Early morning (6:00)</li>
+          <li>Noon (12:00)</li>
+          <li>Evening (18:00)</li>
+        </ul>
+      </div>
+
+      <div v-else-if="period == 'daily'">
+        <p>
+          You will be receiving <strong>{{ author.name }}</strong> daily at
+          <strong>{{time}}</strong>.
+        </p>
+      </div>
+
+      <div v-else-if="period == 'weekly'">
+        <p>
+          You will be receiving <strong>{{ author.name }}</strong> weekly on
+          <strong>{{DAYS[dow - 1]}}</strong> at <strong>{{time}}</strong>.
+        </p>
+      </div>
     </section>
   </div>
 </template>
@@ -90,65 +90,56 @@ export default {
 
   data() {
     return {
-      subscribePeriod: null,
-      subscribeTime: null,
-      subscribeDow: null,
-      subscribeStep: null,
-      dow: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+      show: false,
+      period: null,
+      dow: null,
+      time: null,
+      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
 
   methods: {
     openSubscribeWidget() {
-      this.subscribeStep = 1
+      this.show = true
     },
 
     closeSubscribeWidget() {
-      this.subscribePeriod = null
-      this.subscribeTime = null
-      this.subscribeDow = null
-      this.subscribeStep = null
+      this.show = false
+      this.period = null
+      this.time = null
+      this.dow = null
     },
 
     goOneStepBack() {
-      if (this.subscribePeriod == 'daily') {
-        this.subscribeStep = 1
+      if (this.dow !== null) {
+        this.dow = null
       } else {
-        this.subscribeStep--
+        this.period = null
       }
+    },
+
+    submit() {
+      this.onSelect(this.period, this.time, this.dow)
     },
 
     selectHowOften(period, ev) {
       ev.target.blur()
-      this.subscribePeriod = period
+      this.period = period
 
       if (period == '3X') {
-        this.subscribeStep = 4
-          this.onSelect(period)
-      } else if (period == 'daily') {
-        this.subscribeStep = 3
-      } else if (period == 'weekly') {
-        this.subscribeStep = 2
+        this.submit()
       }
     },
 
     selectWhatTime(time, ev) {
       ev.target.blur()
-      this.subscribeTime = time
-
-      if (this.subscribePeriod == 'daily') {
-        this.onSelect('D', time)
-      } else if (this.subscribePeriod == 'weekly') {
-        this.onSelect('W', time, this.subscribeDow)
-      }
-
-      this.subscribeStep = 4
+      this.time = time
+      this.submit()
     },
 
     selectWhatDay(dow, ev) {
       ev.target.blur()
-      this.subscribeDow = dow
-      this.subscribeStep = 3
+      this.dow = dow
     }
   }
 }
