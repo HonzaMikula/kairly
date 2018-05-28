@@ -32,16 +32,16 @@
         <follow-author 
           v-if="subscribeStep != null"
           v-on-clickaway="() => closeSubscribeWidget()">
-          <section v-if="!subscribePeriod">
+          <section v-if="subscribeStep == 1">
             <header>How often?</header>
             <ul>
-              <li><a href="" v-on:click.prevent="selectHowOften('3X')">3x per day</a></li>
-              <li><a href="" v-on:click.prevent="selectHowOften('daily')">Daily</a></li>
-              <li><a href="" v-on:click.prevent="selectHowOften('weekly')">Weekly</a></li>
+              <li><a href="" v-on:click.prevent="selectHowOften('3X', $event)">3x per day</a></li>
+              <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
+              <li><a href="" v-on:click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
             </ul>
           </section>
 
-          <section v-if="subscribeStep == 3">
+          <section v-if="subscribeStep == 4">
             <header>You're subscribed!</header>
             <div v-if="subscribePeriod == '3X'">
               <p>
@@ -69,28 +69,34 @@
             </div>
           </section>
 
-          <section v-if="subscribeStep == 2">
-            <header>What time?</header>
+          <section v-if="subscribeStep == 3">
+            <header>
+              What time?
+              <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
+            </header>
             <ul>
-              <li><a href="" v-on:click.prevent="selectWhatTime('6:00')">Early morning (6:00)</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatTime('9:00')">Morning (9:00)</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatTime('12:00')">Noon (12:00)</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatTime('15:00')">After noon (15:00)</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatTime('18:00')">Evening (18:00)</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatTime('21:00')">Night (21:00)</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatTime('9:00', $event)">Morning (9:00)</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatTime('12:00', $event)">Noon (12:00)</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatTime('15:00', $event)">After noon (15:00)</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatTime('18:00', $event)">Evening (18:00)</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
             </ul>
           </section>
 
-          <section v-if="subscribeStep == 1">
-            <header>Which day?</header>
+          <section v-if="subscribeStep == 2">
+            <header>
+              Which day?
+              <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
+            </header>
             <ul>
-              <li><a href="" v-on:click.prevent="selectWhatDay('1')">Monday</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatDay('2')">Tuesday</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatDay('3')">Wednesday</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatDay('4')">Thursday</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatDay('5')">Friday</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatDay('6')">Saturday</a></li>
-              <li><a href="" v-on:click.prevent="selectWhatDay('7')">Sunday</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatDay('1', $event)">Monday</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatDay('4', $event)">Thursday</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatDay('5', $event)">Friday</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatDay('6', $event)">Saturday</a></li>
+              <li><a href="" v-on:click.prevent="selectWhatDay('7', $event)">Sunday</a></li>
             </ul>
           </section>
         </follow-author>
@@ -172,7 +178,7 @@ export default {
 
   methods: {
     openSubscribeWidget() {
-      this.subscribeStep = 0
+      this.subscribeStep = 1
     },
 
     closeSubscribeWidget() {
@@ -182,22 +188,32 @@ export default {
       this.subscribeStep = null
     },
 
-    selectHowOften(period) {
-      this.subscribePeriod = period
-
-      if (period == '3X') {
-        this.subscribeStep = 3
-        this.follow(period)  
-      }
-      else if (period == 'daily') {
-        this.subscribeStep = 2
-      }
-      else if (period == 'weekly') {
+    goOneStepBack() {
+      if (this.subscribePeriod == 'daily') {
         this.subscribeStep = 1
+      } else {
+        this.subscribeStep--
       }
     },
 
-    selectWhatTime(time) {
+    selectHowOften(period, ev) {
+      ev.target.blur()
+      this.subscribePeriod = period
+
+      if (period == '3X') {
+        this.subscribeStep = 4
+        this.follow(period)  
+      }
+      else if (period == 'daily') {
+        this.subscribeStep = 3
+      }
+      else if (period == 'weekly') {
+        this.subscribeStep = 2
+      }
+    },
+
+    selectWhatTime(time, ev) {
+      ev.target.blur()
       this.subscribeTime = time
       
       if (this.subscribePeriod == 'daily') {
@@ -207,12 +223,13 @@ export default {
         this.follow('W', time, this.subscribeDow)
       }
 
-      this.subscribeStep = 3
+      this.subscribeStep = 4
     },
 
-    selectWhatDay(dow) {
+    selectWhatDay(dow, ev) {
+      ev.target.blur()
       this.subscribeDow = dow
-      this.subscribeStep = 2
+      this.subscribeStep = 3
     },
 
     follow(period, time, dow) {
@@ -398,6 +415,8 @@ follow-author
 
   //- header
   header
+    position: relative
+
     border-radius: 5px 5px 0 0
 
     background: lighten($c-base, 30%)
@@ -407,6 +426,28 @@ follow-author
     font-size: $fs--1
     line-height: $baseline * 1.25
     text-align: center
+
+    //-- arrow back
+    button-icon 
+      position: absolute
+      left: 0
+
+      width: $baseline * 1.25
+
+      color: darken($c-base, 20%)
+
+      cursor: pointer
+      font-size: $fs--2
+
+      &:focus,
+      &:hover
+        background: lighten($c-base, 15%)
+        color: #000
+
+      &::before
+        content: $fa-var-arrow-left
+
+
 
   //- steps
   section
