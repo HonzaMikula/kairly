@@ -3,8 +3,8 @@
     <div>
       <app-header--nav role="navigation">
         <ul v-if="user">
-          <li class="home"><router-link to="/">Home</router-link></li>
-          <li class="your-editions"><router-link to="/my-editions">My Subscription</router-link></li>
+          <li class="home"><router-link :to="{name: 'Timeline'}">Home</router-link></li>
+          <li class="your-editions"><router-link :to="{name: 'MyEditions'}">My Subscription</router-link></li>
         </ul>
         </app-header--nav>
 
@@ -68,7 +68,7 @@ export default {
 
 <style lang="sass">
 //- HEADER -//
-app-header 
+app-header
   display: block
   height: $baseline * 2
   padding: 0 $baseline
@@ -118,21 +118,21 @@ app-header--nav
 
     margin-right: $baseline / 4
 
-  li.home a::before 
+  li.home a::before
     content: $fa-var-home
 
   li.new-post a::before
-    content: $fa-var-pencil-square-o  
+    content: $fa-var-pencil-square-o
 
-  li.your-editions a::before 
+  li.your-editions a::before
     content: $fa-var-newspaper-o
 
-  li.notification a::before 
+  li.notification a::before
     content: $fa-var-bell
 
-  li.reading-list a::before 
+  li.reading-list a::before
     content: $fa-var-clock-o
-      
+
 
 //- Search
 app-header--search
@@ -147,7 +147,7 @@ app-header--search
     right: $baseline / 2
     top: 50%
 
-    margin-top: -7px 
+    margin-top: -7px
 
     +fa-icon()
     opacity: 0.5
@@ -170,7 +170,7 @@ app-header--search
     &:focus
       background: #fff
 
-    
+
 
 //- User Profile
 app-header--user-profile
@@ -184,17 +184,17 @@ app-header--user-profile
     vertical-align: middle
 
     object-fit: cover
-        
+
 
 //- User Profile Menu
 app-header--user-profile-menu
   position: absolute
   right: 0
-  top: $baseline * 2   
+  top: $baseline * 2
   z-index: 1
 
-  padding: $baseline / 4 0  
-  min-width: 150px  
+  padding: $baseline / 4 0
+  min-width: 150px
 
   background: #fff
   border: 1px solid #eee
@@ -204,24 +204,23 @@ app-header--user-profile-menu
   line-height: $baseline
 
   h3
-    padding: 0 $baseline / 2 
+    padding: 0 $baseline / 2
 
     color: #000
 
     font-weight: 600
 
-  a 
+  a
     display: block
     padding: 0 $baseline / 2
 
     color: #555
 
     text-decoration: none
-  
+
     &:focus,
     &:hover
       background: #eee
 
 
 </style>
-

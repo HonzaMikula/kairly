@@ -5,6 +5,8 @@ import PostDetail from '@/components/PostDetail'
 import EditionDetail from '@/components/EditionDetail'
 import AuthorDetail from '@/components/AuthorDetail'
 import Homepage from '@/components/Homepage'
+import MySubscription from '@/components/MySubscription'
+import MyAuthors from '@/components/MyAuthors'
 import MyEditions from '@/components/MyEditions'
 
 Vue.use(Router)
@@ -33,9 +35,21 @@ export default new Router({
       name: 'Homepage',
       component: Homepage
     }, {
-      path: '/my-editions',
-      name: 'MyEditions',
-      component: MyEditions
+      path: '/subscription',
+      component: MySubscription,
+      children: [
+        {
+          path: 'editions',
+          name: 'MyEditions',
+          component: MyEditions
+        },
+        {
+          path: 'authors',
+          name: 'MyAuthors',
+          component: MyAuthors
+        }
+      ]
+
     }
   ],
   linkActiveClass: '',
