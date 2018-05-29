@@ -26,7 +26,7 @@ timeline-post--tweet
   font-family: $ff-serif
   font-size: $fs-1
 
-  a 
+  a
     color: $c-base
 
     text-decoration: none

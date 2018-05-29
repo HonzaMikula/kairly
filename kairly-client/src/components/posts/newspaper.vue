@@ -32,11 +32,11 @@ export default {
 <style lang="sass">
 timeline-post--newspaper
   font-family: $ff-serif
-  
+
   //- Title
   > h2
     display: block
-    margin-bottom: $baseline / 2 
+    margin-bottom: $baseline / 2
 
     font-size: $fs-1
     font-weight: 600
@@ -55,13 +55,13 @@ timeline-post--newspaper
 //- Content
 timeline-post--newspaper--content
   position: relative
-  
+
   column-count: 3
   column-rule: 1px dotted #ddd
   column-gap: $baseline
   display: block
 
-  line-height: $baseline * 0.9    
+  line-height: $baseline * 0.9
   text-align: justify
   hyphens: auto
 
@@ -77,11 +77,11 @@ timeline-post--newspaper--content
     break-after: avoid-column
 
   //-- paragraph
-  p 
+  p
     text-indent: $baseline
 
   //-- illustration image
-  img 
+  img
     display: block
     margin: $baseline / 4 auto
     height: auto
@@ -91,14 +91,14 @@ timeline-post--newspaper--content
   //- Video
   video
     height: auto
-    max-width: 100%    
+    max-width: 100%
 
   //-- link
   a[href]
     text-decoration: none
 
   //-- strong
-  strong, b 
+  strong, b
     font-weight: 600
 
   //-- italic
@@ -108,7 +108,7 @@ timeline-post--newspaper--content
   //-- bullet points
   ul li
     margin-left: $baseline
-    list-style: disc outside      
+    list-style: disc outside
 
   //-- ordered list
   ol li
@@ -119,7 +119,7 @@ timeline-post--newspaper--content
   hr
     border: 0
     height: 1px
-    background: #ddd      
+    background: #ddd
 
   //-- quotes
   blockquote
@@ -142,7 +142,7 @@ timeline-post--newspaper--content
         content: "“"
 
   //-- cite
-  cite      
+  cite
     display: block
     margin: ($baseline / 4 - 2rem) 0
     padding: $baseline / 4 0
@@ -153,7 +153,7 @@ timeline-post--newspaper--content
 
     font-size: $fs-1
     text-indent: 0
-    
+
     &::before
       content: "„"
 
@@ -167,7 +167,7 @@ timeline-post--newspaper--content
     font-size: $fs--1
 
   //-- code block
-  pre 
+  pre
     overflow: auto
 
     background: #fafafa
@@ -178,14 +178,14 @@ timeline-post--newspaper--content
 
 
   //-- pictures
-  figure 
+  figure
     text-align: center
 
     figcaption, p
       color: #999
-      
+
       font-family: $ff-sans
-      font-size: $fs--2    
+      font-size: $fs--2
       line-height: $baseline * 0.9
 
 
@@ -195,11 +195,11 @@ timeline-post--continue-reading
 
   color: #999
 
-  font-family: $ff-sans  
+  font-family: $ff-sans
   font-size: $fs--2
   text-align: center
 
-  a 
+  a
     display: table
     border-radius: 15px
     clear: both

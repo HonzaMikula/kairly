@@ -27,7 +27,7 @@ timeline-post--picture
   //- Title
   h2
     display: block
-    margin-bottom: $baseline / 2 
+    margin-bottom: $baseline / 2
 
     font-size: $fs-1
     font-weight: 600
@@ -37,17 +37,16 @@ timeline-post--picture
     display: block
     margin-bottom: $baseline / 2
     height: 450px
-    width: 100% 
-  
+    width: 100%
+
     object-fit: cover
 
   //- Figcaption
   figcaption
     display: block
 
-    color: #999 
+    color: #999
 
     font-size: $fs--1
     font-family: $ff-serif
 </style>
-

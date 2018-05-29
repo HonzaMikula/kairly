@@ -177,11 +177,11 @@ export default {
 //- AUTHOR WIDGET -//
 
 author-widget
-  position: absolute  
+  position: absolute
   left: $baseline * 2
   top: $baseline * 1.25
   z-index: 1
-  
+
   display: grid
   grid-template-areas: "author-widget-picture author-widget-name" "author-widget-picture author-widget-medium" "author-widget-picture author-widget-stats" "author-widget-bio author-widget-bio" "author-widget-follow author-widget-follow"
   grid-template-columns: $baseline * 3 auto
@@ -215,14 +215,14 @@ author-widget
     width: 0
 
     content: ""
-    pointer-events: none  
+    pointer-events: none
 
   //- Image
   img
     grid-area: author-widget-picture
 
     border-radius: $baseline / 4
-    width: $baseline * 3 
+    width: $baseline * 3
 
 //- Name
 author-widget--name
@@ -233,7 +233,7 @@ author-widget--name
   line-height: 18px
 
 
-//- Medium  
+//- Medium
 author-widget--medium
   grid-area: author-widget-medium
   align-self: center
@@ -246,7 +246,7 @@ author-widget--medium
 
 //- Bio
 author-widget--bio
-  grid-area: author-widget-bio  
+  grid-area: author-widget-bio
 
   margin-top: $baseline / 2
 
@@ -267,8 +267,8 @@ author-widget--stats
     margin-right: $baseline
 
     white-space: nowrap
-    
-  
+
+
   //- labels
   h3
     color: #999
@@ -277,7 +277,7 @@ author-widget--stats
 
   //- values
   p
-    font-weight: 600  
+    font-weight: 600
     font-size: $fs--1
     line-height: 18px
 
@@ -285,7 +285,7 @@ author-widget--stats
 //- Follow button
 author-widget--follow
   grid-area: author-widget-follow
-  
+
   > button
     border-radius: 13px
     height: $baseline
@@ -301,12 +301,12 @@ author-widget--follow
     &.is-active
       background: $c-base
       border: 1px solid $c-base
-      color: #fff   
+      color: #fff
 
 
 
-//-- Chose time    
-author-widget--follow--choose-time    
+//-- Chose time
+author-widget--follow--choose-time
   display: block
   padding-top: $baseline / 2
 
@@ -323,7 +323,7 @@ author-widget--follow--choose-time
     border-radius: $baseline/4
     padding: 0 $baseline/4
 
-   
+
     background: #fff
     border: 0
     color: #000

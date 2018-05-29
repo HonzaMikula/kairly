@@ -1,5 +1,5 @@
 <template>
-  <post--issue role="article"> 
+  <post--issue role="article">
     <div>
       <h2><a :href="'/editions/' + post.edition.id">{{ post.title }}</a></h2>
       <picture>
@@ -28,7 +28,7 @@ post--issue
   width: 576px
 
   background: #fff
-  
+
 
   //- content
   > div
@@ -55,13 +55,13 @@ post--issue
     picture
       grid-area: post-issue-picture
 
-    img 
+    img
       height: $baseline * 3
       width: $baseline * 5
 
-      object-fit: cover  
+      object-fit: cover
 
     //- description
     p
-      grid-area: post-issue-description  
+      grid-area: post-issue-description
 </style>

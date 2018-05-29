@@ -29,15 +29,17 @@
 </template>
 
 <script>
-import { directive as onClickaway } from 'vue-clickaway'
+import { directive as onClickaway } from 'vue-clickaway'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
 
 export default {
   name: 'post',
   props: ["post", "isSubscribed"],
-  directives: {
-    onClickaway,
-  },
+
+  directives: {
+    onClickaway
+  },
+
   data: function () {
     return {
       isAuthorWidgetOpen: false,
@@ -46,6 +48,7 @@ export default {
       timer: null,
     }
   },
+
   methods: {
     openAuthorWidget() {
       this.timer = setTimeout(() => {
