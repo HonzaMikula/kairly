@@ -3,8 +3,6 @@ import request from 'superagent'
 let token = localStorage.getItem("token")
 let agent = createAgent(token)
 
-console.log("API URL " + process.env.VUE_APP_BASE_URI)
-
 function createAgent(token) {
   if (!token) {
     return null

@@ -2,6 +2,12 @@ const fs = require('fs')
 const path = require('path')
 
 module.exports = {
+  outputDir: 'dist/static',
+  configureWebpack: {
+    output: {
+      publicPath: "/static/"
+    }
+  },
   css: {
     loaderOptions: {
       sass: {

@@ -7,7 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
     "local": "vue-cli-service serve --mode local",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build && mv dist/static/index.html dist/index.html",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
