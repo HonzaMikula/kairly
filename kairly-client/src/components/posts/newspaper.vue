@@ -1,12 +1,12 @@
 <template>
   <post :post="post">
     <timeline-post--newspaper>
-      <h2><router-link :to="{ name: 'Post', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
+      <h2><router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
       <timeline-post--newspaper--content>
         <div v-html="post.content.content"></div>
         <timeline-post--continue-reading v-if="post.timeRead && post.timeRead !='0 min'">
           <div v-if="isSubscribed">
-            <router-link :to="{ name: 'Post', params: { postId: post.id }, hash: '#continue'}">Continue reading</router-link>
+            <router-link :to="{ name: 'post', params: { postId: post.id }, hash: '#continue'}">Continue reading</router-link>
           </div>
           <div v-else>
             Subscribe edition to continue reading
