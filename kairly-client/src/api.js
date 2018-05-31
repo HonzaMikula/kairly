@@ -1,7 +1,10 @@
 import request from 'superagent'
 
+const API_URI = process.env.VUE_APP_BASE_URI + '/api'
+
 let token = localStorage.getItem("token")
 let agent = createAgent(token)
+
 
 function createAgent(token) {
   if (!token) {
@@ -20,7 +23,7 @@ export const clearToken = () => {
 
 export const createToken = (username, password) => {
   return request
-    .post(process.env.VUE_APP_BASE_URI + '/token')
+    .post(API_URI + '/token')
     .send({username, password})
     .then(res => {
        token = res.body.token
@@ -33,13 +36,13 @@ export const createToken = (username, password) => {
 export const getProfile = () => {
   if (!token) return Promise.reject();
   return agent
-    .get(process.env.VUE_APP_BASE_URI + '/profile')
+    .get(API_URI + '/profile')
     .then(res => res.body.user)
 }
 
 export const getTimeline = (cursor) => {
   if (!token) return Promise.reject();
-  let url = process.env.VUE_APP_BASE_URI + '/timeline'
+  let url = API_URI + '/timeline'
   if (cursor) {
     url += '?cursor=' + cursor
   }
@@ -51,27 +54,27 @@ export const getTimeline = (cursor) => {
 export const getEditions = () => {
   if (!token) return Promise.reject();
   return agent
-    .get(process.env.VUE_APP_BASE_URI + '/editions')
+    .get(API_URI + '/editions')
     .then(res => res.body)
 }
 
 export const getEditionDetail = (editionId) => {
   if (!token) return Promise.reject();
   return agent
-    .get(process.env.VUE_APP_BASE_URI + '/editions/' + editionId)
+    .get(API_URI + '/editions/' + editionId)
     .then(res => res.body)
 }
 
 export const getAuthorDetail = (authorId) => {
   if (!token) return Promise.reject();
   return agent
-    .get(process.env.VUE_APP_BASE_URI + '/author/' + authorId)
+    .get(API_URI + '/author/' + authorId)
     .then(res => res.body)
 }
 
 export const getAuthorPosts = (authorId, cursor) => {
   if (!token) return Promise.reject();
-  let url = process.env.VUE_APP_BASE_URI + '/author/' + authorId + '/posts'
+  let url = API_URI + '/author/' + authorId + '/posts'
   if (cursor) {
     url += '?cursor=' + cursor
   }
@@ -83,21 +86,21 @@ export const getAuthorPosts = (authorId, cursor) => {
 export const getPost = (postId) => {
   if (!token) return Promise.reject();
   return agent
-    .get(process.env.VUE_APP_BASE_URI + '/post/'  + postId)
+    .get(API_URI + '/post/'  + postId)
     .then(res => res.body.post)
 }
 
 export const subscribeEdition = editionId => {
   if (!token) return Promise.reject();
   return agent
-    .post(process.env.VUE_APP_BASE_URI + '/subscribe/' + editionId)
+    .post(API_URI + '/subscribe/' + editionId)
     .then(res => res.body)
 }
 
 export const unsubscribeEdition = editionId => {
   if (!token) return Promise.reject();
   return agent
-    .post(process.env.VUE_APP_BASE_URI + '/unsubscribe/' + editionId)
+    .post(API_URI + '/unsubscribe/' + editionId)
     .then(res => res.body)
 }
 

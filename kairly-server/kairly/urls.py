@@ -25,7 +25,7 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('api/token', get_token),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('admin',  RedirectView.as_view(url='admin/')),
+    path('admin', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
     path('', include('articles.urls')),
 ]

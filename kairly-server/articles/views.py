@@ -5,7 +5,7 @@ from libgravatar import Gravatar
 
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.views.decorators.http import require_POST
 
 
@@ -18,6 +18,12 @@ AUTOR_POSTS_PAGE_SIZE = 20
 
 
 def index(request, *args, **kwargs):
+    if request.path.startswith('/api') or request.path == '/favicon.ico':
+        return HttpResponseNotFound()
+    accept = request.META.get('HTTP_ACCEPT')
+    if accept and 'text/html' not in accept:
+        return HttpResponseBadRequest()
+
     return render(request, 'index.html')
 
 
