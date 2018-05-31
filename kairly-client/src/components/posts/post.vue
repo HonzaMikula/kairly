@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { directive as onClickaway } from 'vue-clickaway'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
 
 export default {

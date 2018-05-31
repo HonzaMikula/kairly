@@ -55,7 +55,7 @@
 <script>
 import * as api from '@/api'
 
-import { directive as onClickaway } from 'vue-clickaway'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 
