@@ -3,8 +3,8 @@
     <div>
       <app-header--nav role="navigation">
         <ul v-if="user">
-          <li class="home"><router-link :to="{name: 'Timeline'}">Home</router-link></li>
-          <li class="your-editions"><router-link :to="{name: 'MyEditions'}">My Subscription</router-link></li>
+          <li class="home"><router-link :to="{name: 'timeline'}">Home</router-link></li>
+          <li class="your-editions"><router-link :to="{name: 'subscription'}">My Subscription</router-link></li>
         </ul>
         </app-header--nav>
 

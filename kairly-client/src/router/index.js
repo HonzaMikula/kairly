@@ -16,36 +16,41 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Timeline',
+      name: 'timeline',
       component: Timeline
     }, {
       path: '/post/:postId',
-      name: 'Post',
+      name: 'post',
       component: PostDetail
     }, {
       path: '/editions/:editionId+',
-      name: 'Edition Detail',
+      name: 'edition',
       component: EditionDetail
     }, {
       path: '/author/:authorId',
-      name: 'Author Detail',
+      name: 'author',
       component: AuthorDetail
     }, {
       path: '/homepage',
-      name: 'Homepage',
+      name: 'homepage',
       component: Homepage
     }, {
       path: '/subscription',
       component: MySubscription,
       children: [
         {
+           path: '',
+           name: 'subscription',
+           redirect: { name: 'subscription.editions' }
+        },
+        {
           path: 'editions',
-          name: 'MyEditions',
+          name: 'subscription.editions',
           component: MyEditions
         },
         {
           path: 'authors',
-          name: 'MyAuthors',
+          name: 'subscription.authors',
           component: MyAuthors
         }
       ]

@@ -55,6 +55,20 @@ def editions(request):
 
 
 @ajax_login_required
+def authors(request):
+    subscriptions = SubscriptionToAuthor.objects.filter(user=request.user) \
+        .select_related('author').order_by('author__name')
+
+    def map_to_author(sub):
+        author = sub.author
+        author.user_subscription = sub
+        return author
+
+    return JsonResponse([author_json(map_to_author(sub)) for sub in subscriptions],
+                        safe=False)
+
+
+@ajax_login_required
 def edition(request, editor_slug, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
     try:

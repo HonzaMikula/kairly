@@ -3,7 +3,7 @@
     <MyEditionsItem
       v-for="edition in editions"
       :key="edition.id"
-      v-bind:edition="edition"
+      :edition="edition"
     />
   </div>
 </template>

@@ -6,6 +6,7 @@ from . import timeline
 urlpatterns = [
     path('api/timeline', timeline.timeline, name='timeline'),
     path('api/editions', views.editions, name='editions'),
+    path('api/authors', views.authors, name='authors'),
     path('api/editions/<slug:editor_slug>/<slug:edition_slug>', views.edition, name='edition'),
     path('api/subscribe/<slug:editor_slug>/<slug:edition_slug>', views.subscribe, name='subscribe'),
     path('api/unsubscribe/<slug:editor_slug>/<slug:edition_slug>', views.unsubscribe, name='unsubscribe'),

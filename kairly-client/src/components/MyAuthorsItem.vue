@@ -1,5 +1,12 @@
 <template>
-  <my-authors--item>
+  <my-authors--item style="border: 1px solid black">
+    <h3>
+      <router-link :to="author.url">{{ author.name }}</router-link>
+    </h3>
+
+    <AuthorSubscription
+      :name="author.name" :subscription="author.subscription"
+    />
 
   </my-authors--item>
 </template>
@@ -7,9 +14,15 @@
 <script>
 import * as api from '@/api'
 
+import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+
 export default {
   name: 'MyAuthorsItem',
   props: ['author'],
+
+  components: {
+    AuthorSubscription
+  },
 
   methods: {
     // subscribe(ev) {

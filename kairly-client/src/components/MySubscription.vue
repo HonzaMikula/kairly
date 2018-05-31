@@ -2,8 +2,8 @@
   <my-editions-view>
     <h1>My Subscription</h1>
     <nav>
-      <router-link :to="{name: 'MyEditions'}">Editions</router-link> |
-      <router-link :to="{name: 'MyAuthors'}">Authors</router-link>
+      <router-link :to="{name: 'subscription.editions'}">Editions</router-link> |
+      <router-link :to="{name: 'subscription.authors'}">Authors</router-link>
     </nav>
     <router-view></router-view>
   </my-editions-view>

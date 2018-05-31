@@ -1,6 +1,10 @@
 <template>
   <div>
-
+    <MyAuthorsItem
+      v-for="author in authors"
+      :key="author.slug"
+      :author="author"
+    />
   </div>
 </template>
 
@@ -17,14 +21,16 @@ export default {
     MyAuthorsItem
   },
 
-  computed: {
-    // ...mapGetters({
-    //   editions: 'allEditions'
-    // })
+  data() {
+    return {
+      authors: []
+    }
   },
 
   created() {
-    //this.$store.dispatch('getEditions')
+    api.getAuthors().then(resp => {
+      this.authors = resp
+    })
   }
 }
 </script>
