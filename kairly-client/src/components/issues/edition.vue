@@ -1,7 +1,12 @@
 <template>
   <timeline-edition>
     <header>
-      <h1>{{issue.title}}</h1>
+      <h1>
+        {{issue.title}}
+        <router-link :to="`/editions/${issue.edition.id}/${issue.id}`">
+          <span style="font-size: 18px">&#x1f517;</span>
+        </router-link>
+      </h1>
 
       <p>
         <timeline-edition--editor>

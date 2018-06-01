@@ -1,7 +1,7 @@
 <template>
   <edition-detail-view>
 
-    <div>
+    <div v-if="!loading">
       <edition-detail--header>
         <h1>{{ edition.title }}</h1>
 

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Timeline from '@/components/Timeline'
 import PostDetail from '@/components/PostDetail'
 import EditionDetail from '@/components/EditionDetail'
+import IssueDetail from '@/components/IssueDetail'
 import AuthorDetail from '@/components/AuthorDetail'
 import Homepage from '@/components/Homepage'
 import MySubscription from '@/components/MySubscription'
@@ -16,7 +17,8 @@ export default new Router({
   routes: [
     {path: '/', name: 'timeline', component: Timeline},
     {path: '/post/:postId', name: 'post', component: PostDetail},
-    {path: '/editions/:editionId+', name: 'edition', component: EditionDetail},
+    {path: '/editions/:editionId([^\/]+/[^\/]+)', name: 'edition', component: EditionDetail},
+    {path: '/editions/:editionId([^\/]+/[^\/]+)/:issueId', name: 'issue', component: IssueDetail},
     {path: '/author/:authorId', name: 'author', component: AuthorDetail},
     {path: '/homepage', name: 'homepage', component: Homepage},
     {path: '/subscription', component: MySubscription, children: [

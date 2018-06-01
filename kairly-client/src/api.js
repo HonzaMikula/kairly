@@ -65,10 +65,14 @@ export const getAuthors = () => {
     .then(res => res.body)
 }
 
-export const getEditionDetail = (editionId) => {
+export const getEditionDetail = (editionId, issueId=null) => {
   if (!token) return Promise.reject();
+  let url = API_URI + '/editions/' + editionId
+  if (issueId) {
+    url += '?issue=' + issueId
+  }
   return agent
-    .get(API_URI + '/editions/' + editionId)
+    .get(url)
     .then(res => res.body)
 }
 

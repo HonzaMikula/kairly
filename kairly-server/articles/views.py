@@ -78,10 +78,14 @@ def edition(request, editor_slug, edition_slug):
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
 
-    try:
-        issue = EditionIssue.objects.filter(edition=edition).select_related('editor')[0]
-    except IndexError:
-        issue = None
+    issueId = request.GET.get('issue')
+    if issueId:
+        issue = get_object_or_404(EditionIssue, edition=edition, id=int(issueId))
+    else:
+        try:
+            issue = EditionIssue.objects.filter(edition=edition).select_related('editor')[0]
+        except IndexError:
+            issue = None
 
     return JsonResponse({
         'edition': edition_json(edition),
