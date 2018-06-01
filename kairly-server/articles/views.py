@@ -56,7 +56,7 @@ def editions(request):
 
 @ajax_login_required
 def authors(request):
-    subscriptions = SubscriptionToAuthor.objects.filter(user=request.user) \
+    subscriptions = SubscriptionToAuthor.objects.filter(user=request.user, topic__isnull=True) \
         .select_related('author').order_by('author__name')
 
     def map_to_author(sub):
@@ -99,7 +99,7 @@ def edition(request, editor_slug, edition_slug):
 def author(request, author_slug):
     author = get_object_or_404(Author, slug=author_slug)
     try:
-        author.user_subscription = SubscriptionToAuthor.objects.get(user=request.user, author=author)
+        author.user_subscription = SubscriptionToAuthor.objects.get(user=request.user, author=author, topic__isnull=True)
     except SubscriptionToAuthor.DoesNotExist:
         author.user_subscription = None
 

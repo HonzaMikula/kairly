@@ -64,6 +64,6 @@ class EditionAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'period', 'description')
 
 
-@admin.register(Subscription)
-class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'edition')
+# @admin.register(Subscription)
+# class SubscriptionAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'edition')

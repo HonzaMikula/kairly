@@ -97,9 +97,10 @@ class EditionIssueStream(TimelineStream):
 
 class AuthorIssueItem(TimelineItem):
 
-    def __init__(self, published, title, author, post_ids, tzinfo):
+    def __init__(self, published, title, author, topic, post_ids, tzinfo):
         super().__init__(published)
         self.title = title
+        self.topic = topic
         self.author = author
         self.post_ids = post_ids
         self.tzinfo = tzinfo
@@ -114,6 +115,7 @@ class AuthorIssueItem(TimelineItem):
             'title': self.title,
             'time': isodate,
             'author': author_json(self.author),
+            'topic': self.topic.name if self.topic else None,
             'posts': [post_json(p, short=True, tzinfo=self.tzinfo) for p in posts],
         }
 
@@ -131,7 +133,10 @@ class AuthorStream(TimelineStream):
         posts_query = Post.objects.filter(
             author_id=self.author.id,
             published__lt=self.before
-        ).order_by('-published').values('id', 'published')
+        )
+        if self.subscription.topic:
+            posts_query = posts_query.filter(topics=self.subscription.topic)
+        posts_query = posts_query.order_by('-published').values('id', 'published')
 
         issue_end = None
         issue_title = None
@@ -145,7 +150,9 @@ class AuthorStream(TimelineStream):
                 # Or due paging, some post individua may be published before self.before
                 # but their interval belong to prev page and not match time condition
                 if post_ids and issue_end < self.before:
-                    yield AuthorIssueItem(issue_end, issue_title, self.author, post_ids, self.tzinfo)
+                    yield AuthorIssueItem(
+                        issue_end, issue_title, self.author,
+                        self.subscription.topic, post_ids, self.tzinfo)
                 post_ids = []
                 issue_end = end
                 issue_title = title
