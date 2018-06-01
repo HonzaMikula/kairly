@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+
 def forwards_func(apps, schema_editor):
     SubscriptionToAuthor = apps.get_model("articles", "SubscriptionToAuthor")
     Author = apps.get_model("articles", "Author")

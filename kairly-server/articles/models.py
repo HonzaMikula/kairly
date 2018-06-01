@@ -74,8 +74,10 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.topic and self.topic.author_id != self.author_id:
-            raise ValueError("Topic doesn't match author")
+        if self.id:
+            for topic in self.topics.all():
+                if topic.author_id != self.author_id:
+                    raise ValueError("Topic auhtor doesn't match author")
         return super().save(*args, **kwargs)
 
     @property

@@ -31,6 +31,52 @@ class Command(BaseCommand):
             help='Create posts as draft',
         )
 
+    def import_post(self, channel, entry, options):
+        verbosity = options.get('verbosity')
+
+        guid = "{}|{}".format(channel.provider, entry.id)
+        url = entry.link.split('#', maxsplit=1)[0]
+
+        try:
+            post = Post.objects.get(guid=guid)
+        except Post.DoesNotExist:
+            post = None
+
+        if post and not options.get('force'):
+            if verbosity > 1:
+                self.stdout.write('Skipping {}. Already imported'.format(url))
+            return post
+
+        if verbosity > 0:
+            self.stdout.write('Importing {}'.format(url))
+
+        perex, content = channel.parse_entry(entry)
+
+        try:
+            published = entry.published
+        except AttributeError:
+            published = entry.date
+
+        args = dict(
+            kind=Post.NEWSPAPER,
+            published=dateutil.parser.parse(published),
+            draft=options.get('draft'),
+            guid=guid,
+            source=url,
+            title=entry.title,
+            perex=perex,
+            content=content,
+            author=channel.author
+        )
+
+        if post is None:
+            post = Post.objects.create(**args)
+        else:
+            post.__dict__.update(args)
+            post.save()
+
+        return post
+
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
         channels = Channel.objects.filter(enabled=True).exclude(author__isnull=True)
@@ -42,52 +88,17 @@ class Command(BaseCommand):
                 self.stdout.write('Fetching {}'.format(channel.rss))
 
             for entry in channel.parse_rss().entries:
-                guid = "{}|{}".format(channel.provider, entry.id)
-
                 if not channel.is_url_valid(entry.link):
                     continue
 
-                url = entry.link.split('#', maxsplit=1)[0]
-
-                if Post.objects.filter(guid=guid).exists():
-                    if options.get('force'):
-                        update = True
-                    else:
-                        if verbosity > 1:
-                            self.stdout.write('Skipping {}. Already imported'.format(url))
-                        continue
-
-                if verbosity > 0:
-                    self.stdout.write('Importing {}'.format(url))
-
                 try:
-                    perex, content = channel.parse_entry(entry)
-                    update = False
+                    post = self.import_post(channel, entry, options)
 
-                    try:
-                        published = entry.published
-                    except AttributeError:
-                        published = entry.date
-
-                    args = dict(
-                        kind=Post.NEWSPAPER,
-                        published=dateutil.parser.parse(published),
-                        draft=options.get('draft'),
-                        guid=guid,
-                        source=url,
-                        title=entry.title,
-                        perex=perex,
-                        content=content,
-                        author=channel.author
-                    )
-
-                    if update:
-                        post = Post.objects.get(guid=guid)
-                        post.__dict__.update(args)
-                        post.save()
-                    else:
-                        Post.objects.create(**args)
+                    if channel.topic and not post.topics.filter(id=channel.topic_id).exists():
+                        if verbosity > 1:
+                            self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
+                        post.topics.add(channel.topic)
                 except Exception:
                     traceback.print_exc()
 
-                time.sleep(0.1)
+                time.sleep(0.05)
