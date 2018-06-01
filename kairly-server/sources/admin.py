@@ -7,7 +7,25 @@ from .models import Channel
 
 @admin.register(Channel)
 class ChannelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'provider', 'author', 'enabled', 'rss')
+    list_display = ('name', 'provider', 'author', 'topic', 'enabled', 'rss')
+
+    def get_field_queryset(self, db, db_field, request):
+        """
+        If the ModelAdmin specifies ordering, the queryset should respect that
+        ordering.  Otherwise don't specify the queryset, let the field decide
+        (returns None in that case).
+        """
+        if db_field.name == 'topic':
+            manager = db_field.remote_field.model._default_manager
+            channel_id = int(request.resolver_match.kwargs['object_id'])
+
+            if channel_id:
+                channel = Channel.objects.get(id=channel_id)
+                if channel.author_id:
+                    return manager.filter(author_id=channel.author_id)
+            return manager.none()
+
+        super().get_field_queryset(db, db_field, request)
 
     def get_urls(self):
         urls = super().get_urls()

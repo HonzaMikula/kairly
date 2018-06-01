@@ -25,13 +25,17 @@ def flatten_tree(htmltree):
 
 class Channel(models.Model):
     name = models.CharField(max_length=160)
-    provider = models.CharField(max_length=32, unique=True, help_text="Source identifier (namespace for guid)")
+    provider = models.CharField(max_length=32, help_text="Source identifier (namespace for guid)")
     rss = models.CharField(max_length=250)
     parse_content_from_rss = models.BooleanField(default=False)
     parser = models.TextField(help_text="Parse rules to get content from webpage.", blank=True)
     skip_rules = models.TextField(help_text="YAML", blank=True)
     author = models.ForeignKey('articles.Author', models.SET_NULL, blank=True, null=True)
+    topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
     enabled = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -40,6 +44,10 @@ class Channel(models.Model):
         # validate skip rules
         if self.skip_rules:
             yaml.load(self.skip_rules)
+
+        if self.topic and self.topic.author_id != self.author_id:
+            raise ValueError("Topic doesn't match author")
+
         super(Channel, self).save(*args, **kwargs)
 
     def parse_rss(self):

@@ -27,6 +27,18 @@ class Author(models.Model):
         return self.name
 
 
+class Topic(models.Model):
+    name = models.CharField(_("Name"), max_length=160)
+    slug = models.SlugField(_('Slug'))
+    author = models.ForeignKey(Author, models.PROTECT)
+
+    class Meta:
+        unique_together = (("slug", "author"),)
+
+    def __str__(self):
+        return self.name
+
+
 class Post(models.Model):
 
     NEWSPAPER = 'newspaper'
@@ -56,9 +68,15 @@ class Post(models.Model):
     perex = RichTextField(_("Perex"), blank=True, null=True)
     content = RichTextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(Author, models.PROTECT)
+    topics = models.ManyToManyField(Topic)
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if self.topic and self.topic.author_id != self.author_id:
+            raise ValueError("Topic doesn't match author")
+        return super().save(*args, **kwargs)
 
     @property
     def read_time(self):
@@ -137,12 +155,18 @@ class SubscriptionToAuthor(models.Model):
 
     user = models.ForeignKey('auth.User', models.CASCADE)
     author = models.ForeignKey(Author, models.CASCADE)
+    topic = models.ForeignKey(Topic, models.CASCADE, blank=True, null=True)
     period = models.CharField(max_length=32, choices=PERIOD_CHOICES, default=DAILY)
     period_time = models.TimeField(null=True)  # time for daily and weekly period
     period_dow = models.IntegerField(null=True)  # ISO week day for weekly period
 
     class Meta:
-        unique_together = (("user", "author"),)
+        unique_together = (("user", "author", "topic"),)
+
+    def save(self, *args, **kwargs):
+        if self.topic and self.topic.author_id != self.author_id:
+            raise ValueError("Topic doesn't match author")
+        return super().save(*args, **kwargs)
 
     def get_issue_interval(self, dt):
         """Construct time interval which includes given datetime and matches
