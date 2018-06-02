@@ -38,6 +38,12 @@
           :name="author.name"
           :subscription="author.subscription"
         />
+
+        <div style="display: flex">
+          <div v-for="topic in topics">
+            <router-link :to="topic.url">{{ topic.name}}</router-link> |
+          </div>
+        </div>
       </author-detail--subscribe>
 
       <author-detail--editions v-if="editions.length">
@@ -95,6 +101,7 @@ export default {
       loadingProfile: true,
       loadingPosts: true,
       author: null,
+      topic: null,
       showAllEditions: false,
       editionIds: [],
       posts: [],
@@ -106,6 +113,12 @@ export default {
     editions() {
       const ids = this.showAllEditions ? this.editionIds : this.editionIds.slice(0, 3)
       return ids.map(id => this.$store.getters.edition(id))
+    }
+  },
+
+  watch: {
+    '$route' (to, from) {
+      this.loadData()
     }
   },
 
@@ -138,20 +151,34 @@ export default {
     loadMore() {
       if (this.cursor) {
         this.loadingPosts = true
-        api.getAuthorPosts(this.$route.params.authorId, this.cursor).then(this.handlePostsData)
+        api.getAuthorPosts(this.$route.params.authorId, this.topic, this.cursor).then(this.handlePostsData)
       }
+    },
+
+    loadData() {
+      this.loadingProfile = true
+      this.loadingPosts = true
+      this.author = null
+      this.showAllEditions = false
+      this.editionIds = []
+      this.posts = []
+      this.cursor = null
+
+      this.topic = this.$route.params.topic || null
+      api.getAuthorDetail(this.$route.params.authorId, this.topic).then(resp => {
+        resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
+        this.author = resp.author
+        this.editionIds = resp.editions.map(e => e.id)
+        this.loadingProfile = false
+        this.topics = resp.topics
+      })
+      api.getAuthorPosts(this.$route.params.authorId, this.topic, null).then(this.handlePostsData)
     }
   },
 
   created() {
-    api.getAuthorDetail(this.$route.params.authorId).then(resp => {
-      resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
-      this.author = resp.author
-      this.editionIds = resp.editions.map(e => e.id)
-      this.loadingProfile = false
-    })
-    api.getAuthorPosts(this.$route.params.authorId, null).then(this.handlePostsData)
-  }
+    this.loadData()
+  },
 }
 </script>
 

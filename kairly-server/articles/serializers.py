@@ -5,16 +5,27 @@ from django.conf import settings
 from .models import Post
 
 
-def author_json(author):
+def author_json(author, topic=None):
     res = {
-        "name": author.name,
-        "picture": author.picture,
-        "medium": author.medium,
-        "bio": author.bio,
-        "url": '/author/{}'.format(author.slug),
-        "followUrl": '/api/subscribe/{}'.format(author.slug),
-        "unfollowUrl": '/api/unsubscribe/{}'.format(author.slug),
+        'picture': author.picture,
+        'medium': author.medium,
+        'bio': author.bio,
     }
+    if topic:
+        res.update({
+            'name': '{} | {}'.format(author.name, topic.name),
+            'url': '/author/{}/{}'.format(author.slug, topic.slug),
+            'followUrl': '/api/subscribe/{}?topic={}'.format(author.slug, topic.slug),
+            'unfollowUrl': '/api/unsubscribe/{}?topic={}'.format(author.slug, topic.slug),
+        })
+    else:
+        res.update({
+            'name': author.name,
+            'url': '/author/{}'.format(author.slug),
+            'followUrl': '/api/subscribe/{}'.format(author.slug),
+            'unfollowUrl': '/api/unsubscribe/{}'.format(author.slug),
+        })
+
     if hasattr(author, 'user_subscription'):
         sub = author.user_subscription
         if sub:

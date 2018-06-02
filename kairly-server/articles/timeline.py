@@ -114,8 +114,7 @@ class AuthorIssueItem(TimelineItem):
             'type': 'author',
             'title': self.title,
             'time': isodate,
-            'author': author_json(self.author),
-            'topic': self.topic.name if self.topic else None,
+            'author': author_json(self.author, self.topic),
             'posts': [post_json(p, short=True, tzinfo=self.tzinfo) for p in posts],
         }
 

@@ -4,7 +4,7 @@
       <h1>
         <router-link :to="issue.author.url">
           <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
-          {{ issue.author.name }} <span v-if="issue.topic"> | {{ issue.topic }}</span>
+          {{ issue.author.name }}
         </router-link>
       </h1>
 
