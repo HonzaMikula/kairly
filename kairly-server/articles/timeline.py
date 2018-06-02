@@ -158,7 +158,8 @@ class AuthorStream(TimelineStream):
             post_ids.append(post['id'])
 
         if post_ids:
-            yield AuthorIssueItem(issue_end, issue_title, self.author, post_ids, self.tzinfo)
+            yield AuthorIssueItem(issue_end, issue_title, self.author,
+                                  self.subscription.topicpost_ids, self.tzinfo)
 
 
 class AuthorsStream(TimelineStream):
