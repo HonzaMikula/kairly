@@ -2,10 +2,7 @@
   <timeline-edition>
     <header>
       <h1>
-        {{issue.title}}
-        <router-link :to="`/editions/${issue.edition.id}/${issue.id}`">
-          <span style="font-size: 18px">&#x1f517;</span>
-        </router-link>
+        <router-link :to="`/editions/${issue.edition.id}/${issue.id}`">{{issue.title}}</router-link>  
       </h1>
 
       <p>

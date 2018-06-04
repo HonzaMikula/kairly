@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <issue-detail-view>
     <div v-if="!loading">
       <Issue :issue="issue" :subscription="edition.subscription" />
     </div>
-  </div>
+  </issue-detail-view>
 </template>
 
 
@@ -40,5 +40,8 @@ export default {
 </script>
 
 <style lang="sass">
-
+issue-detail-view
+  display: block
+  margin: $baseline auto
+  max-width: 900px
 </style>
