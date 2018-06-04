@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (Author, Topic, Post, EditionIssue, EditionIssuePost,
-                     Edition, Subscription)
+                     Edition)
 
 
 @admin.register(Author)
@@ -21,9 +21,10 @@ class TopicAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'kind', 'author', 'draft', 'published', 'read_time')
+    list_filter = ('kind', 'draft')
     exclude = ('guid',)
     readonly_fields = ('source',)
-    search_fields = ('title',)
+    search_fields = ('title', 'author')
 
     def get_field_queryset(self, db, db_field, request):
         """

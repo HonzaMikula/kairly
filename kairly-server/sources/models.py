@@ -48,7 +48,7 @@ class Channel(models.Model):
         if self.topic and self.topic.author_id != self.author_id:
             raise ValueError("Topic doesn't match author")
 
-        super(Channel, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def parse_rss(self):
         return feedparser.parse(self.rss)
@@ -137,3 +137,16 @@ class Channel(models.Model):
             src = el.attrib.get('src')
             if src and src.startswith('/') and not src.startswith('//'):
                 el.attrib['src'] = host + el.attrib['src']
+
+
+class TwitterChannel(models.Model):
+    twtter_account = models.CharField(max_length=160)
+    author = models.ForeignKey('articles.Author', models.SET_NULL, blank=True, null=True)
+    topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
+    enabled = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if self.topic and self.topic.author_id != self.author_id:
+            raise ValueError("Topic doesn't match author")
+
+        super().save(*args, **kwargs)

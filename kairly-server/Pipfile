@@ -22,6 +22,7 @@ pyyaml = "*"
 python-dateutil = "*"
 cssselect = "*"
 more-itertools = "*"
+python-twitter = "*"
 
 [requires]
 python_version = "3.6"
