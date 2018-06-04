@@ -43,17 +43,26 @@ class Command(BaseCommand):
                 for status in timeline:
                     guid = 'twitter|' + status.id_str
 
+                    # ignore retweets
+                    if status.retweeted_status:
+                        continue
+
                     if Post.objects.filter(guid=guid).exists():
                         continue
 
                     title = "{}: {}...".format(channel.twitter_account, status.text[:60])
+                    content = status.text
+                    for u in status.urls:
+                        content = content.replace(u.url, '<a href="{}">{}</a>'.format(u.expanded_url, u.url))
+
                     args = dict(
                         kind=Post.TWEET,
                         published=dateutil.parser.parse(status.created_at),
                         draft=False,
                         guid=guid,
+                        source="https://twitter.com/{}/status/{}".format(channel.twitter_account, status.id_str),
                         title=title,
-                        content=status.text,
+                        content=content,
                         author=channel.author
                     )
 
