@@ -40,7 +40,7 @@
         />
 
         <div style="display: flex">
-          <div v-for="topic in topics">
+          <div v-for="topic in topics" :key="topic.url">
             <router-link :to="topic.url">{{ topic.name}}</router-link> |
           </div>
         </div>
@@ -50,7 +50,7 @@
         <h2>{{ author.name }}'s Editions</h2>
 
         <div>
-          <MyEditionsItem
+          <EditionWidget
             v-for="edition in editions"
             :key="edition.id"
             v-bind:edition="edition"
@@ -82,7 +82,7 @@
 <script>
 import * as api from '@/api'
 
-import MyEditionsItem from '@/components/MyEditionsItem'
+import EditionWidget from '@/components/widgets/EditionWidget'
 import PostWrapper from '@/components/PostWrapper'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
@@ -90,7 +90,7 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 export default {
   name: 'AuthorDetail',
   components: {
-    MyEditionsItem,
+    EditionWidget,
     PostWrapper,
     FollowAuthor,
     AuthorSubscription

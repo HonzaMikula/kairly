@@ -45,9 +45,36 @@
 
     <section v-else>
       <header>You're subscribed!</header>
+      
+      <div v-if="period == '3x_per_day'">
+        <p>
+          You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
+        </p>
+        <ul class="text">
+          <li>Early morning (6:00)</li>
+          <li>Noon (12:00)</li>
+          <li>Evening (18:00)</li>
+        </ul>
+      </div>
+
+      <div v-else-if="period == 'daily'">
+        <p>
+          You will be receiving <strong>{{ author.name }}</strong> daily at
+          <strong>{{ time }}</strong>.
+        </p>
+      </div>
+
+      <div v-else-if="period == 'weekly'">
+        <p>
+          You will be receiving <strong>{{ author.name }}</strong> weekly on
+          <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
+        </p>
+      </div>
+      <!--
       <AuthorSubscription
         :name="author.name" :subscription="{period, time, dow}"
       />
+      -->
     </section>
   </div>
 </template>
@@ -80,7 +107,8 @@ export default {
       show: false,
       period: null,
       dow: null,
-      time: null
+      time: null,
+      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
 

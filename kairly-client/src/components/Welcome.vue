@@ -69,7 +69,7 @@
     <timeline-welcome--my-editions>
       <h2>Interesting Edition to Follow</h2>
       <div>
-        <MyEditionsItem
+        <EditionWidget
           v-for="edition in editions"
           :key="edition.id"
           v-bind:edition="edition"
@@ -91,13 +91,13 @@
 import * as api from '@/api'
 import { mapGetters } from 'vuex'
 
-import MyEditionsItem from '@/components/MyEditionsItem'
+import EditionWidget from '@/components/widgets/EditionWidget'
 
 export default {
   name: 'Welcome',
 
   components: {
-    MyEditionsItem
+    EditionWidget
   },
 
   computed: {

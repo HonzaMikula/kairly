@@ -1,5 +1,5 @@
 <template>
-  <my-editions--item>
+  <edition-widget-view>
     <picture>
       <router-link :to="'/editions/' + edition.id">
       <img :src="edition.picture" :alt="edition.title" />
@@ -10,12 +10,12 @@
 
     <p>{{ edition.description }}</p>
 
-    <my-editions--item--author>
+    <edition-widget--author>
       <img :src="edition.editor.picture" :alt="edition.editor.name"/>
       <router-link :to="edition.editor.url">{{ edition.editor.name }}</router-link>
-    </my-editions--item--author>
+    </edition-widget--author>
 
-    <my-editions--item--subscribe>
+    <edition-widget--subscribe>
       <button
         v-bind:class="{ 'is-subscribed': edition.subscription }"
         v-on:click="subscribe($event)"
@@ -27,9 +27,9 @@
         •
         #{{ edition.issues }}
       </p>
-    </my-editions--item--subscribe>
+    </edition-widget--subscribe>
 
-  </my-editions--item>
+  </edition-widget-view>
 </template>
 
 <script>
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style lang="sass">
-my-editions--item
+edition-widget-view
   position: relative
 
   display: flex
@@ -108,7 +108,7 @@ my-editions--item
     line-height: $baseline * 0.8
 
 //- Author + Periodicity
-my-editions--item--author
+edition-widget--author
 
   order: 2
 
@@ -130,7 +130,7 @@ my-editions--item--author
 
 
 //- Subscribe Edition
-my-editions--item--subscribe
+edition-widget--subscribe
   display: block
   padding: $baseline / 2 0 0 0
   order: 4

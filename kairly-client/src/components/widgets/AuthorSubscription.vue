@@ -1,30 +1,18 @@
 <template>
-  <div>
-    <div v-if="period == '3x_per_day'">
-      <p>
-        You will be receiving <strong>{{ name }}</strong> 3x time per day:
-      </p>
-      <ul class="text">
-        <li>Early morning (6:00)</li>
-        <li>Noon (12:00)</li>
-        <li>Evening (18:00)</li>
-      </ul>
-    </div>
+  <author-subscription-view>
+    <p v-if="period == '3x_per_day'">
+      3x time per day: <strong>6:00</strong>, 
+      <strong>12:00</strong> and <strong>18:00</strong>.
+    </p>
 
-    <div v-else-if="period == 'daily'">
-      <p>
-        You will be receiving <strong>{{ name }}</strong> daily at
-        <strong>{{ time }}</strong>.
-      </p>
-    </div>
+    <p v-else-if="period == 'daily'">
+      Daily at <strong>{{ time }}</strong>.
+    </p>
 
-    <div v-else-if="period == 'weekly'">
-      <p>
-        You will be receiving <strong>{{ name }}</strong> weekly on
-        <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
-      </p>
-    </div>
-  </div>
+    <p v-else-if="period == 'weekly'">
+      Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
+    </p>
+  </author-subscription-view>
 </template>
 
 <script>
@@ -50,4 +38,6 @@ export default {
 </script>
 
 <style lang="sass">
+author-subscription-view p
+  font-size: $fs--2
 </style>

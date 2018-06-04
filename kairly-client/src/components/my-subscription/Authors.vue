@@ -12,10 +12,10 @@
 import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
-import MyAuthorsItem from '@/components/MyAuthorsItem'
+import MyAuthorsItem from '@/components/my-subscription/MyAuthorsItem'
 
 export default {
-  name: 'MyEditions',
+  name: 'MyAuthors',
 
   components: {
     MyAuthorsItem

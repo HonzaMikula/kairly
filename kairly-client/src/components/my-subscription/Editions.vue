@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyEditionsItem
+    <EditionWidget
       v-for="edition in editions"
       :key="edition.id"
       :edition="edition"
@@ -12,13 +12,13 @@
 import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
-import MyEditionsItem from '@/components/MyEditionsItem'
+import EditionWidget from '@/components/widgets/EditionWidget'
 
 export default {
   name: 'MyEditions',
 
   components: {
-    MyEditionsItem
+    EditionWidget
   },
 
   computed: {
