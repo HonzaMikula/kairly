@@ -37,8 +37,8 @@ class Command(BaseCommand):
         for channel in channels:
             try:
                 if verbosity > 0:
-                    self.stdout.write('Fetching @{}'.format(channel.twtter_account))
-                timeline = api.GetUserTimeline(screen_name=channel.twtter_account)
+                    self.stdout.write('Fetching @{}'.format(channel.twitter_account))
+                timeline = api.GetUserTimeline(screen_name=channel.twitter_account)
 
                 for status in timeline:
                     guid = 'twitter|' + status.id_str
@@ -46,7 +46,7 @@ class Command(BaseCommand):
                     if Post.objects.filter(guid=guid).exists():
                         continue
 
-                    title = "{}: {}...".format(channel.twtter_account, status.text[:60])
+                    title = "{}: {}...".format(channel.twitter_account, status.text[:60])
                     args = dict(
                         kind=Post.TWEET,
                         published=dateutil.parser.parse(status.created_at),

@@ -140,7 +140,7 @@ class Channel(models.Model):
 
 
 class TwitterChannel(models.Model):
-    twtter_account = models.CharField(max_length=160)
+    twitter_account = models.CharField(max_length=160)
     author = models.ForeignKey('articles.Author', models.SET_NULL, blank=True, null=True)
     topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
     enabled = models.BooleanField(default=True)

@@ -76,7 +76,7 @@ class ChannelAdmin(admin.ModelAdmin):
 
 @admin.register(TwitterChannel)
 class TwitterChannelAdmin(admin.ModelAdmin):
-    list_display = ('twtter_account', 'author', 'topic', 'enabled')
+    list_display = ('twitter_account', 'author', 'topic', 'enabled')
 
     def get_field_queryset(self, db, db_field, request):
         """
