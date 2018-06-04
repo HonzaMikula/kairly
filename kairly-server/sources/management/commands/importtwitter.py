@@ -43,8 +43,8 @@ class Command(BaseCommand):
                 for status in timeline:
                     guid = 'twitter|' + status.id_str
 
-                    # ignore retweets
-                    if status.retweeted_status:
+                    # ignore retweets and replies
+                    if status.retweeted_status or status.in_reply_to_status_id:
                         continue
 
                     if Post.objects.filter(guid=guid).exists():
