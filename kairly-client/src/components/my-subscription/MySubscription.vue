@@ -3,7 +3,6 @@
     <nav>
       <router-link :to="{name: 'subscription.editions'}">Editions</router-link>
       <router-link :to="{name: 'subscription.authors'}">Authors</router-link>
-      <router-link :to="{name: 'subscription.explore'}">Explore</router-link>
     </nav>
     <router-view></router-view>
   </my-editions-view>

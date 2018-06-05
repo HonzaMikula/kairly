@@ -9,7 +9,7 @@ import Homepage from '@/components/Homepage'
 import MySubscription from '@/components/my-subscription/MySubscription'
 import MyAuthors from '@/components/my-subscription/Authors'
 import MyEditions from '@/components/my-subscription/Editions'
-import Explore from '@/components/my-subscription/Explore'
+import Explore from '@/components/Explore'
 
 Vue.use(Router)
 
@@ -26,9 +26,9 @@ export default new Router({
     {path: '/subscription', component: MySubscription, children: [
       {path: '', name: 'subscription', redirect: { name: 'subscription.editions'}},
       {path: 'editions', name: 'subscription.editions', component: MyEditions},
-      {path: 'authors', name: 'subscription.authors', component: MyAuthors},
-      {path: 'explore', name: 'subscription.explore', component: Explore}
-    ]}
+      {path: 'authors', name: 'subscription.authors', component: MyAuthors}
+    ]},
+    {path: '/explore', name: 'explore', component: Explore},
   ],
   linkActiveClass: 'is-active',
   linkExactActiveClass: 'is-active'

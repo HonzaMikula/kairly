@@ -13,11 +13,11 @@
         </router-link>
       </h3>
 
-      <authorWidget
+      <authorPopup
         :author="post.author"
         v-if="isAuthorWidgetOpen"
         v-on:authorwidgetclose="closeAuthorWidget()">
-      </authorWidget>
+      </authorPopup>
 
       <time>
         {{ post.time | moment('calendar') }}
@@ -30,7 +30,7 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import AuthorWidget from '@/components/widgets/AuthorWidget'
+import AuthorPopup from '@/components/widgets/AuthorPopup'
 
 export default {
   name: 'post',
@@ -67,7 +67,7 @@ export default {
   },
 
   components: {
-    AuthorWidget
+    AuthorPopup
   }
 }
 </script>

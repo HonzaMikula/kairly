@@ -36,7 +36,7 @@
 import * as api from '@/api'
 
 export default {
-  name: 'MyEditionsItem',
+  name: 'EditionWidget',
   props: ['edition'],
 
   methods: {

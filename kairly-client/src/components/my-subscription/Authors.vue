@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyAuthorsItem
+    <AuthorWidget
       v-for="author in authors"
       :key="author.slug"
       :author="author"
@@ -12,13 +12,13 @@
 import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
-import MyAuthorsItem from '@/components/my-subscription/MyAuthorsItem'
+import AuthorWidget from '@/components/widgets/AuthorWidget'
 
 export default {
   name: 'MyAuthors',
 
   components: {
-    MyAuthorsItem
+    AuthorWidget
   },
 
   data() {

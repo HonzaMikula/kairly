@@ -5,6 +5,7 @@
         <ul v-if="user">
           <li class="home"><router-link :to="{name: 'timeline'}" exact>Home</router-link></li>
           <li class="your-editions"><router-link :to="{name: 'subscription'}">My Subscription</router-link></li>
+          <li class="explore"><router-link :to="{name: 'explore'}">Explore</router-link></li>
         </ul>
         </app-header--nav>
 
