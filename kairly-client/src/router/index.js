@@ -19,8 +19,8 @@ export default new Router({
   routes: [
     {path: '/', name: 'timeline', component: Timeline},
     {path: '/post/:postId', name: 'post', component: PostDetail},
-    {path: '/editions/:editionId([^\/]+/[^\/]+)', name: 'edition', component: EditionDetail},
-    {path: '/editions/:editionId([^\/]+/[^\/]+)/:issueId', name: 'issue', component: IssueDetail},
+    {path: '/editions/:editionId([^/]+/[^/]+)', name: 'edition', component: EditionDetail},
+    {path: '/editions/:editionId([^/]+/[^/]+)/:issueId', name: 'issue', component: IssueDetail},
     {path: '/author/:authorId', name: 'author', component: AuthorDetail},
     {path: '/author/:authorId/:topic', name: 'topic', component: AuthorDetail},
     {path: '/homepage', name: 'homepage', component: Homepage},
