@@ -49,7 +49,7 @@
       </section>
 
       <section class="journalist">
-        <h2>Journalist & Commentators</h2>
+        <h2>Journalists & Commentators</h2>
 
         <AuthorWidget
           v-for="author in journalistAuthors"

@@ -36,4 +36,7 @@ export default {
 </script>
 
 <style lang="sass">
+my-editions-view author-widget-view
+  width: 576px
+
 </style>
