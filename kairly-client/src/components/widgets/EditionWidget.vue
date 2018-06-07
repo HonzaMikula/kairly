@@ -63,7 +63,6 @@ edition-widget-view
   border-radius: $baseline / 4
   margin: 0 $baseline/4 $baseline $baseline/4
   overflow: hidden
-  max-width: 280px
 
   background: #fff
   border: 1px solid #eee

@@ -9,7 +9,8 @@ import Homepage from '@/components/Homepage'
 import MySubscription from '@/components/my-subscription/MySubscription'
 import MyAuthors from '@/components/my-subscription/Authors'
 import MyEditions from '@/components/my-subscription/Editions'
-import Explore from '@/components/Explore'
+import Explore from '@/components/explore/Explore'
+import ExplorePolitics from '@/components/explore/Politics'
 
 Vue.use(Router)
 
@@ -29,6 +30,7 @@ export default new Router({
       {path: 'authors', name: 'subscription.authors', component: MyAuthors}
     ]},
     {path: '/explore', name: 'explore', component: Explore},
+    {path: '/explore/politics', name: 'explore', component: ExplorePolitics},
   ],
   linkActiveClass: 'is-active',
   linkExactActiveClass: 'is-active'

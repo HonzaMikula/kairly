@@ -57,7 +57,7 @@ author-widget-view
   display: block
   margin-bottom: $baseline / 2
   padding: $baseline / 4
-  width: 576px
+  max-width: 576px
 
   background: #fff
 
