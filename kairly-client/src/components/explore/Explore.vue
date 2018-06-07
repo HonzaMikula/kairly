@@ -1,23 +1,19 @@
 <template>
-  <explore-view class="bestOf">
+  <explore-view>
     <header>
       <nav>
         <ul>
-          <li><a href="/explore" class="is-active">Best of Kairly</a></li>
-          <li><a href="/explore/politics">Politics</a></li>
-          <li><a href="">Sport</a></li>
-          <li><a href="">Technology</a></li>
-          <li><a href="">Lifestyle</a></li>
+          <li v-for="tab in tabs"><router-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</router-link></li>
         </ul>
       </nav>
-      <h1>Best on Kairly</h1>
+      <h1>Politics</h1>
     </header>
 
     <main>
 
       <explore--top-editions>
         <h2>Top Editions</h2>
-        
+
         <div>
           <EditionWidget
             v-for="edition in editions"
@@ -25,27 +21,19 @@
             :edition="edition"
           />
         </div>
-        
+
       </explore--top-editions>
 
-      <section class="recommended-authors">
-        <h2>Recommended Authors</h2>
+      <section :class="`explore-${index}`" v-for="(section, index) in tab.sections">
+        <h2>{{ section.name }}</h2>
 
-        <AuthorWidget
-          v-for="author in recommendedAuthors"
-          :key="author.slug"
-          :author="author"
-        />
-      </section>
-
-      <section class="most-read-authors">
-        <h2>Most Read Authors</h2>
-
-        <AuthorWidget
-          v-for="author in topReadAuthors"
-          :key="author.slug"
-          :author="author"
-        />
+        <div v-for="authorId in section.authors">
+          <AuthorWidget
+            v-if="authors[authorId]"
+            :key="authorId"
+            :author="authors[authorId]"
+          />
+        </div>
       </section>
     </main>
   </explore-view>
@@ -54,6 +42,7 @@
 <script>
 import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
+import TABS from './exploreTabs'
 
 import EditionWidget from '@/components/widgets/EditionWidget'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
@@ -70,30 +59,57 @@ export default {
     ...mapGetters(['allEditions']),
 
     editions() {
-      return (this.allEditions || []).slice(0, 3)
+      return (this.tab.editions
+        .map(id => (this.allEditions || []).find(e => e.id === id))
+        .filter(edition => edition !== undefined)
+      )
     }
   },
 
   data() {
     return {
-      recommendedAuthors: [],
-      topReadAuthors: []
+      tabs: TABS,
+      tab: null,
+      authors: {}
+    }
+  },
+
+  methods: {
+    loadData() {
+      const slug = this.$route.params.tab
+      this.tab = TABS.find(t => t.slug === slug)
+
+      const authors = []
+      this.tab.sections.forEach(section => authors.push(...section.authors))
+      Promise.all(authors.map(authorId => {
+        const params = authorId.split('/')
+        return api.getAuthorDetail(...authorId.split('/')).then(res => {
+          // save loaded edition to store
+          res.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
+          this.authors = {...this.authors, [authorId]: res.author}
+          return res.author
+        })
+      }))
+    }
+  },
+
+  watch: {
+    '$route' (to, from) {
+      this.loadData()
     }
   },
 
   created() {
+    // TODO in future replace with loading only used editions
     this.$store.dispatch('getEditions')
-    api.getAuthors().then(resp => {
-      this.recommendedAuthors = resp.slice(7, 12)
-      this.topReadAuthors = resp.slice(17, 22)
-    })
+    this.loadData()
   }
 }
 </script>
 
 <style lang="sass">
-explore-view.bestOf
-  
+explore-view
+
   //- Header
   > header
     display: grid
@@ -103,13 +119,13 @@ explore-view.bestOf
 
     height: 400px
 
-    background: url(../../assets/homepage/hero.png) center center no-repeat
+    background: url(http://kairly.com/media/editions/uspolitics.jpg) center center no-repeat
     background-size: cover
 
     nav
       grid-area: nav
 
-      backdrop-filter: blur(5px) 
+      backdrop-filter: blur(5px)
       background: rgba(0, 0, 0, 0.05)
 
       ul
@@ -117,7 +133,7 @@ explore-view.bestOf
         margin: 0 auto
 
       li
-        display: inline-block  
+        display: inline-block
 
       a
         display: block
@@ -156,19 +172,7 @@ explore-view.bestOf
     grid-row-gap: $baseline
     grid-template-columns: 50% 50%
     grid-template-rows: auto auto
-    grid-template-areas: "explore-top-editions explore-top-editions" "explore-recommended-authors explore-most-read-authors"
-
-  section
-    > h2
-      font-size: $fs-2
-      font-weight: 600
-      line-height: $baseline * 2
-
-    &.recommended-authors
-      grid-area: explore-recommended-authors
-
-    &.most-read-authors  
-      grid-area: explore-most-read-authors
+    grid-template-areas: "explore-top-editions explore-top-editions" "explore-0 explore-1" "explore-2 explore-3"
 
 explore--top-editions
   grid-area: explore-top-editions
@@ -179,9 +183,29 @@ explore--top-editions
     line-height: $baseline * 2
 
   //-- wrapper
-  > div  
+  > div
     display: flex
     flex-wrap: wrap
     margin: 0 (-$baseline/4)
+
+section
+  > h2
+    font-size: $fs-2
+    font-weight: 600
+    line-height: $baseline * 2
+
+  &.explore-0
+    grid-area: explore-0
+
+  &.explore-1
+    grid-area: explore-1
+
+  &.explore-2
+    grid-area: explore-2
+
+  &.explore-3
+    grid-area: explore-3
+
+
 
 </style>
