@@ -1,17 +1,17 @@
 <template>
   <author-subscription-view>
-    <p v-if="period == '3x_per_day'">
-      3x time per day: <strong>6:00</strong>, 
-      <strong>12:00</strong> and <strong>18:00</strong>.
-    </p>
+    <template v-if="period == '3x_per_day'">
+      Daily at: <strong>6:00</strong>, 
+      <strong>12:00</strong> and <strong>18:00</strong>
+    </template>
 
-    <p v-else-if="period == 'daily'">
-      Daily at <strong>{{ time }}</strong>.
-    </p>
+    <template v-else-if="period == 'daily'">
+      Daily at <strong>{{ time }}</strong>
+    </template>
 
-    <p v-else-if="period == 'weekly'">
-      Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
-    </p>
+    <template v-else-if="period == 'weekly'">
+      Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>
+    </template>
   </author-subscription-view>
 </template>
 
@@ -38,6 +38,6 @@ export default {
 </script>
 
 <style lang="sass">
-author-subscription-view p
+author-subscription-view
   font-size: $fs--2
 </style>
