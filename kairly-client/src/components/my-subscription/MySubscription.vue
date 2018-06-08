@@ -1,11 +1,11 @@
 <template>
-  <my-editions-view>
+  <my-subscription-view>
     <nav>
       <router-link :to="{name: 'subscription.editions'}">Editions</router-link>
       <router-link :to="{name: 'subscription.authors'}">Authors</router-link>
     </nav>
     <router-view></router-view>
-  </my-editions-view>
+  </my-subscription-view>
 </template>
 
 <script>
@@ -15,19 +15,15 @@ export default {
 </script>
 
 <style lang="sass">
-my-editions-view
+my-subscription-view
   display: block
+  box-sizing: border-box
   max-width: 900px
   margin: $baseline auto
+  padding: 0 $baseline/2
 
   @media (max-width: $mobile)
     padding: 0 $baseline
-
-  //- wrapper
-  > div
-    display: flex
-    flex-wrap: wrap
-    margin: 0 -$baseline/4
 
   //- heading
   nav

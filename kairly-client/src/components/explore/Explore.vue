@@ -1,12 +1,12 @@
 <template>
-  <explore-view>
+  <explore-view :class="tab.slug">
     <header>
       <nav>
         <ul>
-          <li v-for="tab in tabs"><router-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</router-link></li>
+          <li v-for="tab in tabs" :key="tab.slug"><router-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</router-link></li>
         </ul>
       </nav>
-      <h1>Politics</h1>
+      <h1>{{ tab.name }}</h1>
     </header>
 
     <main>
@@ -24,10 +24,10 @@
 
       </explore--top-editions>
 
-      <section :class="`explore-${index}`" v-for="(section, index) in tab.sections">
+      <section :class="`explore-${index}`" v-for="(section, index) in tab.sections" :key="index">
         <h2>{{ section.name }}</h2>
 
-        <div v-for="authorId in section.authors">
+        <div v-for="authorId in section.authors" :key="authorId">
           <AuthorWidget
             v-if="authors[authorId]"
             :key="authorId"
@@ -119,8 +119,20 @@ explore-view
 
     height: 400px
 
-    background: url(http://kairly.com/media/editions/uspolitics.jpg) center center no-repeat
+    background: url(../../assets/homepage/hero.png) center center no-repeat
     background-size: cover
+
+    @at-root .politics > header
+      background-image: url(http://kairly.com/media/editions/uspolitics.jpg)
+
+    @at-root .sport > header
+      background-image: url(http://kairly.com/media/editions/olymp.jpg)
+
+    @at-root .technology > header
+      background-image: url(http://kairly.com/media/editions/bitcoin.jpg)    
+
+    @at-root .lifestyle > header
+      background-image: url(http://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)   
 
     nav
       grid-area: nav
@@ -184,9 +196,10 @@ explore--top-editions
 
   //-- wrapper
   > div
-    display: flex
-    flex-wrap: wrap
-    margin: 0 (-$baseline/4)
+    display: grid
+    grid-row-gap: $baseline
+    grid-template-columns: 1fr 1fr 1fr
+    grid-column-gap: $baseline / 2
 
 section
   > h2

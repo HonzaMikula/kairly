@@ -65,7 +65,7 @@ export default [
       sections: []
     },
     {
-      name: 'Lifestyke',
+      name: 'Lifestyle',
       slug: 'lifestyle',
       editions: [],
       sections: []

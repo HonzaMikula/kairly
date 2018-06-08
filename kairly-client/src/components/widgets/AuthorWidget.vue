@@ -9,17 +9,13 @@
       <h3>
         <router-link :to="author.url">{{ author.name }}</router-link>
       </h3>
-    </header>
 
-    <p>{{ author.bio }}</p>
-
-    <section>
       <AuthorSubscription
         :name="author.name" :subscription="author.subscription"
       />
-    </section>
-    
+    </header>
 
+    <p>{{ author.bio }}</p>
   </author-widget-view>
 </template>
 
@@ -62,34 +58,51 @@ author-widget-view
   background: #fff
 
   header 
-    display: flex
+    display: grid
+    grid-column-gap: $baseline / 4
+    grid-template-columns: $baseline*1.25 auto auto
+    grid-template-rows: $baseline * 1.25
+    grid-template-areas: "author-widget-image author-widget-name author-widget-subscription"
+    align-items: center
+    margin-bottom: $baseline / 4
 
+    //- picture
     img
-      border-radius: 100%
-      height: $baseline * 1.5
-      margin-right: $baseline / 2
-      width: $baseline * 1.5  
+      grid-area: author-widget-image
 
+      display: block
+      border-radius: 100%
+      height: $baseline * 1.25
+      margin-right: $baseline / 2
+      width: $baseline * 1.25  
+
+    //- name
     h3
+      grid-area: author-widget-name
+
       font-family: $ff-serif
-      font-size: $fs-1
+      font-weight: 600
 
       a 
         color: #000
 
+        text-decoration: none
+
+    //- subscription information
+    author-subscription-view
+      grid-area: author-widget-subscription
+
+      font-family: $ff-sans !important    
+      text-align: right
+  
+  //- bio
   p
     margin-bottom: $baseline / 2
 
+    color: #777
+
     font-family: $ff-serif
-
-  button
-    +subscribe-button     
-
-  section
-    position: absolute
-    right: $baseline / 4
-    top: $baseline / 4
-
-    font-family: $ff-sans !important
+    font-size: $fs--1
+    line-height: $baseline * 0.8
 
 </style>

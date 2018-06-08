@@ -61,7 +61,6 @@ edition-widget-view
   flex: 1 0 270px
   padding: 0 $baseline / 4
   border-radius: $baseline / 4
-  margin: 0 $baseline/4 $baseline $baseline/4
   overflow: hidden
 
   background: #fff
@@ -88,7 +87,6 @@ edition-widget-view
   //- title
   > h2
     order: 3
-    font-size: $fs-1
     font-weight: 600
 
     a

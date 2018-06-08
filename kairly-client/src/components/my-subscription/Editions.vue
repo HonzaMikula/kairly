@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <my-editions-view>
     <EditionWidget
       v-for="edition in editions"
       :key="edition.id"
       :edition="edition"
     />
-  </div>
+  </my-editions-view>
 </template>
 
 <script>
@@ -34,4 +34,10 @@ export default {
 </script>
 
 <style lang="sass">
+my-editions-view
+  display: grid
+  grid-row-gap: $baseline
+  grid-template-columns: 1fr 1fr 1fr
+  grid-column-gap: $baseline / 2
+  grid-row-gap: $baseline / 2
 </style>

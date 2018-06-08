@@ -251,9 +251,12 @@ author-detail--editions
 
   //- wrapper for edition items
   > div
-    display: flex
-    flex-wrap: wrap
-    margin: 0 -$baseline/4
+    display: grid
+    grid-row-gap: $baseline
+    grid-template-columns: 1fr 1fr 1fr
+    grid-column-gap: $baseline / 2
+    grid-row-gap: $baseline / 2
+    margin-bottom: $baseline / 2
 
   //- show/hide more editions
   > button
