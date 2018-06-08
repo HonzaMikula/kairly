@@ -39,5 +39,7 @@ export default {
 
 <style lang="sass">
 author-subscription-view
+  display: block
+  
   font-size: $fs--2
 </style>
