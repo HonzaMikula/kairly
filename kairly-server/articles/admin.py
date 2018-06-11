@@ -24,7 +24,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('kind', 'draft')
     exclude = ('guid',)
     readonly_fields = ('source',)
-    search_fields = ('title', 'author')
+    search_fields = ('title', 'author__name', 'author__slug')
 
     def get_field_queryset(self, db, db_field, request):
         """
