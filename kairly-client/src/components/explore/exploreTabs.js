@@ -23,20 +23,36 @@ export default [
           name: 'News',
           authors: [
             'idnescz',
-            'aktualnecz/domaci'
+            'aktualnecz'
           ]
         },
         {
           name: 'Politics',
-          authors: []
+          authors: [
+            'mirektopolanek',
+            'miroslavkalousek',
+            'andrejbabis',
+            'michalhoracek',
+            'petrfiala'
+          ]
         },
         {
           name: 'Journalists & Commentators',
-          authors: []
+          authors: [
+            'jindrichsidlo',
+            'eriktabery',
+            'alexandrmitrofanov',
+            'pavelsafr',
+            'petrhonzejk'
+          ]
         },
         {
           name: 'Think-thanks',
-          authors: []
+          authors: [
+            'liberalni-institut',
+            'obcansky-institut',
+            'misescz'
+          ]
         }
       ]
     },

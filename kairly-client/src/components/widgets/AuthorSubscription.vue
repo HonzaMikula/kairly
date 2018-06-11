@@ -1,7 +1,7 @@
 <template>
   <author-subscription-view>
     <template v-if="period == '3x_per_day'">
-      Daily at: <strong>6:00</strong>, 
+      Daily at <strong>6:00</strong>, 
       <strong>12:00</strong> and <strong>18:00</strong>
     </template>
 
@@ -40,6 +40,6 @@ export default {
 <style lang="sass">
 author-subscription-view
   display: block
-  
+
   font-size: $fs--2
 </style>
