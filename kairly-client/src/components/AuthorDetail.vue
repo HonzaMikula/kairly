@@ -13,6 +13,11 @@
         </picture>
         <h1>{{ author.name }}</h1>
         <p>{{ author.bio }}</p>
+        <p>
+          <span v-for="topic in topics" :key="topic.url">
+            <router-link :to="topic.url">{{ topic.name}}</router-link>
+          </span>
+        </p>
       </author-detail--header>
 
       <author-detail--subscribe>
@@ -39,11 +44,6 @@
           :subscription="author.subscription"
         />
 
-        <div style="display: flex">
-          <div v-for="topic in topics" :key="topic.url">
-            <router-link :to="topic.url">{{ topic.name}}</router-link> |
-          </div>
-        </div>
       </author-detail--subscribe>
 
       <author-detail--editions v-if="editions.length">
@@ -215,6 +215,26 @@ author-detail--header
       width: $baseline * 4
 
       object-fit: cover
+
+  //- topics
+  p + p
+    margin-top: $baseline / 2
+
+    span
+      &::after
+        content: '•'
+
+      &:last-of-type::after
+        content: ''  
+
+    a
+      display: inline-block
+      margin: 0 $baseline/4
+
+      color: $c-base
+
+      text-decoration: none
+        
 
 //- Subsribe
 author-detail--subscribe
