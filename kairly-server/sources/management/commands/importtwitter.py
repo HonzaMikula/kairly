@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     self.stdout.write('Fetching @{}'.format(channel.twitter_account))
                 timeline = api.GetUserTimeline(
                     screen_name=channel.twitter_account,
-                    exclude_replies=True,
+                    # exclude_replies=True, # we still want reply to account
                     trim_user=True
                 )
 
