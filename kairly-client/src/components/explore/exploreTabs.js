@@ -8,6 +8,28 @@ export default [
         'janmikula/bitsontheblock'
       ],
       sections: [
+        {
+          name: 'Recommended',
+          authors: [
+            'idnescz',
+            'aktualnecz',
+            'technet',
+            'jindrichsidlo',
+            'intercom',
+            'liberalni-institut',
+            'celiaxmoni'
+          ]
+        }, {
+          name: 'New Authors',
+          authors: [
+            'jablickar',
+            'karel-fillner',
+            'mirektopolanek',
+            'miroslavkalousek',
+            'obcansky-institut',
+            'my-cooking-diary'
+          ]
+        }
       ]
     },
     {
@@ -23,7 +45,8 @@ export default [
           name: 'News',
           authors: [
             'idnescz',
-            'aktualnecz'
+            'aktualnecz',
+            'finmag'
           ]
         },
         {
@@ -64,9 +87,27 @@ export default [
       ],
       sections: [
         {
-          name: 'Sportovní zpravodajství',
+          name: 'Sport News',
+          authors: [
+            'aktualnecz/sport',
+            'sportcz'
+          ]
+        }, {
+          name: 'Athletes',
           authors: [
             'aktualnecz/sport'
+          ]
+        }, {
+          name: 'Sport Journalists',
+          authors: [
+            'robertzaruba',
+            'darinavymetalikova',
+            'michaldusik'
+          ]
+        }, {
+          name: 'Sport Clubs',
+          authors: [
+            'ceskyolympijskytym'
           ]
         }
       ]
@@ -78,12 +119,56 @@ export default [
         'janmikula/bitsontheblock',
         'janmikula/pokrokaprosperita'
       ],
-      sections: []
+      sections: [
+        {
+          name: 'Tech News',
+          authors: [
+            'technet',
+            'lupacz',
+            'jablickar'
+          ]
+        }, {
+          name: 'Web Technologies',
+          authors: [
+            'smashing-magazine',
+            'list-apart',
+            'google-developers'
+          ]
+        }, {
+          name: 'Product Design',
+          authors: [
+            'intercom',
+            'mind-product'
+          ]
+        }, {
+          name: 'Cryptocurrencies',
+          authors: [
+            'karel-fillner',
+            'joseftetek'
+          ]
+        }, {
+          name: 'Tech Companies',
+          authors: [
+            'opera',
+            'microsoft',
+            'mozilla'
+          ]
+        }
+      ]
     },
     {
       name: 'Lifestyle',
       slug: 'lifestyle',
       editions: [],
-      sections: []
+      sections: [
+        {
+          name: 'Recipes',
+          authors: [
+            'cukr-free',
+            'celiaxmoni',
+            'my-cooking-diary'
+          ]
+        }
+      ]
     }
 ]

@@ -80,7 +80,6 @@ author-widget-view
     h3
       grid-area: author-widget-name
 
-      font-family: $ff-serif
       font-weight: 600
 
       a 
@@ -101,8 +100,7 @@ author-widget-view
 
     color: #777
 
-    font-family: $ff-serif
-    font-size: $fs--1
+    font-size: $fs--2
     line-height: $baseline * 0.8
 
 </style>

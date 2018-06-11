@@ -66,7 +66,6 @@ edition-widget-view
   background: #fff
   border: 1px solid #eee
 
-  font-family: $ff-serif
   text-align: left
 
   @media (max-width: $mobile)
@@ -101,7 +100,7 @@ edition-widget-view
 
     color: #777
 
-    font-size: $fs--1
+    font-size: $fs--2
     line-height: $baseline * 0.8
 
 //- Author + Periodicity
@@ -137,6 +136,9 @@ edition-widget--subscribe
   //- button
   button
     +subscribe-button
+
+    font-family: $ff-sans
+    font-size: $fs--1
 
   //- info
   p
