@@ -76,18 +76,15 @@ export const getEditionDetail = (editionId, issueId=null) => {
     .then(res => res.body)
 }
 
-export const getAuthorDetail = (authorId, topic) => {
+export const getAuthorDetail = (authorId) => {
   if (!token) return Promise.reject()
   let req = agent.get(API_URI + '/author/' + authorId)
-  // TODO review api design here, it should be rather in url but now it clashes with author/posts endpoint
-  if (topic) { req = req.query({ topic }) }
   return req.then(res => res.body)
 }
 
-export const getAuthorPosts = (authorId, topic, cursor) => {
+export const getAuthorPosts = (authorId, cursor) => {
   if (!token) return Promise.reject()
   let req = agent.get(API_URI + '/author/' + authorId + '/posts')
-  if (topic) { req = req.query({ topic }) }
   if (cursor) { req = req.query({ cursor }) }
   return req.then(res => res.body)
 }

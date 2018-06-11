@@ -6,27 +6,23 @@ from .models import Post
 
 
 def author_json(author, topic=None):
+    if topic:
+        id = '{}|{}'.format(author.slug, topic.slug)
+        name = '{} | {}'.format(author.name, topic.name)
+    else:
+        id = author.slug
+        name = author.name
+
     res = {
+        'id': id,
+        'name': name,
         'picture': author.picture,
         'medium': author.medium,
         'bio': author.bio,
+        'url': '/author/{}'.format(id),
+        'followUrl': '/api/subscribe/{}'.format(id),
+        'unfollowUrl': '/api/unsubscribe/{}'.format(id),
     }
-    if topic:
-        res.update({
-            'id': '{}/{}'.format(author.slug, topic.slug),
-            'name': '{} | {}'.format(author.name, topic.name),
-            'url': '/author/{}/{}'.format(author.slug, topic.slug),
-            'followUrl': '/api/subscribe/{}?topic={}'.format(author.slug, topic.slug),
-            'unfollowUrl': '/api/unsubscribe/{}?topic={}'.format(author.slug, topic.slug),
-        })
-    else:
-        res.update({
-            'id': author.slug,
-            'name': author.name,
-            'url': '/author/{}'.format(author.slug),
-            'followUrl': '/api/subscribe/{}'.format(author.slug),
-            'unfollowUrl': '/api/unsubscribe/{}'.format(author.slug),
-        })
 
     if hasattr(author, 'user_subscription'):
         sub = author.user_subscription

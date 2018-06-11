@@ -61,6 +61,10 @@
 
       </author-detail--editions>
 
+      <div v-if="canCreateEdition">
+        <router-link :to="{ name: '', params: {} }">Create new edition</router-link>
+      </div>
+
       <author-detail--posts v-if="posts.length">
         <h2>{{ author.name }}'s Posts</h2>
 
@@ -113,6 +117,10 @@ export default {
     editions() {
       const ids = this.showAllEditions ? this.editionIds : this.editionIds.slice(0, 3)
       return ids.map(id => this.$store.getters.edition(id))
+    },
+
+    canCreateEdition() {
+      return this.author && this.$store.getters.isManagedAuthor(this.author.id)
     }
   },
 
@@ -150,12 +158,16 @@ export default {
 
     loadMore() {
       if (this.cursor) {
+        const { authorId } = this.$route.params
+
         this.loadingPosts = true
-        api.getAuthorPosts(this.$route.params.authorId, this.topic, this.cursor).then(this.handlePostsData)
+        api.getAuthorPosts(authorId, this.cursor).then(this.handlePostsData)
       }
     },
 
     loadData() {
+      const { authorId } = this.$route.params
+
       this.loadingProfile = true
       this.loadingPosts = true
       this.author = null
@@ -164,15 +176,14 @@ export default {
       this.posts = []
       this.cursor = null
 
-      this.topic = this.$route.params.topic || null
-      api.getAuthorDetail(this.$route.params.authorId, this.topic).then(resp => {
+      api.getAuthorDetail(authorId).then(resp => {
         resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
         this.author = resp.author
         this.editionIds = resp.editions.map(e => e.id)
         this.loadingProfile = false
         this.topics = resp.topics
       })
-      api.getAuthorPosts(this.$route.params.authorId, this.topic, null).then(this.handlePostsData)
+      api.getAuthorPosts(authorId, null).then(this.handlePostsData)
     }
   },
 

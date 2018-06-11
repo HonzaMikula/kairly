@@ -5,7 +5,7 @@ from libgravatar import Gravatar
 
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
+from django.http import Http404, JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.views.decorators.http import require_POST
 
 
@@ -15,6 +15,25 @@ from utils.decorators import ajax_login_required
 
 
 AUTOR_POSTS_PAGE_SIZE = 20
+
+
+def get_author_and_topic(author_id):
+    if '|' in author_id:
+        author_slug, topic_slug = author_id.split('|', maxsplit=1)
+    else:
+        author_slug = author_id
+        topic_slug = None
+
+    print(author_slug, topic_slug)
+    author = get_object_or_404(Author, slug=author_slug)
+    if topic_slug:
+        topic = Topic.objects.get(slug=topic_slug)
+        if not topic:
+            raise Http404
+    else:
+        topic = None
+
+    return author, topic
 
 
 def index(request, *args, **kwargs):
@@ -69,8 +88,8 @@ def authors(request):
 
 
 @ajax_login_required
-def edition(request, editor_slug, edition_slug):
-    edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
+def edition(request, author_id, edition_slug):
+    edition = get_object_or_404(Edition, editor__slug=author_id, slug=edition_slug)
     try:
         edition.user_subscription = Subscription.objects.get(user=request.user, edition=edition)
     except Subscription.DoesNotExist:
@@ -96,16 +115,9 @@ def edition(request, editor_slug, edition_slug):
 
 
 @ajax_login_required
-def author(request, author_slug):
-    author = get_object_or_404(Author, slug=author_slug)
+def author(request, author_id):
+    author, topic = get_author_and_topic(author_id)
     topics = {t.slug: t for t in Topic.objects.filter(author=author)}
-    topic_slug = request.GET.get('topic')
-    if topic_slug:
-        topic = topics.get(topic_slug)
-        if not topic:
-            return HttpResponseNotFound()
-    else:
-        topic = None
 
     try:
         if topic:
@@ -125,25 +137,22 @@ def author(request, author_slug):
     if not topic and topics:
         data['topics'] = [{
             'name': t.name,
-            'url': '/author/{}/{}'.format(author_slug, t.slug)
+            'url': '/author/{}|{}'.format(author.slug, t.slug)
         } for t in topics.values()]
     return JsonResponse(data)
 
 
 @ajax_login_required
-def author_posts(request, author_slug):
+def author_posts(request, author_id):
     try:
         offset = int(request.GET.get('cursor', 0))
     except ValueError:
         offset = 0
 
-    topic_slug = request.GET.get('topic')
-
-    author = get_object_or_404(Author, slug=author_slug)
+    author, topic = get_author_and_topic(author_id)
 
     posts_query = Post.objects.filter(author=author, draft=False)
-    if topic_slug:
-        topic = get_object_or_404(Topic, slug=topic_slug, author=author)
+    if topic:
         posts_query = posts_query.filter(topics=topic)
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
     posts = [post_json(post, short=True) for post in posts_query]
@@ -155,8 +164,9 @@ def author_posts(request, author_slug):
 
 @ajax_login_required
 @require_POST
-def subscribe(request, editor_slug, edition_slug):
-    edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
+def subscribe(request, author_id, edition_slug):
+    author, _ = get_author_and_topic(author_id)
+    edition = get_object_or_404(Edition, editor=author, slug=edition_slug)
     Subscription.objects.create(user=request.user, edition=edition)
 
     edition.user_subscription = True
@@ -167,8 +177,9 @@ def subscribe(request, editor_slug, edition_slug):
 
 @ajax_login_required
 @require_POST
-def unsubscribe(request, editor_slug, edition_slug):
-    edition = get_object_or_404(Edition, editor__slug=editor_slug, slug=edition_slug)
+def unsubscribe(request, author_id, edition_slug):
+    author, _ = get_author_and_topic(author_id)
+    edition = get_object_or_404(Edition, editor=author, slug=edition_slug)
     Subscription.objects.filter(user=request.user, edition=edition).delete()
 
     edition.user_subscription = False
@@ -179,15 +190,8 @@ def unsubscribe(request, editor_slug, edition_slug):
 
 @ajax_login_required
 @require_POST
-def subscribe_author(request, editor_slug):
-    author = get_object_or_404(Author, slug=editor_slug)
-    topic_slug = request.GET.get('topic')
-    if topic_slug:
-        topic = Topic.objects.get(slug=topic_slug)
-        if not topic:
-            return HttpResponseNotFound()
-    else:
-        topic = None
+def subscribe_author(request, author_id):
+    author, topic = get_author_and_topic(author_id)
     payload = json.loads(request.body.decode('utf-8'))
 
     period = payload.get('period')
@@ -221,15 +225,8 @@ def subscribe_author(request, editor_slug):
 
 @ajax_login_required
 @require_POST
-def unsubscribe_author(request, editor_slug):
-    author = get_object_or_404(Author, slug=editor_slug)
-    topic_slug = request.GET.get('topic')
-    if topic_slug:
-        topic = Topic.objects.get(slug=topic_slug)
-        if not topic:
-            return HttpResponseNotFound()
-    else:
-        topic = None
+def unsubscribe_author(request, author_id):
+    author, topic = get_author_and_topic(author_id)
     SubscriptionToAuthor.objects.filter(
         user=request.user, author=author, topic=topic).delete()
 

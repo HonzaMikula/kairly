@@ -21,7 +21,6 @@ export default new Router({
     {path: '/editions/:editionId([^/]+/[^/]+)', name: 'edition', component: EditionDetail},
     {path: '/editions/:editionId([^/]+/[^/]+)/:issueId', name: 'issue', component: IssueDetail},
     {path: '/author/:authorId', name: 'author', component: AuthorDetail},
-    {path: '/author/:authorId/:topic', name: 'topic', component: AuthorDetail},
     {path: '/homepage', name: 'homepage', component: Homepage},
     {path: '/subscription', component: MySubscription, children: [
       {path: '', name: 'subscription', redirect: { name: 'subscription.editions'}},
