@@ -37,7 +37,7 @@ export const getProfile = () => {
   if (!token) return Promise.reject();
   return agent
     .get(API_URI + '/profile')
-    .then(res => res.body.user)
+    .then(res => res.body)
 }
 
 export const getTimeline = (cursor) => {
