@@ -21,6 +21,12 @@ class Command(BaseCommand):
             dest='account',
             help='Import just selected twitter account',
         )
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            dest='force',
+            help='Override existing posts',
+        )
 
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
@@ -28,7 +34,8 @@ class Command(BaseCommand):
         api = twitter.Api(consumer_key=settings.TWITTER_CONSUMER_KEY,
                           consumer_secret=settings.TWITTER_CONSUMER_SECRET,
                           access_token_key=settings.TWITTER_ACCESS_TOKEN_KEY,
-                          access_token_secret=settings.TWITTER_ACCESS_TOKEN_SECRET)
+                          access_token_secret=settings.TWITTER_ACCESS_TOKEN_SECRET,
+                          tweet_mode='extended')
 
         channels = TwitterChannel.objects.filter(enabled=True).exclude(author__isnull=True)
         if options.get('account'):
@@ -38,7 +45,11 @@ class Command(BaseCommand):
             try:
                 if verbosity > 0:
                     self.stdout.write('Fetching @{}'.format(channel.twitter_account))
-                timeline = api.GetUserTimeline(screen_name=channel.twitter_account)
+                timeline = api.GetUserTimeline(
+                    screen_name=channel.twitter_account,
+                    exclude_replies=True,
+                    trim_user=True
+                )
 
                 for status in timeline:
                     guid = 'twitter|' + status.id_str
@@ -47,11 +58,20 @@ class Command(BaseCommand):
                     if status.retweeted_status or status.in_reply_to_status_id:
                         continue
 
-                    if Post.objects.filter(guid=guid).exists():
+                    source = "https://twitter.com/{}/status/{}".format(channel.twitter_account, status.id_str)
+
+                    try:
+                        post = Post.objects.get(guid=guid)
+                    except Post.DoesNotExist:
+                        post = None
+
+                    if post and not options.get('force'):
+                        if verbosity > 1:
+                            self.stdout.write('Skipping {}. Already imported'.format(source))
                         continue
 
-                    title = "{}: {}...".format(channel.twitter_account, status.text[:60])
-                    content = status.text
+                    title = "{}: {}...".format(channel.twitter_account, status.full_text[:60])
+                    content = status.full_text
                     for u in status.urls:
                         content = content.replace(u.url, '<a href="{}">{}</a>'.format(u.expanded_url, u.url))
 
@@ -60,13 +80,18 @@ class Command(BaseCommand):
                         published=dateutil.parser.parse(status.created_at),
                         draft=False,
                         guid=guid,
-                        source="https://twitter.com/{}/status/{}".format(channel.twitter_account, status.id_str),
+                        source=source,
                         title=title,
                         content=content,
                         author=channel.author
                     )
 
-                    post = Post.objects.create(**args)
+                    if post is None:
+                        post = Post.objects.create(**args)
+                    else:
+                        post.__dict__.update(args)
+                        post.save()
+
                     if channel.topic:
                         if verbosity > 1:
                             self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
