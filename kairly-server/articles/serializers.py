@@ -13,6 +13,7 @@ def author_json(author, topic=None):
     }
     if topic:
         res.update({
+            'id': '{}/{}'.format(author.slug, topic.slug),
             'name': '{} | {}'.format(author.name, topic.name),
             'url': '/author/{}/{}'.format(author.slug, topic.slug),
             'followUrl': '/api/subscribe/{}?topic={}'.format(author.slug, topic.slug),
@@ -20,6 +21,7 @@ def author_json(author, topic=None):
         })
     else:
         res.update({
+            'id': author.slug,
             'name': author.name,
             'url': '/author/{}'.format(author.slug),
             'followUrl': '/api/subscribe/{}'.format(author.slug),

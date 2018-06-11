@@ -255,9 +255,11 @@ def post(request, post_id):
 @ajax_login_required
 def profile(request):
     g = Gravatar(request.user.email)
+    authors = Author.objects.filter(users=request.user).values_list('slug', flat=True)
     return JsonResponse({
         "user": {
             "name": request.user.get_full_name(),
             'picture': g.get_image(use_ssl=True, default='blank')
-        }
+        },
+        "authors": list(authors)
     })

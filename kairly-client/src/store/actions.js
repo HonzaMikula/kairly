@@ -1,12 +1,17 @@
-import request from 'superagent'
 import * as api from '@/api'
 
-export const getProfile = ({ commit, state }) => {
+export const getProfile = ({ commit }) => {
   api
     .getProfile()
     .then(
-      user => commit('user', user),
-      () => commit('user', false)
+      resp => {
+        commit('user', resp.user)
+        commit('managedAuthors', resp.authors)
+      },
+      () => {
+        commit('user', false)
+        commit('managedAuthors', [])
+      }
     )
 }
 
