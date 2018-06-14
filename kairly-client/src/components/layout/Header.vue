@@ -13,18 +13,20 @@
           <input type="search" placeholder="Search"/>
         </app-header--search-->
 
-        <app-header--user-profile v-if="user" v-on:click="openDropDownMenu">
+        <app-header--user-profile v-if="user">
           <img src="../../assets/user.png" :alt="user.name"/>
           <!--
             Gravatar url handles default itself (it can generate 404 url or some dafault),
             but it is problematic handle it on client side identify default and replace it with own default
           -->
           <!--img :src="user.picture" :alt="user.name"/-->
+          <button-icon v-on:click="openDropDownMenu"></button-icon>
         </app-header--user-profile>
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
           <h3>{{ user.name }}</h3>
           <ul>
+            <li><a href="" v-on:click.prevent="help()">Help</a></li>
             <li><a href="" v-on:click.prevent="logout">Logout</a></li>
           </ul>
         </app-header--user-profile-menu>
@@ -185,6 +187,25 @@ app-header--user-profile
     vertical-align: middle
 
     object-fit: cover
+
+  //- dropdown button
+  button-icon
+    display: inline-block
+    border-radius: 100%
+    height: $baseline * 1.25
+    margin-left: $baseline / 4
+    width: $baseline * 1.25
+
+    line-height: $baseline * 1.25
+    vertical-align: middle
+    text-align: center
+
+    &:focus,
+    &:hover
+      background: darken($c-base, 10%)
+
+    &::before
+      content: $fa-var-chevron-down
 
 
 //- User Profile Menu
