@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/unsubscribe/<author_id>', views.unsubscribe_author, name='unsubscribe_author'),
     path('api/author/<author_id>', views.author, name='author'),
     path('api/author/<author_id>/posts', views.author_posts, name='author_posts'),
+    path('api/author/<author_id>/new-edition', views.create_edition, name='create_edition'),
     path('api/profile', views.profile, name='profile'),
     path('api/post/<int:post_id>', views.post, name='post'),
 

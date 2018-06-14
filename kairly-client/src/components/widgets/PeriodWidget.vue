@@ -1,5 +1,5 @@
 <template>
-  <div class="follow-author"
+  <div class="period-widget"
     v-if="show"
     v-on-clickaway="() => closeSubscribeWidget()">
 
@@ -42,35 +42,6 @@
         <li><a href="" v-on:click.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
       </ul>
     </section>
-
-    <section v-else>
-      <header>You're subscribed!</header>
-
-      <div v-if="period == '3x_per_day'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
-        </p>
-        <ul class="text">
-          <li>Early morning (6:00)</li>
-          <li>Noon (12:00)</li>
-          <li>Evening (18:00)</li>
-        </ul>
-      </div>
-
-      <div v-else-if="period == 'daily'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> daily at
-          <strong>{{ time }}</strong>.
-        </p>
-      </div>
-
-      <div v-else-if="period == 'weekly'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> weekly on
-          <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
-        </p>
-      </div>
-    </section>
   </div>
 </template>
 
@@ -80,10 +51,9 @@ import * as api from '@/api'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 export default {
-  name: 'FollowAuthor',
+  name: 'PeriodWidget',
 
   props: {
-    'author': Object,
     'onSelect': Function
   },
 
@@ -123,6 +93,7 @@ export default {
 
     submit() {
       this.onSelect(this.period, this.time, this.dow)
+      this.closeSubscribeWidget()
     },
 
     selectHowOften(period, ev) {
@@ -150,7 +121,7 @@ export default {
 
 <style lang="sass">
 
-.follow-author
+.period-widget
   position: absolute
   left: 50%
   top: 50px

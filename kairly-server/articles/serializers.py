@@ -90,14 +90,16 @@ def edition_issue_json(issue, posts=True, edition=None, tzinfo=timezone.utc):
 
 
 def edition_json(edition):
-    return {
+    result = {
         "id": "{}/{}".format(edition.editor.slug, edition.slug),
         "title": edition.title,
         "picture": settings.MEDIA_SITE + edition.image.url,
         "description": edition.description,
         "editor": author_json(edition.editor),
         "period": edition.period,
-        "subscription": edition.user_subscription is not None,
-        "issues": edition.issues,
-        "likes": edition.likes,
+        "issues": getattr(edition, 'issues', 0),
+        "likes": getattr(edition, 'likes', 0)
     }
+    if hasattr(edition, 'user_subscription'):
+        result['subscription'] = edition.user_subscription is not None
+    return result

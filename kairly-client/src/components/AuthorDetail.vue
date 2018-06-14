@@ -62,7 +62,7 @@
       </author-detail--editions>
 
       <div v-if="canCreateEdition">
-        <router-link :to="{ name: '', params: {} }">Create new edition</router-link>
+        <router-link :to="{ name: 'create-edition', params: {authorId: this.$route.params.authorId} }">Create new edition</router-link>
       </div>
 
       <author-detail--posts v-if="posts.length">
@@ -236,7 +236,7 @@ author-detail--header
         content: '•'
 
       &:last-of-type::after
-        content: ''  
+        content: ''
 
     a
       display: inline-block
@@ -245,7 +245,7 @@ author-detail--header
       color: $c-base
 
       text-decoration: none
-        
+
 
 //- Subsribe
 author-detail--subscribe

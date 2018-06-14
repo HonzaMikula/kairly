@@ -124,3 +124,12 @@ export const unsubscribeAuthor = author => {
     .post(process.env.VUE_APP_BASE_URI + author.unfollowUrl)
     .then(res => res.body)
 }
+
+export const createEdition = (authorId, edition) => {
+  //const { title, description, image, period, time, dow } = edition
+  if (!token) return Promise.reject();
+  return agent
+    .post(API_URI + '/author/' + authorId + '/new-edition')
+    .send(edition)
+    .then(res => res.body)
+}

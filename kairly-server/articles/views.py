@@ -1,4 +1,5 @@
 import json
+from binascii import a2b_base64
 from datetime import time
 
 from libgravatar import Gravatar
@@ -7,6 +8,8 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.views.decorators.http import require_POST
+from django.utils.text import slugify
+from django.core.files.base import ContentFile
 
 
 from .models import (Author, Edition, EditionIssue, Post, Subscription, SubscriptionToAuthor, Topic)
@@ -24,7 +27,6 @@ def get_author_and_topic(author_id):
         author_slug = author_id
         topic_slug = None
 
-    print(author_slug, topic_slug)
     author = get_object_or_404(Author, slug=author_slug)
     if topic_slug:
         topic = Topic.objects.get(slug=topic_slug)
@@ -259,4 +261,36 @@ def profile(request):
             'picture': g.get_image(use_ssl=True, default='blank')
         },
         "authors": list(authors)
+    })
+
+
+def get_type_from_data_uri(data):
+    return data.split(';', maxsplit=1)[0].split('/')[1]
+
+
+@ajax_login_required
+@require_POST
+def create_edition(request, author_id):
+    author, topic = get_author_and_topic(author_id)
+    payload = json.loads(request.body.decode('utf-8'))
+    title = payload['title']
+    slug = slugify(title)
+    data_uri = payload['image']
+    # data_uri = 'data:image/jpeg;base64,/9j/4AAQSkZJRg....'
+    head, image_data = data_uri.split(',')
+    binary_image_data = a2b_base64(image_data)
+    image_type = head.split(';')[0].split('/')[1]
+    # TODO handle existing slug
+    edition = Edition(
+        title=title,
+        slug=slug,
+        description=payload['description'],
+        image=ContentFile(binary_image_data, "{}-{}.{}".format(author.slug, slug, image_type)),
+        period=payload['period'],
+        editor=author
+    )
+    edition.save()
+
+    return JsonResponse({
+        "edition": edition_json(edition)
     })
