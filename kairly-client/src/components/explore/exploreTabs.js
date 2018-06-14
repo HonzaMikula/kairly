@@ -22,6 +22,8 @@ export default [
         }, {
           name: 'New Authors',
           authors: [
+            'vesmircz',
+            'neviditelny-pes',
             'jablickar',
             'karel-fillner',
             'mirektopolanek',
@@ -46,7 +48,8 @@ export default [
           authors: [
             'idnescz',
             'aktualnecz',
-            'finmag'
+            'finmag',
+            'neviditelny-pes',
           ]
         },
         {
@@ -152,6 +155,11 @@ export default [
             'opera',
             'microsoft',
             'mozilla'
+          ]
+        }, {
+          name: 'Science',
+          authors: [
+            'vesmircz'
           ]
         }
       ]

@@ -3,7 +3,15 @@
     v-if="show"
     v-on-clickaway="() => closeSubscribeWidget()">
 
-    <section v-if="period === null">
+    <section v-if="showCanceling === true && cancelingSubscription === true">
+      <header>What to do?</header>
+      <ul>
+        <li><a href="" v-on:click.prevent="editSubscription($event)">Edit</a></li>
+        <li><a href="" v-on:click.prevent="cancelSubscription($event)">Cancel subscription</a></li>
+      </ul>
+    </section>
+
+    <section v-else-if="period === null">
       <header>How often?</header>
       <ul>
         <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
@@ -84,7 +92,8 @@ export default {
 
   props: {
     'author': Object,
-    'onSelect': Function
+    'onSelect': Function,
+    'cancelingSubscription': Boolean
   },
 
   directives: {
@@ -94,6 +103,7 @@ export default {
   data() {
     return {
       show: false,
+      showCanceling: true,
       period: null,
       dow: null,
       time: null,
@@ -111,6 +121,7 @@ export default {
       this.period = null
       this.time = null
       this.dow = null
+      this.showCanceling = true
     },
 
     goOneStepBack() {
@@ -143,6 +154,20 @@ export default {
     selectWhatDay(dow, ev) {
       ev.target.blur()
       this.dow = dow
+    },
+
+    editSubscription(ev) {
+      ev.target.blur()
+      this.showCanceling = false
+    },
+
+    cancelSubscription() {
+      // TODO split handlers
+      this.showCanceling = false
+      this.$store.dispatch('invalidateTimeline')
+      api.unsubscribeAuthor(this.author).then(author => this.author)
+      this.author.subscription = null
+      ev.target.blur()
     }
   }
 }

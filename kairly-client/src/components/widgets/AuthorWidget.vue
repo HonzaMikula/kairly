@@ -9,10 +9,26 @@
       <h3>
         <router-link :to="author.url">{{ author.name }}</router-link>
       </h3>
+      
+      <section>
+        <AuthorSubscription
+          v-if="author.subscription"
+          :subscription="author.subscription" :author="author"
+        />
+ 
+        <button
+          v-else
+          @click="$refs.followWidget.openSubscribeWidget()">
+          Subscribe author
+        </button>
 
-      <AuthorSubscription
-        :name="author.name" :subscription="author.subscription"
-      />
+        <follow-author
+          ref="followWidget"
+          :author="author"
+          :onSelect="follow"
+        />
+
+      </section>
     </header>
 
     <p>{{ author.bio }}</p>
@@ -23,24 +39,24 @@
 import * as api from '@/api'
 
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+import FollowAuthor from '@/components/widgets/FollowAuthor'
 
 export default {
   name: 'AuthorWidget',
   props: ['author'],
 
   components: {
+    FollowAuthor,
     AuthorSubscription
   },
 
   methods: {
-    // subscribe(ev) {
-    //   const value = !this.edition.isSubscribed
-    //   this.$store.dispatch('subscribe', {
-    //     edition: this.edition,
-    //     value
-    //   })
-    //   ev.target.blur()
-    // }
+    follow(period, time, dow) {
+      // TODO split handlers
+      this.$store.dispatch('invalidateTimeline')
+      api.subscribeAuthor(this.author, period, time, dow).then(author => this.author)
+      this.author.subscription = { period, time, dow }
+    }
   }
 }
 </script>
@@ -57,10 +73,10 @@ author-widget-view
 
   background: #fff
 
-  header 
+  > header 
     display: grid
     grid-column-gap: $baseline / 4
-    grid-template-columns: $baseline*1.25 auto auto
+    grid-template-columns: $baseline*1.25 1fr auto
     grid-template-rows: $baseline * 1.25
     grid-template-areas: "author-widget-image author-widget-name author-widget-subscription"
     align-items: center
@@ -89,10 +105,27 @@ author-widget-view
 
     //- subscription information
     author-subscription-view
-      grid-area: author-widget-subscription
-
       font-family: $ff-sans !important    
       text-align: right
+
+    //- subscribe button
+    section  
+      position: relative
+
+      grid-area: author-widget-subscription
+      justify-self: end
+
+      font-size: $fs--2
+
+      button
+        +subscribe-button
+        
+        height: $baseline
+        padding: 0 $baseline/2
+
+        font-family: $ff-sans
+        font-size: $fs--2
+        line-height: $baseline
   
   //- bio
   p

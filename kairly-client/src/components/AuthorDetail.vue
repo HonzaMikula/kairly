@@ -40,7 +40,6 @@
           :onSelect="follow" />
 
         <AuthorSubscription if="author.subscription"
-          :name="author.name"
           :subscription="author.subscription"
         />
 
