@@ -3,10 +3,13 @@
     <Header v-if="user" />
 
     <loading-spinner v-if="loadingUser"></loading-spinner>
+
     <app-main v-else>
       <router-view v-if="user"></router-view>
       <Homepage v-else></Homepage>
     </app-main>
+
+    <portal-target name="modal"></portal-target>
   </app-view>
 </template>
 
@@ -22,12 +25,15 @@ export default {
     Header,
     Homepage
   },
+
   computed: {
     ...mapState({
-      user: state => state.user
+      user: state => state.user,
+      showTutorial: state => state.showTutorial
     }),
     ...mapGetters(['loadingUser'])
   },
+
   created: function () {
     this.$store.dispatch('getProfile')
   }

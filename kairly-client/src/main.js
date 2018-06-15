@@ -9,7 +9,9 @@ import Tooltip from 'vue-directive-tooltip'
 import VueMoment from 'vue-moment-jalaali'
 import InfiniteScroll from 'vue-infinite-scroll'
 import VueAnalytics from 'vue-analytics'
-import VueKeepScroll from'vue-keep-scroll'
+import VueKeepScroll from 'vue-keep-scroll'
+import PortalVue from 'portal-vue'
+
 
 import store from '@/store'
 
@@ -20,6 +22,7 @@ Vue.use(Tooltip)
 Vue.use(VueMoment)
 Vue.use(InfiniteScroll)
 Vue.use(VueKeepScroll)
+Vue.use(PortalVue)
 
 Vue.use(VueAnalytics, {
   id: 'UA-114180015-1',

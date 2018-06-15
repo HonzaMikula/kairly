@@ -14,6 +14,7 @@
         </app-header--search-->
 
         <app-header--user-profile v-if="user">
+          <h3>{{ user.name }}</h3>
           <img src="../../assets/user.png" :alt="user.name"/>
           <!--
             Gravatar url handles default itself (it can generate 404 url or some dafault),
@@ -24,13 +25,17 @@
         </app-header--user-profile>
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
-          <h3>{{ user.name }}</h3>
           <ul>
-            <li><a href="" v-on:click.prevent="help()">Help</a></li>
+            <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
             <li><a href="" v-on:click.prevent="logout">Logout</a></li>
           </ul>
         </app-header--user-profile-menu>
     </div>
+
+    <portal to="modal" v-if="isTutorialOpen">
+      <tutorial-modal :onClose="closeTutorial"></tutorial-modal>
+    </portal>
+
   </app-header>
 </template>
 
@@ -38,21 +43,30 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import store from '@/store'
 
+import TutorialModal from '@/components/modals/Tutorial'
+
 export default {
   name: 'AppHeaderComponent',
   data: function() {
     return {
       username: null,
       password: null,
-      isDropDownMenuOpen: false
+      isDropDownMenuOpen: false,
+      isTutorialOpen: false
     }
   },
+
+  components: {
+    TutorialModal
+  },
+
   computed: {
     ...mapState({
       user: state => state.user
     }),
     ...mapGetters(['loadingUser'])
   },
+
   methods: {
     ...mapActions(['login', 'logout']),
 
@@ -62,8 +76,13 @@ export default {
     },
 
     closeDropDownMenu() {
-      this.isDropDownMenuOpen = false;
-      this.$forceUpdate();
+      this.isDropDownMenuOpen = false
+      this.$forceUpdate()
+    },
+
+    closeTutorial() {
+      this.isTutorialOpen = false
+      this.$forceUpdate()
     }
   }
 }
@@ -178,6 +197,11 @@ app-header--search
 //- User Profile
 app-header--user-profile
   cursor: pointer
+
+  //- profile name
+  h3 
+    display: inline-block
+    margin-right: $baseline / 4
 
   //- profile picture
   img
