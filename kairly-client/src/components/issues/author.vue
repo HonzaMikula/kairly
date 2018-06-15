@@ -9,7 +9,7 @@
       </h1>
 
       <p>
-        {{ issue.edition.title }}
+        {{ issue.title }}
         •
         {{ issue.time | moment('calendar') }}
       </p>
