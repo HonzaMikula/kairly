@@ -19,7 +19,7 @@
         <div>
           <div>
             <h3>Periodicity</h3>
-            <p>{{ issue.period }}</p>
+            <p>{{ edition.period }}</p>
           </div>
 
           <div>
