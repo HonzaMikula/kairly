@@ -1,7 +1,7 @@
 <template>
   <author-subscription-view>
     <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-if="period == '3x_per_day'">
-      Daily at <strong>6:00</strong>, 
+      Daily at <strong>6:00</strong>,
       <strong>12:00</strong> and <strong>18:00</strong>
     </a>
 
