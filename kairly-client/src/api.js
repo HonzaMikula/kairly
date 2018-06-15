@@ -133,3 +133,9 @@ export const createEdition = (authorId, edition) => {
     .send(edition)
     .then(res => res.body)
 }
+
+export const deleteEdition = editionId => {
+  if (!token) return Promise.reject();
+  return agent
+    .delete(API_URI + '/editions/' + editionId)
+}

@@ -48,6 +48,10 @@
       </edition-detail--picture>
     </div>
 
+    <div v-if="canDeleteEdition">
+      <a href="#" @click.prevent="deleteEdition">Delete edition</a>
+    </div>
+
 
     <edition-detail--last-edition v-if="issue">
       <h2><span>Check the Last Issue</span></h2>
@@ -79,6 +83,17 @@ export default {
     }
   },
 
+  computed: {
+    canDeleteEdition() {
+      if (this.edition) {
+        const author = this.edition.editor
+        return this.$store.getters.isManagedAuthor(author.id)
+      } else {
+        return false
+      }
+    }
+  },
+
   methods: {
     subscribe(ev) {
       this.$store.dispatch('subscribe', {
@@ -87,6 +102,15 @@ export default {
       })
       this.edition.subscription = !this.edition.subscription
       ev.target.blur()
+    },
+
+    deleteEdition() {
+      if (window.confirm("Are you sure?")) {
+        api.deleteEdition(this.edition.id)
+        .then(resp => {
+          this.$router.push(this.edition.editor.url)
+        })
+      }
     }
   },
 

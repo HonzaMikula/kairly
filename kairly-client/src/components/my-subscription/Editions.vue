@@ -1,4 +1,4 @@
-<template>
+  <template>
   <my-editions-view>
     <EditionWidget
       v-for="edition in editions"

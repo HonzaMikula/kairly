@@ -5,8 +5,11 @@ from datetime import time
 from libgravatar import Gravatar
 
 from django.db.models import Count
+from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404, render
-from django.http import Http404, JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
+from django.http import (Http404, JsonResponse, HttpResponse,
+                         HttpResponseForbidden, HttpResponseBadRequest,
+                         HttpResponseNotFound)
 from django.views.decorators.http import require_POST
 from django.utils.text import slugify
 from django.core.files.base import ContentFile
@@ -89,9 +92,19 @@ def authors(request):
                         safe=False)
 
 
+def delete_edition(request, edition):
+    if not edition.editor.users.filter(id=request.user.id).exists():
+        return HttpResponseForbidden()
+    edition.delete()
+    return HttpResponse(status=204)
+
+
 @ajax_login_required
 def edition(request, author_id, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=author_id, slug=edition_slug)
+    if request.method == 'DELETE':
+        return delete_edition(request, edition)
+
     try:
         edition.user_subscription = Subscription.objects.get(user=request.user, edition=edition)
     except Subscription.DoesNotExist:
@@ -274,22 +287,34 @@ def create_edition(request, author_id):
     author, topic = get_author_and_topic(author_id)
     payload = json.loads(request.body.decode('utf-8'))
     title = payload['title']
-    slug = slugify(title)
+    base_slug = slugify(title)
     data_uri = payload['image']
     # data_uri = 'data:image/jpeg;base64,/9j/4AAQSkZJRg....'
     head, image_data = data_uri.split(',')
     binary_image_data = a2b_base64(image_data)
     image_type = head.split(';')[0].split('/')[1]
-    # TODO handle existing slug
-    edition = Edition(
-        title=title,
-        slug=slug,
-        description=payload['description'],
-        image=ContentFile(binary_image_data, "{}-{}.{}".format(author.slug, slug, image_type)),
-        period=payload['period'],
-        editor=author
-    )
-    edition.save()
+    img_suffix = {'jpeg': 'jpg'}.get(image_type, image_type)
+
+    edition = None
+    slug = base_slug
+    slug_suffix = 1
+    while not edition:
+        try:
+            edition = Edition.objects.create(
+                title=title,
+                slug=slug,
+                description=payload['description'],
+                image=ContentFile(binary_image_data, "{}-{}.{}".format(author.slug, slug, img_suffix)),
+                period=payload['period'],
+                editor=author
+            )
+        except IntegrityError as e:
+            code, msg = e.args
+            if 'Duplicate entry' in msg and 'slug' in msg:
+                slug_suffix += 1
+                slug = '{}-{}'.format(base_slug, slug_suffix)
+                continue
+            raise
 
     return JsonResponse({
         "edition": edition_json(edition)

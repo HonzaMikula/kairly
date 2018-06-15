@@ -31,15 +31,17 @@
 
       <button
         @click="$refs.periodWidget.openSubscribeWidget()">
-        Seelect period
+        Select period
       </button>
 
       <br>
       Selected: {{ period }} / {{ dow }} / {{ time }}
 
-      <period-widget
-        ref="periodWidget"
-        :onSelect="selectPeriod" />
+      <div class="period-wrapper">
+        <period-widget
+          ref="periodWidget"
+          :onSelect="selectPeriod" />
+      </div>
     </div>
 
     <button
@@ -99,6 +101,9 @@ export default {
         dow: this.dow,
         image: this.image
       })
+      .then(resp => {
+        this.$router.push('/editions/' + resp.edition.id)
+      })
     }
   }
 }
@@ -117,5 +122,6 @@ export default {
   .row
     margin-bottom: 20px
 
-
+  .period-wrapper
+    position: relative
 </style>
