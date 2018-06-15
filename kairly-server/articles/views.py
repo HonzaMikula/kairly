@@ -1,6 +1,5 @@
 import json
 from binascii import a2b_base64
-from datetime import time
 
 from libgravatar import Gravatar
 
@@ -15,9 +14,10 @@ from django.utils.text import slugify
 from django.core.files.base import ContentFile
 
 
+from utils.decorators import ajax_login_required
 from .models import (Author, Edition, EditionIssue, Post, Subscription, SubscriptionToAuthor, Topic)
 from .serializers import edition_issue_json, post_json, edition_json, author_json
-from utils.decorators import ajax_login_required
+from .period import parse_periodicity
 
 
 AUTOR_POSTS_PAGE_SIZE = 20
@@ -88,7 +88,7 @@ def authors(request):
         author.user_subscription = sub
         return author
 
-    return JsonResponse([author_json(map_to_author(sub)) for sub in subscriptions],
+    return JsonResponse([author_json(map_to_author(sub), sub.topic) for sub in subscriptions],
                         safe=False)
 
 
@@ -209,29 +209,18 @@ def subscribe_author(request, author_id):
     author, topic = get_author_and_topic(author_id)
     payload = json.loads(request.body.decode('utf-8'))
 
-    period = payload.get('period')
-    if period not in (SubscriptionToAuthor.X3_PER_DAY, SubscriptionToAuthor.DAILY, SubscriptionToAuthor.WEEKLY):
-        return HttpResponseBadRequest('Invalid period')
-
-    if period == SubscriptionToAuthor.X3_PER_DAY:
-        period_time = None
-        period_dow = None
-    else:
-        period_time = payload.get('time')
-        if period_time not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
-            return HttpResponseBadRequest('Invalid time format')
-        period_time = time(*map(int, period_time.split(':', maxsplit=1)))
-
-        if period == SubscriptionToAuthor.WEEKLY:
-            period_dow = int(payload.get('dow'))
-            if period_dow < 1 or period_dow > 7:
-                return HttpResponseBadRequest('Invalid day of week')
-        else:
-            period_dow = None
+    try:
+        periodicity = parse_periodicity(payload)
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
 
     subscription = SubscriptionToAuthor.objects.create(
-        user=request.user, author=author, topic=topic,
-        period=period, period_time=period_time, period_dow=period_dow
+        user=request.user,
+        author=author,
+        topic=topic,
+        period=periodicity.frequency,
+        period_time=periodicity.time,
+        period_dow=periodicity.dow,
     )
 
     author.user_subscription = subscription
@@ -287,9 +276,14 @@ def create_edition(request, author_id):
     author, topic = get_author_and_topic(author_id)
     payload = json.loads(request.body.decode('utf-8'))
     title = payload['title']
+
+    try:
+        periodicity = parse_periodicity(payload['periodicity'])
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
+
     base_slug = slugify(title)
     data_uri = payload['image']
-    # data_uri = 'data:image/jpeg;base64,/9j/4AAQSkZJRg....'
     head, image_data = data_uri.split(',')
     binary_image_data = a2b_base64(image_data)
     image_type = head.split(';')[0].split('/')[1]
@@ -305,7 +299,9 @@ def create_edition(request, author_id):
                 slug=slug,
                 description=payload['description'],
                 image=ContentFile(binary_image_data, "{}-{}.{}".format(author.slug, slug, img_suffix)),
-                period=payload['period'],
+                period=periodicity.frequency,
+                period_time=periodicity.time,
+                period_dow=periodicity.dow,
                 editor=author
             )
         except IntegrityError as e:

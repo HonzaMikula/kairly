@@ -28,7 +28,7 @@ def author_json(author, topic=None):
         sub = author.user_subscription
         if sub:
             res['subscription'] = {
-                'period': sub.period,
+                'frequency': sub.period,
                 'dow': sub.period_dow,
                 'time': sub.period_time,
             }
@@ -74,7 +74,11 @@ def edition_issue_json(issue, posts=True, edition=None, tzinfo=timezone.utc):
         "title": issue.title,
         "edition": {
             "id": "{}/{}".format(edition.editor.slug, edition.slug),
-            "period": edition.period,
+            "periodicity": {
+                'frequency': edition.period,
+                'time': edition.period_time,
+                'dow': edition.period_dow,
+            },
             "picture": settings.MEDIA_SITE + edition.image.url,
             "description": edition.description,
         },
@@ -96,7 +100,11 @@ def edition_json(edition):
         "picture": settings.MEDIA_SITE + edition.image.url,
         "description": edition.description,
         "editor": author_json(edition.editor),
-        "period": edition.period,
+        "periodicity": {
+            'frequency': edition.period,
+            'time': edition.period_time,
+            'dow': edition.period_dow,
+        },
         "issues": getattr(edition, 'issues', 0),
         "likes": getattr(edition, 'likes', 0)
     }

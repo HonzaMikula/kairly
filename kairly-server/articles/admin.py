@@ -62,7 +62,7 @@ class EditionIssueAdmin(admin.ModelAdmin):
 
 @admin.register(Edition)
 class EditionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'period', 'description')
+    list_display = ('title', 'slug', 'period', 'period_time', 'period_dow', 'description')
 
 
 # @admin.register(Subscription)

@@ -40,7 +40,7 @@
       <div class="period-wrapper">
         <period-widget
           ref="periodWidget"
-          :onSelect="selectPeriod" />
+          :onSelect="selectPeriodicity" />
       </div>
     </div>
 
@@ -72,7 +72,7 @@ export default {
     return {
       title: '',
       description: '',
-      period: null,
+      periodicity: null,
       time: null,
       dow: null
     }
@@ -85,10 +85,8 @@ export default {
       this.image = image
     },
 
-    selectPeriod(period, time, dow) {
-      this.period = period
-      this.time = time
-      this.dow = dow
+    selectPeriodicity(periodicity) {
+      this.periodicity = periodicity
     },
 
     submit() {
@@ -96,7 +94,7 @@ export default {
       api.createEdition(authorId, {
         title: this.title,
         description: this.description,
-        period: this.period,
+        periodicity: this.periodicity,
         time: this.time,
         dow: this.dow,
         image: this.image

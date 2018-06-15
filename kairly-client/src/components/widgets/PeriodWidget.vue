@@ -3,7 +3,7 @@
     v-if="show"
     v-on-clickaway="() => closeSubscribeWidget()">
 
-    <section v-if="period === null">
+    <section v-if="frequency === null">
       <header>How often?</header>
       <ul>
         <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
@@ -12,7 +12,7 @@
       </ul>
     </section>
 
-    <section v-else-if="period === 'weekly' && dow === null">
+    <section v-else-if="frequency === 'weekly' && dow === null">
       <header>
         Which day?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
@@ -28,7 +28,7 @@
       </ul>
     </section>
 
-    <section v-else-if="(period === 'weekly' || period === 'daily') && time === null">
+    <section v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
         What time?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       show: false,
-      period: null,
+      frequency: null,
       dow: null,
       time: null,
       DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -78,7 +78,7 @@ export default {
 
     closeSubscribeWidget() {
       this.show = false
-      this.period = null
+      this.frequency = null
       this.time = null
       this.dow = null
     },
@@ -87,20 +87,24 @@ export default {
       if (this.dow !== null) {
         this.dow = null
       } else {
-        this.period = null
+        this.frequency = null
       }
     },
 
     submit() {
-      this.onSelect(this.period, this.time, this.dow)
+      this.onSelect({
+        frequency: this.frequency,
+        time: this.time,
+        dow: this.dow
+      })
       this.closeSubscribeWidget()
     },
 
-    selectHowOften(period, ev) {
+    selectHowOften(frequency, ev) {
       ev.target.blur()
-      this.period = period
+      this.frequency = frequency
 
-      if (period == '3x_per_day') {
+      if (frequency == '3x_per_day') {
         this.submit()
       }
     },

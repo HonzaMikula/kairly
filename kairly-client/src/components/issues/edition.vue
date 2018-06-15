@@ -2,7 +2,9 @@
   <timeline-edition>
     <header>
       <h1>
-        <router-link :to="`/editions/${issue.edition.id}/${issue.id}`">{{issue.title}}</router-link>  
+        <router-link :to="`/editions/${issue.edition.id}`">{{issue.title}}</router-link>
+        <!-- title link shoul point to whole edition TODO return permalink -->
+        <!--router-link :to="`/editions/${issue.edition.id}/${issue.id}`">{{ issue.id }}</router-link-->
       </h1>
 
       <p>
@@ -13,9 +15,9 @@
           </router-link>
         </timeline-edition--editor>
         •
-        {{issue.edition.period}}
+        {{ issue.edition.periodicity.frequency }}
         •
-        {{issue.time | moment('calendar')}}
+        {{ issue.time | moment('calendar')}}
       </p>
     </header>
     <slot></slot>

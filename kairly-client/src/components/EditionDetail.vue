@@ -19,7 +19,11 @@
         <div>
           <div>
             <h3>Periodicity</h3>
-            <p>{{ edition.period }}</p>
+            <p>
+              {{ edition.periodicity.frequency }}
+              {{ edition.periodicity.time }}
+              {{ edition.periodicity.dow }}
+            </p>
           </div>
 
           <div>

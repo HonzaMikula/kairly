@@ -12,6 +12,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from ckeditor.fields import RichTextField
 
+from .period import PeriodMixin
+
 
 class Author(models.Model):
     name = models.CharField(_("Name"), max_length=160)
@@ -99,13 +101,17 @@ class Post(models.Model):
         return '{} min'.format(value)
 
 
-class Edition(models.Model):
+class Edition(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
     slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True)  # temporary allow null
-    period = models.CharField(max_length=160)
+    # period = models.CharField(max_length=160)
     editor = models.ForeignKey(Author, models.PROTECT)
+
+    period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
+    period_time = models.TimeField(null=True)  # time for daily and weekly period
+    period_dow = models.IntegerField(null=True)  # ISO week day for weekly period
 
     class Meta:
         unique_together = (("slug", "editor"),)
@@ -146,20 +152,12 @@ class Subscription(models.Model):
         unique_together = (("user", "edition"),)
 
 
-class SubscriptionToAuthor(models.Model):
-    X3_PER_DAY = '3x_per_day'
-    DAILY = 'daily'
-    WEEKLY = 'weekly'
-    PERIOD_CHOICES = (
-        (X3_PER_DAY, '3x per day'),
-        (DAILY, 'Daily'),
-        (WEEKLY, 'Weekly'),
-    )
+class SubscriptionToAuthor(models.Model, PeriodMixin):
 
     user = models.ForeignKey('auth.User', models.CASCADE)
     author = models.ForeignKey(Author, models.CASCADE)
     topic = models.ForeignKey(Topic, models.CASCADE, blank=True, null=True)
-    period = models.CharField(max_length=32, choices=PERIOD_CHOICES, default=DAILY)
+    period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
     period_time = models.TimeField(null=True)  # time for daily and weekly period
     period_dow = models.IntegerField(null=True)  # ISO week day for weekly period
 

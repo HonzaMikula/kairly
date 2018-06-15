@@ -1,15 +1,15 @@
 <template>
   <author-subscription-view>
-    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-if="period == '3x_per_day'">
+    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-if="frequency == '3x_per_day'">
       Daily at <strong>6:00</strong>,
       <strong>12:00</strong> and <strong>18:00</strong>
     </a>
 
-    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-else-if="period == 'daily'">
+    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-else-if="frequency == 'daily'">
       Daily at <strong>{{ time }}</strong>
     </a>
 
-    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-else-if="period == 'weekly'">
+    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-else-if="frequency == 'weekly'">
       Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>
     </a>
 
@@ -43,17 +43,17 @@ export default {
   },
 
   computed: {
-    period() { return this.author.subscription && this.author.subscription.period },
+    frequency() { return this.author.subscription && this.author.subscription.frequency },
     dow() { return this.author.subscription && this.author.subscription.dow },
     time() { return this.author.subscription && this.author.subscription.time }
   },
 
   methods: {
-    follow(period, time, dow) {
+    follow(periodicity) {
       // TODO split handlers
       this.$store.dispatch('invalidateTimeline')
-      api.subscribeAuthor(this.author, period, time, dow).then(author => this.author)
-      this.author.subscription = { period, time, dow }
+      api.subscribeAuthor(this.author, periodicity).then(author => this.author)
+      this.author.subscription = periodicity
     }
   }
 }

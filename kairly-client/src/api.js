@@ -110,11 +110,11 @@ export const unsubscribeEdition = editionId => {
     .then(res => res.body)
 }
 
-export const subscribeAuthor = (author, period, time, dow) => {
+export const subscribeAuthor = (author, periodicity) => {
   if (!token) return Promise.reject();
   return agent
     .post(process.env.VUE_APP_BASE_URI + author.followUrl)
-    .send({period, time, dow})
+    .send(periodicity)
     .then(res => res.body)
 }
 
