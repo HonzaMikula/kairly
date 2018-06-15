@@ -112,9 +112,9 @@ def edition(request, author_id, edition_slug):
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
 
-    issueId = request.GET.get('issue')
-    if issueId:
-        issue = get_object_or_404(EditionIssue, edition=edition, id=int(issueId))
+    issueNo = request.GET.get('issue')
+    if issueNo:
+        issue = get_object_or_404(EditionIssue, edition=edition, number=int(issueNo))
     else:
         try:
             issue = EditionIssue.objects.filter(edition=edition).select_related('editor')[0]

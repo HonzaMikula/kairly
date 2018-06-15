@@ -69,11 +69,11 @@ def edition_issue_json(issue, posts=True, edition=None, tzinfo=timezone.utc):
     if edition is None:
         edition = issue.edition
     result = {
-        "id": issue.id,
+        "number": issue.number,
         "type": 'edition',
-        "title": issue.title,
         "edition": {
             "id": "{}/{}".format(edition.editor.slug, edition.slug),
+            "title": edition.title,
             "periodicity": {
                 'frequency': edition.period,
                 'time': edition.period_time,

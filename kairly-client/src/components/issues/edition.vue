@@ -2,9 +2,7 @@
   <timeline-edition>
     <header>
       <h1>
-        <router-link :to="`/editions/${issue.edition.id}`">{{issue.title}}</router-link>
-        <!-- title link shoul point to whole edition TODO return permalink -->
-        <!--router-link :to="`/editions/${issue.edition.id}/${issue.id}`">{{ issue.id }}</router-link-->
+        <router-link :to="`/editions/${issue.edition.id}`">{{ issue.edition.title }}</router-link>&nbsp;<router-link :to="`/editions/${issue.edition.id}/${issue.number}`">#{{ issue.number }}</router-link>
       </h1>
 
       <p>

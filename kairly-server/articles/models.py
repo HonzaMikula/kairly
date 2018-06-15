@@ -121,18 +121,17 @@ class Edition(models.Model, PeriodMixin):
 
 
 class EditionIssue(models.Model):
-    title = models.CharField(max_length=160)
-    description = models.TextField(blank=True)
+    number = models.IntegerField()
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
     posts = models.ManyToManyField(Post, blank=True, through='EditionIssuePost')
-    edition = models.ForeignKey(Edition, models.SET_NULL, null=True)
+    edition = models.ForeignKey(Edition, models.CASCADE)
 
     class Meta:
         ordering = ('-published',)
 
     def __str__(self):
-        return self.title
+        return "{} #{}".format(self.edition.title, self.number)
 
 
 class EditionIssuePost(models.Model):

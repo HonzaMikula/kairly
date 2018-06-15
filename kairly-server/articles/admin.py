@@ -45,19 +45,19 @@ class PostAdmin(admin.ModelAdmin):
         super().get_field_queryset(db, db_field, request)
 
 
-class PostInline(admin.TabularInline):
-    model = EditionIssuePost
-
-
-@admin.register(EditionIssue)
-class EditionIssueAdmin(admin.ModelAdmin):
-    list_display = ('title', 'editor', 'published', 'edition')
-    inlines = [
-        PostInline,
-    ]
-
-    def tag_list(self, obj):
-        return ", ".join(o.name for o in obj.tags.all())
+# class PostInline(admin.TabularInline):
+#     model = EditionIssuePost
+#
+#
+# @admin.register(EditionIssue)
+# class EditionIssueAdmin(admin.ModelAdmin):
+#     list_display = ('__str__', 'editor', 'published', 'edition')
+#     inlines = [
+#         PostInline,
+#     ]
+#
+#     def tag_list(self, obj):
+#         return ", ".join(o.name for o in obj.tags.all())
 
 
 @admin.register(Edition)
