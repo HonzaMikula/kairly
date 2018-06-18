@@ -139,3 +139,17 @@ export const deleteEdition = editionId => {
   return agent
     .delete(API_URI + '/editions/' + editionId)
 }
+
+export const getEditionBacklog = editionId => {
+  if (!token) return Promise.reject();
+  return agent
+    .get(API_URI + '/editions/' + editionId + '/backlog')
+    .then(res => res.body)
+}
+
+export const addToBacklog = (editionId, postId, publish=false) => {
+  if (!token) return Promise.reject();
+  return agent
+    .put(API_URI + '/editions/' + editionId + '/backlog')
+    .send({post: postId, publish})
+}

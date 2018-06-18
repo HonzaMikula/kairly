@@ -52,10 +52,11 @@
       </edition-detail--picture>
     </div>
 
-    <div v-if="canDeleteEdition">
+    <div v-if="isEditor">
       <a href="#" @click.prevent="deleteEdition">Delete edition</a>
     </div>
 
+    <edition-backlog v-if="isEditor" :edition="edition" />
 
     <edition-detail--last-edition v-if="issue">
       <h2><span>Check the Last Issue</span></h2>
@@ -70,13 +71,16 @@
 import * as api from '@/api'
 
 import Issue from '@/components/IssueWrapper'
+import EditionBacklog from '@/components/editor/EditionBacklog'
+
 
 
 export default {
   name: 'EditionDetail',
 
   components: {
-    Issue
+    Issue,
+    EditionBacklog
   },
 
   data() {
@@ -88,7 +92,7 @@ export default {
   },
 
   computed: {
-    canDeleteEdition() {
+    isEditor() {
       if (this.edition) {
         const author = this.edition.editor
         return this.$store.getters.isManagedAuthor(author.id)

@@ -22,6 +22,8 @@
       <time>
         {{ post.time | moment('calendar') }}
       </time>
+
+      <backlog-add :post="post" />
     </header>
 
     <slot></slot>
@@ -31,10 +33,16 @@
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
+import BacklogAdd from '@/components/posts/BacklogAdd'
 
 export default {
   name: 'post',
   props: ["post", "isSubscribed"],
+
+  components: {
+    AuthorPopup,
+    BacklogAdd
+  },
 
   directives: {
     onClickaway
@@ -64,10 +72,6 @@ export default {
         this.$forceUpdate()
       }
     }
-  },
-
-  components: {
-    AuthorPopup
   }
 }
 </script>
@@ -92,7 +96,7 @@ post-component > header
 
   display: grid
   grid-template-areas: "picture author" "picture info"
-  grid-template-columns: 52px auto
+  grid-template-columns: 52px 1fr auto
   grid-template-rows: 0.75*$baseline 0.75*$baseline
   margin-bottom: $baseline / 2
 

@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     managedAuthors: [],
+    managedEditions: [],
     editions: {},
     allEditionsLoaded: false,
     timeline: {
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     },
     managedAuthors(state, authors) {
       state.managedAuthors = authors
+    },
+    managedEditions(state, editions) {
+      state.managedEditions = editions
     },
     allEditions(state, editions) {
       editions.forEach(edition => {

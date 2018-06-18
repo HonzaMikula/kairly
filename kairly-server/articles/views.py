@@ -15,7 +15,8 @@ from django.core.files.base import ContentFile
 
 
 from utils.decorators import ajax_login_required
-from .models import (Author, Edition, EditionIssue, Post, Subscription, SubscriptionToAuthor, Topic)
+from .models import (Author, Edition, EditionIssue, EditionBacklog,
+                     Post, Subscription, SubscriptionToAuthor, Topic)
 from .serializers import edition_issue_json, post_json, edition_json, author_json
 from .period import parse_periodicity
 
@@ -178,6 +179,39 @@ def author_posts(request, author_id):
 
 
 @ajax_login_required
+def edition_backlog(request, author_id, edition_slug):
+    edition = get_object_or_404(Edition, editor__slug=author_id, slug=edition_slug)
+    if not edition.editor.users.filter(id=request.user.id).exists():
+        return HttpResponseForbidden()
+
+    if request.method == 'GET':
+        result = {'backlog': [], 'publish': []}
+        for log in EditionBacklog.objects.filter(edition=edition).select_related('post'):
+            target = result['publish'] if log.publish else result['backlog']
+            target.append(post_json(log.post))
+        return JsonResponse(result)
+
+    if request.method == 'PUT':
+        payload = json.loads(request.body.decode('utf-8'))
+        post = get_object_or_404(Post, id=payload.get('post'))
+        publish = payload.get('publish', False)
+
+        try:
+            log = EditionBacklog.objects.get(edition=edition, post=post)
+            log.publish = publish
+            log.save()
+        except EditionBacklog.DoesNotExist:
+            EditionBacklog.objects.create(
+                edition=edition,
+                post=post,
+                publish=publish
+            )
+        return HttpResponse(status=204)
+
+    return HttpResponse('405 Method Not Allowed', status=405)
+
+
+@ajax_login_required
 @require_POST
 def subscribe(request, author_id, edition_slug):
     author, _ = get_author_and_topic(author_id)
@@ -256,13 +290,23 @@ def post(request, post_id):
 @ajax_login_required
 def profile(request):
     g = Gravatar(request.user.email)
-    authors = Author.objects.filter(users=request.user)
+    authors = list(Author.objects.filter(users=request.user).order_by('name'))
+    authors_map = {a.id: a for a in authors}
+
+    editions = []
+    for edition in Edition.objects.filter(editor__in=authors).values_list('editor_id', 'slug', 'title', named=True):
+        editions.append({
+            'id': '{}/{}'.format(authors_map[edition.editor_id].slug, edition.slug),
+            'title': edition.title,
+        })
+
     return JsonResponse({
         "user": {
             "name": request.user.get_full_name(),
             'picture': g.get_image(use_ssl=True, default='blank')
         },
-        "authors": [author_json(a) for a in authors]
+        "authors": [author_json(a) for a in authors],
+        "editions": editions
     })
 
 

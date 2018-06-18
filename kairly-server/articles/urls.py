@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/editions/<author_id>/<slug:edition_slug>', views.edition, name='edition'),
     path('api/editions/<author_id>/<slug:edition_slug>/subscribe', views.subscribe, name='subscribe'),
     path('api/editions/<author_id>/<slug:edition_slug>/unsubscribe', views.unsubscribe, name='unsubscribe'),
+    path('api/editions/<author_id>/<slug:edition_slug>/backlog', views.edition_backlog, name='edition_backlog'),
 
     path('api/authors', views.authors, name='authors'),
     path('api/authors/<author_id>', views.author, name='author'),

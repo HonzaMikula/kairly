@@ -106,7 +106,6 @@ class Edition(models.Model, PeriodMixin):
     slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True)  # temporary allow null
-    # period = models.CharField(max_length=160)
     editor = models.ForeignKey(Author, models.PROTECT)
 
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
@@ -122,6 +121,7 @@ class Edition(models.Model, PeriodMixin):
 
 class EditionBacklog(models.Model):
     edition = models.ForeignKey(Edition, models.CASCADE)
+    post = models.ForeignKey(Post, models.CASCADE)
     publish = models.BooleanField(_('Ready to publish'))
 
 
