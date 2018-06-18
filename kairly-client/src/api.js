@@ -78,13 +78,13 @@ export const getEditionDetail = (editionId, issueId=null) => {
 
 export const getAuthorDetail = (authorId) => {
   if (!token) return Promise.reject()
-  let req = agent.get(API_URI + '/author/' + authorId)
+  let req = agent.get(API_URI + '/authors/' + authorId)
   return req.then(res => res.body)
 }
 
 export const getAuthorPosts = (authorId, cursor) => {
   if (!token) return Promise.reject()
-  let req = agent.get(API_URI + '/author/' + authorId + '/posts')
+  let req = agent.get(API_URI + '/authors/' + authorId + '/posts')
   if (cursor) { req = req.query({ cursor }) }
   return req.then(res => res.body)
 }
@@ -99,14 +99,14 @@ export const getPost = (postId) => {
 export const subscribeEdition = editionId => {
   if (!token) return Promise.reject()
   return agent
-    .post(API_URI + '/subscribe/' + editionId)
+    .post(API_URI + '/editions/' + editionId + '/subscribe')
     .then(res => res.body)
 }
 
 export const unsubscribeEdition = editionId => {
   if (!token) return Promise.reject();
   return agent
-    .post(API_URI + '/unsubscribe/' + editionId)
+    .post(API_URI + '/editions/' + editionId + '/unsubscribe')
     .then(res => res.body)
 }
 
@@ -129,7 +129,7 @@ export const createEdition = (authorId, edition) => {
   //const { title, description, image, period, time, dow } = edition
   if (!token) return Promise.reject();
   return agent
-    .post(API_URI + '/author/' + authorId + '/new-edition')
+    .post(API_URI + '/authors/' + authorId + '/new-edition')
     .send(edition)
     .then(res => res.body)
 }

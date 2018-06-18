@@ -2,20 +2,22 @@
   <author-widget-view>
     <header>
       <picture>
-        <router-link :to="author.url">
+        <router-link :to="{name: 'author', params: {authorId: author.id}}">
           <img :src="author.picture" :alt="author.name"/>
         </router-link>
       </picture>
       <h3>
-        <router-link :to="author.url">{{ author.name }}</router-link>
+        <router-link :to="{name: 'author', params: {authorId: author.id}}">
+          {{ author.name }}
+        </router-link>
       </h3>
-      
+
       <section>
         <AuthorSubscription
           v-if="author.subscription"
           :subscription="author.subscription" :author="author"
         />
- 
+
         <button
           v-else
           @click="$refs.followWidget.openSubscribeWidget()">
@@ -73,7 +75,7 @@ author-widget-view
 
   background: #fff
 
-  > header 
+  > header
     display: grid
     grid-column-gap: $baseline / 4
     grid-template-columns: $baseline*1.25 1fr auto
@@ -90,7 +92,7 @@ author-widget-view
       border-radius: 100%
       height: $baseline * 1.25
       margin-right: $baseline / 2
-      width: $baseline * 1.25  
+      width: $baseline * 1.25
 
     //- name
     h3
@@ -98,18 +100,18 @@ author-widget-view
 
       font-weight: 600
 
-      a 
+      a
         color: #000
 
         text-decoration: none
 
     //- subscription information
     author-subscription-view
-      font-family: $ff-sans !important    
+      font-family: $ff-sans !important
       text-align: right
 
     //- subscribe button
-    section  
+    section
       position: relative
 
       grid-area: author-widget-subscription
@@ -119,14 +121,14 @@ author-widget-view
 
       button
         +subscribe-button
-        
+
         height: $baseline
         padding: 0 $baseline/2
 
         font-family: $ff-sans
         font-size: $fs--2
         line-height: $baseline
-  
+
   //- bio
   p
     margin-bottom: $baseline / 2

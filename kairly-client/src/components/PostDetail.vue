@@ -14,7 +14,7 @@
 
       <main>
         <post-detail--header>
-          <router-link :to="post.author.url">
+          <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
             <img :src="post.author.picture" :alt="post.author.name"/>
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </router-link>
@@ -42,13 +42,13 @@
 
         <post-detail--author>
           <picture>
-            <router-link :to="post.author.url">
+            <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
               <img :src="post.author.picture" :alt="post.author.name"/>
             </router-link>
           </picture>
 
           <h3>
-            <router-link :to="post.author.url">
+            <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
               {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
             </router-link>
           </h3>
@@ -99,7 +99,7 @@ post-detail
   display: block
   padding: 0 $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
-  
+
   background: #fff
 
   //- wrapper
@@ -142,7 +142,7 @@ post-detail--back-button
     content: $fa-var-arrow-left
 
   @media (max-width: $mobile)
-    position: static  
+    position: static
 
 
 //- Read Later Button
@@ -174,7 +174,7 @@ post-detail--read-later
     content: $fa-var-bookmark
 
   @media (max-width: $mobile)
-    position: static    
+    position: static
 
 
 //- Header
@@ -238,11 +238,11 @@ post-detail--continue-reading
 
     content: ''
 
-  &::before   
+  &::before
     left: 0
 
   &::after
-    right: 0   
+    right: 0
 
 
 //- Content
@@ -253,7 +253,7 @@ post-detail--perex
   font-family: $ff-serif
   font-size: $fs-1
   line-height: $baseline * 1.25
-    
+
   //- title
   h1
     margin-bottom: $baseline
@@ -264,29 +264,29 @@ post-detail--perex
   //- Headings
   h2, h3, h4, h5, h6
     margin-bottom: $baseline
-    
-    font-weight: 600  
+
+    font-weight: 600
 
   //- Paragraph
   p
-    margin-bottom: $baseline  
+    margin-bottom: $baseline
 
   //- Strong
-  strong, b 
+  strong, b
     font-weight: 600
 
   //- Italic
   em, i
-    font-style: italic  
+    font-style: italic
 
   //- Lists
   ul
-    margin: 0 0 $baseline $baseline    
+    margin: 0 0 $baseline $baseline
 
   //-- bullet points
   ul li
     margin-left: $baseline
-    list-style: disc outside      
+    list-style: disc outside
 
   //-- ordered list
   ol li
@@ -296,18 +296,18 @@ post-detail--perex
   //- Image
   img
     height: auto
-    max-width: 100%   
+    max-width: 100%
 
   //- Video
   video
     height: auto
-    max-width: 100%       
+    max-width: 100%
 
   //- Link
   a[href]
     color: $c-base
 
-    text-decoration: none 
+    text-decoration: none
 
   //-- code inline
   code
@@ -316,31 +316,31 @@ post-detail--perex
     font-size: $fs--1
 
   //-- code block
-  pre 
+  pre
     overflow: auto
 
     background: #fafafa
     border: 1px solid #eee
 
     font-family: "courier new", courier, monospace
-    font-size: $fs--2  
+    font-size: $fs--2
 
 
   //-- pictures
-  figure 
+  figure
     margin-bottom: $baseline
-    
+
     text-align: center
 
     figcaption, p
       color: #999
 
       font-family: $ff-sans
-      font-size: $fs--2  
+      font-size: $fs--2
       line-height: $baseline * 0.9
 
-      
-//- Post Footer    
+
+//- Post Footer
 post-detail--footer
   display: block
   padding-bottom: $baseline / 2
@@ -354,7 +354,7 @@ post-detail--footer
     height: $baseline * 1.25
     margin-right: $baseline / 2
     padding: 0 $baseline/4
-    
+
     background: #eee
 
     cursor: pointer
@@ -374,7 +374,7 @@ post-detail--footer
     &:focus,
     &:hover
       background: #bbb
-      color: #000  
+      color: #000
 
 //- Post Author
 post-detail--author
@@ -387,7 +387,7 @@ post-detail--author
   //- picture
   picture
     grid-area: post-detail-author-image
-    
+
     img
       border-radius: 100%
       height: $baseline * 3
@@ -409,7 +409,7 @@ post-detail--author
 
   //- bio
   p
-    grid-area: post-detail-author-bio 
+    grid-area: post-detail-author-bio
 
     font-size: $fs--1
 </style>

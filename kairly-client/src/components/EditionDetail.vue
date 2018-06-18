@@ -5,7 +5,7 @@
       <edition-detail--header>
         <h1>{{ edition.title }}</h1>
 
-        <router-link :to="edition.editor.url">
+        <router-link :to="{name: 'author', params: {authorId: edition.editor.id}}">
           <img :src="edition.editor.picture" :alt="edition.editor.name"/>
           {{ edition.editor.name }}
         </router-link>
@@ -112,7 +112,7 @@ export default {
       if (window.confirm("Are you sure?")) {
         api.deleteEdition(this.edition.id)
         .then(resp => {
-          this.$router.push(this.edition.editor.url)
+          this.$router.push({ name: 'author', params: { authorId: this.edition.editor.id }})
         })
       }
     }

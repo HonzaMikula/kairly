@@ -19,9 +19,8 @@ def author_json(author, topic=None):
         'picture': author.picture,
         'medium': author.medium,
         'bio': author.bio,
-        'url': '/author/{}'.format(id),
-        'followUrl': '/api/subscribe/{}'.format(id),
-        'unfollowUrl': '/api/unsubscribe/{}'.format(id),
+        'followUrl': '/api/authors/{}/subscribe'.format(id),
+        'unfollowUrl': '/api/authors/{}/unsubscribe'.format(id),
     }
 
     if hasattr(author, 'user_subscription'):

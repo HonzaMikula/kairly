@@ -5,16 +5,19 @@ from . import timeline
 
 urlpatterns = [
     path('api/timeline', timeline.timeline, name='timeline'),
+
     path('api/editions', views.editions, name='editions'),
-    path('api/authors', views.authors, name='authors'),
     path('api/editions/<author_id>/<slug:edition_slug>', views.edition, name='edition'),
-    path('api/subscribe/<author_id>/<slug:edition_slug>', views.subscribe, name='subscribe'),
-    path('api/unsubscribe/<author_id>/<slug:edition_slug>', views.unsubscribe, name='unsubscribe'),
-    path('api/subscribe/<author_id>', views.subscribe_author, name='subscribe_author'),
-    path('api/unsubscribe/<author_id>', views.unsubscribe_author, name='unsubscribe_author'),
-    path('api/author/<author_id>', views.author, name='author'),
-    path('api/author/<author_id>/posts', views.author_posts, name='author_posts'),
-    path('api/author/<author_id>/new-edition', views.create_edition, name='create_edition'),
+    path('api/editions/<author_id>/<slug:edition_slug>/subscribe', views.subscribe, name='subscribe'),
+    path('api/editions/<author_id>/<slug:edition_slug>/unsubscribe', views.unsubscribe, name='unsubscribe'),
+
+    path('api/authors', views.authors, name='authors'),
+    path('api/authors/<author_id>', views.author, name='author'),
+    path('api/authors/<author_id>/posts', views.author_posts, name='author_posts'),
+    path('api/authors/<author_id>/new-edition', views.create_edition, name='create_edition'),
+    path('api/authors/<author_id>/subscribe', views.subscribe_author, name='subscribe_author'),
+    path('api/authors/<author_id>/unsubscribe', views.unsubscribe_author, name='unsubscribe_author'),
+
     path('api/profile', views.profile, name='profile'),
     path('api/post/<int:post_id>', views.post, name='post'),
 

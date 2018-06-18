@@ -120,6 +120,11 @@ class Edition(models.Model, PeriodMixin):
         return self.title
 
 
+class EditionBacklog(models.Model):
+    edition = models.ForeignKey(Edition, models.CASCADE)
+    publish = models.BooleanField(_('Ready to publish'))
+
+
 class EditionIssue(models.Model):
     number = models.IntegerField()
     published = models.DateTimeField(_('Published'), default=now)

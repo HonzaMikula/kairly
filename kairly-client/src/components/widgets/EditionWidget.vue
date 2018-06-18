@@ -12,7 +12,7 @@
 
     <edition-widget--author>
       <img :src="edition.editor.picture" :alt="edition.editor.name"/>
-      <router-link :to="edition.editor.url">{{ edition.editor.name }}</router-link>
+      <router-link :to="{name: 'author', params: {authorId: edition.editor.id}}">{{ edition.editor.name }}</router-link>
     </edition-widget--author>
 
     <edition-widget--subscribe>
