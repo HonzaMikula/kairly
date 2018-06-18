@@ -52,16 +52,13 @@
 </template>
 
 <script>
-import * as api from '@/api'
-
-// import { mapState, mapGetters } from 'vuex'
-// import TABS from './exploreTabs'
+import { mapActions } from 'vuex'
 
 import PictureInput from 'vue-picture-input'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
 export default {
-  name: 'Explore',
+  name: 'CreateEdition',
 
   components: {
     PeriodWidget,
@@ -79,9 +76,7 @@ export default {
   },
 
   methods: {
-    onPictureChange (image) {
-      //console.log(this.$refs.pictureInput.file)
-      //console.log(image)
+    onPictureChange(image) {
       this.image = image
     },
 
@@ -91,18 +86,21 @@ export default {
 
     submit() {
       const { authorId } = this.$route.params
-      api.createEdition(authorId, {
-        title: this.title,
-        description: this.description,
-        periodicity: this.periodicity,
-        time: this.time,
-        dow: this.dow,
-        image: this.image
+
+      this.startNewEdtion({
+        authorId,
+        edition: {
+          title: this.title,
+          description: this.description,
+          periodicity: this.periodicity,
+          time: this.time,
+          dow: this.dow,
+          image: this.image
+        }
       })
-      .then(resp => {
-        this.$router.push('/editions/' + resp.edition.id)
-      })
-    }
+    },
+
+    ...mapActions(['startNewEdtion'])
   }
 }
 </script>

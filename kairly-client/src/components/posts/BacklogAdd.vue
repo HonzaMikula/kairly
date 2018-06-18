@@ -1,11 +1,11 @@
 <template>
-  <backlog-add-view v-if="managedEditions">
-    
-    <button-icon 
-      role="button" 
+  <backlog-add-view v-if="managedEditions.length">
+
+    <button-icon
+      role="button"
       tabindex="0"
       aria-label="Consider for Edition"
-      v-tooltip.top="'Consider for Edition'" 
+      v-tooltip.top="'Consider for Edition'"
       @click.prevent="showEditions = true">
     </button-icon>
 
@@ -19,7 +19,7 @@
           <a href="#" @click.prevent="add(ed)">{{ ed.title }}</a>
         </li>
       </ul>
-      
+
     </backlog-add--dropdown>
   </backlog-add-view>
 </template>
@@ -68,7 +68,7 @@ backlog-add-view
 
   button-icon
     opacity: 0.5
-    
+
     cursor: pointer
 
     transition: 0.15s opacity
@@ -154,7 +154,7 @@ backlog-add--dropdown
 
         content: $fa-var-check
 
-        transition: 0.15s all 
+        transition: 0.15s all
 
       &:hover,
       &:focus
@@ -164,9 +164,9 @@ backlog-add--dropdown
           opacity: 0.5
 
     &.is-selected a::after
-      opacity: 1        
-  
-   
+      opacity: 1
+
+
 
 
 </style>
