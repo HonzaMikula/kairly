@@ -35,7 +35,7 @@
       </button>
 
       <br>
-      Selected: {{ period }} / {{ dow }} / {{ time }}
+      Selected: <span v-if="periodicity">{{ periodicity.frequency }} / {{ periodicity.dow }} / {{ periodicity.time }}</span>
 
       <div class="period-wrapper">
         <period-widget

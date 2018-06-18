@@ -63,7 +63,9 @@ export default new Vuex.Store({
     loadingUser: state => state.user === null, // Unauthorized -> user === false
     allEditions: state => state.allEditionsLoaded ? Object.values(state.editions) : null,
     edition: state => id => state.editions[id],
-    isManagedAuthor: state => slug => state.managedAuthors.indexOf(slug) !== -1
+    isManagedAuthor: state => id => {
+        return !!state.managedAuthors.find(a => a.id === id)
+    }
   },
 
   actions,
