@@ -48,6 +48,8 @@
       <author-detail--editions v-if="editions.length">
         <h2>{{ author.name }}'s Editions</h2>
 
+        
+
         <div>
           <EditionWidget
             v-for="edition in editions"
