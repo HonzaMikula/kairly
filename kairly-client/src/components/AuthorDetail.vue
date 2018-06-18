@@ -18,6 +18,10 @@
             <router-link :to="topic.url">{{ topic.name}}</router-link>
           </span>
         </p>
+
+        <div class="create-edition" v-if="canCreateEdition">
+          <router-link :to="{ name: 'create-edition', params: {authorId: this.$route.params.authorId} }">Start new edition</router-link>
+        </div>
       </author-detail--header>
 
       <author-detail--subscribe>
@@ -48,8 +52,6 @@
       <author-detail--editions v-if="editions.length">
         <h2>{{ author.name }}'s Editions</h2>
 
-        
-
         <div>
           <EditionWidget
             v-for="edition in editions"
@@ -62,9 +64,6 @@
 
       </author-detail--editions>
 
-      <div v-if="canCreateEdition">
-        <router-link :to="{ name: 'create-edition', params: {authorId: this.$route.params.authorId} }">Create new edition</router-link>
-      </div>
 
       <author-detail--posts v-if="posts.length">
         <h2>{{ author.name }}'s Posts</h2>
@@ -204,6 +203,8 @@ author-detail-view
 
 //- Header
 author-detail--header
+  position: relative
+  
   display: block
   padding: $baseline 0
 
@@ -247,6 +248,23 @@ author-detail--header
 
       text-decoration: none
 
+  //- create edition button
+  .create-edition
+    position: absolute
+    right: 0
+    top: $baseline   
+
+    a
+      +subscribe-button 
+
+      display: inline-block
+      height: $baseline * 1.5
+      border-radius: $baseline * 0.75
+      padding: 0 $baseline/2
+
+      font-family: $ff-sans
+      line-height: $baseline * 1.5
+      text-decoration: none
 
 //- Subsribe
 author-detail--subscribe
