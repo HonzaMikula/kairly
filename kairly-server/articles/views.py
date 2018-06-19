@@ -248,14 +248,28 @@ def subscribe_author(request, author_id):
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
 
-    subscription = SubscriptionToAuthor.objects.create(
-        user=request.user,
-        author=author,
-        topic=topic,
-        period=periodicity.frequency,
-        period_time=periodicity.time,
-        period_dow=periodicity.dow,
-    )
+    try:
+        # Handle unique together manually, because
+        # mysql ignores key when one of values is NULL (usually topic)
+        #
+        # There is still place for race condition
+        # it could be solved by adding topic slug on this table
+        # (with empty string value when there is no topic) and
+        # make unique together on that
+        subscription = SubscriptionToAuthor.objects.get(
+            user=request.user,
+            author=author,
+            topic=topic
+        )
+    except SubscriptionToAuthor.DoesNotExist:
+        subscription = SubscriptionToAuthor.objects.create(
+            user=request.user,
+            author=author,
+            topic=topic,
+            period=periodicity.frequency,
+            period_time=periodicity.time,
+            period_dow=periodicity.dow,
+        )
 
     author.user_subscription = subscription
     return JsonResponse(author_json(author, topic))
