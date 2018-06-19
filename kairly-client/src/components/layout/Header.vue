@@ -26,8 +26,8 @@
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
           <ul>
-            <li v-for="author in authors" :key="author.id">
-              <router-link :to="{name: 'author', params: {authorId: author.id}}">{{ author.name }}</router-link>
+            <li v-if="user.author">
+              <router-link :to="{name: 'author', params: {authorId: user.author.id}}">Profile</router-link>
             </li>
 
             <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
@@ -66,8 +66,7 @@ export default {
 
   computed: {
     ...mapState({
-      user: state => state.user,
-      authors: state => state.managedAuthors,
+      user: state => state.user
     }),
     ...mapGetters(['loadingUser'])
   },

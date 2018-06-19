@@ -94,7 +94,7 @@ def authors(request):
 
 
 def delete_edition(request, edition):
-    if not edition.editor.users.filter(id=request.user.id).exists():
+    if not edition.editor.user_id != request.user.id:
         return HttpResponseForbidden()
     edition.delete()
     return HttpResponse(status=204)
@@ -181,7 +181,7 @@ def author_posts(request, author_id):
 @ajax_login_required
 def edition_backlog(request, author_id, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=author_id, slug=edition_slug)
-    if not edition.editor.users.filter(id=request.user.id).exists():
+    if not edition.editor.user_id != request.user.id:
         return HttpResponseForbidden()
 
     if request.method == 'GET':
@@ -290,22 +290,22 @@ def post(request, post_id):
 @ajax_login_required
 def profile(request):
     g = Gravatar(request.user.email)
-    authors = list(Author.objects.filter(users=request.user).order_by('name'))
-    authors_map = {a.id: a for a in authors}
+    author = request.user.author
 
     editions = []
-    for edition in Edition.objects.filter(editor__in=authors).values_list('editor_id', 'slug', 'title', named=True):
-        editions.append({
-            'id': '{}/{}'.format(authors_map[edition.editor_id].slug, edition.slug),
-            'title': edition.title,
-        })
+    if author:
+        for edition in Edition.objects.filter(editor=author).values_list('editor_id', 'slug', 'title', named=True):
+            editions.append({
+                'id': '{}/{}'.format(author.slug, edition.slug),
+                'title': edition.title,
+            })
 
     return JsonResponse({
         "user": {
             "name": request.user.get_full_name(),
-            'picture': g.get_image(use_ssl=True, default='blank')
+            'picture': g.get_image(use_ssl=True, default='blank'),
+            "author": author_json(author) if author else None,
         },
-        "authors": [author_json(a) for a in authors],
         "editions": editions
     })
 

@@ -21,7 +21,7 @@ class Author(models.Model):
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
     picture = models.CharField(_("Picture"), max_length=300)
     bio = models.TextField(_("Bio"), blank=True)
-    users = models.ManyToManyField('auth.User', blank=True)
+    user = models.OneToOneField('auth.User', models.SET_NULL, blank=True, null=True)
 
     class Meta:
         ordering = ('name',)

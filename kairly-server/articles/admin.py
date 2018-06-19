@@ -1,12 +1,11 @@
 from django.contrib import admin
 
-from .models import (Author, Topic, Post, EditionIssue, EditionIssuePost,
-                     Edition)
+from .models import Author, Topic, Post, Edition
 
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'medium')
+    list_display = ('name', 'slug', 'medium', 'user')
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'medium')
 

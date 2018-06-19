@@ -84,6 +84,8 @@
 
 
 <script>
+import { mapState } from 'vuex'
+
 import * as api from '@/api'
 
 import EditionWidget from '@/components/widgets/EditionWidget'
@@ -120,8 +122,12 @@ export default {
     },
 
     canCreateEdition() {
-      return this.author && this.$store.getters.isManagedAuthor(this.author.id)
-    }
+      return this.user.author && this.author && this.user.author.id == this.author.id
+    },
+
+    ...mapState({
+      user: state => state.user
+    }),
   },
 
   watch: {
@@ -204,7 +210,7 @@ author-detail-view
 //- Header
 author-detail--header
   position: relative
-  
+
   display: block
   padding: $baseline 0
 
@@ -252,10 +258,10 @@ author-detail--header
   .create-edition
     position: absolute
     right: 0
-    top: $baseline   
+    top: $baseline
 
     a
-      +subscribe-button 
+      +subscribe-button
 
       display: inline-block
       height: $baseline * 1.5

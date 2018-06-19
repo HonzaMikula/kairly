@@ -68,7 +68,7 @@
 
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import * as api from '@/api'
 
@@ -97,11 +97,15 @@ export default {
     isEditor() {
       if (this.edition) {
         const author = this.edition.editor
-        return this.$store.getters.isManagedAuthor(author.id)
+        return this.user.author && this.user.author.id === author.id
       } else {
         return false
       }
-    }
+    },
+
+    ...mapState({
+      user: state => state.user
+    }),
   },
 
   methods: {

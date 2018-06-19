@@ -7,7 +7,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: null,
-    managedAuthors: [],
     managedEditions: [],
     editions: {},
     allEditionsLoaded: false,
@@ -22,9 +21,6 @@ export default new Vuex.Store({
   mutations: {
     user(state, user) {
       state.user = user
-    },
-    managedAuthors(state, authors) {
-      state.managedAuthors = authors
     },
     managedEditions(state, editions) {
       state.managedEditions = editions
@@ -75,10 +71,7 @@ export default new Vuex.Store({
   getters: {
     loadingUser: state => state.user === null, // Unauthorized -> user === false
     allEditions: state => state.allEditionsLoaded ? Object.values(state.editions) : null,
-    edition: state => id => state.editions[id],
-    isManagedAuthor: state => id => {
-        return !!state.managedAuthors.find(a => a.id === id)
-    }
+    edition: state => id => state.editions[id]
   },
 
   actions,

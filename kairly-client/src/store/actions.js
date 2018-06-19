@@ -8,13 +8,11 @@ export const getProfile = ({ commit }) => {
     .then(
       resp => {
         commit('user', resp.user)
-        commit('managedAuthors', resp.authors),
         commit('managedEditions', resp.editions)
 
       },
       () => {
         commit('user', false)
-        commit('managedAuthors', [])
         commit('managedEditions', [])
       }
     )
