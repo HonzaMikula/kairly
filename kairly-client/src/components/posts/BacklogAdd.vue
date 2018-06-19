@@ -90,6 +90,7 @@ backlog-add--dropdown
   left: 50%
   top: 40px
   z-index: 1
+  background-color: white
 
   @media (max-width: 1120px)
     left: inherit
@@ -104,6 +105,6 @@ backlog-add--dropdown
       content: $fa-var-check
 
     &.is-selected a::after
-      opacity: 1 !important       
+      opacity: 1 !important
 
 </style>
