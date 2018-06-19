@@ -1,11 +1,11 @@
 <template>
-  <backlog-add-view v-if="managedEditions">
-    
-    <button-icon 
-      role="button" 
+  <backlog-add-view v-if="managedEditions.length">
+
+    <button-icon
+      role="button"
       tabindex="0"
       aria-label="Consider for Edition"
-      v-tooltip.top="'Consider for Edition'" 
+      v-tooltip.top="'Consider for Edition'"
       @click.prevent="showEditions = true">
     </button-icon>
 
@@ -71,7 +71,7 @@ backlog-add-view
 
   button-icon
     opacity: 0.5
-    
+
     cursor: pointer
 
     transition: 0.15s opacity

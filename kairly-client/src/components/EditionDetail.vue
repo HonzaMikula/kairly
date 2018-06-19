@@ -53,7 +53,7 @@
     </div>
 
     <div v-if="isEditor">
-      <a href="#" @click.prevent="deleteEdition">Delete edition</a>
+      <a href="#" @click.prevent="confirmDeleteEdition">Delete edition</a>
     </div>
 
     <edition-backlog v-if="isEditor" :edition="edition" />
@@ -68,6 +68,8 @@
 
 
 <script>
+import { mapActions } from 'vuex'
+
 import * as api from '@/api'
 
 import Issue from '@/components/IssueWrapper'
@@ -112,14 +114,13 @@ export default {
       ev.target.blur()
     },
 
-    deleteEdition() {
+    confirmDeleteEdition() {
       if (window.confirm("Are you sure?")) {
-        api.deleteEdition(this.edition.id)
-        .then(resp => {
-          this.$router.push({ name: 'author', params: { authorId: this.edition.editor.id }})
-        })
+        this.deleteEdition(this.edition)
       }
-    }
+    },
+
+    ...mapActions(['deleteEdition'])
   },
 
   created() {

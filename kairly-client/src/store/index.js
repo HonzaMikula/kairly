@@ -29,6 +29,15 @@ export default new Vuex.Store({
     managedEditions(state, editions) {
       state.managedEditions = editions
     },
+    appendManagedEdition(state, edition) {
+      state.managedEditions.push(edition)
+    },
+    removeManagedEdition(state, edition) {
+      const idx = state.managedEditions.findIndex(e => e.id === edition.id)
+      if (idx !== -1) {
+        state.managedEditions.splice(idx, 1)
+      }
+    },
     allEditions(state, editions) {
       editions.forEach(edition => {
         state.editions[edition.id] = edition

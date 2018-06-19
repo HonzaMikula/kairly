@@ -1,5 +1,7 @@
 import * as api from '@/api'
 
+import router from '@/router'
+
 export const getProfile = ({ commit }) => {
   api
     .getProfile()
@@ -64,4 +66,24 @@ export const invalidateTimeline = ({ commit }) => {
 
 export const expandIssue = ({ commit }, issueId) => {
   commit('expandIssue', issueId)
+}
+
+export const startNewEdtion = ({ commit }, { authorId, edition }) => {
+  api.createEdition(authorId, edition)
+  .then(resp => {
+    const { edition } = resp
+    commit('appendManagedEdition', edition)
+    // there is problem with push using editionId param, it can't handle
+    // parameter which contains /
+    //router.push({ name: 'edition', params: { editionId: edition.id }})
+    router.push('/editions/' + edition.id )
+  })
+}
+
+export const deleteEdition = ({ commit }, edition) => {
+  api.deleteEdition(edition.id)
+  .then(() => {
+    commit('removeManagedEdition', edition)
+    router.push({ name: 'author', params: { authorId: edition.editor.id }})
+  })
 }
