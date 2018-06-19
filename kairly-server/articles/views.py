@@ -1,5 +1,7 @@
 import json
+from datetime import datetime
 from binascii import a2b_base64
+from collections import defaultdict
 
 from libgravatar import Gravatar
 
@@ -94,7 +96,7 @@ def authors(request):
 
 
 def delete_edition(request, edition):
-    if not edition.editor.user_id != request.user.id:
+    if edition.editor.user_id != request.user.id:
         return HttpResponseForbidden()
     edition.delete()
     return HttpResponse(status=204)
@@ -181,13 +183,13 @@ def author_posts(request, author_id):
 @ajax_login_required
 def edition_backlog(request, author_id, edition_slug):
     edition = get_object_or_404(Edition, editor__slug=author_id, slug=edition_slug)
-    if not edition.editor.user_id != request.user.id:
+    if edition.editor.user_id != request.user.id:
         return HttpResponseForbidden()
 
     if request.method == 'GET':
         result = {'backlog': [], 'publish': []}
         for log in EditionBacklog.objects.filter(edition=edition).select_related('post'):
-            target = result['publish'] if log.publish else result['backlog']
+            target = result['publish'] if log.publish_stamp else result['backlog']
             target.append(post_json(log.post))
         return JsonResponse(result)
 
@@ -195,17 +197,24 @@ def edition_backlog(request, author_id, edition_slug):
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
         publish = payload.get('publish', False)
+        publish_stamp = datetime.now() if publish else None
 
         try:
             log = EditionBacklog.objects.get(edition=edition, post=post)
-            log.publish = publish
+            log.publish_stamp = publish_stamp
             log.save()
         except EditionBacklog.DoesNotExist:
             EditionBacklog.objects.create(
                 edition=edition,
                 post=post,
-                publish=publish
+                publish_stamp=publish_stamp
             )
+        return HttpResponse(status=204)
+
+    if request.method == 'DELETE':
+        payload = json.loads(request.body.decode('utf-8'))
+        post = get_object_or_404(Post, id=payload.get('post'))
+        EditionBacklog.objects.filter(edition=edition, post=post).delete()
         return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)
@@ -308,11 +317,19 @@ def profile(request):
 
     editions = []
     if author:
-        for edition in Edition.objects.filter(editor=author).values_list('editor_id', 'slug', 'title', named=True):
+        internal_ids_mapping = {}
+        for edition in Edition.objects.filter(editor=author).values_list('id', 'editor_id', 'slug', 'title', named=True):
+            public_id = '{}/{}'.format(author.slug, edition.slug)
+            internal_ids_mapping[edition.id] = public_id
             editions.append({
-                'id': '{}/{}'.format(author.slug, edition.slug),
+                'id': public_id,
                 'title': edition.title,
             })
+        backlog = defaultdict(list)
+        for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
+            backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
+    else:
+        backlog = []
 
     return JsonResponse({
         "user": {
@@ -320,7 +337,8 @@ def profile(request):
             'picture': g.get_image(use_ssl=True, default='blank'),
             "author": author_json(author) if author else None,
         },
-        "editions": editions
+        "editions": editions,
+        "backlog": backlog
     })
 
 

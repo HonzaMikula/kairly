@@ -122,7 +122,7 @@ class Edition(models.Model, PeriodMixin):
 class EditionBacklog(models.Model):
     edition = models.ForeignKey(Edition, models.CASCADE)
     post = models.ForeignKey(Post, models.CASCADE)
-    publish = models.BooleanField(_('Ready to publish'))
+    publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
 
 
 class EditionIssue(models.Model):

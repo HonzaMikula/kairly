@@ -16,8 +16,8 @@
 
       <section>
         <ul>
-          <li v-for="ed in managedEditions" :key="ed.id" :class="{'is-selected': backlog[ed.id]}">
-            <a href="#" @click.prevent="add(ed, $event)">{{ ed.title }}</a>
+          <li v-for="ed in managedEditions" :key="ed.id" :class="{'is-selected': containedIn.indexOf(ed.id) !== -1}">
+            <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
           </li>
         </ul>
       </section>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import * as api from '@/api'
@@ -44,23 +44,32 @@ export default {
   data() {
     return {
       showEditions: false,
-      backlog: {} // TODO provide initial state
+//      backlog: {} // TODO provide initial state
     }
   },
 
-  computed: mapState({
-    managedEditions: state => state.managedEditions
-  }),
+  computed: {
+    ...mapState({
+      managedEditions: state => state.managedEditions,
+      backlog: state => state.backlog,
+    }),
+
+    containedIn() {
+      return this.backlog[this.post.id] || []
+    }
+  },
 
   methods: {
-    add(edition, ev) {
-      api.addToBacklog(edition.id, this.post.id)
-      .then(() => {
-        this.backlog = {...this.backlog, [edition.id]: true}
-      })
-
+    toggle(edition, ev) {
+      if (this.containedIn.indexOf(edition.id) === -1) {
+        this.addToBacklog({edition, post: this.post})
+      } else {
+        this.removeFromBacklog({edition, post: this.post})
+      }
       ev.target.blur()
-    }
+    },
+
+    ...mapActions(['addToBacklog', 'removeFromBacklog'])
   }
 }
 </script>

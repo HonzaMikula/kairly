@@ -8,11 +8,13 @@ export const getProfile = ({ commit }) => {
     .then(
       resp => {
         commit('user', resp.user)
+        commit('backlog', resp.backlog)
         commit('managedEditions', resp.editions)
 
       },
       () => {
         commit('user', false)
+        commit('backlog', {})
         commit('managedEditions', [])
       }
     )
@@ -21,6 +23,8 @@ export const getProfile = ({ commit }) => {
 export const logout = ({ commit }) => {
   api.clearToken()
   commit('user', false)
+  commit('backlog', {})
+  commit('managedEditions', [])
 }
 
 export const getEditions = ({ commit, state }) => {
@@ -83,5 +87,23 @@ export const deleteEdition = ({ commit }, edition) => {
   .then(() => {
     commit('removeManagedEdition', edition)
     router.push({ name: 'author', params: { authorId: edition.editor.id }})
+  })
+}
+
+export const addToBacklog = ({ commit }, { edition, post }) => {
+  api.addToBacklog(edition.id, post.id)
+  // TODO to have better user experience, post can be added immediately
+  // and reverted when api call fails
+  .then(() => {
+    commit('backlogAdd', { editionId: edition.id, postId: post.id })
+  })
+}
+
+export const removeFromBacklog = ({ commit }, { edition, post }) => {
+  api.deleteFromBacklog(edition.id, post.id)
+  // TODO to have better user experience, post can be removed immediately
+  // and reverted when api call fails
+  .then(() => {
+    commit('backlogRemove', { editionId: edition.id, postId: post.id })
   })
 }

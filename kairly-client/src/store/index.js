@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: null,
+    backlog: {},
     managedEditions: [],
     editions: {},
     allEditionsLoaded: false,
@@ -21,6 +22,29 @@ export default new Vuex.Store({
   mutations: {
     user(state, user) {
       state.user = user
+    },
+    backlog(state, backlog) {
+      state.backlog = backlog
+    },
+    backlogAdd(state, { postId, editionId }) {
+      const currEditions = state.backlog[postId] || []
+      state.backlog = {...state.backlog, [postId]: [...currEditions, editionId]}
+    },
+    backlogRemove(state, { postId, editionId }) {
+      // TODO this would be nice move to utils function
+      // we need shallow copy with updated nested object
+      let currEditions = [...state.backlog[postId]] || []
+      const idx = currEditions.findIndex(i => i == editionId)
+      if (idx !== -1) {
+        currEditions.splice(idx, 1)
+      }
+      const backlog = {...state.backlog}
+      if (currEditions.length) {
+        backlog[postId] = currEditions
+      } else {
+        delete backlog[postId]
+      }
+      state.backlog = backlog
     },
     managedEditions(state, editions) {
       state.managedEditions = editions
