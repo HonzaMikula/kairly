@@ -26,7 +26,7 @@
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
           <ul>
-            <li v-for="author in authors">
+            <li v-for="author in authors" :key="author.id">
               <router-link :to="{name: 'author', params: {authorId: author.id}}">{{ author.name }}</router-link>
             </li>
 

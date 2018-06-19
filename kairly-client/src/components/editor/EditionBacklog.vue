@@ -5,7 +5,7 @@
         <div>
           <h3>Post</h3>
 
-          <div v-for="post in backlog" class="backlog-post">
+          <div v-for="post in backlog" class="backlog-post" :key="post.id">
             <!-- TODO use Post component which show correctly also tweets -->
             {{ post.id }} : {{ post.content.title }}
 
@@ -16,7 +16,7 @@
         <div>
           <h3>Next Edition Issue</h3>
 
-          <div v-for="post in published" class="backlog-post">
+          <div v-for="post in published" class="backlog-post" :key="post.id">
             <!-- TODO use Post component which show correctly also tweets -->
             {{ post.id }} : {{ post.content.title }}
 

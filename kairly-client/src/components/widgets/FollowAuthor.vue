@@ -3,58 +3,70 @@
     v-if="show"
     v-on-clickaway="() => closeSubscribeWidget()">
 
-    <section v-if="showCanceling === true && cancelingSubscription === true">
+    <div v-if="showCanceling === true && cancelingSubscription === true">
       <header>What to do?</header>
-      <ul>
-        <li><a href="" v-on:click.prevent="editSubscription($event)">Edit</a></li>
-        <li><a href="" v-on:click.prevent="cancelSubscription($event)">Cancel subscription</a></li>
-      </ul>
-    </section>
 
-    <section v-else-if="frequency === null">
+      <section>
+        <ul>
+          <li><a href="" v-on:click.prevent="editSubscription($event)">Edit</a></li>
+          <li><a href="" v-on:click.prevent="cancelSubscription($event)">Cancel subscription</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <div v-else-if="frequency === null">
       <header>How often?</header>
-      <ul>
-        <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
-        <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
-        <li><a href="" v-on:click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
-      </ul>
-    </section>
 
-    <section v-else-if="frequency === 'weekly' && dow === null">
+      <section>
+        <ul>
+          <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
+          <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
+          <li><a href="" v-on:click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <div v-else-if="frequency === 'weekly' && dow === null">
       <header>
         Which day?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
       </header>
-      <ul>
-        <li><a href="" v-on:click.prevent="selectWhatDay('1', $event)">Monday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('4', $event)">Thursday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('5', $event)">Friday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('6', $event)">Saturday</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatDay('7', $event)">Sunday</a></li>
-      </ul>
-    </section>
 
-    <section v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
+      <section>
+        <ul>
+          <li><a href="" v-on:click.prevent="selectWhatDay('1', $event)">Monday</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatDay('4', $event)">Thursday</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatDay('5', $event)">Friday</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatDay('6', $event)">Saturday</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatDay('7', $event)">Sunday</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <div v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
         What time?
         <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
       </header>
-      <ul>
-        <li><a href="" v-on:click.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatTime('9:00', $event)">Morning (9:00)</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatTime('12:00', $event)">Noon (12:00)</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatTime('15:00', $event)">After noon (15:00)</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatTime('18:00', $event)">Evening (18:00)</a></li>
-        <li><a href="" v-on:click.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
-      </ul>
-    </section>
 
-    <section v-else>
+      <section>
+        <ul>
+          <li><a href="" v-on:click.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatTime('9:00', $event)">Morning (9:00)</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatTime('12:00', $event)">Noon (12:00)</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatTime('15:00', $event)">After noon (15:00)</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatTime('18:00', $event)">Evening (18:00)</a></li>
+          <li><a href="" v-on:click.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
+        </ul>
+      </section>
+    </div>
+
+    <div v-else>
       <header>You're subscribed!</header>
 
-      <div v-if="frequency == '3x_per_day'">
+      <section v-if="frequency == '3x_per_day'">
         <p>
           You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
         </p>
@@ -63,22 +75,22 @@
           <li>Noon (12:00)</li>
           <li>Evening (18:00)</li>
         </ul>
-      </div>
+      </section>
 
-      <div v-else-if="frequency == 'daily'">
+      <section v-else-if="frequency == 'daily'">
         <p>
           You will be receiving <strong>{{ author.name }}</strong> daily at
           <strong>{{ time }}</strong>.
         </p>
-      </div>
+      </section>
 
-      <div v-else-if="frequency == 'weekly'">
+      <section v-else-if="frequency == 'weekly'">
         <p>
           You will be receiving <strong>{{ author.name }}</strong> weekly on
           <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
         </p>
-      </div>
-    </section>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -179,75 +191,14 @@ export default {
 <style lang="sass">
 
 .follow-author
-  position: absolute
+  +context-menu
+
   left: 50%
   top: 50px
   z-index: 1
 
-  margin-left: -125px
-
-  display: block
-  border-radius: 5px
-  width: 250px
-
-  background: #fff
-  border: 1px solid #eee
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15)
-
-  &::after
-    bottom: 100%
-    left: 50%
-    border: solid transparent
-    content: " "
-    height: 0
-    width: 0
-    position: absolute
-    pointer-events: none
-    border-bottom-color: lighten($c-base, 30%)
-    border-width: 15px
-    margin-left: -15px
-
-
-  //- header
-  header
-    position: relative
-
-    border-radius: 5px 5px 0 0
-
-    background: lighten($c-base, 30%)
-    color: #000
-
-    font-weight: 600
-    font-size: $fs--1
-    line-height: $baseline * 1.25
-    text-align: center
-
-    //-- arrow back
-    button-icon
-      position: absolute
-      left: 0
-
-      width: $baseline * 1.25
-
-      color: darken($c-base, 20%)
-
-      cursor: pointer
-      font-size: $fs--2
-
-      &:focus,
-      &:hover
-        background: lighten($c-base, 15%)
-        color: #000
-
-      &::before
-        content: $fa-var-arrow-left
-
-
-
   //- steps
   section
-    text-align: left
-
     p
       padding: $baseline / 2
 
@@ -266,40 +217,7 @@ export default {
       li
         list-style: disc
 
-    li a
-      position: relative
-
-      display: block
-      padding: 0 $baseline/2
-
-      color: #000
-
-      line-height: $baseline * 1.25
-      text-decoration: none
-
-      transition: 0.15s all
-
-      &::after
-        +fa-icon()
-
-        position: absolute
-        right: $baseline / 2
-        top: 8px
-
-        color: darken($c-base, 20%)
-        opacity: 0
-
-        font-size: $fs--2
-
-        content: $fa-var-arrow-right
-
-        transition: 0.15s all
-
-      &:hover,
-      &:focus
-        background: lighten($c-base, 40%)
-
-        &::after
-          opacity: 1
+    li a::after
+      content: $fa-var-arrow-right
 
 </style>
