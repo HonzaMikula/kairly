@@ -313,7 +313,10 @@ def post(request, post_id):
 @ajax_login_required
 def profile(request):
     g = Gravatar(request.user.email)
-    author = request.user.author
+    try:
+        author = request.user.author
+    except Author.DoesNotExist:
+        author = None
 
     editions = []
     if author:
