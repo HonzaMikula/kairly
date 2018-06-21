@@ -1,6 +1,6 @@
 <template>
   <dialog-window :onClose="closeModal">
-    <modal-dialog role="dialog">
+    <modal-dialog role="dialog" @click="$event.stopPropagation()">
       <div v-if="!loading">
         <Issue :issue="issue" :subscription="edition.subscription" />
       </div>

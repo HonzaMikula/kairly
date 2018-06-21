@@ -4,7 +4,7 @@
       <h1>My Editions</h1>
 
       <div class="create-edition" v-if="canCreateEdition">
-        <router-link :to="{ name: 'create-edition', params: {authorId: this.$route.params.authorId} }">Start new edition</router-link>
+        <a href="" v-on:click.prevent="isCreateEditionOpen=true">Start new edition</a>
       </div>
     </editor-editions--header>
 
@@ -20,6 +20,10 @@
 
     </author-detail--editions>
 
+    <portal to="modal" v-if="isCreateEditionOpen">
+      <create-edition :onClose="closeModal"></create-edition>
+    </portal>
+    {{isCreateEditionOpen}}
   </editor-editions-view>
 </template>
 
@@ -30,11 +34,13 @@ import { mapState } from 'vuex'
 import * as api from '@/api'
 
 import EditionWidget from '@/components/widgets/EditionWidget'
+import CreateEdition from '@/components/editor/CreateEdition'
 
 export default {
   name: 'AuthorDetail',
   components: {
-    EditionWidget
+    EditionWidget,
+    CreateEdition
   },
 
   data() {
@@ -45,7 +51,8 @@ export default {
       topic: null,
       editionIds: [],
       posts: [],
-      cursor: null
+      cursor: null,
+      isCreateEditionOpen: false
     }
   },
 
@@ -71,8 +78,9 @@ export default {
   },
 
   methods: {
-    toggleEditions() {
-      this.showAllEditions = !this.showAllEditions
+    closeModal() {
+      this.isCreateEditionOpen = false
+      this.$forceUpdate()
     },
 
     handlePostsData(resp) {

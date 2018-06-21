@@ -1,68 +1,79 @@
+
 <template>
-  <div class="dev-create-edition">
-    <h1>Create new edition</h1>
+  <dialog-window :onClose="closeModal">
+    <modal-dialog role="dialog"  @click="$event.stopPropagation()">
+      <div class="dev-create-edition">
+        <h1>Create new edition</h1>
 
-    <picture-input
-      ref="pictureInput"
-      @change="onPictureChange"
-      width="450"
-      height="300"
-      margin="16"
-      accept="image/jpeg,image/png"
-      size="10"
-      buttonClass="btn"
-      :customStrings="{
-        drag: 'Drag or upload image'
-      }">
-    </picture-input>
+        <picture-input
+          ref="pictureInput"
+          @change="onPictureChange"
+          width="450"
+          height="300"
+          margin="16"
+          accept="image/jpeg,image/png"
+          size="10"
+          buttonClass="btn"
+          :customStrings="{
+            drag: 'Drag or upload image'
+          }">
+        </picture-input>
 
-    <div class="row">
-      Edition Title
-      <input v-model="title">
-    </div>
+        <div class="row">
+          Edition Title
+          <input v-model="title">
+        </div>
 
-    <div class="row">
-      Description
-      <textarea v-model="description"></textarea>
-    </div>
+        <div class="row">
+          Description
+          <textarea v-model="description"></textarea>
+        </div>
 
-    <div class="row">
-      Period / release time
+        <div class="row">
+          Period / release time
 
-      <button
-        @click="$refs.periodWidget.openSubscribeWidget()">
-        Select period
-      </button>
+          <button
+            @click="$refs.periodWidget.openSubscribeWidget()">
+            Select period
+          </button>
 
-      <br>
-      Selected: <span v-if="periodicity">{{ periodicity.frequency }} / {{ periodicity.dow }} / {{ periodicity.time }}</span>
+          <br>
+          Selected: <span v-if="periodicity">{{ periodicity.frequency }} / {{ periodicity.dow }} / {{ periodicity.time }}</span>
 
-      <div class="period-wrapper">
-        <period-widget
-          ref="periodWidget"
-          :onSelect="selectPeriodicity" />
+          <div class="period-wrapper">
+            <period-widget
+              ref="periodWidget"
+              :onSelect="selectPeriodicity" />
+          </div>
+        </div>
+
+        <button
+          @click="submit">
+          Create
+        </button>
       </div>
-    </div>
-
-    <button
-      @click="submit">
-      Create
-    </button>
-  </div>
+    </modal-dialog>
+  </dialog-window>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
+import DialogWindow from '@/components/modals/Dialog'
 import PictureInput from 'vue-picture-input'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
 export default {
-  name: 'CreateEdition',
+  name: 'CreateEditionModal',
+
+  props: {
+    'onClose': Function
+  },
 
   components: {
     PeriodWidget,
-    PictureInput
+    PictureInput,
+    DialogWindow
   },
 
   data() {
@@ -76,6 +87,10 @@ export default {
   },
 
   methods: {
+    closeModal() {
+      this.onClose()
+    },
+    
     onPictureChange(image) {
       this.image = image
     },
