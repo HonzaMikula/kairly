@@ -178,7 +178,6 @@ edition-detail--header
     color: #999
 
     font-size: $fs-1
-    text-decoration: none
 
     img
       border-radius: 100%

@@ -188,7 +188,6 @@ post-detail--header
     color: #555
 
     line-height: $baseline * 1.25
-    text-decoration: none
 
     //- author picture
     img
@@ -307,8 +306,6 @@ post-detail--perex
   a[href]
     color: $c-base
 
-    text-decoration: none
-
   //-- code inline
   code
     background: #fafafa
@@ -404,8 +401,6 @@ post-detail--author
 
     a
       color: #000
-
-      text-decoration: none
 
   //- bio
   p

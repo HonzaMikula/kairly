@@ -4,17 +4,14 @@
       <app-header--nav role="navigation">
         <ul v-if="user">
           <li class="home"><router-link :to="{name: 'timeline'}" exact>Home</router-link></li>
-          <li class="your-editions"><router-link :to="{name: 'subscription'}">My Subscription</router-link></li>
+          <li class="my-subscription"><router-link :to="{name: 'subscription'}">My Subscription</router-link></li>
+          <li class="my-editions"><router-link :to="{name: 'author-editions', params: {authorId: user.author.id}}">My Editions</router-link></li>
           <li class="explore"><router-link :to="{name: 'explore'}">Explore</router-link></li>
         </ul>
         </app-header--nav>
 
-        <!--app-header--search>
-          <input type="search" placeholder="Search"/>
-        </app-header--search-->
-
         <app-header--user-profile v-if="user">
-          <h3>{{ user.name }}</h3>
+          <h3 v-if="user.author"><router-link :to="{name: 'author', params: {authorId: user.author.id}}">{{ user.name }}</router-link></h3>
           <img src="../../assets/user.png" :alt="user.name"/>
           <!--
             Gravatar url handles default itself (it can generate 404 url or some dafault),
@@ -26,10 +23,6 @@
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
           <ul>
-            <li v-if="user.author">
-              <router-link :to="{name: 'author', params: {authorId: user.author.id}}">Profile</router-link>
-            </li>
-
             <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
             <li><a href="" v-on:click.prevent="logout">Logout</a></li>
           </ul>
@@ -130,8 +123,6 @@ app-header--nav
 
     color: #fff
 
-    text-decoration: none
-
     &:focus,
     &:hover
       background: darken($c-base, 10%)
@@ -147,55 +138,8 @@ app-header--nav
   li.home a::before
     content: $fa-var-home
 
-  li.new-post a::before
-    content: $fa-var-pencil-square-o
-
-  li.your-editions a::before
+  li.my-subscription a::before
     content: $fa-var-newspaper-o
-
-  li.notification a::before
-    content: $fa-var-bell
-
-  li.reading-list a::before
-    content: $fa-var-clock-o
-
-
-//- Search
-app-header--search
-  position: relative
-  margin-right: $baseline
-
-  @media (max-width: $mobile)
-    display: none
-
-  &::after
-    position: absolute
-    right: $baseline / 2
-    top: 50%
-
-    margin-top: -7px
-
-    +fa-icon()
-    opacity: 0.5
-
-    content: $fa-var-search
-
-  input
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.25
-    padding: 0 $baseline / 2
-
-    background: lighten($c-base, 10%)
-    border: 0
-    outline: 0
-
-    font-family: $ff-sans
-
-    transition: 0.15s background
-
-    &:focus
-      background: #fff
-
 
 
 //- User Profile
@@ -206,6 +150,9 @@ app-header--user-profile
   h3
     display: inline-block
     margin-right: $baseline / 4
+
+    a
+      color: #fff
 
   //- profile picture
   img
@@ -253,20 +200,11 @@ app-header--user-profile-menu
   font-size: $fs--2
   line-height: $baseline
 
-  h3
-    padding: 0 $baseline / 2
-
-    color: #000
-
-    font-weight: 600
-
   a
     display: block
     padding: 0 $baseline / 2
 
     color: #555
-
-    text-decoration: none
 
     &:focus,
     &:hover

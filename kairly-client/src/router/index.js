@@ -11,6 +11,7 @@ import MyAuthors from '@/components/my-subscription/Authors'
 import MyEditions from '@/components/my-subscription/Editions'
 import Explore from '@/components/explore/Explore'
 import CreateEdition from '@/components/editor/CreateEdition'
+import Editions from '@/components/editor/Editions'
 
 Vue.use(Router)
 
@@ -23,7 +24,9 @@ export default new Router({
     {path: '/editions/:editionId([^/]+/[^/]+)/:issueId', name: 'issue', component: IssueDetail},
     {path: '/author/:authorId', name: 'author', component: AuthorDetail},
     {path: '/author/:authorId/new-edition', name: 'create-edition', component: CreateEdition},
+    {path: '/author/:authorId/editions', name: 'author-editions', component: Editions},
     {path: '/homepage', name: 'homepage', component: Homepage},
+    
     {path: '/subscription', component: MySubscription, children: [
       {path: '', name: 'subscription', redirect: { name: 'subscription.editions'}},
       {path: 'editions', name: 'subscription.editions', component: MyEditions},

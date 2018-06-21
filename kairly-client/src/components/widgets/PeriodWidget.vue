@@ -222,7 +222,6 @@ export default {
       color: #000
 
       line-height: $baseline * 1.25
-      text-decoration: none
 
       transition: 0.15s all
 

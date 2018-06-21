@@ -154,7 +154,6 @@ explore-view
         color: #fff
 
         line-height: $baseline * 2
-        text-decoration: none
 
         &:hover,
         &:focus,

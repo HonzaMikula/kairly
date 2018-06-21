@@ -128,8 +128,6 @@ post-component > header
     a
       color: $c-base
 
-      text-decoration: none
-
 
   //-- date of publication
   time

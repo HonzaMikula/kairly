@@ -160,6 +160,8 @@ timeline-welcome--more-editions
 
     color: #000
 
+    text-decoration: underline
+
     &:hover,
     &:focus
       text-decoration: none

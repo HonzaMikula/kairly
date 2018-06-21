@@ -49,8 +49,6 @@ post--issue
       a
         color: #000
 
-        text-decoration: none
-
     //- issue picture
     picture
       grid-area: post-issue-picture

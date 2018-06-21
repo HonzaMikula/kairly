@@ -106,8 +106,6 @@ timeline-edition
       a
         color: #000
 
-        text-decoration: none
-
     img
       border-radius: 100%
       height: $baseline
@@ -123,8 +121,6 @@ timeline-edition
 
       a
         color: #999
-
-        text-decoration: none
 
   footer
     text-align: center

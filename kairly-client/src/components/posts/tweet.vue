@@ -29,8 +29,6 @@ timeline-post--tweet
   a
     color: $c-base
 
-    text-decoration: none
-
   //- picture
   img
     display: block

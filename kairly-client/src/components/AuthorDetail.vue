@@ -18,10 +18,6 @@
             <router-link :to="topic.url">{{ topic.name}}</router-link>
           </span>
         </p>
-
-        <div class="create-edition" v-if="canCreateEdition">
-          <router-link :to="{ name: 'create-edition', params: {authorId: this.$route.params.authorId} }">Start new edition</router-link>
-        </div>
       </author-detail--header>
 
       <author-detail--subscribe>
@@ -119,10 +115,6 @@ export default {
     editions() {
       const ids = this.showAllEditions ? this.editionIds : this.editionIds.slice(0, 3)
       return ids.map(id => this.$store.getters.edition(id))
-    },
-
-    canCreateEdition() {
-      return this.user.author && this.author && this.user.author.id == this.author.id
     },
 
     ...mapState({
@@ -252,25 +244,6 @@ author-detail--header
 
       color: $c-base
 
-      text-decoration: none
-
-  //- create edition button
-  .create-edition
-    position: absolute
-    right: 0
-    top: $baseline
-
-    a
-      +subscribe-button
-
-      display: inline-block
-      height: $baseline * 1.5
-      border-radius: $baseline * 0.75
-      padding: 0 $baseline/2
-
-      font-family: $ff-sans
-      line-height: $baseline * 1.5
-      text-decoration: none
 
 //- Subsribe
 author-detail--subscribe

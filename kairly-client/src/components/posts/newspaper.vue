@@ -43,14 +43,9 @@ timeline-post--newspaper
 
     a
       color: #000
-      text-decoration: none
 
   a
     color: $c-base
-
-    &:hover,
-    &:focus
-      text-decoration: none
 
 //- Content
 timeline-post--newspaper--content

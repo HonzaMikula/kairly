@@ -39,7 +39,6 @@ my-subscription-view
       color: $c-base
 
       font-weight: 600
-      text-decoration: none
 
       &.is-active
         color: #000

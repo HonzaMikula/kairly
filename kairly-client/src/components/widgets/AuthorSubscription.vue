@@ -68,8 +68,6 @@ author-subscription-view
   a
     color: #333
 
-    text-decoration: none
-
     &:focus,
     &:hover
       color: #000

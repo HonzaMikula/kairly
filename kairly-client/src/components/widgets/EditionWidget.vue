@@ -91,8 +91,6 @@ edition-widget-view
     a
       color: #000
 
-      text-decoration: none
-
   //- description
   > p
     flex: 1
@@ -121,8 +119,6 @@ edition-widget--author
 
   a
     color: #000
-
-    text-decoration: none
 
 
 //- Subscribe Edition

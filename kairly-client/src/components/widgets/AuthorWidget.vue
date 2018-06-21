@@ -103,8 +103,6 @@ author-widget-view
       a
         color: #000
 
-        text-decoration: none
-
     //- subscription information
     author-subscription-view
       font-family: $ff-sans !important

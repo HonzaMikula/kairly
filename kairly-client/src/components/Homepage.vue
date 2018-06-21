@@ -409,7 +409,6 @@ homepage--help-us--contact-us
 
     font-size: $fs-1
     line-height: $baseline * 1.5
-    text-decoration: none
 
     &:hover,
     &:focus
