@@ -120,7 +120,7 @@ def edition(request, author_id, edition_slug):
         issue = get_object_or_404(EditionIssue, edition=edition, number=int(issueNo))
     else:
         try:
-            issue = EditionIssue.objects.filter(edition=edition).select_related('editor')[0]
+            issue = EditionIssue.objects.filter(edition=edition).order_by('-number').select_related('editor')[0]
         except IndexError:
             issue = None
 

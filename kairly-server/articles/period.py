@@ -15,6 +15,9 @@ class PeriodMixin:
         (WEEKLY, 'Weekly'),
     )
 
+    # TODO refactor get_issue_interval(), use constant
+    X3_PER_DAY_HOURS = [6, 12, 18]
+
 
 def parse_periodicity(periodicity):
     frequency = periodicity.get('frequency')

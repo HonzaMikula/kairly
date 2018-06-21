@@ -22,6 +22,7 @@ class Author(models.Model):
     picture = models.CharField(_("Picture"), max_length=300)
     bio = models.TextField(_("Bio"), blank=True)
     user = models.OneToOneField('auth.User', models.SET_NULL, blank=True, null=True)
+    timezone = models.CharField(_("Timezone"), max_length=160)
 
     class Meta:
         ordering = ('name',)
@@ -128,7 +129,7 @@ class EditionBacklog(models.Model):
 class EditionIssue(models.Model):
     number = models.IntegerField()
     published = models.DateTimeField(_('Published'), default=now)
-    editor = models.ForeignKey(Author, models.PROTECT, related_name='+')
+    editor = models.ForeignKey(Author, models.PROTECT, related_name='+')  # TODO why this is denormalized, why this is not taken from edition
     posts = models.ManyToManyField(Post, blank=True, through='EditionIssuePost')
     edition = models.ForeignKey(Edition, models.CASCADE)
 
@@ -177,6 +178,7 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         """Construct time interval which includes given datetime and matches
         period of author subscription.
         """
+        # TODO move this to period module
         if self.period == SubscriptionToAuthor.X3_PER_DAY:
             if dt.hour < 6:
                 return (

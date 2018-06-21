@@ -5,7 +5,7 @@ from .models import Author, Topic, Post, Edition
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'medium', 'user')
+    list_display = ('name', 'slug', 'medium', 'user', 'timezone')
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name', 'medium')
 
