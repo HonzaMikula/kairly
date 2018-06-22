@@ -139,7 +139,13 @@ app-header--nav
     content: $fa-var-home
 
   li.my-subscription a::before
-    content: $fa-var-newspaper-o
+    content: $fa-var-clock-o
+
+  li.my-editions a::before
+    content: $fa-var-newspaper-o  
+
+  li.explore a::before
+    content: $fa-var-hashtag   
 
 
 //- User Profile

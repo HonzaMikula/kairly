@@ -8,22 +8,27 @@
       </div>
     </editor-editions--header>
 
-    <author-detail--editions v-if="editions.length">
+    <nav v-if="editions.length">
+      <editor-editions--nav-item v-for="edition in editions" :key="edition.id">
+        <picture>
+          <img :src="edition.picture" :alt="edition.title"/>
+        </picture>
 
-      <div>
-        <EditionWidget
-          v-for="edition in editions"
-          :key="edition.id"
-          v-bind:edition="edition"
-        />
-      </div>
+        <h2>{{edition.title}} <span>#{{ edition.issues + 1 }}</span></h2>
+        <p>In <strong>4 hours</strong> with <strong>3 posts</strong>.</p>
+        <span class="backlog" v-tooltip.top="'Posts in consideration'">12</span> 
+      </editor-editions--nav-item>    
 
-    </author-detail--editions>
+    </nav>
+
+    <editor-editions--board>
+      In the top editor will be switching between editions <br /><br />
+      Here they will be selecting, which posts will go to upcoming issue.
+    </editor-editions--board>
 
     <portal to="modal" v-if="isCreateEditionOpen">
       <create-edition :onClose="closeModal"></create-edition>
     </portal>
-    {{isCreateEditionOpen}}
   </editor-editions-view>
 </template>
 
@@ -46,11 +51,9 @@ export default {
   data() {
     return {
       loadingProfile: true,
-      loadingPosts: true,
       author: null,
       topic: null,
       editionIds: [],
-      posts: [],
       cursor: null,
       isCreateEditionOpen: false
     }
@@ -83,28 +86,12 @@ export default {
       this.$forceUpdate()
     },
 
-    handlePostsData(resp) {
-      resp.posts.forEach(post => this.posts.push(post))
-      this.cursor = resp.cursor
-      this.loadingPosts = false
-    },
-
-    loadMore() {
-      if (this.cursor) {
-        const { authorId } = this.$route.params
-
-        this.loadingPosts = true
-        api.getAuthorPosts(authorId, this.cursor).then(this.handlePostsData)
-      }
-    },
-
     loadData() {
       const { authorId } = this.$route.params
 
       this.loadingProfile = true
       this.loadingPosts = true
       this.author = null
-      this.showAllEditions = false
       this.editionIds = []
       this.posts = []
       this.cursor = null
@@ -116,7 +103,6 @@ export default {
         this.loadingProfile = false
         this.topics = resp.topics
       })
-      api.getAuthorPosts(authorId, null).then(this.handlePostsData)
     }
   },
 
@@ -131,32 +117,113 @@ editor-editions-view
   position: relative
 
   display: block
-  margin: 0 auto
-  max-width: 900px
+  margin: 0 $baseline
 
-//- Header
-editor-editions--header
-  display: block
-  padding: $baseline 0
+  //- Header
+  editor-editions--header
+    display: block
+    padding: $baseline 0
 
-  h1
-    font-family: $ff-serif
-    font-size: $fs-2
-    font-weight: 600
+    h1
+      font-family: $ff-serif
+      font-size: $fs-2
+      font-weight: 600
 
-  .create-edition
+    .create-edition
+      position: absolute
+      right: 0
+      top: $baseline
+
+      a
+        +subscribe-button
+
+        display: inline-block
+        height: $baseline * 1.5
+        border-radius: $baseline * 0.75
+        padding: 0 $baseline/2
+
+        font-family: $ff-sans
+        line-height: $baseline * 1.5
+
+  //- Switcher between Editions
+  > nav
+    display: flex
+    
+    overflow: hidden
+
+
+editor-editions--nav-item
+  position: relative
+  margin-right: $baseline / 2
+
+  background: #fff
+  opacity: 0.7
+
+  &:nth-of-type(2)
+    opacity: 1
+
+    border-bottom: 5px solid $c-base
+
+  picture 
+    
+    img
+      height: $baseline * 4
+      width: 250px
+      object-fit: cover
+
+  h2
+    font-weight: 600 
+    font-family: $ff-sans
+    font-size: $fs--1
+
+    span
+      float: right
+
+  p 
+    font-size: $fs--2  
+
+  .release
     position: absolute
-    right: 0
-    top: $baseline
+    left: $baseline / 4
+    top: $baseline / 4
 
-    a
-      +subscribe-button
+    border-radius: 100%
+    display: inline-block
+    height: $baseline
+    width: $baseline
 
-      display: inline-block
-      height: $baseline * 1.5
-      border-radius: $baseline * 0.75
-      padding: 0 $baseline/2
+    background: $c-base
+    color: #fff
 
-      font-family: $ff-sans
-      line-height: $baseline * 1.5
+    font-weight: 600
+    font-size: $fs--2
+    text-align: center
+
+  .backlog
+    position: absolute
+    right: $baseline / 4
+    top: $baseline / 4
+
+    border-radius: 100%
+    display: inline-block
+    height: $baseline
+    width: $baseline
+
+    background: #fff
+    color: #000
+
+    font-size: $fs--2
+    text-align: center
+  
+editor-editions--board
+  display: block
+  height: 400px
+  padding: $baseline
+  margin-top: $baseline
+
+  background: #eee
+
+  text-align: center
+
+
 </style>
