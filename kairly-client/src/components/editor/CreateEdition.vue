@@ -1,7 +1,7 @@
 
 <template>
   <dialog-window :onClose="closeModal">
-    <modal-dialog role="dialog"  @click="$event.stopPropagation()">
+    <modal-dialog role="dialog" @click.stop>
       <div class="dev-create-edition">
         <h1>Create new edition</h1>
 
@@ -90,7 +90,7 @@ export default {
     closeModal() {
       this.onClose()
     },
-    
+
     onPictureChange(image) {
       this.image = image
     },

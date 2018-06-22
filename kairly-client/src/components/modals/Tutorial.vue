@@ -1,10 +1,10 @@
 <template>
   <dialog-window :onClose="closeModal">
-    <modal-dialog role="dialog" @click="$event.stopPropagation()">
+    <modal-dialog role="dialog" @click.stop>
       <div v-if="!loading">
         <Issue :issue="issue" :subscription="edition.subscription" />
       </div>
-      <button-close tabindex="0" role="button" @click="closeModal()">Close</button-close> 
+      <button-close tabindex="0" role="button" @click="closeModal()">Close</button-close>
     </modal-dialog>
   </dialog-window>
 </template>

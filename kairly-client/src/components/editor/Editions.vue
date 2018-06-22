@@ -4,7 +4,7 @@
       <h1>My Editions</h1>
 
       <div class="create-edition" v-if="canCreateEdition">
-        <a href="" v-on:click.prevent="isCreateEditionOpen=true">Start new edition</a>
+        <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
       </div>
     </editor-editions--header>
 
@@ -23,7 +23,7 @@
     <portal to="modal" v-if="isCreateEditionOpen">
       <create-edition :onClose="closeModal"></create-edition>
     </portal>
-    {{isCreateEditionOpen}}
+    {{ isCreateEditionOpen }}
   </editor-editions-view>
 </template>
 
