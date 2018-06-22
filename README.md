@@ -13,6 +13,9 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
+# serve with hot reload at localhost:8080 and connect to local Python server
+npm run local
+
 # build for production with minification
 npm run build
 
@@ -102,3 +105,21 @@ div#main-content
   h1
     tag: h2
 ```
+
+## Users before migration
+
+(Emails should be filled)
+
+alenamarasova	 	                        Alena	Mařesová
+farin	                  	              Roman	Krejčík
+honzamikula	   	                        Jan	Mikula
+janhavel	                            	Jan	Havel
+jirikocib	                             	Jiří	Kočíb
+marekcerovsky	                         	Marek	Čeřovský
+martinmikula                            Martin Mikula
+oskarhollmann	 	                        Oskar	Hollmann
+qa@onboarding	 	                        QA	Kairly
+romanriha	 	                            Roman	Říha
+veronikasafarikova	 	                  Veronika Safaříková
+veronikavamberova	 	                    Veronika	Vamberova
+zbynekhujer                             Zbyněk Hujer

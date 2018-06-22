@@ -1,13 +1,6 @@
 from django.contrib import admin
 
-from .models import Author, Topic, Post, Edition
-
-
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'medium', 'user', 'timezone')
-    prepopulated_fields = {'slug': ('name',)}
-    search_fields = ('name', 'medium')
+from .models import Topic, Post, Edition
 
 
 @admin.register(Topic)
@@ -23,7 +16,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('kind', 'draft')
     exclude = ('guid',)
     readonly_fields = ('source',)
-    search_fields = ('title', 'author__name', 'author__slug')
+    search_fields = ('title', 'author__name', 'author__username')
 
     def get_field_queryset(self, db, db_field, request):
         """

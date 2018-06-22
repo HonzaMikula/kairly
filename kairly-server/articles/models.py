@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from bs4 import BeautifulSoup
 
+from django.conf import settings
 from django.core.cache import cache
 from django.db import models
 from django.db.models.signals import post_save
@@ -15,26 +16,10 @@ from ckeditor.fields import RichTextField
 from .period import PeriodMixin
 
 
-class Author(models.Model):
-    name = models.CharField(_("Name"), max_length=160)
-    slug = models.SlugField(_('Slug'), unique=True)
-    medium = models.CharField(_("Medium"), max_length=160, blank=True)
-    picture = models.CharField(_("Picture"), max_length=300)
-    bio = models.TextField(_("Bio"), blank=True)
-    user = models.OneToOneField('auth.User', models.SET_NULL, blank=True, null=True)
-    timezone = models.CharField(_("Timezone"), max_length=160)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __str__(self):
-        return self.name
-
-
 class Topic(models.Model):
     name = models.CharField(_("Name"), max_length=160)
     slug = models.SlugField(_('Slug'))
-    author = models.ForeignKey(Author, models.PROTECT)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
 
     class Meta:
         unique_together = (("slug", "author"),)
@@ -71,7 +56,7 @@ class Post(models.Model):
     picture = models.CharField(_("Picture"), max_length=300, blank=True, null=True)
     perex = RichTextField(_("Perex"), blank=True, null=True)
     content = RichTextField(_("Content"), blank=True, null=True)
-    author = models.ForeignKey(Author, models.PROTECT)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
     topics = models.ManyToManyField(Topic)
 
     def __str__(self):
@@ -107,7 +92,7 @@ class Edition(models.Model, PeriodMixin):
     slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True)  # temporary allow null
-    editor = models.ForeignKey(Author, models.PROTECT)
+    editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
 
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
     period_time = models.TimeField(null=True)  # time for daily and weekly period
@@ -129,7 +114,7 @@ class EditionBacklog(models.Model):
 class EditionIssue(models.Model):
     number = models.IntegerField()
     published = models.DateTimeField(_('Published'), default=now)
-    editor = models.ForeignKey(Author, models.PROTECT, related_name='+')  # TODO why this is denormalized, why this is not taken from edition
+    editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from edition
     posts = models.ManyToManyField(Post, blank=True, through='EditionIssuePost')
     edition = models.ForeignKey(Edition, models.CASCADE)
 
@@ -150,7 +135,7 @@ class EditionIssuePost(models.Model):
 
 
 class Subscription(models.Model):
-    user = models.ForeignKey('auth.User', models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE)
     edition = models.ForeignKey(Edition, models.CASCADE)
 
     class Meta:
@@ -159,8 +144,8 @@ class Subscription(models.Model):
 
 class SubscriptionToAuthor(models.Model, PeriodMixin):
 
-    user = models.ForeignKey('auth.User', models.CASCADE)
-    author = models.ForeignKey(Author, models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True, related_name='+')
     topic = models.ForeignKey(Topic, models.CASCADE, blank=True, null=True)
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
     period_time = models.TimeField(null=True)  # time for daily and weekly period

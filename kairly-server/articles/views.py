@@ -17,7 +17,8 @@ from django.core.files.base import ContentFile
 
 
 from utils.decorators import ajax_login_required
-from .models import (Author, Edition, EditionIssue, EditionBacklog,
+from users.models import User
+from .models import (Edition, EditionIssue, EditionBacklog,
                      Post, Subscription, SubscriptionToAuthor, Topic)
 from .serializers import edition_issue_json, post_json, edition_json, author_json
 from .period import parse_periodicity
@@ -33,7 +34,7 @@ def get_author_and_topic(author_id):
         author_slug = author_id
         topic_slug = None
 
-    author = get_object_or_404(Author, slug=author_slug)
+    author = get_object_or_404(User, username=author_slug)
     if topic_slug:
         topic = Topic.objects.get(slug=topic_slug)
         if not topic:
@@ -313,32 +314,28 @@ def post(request, post_id):
 @ajax_login_required
 def profile(request):
     g = Gravatar(request.user.email)
-    try:
-        author = request.user.author
-    except Author.DoesNotExist:
-        author = None
 
+    # TODO load edition and backlog in separate endpoint
     editions = []
-    if author:
-        internal_ids_mapping = {}
-        for edition in Edition.objects.filter(editor=author).values_list('id', 'editor_id', 'slug', 'title', named=True):
-            public_id = '{}/{}'.format(author.slug, edition.slug)
-            internal_ids_mapping[edition.id] = public_id
-            editions.append({
-                'id': public_id,
-                'title': edition.title,
-            })
-        backlog = defaultdict(list)
-        for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
-            backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
-    else:
-        backlog = []
+    internal_ids_mapping = {}
+    for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
+        public_id = '{}/{}'.format(request.user.username, edition.slug)
+        internal_ids_mapping[edition.id] = public_id
+        editions.append({
+            'id': public_id,
+            'title': edition.title,
+        })
 
+    backlog = defaultdict(list)
+    for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
+        backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
+
+    # TODO merge author and user props
     return JsonResponse({
         "user": {
             "name": request.user.get_full_name(),
             'picture': g.get_image(use_ssl=True, default='blank'),
-            "author": author_json(author) if author else None,
+            "author": author_json(request.user) if author else None,
         },
         "editions": editions,
         "backlog": backlog

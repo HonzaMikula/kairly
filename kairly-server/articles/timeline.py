@@ -4,7 +4,8 @@ from more_itertools import peekable
 
 from django.http import JsonResponse
 
-from .models import EditionIssue, Post, Edition, SubscriptionToAuthor, Author
+from users.models import User
+from .models import EditionIssue, Post, Edition, SubscriptionToAuthor
 from .serializers import edition_issue_json, post_json, author_json
 from utils.decorators import ajax_login_required
 
@@ -110,7 +111,7 @@ class AuthorIssueItem(TimelineItem):
         posts = Post.objects.filter(id__in=self.post_ids)
         isodate = str(self.published)
         return {
-            'id': '{}-{}'.format(self.author.slug, isodate),
+            'id': '{}-{}'.format(self.author.username, isodate),
             'type': 'author',
             'title': self.title,
             'time': isodate,
@@ -169,9 +170,10 @@ class AuthorsStream(TimelineStream):
         self.user = user
 
     def __iter__(self):
+        # TODO this can be probably simplified after author-user merge
         author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(user=self.user)}
         author_ids = [asub.author_id for asub in author_subscriptions.values()]
-        authors = {a.id: a for a in Author.objects.filter(id__in=author_ids)}
+        authors = {u.id: u for u in User.objects.filter(id__in=author_ids)}
 
         streams = [
             AuthorStream(authors[asub.author_id], asub, self.before, self.tzinfo)

@@ -7,11 +7,11 @@ from .models import Post
 
 def author_json(author, topic=None):
     if topic:
-        id = '{}|{}'.format(author.slug, topic.slug)
-        name = '{} | {}'.format(author.name, topic.name)
+        id = '{}|{}'.format(author.username, topic.slug)
+        name = '{} | {}'.format(author.get_full_name(), topic.name)
     else:
-        id = author.slug
-        name = author.name
+        id = author.username
+        name = author.get_full_name()
 
     res = {
         'id': id,
@@ -71,7 +71,7 @@ def edition_issue_json(issue, posts=True, edition=None, tzinfo=timezone.utc):
         "number": issue.number,
         "type": 'edition',
         "edition": {
-            "id": "{}/{}".format(edition.editor.slug, edition.slug),
+            "id": "{}/{}".format(edition.editor.username, edition.slug),
             "title": edition.title,
             "periodicity": {
                 'frequency': edition.period,
@@ -94,7 +94,7 @@ def edition_issue_json(issue, posts=True, edition=None, tzinfo=timezone.utc):
 
 def edition_json(edition):
     result = {
-        "id": "{}/{}".format(edition.editor.slug, edition.slug),
+        "id": "{}/{}".format(edition.editor.username, edition.slug),
         "title": edition.title,
         "picture": settings.MEDIA_SITE + edition.image.url,
         "description": edition.description,

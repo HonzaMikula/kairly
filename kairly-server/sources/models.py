@@ -7,6 +7,7 @@ import lxml.html
 from lxml.etree import tostring
 
 from django.db import models
+from django.conf import settings
 
 from .parser import ArticleParser
 
@@ -30,7 +31,7 @@ class Channel(models.Model):
     parse_content_from_rss = models.BooleanField(default=False)
     parser = models.TextField(help_text="Parse rules to get content from webpage.", blank=True)
     skip_rules = models.TextField(help_text="YAML", blank=True)
-    author = models.ForeignKey('articles.Author', models.SET_NULL, blank=True, null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
     topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
     enabled = models.BooleanField(default=True)
 
@@ -141,7 +142,7 @@ class Channel(models.Model):
 
 class TwitterChannel(models.Model):
     twitter_account = models.CharField(max_length=160)
-    author = models.ForeignKey('articles.Author', models.SET_NULL, blank=True, null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
     topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
     enabled = models.BooleanField(default=True)
 
