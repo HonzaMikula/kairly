@@ -1,16 +1,12 @@
 import json
 from datetime import datetime
 from binascii import a2b_base64
-from collections import defaultdict
-
-from libgravatar import Gravatar
 
 from django.db.models import Count
 from django.db.utils import IntegrityError
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.http import (Http404, JsonResponse, HttpResponse,
-                         HttpResponseForbidden, HttpResponseBadRequest,
-                         HttpResponseNotFound)
+                         HttpResponseForbidden, HttpResponseBadRequest)
 from django.views.decorators.http import require_POST
 from django.utils.text import slugify
 from django.core.files.base import ContentFile
@@ -43,16 +39,6 @@ def get_author_and_topic(author_id):
         topic = None
 
     return author, topic
-
-
-def index(request, *args, **kwargs):
-    if request.path.startswith('/api') or request.path == '/favicon.ico':
-        return HttpResponseNotFound()
-    accept = request.META.get('HTTP_ACCEPT')
-    if accept and 'text/html' not in accept:
-        return HttpResponseBadRequest()
-
-    return render(request, 'index.html')
 
 
 def annotate_editions(request, editions):
@@ -105,7 +91,7 @@ def delete_edition(request, edition):
 
 @ajax_login_required
 def edition(request, author_id, edition_slug):
-    edition = get_object_or_404(Edition, editor__slug=author_id, slug=edition_slug)
+    edition = get_object_or_404(Edition, editor__username=author_id, slug=edition_slug)
     if request.method == 'DELETE':
         return delete_edition(request, edition)
 
@@ -156,7 +142,7 @@ def author(request, author_id):
     if not topic and topics:
         data['topics'] = [{
             'name': t.name,
-            'url': '/author/{}|{}'.format(author.slug, t.slug)
+            'url': '/author/{}|{}'.format(author.username, t.slug)
         } for t in topics.values()]
     return JsonResponse(data)
 
@@ -183,7 +169,7 @@ def author_posts(request, author_id):
 
 @ajax_login_required
 def edition_backlog(request, author_id, edition_slug):
-    edition = get_object_or_404(Edition, editor__slug=author_id, slug=edition_slug)
+    edition = get_object_or_404(Edition, editor__username=author_id, slug=edition_slug)
     if edition.editor.user_id != request.user.id:
         return HttpResponseForbidden()
 
@@ -308,37 +294,6 @@ def post(request, post_id):
 
     return JsonResponse({
         'post': post_json(post)
-    })
-
-
-@ajax_login_required
-def profile(request):
-    g = Gravatar(request.user.email)
-
-    # TODO load edition and backlog in separate endpoint
-    editions = []
-    internal_ids_mapping = {}
-    for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
-        public_id = '{}/{}'.format(request.user.username, edition.slug)
-        internal_ids_mapping[edition.id] = public_id
-        editions.append({
-            'id': public_id,
-            'title': edition.title,
-        })
-
-    backlog = defaultdict(list)
-    for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
-        backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
-
-    # TODO merge author and user props
-    return JsonResponse({
-        "user": {
-            "name": request.user.get_full_name(),
-            'picture': g.get_image(use_ssl=True, default='blank'),
-            "author": author_json(request.user) if author else None,
-        },
-        "editions": editions,
-        "backlog": backlog
     })
 
 

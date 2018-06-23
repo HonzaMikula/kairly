@@ -16,16 +16,30 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic.base import RedirectView
+from django.shortcuts import render
+from django.http import HttpResponseBadRequest, HttpResponseNotFound
 
-from jwtauth.views import get_token
+
+def index(request, *args, **kwargs):
+    if request.path.startswith('/api') or request.path == '/favicon.ico':
+        return HttpResponseNotFound()
+    accept = request.META.get('HTTP_ACCEPT')
+    if accept and 'text/html' not in accept:
+        return HttpResponseBadRequest()
+
+    return render(request, 'index.html')
+
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
-    path('api/token', get_token),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
-    path('', include('articles.urls')),
+    path('api/', include('users.urls')),
+    path('api/', include('articles.urls')),
+
+    # frontend paths, match anything, needs regexp!
+    re_path(r'', index, name='index'),
 ]
