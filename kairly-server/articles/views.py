@@ -64,7 +64,7 @@ def editions(request):
     editions = Edition.objects.all().select_related('editor').order_by('-likes')
 
     return JsonResponse([
-        e.to_json(e) for e in annotate_editions(request, editions)], safe=False)
+        e.to_json() for e in annotate_editions(request, editions)], safe=False)
 
 
 @ajax_login_required
