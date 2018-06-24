@@ -5,13 +5,13 @@
         <ul v-if="user">
           <li class="home"><router-link :to="{name: 'timeline'}" exact>Home</router-link></li>
           <li class="my-subscription"><router-link :to="{name: 'subscription'}">My Subscription</router-link></li>
-          <li class="my-editions"><router-link :to="{name: 'author-editions', params: {authorId: user.author.id}}">My Editions</router-link></li>
+          <li class="my-editions"><router-link :to="{name: 'author-editions', params: {authorId: user.id}}">My Editions</router-link></li>
           <li class="explore"><router-link :to="{name: 'explore'}">Explore</router-link></li>
         </ul>
         </app-header--nav>
 
         <app-header--user-profile v-if="user">
-          <h3 v-if="user.author"><router-link :to="{name: 'author', params: {authorId: user.author.id}}">{{ user.name }}</router-link></h3>
+          <h3><router-link :to="{name: 'author', params: {authorId: user.id}}">{{ user.name }}</router-link></h3>
           <img src="../../assets/user.png" :alt="user.name"/>
           <!--
             Gravatar url handles default itself (it can generate 404 url or some dafault),
@@ -142,10 +142,10 @@ app-header--nav
     content: $fa-var-clock-o
 
   li.my-editions a::before
-    content: $fa-var-newspaper-o  
+    content: $fa-var-newspaper-o
 
   li.explore a::before
-    content: $fa-var-hashtag   
+    content: $fa-var-hashtag
 
 
 //- User Profile

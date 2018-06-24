@@ -97,7 +97,7 @@ export default {
     isEditor() {
       if (this.edition) {
         const author = this.edition.editor
-        return this.user.author && this.user.author.id === author.id
+        return this.user.id === author.id
       } else {
         return false
       }

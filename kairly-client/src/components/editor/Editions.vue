@@ -16,8 +16,8 @@
 
         <h2>{{edition.title}} <span>#{{ edition.issues + 1 }}</span></h2>
         <p>In <strong>4 hours</strong> with <strong>3 posts</strong>.</p>
-        <span class="backlog" v-tooltip.top="'Posts in consideration'">12</span> 
-      </editor-editions--nav-item>    
+        <span class="backlog" v-tooltip.top="'Posts in consideration'">12</span>
+      </editor-editions--nav-item>
 
     </nav>
 
@@ -66,7 +66,7 @@ export default {
     },
 
     canCreateEdition() {
-      return this.user.author && this.author && this.user.author.id == this.author.id
+      return this.user.id == this.author.id
     },
 
     ...mapState({
@@ -148,7 +148,7 @@ editor-editions-view
   //- Switcher between Editions
   > nav
     display: flex
-    
+
     overflow: hidden
 
 
@@ -164,23 +164,23 @@ editor-editions--nav-item
 
     border-bottom: 5px solid $c-base
 
-  picture 
-    
+  picture
+
     img
       height: $baseline * 4
       width: 250px
       object-fit: cover
 
   h2
-    font-weight: 600 
+    font-weight: 600
     font-family: $ff-sans
     font-size: $fs--1
 
     span
       float: right
 
-  p 
-    font-size: $fs--2  
+  p
+    font-size: $fs--2
 
   .release
     position: absolute
@@ -214,7 +214,7 @@ editor-editions--nav-item
 
     font-size: $fs--2
     text-align: center
-  
+
 editor-editions--board
   display: block
   height: 400px

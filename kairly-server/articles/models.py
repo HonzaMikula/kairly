@@ -1,5 +1,5 @@
 import math
-from datetime import timedelta
+from datetime import timedelta, timezone
 
 from bs4 import BeautifulSoup
 
@@ -86,6 +86,33 @@ class Post(models.Model):
             cache.set(cache_key, value, None)
         return '{} min'.format(value)
 
+    def to_json(self, short=False, tzinfo=timezone.utc):
+        j = {
+            'id': self.id,
+            "author": self.author.to_json(),
+            "type": self.kind,
+            "time": str(self.published.astimezone(tzinfo)),
+            "favorites": 131
+        }
+        if self.kind == Post.PICTURE:
+            j['content'] = {
+                'title': self.title,
+                'picture': self.picture,
+            }
+        elif self.kind == Post.TWEET:
+            j['content'] = {
+                'content': self.content,
+                'picture': self.picture,
+            }
+        elif self.kind == Post.NEWSPAPER:
+            j['timeRead'] = self.read_time
+            j['content'] = {
+                'title': self.title,
+                'content': self.perex if short else self.content,
+                'perex': self.perex
+            }
+        return j
+
 
 class Edition(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
@@ -103,6 +130,25 @@ class Edition(models.Model, PeriodMixin):
 
     def __str__(self):
         return self.title
+
+    def to_json(self):
+        result = {
+            "id": "{}/{}".format(self.editor.username, self.slug),
+            "title": self.title,
+            "picture": settings.MEDIA_SITE + self.image.url,
+            "description": self.description,
+            "editor": self.editor.to_json(),
+            "periodicity": {
+                'frequency': self.period,
+                'time': self.period_time,
+                'dow': self.period_dow,
+            },
+            "issues": getattr(self, 'issues', 0),
+            "likes": getattr(self, 'likes', 0)
+        }
+        if hasattr(self, 'user_subscription'):
+            result['subscription'] = self.user_subscription is not None
+        return result
 
 
 class EditionBacklog(models.Model):
@@ -123,6 +169,33 @@ class EditionIssue(models.Model):
 
     def __str__(self):
         return "{} #{}".format(self.edition.title, self.number)
+
+    def to_json(self, posts=True, edition=None, tzinfo=timezone.utc):
+        if edition is None:
+            edition = self.edition
+        result = {
+            "number": self.number,
+            "type": 'edition',
+            "edition": {
+                "id": "{}/{}".format(edition.editor.username, edition.slug),
+                "title": edition.title,
+                "periodicity": {
+                    'frequency': edition.period,
+                    'time': edition.period_time,
+                    'dow': edition.period_dow,
+                },
+                "picture": settings.MEDIA_SITE + edition.image.url,
+                "description": edition.description,
+            },
+            "time": str(self.published.astimezone(tzinfo)),
+            "author": self.editor.to_json(),
+        }
+        if posts:
+            result["posts"] = [
+                p.to_json(short=True, tzinfo=tzinfo) for p in
+                self.posts.all().order_by('editionissuepost__ordering', '-published')
+            ]
+        return result
 
 
 class EditionIssuePost(models.Model):

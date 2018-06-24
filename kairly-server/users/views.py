@@ -3,7 +3,7 @@ import json
 import time
 from collections import defaultdict
 
-from libgravatar import Gravatar
+# from libgravatar import Gravatar
 
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -13,7 +13,6 @@ from django.views.decorators.http import require_POST
 
 from utils.decorators import ajax_login_required
 from articles.models import Edition, EditionBacklog
-from articles.serializers import author_json
 
 
 @require_POST
@@ -36,7 +35,8 @@ def get_token(request):
 
 @ajax_login_required
 def profile(request):
-    g = Gravatar(request.user.email)
+    # g = Gravatar(request.user.email)
+    # g.get_image(use_ssl=True, default='blank'),
 
     # TODO load edition and backlog in separate endpoint
     editions = []
@@ -55,11 +55,7 @@ def profile(request):
 
     # TODO merge author and user props
     return JsonResponse({
-        "user": {
-            "name": request.user.get_full_name(),
-            'picture': g.get_image(use_ssl=True, default='blank'),
-            "author": author_json(request.user),
-        },
+        "user": request.user.to_json(),
         "editions": editions,
         "backlog": backlog
     })

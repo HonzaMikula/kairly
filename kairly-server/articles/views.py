@@ -16,7 +16,6 @@ from utils.decorators import ajax_login_required
 from users.models import User
 from .models import (Edition, EditionIssue, EditionBacklog,
                      Post, Subscription, SubscriptionToAuthor, Topic)
-from .serializers import edition_issue_json, post_json, edition_json, author_json
 from .period import parse_periodicity
 
 
@@ -64,8 +63,8 @@ def annotate_editions(request, editions):
 def editions(request):
     editions = Edition.objects.all().select_related('editor').order_by('-likes')
 
-    return JsonResponse([edition_json(e) for e in annotate_editions(request, editions)],
-                        safe=False)
+    return JsonResponse([
+        e.to_json(e) for e in annotate_editions(request, editions)], safe=False)
 
 
 @ajax_login_required
@@ -78,7 +77,7 @@ def authors(request):
         author.user_subscription = sub
         return author
 
-    return JsonResponse([author_json(map_to_author(sub), sub.topic) for sub in subscriptions],
+    return JsonResponse([map_to_author(sub).to_json(topic=sub.topic) for sub in subscriptions],
                         safe=False)
 
 
@@ -112,11 +111,9 @@ def edition(request, author_id, edition_slug):
             issue = None
 
     return JsonResponse({
-        'edition': edition_json(edition),
-        'issue': edition_issue_json(issue) if issue else None,
+        'edition': edition.to_json(),
+        'issue': issue.to_json() if issue else None,
     })
-
-    return JsonResponse(edition_json(edition))
 
 
 @ajax_login_required
@@ -136,8 +133,8 @@ def author(request, author_id):
 
     editions = Edition.objects.filter(editor=author).order_by('-likes')
     data = {
-        'author': author_json(author, topic),
-        'editions': [edition_json(e) for e in annotate_editions(request, editions)],
+        'author': author.to_json(topic=topic),
+        'editions': [e.to_json() for e in annotate_editions(request, editions)],
     }
     if not topic and topics:
         data['topics'] = [{
@@ -160,7 +157,7 @@ def author_posts(request, author_id):
     if topic:
         posts_query = posts_query.filter(topics=topic)
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
-    posts = [post_json(post, short=True) for post in posts_query]
+    posts = [post.to_json(short=True) for post in posts_query]
     return JsonResponse({
         'posts': posts,
         'cursor': offset + AUTOR_POSTS_PAGE_SIZE if len(posts) == AUTOR_POSTS_PAGE_SIZE else None
@@ -177,7 +174,7 @@ def edition_backlog(request, author_id, edition_slug):
         result = {'backlog': [], 'publish': []}
         for log in EditionBacklog.objects.filter(edition=edition).select_related('post'):
             target = result['publish'] if log.publish_stamp else result['backlog']
-            target.append(post_json(log.post))
+            target.append(log.post.to_json())
         return JsonResponse(result)
 
     if request.method == 'PUT':
@@ -217,7 +214,7 @@ def subscribe(request, author_id, edition_slug):
     edition.user_subscription = True
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
-    return JsonResponse(edition_json(edition))
+    return JsonResponse(edition.to_json())
 
 
 @ajax_login_required
@@ -230,7 +227,7 @@ def unsubscribe(request, author_id, edition_slug):
     edition.user_subscription = False
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
-    return JsonResponse(edition_json(edition))
+    return JsonResponse(edition.to_json())
 
 
 @ajax_login_required
@@ -268,7 +265,7 @@ def subscribe_author(request, author_id):
         )
 
     author.user_subscription = subscription
-    return JsonResponse(author_json(author, topic))
+    return JsonResponse(author.to_json(topic=topic))
 
 
 @ajax_login_required
@@ -279,7 +276,7 @@ def unsubscribe_author(request, author_id):
         user=request.user, author=author, topic=topic).delete()
 
     author.user_subscription = None
-    return JsonResponse(author_json(author, topic))
+    return JsonResponse(author.to_json(topic=topic))
 
 
 @ajax_login_required
@@ -293,7 +290,7 @@ def post(request, post_id):
     #     return HttpResponse('402 Payment Required', status=402)
 
     return JsonResponse({
-        'post': post_json(post)
+        'post': post.to_json()
     })
 
 
@@ -329,7 +326,7 @@ def create_edition(request, author_id):
                 title=title,
                 slug=slug,
                 description=payload['description'],
-                image=ContentFile(binary_image_data, "{}-{}.{}".format(author.slug, slug, img_suffix)),
+                image=ContentFile(binary_image_data, "{}-{}.{}".format(author.username, slug, img_suffix)),
                 period=periodicity.frequency,
                 period_time=periodicity.time,
                 period_dow=periodicity.dow,
@@ -344,5 +341,5 @@ def create_edition(request, author_id):
             raise
 
     return JsonResponse({
-        "edition": edition_json(edition)
+        "edition": edition.to_json()
     })

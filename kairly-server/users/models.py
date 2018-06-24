@@ -73,3 +73,34 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.name
+
+    def to_json(self, topic=None):
+        if topic:
+            id = '{}|{}'.format(self.username, topic.slug)
+            name = '{} | {}'.format(self.name, topic.name)
+        else:
+            id = self.username
+            name = self.name
+
+        res = {
+            'id': id,
+            'name': name,
+            'picture': self.picture,
+            'medium': self.medium,
+            'bio': self.bio,
+            'followUrl': '/api/authors/{}/subscribe'.format(id),
+            'unfollowUrl': '/api/authors/{}/unsubscribe'.format(id),
+        }
+
+        # TODO what about param (ma)
+        if hasattr(self, 'user_subscription'):
+            sub = self.user_subscription
+            if sub:
+                res['subscription'] = {
+                    'frequency': sub.period,
+                    'dow': sub.period_dow,
+                    'time': sub.period_time,
+                }
+            else:
+                res['subscription'] = None
+        return res

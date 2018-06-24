@@ -5,9 +5,8 @@ from more_itertools import peekable
 from django.http import JsonResponse
 
 from users.models import User
-from .models import EditionIssue, Post, Edition, SubscriptionToAuthor
-from .serializers import edition_issue_json, post_json, author_json
 from utils.decorators import ajax_login_required
+from .models import EditionIssue, Post, Edition, SubscriptionToAuthor
 
 
 TIMELINE_PAGE_SIZE = 6
@@ -74,8 +73,7 @@ class EditionIssueItem(TimelineItem):
 
     @property
     def json(self):
-        return edition_issue_json(
-            self.issue,
+        return self.issue.to_json(
             edition=self.edition,
             tzinfo=self.tzinfo
         )
@@ -115,8 +113,8 @@ class AuthorIssueItem(TimelineItem):
             'type': 'author',
             'title': self.title,
             'time': isodate,
-            'author': author_json(self.author, self.topic),
-            'posts': [post_json(p, short=True, tzinfo=self.tzinfo) for p in posts],
+            'author': self.author.to_json(topic=self.topic),
+            'posts': [p.to_json(short=True, tzinfo=self.tzinfo) for p in posts],
         }
 
 
