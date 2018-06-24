@@ -82,7 +82,7 @@ def authors(request):
 
 
 def delete_edition(request, edition):
-    if edition.editor.user_id != request.user.id:
+    if edition.editor_id != request.user.id:
         return HttpResponseForbidden()
     edition.delete()
     return HttpResponse(status=204)
@@ -167,7 +167,7 @@ def author_posts(request, author_id):
 @ajax_login_required
 def edition_backlog(request, author_id, edition_slug):
     edition = get_object_or_404(Edition, editor__username=author_id, slug=edition_slug)
-    if edition.editor.user_id != request.user.id:
+    if edition.editor_id != request.user.id:
         return HttpResponseForbidden()
 
     if request.method == 'GET':
