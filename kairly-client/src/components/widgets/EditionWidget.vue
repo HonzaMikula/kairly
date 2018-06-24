@@ -103,9 +103,8 @@ edition-widget-view
 
 //- Author + Periodicity
 edition-widget--author
-
+  font-size: $fs--1
   order: 2
-
   margin: $baseline/2 0
 
   img

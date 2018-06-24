@@ -3,13 +3,17 @@
     <editor-editions--header>
       <h1>My Editions</h1>
 
-      <div class="create-edition" v-if="canCreateEdition">
+      <div class="create-edition">
         <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
       </div>
     </editor-editions--header>
 
-    <nav v-if="editions.length">
-      <editor-editions--nav-item v-for="edition in editions" :key="edition.id">
+    <nav>
+      <editor-editions--nav-item 
+        v-for="edition in editions" 
+        :key="edition.id" 
+        @click="selectEdition(edition)"
+        :class="{'is-selected': selectedEdition && selectedEdition.id == edition.id}">
         <picture>
           <img :src="edition.picture" :alt="edition.title"/>
         </picture>
@@ -18,12 +22,10 @@
         <p>In <strong>4 hours</strong> with <strong>3 posts</strong>.</p>
         <span class="backlog" v-tooltip.top="'Posts in consideration'">12</span>
       </editor-editions--nav-item>
-
     </nav>
 
     <editor-editions--board>
-      In the top editor will be switching between editions <br /><br />
-      Here they will be selecting, which posts will go to upcoming issue.
+      <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
     </editor-editions--board>
 
     <portal to="modal" v-if="isCreateEditionOpen">
@@ -34,18 +36,20 @@
 
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
 import EditionWidget from '@/components/widgets/EditionWidget'
 import CreateEdition from '@/components/editor/CreateEdition'
+import EditionBacklog from '@/components/editor/EditionBacklog'
 
 export default {
   name: 'AuthorDetail',
   components: {
     EditionWidget,
-    CreateEdition
+    CreateEdition,
+    EditionBacklog
   },
 
   data() {
@@ -55,19 +59,15 @@ export default {
       topic: null,
       editionIds: [],
       cursor: null,
-      isCreateEditionOpen: false
+      isCreateEditionOpen: false,
+      selectedEdition: null
     }
   },
 
   computed: {
-    editions() {
-      const ids = this.editionIds
-      return ids.map(id => this.$store.getters.edition(id))
-    },
-
-    canCreateEdition() {
-      return this.user.id == this.author.id
-    },
+    ...mapGetters({
+      editions: 'allEditions'
+    }),
 
     ...mapState({
       user: state => state.user
@@ -81,6 +81,12 @@ export default {
   },
 
   methods: {
+    selectEdition(edition) {
+      this.selectedEdition = edition
+
+      console.log(this.selectedEdition.title)
+    },
+
     closeModal() {
       this.isCreateEditionOpen = false
       this.$forceUpdate()
@@ -100,6 +106,7 @@ export default {
         resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
         this.author = resp.author
         this.editionIds = resp.editions.map(e => e.id)
+        this.selectedEdition = resp.editions[0]
         this.loadingProfile = false
         this.topics = resp.topics
       })
@@ -108,6 +115,7 @@ export default {
 
   created() {
     this.loadData()
+    this.$store.dispatch('getEditions')
   },
 }
 </script>
@@ -159,7 +167,7 @@ editor-editions--nav-item
   background: #fff
   opacity: 0.7
 
-  &:nth-of-type(2)
+  &.is-selected
     opacity: 1
 
     border-bottom: 5px solid $c-base

@@ -49,6 +49,13 @@ export default {
   },
 
   methods: {
+    init() {
+      api.getEditionBacklog(this.edition.id).then(resp => {
+        this.backlog = resp.backlog
+        this.published = resp.publish
+      })
+    },
+
     publish(post) {
       api.addToBacklog(this.edition.id, post.id, true)
       .then(() => {
@@ -67,9 +74,10 @@ export default {
   },
 
   created() {
-    api.getEditionBacklog(this.edition.id).then(resp => {
-      this.backlog = resp.backlog
-      this.published = resp.publish
+    this.init()
+
+    this.$watch('edition', edition => {
+      this.init()
     })
   }
 }
