@@ -42,7 +42,7 @@ import EditionWidget from '@/components/widgets/EditionWidget'
 import CreateEdition from '@/components/editor/CreateEdition'
 
 export default {
-  name: 'AuthorDetail',
+  name: 'Editions',
   components: {
     EditionWidget,
     CreateEdition
