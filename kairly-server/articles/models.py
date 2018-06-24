@@ -147,7 +147,7 @@ class Edition(models.Model, PeriodMixin):
             "likes": getattr(self, 'likes', 0)
         }
         if hasattr(self, 'user_subscription'):
-            result['subscription'] = self.user_subscription is not None
+            result['subscription'] = bool(self.user_subscription)
         return result
 
 

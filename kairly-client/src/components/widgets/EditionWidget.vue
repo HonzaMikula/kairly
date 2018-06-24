@@ -41,7 +41,7 @@ export default {
 
   methods: {
     subscribe(ev) {
-      const value = !this.edition.isSubscribed
+      const value = !this.edition.subscription
       this.$store.dispatch('subscribe', {
         edition: this.edition,
         value
