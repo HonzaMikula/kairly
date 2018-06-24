@@ -5,6 +5,9 @@
     :isSubscribed="isSubscribed"
     :key="post.id"
   >
+    <template slot="controls">
+      <slot name="controls"></slot>
+    </template>
   </component>
 </template>
 

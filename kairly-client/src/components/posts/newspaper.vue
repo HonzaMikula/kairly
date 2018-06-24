@@ -15,6 +15,7 @@
         </timeline-post--continue-reading>
       </timeline-post--newspaper--content>
     </timeline-post--newspaper>
+    <template slot="controls"><slot name="controls"></slot></template>
   </post>
 </template>
 

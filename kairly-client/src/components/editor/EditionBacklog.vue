@@ -1,40 +1,45 @@
 <template>
-  <div class="dev-backlog">
-      <h2>Backlog</h2>
-      <div class="backlog-content">
-        <div>
-          <h3>Post</h3>
+  <edition-backlog-view>
 
-          <div v-for="post in backlog" class="backlog-post" :key="post.id">
-            <!-- TODO use Post component which show correctly also tweets -->
-            {{ post.id }} : {{ post.content.title }}
+    <edition-backlog--backlog>
+      <div v-for="post in backlog" class="backlog-post" :key="post.id">
+        <h3>{{ post.content.title }}</h3>
 
-            <a href="#" @click.prevent="publish(post)">Publish &gt;&gt;&gt;</a>
-          </div>
+        <p>
+          <a href="#" @click.prevent="publish(post)">Publish</a>
+        </p>
 
-        </div>
-        <div>
-          <h3>Next Edition Issue</h3>
-
-          <div v-for="post in published" class="backlog-post" :key="post.id">
-            <!-- TODO use Post component which show correctly also tweets -->
-            {{ post.id }} : {{ post.content.title }}
-
-            <a href="#" @click.prevent="undoPublish(post)">Return to backlog &lt;&lt;&lt;</a>
-          </div>
-        </div>
       </div>
-  </div>
+    </edition-backlog--backlog>
+
+    <edition-backlog--next-issue>
+      <PostWrapper
+        v-for="post in published"
+        :post="post"
+        :isSubscribed="true"
+        :key="post.id"
+      >
+        <template slot="controls">
+          <button-icon
+            class="remove" aria-label="Remove from issue"
+            v-tooltip.left="'Remove from issue'"
+            @click.prevent="undoPublish(post)">
+          </button-icon>
+        </template>
+      </PostWrapper>
+    </edition-backlog--next-issue>
+  </edition-backlog-view>
 </template>
 
 <script>
 import * as api from '@/api'
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
   name: 'EditionBacklog',
 
   components: {
-
+    PostWrapper
   },
 
   props: {
@@ -84,25 +89,28 @@ export default {
 </script>
 
 <style lang="sass">
-.dev-backlog
-  display: block
-  border: 1px dashed black
+edition-backlog-view
+  display: grid
+  grid-template-columns: auto 970px
+  grid-column-gap: $baseline
 
-  h2
-    border-bottom: 1px solid black
 
-.backlog-content
-  display: flex
-  min-height: 50px
+//- Backlog
+edition-backlog--backlog
 
-.backlog-content > div
-  flex: 1
+  //- post
+  > div
+    padding: $baseline / 4
+    margin-bottom: $baseline / 2
+    background: #fff
 
-.backlog-content > div:first-child
-  border-right:  1px solid gray
+  h3
+    font-weight: 600
 
-.backlog-post
-  border: 1px solid black
-  padding: 20px
+  p
+    text-align: center
+
+  a
+    +subscribe-button
 
 </style>

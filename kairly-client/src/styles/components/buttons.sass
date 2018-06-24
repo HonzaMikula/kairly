@@ -6,7 +6,7 @@
   border-radius: $baseline / 2
   box-sizing: border-box
   padding: 0 $baseline
-  
+
   background: #fff
   border: 1px solid $c-base
   color: #000
@@ -19,23 +19,25 @@
   &:hover,
   &:focus
     background: $c-base
-    color: #fff 
+    color: #fff
 
   &.is-subscribed
     background: $c-base
-    color: #fff 
+    color: #fff
 
     &:hover,
     &:focus
-      background: $c-red  
+      background: $c-red
 
 
 
 //- Buttons with Icons
 button-icon
+  cursor: pointer
+
   &::before
     +fa-icon()
-  
+
   &.recommend::before
     content: $fa-var-star
 
@@ -43,4 +45,7 @@ button-icon
     content: $fa-var-retweet
 
   &.consider-for-edition::before
-    content: $fa-var-newspaper-o    
+    content: $fa-var-newspaper-o
+
+  &.remove::before
+    content: $fa-var-times

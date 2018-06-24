@@ -1,28 +1,32 @@
 <template>
   <editor-editions-view>
     <editor-editions--header>
-      <h1>My Editions</h1>
+      <h1>{{ selectedEdition.title }}</h1>
+
+      <button-icon role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
+
+      <editor-editions--header--dropdown
+        v-if="isSelectEditionOpen"
+        v-on-clickaway="() => isSelectEditionOpen = false">
+        <div
+          v-for="edition in editions"
+          :key="edition.id"
+          :class="{'is-selected': selectedEdition && selectedEdition.id == edition.id}"
+          @click="selectEdition(edition)">
+          <h3>{{ edition.title }}</h3>
+          <p>
+            <strong>#{{ edition.issues + 1 }}</strong> is realising in
+            <strong>4 hours</strong> with
+            <strong>3 posts</strong>.
+          </p>
+        </div>
+      </editor-editions--header--dropdown>
 
       <div class="create-edition">
+        <a href="" @click.prevent="confirmDeleteEdition">Delete edition</a>
         <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
       </div>
     </editor-editions--header>
-
-    <nav>
-      <editor-editions--nav-item 
-        v-for="edition in editions" 
-        :key="edition.id" 
-        @click="selectEdition(edition)"
-        :class="{'is-selected': selectedEdition && selectedEdition.id == edition.id}">
-        <picture>
-          <img :src="edition.picture" :alt="edition.title"/>
-        </picture>
-
-        <h2>{{edition.title}} <span>#{{ edition.issues + 1 }}</span></h2>
-        <p>In <strong>4 hours</strong> with <strong>3 posts</strong>.</p>
-        <span class="backlog" v-tooltip.top="'Posts in consideration'">12</span>
-      </editor-editions--nav-item>
-    </nav>
 
     <editor-editions--board>
       <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
@@ -36,6 +40,7 @@
 
 
 <script>
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapState, mapGetters } from 'vuex'
 
 import * as api from '@/api'
@@ -52,6 +57,10 @@ export default {
     EditionBacklog
   },
 
+   directives: {
+    onClickaway
+  },
+
   data() {
     return {
       loadingProfile: true,
@@ -60,6 +69,7 @@ export default {
       editionIds: [],
       cursor: null,
       isCreateEditionOpen: false,
+      isSelectEditionOpen: false,
       selectedEdition: null
     }
   },
@@ -91,6 +101,12 @@ export default {
       this.selectedEdition = edition
 
       console.log(this.selectedEdition.title)
+    },
+
+    confirmDeleteEdition() {
+      if (window.confirm("Are you sure?")) {
+        this.deleteEdition(this.selectedEdition)
+      }
     },
 
     closeModal() {
@@ -135,13 +151,35 @@ editor-editions-view
 
   //- Header
   editor-editions--header
+    position: relative
+
     display: block
     padding: $baseline 0
 
     h1
+      display: inline-block
+      margin-right: $baseline / 2
+
       font-family: $ff-serif
       font-size: $fs-2
       font-weight: 600
+
+    button-icon
+      display: inline-block
+      border-radius: 100%
+      height: $baseline * 1.25
+      width: $baseline * 1.25
+
+      cursor: pointer
+      line-height: $baseline * 1.25
+      text-align: center
+
+      &:focus,
+      &:hover
+        background: #eee
+
+      &::before
+        content: $fa-var-chevron-down
 
     .create-edition
       position: absolute
@@ -155,89 +193,52 @@ editor-editions-view
         height: $baseline * 1.5
         border-radius: $baseline * 0.75
         padding: 0 $baseline/2
+        margin-left: $baseline / 4
 
         font-family: $ff-sans
         line-height: $baseline * 1.5
 
-  //- Switcher between Editions
-  > nav
-    display: flex
+editor-editions--header--dropdown
+  position: absolute
+  left: 0
+  top: $baseline * 2.5
+  z-index: 1
 
-    overflow: hidden
-
-
-editor-editions--nav-item
-  position: relative
-  margin-right: $baseline / 2
+  display: block
+  width: 300px
 
   background: #fff
-  opacity: 0.7
+  border-radius: $baseline / 4
+  overflow: hidden
 
-  &.is-selected
-    opacity: 1
+  font-size: $fs--1
 
-    border-bottom: 5px solid $c-base
+  //- item
+  > div
+    margin-bottom: $baseline / 4
+    padding: 0 $baseline / 4
 
-  picture
+    cursor: pointer
 
-    img
-      height: $baseline * 4
-      width: 250px
-      object-fit: cover
+    &:focus,
+    &:hover
+      background: #f5f5f5
 
-  h2
+    &:last-of-type
+      margin-bottom: 0
+
+  h3
     font-weight: 600
-    font-family: $ff-sans
-    font-size: $fs--1
-
-    span
-      float: right
 
   p
-    font-size: $fs--2
-
-  .release
-    position: absolute
-    left: $baseline / 4
-    top: $baseline / 4
-
-    border-radius: 100%
-    display: inline-block
-    height: $baseline
-    width: $baseline
-
-    background: $c-base
-    color: #fff
-
-    font-weight: 600
-    font-size: $fs--2
-    text-align: center
-
-  .backlog
-    position: absolute
-    right: $baseline / 4
-    top: $baseline / 4
-
-    border-radius: 100%
-    display: inline-block
-    height: $baseline
-    width: $baseline
-
-    background: #fff
-    color: #000
+    color: #777
 
     font-size: $fs--2
-    text-align: center
+
+
 
 editor-editions--board
-  display: block
-  height: 400px
-  padding: $baseline
-  margin-top: $baseline
 
-  background: #eee
-
-  text-align: center
 
 
 </style>

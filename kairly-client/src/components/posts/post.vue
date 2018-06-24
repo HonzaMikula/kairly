@@ -23,7 +23,9 @@
         {{ post.time | moment('calendar') }}
       </time>
 
-      <backlog-add :post="post" />
+      <slot name="controls">
+        <backlog-add :post="post" />
+      </slot>
     </header>
 
     <slot></slot>

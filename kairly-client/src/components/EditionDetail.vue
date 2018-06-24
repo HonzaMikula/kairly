@@ -52,12 +52,6 @@
       </edition-detail--picture>
     </div>
 
-    <div v-if="isEditor">
-      <a href="#" @click.prevent="confirmDeleteEdition">Delete edition</a>
-    </div>
-
-    <edition-backlog v-if="isEditor" :edition="edition" />
-
     <edition-detail--last-edition v-if="issue">
       <h2><span>Check the Last Issue</span></h2>
 
@@ -116,12 +110,6 @@ export default {
       })
       this.edition.subscription = !this.edition.subscription
       ev.target.blur()
-    },
-
-    confirmDeleteEdition() {
-      if (window.confirm("Are you sure?")) {
-        this.deleteEdition(this.edition)
-      }
     },
 
     ...mapActions(['deleteEdition'])
