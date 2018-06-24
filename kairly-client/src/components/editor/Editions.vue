@@ -66,7 +66,7 @@ export default {
     },
 
     canCreateEdition() {
-      return this.user.id == this.author.id
+      return this.author && this.user.id == this.author.id
     },
 
     ...mapState({
