@@ -9,33 +9,7 @@
       <h1>{{ tab.name }}</h1>
     </header>
 
-    <main>
-
-      <explore--top-editions>
-        <h2>Top Editions</h2>
-
-        <div>
-          <EditionWidget
-            v-for="edition in editions"
-            :key="edition.id"
-            :edition="edition"
-          />
-        </div>
-
-      </explore--top-editions>
-
-      <section :class="`explore-${index}`" v-for="(section, index) in tab.sections" :key="index">
-        <h2>{{ section.name }}</h2>
-
-        <div v-for="authorId in section.authors" :key="authorId">
-          <AuthorWidget
-            v-if="authors[authorId]"
-            :key="authorId"
-            :author="authors[authorId]"
-          />
-        </div>
-      </section>
-    </main>
+    <explore-content :tab="tab" />
   </explore-view>
 </template>
 
@@ -44,65 +18,27 @@ import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 import TABS from './exploreTabs'
 
-import EditionWidget from '@/components/widgets/EditionWidget'
-import AuthorWidget from '@/components/widgets/AuthorWidget'
+import ExploreContent from '@/components/explore/ExploreContent'
+
 
 export default {
   name: 'Explore',
 
   components: {
-    EditionWidget,
-    AuthorWidget
-  },
-
-  computed: {
-    ...mapGetters(['allEditions']),
-
-    editions() {
-      return (this.tab.editions
-        .map(id => (this.allEditions || []).find(e => e.id === id))
-        .filter(edition => edition !== undefined)
-      )
-    }
+    ExploreContent
   },
 
   data() {
     return {
       tabs: TABS,
-      tab: null,
-      authors: {}
     }
   },
 
-  methods: {
-    loadData() {
+  computed: {
+    tab() {
       const slug = this.$route.params.tab
-      this.tab = TABS.find(t => t.slug === slug)
-
-      const authors = []
-      this.tab.sections.forEach(section => authors.push(...section.authors))
-      Promise.all(authors.map(authorId => {
-        const params = authorId.split('/')
-        return api.getAuthorDetail(...authorId.split('/')).then(res => {
-          // save loaded edition to store
-          res.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
-          this.authors = {...this.authors, [authorId]: res.author}
-          return res.author
-        })
-      }))
+      return TABS.find(t => t.slug === slug)
     }
-  },
-
-  watch: {
-    '$route' (to, from) {
-      this.loadData()
-    }
-  },
-
-  created() {
-    // TODO in future replace with loading only used editions
-    this.$store.dispatch('getEditions')
-    this.loadData()
   }
 }
 </script>
@@ -129,10 +65,10 @@ explore-view
       background-image: url(http://kairly.com/media/editions/olymp.jpg)
 
     @at-root .technology > header
-      background-image: url(http://kairly.com/media/editions/bitcoin.jpg)    
+      background-image: url(http://kairly.com/media/editions/bitcoin.jpg)
 
     @at-root .lifestyle > header
-      background-image: url(http://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)   
+      background-image: url(http://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)
 
     nav
       grid-area: nav
