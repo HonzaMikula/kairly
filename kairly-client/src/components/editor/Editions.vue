@@ -45,7 +45,7 @@ import CreateEdition from '@/components/editor/CreateEdition'
 import EditionBacklog from '@/components/editor/EditionBacklog'
 
 export default {
-  name: 'AuthorDetail',
+  name: 'Editions',
   components: {
     EditionWidget,
     CreateEdition,
@@ -65,9 +65,15 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      editions: 'allEditions'
-    }),
+
+    editions() {
+      const ids = this.editionIds
+      return ids.map(id => this.$store.getters.edition(id))
+    },
+
+    canCreateEdition() {
+      return this.author && this.user.id == this.author.id
+    },
 
     ...mapState({
       user: state => state.user
