@@ -1,16 +1,23 @@
 <template>
-  <my-subscription-view>
-    <nav>
-      <router-link :to="{name: 'subscription.editions'}">Editions</router-link>
-      <router-link :to="{name: 'subscription.authors'}">Authors</router-link>
-    </nav>
-    <router-view></router-view>
-  </my-subscription-view>
+  <app-layout>
+    <my-subscription-view>
+      <nav>
+        <router-link :to="{name: 'subscription.editions'}">Editions</router-link>
+        <router-link :to="{name: 'subscription.authors'}">Authors</router-link>
+      </nav>
+      <router-view></router-view>
+    </my-subscription-view>
+  </app-layout>
 </template>
 
 <script>
+import AppLayout from '@/components/layout/AppLayout'
+
 export default {
-  name: 'MySubscription'
+  name: 'MySubscription',
+  components: {
+    AppLayout
+  },
 }
 </script>
 

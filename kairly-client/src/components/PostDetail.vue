@@ -1,71 +1,79 @@
 <template>
-  <post-detail role="article">
-    <loading-spinner v-if="!post"></loading-spinner>
+  <app-layout>
+    <post-detail role="article">
+      <loading-spinner v-if="!post"></loading-spinner>
 
-    <div v-if="post">
-      <post-detail--back-button
-        v-tooltip.right="'Back to Browsing Editions'"
-        v-on:click="$router.go(-1)">
-      </post-detail--back-button>
+      <div v-if="post">
+        <post-detail--back-button
+          v-tooltip.right="'Back to Browsing Editions'"
+          v-on:click="$router.go(-1)">
+        </post-detail--back-button>
 
-      <post-detail--read-later
-        v-tooltip.right="'Read Later'">
-      </post-detail--read-later>
+        <post-detail--read-later
+          v-tooltip.right="'Read Later'">
+        </post-detail--read-later>
 
-      <main>
-        <post-detail--header>
-          <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
-            <img :src="post.author.picture" :alt="post.author.name"/>
-            {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-          </router-link>
-
-          <button-icon class="read-later" v-tooltip.top="'Read Later'"></button-icon>
-        </post-detail--header>
-
-        <post-detail--title>
-          <h1>{{post.content.title}}</h1>
-        </post-detail--title>
-
-        <post-detail--content v-html="post.content.perex"></post-detail--content>
-
-        <post-detail--continue-reading id="continue">
-          continue reading
-        </post-detail--continue-reading>
-
-        <post-detail--content v-html="post.content.content"></post-detail--content>
-
-        <post-detail--footer>
-          <button-icon class="recommend">Recommend</button-icon>
-          <button-icon class="share">Share</button-icon>
-          <button-icon class="consider-for-edition">Consider for Edition</button-icon>
-        </post-detail--footer>
-
-        <post-detail--author>
-          <picture>
+        <main>
+          <post-detail--header>
             <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
               <img :src="post.author.picture" :alt="post.author.name"/>
-            </router-link>
-          </picture>
-
-          <h3>
-            <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
               {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
             </router-link>
-          </h3>
 
-          <p>{{post.author.bio}}</p>
-        </post-detail--author>
-      </main>
-    </div>
-  </post-detail>
+            <button-icon class="read-later" v-tooltip.top="'Read Later'"></button-icon>
+          </post-detail--header>
+
+          <post-detail--title>
+            <h1>{{post.content.title}}</h1>
+          </post-detail--title>
+
+          <post-detail--content v-html="post.content.perex"></post-detail--content>
+
+          <post-detail--continue-reading id="continue">
+            continue reading
+          </post-detail--continue-reading>
+
+          <post-detail--content v-html="post.content.content"></post-detail--content>
+
+          <post-detail--footer>
+            <button-icon class="recommend">Recommend</button-icon>
+            <button-icon class="share">Share</button-icon>
+            <button-icon class="consider-for-edition">Consider for Edition</button-icon>
+          </post-detail--footer>
+
+          <post-detail--author>
+            <picture>
+              <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
+                <img :src="post.author.picture" :alt="post.author.name"/>
+              </router-link>
+            </picture>
+
+            <h3>
+              <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
+                {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+              </router-link>
+            </h3>
+
+            <p>{{post.author.bio}}</p>
+          </post-detail--author>
+        </main>
+      </div>
+    </post-detail>
+  </app-layout>
 </template>
 
 <script>
 import request from 'superagent'
 import * as api from '@/api'
 
+import AppLayout from '@/components/layout/AppLayout'
+
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
+
+  components: {
+    AppLayout
+  },
 
   data() {
     return {

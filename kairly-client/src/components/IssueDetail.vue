@@ -1,15 +1,18 @@
 <template>
-  <issue-detail-view>
-    <div v-if="!loading">
-      <Issue :issue="issue" :subscription="edition.subscription" />
-    </div>
-  </issue-detail-view>
+  <app-layout>
+    <issue-detail-view>
+      <div v-if="!loading">
+        <Issue :issue="issue" :subscription="edition.subscription" />
+      </div>
+    </issue-detail-view>
+  </app-layout>
 </template>
 
 
 <script>
 import * as api from '@/api'
 
+import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 
 
@@ -17,6 +20,7 @@ export default {
   name: 'EditionDetail',
 
   components: {
+    AppLayout,
     Issue
   },
 

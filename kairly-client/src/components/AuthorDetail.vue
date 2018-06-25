@@ -1,81 +1,83 @@
 <template>
-  <author-detail-view
-    v-infinite-scroll="loadMore"
-    infinite-scroll-disabled="loadingPosts"
-    infinite-scroll-distance="100"
-  >
-    <loading-spinner v-if="loadingProfile"></loading-spinner>
+  <app-layout>
+    <author-detail-view
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="loadingPosts"
+      infinite-scroll-distance="100"
+    >
+      <loading-spinner v-if="loadingProfile"></loading-spinner>
 
-    <div v-else>
-      <author-detail--header>
-        <picture>
-          <img :src="author.picture" :alt="author.name"/>
-        </picture>
-        <h1>{{ author.name }}</h1>
-        <p>{{ author.bio }}</p>
-        <p>
-          <span v-for="topic in topics" :key="topic.url">
-            <router-link :to="topic.url">{{ topic.name}}</router-link>
-          </span>
-        </p>
-      </author-detail--header>
+      <div v-else>
+        <author-detail--header>
+          <picture>
+            <img :src="author.picture" :alt="author.name"/>
+          </picture>
+          <h1>{{ author.name }}</h1>
+          <p>{{ author.bio }}</p>
+          <p>
+            <span v-for="topic in topics" :key="topic.url">
+              <router-link :to="topic.url">{{ topic.name}}</router-link>
+            </span>
+          </p>
+        </author-detail--header>
 
-      <author-detail--subscribe>
-        <button
-          v-if="author.subscription"
-          class="is-subscribed"
-          @click="unfollow($event)">
-          Unsubscribe author
-        </button>
+        <author-detail--subscribe>
+          <button
+            v-if="author.subscription"
+            class="is-subscribed"
+            @click="unfollow($event)">
+            Unsubscribe author
+          </button>
 
-        <button
-          v-else
-          @click="$refs.followWidget.openSubscribeWidget()">
-          Subscribe author
-        </button>
+          <button
+            v-else
+            @click="$refs.followWidget.openSubscribeWidget()">
+            Subscribe author
+          </button>
 
-        <follow-author
-          ref="followWidget"
-          :author="author"
-          :onSelect="follow" />
+          <follow-author
+            ref="followWidget"
+            :author="author"
+            :onSelect="follow" />
 
-        <AuthorSubscription if="author.subscription"
-          :author="author"
-        />
-
-      </author-detail--subscribe>
-
-      <author-detail--editions v-if="editions.length">
-        <h2>{{ author.name }}'s Editions</h2>
-
-        <div>
-          <EditionWidget
-            v-for="edition in editions"
-            :key="edition.id"
-            v-bind:edition="edition"
+          <AuthorSubscription if="author.subscription"
+            :author="author"
           />
-        </div>
 
-        <button v-if="editionIds.length > 3" v-on:click="toggleEditions()">{{ !showAllEditions ? 'Show all editions' : 'Hide editions' }}</button>
+        </author-detail--subscribe>
 
-      </author-detail--editions>
+        <author-detail--editions v-if="editions.length">
+          <h2>{{ author.name }}'s Editions</h2>
+
+          <div>
+            <EditionWidget
+              v-for="edition in editions"
+              :key="edition.id"
+              v-bind:edition="edition"
+            />
+          </div>
+
+          <button v-if="editionIds.length > 3" v-on:click="toggleEditions()">{{ !showAllEditions ? 'Show all editions' : 'Hide editions' }}</button>
+
+        </author-detail--editions>
 
 
-      <author-detail--posts v-if="posts.length">
-        <h2>{{ author.name }}'s Posts</h2>
+        <author-detail--posts v-if="posts.length">
+          <h2>{{ author.name }}'s Posts</h2>
 
-        <PostWrapper
-          v-for="post in posts"
-          :post="post"
-          :isSubscribed="true"
-          :key="post.id"
-        />
-      </author-detail--posts>
+          <PostWrapper
+            v-for="post in posts"
+            :post="post"
+            :isSubscribed="true"
+            :key="post.id"
+          />
+        </author-detail--posts>
 
-      <loading-spinner v-if="loadingPosts"></loading-spinner>
-    </div>
+        <loading-spinner v-if="loadingPosts"></loading-spinner>
+      </div>
 
-  </author-detail-view>
+    </author-detail-view>
+  </app-layout>
 </template>
 
 
@@ -84,6 +86,7 @@ import { mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
+import AppLayout from '@/components/layout/AppLayout'
 import EditionWidget from '@/components/widgets/EditionWidget'
 import PostWrapper from '@/components/PostWrapper'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
@@ -92,6 +95,7 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 export default {
   name: 'AuthorDetail',
   components: {
+    AppLayout,
     EditionWidget,
     PostWrapper,
     FollowAuthor,

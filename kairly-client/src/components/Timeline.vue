@@ -1,24 +1,27 @@
 <template>
-  <timeline-view v-infinite-scroll="loadMore"
-    infinite-scroll-disabled="loadDisabled"
-    infinite-scroll-distance="100"
-    v-keep-scroll
-  >
-    <Welcome v-if="!loading && issues.length === 0"/>
+  <app-layout>
+    <timeline-view v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="loadDisabled"
+      infinite-scroll-distance="100"
+      v-keep-scroll
+    >
+      <Welcome v-if="!loading && issues.length === 0"/>
 
-    <IssueWrapper v-for="issue in issues"
-      :key="issue.id"
-      :issue="issue"
-      :subscription="true"
-      :expanded="expandedIssues[issue.id]" />
+      <IssueWrapper v-for="issue in issues"
+        :key="issue.id"
+        :issue="issue"
+        :subscription="true"
+        :expanded="expandedIssues[issue.id]" />
 
-    <loading-spinner v-if="loading"></loading-spinner>
-  </timeline-view>
+      <loading-spinner v-if="loading"></loading-spinner>
+    </timeline-view>
+  </app-layout>
 </template>
 
 <script>
 import * as api from '@/api'
 import { mapState } from 'vuex'
+import AppLayout from '@/components/layout/AppLayout'
 
 import IssueWrapper from '@/components/IssueWrapper'
 import Welcome from '@/components/Welcome'
@@ -29,6 +32,7 @@ export default {
   components: {
     IssueWrapper,
     Welcome,
+    AppLayout
   },
 
   computed: {

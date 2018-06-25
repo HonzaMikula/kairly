@@ -1,41 +1,43 @@
 <template>
-  <editor-editions-view>
-    <editor-editions--header>
-      <h1>{{ selectedEdition.title }}</h1>
+  <app-layout>
+    <editor-editions-view>
+      <editor-editions--header>
+        <h1>{{ selectedEdition.title }}</h1>
 
-      <button-icon role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
+        <button-icon role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
 
-      <editor-editions--header--dropdown
-        v-if="isSelectEditionOpen"
-        v-on-clickaway="() => isSelectEditionOpen = false">
-        <div
-          v-for="edition in editions"
-          :key="edition.id"
-          :class="{'is-selected': selectedEdition && selectedEdition.id == edition.id}"
-          @click="selectEdition(edition)">
-          <h3>{{ edition.title }}</h3>
-          <p>
-            <strong>#{{ edition.issues + 1 }}</strong> is realising in
-            <strong>4 hours</strong> with
-            <strong>3 posts</strong>.
-          </p>
+        <editor-editions--header--dropdown
+          v-if="isSelectEditionOpen"
+          v-on-clickaway="() => isSelectEditionOpen = false">
+          <div
+            v-for="edition in editions"
+            :key="edition.id"
+            :class="{'is-selected': selectedEdition && selectedEdition.id == edition.id}"
+            @click="selectEdition(edition)">
+            <h3>{{ edition.title }}</h3>
+            <p>
+              <strong>#{{ edition.issues + 1 }}</strong> is realising in
+              <strong>4 hours</strong> with
+              <strong>3 posts</strong>.
+            </p>
+          </div>
+        </editor-editions--header--dropdown>
+
+        <div class="create-edition">
+          <a href="" @click.prevent="confirmDeleteEdition">Delete edition</a>
+          <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
         </div>
-      </editor-editions--header--dropdown>
+      </editor-editions--header>
 
-      <div class="create-edition">
-        <a href="" @click.prevent="confirmDeleteEdition">Delete edition</a>
-        <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
-      </div>
-    </editor-editions--header>
+      <editor-editions--board>
+        <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
+      </editor-editions--board>
 
-    <editor-editions--board>
-      <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
-    </editor-editions--board>
-
-    <portal to="modal" v-if="isCreateEditionOpen">
-      <create-edition :onClose="closeModal"></create-edition>
-    </portal>
-  </editor-editions-view>
+      <portal to="modal" v-if="isCreateEditionOpen">
+        <create-edition :onClose="closeModal"></create-edition>
+      </portal>
+    </editor-editions-view>
+  </app-layout>
 </template>
 
 
@@ -45,6 +47,7 @@ import { mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
+import AppLayout from '@/components/layout/AppLayout'
 import EditionWidget from '@/components/widgets/EditionWidget'
 import CreateEdition from '@/components/editor/CreateEdition'
 import EditionBacklog from '@/components/editor/EditionBacklog'
@@ -52,6 +55,7 @@ import EditionBacklog from '@/components/editor/EditionBacklog'
 export default {
   name: 'Editions',
   components: {
+    AppLayout,
     EditionWidget,
     CreateEdition,
     EditionBacklog

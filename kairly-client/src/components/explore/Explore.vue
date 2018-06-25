@@ -1,17 +1,19 @@
 <template>
-  <explore-view :class="tab.slug">
-    <header>
-      <nav>
-        <ul>
-          <li v-for="tab in tabs" :key="tab.slug"><router-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</router-link></li>
-        </ul>
-      </nav>
-      <h1>{{ tab.name }}</h1>
-    </header>
+  <app-layout>
+    <explore-view :class="tab.slug">
+      <header>
+        <nav>
+          <ul>
+            <li v-for="tab in tabs" :key="tab.slug"><router-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</router-link></li>
+          </ul>
+        </nav>
+        <h1>{{ tab.name }}</h1>
+      </header>
 
-    <explore-recent v-if="tab.slug === 'recent'" />
-    <explore-content v-else :tab="tab" />
-  </explore-view>
+      <explore-recent v-if="tab.slug === 'recent'" />
+      <explore-content v-else :tab="tab" />
+    </explore-view>
+  </app-layout>
 </template>
 
 <script>
@@ -19,6 +21,7 @@ import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 import TABS from './exploreTabs'
 
+import AppLayout from '@/components/layout/AppLayout'
 import ExploreContent from '@/components/explore/ExploreContent'
 import ExploreRecent from '@/components/explore/ExploreRecent'
 
@@ -27,6 +30,7 @@ export default {
   name: 'Explore',
 
   components: {
+    AppLayout,
     ExploreContent,
     ExploreRecent
   },

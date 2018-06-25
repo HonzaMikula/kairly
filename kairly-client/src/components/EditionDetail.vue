@@ -1,63 +1,65 @@
 <template>
-  <edition-detail-view>
+  <app-layout>
+    <edition-detail-view>
 
-    <div v-if="!loading">
-      <edition-detail--header>
-        <h1>{{ edition.title }}</h1>
+      <div v-if="!loading">
+        <edition-detail--header>
+          <h1>{{ edition.title }}</h1>
 
-        <router-link :to="{name: 'author', params: {authorId: edition.editor.id}}">
-          <img :src="edition.editor.picture" :alt="edition.editor.name"/>
-          {{ edition.editor.name }}
-        </router-link>
-      </edition-detail--header>
+          <router-link :to="{name: 'author', params: {authorId: edition.editor.id}}">
+            <img :src="edition.editor.picture" :alt="edition.editor.name"/>
+            {{ edition.editor.name }}
+          </router-link>
+        </edition-detail--header>
 
-      <edition-detail--description>
-        <p>
-          {{ edition.description }}
-        </p>
-
-        <div>
-          <div>
-            <h3>Periodicity</h3>
-            <p>
-              {{ edition.periodicity.frequency }}
-              {{ edition.periodicity.time }}
-              {{ edition.periodicity.dow }}
-            </p>
-          </div>
+        <edition-detail--description>
+          <p>
+            {{ edition.description }}
+          </p>
 
           <div>
-            <h3>Issues</h3>
-            <p>{{ edition.issues }}</p>
+            <div>
+              <h3>Periodicity</h3>
+              <p>
+                {{ edition.periodicity.frequency }}
+                {{ edition.periodicity.time }}
+                {{ edition.periodicity.dow }}
+              </p>
+            </div>
+
+            <div>
+              <h3>Issues</h3>
+              <p>{{ edition.issues }}</p>
+            </div>
+
+            <div>
+              <h3>Subscribers</h3>
+              <p>{{ edition.likes }}</p>
+            </div>
           </div>
+        </edition-detail--description>
 
-          <div>
-            <h3>Subscribers</h3>
-            <p>{{ edition.likes }}</p>
-          </div>
-        </div>
-      </edition-detail--description>
+        <edition-detail--subscribe>
+          <button
+            v-bind:class="{ 'is-subscribed': edition.subscription }"
+            v-on:click="subscribe($event)"
+          >{{ edition.subscription ? 'Subscribed' : 'Subscribe Edition'}}</button>
 
-      <edition-detail--subscribe>
-        <button
-          v-bind:class="{ 'is-subscribed': edition.subscription }"
-          v-on:click="subscribe($event)"
-        >{{ edition.subscription ? 'Subscribed' : 'Subscribe Edition'}}</button>
+          <p>10 CZK per month</p>
+        </edition-detail--subscribe>
 
-        <p>10 CZK per month</p>
-      </edition-detail--subscribe>
+        <edition-detail--picture>
+          <img :src="edition.picture" :alt="edition.title"/>
+        </edition-detail--picture>
+      </div>
 
-      <edition-detail--picture>
-        <img :src="edition.picture" :alt="edition.title"/>
-      </edition-detail--picture>
-    </div>
+      <edition-detail--last-edition v-if="issue">
+        <h2><span>Check the Last Issue</span></h2>
 
-    <edition-detail--last-edition v-if="issue">
-      <h2><span>Check the Last Issue</span></h2>
-
-      <Issue :issue="issue" :subscription="edition.subscription" />
-    </edition-detail--last-edition>
-  </edition-detail-view>
+        <Issue :issue="issue" :subscription="edition.subscription" />
+      </edition-detail--last-edition>
+    </edition-detail-view>
+  </app-layout>
 </template>
 
 
@@ -66,15 +68,15 @@ import { mapActions, mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
+import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 import EditionBacklog from '@/components/editor/EditionBacklog'
-
-
 
 export default {
   name: 'EditionDetail',
 
   components: {
+    AppLayout,
     Issue,
     EditionBacklog
   },
