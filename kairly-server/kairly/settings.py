@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'users.middleware.JwtAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.UserTimeZoneMiddleware',
 ]
 
 ROOT_URLCONF = 'kairly.urls'

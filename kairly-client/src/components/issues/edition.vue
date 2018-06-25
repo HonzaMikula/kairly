@@ -7,9 +7,9 @@
 
       <p>
         <timeline-edition--editor>
-          <router-link :to="{name: 'author', params: {authorId: issue.author.id}}">
-            <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
-            {{issue.author.name}}
+          <router-link :to="{name: 'author', params: {authorId: issue.edition.editor.id}}">
+            <img v-if="issue.edition.editor.picture" :src="issue.edition.editor.picture" :alt="issue.edition.editor.name" />
+            {{ issue.edition.editor.name }}
           </router-link>
         </timeline-edition--editor>
         •

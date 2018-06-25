@@ -74,6 +74,29 @@ def user_editions(request):
 
 
 @ajax_login_required
+def recent_issues(request):
+    issues = list(EditionIssue.objects.all().order_by('-published')[:3])
+    edition_ids = [issue.edition_id for issue in issues]
+    editions = {
+        edition.id: edition for edition in
+        annotate_editions(request, Edition.objects.filter(id__in=edition_ids))
+    }
+
+    resp = []
+    for issue in issues:
+        issue.edition = editions[issue.edition_id]
+        resp.append(issue.to_json(posts=False, tzinfo=request.tzinfo)),
+
+    return JsonResponse(resp, safe=False)
+
+
+@ajax_login_required
+def recent_posts(request):
+    posts = Post.objects.all().select_related('author').order_by('-published')[:12]
+    return JsonResponse([post.to_json(tzinfo=request.tzinfo) for post in posts], safe=False)
+
+
+@ajax_login_required
 def user_authors(request):
     subscriptions = SubscriptionToAuthor.objects.filter(user=request.user) \
         .select_related('author').order_by('author__name')

@@ -9,7 +9,8 @@
       <h1>{{ tab.name }}</h1>
     </header>
 
-    <explore-content :tab="tab" />
+    <explore-recent v-if="tab.slug === 'recent'" />
+    <explore-content v-else :tab="tab" />
   </explore-view>
 </template>
 
@@ -19,13 +20,15 @@ import { mapState, mapGetters } from 'vuex'
 import TABS from './exploreTabs'
 
 import ExploreContent from '@/components/explore/ExploreContent'
+import ExploreRecent from '@/components/explore/ExploreRecent'
 
 
 export default {
   name: 'Explore',
 
   components: {
-    ExploreContent
+    ExploreContent,
+    ExploreRecent
   },
 
   data() {
@@ -121,6 +124,9 @@ explore-view
     grid-template-rows: auto auto
     grid-template-areas: "explore-top-editions explore-top-editions" "explore-0 explore-1" "explore-2 explore-3"
 
+  @at-root .recent > main
+    grid-template-areas: "explore-top-editions explore-top-editions" "explore-recent explore-recent"
+
 explore--top-editions
   grid-area: explore-top-editions
 
@@ -153,6 +159,9 @@ section
 
   &.explore-3
     grid-area: explore-3
+
+  &.explore-recent
+    grid-area: explore-recent
 
 
 

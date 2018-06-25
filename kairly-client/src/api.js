@@ -76,6 +76,22 @@ export const getEditionDetail = (editionId, issueId=null) => {
     .then(res => res.body)
 }
 
+export const getRecentIssues = () => {
+  if (!token) return Promise.reject();
+  let url = API_URI + '/recent/issues'
+  return agent
+    .get(url)
+    .then(res => res.body)
+}
+
+export const getRecentPosts = () => {
+  if (!token) return Promise.reject();
+  let url = API_URI + '/recent/posts'
+  return agent
+    .get(url)
+    .then(res => res.body)
+}
+
 export const getAuthorDetail = (authorId) => {
   if (!token) return Promise.reject()
   let req = agent.get(API_URI + '/authors/' + authorId)

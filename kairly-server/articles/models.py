@@ -176,19 +176,7 @@ class EditionIssue(models.Model):
         result = {
             "number": self.number,
             "type": 'edition',
-            "edition": {
-                "id": "{}/{}".format(edition.editor.username, edition.slug),
-                "title": edition.title,
-                "periodicity": {
-                    'frequency': edition.period,
-                    'time': edition.period_time,
-                    'dow': edition.period_dow,
-                },
-                "picture": settings.MEDIA_SITE + edition.image.url,
-                "description": edition.description,
-            },
-            "time": str(self.published.astimezone(tzinfo)),
-            "author": self.editor.to_json(),
+            "edition": edition.to_json(),
         }
         if posts:
             result["posts"] = [

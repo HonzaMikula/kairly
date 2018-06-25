@@ -1,3 +1,4 @@
+from datetime import timedelta, timezone
 import jwt
 from jwt.exceptions import DecodeError
 
@@ -16,6 +17,15 @@ def JwtAuthenticationMiddleware(get_response):
             except (User.DoesNotExist, DecodeError) as e:
                 print(e)
                 pass
+        return get_response(request)
+
+    return middleware
+
+
+def UserTimeZoneMiddleware(get_response):
+    def middleware(request):
+        timezone_offset = int(request.META.get('HTTP_X_TIMEZONE', 0))
+        request.tzinfo = timezone(timedelta(minutes=-timezone_offset))
         return get_response(request)
 
     return middleware

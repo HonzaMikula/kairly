@@ -7,6 +7,8 @@ urlpatterns = [
     path('timeline', timeline.timeline, name='timeline'),
 
     path('user/editions', views.user_editions, name='user_editions'),
+    path('recent/issues', views.recent_issues, name='recent_issues'),
+    path('recent/posts', views.recent_posts, name='recent_posts'),
     path('editions/<username>/<slug:edition_slug>', views.edition, name='edition'),
     path('editions/<username>/<slug:edition_slug>/subscribe', views.subscribe, name='subscribe'),
     path('editions/<username>/<slug:edition_slug>/unsubscribe', views.unsubscribe, name='unsubscribe'),

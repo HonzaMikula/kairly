@@ -178,5 +178,9 @@ export default [
           ]
         }
       ]
+    },
+    {
+      name: 'Most Recent',
+      slug: 'recent',
     }
 ]
