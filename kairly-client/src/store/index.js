@@ -6,11 +6,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: null,
+    profile: {
+      user: null,
+      subscribedEditions: [] // ids
+    },
     backlog: {},
     managedEditions: [],
     editions: {},
-    allEditionsLoaded: false,
     timeline: {
       issues: null, //null - not loaded, [] - loaded but empty
       cursor: null,
@@ -21,7 +23,7 @@ export default new Vuex.Store({
 
   mutations: {
     user(state, user) {
-      state.user = user
+      state.profile.user = user
     },
     backlog(state, backlog) {
       state.backlog = backlog
@@ -46,6 +48,9 @@ export default new Vuex.Store({
       }
       state.backlog = backlog
     },
+    subscribedEditions(state, editionIds) {
+      state.profile.subscribedEditions = editionIds
+    },
     managedEditions(state, editions) {
       state.managedEditions = editions
     },
@@ -57,12 +62,6 @@ export default new Vuex.Store({
       if (idx !== -1) {
         state.managedEditions.splice(idx, 1)
       }
-    },
-    allEditions(state, editions) {
-      editions.forEach(edition => {
-        state.editions[edition.id] = edition
-      })
-      state.allEditionsLoaded = true
     },
     edition(state, edition) {
       state.editions = {...state.editions, [edition.id]: edition}
@@ -93,8 +92,9 @@ export default new Vuex.Store({
   },
 
   getters: {
-    loadingUser: state => state.user === null, // Unauthorized -> user === false
-    allEditions: state => state.allEditionsLoaded ? Object.values(state.editions) : null,
+    user: state => state.profile.user,
+    loadingUser: state => state.profile.user === null, // Unauthorized -> user === false
+    subscribedEditions: state => state.profile.subscribedEditions.map(id => state.editions[id]),
     edition: state => id => state.editions[id]
   },
 

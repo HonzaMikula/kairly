@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import store from '@/store'
 
 import TutorialModal from '@/components/modals/Tutorial'
@@ -57,12 +57,7 @@ export default {
     TutorialModal
   },
 
-  computed: {
-    ...mapState({
-      user: state => state.user
-    }),
-    ...mapGetters(['loadingUser'])
-  },
+  computed: mapGetters(['user', 'loadingUser']),
 
   methods: {
     ...mapActions(['login', 'logout']),

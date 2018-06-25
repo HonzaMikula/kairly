@@ -28,10 +28,9 @@ export default {
 
   computed: {
     ...mapState({
-      user: state => state.user,
       showTutorial: state => state.showTutorial
     }),
-    ...mapGetters(['loadingUser'])
+    ...mapGetters(['user', 'loadingUser'])
   },
 
   created: function () {

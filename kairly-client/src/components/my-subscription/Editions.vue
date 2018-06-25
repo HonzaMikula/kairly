@@ -23,12 +23,12 @@ export default {
 
   computed: {
     ...mapGetters({
-      editions: 'allEditions'
+      editions: 'subscribedEditions'
     })
   },
 
   created() {
-    this.$store.dispatch('getEditions')
+    this.$store.dispatch('getUserEditions')
   }
 }
 </script>

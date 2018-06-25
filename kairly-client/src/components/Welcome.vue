@@ -10,11 +10,11 @@
             <img src="https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY_400x400.jpeg" alt="Jan Mikula" />
           </a>
         </picture>
-      
+
         <h3>
           <a href="author/janmikula">
             Jan Mikula, Kairly
-          </a>  
+          </a>
         </h3>
 
         <time>
@@ -35,7 +35,7 @@
           přesné důvody, proč chce hnutí ANO oddělovat důchodový účet od státního rozpočtu, a máme spor například v oblasti zálohového výživného, což pokládáme za zásadní věc," jmenoval programové neshody s ANO Hamáček.
 
           Dořešit se zástupci Babišova hnutí bude muset i zvyšování rodičovských příspěvků nebo přídavků na děti.
-        </timeline-post--newspaper--content>  
+        </timeline-post--newspaper--content>
       </timeline-post--newspaper>
     </post-component>
 
@@ -46,11 +46,11 @@
             <img src="https://pbs.twimg.com/profile_images/2334147233/ms3jmf3780crdrujahcm_400x400.jpeg" alt="Jan Mikula" />
           </a>
         </picture>
-      
+
         <h3>
           <a href="author/janmikula">
             Roman Krejčík, Kairly
-          </a>  
+          </a>
         </h3>
 
         <time>
@@ -62,11 +62,11 @@
           Co na Kairly chystáme v nejbližší době?<br />
           - Každý se bude moci stát editorem a sestavovat vlastní edice.<br />
           - Když sledujete autora, budete si moci nastavit, jak často a kdy budete dostávat souhrn autorových příspěvků.
-        </p> 
+        </p>
       </timeline-post--tweet>
     </post-component>
 
-    <timeline-welcome--my-editions>
+    <!--timeline-welcome--my-editions>
       <h2>Interesting Edition to Follow</h2>
       <div>
         <EditionWidget
@@ -75,14 +75,14 @@
           v-bind:edition="edition"
         />
       </div>
-    </timeline-welcome--my-editions>
-    
+    </timeline-welcome--my-editions-->
+
 
     <timeline-welcome--more-editions>
-      <router-link to='/my-editions'>View more editions</router-link>
-      <br />
+      <!--router-link to="/explore">Show me editions</router-link>
+      <br /-->
       <!-- TODO remove reload hack, instead trigger timeline load -->
-      <button v-on:click="$router.go({ name: '/' })">Show me editions</button>
+      <button v-on:click="$router.push({ path: '/explore' })">Show me editions</button>
     </timeline-welcome--more-editions>
   </timeline-welcome>
 </template>
@@ -91,26 +91,8 @@
 import * as api from '@/api'
 import { mapGetters } from 'vuex'
 
-import EditionWidget from '@/components/widgets/EditionWidget'
-
 export default {
   name: 'Welcome',
-
-  components: {
-    EditionWidget
-  },
-
-  computed: {
-    ...mapGetters(['allEditions']),
-
-    editions() {
-      return (this.allEditions || []).slice(0, 3)
-    }
-  },
-
-  created() {
-    this.$store.dispatch('getEditions')
-  }
 }
 </script>
 
@@ -119,9 +101,9 @@ export default {
 timeline-welcome
   display: block
   margin-bottom: $baseline
-  
+
   font-family: $ff-serif
-  
+
 
   > h1
     margin-bottom: $baseline / 2
@@ -130,13 +112,13 @@ timeline-welcome
     text-align: center
 
   > p
-    margin-bottom: $baseline  
+    margin-bottom: $baseline
     text-align: center
-  
+
 timeline-welcome--my-editions
 
   > h2
-    margin-top: $baseline 
+    margin-top: $baseline
 
     font-weight: 600
     font-size: $fs-1
@@ -177,7 +159,7 @@ timeline-welcome--more-editions
     background: $c-base
     border: 0
     color: #fff
- 
+
     font-family: $ff-sans
     font-size: $fs--1
     cursor: pointer

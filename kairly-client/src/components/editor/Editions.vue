@@ -41,7 +41,7 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
@@ -85,9 +85,7 @@ export default {
       return this.author && this.user.id == this.author.id
     },
 
-    ...mapState({
-      user: state => state.user
-    }),
+    ...mapGetters(['user'])
   },
 
   watch: {
@@ -137,7 +135,6 @@ export default {
 
   created() {
     this.loadData()
-    this.$store.dispatch('getEditions')
   },
 }
 </script>

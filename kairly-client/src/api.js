@@ -51,17 +51,17 @@ export const getTimeline = (cursor) => {
     .then(res => res.body)
 }
 
-export const getEditions = () => {
+export const getUserEditions = () => {
   if (!token) return Promise.reject();
   return agent
-    .get(API_URI + '/editions')
+    .get(API_URI + '/user/editions')
     .then(res => res.body)
 }
 
-export const getAuthors = () => {
+export const getUserAuthors = () => {
   if (!token) return Promise.reject();
   return agent
-    .get(API_URI + '/authors')
+    .get(API_URI + '/user/authors')
     .then(res => res.body)
 }
 

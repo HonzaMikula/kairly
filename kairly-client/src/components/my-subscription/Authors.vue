@@ -28,7 +28,7 @@ export default {
   },
 
   created() {
-    api.getAuthors().then(resp => {
+    api.getUserAuthors().then(resp => {
       this.authors = resp
     })
   }

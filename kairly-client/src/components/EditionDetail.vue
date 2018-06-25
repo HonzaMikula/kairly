@@ -62,7 +62,7 @@
 
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
@@ -97,9 +97,7 @@ export default {
       }
     },
 
-    ...mapState({
-      user: state => state.user
-    }),
+    ...mapGetters(['user'])
   },
 
   methods: {

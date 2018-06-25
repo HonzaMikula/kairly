@@ -53,13 +53,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['allEditions']),
-
     editions() {
-      return (this.tab.editions
-        .map(id => (this.allEditions || []).find(e => e.id === id))
+      return this.tab.editions
+        .map(id => this.$store.getters.edition(id))
         .filter(edition => edition !== undefined)
-      )
     }
   },
 
@@ -87,7 +84,7 @@ export default {
 
   created() {
     // TODO in future replace with loading only used editions
-    this.$store.dispatch('getEditions')
+    this.$store.dispatch('getEditions', this.tab.editions)
     this.loadData()
   }
 }

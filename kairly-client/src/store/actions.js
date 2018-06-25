@@ -25,17 +25,27 @@ export const logout = ({ commit }) => {
   commit('user', false)
   commit('backlog', {})
   commit('managedEditions', [])
+  // fot now rather reload page to clear cache in store
+  window.location.reload()
 }
 
-export const getEditions = ({ commit, state }) => {
-  if (!state.allEditionsLoaded) {
-    api
-      .getEditions()
-      .then(
-        editions => commit('allEditions', editions),
-        () => commit('allEditions', null)
-      )
-  }
+export const getUserEditions = ({ commit, state }) => {
+  api
+    .getUserEditions()
+    .then(
+      editions => {
+        editions.forEach(edition => commit('edition', edition))
+        commit('subscribedEditions', editions.map(e => e.id))
+      }
+    )
+}
+
+export const getEditions = ({ commit, state }, editionIds) => {
+  editionIds.forEach(id => {
+    if (!(id in state.editions)) {
+      api.getEditionDetail(id).then(resp => commit('edition', resp.edition))
+    }
+  })
 }
 
 export const subscribe = ({ commit }, { edition, value}) => {

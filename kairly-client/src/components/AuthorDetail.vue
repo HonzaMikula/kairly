@@ -80,7 +80,7 @@
 
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
@@ -117,9 +117,7 @@ export default {
       return ids.map(id => this.$store.getters.edition(id))
     },
 
-    ...mapState({
-      user: state => state.user
-    }),
+    ...mapGetters(['user'])
   },
 
   watch: {
