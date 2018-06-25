@@ -2,17 +2,25 @@ import jwt
 import json
 import time
 from collections import defaultdict
+import urllib.request
+import urllib.error
 
-# from libgravatar import Gravatar
+from libgravatar import Gravatar
 
+from django.db.utils import IntegrityError
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from articles.models import Edition, EditionBacklog
+from .models import User
 
 
 @require_POST
@@ -59,3 +67,44 @@ def profile(request):
         "editions": editions,
         "backlog": backlog
     })
+
+
+# TODO enable CSRF protection
+@require_POST
+def signup(request):
+    payload = json.loads(request.body.decode('utf-8'))
+
+    username = payload['username']
+    email = payload['email']
+    password = payload['password']
+
+    try:
+        User.username_validator(username)
+        EmailValidator()(email)
+        validate_password(password)
+    except ValidationError as e:
+        return JsonResponse({'error': ' '.join(e.messages)}, status=400)
+
+    g = Gravatar(email)
+    picture = g.get_image(use_ssl=True, default='404')
+    try:
+        urllib.request.urlopen(picture)
+    except urllib.error.HTTPError:
+        picture = ''
+
+    try:
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            picture=picture,
+            medium='',
+            bio='',
+            timezone=str(request.tzinfo)
+        )
+    except IntegrityError as e:
+        name = get_column_if_duplicate(e)
+        if name == 'username':
+            return JsonResponse({'error': 'Username is already taken.'}, status=400)
+        raise
+    return JsonResponse(user.to_json())

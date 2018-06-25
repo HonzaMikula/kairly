@@ -1,6 +1,6 @@
-from datetime import timedelta, timezone
 import jwt
 from jwt.exceptions import DecodeError
+from pytz import timezone, UnknownTimeZoneError
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -24,8 +24,12 @@ def JwtAuthenticationMiddleware(get_response):
 
 def UserTimeZoneMiddleware(get_response):
     def middleware(request):
-        timezone_offset = int(request.META.get('HTTP_X_TIMEZONE', 0))
-        request.tzinfo = timezone(timedelta(minutes=-timezone_offset))
+        name = request.META.get('HTTP_X_TIMEZONE', '')
+        try:
+            tzinfo = timezone(name)
+        except UnknownTimeZoneError:
+            tzinfo = timezone('GMT')
+        request.tzinfo = tzinfo
         return get_response(request)
 
     return middleware

@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 import re
 
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 
@@ -16,6 +17,27 @@ class KairlyUsernameValidator(validators.RegexValidator):
         'and cannot begin or end with a hyphen'
     )
     flags = re.ASCII
+
+    min_length = 3
+    reserved_names = [
+        'login', 'logout', 'signin', 'signout',
+        'signup', 'register', 'join', 'invite'
+        'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help',
+        'site', 'page', 'app',
+        'sites', 'pages', 'apps',
+        'author', 'edition', 'profile', 'issue',
+        'authors', 'editions', 'profiles', 'issues',
+        'explore', 'dashboard', 'recent',
+        'subscription', 'subscriptions',
+        'join-and-read-with-kairly',
+    ]
+
+    def __call__(self, value):
+        if len(value) < self.min_length:
+            raise ValidationError('Min length is {}'.format(self.min_length))
+        if value in self.reserved_names:
+            raise ValidationError('Username {} is reserved'.format(self.value))
+        return super().__call__(value)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -75,12 +97,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.name
 
     def to_json(self, topic=None):
+        id = self.username
+        name = self.name or self.username
         if topic:
-            id = '{}|{}'.format(self.username, topic.slug)
-            name = '{} | {}'.format(self.name, topic.name)
-        else:
-            id = self.username
-            name = self.name
+            id = '{}|{}'.format(id, topic.slug)
+            name = '{} | {}'.format(name, topic.name)
 
         res = {
             'id': id,

@@ -7,12 +7,12 @@ let agent = createAgent(token)
 
 
 function createAgent(token) {
-  if (!token) {
-    return null
+  let agent = request.agent()
+    .set('X-Timezone', Intl.DateTimeFormat().resolvedOptions().timeZone)
+  if (token) {
+    agent = agent.set('Authorization', 'Bearer ' + token)
   }
-  return request.agent()
-    .set('Authorization', 'Bearer ' + token)
-    .set('X-Timezone', new Date().getTimezoneOffset())
+  return agent
 }
 
 export const clearToken = () => {
@@ -175,4 +175,10 @@ export const deleteFromBacklog = (editionId, postId) => {
   return agent
     .delete(API_URI + '/editions/' + editionId + '/backlog')
     .send({post: postId})
+}
+
+export const signUp = user => {
+  return agent
+    .post(API_URI + '/signup')
+    .send(user)
 }

@@ -30,7 +30,7 @@ export const logout = ({ commit }) => {
   window.location.reload()
 }
 
-export const getUserEditions = ({ commit, state }) => {
+export const getUserEditions = ({ commit }) => {
   api
     .getUserEditions()
     .then(

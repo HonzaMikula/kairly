@@ -11,7 +11,7 @@ from django.views.decorators.http import require_POST
 from django.utils.text import slugify
 from django.core.files.base import ContentFile
 
-
+from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from users.models import User
 from .models import (Edition, EditionIssue, EditionBacklog,
@@ -362,8 +362,7 @@ def create_edition(request, username):
                 editor=author
             )
         except IntegrityError as e:
-            code, msg = e.args
-            if 'Duplicate entry' in msg and 'slug' in msg:
+            if 'slug' == get_column_if_duplicate(e):
                 slug_suffix += 1
                 slug = '{}-{}'.format(base_slug, slug_suffix)
                 continue

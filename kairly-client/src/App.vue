@@ -5,7 +5,7 @@
     <loading-spinner v-if="loadingUser"></loading-spinner>
 
     <app-main v-else>
-      <router-view v-if="user"></router-view>
+      <router-view v-if="user || $route.meta.public"></router-view>
       <Homepage v-else></Homepage>
     </app-main>
 

@@ -1,4 +1,4 @@
-<template>
+  <template>
   <homepage-view>
     <homepage--cover>
       <h1>Kairly</h1>
@@ -164,18 +164,18 @@ homepage--cover
   //- kairly Heading
   h1
     margin-bottom: $baseline
-    
+
     font-size: 60rem
     line-height: $baseline * 3
 
   //- motto
-  p  
+  p
     font-size: $fs-3
     line-height: $baseline * 1.25
-    
+
 
 //- Login Form
-homepage--login 
+homepage--login
   position: absolute
   right: $baseline / 2
   top: $baseline / 2
@@ -194,7 +194,7 @@ homepage--login
     margin: auto
 
   div
-    display: inline-block  
+    display: inline-block
     margin-right: $baseline / 2
 
   //- input
@@ -233,9 +233,9 @@ homepage--login
     &:focus
       background: darken($c-base, 10%)
 
-//-- Error message  
+//-- Error message
 @keyframes homepage-login-error-message
-  from 
+  from
     opacity: 0
 
 
@@ -259,14 +259,14 @@ homepage--login--error-message
   animation: homepage-login-error-message .15s
 
   //- when added to DOM
-  &:not(:empty)    
+  &:not(:empty)
     opacity: 1
 
-    
+
 //- Values
 homepage--values
   display: block
-  padding: $baseline * 2 $baseline 
+  padding: $baseline * 2 $baseline
 
   text-align: center
 
@@ -277,7 +277,7 @@ homepage--values
     font-family: $ff-serif
 
   //- values
-  p 
+  p
     margin: 0 auto $baseline auto
     max-width: 700px
 
@@ -289,12 +289,12 @@ homepage--values
 
     &:last-of-type
       margin-top: $baseline * 2
-      font-size: $fs-3  
+      font-size: $fs-3
 
 
 homepage--how-it-works
   display: block
-  padding: $baseline * 2 $baseline 
+  padding: $baseline * 2 $baseline
 
   background: lighten($c-base, 20%)
 
@@ -311,7 +311,7 @@ homepage--how-it-works
     max-width: 700px
     margin: 0 auto $baseline auto
 
-    font-size: $fs-1  
+    font-size: $fs-1
 
   > div
     display: table
@@ -321,8 +321,8 @@ homepage--how-it-works
     display: block
     float: left
     margin-right: $baseline
-    
-    max-width: 300px  
+
+    max-width: 300px
 
 
 
@@ -330,7 +330,7 @@ homepage--how-it-works
 homepage--help-us
   display: block
   padding: $baseline
-  
+
   background: lighten($c-base, 40%)
 
   font-family: $ff-serif
@@ -368,8 +368,8 @@ homepage--help-us
     h3
       margin-bottom: $baseline / 2
 
-      font-weight: 600   
-      text-align: center 
+      font-weight: 600
+      text-align: center
 
       &::before
         +fa-icon()
@@ -390,13 +390,13 @@ homepage--help-us
     content: $fa-var-pencil
 
   section:nth-of-type(4) h3::before
-   content: $fa-var-money     
+   content: $fa-var-money
 
 
 //- Contact us button
 homepage--help-us--contact-us
   display: block
-  
+
   text-align: center
 
   a
