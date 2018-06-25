@@ -8,10 +8,10 @@ export default new Vuex.Store({
   state: {
     profile: {
       user: null,
-      subscribedEditions: [] // ids
+      subscribedEditions: [], // ids
+      managedEditions: [], // ids
+      backlog: {}
     },
-    backlog: {},
-    managedEditions: [],
     editions: {},
     timeline: {
       issues: null, //null - not loaded, [] - loaded but empty
@@ -51,17 +51,24 @@ export default new Vuex.Store({
     subscribedEditions(state, editionIds) {
       state.profile.subscribedEditions = editionIds
     },
-    managedEditions(state, editions) {
-      state.managedEditions = editions
+    managedEditions(state, editionIds) {
+      state.profile.managedEditions = editionIds
     },
-    appendManagedEdition(state, edition) {
-      state.managedEditions.push(edition)
+    appendManagedEdition(state, editionId) {
+      state.profile.managedEditions.push(editionId)
     },
-    removeManagedEdition(state, edition) {
-      const idx = state.managedEditions.findIndex(e => e.id === edition.id)
+    removeEdition(state, editionId) {
+      // remove from managed
+      let idx = state.profile.managedEditions.indexOf(editionId)
       if (idx !== -1) {
-        state.managedEditions.splice(idx, 1)
+        state.profile.managedEditions.splice(idx, 1)
       }
+      // remove from subscribed
+      idx = state.profile.subscribedEditions.indexOf(editionId)
+      if (idx !== -1) {
+        state.profile.subscribedEditions.splice(idx, 1)
+      }
+      Vue.delete(state.editions, editionId)
     },
     edition(state, edition) {
       state.editions = {...state.editions, [edition.id]: edition}
@@ -95,6 +102,8 @@ export default new Vuex.Store({
     user: state => state.profile.user,
     loadingUser: state => state.profile.user === null, // Unauthorized -> user === false
     subscribedEditions: state => state.profile.subscribedEditions.map(id => state.editions[id]),
+    managedEditions: state => state.profile.managedEditions.map(id => state.editions[id]),
+    backlog: state => state.backlog,
     edition: state => id => state.editions[id]
   },
 

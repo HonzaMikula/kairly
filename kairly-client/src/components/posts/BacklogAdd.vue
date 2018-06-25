@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import * as api from '@/api'
@@ -49,10 +49,7 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      managedEditions: state => state.managedEditions,
-      backlog: state => state.backlog,
-    }),
+    ...mapGetters(['managedEditions', 'backlog']),
 
     containedIn() {
       return this.backlog[this.post.id] || []

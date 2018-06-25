@@ -9,7 +9,8 @@ export const getProfile = ({ commit }) => {
       resp => {
         commit('user', resp.user)
         commit('backlog', resp.backlog)
-        commit('managedEditions', resp.editions)
+        resp.editions.forEach(edition => commit('edition', edition))
+        commit('managedEditions', resp.editions.map(e => e.id))
 
       },
       () => {
@@ -84,7 +85,8 @@ export const startNewEdtion = ({ commit }, { authorId, edition }) => {
   api.createEdition(authorId, edition)
   .then(resp => {
     const { edition } = resp
-    commit('appendManagedEdition', edition)
+    commit('edition', edition)
+    commit('appendManagedEdition', edition.id)
     // there is problem with push using editionId param, it can't handle
     // parameter which contains /
     //router.push({ name: 'edition', params: { editionId: edition.id }})
@@ -95,7 +97,7 @@ export const startNewEdtion = ({ commit }, { authorId, edition }) => {
 export const deleteEdition = ({ commit }, edition) => {
   api.deleteEdition(edition.id)
   .then(() => {
-    commit('removeManagedEdition', edition)
+    commit('removeEdition', edition.id)
     router.push({ name: 'author', params: { authorId: edition.editor.id }})
   })
 }
