@@ -12,13 +12,11 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import Header from '@/components/layout/Header'
 import Homepage from '@/components/Homepage'
 
 export default {
   name: 'app',
   components: {
-    Header,
     Homepage
   },
 

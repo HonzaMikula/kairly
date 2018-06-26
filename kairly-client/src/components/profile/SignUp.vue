@@ -1,27 +1,28 @@
 <template>
-  <sign-up-wrapper>
-    <homepage--cover>
-      <h1>Kairly</h1>
+  <sign-up-page>
+    <div>
+      <header>
+        <h1>Kairly</h1>
+        <p>Sign up to help with resurrection of exceptional journalism.</p>
+      </header>
 
-      <p>We stand for exceptional journalism<br /> &amp; great reading experience.</p>
-    </homepage--cover>
-    <main>
-      <h1>Sign Up</h1>
+      <main>
+        <div class="error" v-if="error">{{ error }}</div>
 
-      <div>
-        <input placeholder="Username" v-model="username">
-      </div>
-      <div>
-        <input placeholder="Email" v-model="email">
-      </div>
-      <div>
-        <input type="password" placeholder="Password" v-model="password">
-      </div>
-      <button @click="submit">Sign Up</button>
+        <div>
+          <input placeholder="Username" v-model="username">
+        </div>
+        <div>
+          <input placeholder="Email" v-model="email">
+        </div>
+        <div>
+          <input type="password" placeholder="Password" v-model="password">
+        </div>
 
-      <div class="error">{{ error }}</div>
-    </main>
-  </sign-up-wrapper>
+        <button @click="submit">Sign Up</button>
+      </main>
+    </div>
+  </sign-up-page>
 </template>
 
 <script>
@@ -65,21 +66,99 @@ export default {
 </script>
 
 <style lang="sass">
+sign-up-page
+  display: flex
+  align-items: center
+  justify-content: center
+
+  height: 100vh
+  width: 100vw
+
+  background: url(../../assets/homepage/hero.png) center center no-repeat
+  background-size: cover
+
+  //- Header
+  header
+    margin-bottom: $baseline * 2
+
+    color: #fff
+    text-shadow: 1px 1px 1px #000
+
+    font-family: $ff-serif
+
+    h1
+      margin-bottom: $baseline
+
+      font-size: 50px
+      text-align: center
+
+    p
+      font-size: $fs-2
 
 
-
-sign-up-wrapper
-  homepage--cover
-    height: 180px
-
+  //- Form
   main
-    width: 800px
+    padding: $baseline
+    width: 300px
     margin: 0 auto
 
+    backdrop-filter: blur(10px) saturate(125%)
+    background: rgba(0, 0, 0, 0.2)
+
+    //- Heading
+    h2
+      margin-bottom: $baseline
+
+      color: #fff
+
+      font-size: $fs-2
+      text-align: center
+
+    //- Form Fields
+    input
+      box-sizing: border-box
+      height: $baseline * 1.5
+      padding: 0 $baseline/4
+      width: 100%
+
+      background: rgba(255, 255, 255, 0.7)
+      border: 0
+      border-radius: 10px
+
+      font-family: $ff-sans
+      font-size: $fs-0
+
+      &:focus
+        background: #fff
+
+    //- Button
+    button
+      +subscribe-button
+
+      height: $baseline * 1.5
+      width: 100%
+
+      background: $c-base
+      color: #fff
+
+      font-family: $ff-sans
+
+      &:focus,
+      &:hover
+        background: darken($c-base, 10%)
+        border: 1px solid darken($c-base, 10%)
+
+
     div
-      margin: 10px 0
+      margin-bottom: $baseline
 
     .error
-      color: red
+      padding: $baseline / 4
+
+      background: lighten($c-red, 50%)
+      border: 1px dashed $c-red
+      color: #000
+
+      text-align: center
 
 </style>

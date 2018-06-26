@@ -1,6 +1,7 @@
 <template>
   <app-main>
-    <app-header />
+    <AppHeader />
+
     <slot></slot>
   </app-main>
 </template>
@@ -11,9 +12,10 @@ import AppHeader from '@/components/layout/Header'
 
 export default {
   name: 'AppLayout',
+
   components: {
     AppHeader
-  },
+  }
 }
 </script>
 

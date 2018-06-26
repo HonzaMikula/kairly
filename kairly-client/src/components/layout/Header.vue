@@ -1,5 +1,5 @@
 <template>
-  <app-header>
+  <app-header-view>
     <div>
       <app-header--nav role="navigation">
         <ul v-if="user">
@@ -33,7 +33,7 @@
       <tutorial-modal :onClose="closeTutorial"></tutorial-modal>
     </portal>
 
-  </app-header>
+  </app-header-view>
 </template>
 
 <script>
@@ -43,7 +43,7 @@ import store from '@/store'
 import TutorialModal from '@/components/modals/Tutorial'
 
 export default {
-  name: 'AppHeaderComponent',
+  name: 'AppHeader',
   data: function() {
     return {
       username: null,
@@ -82,7 +82,7 @@ export default {
 
 <style lang="sass">
 //- HEADER -//
-app-header
+app-header-view
   display: block
   height: $baseline * 2
   padding: 0 $baseline
