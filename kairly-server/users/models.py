@@ -108,7 +108,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         res = {
             'id': id,
             'name': name,
-            'picture': self.picture.url,
+            'picture': self.picture.url if self.picture else '',
             'medium': self.medium,
             'bio': self.bio,
             'followUrl': '/api/authors/{}/subscribe'.format(id),
