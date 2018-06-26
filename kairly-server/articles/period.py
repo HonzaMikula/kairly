@@ -40,3 +40,11 @@ def parse_periodicity(periodicity):
         else:
             dow = None
     return Periodicity(frequency, time_of_day, dow)
+
+
+def periodicity_to_json(model):
+    return {
+        'frequency': model.period,
+        'dow': model.period_dow,
+        'time': model.period_time.strftime("%H:%M") if model.period_time else None,
+    }

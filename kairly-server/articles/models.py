@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ckeditor.fields import RichTextField
 
-from .period import PeriodMixin
+from .period import PeriodMixin, periodicity_to_json
 
 
 class Topic(models.Model):
@@ -138,11 +138,7 @@ class Edition(models.Model, PeriodMixin):
             "picture": settings.MEDIA_SITE + self.image.url,
             "description": self.description,
             "editor": self.editor.to_json(),
-            "periodicity": {
-                'frequency': self.period,
-                'time': self.period_time,
-                'dow': self.period_dow,
-            },
+            "periodicity": periodicity_to_json(self),
             "issues": getattr(self, 'issues', 0),
             "likes": getattr(self, 'likes', 0)
         }
