@@ -3,16 +3,16 @@
     <div>
       <app-header--nav role="navigation">
         <ul v-if="user">
-          <li class="home"><router-link :to="{name: 'timeline'}" exact>Home</router-link></li>
-          <li class="my-subscription"><router-link :to="{name: 'subscription'}">My Subscription</router-link></li>
-          <li class="my-editions"><router-link :to="{name: 'author-editions', params: {authorId: user.id}}">My Editions</router-link></li>
-          <li class="explore"><router-link :to="{name: 'explore'}">Explore</router-link></li>
+          <li class="home"><router-link :to="{name: 'timeline'}" exact><span>Home</span></router-link></li>
+          <li class="my-subscription"><router-link :to="{name: 'subscription'}"><span>My Subscription</span></router-link></li>
+          <li class="my-editions"><router-link :to="{name: 'author-editions', params: {authorId: user.id}}"><span>My Editions</span></router-link></li>
+          <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
         </ul>
         </app-header--nav>
 
         <app-header--user-profile v-if="user">
           <h3><router-link :to="{name: 'author', params: {authorId: user.id}}">{{ user.name }}</router-link></h3>
-          <img src="../../assets/user.png" :alt="user.name"/>
+          <router-link :to="{name: 'author', params: {authorId: user.id}}"><img src="../../assets/user.png" :alt="user.name"/></router-link>
           <!--
             Gravatar url handles default itself (it can generate 404 url or some dafault),
             but it is problematic handle it on client side identify default and replace it with own default
@@ -126,7 +126,10 @@ app-header--nav
       background: darken($c-base, 15%)
 
     @media (max-width: $mobile)
-      padding: 0 $baseline/4
+      padding: 0 $baseline
+
+      span
+        display: none
 
 
 
@@ -151,8 +154,6 @@ app-header--nav
     li a::before
       margin-right: 0
 
-      content: '' !important
-
 
 //- User Profile
 app-header--user-profile
@@ -162,6 +163,9 @@ app-header--user-profile
   h3
     display: inline-block
     margin-right: $baseline / 4
+
+    @media (max-width: $mobile)
+      display: none
 
     a
       color: #fff
