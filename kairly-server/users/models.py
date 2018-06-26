@@ -73,7 +73,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
-    picture = models.CharField(_("Picture"), max_length=300, blank=True)
+    picture_url = models.CharField(_("Picture"), max_length=300, blank=True)
+    picture = models.ImageField(upload_to='users', null=True)  # temporary allow null
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
 
