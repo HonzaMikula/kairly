@@ -29,7 +29,7 @@
 
           <post-detail--content v-html="post.content.perex"></post-detail--content>
 
-          <post-detail--continue-reading id="continue">
+          <post-detail--continue-reading id="continue" v-if="post.content.content">
             continue reading
           </post-detail--continue-reading>
 

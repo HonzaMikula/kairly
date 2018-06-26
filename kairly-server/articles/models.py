@@ -84,33 +84,34 @@ class Post(models.Model):
             words = len(text.split())
             value = math.ceil(words / 275)
             cache.set(cache_key, value, None)
-        return '{} min'.format(value)
+        return '{} min'.format(max(1, value))
 
     def to_json(self, short=False, tzinfo=timezone.utc):
-        j = {
+        result = {
             'id': self.id,
             "author": self.author.to_json(),
             "type": self.kind,
             "time": str(self.published.astimezone(tzinfo))
         }
         if self.kind == Post.PICTURE:
-            j['content'] = {
+            result['content'] = {
                 'title': self.title,
                 'picture': self.picture,
             }
         elif self.kind == Post.TWEET:
-            j['content'] = {
+            result['content'] = {
                 'content': self.content,
                 'picture': self.picture,
             }
         elif self.kind == Post.NEWSPAPER:
-            j['timeRead'] = self.read_time
-            j['content'] = {
+            result['timeRead'] = self.read_time
+            result['content'] = {
                 'title': self.title,
-                'content': self.perex if short else self.content,
-                'perex': self.perex
+                'perex': self.perex,
             }
-        return j
+            if not short:
+                result['content']['content'] = self.content
+        return result
 
 
 class Edition(models.Model, PeriodMixin):

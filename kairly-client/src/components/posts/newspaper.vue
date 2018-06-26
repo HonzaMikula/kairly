@@ -3,8 +3,8 @@
     <timeline-post--newspaper>
       <h2><router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
       <timeline-post--newspaper--content>
-        <div v-html="post.content.content"></div>
-        <timeline-post--continue-reading v-if="post.timeRead && post.timeRead !='0 min'">
+        <div v-html="post.content.perex"></div>
+        <timeline-post--continue-reading v-if="post.timeRead">
           <div v-if="isSubscribed">
             <router-link :to="{ name: 'post', params: { postId: post.id }, hash: '#continue'}">Continue reading</router-link>
           </div>
