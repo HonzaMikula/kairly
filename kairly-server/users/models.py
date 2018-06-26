@@ -23,12 +23,12 @@ class KairlyUsernameValidator(validators.RegexValidator):
     min_length = 3
     reserved_names = [
         'login', 'logout', 'signin', 'signout',
-        'signup', 'register', 'join', 'invite'
-        'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help',
+        'signup', 'register', 'join', 'invite',
+        'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help', 'settings',
         'site', 'page', 'app',
         'sites', 'pages', 'apps',
-        'author', 'edition', 'profile', 'issue',
-        'authors', 'editions', 'profiles', 'issues',
+        'user', 'author', 'edition', 'profile', 'issue',
+        'users', 'authors', 'editions', 'profiles', 'issues',
         'explore', 'dashboard', 'recent',
         'subscription', 'subscriptions',
         'join-and-read-with-kairly',
@@ -111,6 +111,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'picture': self.picture.url if self.picture else '',
             'medium': self.medium,
             'bio': self.bio,
+            'timezone': self.timezone,
             'followUrl': '/api/authors/{}/subscribe'.format(id),
             'unfollowUrl': '/api/authors/{}/unsubscribe'.format(id),
         }
