@@ -73,7 +73,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
-    picture_url = models.CharField(_("Picture"), max_length=300, blank=True)
     picture = models.ImageField(upload_to='users', null=True)  # temporary allow null
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
@@ -109,7 +108,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         res = {
             'id': id,
             'name': name,
-            'picture': self.picture,
+            'picture': self.picture.url,
             'medium': self.medium,
             'bio': self.bio,
             'followUrl': '/api/authors/{}/subscribe'.format(id),
