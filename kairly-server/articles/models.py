@@ -91,8 +91,7 @@ class Post(models.Model):
             'id': self.id,
             "author": self.author.to_json(),
             "type": self.kind,
-            "time": str(self.published.astimezone(tzinfo)),
-            "favorites": 131
+            "time": str(self.published.astimezone(tzinfo))
         }
         if self.kind == Post.PICTURE:
             j['content'] = {
