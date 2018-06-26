@@ -1,12 +1,14 @@
+import re
+
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.core import validators
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-import re
-
-from django.core import validators
-from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+
+from articles.period import periodicity_to_json
 
 
 @deconstructible
@@ -116,12 +118,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         # TODO what about param (ma)
         if hasattr(self, 'user_subscription'):
             sub = self.user_subscription
-            if sub:
-                res['subscription'] = {
-                    'frequency': sub.period,
-                    'dow': sub.period_dow,
-                    'time': sub.period_time,
-                }
-            else:
-                res['subscription'] = None
+            res['subscription'] = periodicity_to_json(sub) if sub else None
+
         return res

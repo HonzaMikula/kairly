@@ -2,9 +2,9 @@
   <app-layout>
     <editor-editions-view>
       <editor-editions--header>
-        <h1>{{ selectedEdition.title }}</h1>
+        <h1 v-if="selectedEdition">{{ selectedEdition.title }}</h1>
 
-        <button-icon role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
+        <button-icon v-if="selectedEdition" role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
 
         <editor-editions--header--dropdown
           v-if="isSelectEditionOpen"
@@ -24,7 +24,7 @@
         </editor-editions--header--dropdown>
 
         <div class="create-edition">
-          <a href="" @click.prevent="confirmDeleteEdition">Delete edition</a>
+          <a v-if="selectedEdition" href="" @click.prevent="confirmDeleteEdition">Delete edition</a>
           <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
         </div>
       </editor-editions--header>
