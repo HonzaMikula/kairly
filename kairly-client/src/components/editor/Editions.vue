@@ -149,6 +149,7 @@ editor-editions-view
 
   display: block
   margin: 0 $baseline
+  max-width: 1600px
 
   //- Header
   editor-editions--header

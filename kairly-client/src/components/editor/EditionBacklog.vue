@@ -2,13 +2,14 @@
   <edition-backlog-view>
 
     <edition-backlog--backlog>
+      <div v-if="backlog.length == 0">no posts</div>
+
       <div v-for="post in backlog" class="backlog-post" :key="post.id">
         <h3>{{ post.content.title }}</h3>
 
         <p>
           <a href="#" @click.prevent="publish(post)">Publish</a>
         </p>
-
       </div>
     </edition-backlog--backlog>
 

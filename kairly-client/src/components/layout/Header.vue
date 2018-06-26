@@ -94,7 +94,7 @@ app-header-view
   line-height: $baseline * 2
 
   @media (max-width: $mobile)
-    padding: 0 $baseline/2 0 0
+    padding: 0 $baseline/4 0 0
 
   //- wrapper
   > div
@@ -125,6 +125,11 @@ app-header--nav
     &.is-active
       background: darken($c-base, 15%)
 
+    @media (max-width: $mobile)
+      padding: 0 $baseline/4
+
+
+
   li a::before
     +fa-icon()
 
@@ -141,6 +146,12 @@ app-header--nav
 
   li.explore a::before
     content: $fa-var-hashtag
+
+  @media (max-width: $mobile)
+    li a::before
+      margin-right: 0
+
+      content: '' !important
 
 
 //- User Profile
