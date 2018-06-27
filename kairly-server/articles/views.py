@@ -1,18 +1,15 @@
 import json
 from datetime import datetime
-from binascii import a2b_base64
 
 from django.db.models import Count
-from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404
 from django.http import (Http404, JsonResponse, HttpResponse,
                          HttpResponseForbidden, HttpResponseBadRequest)
 from django.views.decorators.http import require_POST
 from django.utils.text import slugify
-from django.core.files.base import ContentFile
 
-from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
+from utils.upload import file_from_data_uri
 from users.models import User
 from .models import (Edition, EditionIssue, EditionBacklog,
                      Post, Subscription, SubscriptionToAuthor, Topic)
@@ -340,33 +337,23 @@ def create_edition(request, username):
         return HttpResponseBadRequest(str(e))
 
     base_slug = slugify(title)
-    data_uri = payload['image']
-    head, image_data = data_uri.split(',')
-    binary_image_data = a2b_base64(image_data)
-    image_type = head.split(';')[0].split('/')[1]
-    img_suffix = {'jpeg': 'jpg'}.get(image_type, image_type)
-
-    edition = None
     slug = base_slug
     slug_suffix = 1
-    while not edition:
-        try:
-            edition = Edition.objects.create(
-                title=title,
-                slug=slug,
-                description=payload['description'],
-                image=ContentFile(binary_image_data, "{}-{}.{}".format(author.username, slug, img_suffix)),
-                period=periodicity.frequency,
-                period_time=periodicity.time,
-                period_dow=periodicity.dow,
-                editor=author
-            )
-        except IntegrityError as e:
-            if 'slug' == get_column_if_duplicate(e):
-                slug_suffix += 1
-                slug = '{}-{}'.format(base_slug, slug_suffix)
-                continue
-            raise
+    while Edition.objects.filter(editor=author, slug=slug).exists():
+        slug_suffix += 1
+        slug = '{}-{}'.format(base_slug, slug_suffix)
+
+    image = file_from_data_uri(payload['image'], "{}-{}".format(author.username, base_slug))
+    edition = Edition.objects.create(
+        title=title,
+        slug=slug,
+        description=payload['description'],
+        image=image,
+        period=periodicity.frequency,
+        period_time=periodicity.time,
+        period_dow=periodicity.dow,
+        editor=author
+    )
 
     return JsonResponse({
         "edition": edition.to_json()

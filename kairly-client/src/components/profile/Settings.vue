@@ -4,7 +4,20 @@
       <main>
         <h2>Personal Info</h2>
 
-        PICTURE INPUT HERE
+        <picture-input
+          ref="pictureInput"
+          @change="onPictureChange"
+          width="200"
+          height="200"
+          margin="16"
+          accept="image/jpeg,image/png"
+          size="10"
+          buttonClass="btn"
+          :prefill="this.user.picture"
+          :customStrings="{
+            drag: 'Drag or upload image'
+          }">
+        </picture-input>
 
         <div>
           <input placeholder="Name" v-model="name">
@@ -37,16 +50,18 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import * as api from '@/api'
 
+import PictureInput from 'vue-picture-input'
 import AppLayout from '@/components/layout/AppLayout'
 
 export default {
   name: 'Settings',
 
   components: {
-    AppLayout
+    AppLayout,
+    PictureInput
   },
 
   data() {
@@ -56,34 +71,43 @@ export default {
       bio: null,
       timezone: null,
       twitter: null
-      //picture = models.ImageField(upload_to='users', null=True)  # temporary allow null
-
     }
   },
 
   computed: mapGetters(['user']),
 
   methods: {
-    updateFrom({ name, medium, bio, timezone }) {
+    updateComponentData({ name, medium, bio, timezone }) {
       this.name = name
       this.medium = medium
       this.bio = bio
       this.timezone = timezone
     },
 
+    updateProfile(payload) {
+      api.updateProfile(payload)
+      .then(res => {
+        const user = res.body
+        this.updateComponentData(user)
+        this.updateUserInStore(user)
+      })
+    },
+
+    onPictureChange(picture) {
+      // Save imediatelly
+      this.updateProfile({ picture })
+    },
+
     submit() {
       const { name, medium, bio, timezone } = this
-      // empty .then needed to trigger request
-      api.updateProfile({ name, medium, bio, timezone })
-      .then(res => {
-        this.updateFrom(res.body)
-        // TODO update store, use action
-      })
-    }
+      this.updateProfile({ name, medium, bio, timezone })
+    },
+
+    ...mapMutations({updateUserInStore: 'user'})
   },
 
   beforeMount() {
-    this.updateFrom(this.user)
+    this.updateComponentData(this.user)
   }
 
 

@@ -20,6 +20,7 @@ from django.views.decorators.http import require_POST
 
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
+from utils.upload import file_from_data_uri
 from articles.models import Edition, EditionBacklog
 from .models import User
 
@@ -70,12 +71,18 @@ class ProfileView(View):
     @ajax_login_required
     def patch(self, request):
         payload = json.loads(request.body.decode('utf-8'))
+        user = request.user
         fields = ['name', 'bio', 'medium', 'timezone']
         for field in fields:
             if field in payload:
-                setattr(request.user, field, payload[field])
-        request.user.save()
-        return JsonResponse(request.user.to_json())
+                setattr(user, field, payload[field])
+
+        if 'picture' in payload:
+            picture = file_from_data_uri(payload['picture'], user.username)
+            user.picture = picture
+
+        user.save()
+        return JsonResponse(user.to_json())
 
 
 # TODO enable CSRF protection
