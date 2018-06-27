@@ -83,6 +83,9 @@ timeline-post--newspaper--content
   p
     text-indent: $baseline
 
+    @media (max-width: $mobile)
+      text-indent: $baseline / 2
+
   //-- illustration image
   img
     display: block

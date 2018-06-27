@@ -122,7 +122,7 @@ app-header--nav
       background: darken($c-base, 15%)
 
     @media (max-width: $mobile)
-      padding: 0 $baseline
+      padding: 0 $baseline*0.75
 
       span
         display: none
