@@ -64,16 +64,26 @@ export default {
   computed: mapGetters(['user']),
 
   methods: {
+    updateFrom({ name, medium, bio, timezone }) {
+      this.name = name
+      this.medium = medium
+      this.bio = bio
+      this.timezone = timezone
+    },
+
     submit() {
-      alert('TODO')
+      const { name, medium, bio, timezone } = this
+      // empty .then needed to trigger request
+      api.updateProfile({ name, medium, bio, timezone })
+      .then(res => {
+        this.updateFrom(res.body)
+        // TODO update store, use action
+      })
     }
   },
 
   beforeMount() {
-    this.name = this.user.name
-    this.medium = this.user.medium
-    this.bio = this.user.bio
-    this.timezone = this.user.timezone
+    this.updateFrom(this.user)
   }
 
 

@@ -14,6 +14,7 @@ from django.core.validators import EmailValidator
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.http import HttpResponse, JsonResponse
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
@@ -41,32 +42,40 @@ def get_token(request):
         return HttpResponse('Unauthorized', status=401)
 
 
-@ajax_login_required
-def profile(request):
-    # g = Gravatar(request.user.email)
-    # g.get_image(use_ssl=True, default='blank'),
+class ProfileView(View):
+    @ajax_login_required
+    def get(self, request):
+        # TODO load edition and backlog in separate endpoint
+        editions = []
+        internal_ids_mapping = {}
+        for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
+            public_id = '{}/{}'.format(request.user.username, edition.slug)
+            internal_ids_mapping[edition.id] = public_id
+            editions.append({
+                'id': public_id,
+                'title': edition.title,
+            })
 
-    # TODO load edition and backlog in separate endpoint
-    editions = []
-    internal_ids_mapping = {}
-    for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
-        public_id = '{}/{}'.format(request.user.username, edition.slug)
-        internal_ids_mapping[edition.id] = public_id
-        editions.append({
-            'id': public_id,
-            'title': edition.title,
+        backlog = defaultdict(list)
+        for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
+            backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
+
+        # TODO merge author and user props
+        return JsonResponse({
+            "user": request.user.to_json(),
+            "editions": editions,
+            "backlog": backlog
         })
 
-    backlog = defaultdict(list)
-    for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
-        backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
-
-    # TODO merge author and user props
-    return JsonResponse({
-        "user": request.user.to_json(),
-        "editions": editions,
-        "backlog": backlog
-    })
+    @ajax_login_required
+    def patch(self, request):
+        payload = json.loads(request.body.decode('utf-8'))
+        fields = ['name', 'bio', 'medium', 'timezone']
+        for field in fields:
+            if field in payload:
+                setattr(request.user, field, payload[field])
+        request.user.save()
+        return JsonResponse(request.user.to_json())
 
 
 # TODO enable CSRF protection

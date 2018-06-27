@@ -182,3 +182,9 @@ export const signUp = user => {
     .post(API_URI + '/signup')
     .send(user)
 }
+
+export const updateProfile = profile => {
+  return agent
+    .patch(API_URI + '/profile')
+    .send(profile)
+}
