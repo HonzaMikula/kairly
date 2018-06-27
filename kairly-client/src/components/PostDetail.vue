@@ -218,6 +218,10 @@ post-detail--title
   font-weight: 600
   line-height: $baseline * 1.25
 
+  @media (max-width: $mobile)
+    font-size: $fs-2
+    line-height: $baseline
+
 
 //- Continue Reading
 post-detail--continue-reading
@@ -260,6 +264,10 @@ post-detail--perex
   font-family: $ff-serif
   font-size: $fs-1
   line-height: $baseline * 1.25
+
+  @media (max-width: $mobile)
+    font-size: $fs-0
+    line-height: $baseline
 
   //- title
   h1

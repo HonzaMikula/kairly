@@ -89,7 +89,10 @@ post-component
   background: #fff
 
   &.tweet
-    width: 576px
+    max-width: 576px
+
+  @media (max-width: $mobile)
+    padding: $baseline / 4
 
 
 //- Post header

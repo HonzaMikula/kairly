@@ -152,6 +152,10 @@ app-header--nav
 
   @media (max-width: $mobile)
     li a::before
+      position: relative
+      top: 5px
+
+      font-size: 30px
       margin-right: 0
 
 

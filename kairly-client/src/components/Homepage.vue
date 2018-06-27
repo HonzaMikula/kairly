@@ -9,11 +9,13 @@
     <homepage--login>
       <form v-on:submit.prevent="login">
         <div>
-          <input name="username" placeholder="Username" v-model="username" />
+          <label for="username">Username</label>
+          <input name="username" id="username" v-model="username" />
         </div>
 
         <div>
-          <input name="password" type="password" placeholder="Password" v-model="password" />
+          <label for="password">Password</label>
+          <input name="password" type="password" v-model="password" />
         </div>
 
         <button type="submit">Sign In</button>
@@ -152,7 +154,7 @@ homepage--cover
   display: block
   box-sizing: border-box
   height: 580px
-  padding: $baseline*2 $baseline*2 $baseline*2 $baseline*2
+  padding: $baseline * 2
 
   background: url(../assets/homepage/hero.png) center center no-repeat
   background-size: cover
@@ -161,41 +163,70 @@ homepage--cover
 
   font-family: $ff-serif
 
+  @media (max-width: $mobile)
+    padding: $baseline / 2
+    height: 160px
+
   //- kairly Heading
   h1
     margin-bottom: $baseline
 
     font-size: 60rem
     line-height: $baseline * 3
+    text-shadow: 1px 1px 1px #000
+
+    @media (max-width: $mobile)
+      margin-top: $baseline / 2
+
+      font-size: $fs-3
+      line-height: $baseline
+
 
   //- motto
   p
     font-size: $fs-3
     line-height: $baseline * 1.25
+    text-shadow: 1px 1px 1px #000
+
+    @media (max-width: $mobile)
+      font-size: $fs-0
+      line-height: $baseline
 
 
 //- Login Form
 homepage--login
   position: absolute
-  right: $baseline / 2
-  top: $baseline / 2
+  right: 0
+  top: 0
 
   border-radius: 5px
   display: block
   padding: $baseline / 2
 
-  background: rgba(#555, 0.7)
+  backdrop-filter: blur(10px) saturate(125%)
+
+  @media (max-width: $mobile)
+    position: static
+
+    background: #eee
 
   //- wrapper
   form
     position: relative
 
-    display: table
-    margin: auto
-
   div
     display: inline-block
     margin-right: $baseline / 2
+
+    @media (max-width: $mobile)
+      display: block
+      margin: 0 0 $baseline/2 0
+
+  //- label
+  label
+    display: block
+
+    font-size: $fs--2
 
   //- input
   input
@@ -215,6 +246,9 @@ homepage--login
     &:hover
       background: #fff
 
+    @media (max-width: $mobile)
+      width: 100%
+
   //- button
   button
     border-radius: 3px
@@ -232,6 +266,9 @@ homepage--login
     &:hover,
     &:focus
       background: darken($c-base, 10%)
+
+    @media (max-width: $mobile)
+      width: 100%
 
 //-- Error message
 @keyframes homepage-login-error-message
@@ -270,11 +307,17 @@ homepage--values
 
   text-align: center
 
+  @media (max-width: $mobile)
+    text-align: left
+
   //- heading
   h2
     margin-bottom: $baseline * 2
     font-size: $fs-3
     font-family: $ff-serif
+
+    @media (max-width: $mobile)
+      margin-bottom: $baseline
 
   //- values
   p
@@ -283,6 +326,9 @@ homepage--values
 
     font-size: $fs-1
     font-family: $ff-serif
+
+    @media (max-width: $mobile)
+      font-size: $fs-0
 
     strong
       font-weight: 600
@@ -301,17 +347,29 @@ homepage--how-it-works
   font-family: $ff-serif
   text-align: center
 
+  @media (max-width: $mobile)
+    text-align: left
+
   //- heading
   h2
     margin-bottom: $baseline * 2
     font-size: $fs-3
     font-family: $ff-serif
 
+    @media (max-width: $mobile)
+      margin-bottom: $baseline
+
   p
     max-width: 700px
     margin: 0 auto $baseline auto
 
     font-size: $fs-1
+
+    @media (max-width: $mobile)
+      font-size: $fs-0
+
+      &:last-of-type
+        margin: 0
 
   > div
     display: table
@@ -324,7 +382,13 @@ homepage--how-it-works
 
     max-width: 300px
 
+    @media (max-width: $mobile)
+      float: none
+      margin: 0 0 $baseline 0
+      width: 100%
 
+      &:last-of-type
+        margin: 0
 
 //- Help Us
 homepage--help-us
@@ -334,6 +398,10 @@ homepage--help-us
   background: lighten($c-base, 40%)
 
   font-family: $ff-serif
+  text-align: center
+
+  @media (max-width: $mobile)
+    text-align: left
 
   //- Heading
   h2
@@ -341,10 +409,6 @@ homepage--help-us
 
     font-size: $fs-3
     font-family: $ff-serif
-    text-align: center
-
-  > p
-    text-align: center
 
 
   //- wrapper
@@ -353,14 +417,18 @@ homepage--help-us
     max-width: 1200px
     margin: $baseline*2 auto
 
+    @media (max-width: $mobile)
+      display: block
+
   //- section
   section
     flex: 1
     margin-right: $baseline * 2
 
     @media (max-width: $mobile)
-      flex: 1 50%
-      flex-wrap: wrap
+      margin: 0 0 $baseline 0
+
+
 
     &:last-of-type
       margin-right: 0
@@ -369,7 +437,9 @@ homepage--help-us
       margin-bottom: $baseline / 2
 
       font-weight: 600
-      text-align: center
+
+      @media (max-width: $mobile)
+        font-size: $fs-1
 
       &::before
         +fa-icon()
@@ -379,6 +449,9 @@ homepage--help-us
 
         font-size: 60px
         text-align: center
+
+        @media (max-width: $mobile)
+          display: none
 
   section:nth-of-type(1) h3::before
     content: $fa-var-book

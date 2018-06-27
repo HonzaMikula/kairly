@@ -42,6 +42,9 @@ timeline-post--newspaper
     font-size: $fs-1
     font-weight: 600
 
+    @media (max-width: $mobile)
+      font-size: $fs-0
+
     a
       color: #000
 
@@ -63,6 +66,10 @@ timeline-post--newspaper--content
 
   @media (max-width: $mobile)
     column-count: 2
+    column-gap: $baseline / 2
+
+    font-size: $fs--2
+    line-height: $baseline * 0.8
 
 
   //-- heading
