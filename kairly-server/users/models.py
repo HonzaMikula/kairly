@@ -23,12 +23,12 @@ class KairlyUsernameValidator(validators.RegexValidator):
     min_length = 3
     reserved_names = [
         'login', 'logout', 'signin', 'signout',
-        'signup', 'register', 'join', 'invite'
-        'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help',
+        'signup', 'register', 'join', 'invite',
+        'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help', 'settings',
         'site', 'page', 'app',
         'sites', 'pages', 'apps',
-        'author', 'edition', 'profile', 'issue',
-        'authors', 'editions', 'profiles', 'issues',
+        'user', 'author', 'edition', 'profile', 'issue',
+        'users', 'authors', 'editions', 'profiles', 'issues',
         'explore', 'dashboard', 'recent',
         'subscription', 'subscriptions',
         'join-and-read-with-kairly',
@@ -73,7 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
-    picture = models.CharField(_("Picture"), max_length=300, blank=True)
+    picture = models.ImageField(upload_to='users', null=True)  # temporary allow null
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
 
@@ -108,9 +108,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         res = {
             'id': id,
             'name': name,
-            'picture': self.picture,
+            'picture': self.picture.url if self.picture else '',
             'medium': self.medium,
             'bio': self.bio,
+            'timezone': self.timezone,
             'followUrl': '/api/authors/{}/subscribe'.format(id),
             'unfollowUrl': '/api/authors/{}/unsubscribe'.format(id),
         }

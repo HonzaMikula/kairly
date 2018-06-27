@@ -13,6 +13,7 @@ import Explore from '@/components/explore/Explore'
 import CreateEdition from '@/components/editor/CreateEdition'
 import Editions from '@/components/editor/Editions'
 import SignUp from '@/components/profile/SignUp'
+import Settings from '@/components/profile/Settings'
 
 Vue.use(Router)
 
@@ -35,6 +36,7 @@ export default new Router({
     ]},
     {path: '/explore', name: 'explore', component: Explore},
     {path: '/explore/:tab', component: Explore},
+    {path: '/user/settings', component: Settings, name: 'settings'},
     {path: '/join-and-read-with-kairly', component: SignUp, meta: { public: true }},
   ],
   linkActiveClass: 'is-active',

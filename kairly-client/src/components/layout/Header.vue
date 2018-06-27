@@ -12,17 +12,13 @@
 
         <app-header--user-profile v-if="user">
           <h3><router-link :to="{name: 'author', params: {authorId: user.id}}">{{ user.name }}</router-link></h3>
-          <router-link :to="{name: 'author', params: {authorId: user.id}}"><img src="../../assets/user.png" :alt="user.name"/></router-link>
-          <!--
-            Gravatar url handles default itself (it can generate 404 url or some dafault),
-            but it is problematic handle it on client side identify default and replace it with own default
-          -->
-          <!--img :src="user.picture" :alt="user.name"/-->
+          <router-link :to="{name: 'author', params: {authorId: user.id}}"><img :src="user.picture || '../../assets/user.png'" :alt="user.name"/></router-link>
           <button-icon v-on:click="openDropDownMenu"></button-icon>
         </app-header--user-profile>
 
         <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
           <ul>
+            <li><router-link :to="{name: 'settings'}"><span>Settings</span></router-link></li>
             <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
             <li><a href="" v-on:click.prevent="logout">Logout</a></li>
           </ul>

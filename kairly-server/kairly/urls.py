@@ -32,7 +32,7 @@ def index(request, *args, **kwargs):
     return render(request, 'index.html')
 
 
-urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = static('/media', document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin', RedirectView.as_view(url='admin/')),
