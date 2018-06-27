@@ -124,3 +124,23 @@ def signup(request):
             return JsonResponse({'error': 'Username is already taken.'}, status=400)
         raise
     return JsonResponse(user.to_json())
+
+
+@require_POST
+@ajax_login_required
+def change_password(request):
+    payload = json.loads(request.body.decode('utf-8'))
+    user = request.user
+
+    if not user.check_password(payload['oldPassword']):
+        return HttpResponse('Unauthorized', status=401)
+
+    password = payload['newPassword']
+    try:
+        validate_password(password)
+    except ValidationError as e:
+        return JsonResponse({'error': ' '.join(e.messages)}, status=400)
+
+    user.set_password(password)
+    user.save()
+    return JsonResponse(user.to_json())

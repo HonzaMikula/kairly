@@ -184,7 +184,15 @@ export const signUp = user => {
 }
 
 export const updateProfile = profile => {
+  if (!token) return Promise.reject();
   return agent
     .patch(API_URI + '/profile')
     .send(profile)
+}
+
+export const changePassword = ({oldPassword, newPassword}) => {
+  if (!token) return Promise.reject();
+  return agent
+    .post(API_URI + '/change-password')
+    .send({oldPassword, newPassword})
 }

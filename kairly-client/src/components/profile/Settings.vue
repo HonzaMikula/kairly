@@ -35,7 +35,7 @@
           </select>
         </div>
 
-        <a href="#">Change password</a>
+        <router-link :to="{name: 'change-password'}">Change password</router-link>
 
         <h2>Twitter</h2>
 
