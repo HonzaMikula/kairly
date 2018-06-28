@@ -31,6 +31,10 @@ import * as api from '@/api'
 export default {
   name: 'SignUp',
 
+  metaInfo: {
+    title: 'Sign Up'
+  },
+
   data() {
     return {
       username: '',

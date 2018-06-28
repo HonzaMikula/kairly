@@ -4,6 +4,7 @@
       <p v-html="post.content.content"></p>
       <img :src="post.content.picture" v-if="post.content.picture" />
     </timeline-post--tweet>
+    <template slot="controls"><slot name="controls"></slot></template>
   </post>
 </template>
 

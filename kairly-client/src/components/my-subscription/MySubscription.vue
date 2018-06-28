@@ -15,6 +15,7 @@ import AppLayout from '@/components/layout/AppLayout'
 
 export default {
   name: 'MySubscription',
+
   components: {
     AppLayout
   },

@@ -89,7 +89,7 @@ def recent_issues(request):
 
 @ajax_login_required
 def recent_posts(request):
-    posts = Post.objects.all().select_related('author').order_by('-published')[:12]
+    posts = Post.objects.filter(draft=False, published__lt=datetime.now()).select_related('author').order_by('-published')[:12]
     return JsonResponse([post.to_json(tzinfo=request.tzinfo) for post in posts], safe=False)
 
 
@@ -179,7 +179,7 @@ def author_posts(request, username):
 
     author, topic = get_user_and_topic(username)
 
-    posts_query = Post.objects.filter(author=author, draft=False)
+    posts_query = Post.objects.filter(author=author, draft=False, published__lt=datetime.now())
     if topic:
         posts_query = posts_query.filter(topics=topic)
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
@@ -307,7 +307,7 @@ def unsubscribe_author(request, username):
 
 @ajax_login_required
 def post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+    post = get_object_or_404(Post, id=post_id, draft=False, published__lt=datetime.now())
 
     # Doesn't work, post can be part of multiple issues or just related to author
     # edition = EditionIssue.objects.get(posts=post).edition

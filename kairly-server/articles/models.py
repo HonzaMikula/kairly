@@ -1,5 +1,5 @@
 import math
-from datetime import timedelta, timezone
+from datetime import datetime, timedelta, timezone
 
 from bs4 import BeautifulSoup
 
@@ -177,7 +177,8 @@ class EditionIssue(models.Model):
         if posts:
             result["posts"] = [
                 p.to_json(short=True, tzinfo=tzinfo) for p in
-                self.posts.all().order_by('editionissuepost__ordering', '-published')
+                self.posts.filter(draft=False, published__lt=datetime.now())
+                    .order_by('editionissuepost__ordering', '-published')
             ]
         return result
 

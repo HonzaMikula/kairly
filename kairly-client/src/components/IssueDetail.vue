@@ -17,7 +17,13 @@ import Issue from '@/components/IssueWrapper'
 
 
 export default {
-  name: 'EditionDetail',
+  name: 'IssueDetail',
+
+  metaInfo() {
+      return {
+        title: this.edition ? `${this.edition.title} #${this.issue.number}` : undefined
+      }
+  },
 
   components: {
     AppLayout,

@@ -94,6 +94,13 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 
 export default {
   name: 'AuthorDetail',
+
+  metaInfo() {
+      return {
+        title: this.author ? this.author.name : undefined
+      }
+  },
+
   components: {
     AppLayout,
     EditionWidget,

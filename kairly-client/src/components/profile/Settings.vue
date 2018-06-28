@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <settings-view>
-      <h1>Account Setting</h1>
+      <h1>Account Settings</h1>
 
       <div>
         <settings--profile-picture>
@@ -83,6 +83,10 @@ import ChangePassword from '@/components/profile/ChangePassword'
 
 export default {
   name: 'Settings',
+
+  metaInfo: {
+    title: 'Account Settings'
+  },
 
   components: {
     AppLayout,

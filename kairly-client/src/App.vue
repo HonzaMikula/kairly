@@ -16,8 +16,13 @@ import Homepage from '@/components/Homepage'
 
 export default {
   name: 'app',
+
   components: {
     Homepage
+  },
+
+  metaInfo: {
+      title: 'Kairly - exceptional journalism & great reading experience',
   },
 
   computed: {

@@ -36,6 +36,10 @@ export default {
     'onClose': Function
   },
 
+  metaInfo: {
+    title: 'Change Password'
+  },
+
   components: {
     DialogWindow
   },

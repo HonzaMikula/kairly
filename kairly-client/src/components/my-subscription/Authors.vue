@@ -17,6 +17,10 @@ import AuthorWidget from '@/components/widgets/AuthorWidget'
 export default {
   name: 'MyAuthors',
 
+  metaInfo: {
+    title: 'My Subscription - Authors'
+  },
+
   components: {
     AuthorWidget
   },

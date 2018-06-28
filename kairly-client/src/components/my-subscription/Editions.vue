@@ -17,6 +17,10 @@ import EditionWidget from '@/components/widgets/EditionWidget'
 export default {
   name: 'MyEditions',
 
+  metaInfo: {
+    title: 'My Subscription - Editions'
+  },
+
   components: {
     EditionWidget
   },
