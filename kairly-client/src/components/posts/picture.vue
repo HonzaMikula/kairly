@@ -7,6 +7,7 @@
         <figcaption>{{ post.content.title }}</figcaption>
       </figure>
     </timeline-post--picture>
+    <template slot="controls"><slot name="controls"></slot></template>
   </post>
 </template>
 
