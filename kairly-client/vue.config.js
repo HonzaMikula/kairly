@@ -26,6 +26,9 @@ if (process.env.NODE_ENV === 'production') {
   vueConfig.configureWebpack = {
       output: {
         publicPath: "/static/"
+      },
+      performance: {
+        hints: false
       }
   }
 }
