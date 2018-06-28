@@ -1,38 +1,43 @@
 <template>
-  <app-layout>
-    <chnage-password-view>
-      <main>
+  <dialog-window :onClose="closeModal">
+    <change-password-view role="dialog" @click.stop>
+      <div>
+        <label for="oldPassword">Old password</label>
+        <input id="oldPassword" type="password" v-model="oldPassword">
+      </div>
 
-        <div>
-          <input placeholder="Old Password" type="password" v-model="oldPassword">
-        </div>
+      <div>
+        <label for="newPassword">New password</label>
+        <input id="newPassword" type="password" v-model="newPassword1">
+      </div>
 
-        <div>
-          <input placeholder="New Password" type="password" v-model="newPassword1">
-        </div>
+      <div>
+        <label for="newPassword2">New password again</label>
+        <input id="newPassword2" type="password" v-model="newPassword2">
+      </div>
 
-        <div>
-          <input placeholder="New Password" type="password" v-model="newPassword2">
-        </div>
+      <button @click="submit">Change Passoword</button>
 
-        <button @click="submit">Change Passoword</button>
-      </main>
-    </chnage-password-view>
-  </app-layout>
+      <button-close tabindex="0" role="button" @click="closeModal()">Close</button-close>
+    </change-password-view>
+  </dialog-window>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import * as api from '@/api'
 
-import PictureInput from 'vue-picture-input'
-import AppLayout from '@/components/layout/AppLayout'
+import DialogWindow from '@/components/modals/Dialog'
 
 export default {
-  name: 'Settings',
+  name: 'ChangePassword',
+
+  props: {
+    'onClose': Function
+  },
 
   components: {
-    AppLayout
+    DialogWindow
   },
 
   data() {
@@ -46,6 +51,10 @@ export default {
   computed: mapGetters(['user']),
 
   methods: {
+    closeModal() {
+      this.onClose()
+    },
+
     submit() {
       if (this.newPassword1 != this.newPassword2) {
         alert("Password doesn't match")
@@ -64,8 +73,67 @@ export default {
 </script>
 
 <style lang="sass">
-chnage-password-view
-  main
-    max-width: 970px
-    margin: $baseline auto
+change-password-view
+  position: relative
+
+  padding: $baseline
+  background: #fff
+
+  //- close button
+  button-close
+    position: absolute
+    top: -$baseline
+    right: 0
+
+    text-transform: lowercase
+    cursor: pointer
+
+    &::before
+      +fa-icon()
+
+      margin-right: $baseline / 4
+
+      content: $fa-var-times
+
+
+  > div
+    dispay: table
+    margin-bottom: $baseline
+
+
+    //- label
+    label, h3
+      display: table
+
+      font-size: $fs--2
+      font-weight: 600
+
+    //- input fields
+    input
+      box-sizing: border-box
+      height: $baseline * 1.25
+      padding: 0 $baseline/4
+      width: $baseline * 8
+
+      border: 1px solid #ddd
+
+      font-family: $ff-sans
+      font-size: $fs--2
+
+  //- submit button
+  button
+    +subscribe-button
+
+    height: $baseline * 1.25
+
+    border-radius: $baseline*0.75
+    background: $c-base
+    color: #fff
+
+    font-family: $ff-sans
+    font-size: $fs--1
+
+    &:focus,
+    &:hover
+      background: darken($c-base, 10%)
 </style>

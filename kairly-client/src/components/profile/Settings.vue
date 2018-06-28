@@ -3,10 +3,6 @@
     <settings-view>
       <h1>Account Setting</h1>
 
-      <settings--change-password>
-        <router-link :to="{name: 'change-password'}">Change password</router-link>
-      </settings--change-password>
-
       <div>
         <settings--profile-picture>
           <picture-input
@@ -48,7 +44,14 @@
               <option value="GMT">GMT</option>
               <option value="Europe/Prague">Europe/Prague</option>
             </select>
-            <p>Tell us in which timezone are you living, so we can deliver news at right time.</p>
+            <p>Tell us in which timezone are you living in, so we can deliver news at the right time.</p>
+          </div>
+
+          <div>
+            <h3>Password</h3>
+            <p>
+              Do you want to have different password?
+              <a href="" v-on:click.prevent="isChangePasswordOpen=true">Change password</a>.</p>
           </div>
 
           <h2>Integrations</h2>
@@ -63,6 +66,9 @@
           <button @click="submit">Save profile</button>
         </settings--form>
       </div>
+      <portal to="modal" v-if="isChangePasswordOpen">
+        <change-password :onClose="closeChangePassword"></change-password>
+      </portal>
     </settings-view>
   </app-layout>
 </template>
@@ -73,13 +79,15 @@ import * as api from '@/api'
 
 import PictureInput from 'vue-picture-input'
 import AppLayout from '@/components/layout/AppLayout'
+import ChangePassword from '@/components/profile/ChangePassword'
 
 export default {
   name: 'Settings',
 
   components: {
     AppLayout,
-    PictureInput
+    PictureInput,
+    ChangePassword
   },
 
   data() {
@@ -88,7 +96,8 @@ export default {
       medium: null,
       bio: null,
       timezone: null,
-      twitter: null
+      twitter: null,
+      isChangePasswordOpen: false
     }
   },
 
@@ -121,13 +130,16 @@ export default {
       this.updateProfile({ name, medium, bio, timezone })
     },
 
-    ...mapMutations({updateUserInStore: 'user'})
+    ...mapMutations({updateUserInStore: 'user'}),
+
+    closeChangePassword() {
+      this.isChangePasswordOpen = false
+    }
   },
 
   beforeMount() {
     this.updateComponentData(this.user)
-  }
-
+  },
 
 }
 </script>
@@ -165,30 +177,6 @@ settings-view
     @media (max-width: $mobile)
       display: block
       padding: $baseline / 4
-
-//- Change Password
-settings--change-password
-  position: absolute
-  right: 0
-  top: 0
-
-  @media (max-width: $mobile)
-    position: static
-
-    display: block
-    margin-bottom: $baseline / 2
-
-    text-align: center
-
-  a
-    +subscribe-button
-
-    display: inline-block
-    border-radius: $baseline*0.75
-
-    font-family: $ff-sans
-    font-size: $fs--1
-    line-height: $baseline * 1.25
 
 
 //- Profile Picture
@@ -244,7 +232,7 @@ settings--form
 
 
     //- label
-    label
+    label, h3
       display: table
 
       font-size: $fs--2
@@ -267,6 +255,7 @@ settings--form
     textarea
       box-sizing: border-box
       height: $baseline * 2.5
+      padding: 0 $baseline/4
       width: $baseline * 14
 
       border: 1px solid #ddd
@@ -298,6 +287,16 @@ settings--form
 
       font-size: $fs--3
       line-height: $baseline * 0.7
+
+      a
+        color: darken($c-base, 20%)
+
+        font-weight: 600
+        text-decoration: underline
+
+        &:hover,
+        &:focus
+          text-decoration: none
 
   //- submit button
   button

@@ -5,7 +5,7 @@
     <router-view v-if="user || $route.meta.public"></router-view>
     <Homepage v-else></Homepage>
 
-    <portal-target name="modal"></portal-target>
+    <portal-target name="modal" slim></portal-target>
   </app-view>
 </template>
 

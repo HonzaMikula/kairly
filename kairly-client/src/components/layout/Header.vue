@@ -60,17 +60,14 @@ export default {
 
     openDropDownMenu() {
       this.isDropDownMenuOpen = true
-      this.$forceUpdate()
     },
 
     closeDropDownMenu() {
       this.isDropDownMenuOpen = false
-      this.$forceUpdate()
     },
 
     closeTutorial() {
       this.isTutorialOpen = false
-      this.$forceUpdate()
     }
   }
 }

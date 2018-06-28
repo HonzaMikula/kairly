@@ -32,8 +32,8 @@ modal-window
   justify-content: center
   height: 100%
   width: 100%
-  
+
   background: rgba(0, 0, 0, 0.1)
-  backdrop-filter: blur(5px)  
+  backdrop-filter: blur(5px)
 
 </style>
