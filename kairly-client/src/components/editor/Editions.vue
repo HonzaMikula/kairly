@@ -54,6 +54,13 @@ import EditionBacklog from '@/components/editor/EditionBacklog'
 
 export default {
   name: 'Editions',
+
+  metaInfo() {
+    return {
+      title: this.selectedEdition ? this.selectedEdition.title : 'My Editions'
+    }
+  },
+
   components: {
     AppLayout,
     EditionWidget,

@@ -75,6 +75,12 @@ import EditionBacklog from '@/components/editor/EditionBacklog'
 export default {
   name: 'EditionDetail',
 
+  metaInfo() {
+      return {
+        title: this.edition ? this.edition.title : undefined
+      }
+  },
+
   components: {
     AppLayout,
     Issue,

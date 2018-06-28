@@ -31,6 +31,10 @@ import AppLayout from '@/components/layout/AppLayout'
 export default {
   name: 'Settings',
 
+  metaInfo: {
+    title: 'Change Password'
+  },
+
   components: {
     AppLayout
   },

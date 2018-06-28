@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <settings-view>
-      <h1>Account Setting</h1>
+      <h1>Account Settings</h1>
 
       <settings--change-password>
         <router-link :to="{name: 'change-password'}">Change password</router-link>
@@ -76,6 +76,10 @@ import AppLayout from '@/components/layout/AppLayout'
 
 export default {
   name: 'Settings',
+
+  metaInfo: {
+    title: 'Account Settings'
+  },
 
   components: {
     AppLayout,
