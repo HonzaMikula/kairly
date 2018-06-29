@@ -108,11 +108,12 @@ export default {
   computed: mapGetters(['user']),
 
   methods: {
-    updateComponentData({ name, medium, bio, timezone }) {
+    updateComponentData({ name, medium, bio, timezone, integrations: { twitter }}) {
       this.name = name
       this.medium = medium
       this.bio = bio
       this.timezone = timezone
+      this.twitter = twitter
     },
 
     updateProfile(payload) {
@@ -130,8 +131,8 @@ export default {
     },
 
     submit() {
-      const { name, medium, bio, timezone } = this
-      this.updateProfile({ name, medium, bio, timezone })
+      const { name, medium, bio, timezone, twitter } = this
+      this.updateProfile({ name, medium, bio, timezone, integrations: { twitter }})
     },
 
     ...mapMutations({updateUserInStore: 'user'}),

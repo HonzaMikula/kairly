@@ -77,6 +77,11 @@ class ProfileView(View):
             if field in payload:
                 setattr(user, field, payload[field])
 
+        integrations = payload.get('integrations')
+        if 'twitter' in integrations:
+            value = integrations['twitter']
+            user.twitter_account = value if value else None
+
         if 'picture' in payload:
             picture = file_from_data_uri(payload['picture'], user.username)
             user.picture = picture

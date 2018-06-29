@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from articles.models import Post
-from sources.models import TwitterChannel
+from users.models import User
 
 
 class Command(BaseCommand):
@@ -37,16 +37,18 @@ class Command(BaseCommand):
                           access_token_secret=settings.TWITTER_ACCESS_TOKEN_SECRET,
                           tweet_mode='extended')
 
-        channels = TwitterChannel.objects.filter(enabled=True).exclude(author__isnull=True)
         if options.get('account'):
-            channels = channels.filter(twitter_account=options['account'])
+            users = User.objects.filter(twitter_account=options['account'])
+        else:
+            users = User.objects.filter(twitter_account__isnull=False)
 
-        for channel in channels:
+        for user in users:
+            twitter_account = user.twitter_account
             try:
                 if verbosity > 0:
-                    self.stdout.write('Fetching @{}'.format(channel.twitter_account))
+                    self.stdout.write('Fetching @{}'.format(twitter_account))
                 timeline = api.GetUserTimeline(
-                    screen_name=channel.twitter_account,
+                    screen_name=twitter_account,
                     # exclude_replies=True, # we still want reply to account
                     trim_user=True
                 )
@@ -58,7 +60,7 @@ class Command(BaseCommand):
                     if status.retweeted_status or status.in_reply_to_status_id:
                         continue
 
-                    source = "https://twitter.com/{}/status/{}".format(channel.twitter_account, status.id_str)
+                    source = "https://twitter.com/{}/status/{}".format(twitter_account, status.id_str)
 
                     try:
                         post = Post.objects.get(guid=guid)
@@ -70,7 +72,7 @@ class Command(BaseCommand):
                             self.stdout.write('Skipping {}. Already imported'.format(source))
                         continue
 
-                    title = "{}: {}...".format(channel.twitter_account, status.full_text[:60])
+                    title = "{}: {}...".format(twitter_account, status.full_text[:60])
                     content = status.full_text
                     for u in status.urls:
                         content = content.replace(u.url, '<a href="{}">{}</a>'.format(u.expanded_url, u.url))
@@ -83,7 +85,7 @@ class Command(BaseCommand):
                         source=source,
                         title=title,
                         content=content,
-                        author=channel.author
+                        author=user
                     )
 
                     if post is None:
@@ -92,10 +94,11 @@ class Command(BaseCommand):
                         post.__dict__.update(args)
                         post.save()
 
-                    if channel.topic:
-                        if verbosity > 1:
-                            self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
-                        post.topics.add(channel.topic)
+                    # # Topics are not supported for now
+                    # if channel.topic:
+                    #     if verbosity > 1:
+                    #         self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
+                    #     post.topics.add(channel.topic)
 
             except Exception:
                 traceback.print_exc()

@@ -77,6 +77,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
 
+    twitter_account = models.CharField(max_length=160, null=True, blank=True)
+
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
@@ -112,6 +114,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             'medium': self.medium,
             'bio': self.bio,
             'timezone': self.timezone,
+            'integrations': {
+                'twitter': self.twitter_account
+            },
             'followUrl': '/api/authors/{}/subscribe'.format(id),
             'unfollowUrl': '/api/authors/{}/unsubscribe'.format(id),
         }
