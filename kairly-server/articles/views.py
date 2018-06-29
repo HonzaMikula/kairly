@@ -165,7 +165,7 @@ def author(request, username):
     if not topic and topics:
         data['topics'] = [{
             'name': t.name,
-            'url': '/author/{}|{}'.format(author.username, t.slug)
+            'url': '{}|{}'.format(author.username, t.slug)
         } for t in topics.values()]
     return JsonResponse(data)
 
