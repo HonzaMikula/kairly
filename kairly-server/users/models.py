@@ -25,8 +25,8 @@ class KairlyUsernameValidator(validators.RegexValidator):
         'login', 'logout', 'signin', 'signout',
         'signup', 'register', 'join', 'invite',
         'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help', 'settings',
-        'site', 'page', 'app',
-        'sites', 'pages', 'apps',
+        'site', 'page', 'app', 'post', 'action',
+        'sites', 'pages', 'apps', 'posts', 'actions',
         'user', 'author', 'edition', 'profile', 'issue',
         'users', 'authors', 'editions', 'profiles', 'issues',
         'explore', 'dashboard', 'recent',
@@ -116,9 +116,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'timezone': self.timezone,
             'integrations': {
                 'twitter': self.twitter_account
-            },
-            'followUrl': '/api/authors/{}/subscribe'.format(id),
-            'unfollowUrl': '/api/authors/{}/unsubscribe'.format(id),
+            }
         }
 
         # TODO what about param (ma)
