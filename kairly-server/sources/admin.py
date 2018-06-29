@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
 
-from .models import Channel, TwitterChannel
+from .models import Channel
 
 
 @admin.register(Channel)
