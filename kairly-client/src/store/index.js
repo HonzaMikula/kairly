@@ -71,7 +71,7 @@ export default new Vuex.Store({
       Vue.delete(state.editions, editionId)
     },
     edition(state, edition) {
-      state.editions = {...state.editions, [edition.id]: edition}
+      state.editions = {...state.editions, [edition.fullName]: edition}
     },
     timelineRequested(state) {
       state.timeline.loading = true

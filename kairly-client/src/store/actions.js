@@ -8,7 +8,7 @@ export const getProfile = ({ commit }) => {
         commit('user', resp.user)
         commit('backlog', resp.backlog)
         resp.editions.forEach(edition => commit('edition', edition))
-        commit('managedEditions', resp.editions.map(e => e.id))
+        commit('managedEditions', resp.editions.map(e => e.fullName))
 
       },
       () => {
@@ -34,7 +34,7 @@ export const getUserEditions = ({ commit }) => {
     .then(
       editions => {
         editions.forEach(edition => commit('edition', edition))
-        commit('subscribedEditions', editions.map(e => e.id))
+        commit('subscribedEditions', editions.map(e => e.fullName))
       }
     )
 }
@@ -51,9 +51,9 @@ export const subscribe = ({ commit }, { edition, value}) => {
   commit('invalidateTimeline')
   let p
   if (value) {
-    p = api.subscribeEdition(edition.id)
+    p = api.subscribeEdition(edition.fullName)
   } else {
-    p = api.unsubscribeEdition(edition.id)
+    p = api.unsubscribeEdition(edition.fullName)
   }
   p.then(
     edition => commit('edition', edition)
@@ -84,31 +84,31 @@ export const startNewEdtion = ({ commit }, { authorId, edition }) => {
   .then(resp => {
     const { edition } = resp
     commit('edition', edition)
-    commit('appendManagedEdition', edition.id)
+    commit('appendManagedEdition', edition.fullName)
   })
 }
 
 export const deleteEdition = ({ commit }, edition) => {
-  api.deleteEdition(edition.id)
+  api.deleteEdition(edition.fullName)
   .then(() => {
-    commit('removeEdition', edition.id)
+    commit('removeEdition', edition.fullName)
   })
 }
 
 export const addToBacklog = ({ commit }, { edition, post }) => {
-  api.addToBacklog(edition.id, post.id)
+  api.addToBacklog(edition.fullName, post.id)
   // TODO to have better user experience, post can be added immediately
   // and reverted when api call fails
   .then(() => {
-    commit('backlogAdd', { editionId: edition.id, postId: post.id })
+    commit('backlogAdd', { editionId: edition.fullName, postId: post.id })
   })
 }
 
 export const removeFromBacklog = ({ commit }, { edition, post }) => {
-  api.deleteFromBacklog(edition.id, post.id)
+  api.deleteFromBacklog(edition.fullName, post.id)
   // TODO to have better user experience, post can be removed immediately
   // and reverted when api call fails
   .then(() => {
-    commit('backlogRemove', { editionId: edition.id, postId: post.id })
+    commit('backlogRemove', { editionId: edition.fullName, postId: post.id })
   })
 }

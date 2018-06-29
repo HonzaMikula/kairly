@@ -133,7 +133,8 @@ class Edition(models.Model, PeriodMixin):
 
     def to_json(self):
         result = {
-            "id": "{}/{}".format(self.editor.username, self.slug),
+            "name": self.slug,
+            "fullName": "{}/{}".format(self.editor.username, self.slug),
             "title": self.title,
             "picture": settings.MEDIA_SITE + self.image.url,
             "description": self.description,

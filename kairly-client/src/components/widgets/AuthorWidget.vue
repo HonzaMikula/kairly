@@ -2,12 +2,12 @@
   <author-widget-view>
     <header>
       <picture>
-        <router-link :to="{name: 'author', params: {authorId: author.id}}">
+        <router-link :to="{name: 'author', params: {author: author.id}}">
           <img :src="author.picture" :alt="author.name"/>
         </router-link>
       </picture>
       <h3>
-        <router-link :to="{name: 'author', params: {authorId: author.id}}">
+        <router-link :to="{name: 'author', params: {author: author.id}}">
           {{ author.name }}
         </router-link>
       </h3>

@@ -50,10 +50,10 @@ class ProfileView(View):
         editions = []
         internal_ids_mapping = {}
         for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
-            public_id = '{}/{}'.format(request.user.username, edition.slug)
-            internal_ids_mapping[edition.id] = public_id
+            full_name = '{}/{}'.format(request.user.username, edition.slug)
+            internal_ids_mapping[edition.id] = full_name
             editions.append({
-                'id': public_id,
+                'fullName': full_name,
                 'title': edition.title,
             })
 

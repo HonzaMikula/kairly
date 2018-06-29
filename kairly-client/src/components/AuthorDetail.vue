@@ -52,7 +52,7 @@
           <div>
             <EditionWidget
               v-for="edition in editions"
-              :key="edition.id"
+              :key="edition.fullName"
               v-bind:edition="edition"
             />
           </div>
@@ -165,15 +165,15 @@ export default {
 
     loadMore() {
       if (this.cursor) {
-        const { authorId } = this.$route.params
+        const { author } = this.$route.params
 
         this.loadingPosts = true
-        api.getAuthorPosts(authorId, this.cursor).then(this.handlePostsData)
+        api.getAuthorPosts(author, this.cursor).then(this.handlePostsData)
       }
     },
 
     loadData() {
-      const { authorId } = this.$route.params
+      const { author } = this.$route.params
 
       this.loadingProfile = true
       this.loadingPosts = true
@@ -183,14 +183,14 @@ export default {
       this.posts = []
       this.cursor = null
 
-      api.getAuthorDetail(authorId).then(resp => {
+      api.getAuthorDetail(author).then(resp => {
         resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
         this.author = resp.author
-        this.editionIds = resp.editions.map(e => e.id)
+        this.editionIds = resp.editions.map(e => e.fullName)
         this.loadingProfile = false
         this.topics = resp.topics
       })
-      api.getAuthorPosts(authorId, null).then(this.handlePostsData)
+      api.getAuthorPosts(author, null).then(this.handlePostsData)
     }
   },
 

@@ -2,18 +2,18 @@
   <timeline-edition>
     <header>
       <h1>
-        <router-link :to="`/editions/${issue.edition.id}`">{{ issue.edition.title }}</router-link>&nbsp;<router-link :to="`/editions/${issue.edition.id}/${issue.number}`">#{{ issue.number }}</router-link>
+        <router-link :to="{name: 'edition', params: {author: edition.editor.id, edition: edition.name}}">{{ issue.edition.title }}</router-link>&nbsp;<router-link :to="{name: 'issue', params: {author: edition.editor.id, edition: edition.name, issue: issue.number}}">#{{ issue.number }}</router-link>
       </h1>
 
       <p>
         <timeline-edition--editor>
-          <router-link :to="{name: 'author', params: {authorId: issue.edition.editor.id}}">
-            <img v-if="issue.edition.editor.picture" :src="issue.edition.editor.picture" :alt="issue.edition.editor.name" />
-            {{ issue.edition.editor.name }}
+          <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
+            <img v-if="issue.edition.editor.picture" :src="edition.editor.picture" :alt="edition.editor.name" />
+            {{ edition.editor.name }}
           </router-link>
         </timeline-edition--editor>
         •
-        {{ issue.edition.periodicity.frequency }}
+        {{ edition.periodicity.frequency }}
         •
         {{ issue.time | moment('calendar')}}
       </p>
@@ -25,6 +25,12 @@
 <script>
 export default {
   name: 'issue-edition',
-  props: ['issue']
+  props: ['issue'],
+
+  computed: {
+    edition() {
+      return this.issue.edition
+    }
+  }
 }
 </script>

@@ -56,14 +56,14 @@ export default {
 
   methods: {
     init() {
-      api.getEditionBacklog(this.edition.id).then(resp => {
+      api.getEditionBacklog(this.edition.fullName).then(resp => {
         this.backlog = resp.backlog
         this.published = resp.publish
       })
     },
 
     publish(post) {
-      api.addToBacklog(this.edition.id, post.id, true)
+      api.addToBacklog(this.edition.fullName, post.id, true)
       .then(() => {
         this.backlog.splice(this.backlog.indexOf(post), 1)
         this.published.push(post)
@@ -71,7 +71,7 @@ export default {
     },
 
     undoPublish(post) {
-      api.addToBacklog(this.edition.id, post.id, false)
+      api.addToBacklog(this.edition.fullName, post.id, false)
       .then(() => {
         this.published.splice(this.published.indexOf(post), 1)
         this.backlog.push(post)

@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import DialogWindow from '@/components/modals/Dialog'
 import PictureInput from 'vue-picture-input'
@@ -86,6 +86,8 @@ export default {
     }
   },
 
+  computed: mapGetters(['user']),
+
   methods: {
     closeModal() {
       this.onClose()
@@ -100,10 +102,8 @@ export default {
     },
 
     submit() {
-      const { authorId } = this.$route.params
-
       this.startNewEdtion({
-        authorId,
+        authorId: this.user.id,
         edition: {
           title: this.title,
           description: this.description,

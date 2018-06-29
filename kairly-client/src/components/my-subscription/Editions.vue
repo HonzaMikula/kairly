@@ -2,7 +2,7 @@
   <my-editions-view>
     <EditionWidget
       v-for="edition in editions"
-      :key="edition.id"
+      :key="edition.fullName"
       :edition="edition"
     />
   </my-editions-view>

@@ -58,7 +58,7 @@ export default {
 
   methods: {
     toggle(edition, ev) {
-      if (this.containedIn.indexOf(edition.id) === -1) {
+      if (this.containedIn.indexOf(edition.fullName) === -1) {
         this.addToBacklog({edition, post: this.post})
       } else {
         this.removeFromBacklog({edition, post: this.post})

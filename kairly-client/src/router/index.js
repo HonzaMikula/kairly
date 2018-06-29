@@ -10,7 +10,6 @@ import MySubscription from '@/components/my-subscription/MySubscription'
 import MyAuthors from '@/components/my-subscription/Authors'
 import MyEditions from '@/components/my-subscription/Editions'
 import Explore from '@/components/explore/Explore'
-import CreateEdition from '@/components/editor/CreateEdition'
 import Editions from '@/components/editor/Editions'
 import SignUp from '@/components/profile/SignUp'
 import Settings from '@/components/profile/Settings'
@@ -21,12 +20,6 @@ export default new Router({
   mode: 'history',
   routes: [
     {path: '/', name: 'timeline', component: Timeline},
-    {path: '/post/:postId', name: 'post', component: PostDetail},
-    {path: '/editions/:editionId([^/]+/[^/]+)', name: 'edition', component: EditionDetail},
-    {path: '/editions/:editionId([^/]+/[^/]+)/:issueId', name: 'issue', component: IssueDetail},
-    {path: '/author/:authorId', name: 'author', component: AuthorDetail},
-    {path: '/author/:authorId/new-edition', name: 'create-edition', component: CreateEdition},
-    {path: '/author/:authorId/editions', name: 'author-editions', component: Editions},
     {path: '/homepage', name: 'homepage', component: Homepage},
 
     {path: '/subscription', component: MySubscription, children: [
@@ -38,6 +31,16 @@ export default new Router({
     {path: '/explore/:tab', component: Explore},
     {path: '/user/settings', component: Settings, name: 'settings'},
     {path: '/join-and-read-with-kairly', component: SignUp, meta: { public: true }},
+
+    {path: '/editions', name: 'author-editions', component: Editions},
+    {path: '/post/:postId', name: 'post', component: PostDetail},  // TODO remap to /:author/post--:id
+
+    {path: '/:author', name: 'author', component: AuthorDetail},
+    {path: '/:author/:edition', name: 'edition', component: EditionDetail},
+    {path: '/:author/:edition/:issue', name: 'issue', component: IssueDetail},
+
+
+
   ],
   linkActiveClass: 'is-active',
   linkExactActiveClass: 'is-active'

@@ -5,14 +5,14 @@
         <ul v-if="user">
           <li class="home"><router-link :to="{name: 'timeline'}" exact><span>Home</span></router-link></li>
           <li class="my-subscription"><router-link :to="{name: 'subscription'}"><span>My Subscription</span></router-link></li>
-          <li class="my-editions"><router-link :to="{name: 'author-editions', params: {authorId: user.id}}"><span>My Editions</span></router-link></li>
+          <li class="my-editions"><router-link :to="{name: 'author-editions'}"><span>My Editions</span></router-link></li>
           <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
         </ul>
         </app-header--nav>
 
         <app-header--user-profile v-if="user">
-          <h3><router-link :to="{name: 'author', params: {authorId: user.id}}">{{ user.name }}</router-link></h3>
-          <router-link :to="{name: 'author', params: {authorId: user.id}}"><img :src="user.picture || '../../assets/user.png'" :alt="user.name"/></router-link>
+          <h3><router-link :to="{name: 'author', params: {author: user.id}}">{{ user.name }}</router-link></h3>
+          <router-link :to="{name: 'author', params: {author: user.id}}"><img :src="user.picture || '../../assets/user.png'" :alt="user.name"/></router-link>
           <button-icon v-on:click="openDropDownMenu"></button-icon>
         </app-header--user-profile>
 

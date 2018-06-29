@@ -2,7 +2,7 @@
   <timeline-edition>
     <header>
       <h1>
-        <router-link :to="{name: 'author', params: {authorId: issue.author.id}}">
+        <router-link :to="{name: 'author', params: {author: issue.author.id}}">
           <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
           {{ issue.author.name }}
         </router-link>
