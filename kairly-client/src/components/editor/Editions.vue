@@ -14,9 +14,10 @@
             :key="edition.id"
             :class="{'is-selected': selectedEdition && selectedEdition.id == edition.id}"
             @click="selectEdition(edition)">
+            <img :src="edition.picture" :alt="edition.title"/>
             <h3>{{ edition.title }}</h3>
             <p>
-              <strong>#{{ edition.issues + 1 }}</strong> is realising in
+              <strong>#{{ edition.issues + 1 }}</strong> is releasing in
               <strong>4 hours</strong> with
               <strong>3 posts</strong>.
             </p>
@@ -217,31 +218,43 @@ editor-editions--header--dropdown
   z-index: 1
 
   display: block
-  width: 300px
+  height: $baseline * 10
+  width: 380px
 
-  background: #fff
+  backdrop-filter: blur(10px) saturate(125%)
   border-radius: $baseline / 4
-  overflow: hidden
 
   font-size: $fs--1
 
   //- item
   > div
-    margin-bottom: $baseline / 4
-    padding: 0 $baseline / 4
+    padding: $baseline / 2
+
+    border-bottom: 1px solid #eee
 
     cursor: pointer
 
     &:focus,
     &:hover
-      background: #f5f5f5
+      background: #fff
 
     &:last-of-type
       margin-bottom: 0
 
+      border-bottom: 0
+
+  //- edition cover
+  img
+    float: left
+    margin-right: $baseline / 2
+    height: $baseline * 2
+    width: $baseline * 3
+
+  //- edition title
   h3
     font-weight: 600
 
+  //- information about next issue
   p
     color: #777
 
