@@ -1,7 +1,5 @@
 import * as api from '@/api'
 
-import router from '@/router'
-
 export const getProfile = ({ commit }) => {
   api
     .getProfile()
@@ -87,10 +85,6 @@ export const startNewEdtion = ({ commit }, { authorId, edition }) => {
     const { edition } = resp
     commit('edition', edition)
     commit('appendManagedEdition', edition.id)
-    // there is problem with push using editionId param, it can't handle
-    // parameter which contains /
-    //router.push({ name: 'edition', params: { editionId: edition.id }})
-    router.push('/editions/' + edition.id )
   })
 }
 
@@ -98,7 +92,6 @@ export const deleteEdition = ({ commit }, edition) => {
   api.deleteEdition(edition.id)
   .then(() => {
     commit('removeEdition', edition.id)
-    router.push({ name: 'author', params: { authorId: edition.editor.id }})
   })
 }
 

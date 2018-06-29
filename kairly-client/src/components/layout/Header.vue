@@ -148,7 +148,7 @@ app-header--nav
       position: relative
       top: 5px
 
-      font-size: 30px
+      font-size: $fs-2
       margin-right: 0
 
 

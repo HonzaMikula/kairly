@@ -113,6 +113,8 @@ export default {
           image: this.image
         }
       })
+
+      this.closeModal()
     },
 
     ...mapActions(['startNewEdtion'])

@@ -43,7 +43,7 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
@@ -115,12 +115,13 @@ export default {
     confirmDeleteEdition() {
       if (window.confirm("Are you sure?")) {
         this.deleteEdition(this.selectedEdition)
+        this.loadData()
       }
     },
 
     closeModal() {
       this.isCreateEditionOpen = false
-      this.$forceUpdate()
+      this.loadData()
     },
 
     loadData() {
@@ -141,7 +142,9 @@ export default {
         this.loadingProfile = false
         this.topics = resp.topics
       })
-    }
+    },
+
+    ...mapActions(['deleteEdition'])
   },
 
   created() {

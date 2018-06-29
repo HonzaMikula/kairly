@@ -64,7 +64,7 @@
 
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
@@ -116,9 +116,7 @@ export default {
       })
       this.edition.subscription = !this.edition.subscription
       ev.target.blur()
-    },
-
-    ...mapActions(['deleteEdition'])
+    }
   },
 
   created() {
