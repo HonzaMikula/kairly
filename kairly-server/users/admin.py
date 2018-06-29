@@ -21,7 +21,7 @@ class UserAdmin(OriginalUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('username', 'email', 'img_picture', 'name', 'is_active', 'timezone')
+    list_display = ('username', 'email', 'img_picture', 'name', 'medium', 'is_active', 'timezone')
     search_fields = ('username', 'name', 'email')
 
     def img_picture(self, obj):
