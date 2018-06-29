@@ -280,6 +280,10 @@ def subscribe_author(request, username):
             author=author,
             topic=topic
         )
+        subscription.period = periodicity.frequency
+        subscription.period_time = periodicity.time
+        subscription.period_dow = periodicity.dow
+        subscription.save()
     except SubscriptionToAuthor.DoesNotExist:
         subscription = SubscriptionToAuthor.objects.create(
             user=request.user,
