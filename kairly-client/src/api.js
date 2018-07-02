@@ -67,7 +67,7 @@ export const getUserAuthors = () => {
 
 export const getEditionDetail = (editionId, issueId=null) => {
   if (!token) return Promise.reject();
-  let url = API_URI + '/editions/' + editionId
+  let url = `${API_URI}/editions/${editionId}`
   if (issueId) {
     url += '?issue=' + issueId
   }
@@ -94,13 +94,13 @@ export const getRecentPosts = () => {
 
 export const getAuthorDetail = (authorId) => {
   if (!token) return Promise.reject()
-  let req = agent.get(API_URI + '/authors/' + authorId)
+  let req = agent.get(`${API_URI}/authors/${authorId}`)
   return req.then(res => res.body)
 }
 
 export const getAuthorPosts = (authorId, cursor) => {
   if (!token) return Promise.reject()
-  let req = agent.get(API_URI + '/authors/' + authorId + '/posts')
+  let req = agent.get(`${API_URI}/authors/${authorId}/posts`)
   if (cursor) { req = req.query({ cursor }) }
   return req.then(res => res.body)
 }
@@ -108,28 +108,28 @@ export const getAuthorPosts = (authorId, cursor) => {
 export const getPost = (postId) => {
   if (!token) return Promise.reject();
   return agent
-    .get(API_URI + '/post/'  + postId)
+    .get(`${API_URI}/post/${postId}`)
     .then(res => res.body.post)
 }
 
 export const subscribeEdition = editionId => {
   if (!token) return Promise.reject()
   return agent
-    .post(API_URI + '/editions/' + editionId + '/subscribe')
+    .post(`${API_URI}/editions/${editionId}/subscribe`)
     .then(res => res.body)
 }
 
 export const unsubscribeEdition = editionId => {
   if (!token) return Promise.reject();
   return agent
-    .post(API_URI + '/editions/' + editionId + '/unsubscribe')
+    .post(`${API_URI}/editions/${editionId}/unsubscribe`)
     .then(res => res.body)
 }
 
 export const subscribeAuthor = (author, periodicity) => {
   if (!token) return Promise.reject();
   return agent
-    .post(process.env.VUE_APP_BASE_URI + author.followUrl)
+    .post(`${API_URI}/authors/${author.id}/subscribe`)
     .send(periodicity)
     .then(res => res.body)
 }
@@ -137,7 +137,7 @@ export const subscribeAuthor = (author, periodicity) => {
 export const unsubscribeAuthor = author => {
   if (!token) return Promise.reject();
   return agent
-    .post(process.env.VUE_APP_BASE_URI + author.unfollowUrl)
+    .post(`${API_URI}/authors/${author.id}/unsubscribe`)
     .then(res => res.body)
 }
 
@@ -145,7 +145,7 @@ export const createEdition = (authorId, edition) => {
   //const { title, description, image, period, time, dow } = edition
   if (!token) return Promise.reject();
   return agent
-    .post(API_URI + '/authors/' + authorId + '/new-edition')
+    .post(`${API_URI}/authors/${authorId}/new-edition`)
     .send(edition)
     .then(res => res.body)
 }
@@ -153,27 +153,27 @@ export const createEdition = (authorId, edition) => {
 export const deleteEdition = editionId => {
   if (!token) return Promise.reject();
   return agent
-    .delete(API_URI + '/editions/' + editionId)
+    .delete(`${API_URI}/editions/${editionId}`)
 }
 
 export const getEditionBacklog = editionId => {
   if (!token) return Promise.reject();
   return agent
-    .get(API_URI + '/editions/' + editionId + '/backlog')
+    .get(`${API_URI}/editions/${editionId}/backlog`)
     .then(res => res.body)
 }
 
 export const addToBacklog = (editionId, postId, publish=false) => {
   if (!token) return Promise.reject();
   return agent
-    .put(API_URI + '/editions/' + editionId + '/backlog')
+    .put(`${API_URI}/editions/${editionId}/backlog`)
     .send({post: postId, publish})
 }
 
 export const deleteFromBacklog = (editionId, postId) => {
   if (!token) return Promise.reject();
   return agent
-    .delete(API_URI + '/editions/' + editionId + '/backlog')
+    .delete(`${API_URI}/editions/${editionId}/backlog`)
     .send({post: postId})
 }
 

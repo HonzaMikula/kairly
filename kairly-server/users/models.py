@@ -25,8 +25,8 @@ class KairlyUsernameValidator(validators.RegexValidator):
         'login', 'logout', 'signin', 'signout',
         'signup', 'register', 'join', 'invite',
         'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help', 'settings',
-        'site', 'page', 'app',
-        'sites', 'pages', 'apps',
+        'site', 'page', 'app', 'post', 'action',
+        'sites', 'pages', 'apps', 'posts', 'actions',
         'user', 'author', 'edition', 'profile', 'issue',
         'users', 'authors', 'editions', 'profiles', 'issues',
         'explore', 'dashboard', 'recent',
@@ -73,9 +73,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
-    picture = models.ImageField(upload_to='users', null=True)  # temporary allow null
+    picture = models.ImageField(upload_to='users', null=True, blank=True)
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
+
+    twitter_account = models.CharField(max_length=160, null=True, blank=True)
 
     objects = UserManager()
 
@@ -112,8 +114,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             'medium': self.medium,
             'bio': self.bio,
             'timezone': self.timezone,
-            'followUrl': '/api/authors/{}/subscribe'.format(id),
-            'unfollowUrl': '/api/authors/{}/unsubscribe'.format(id),
+            'integrations': {
+                'twitter': self.twitter_account
+            }
         }
 
         # TODO what about param (ma)

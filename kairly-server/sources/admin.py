@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
 
-from .models import Channel, TwitterChannel
+from .models import Channel
 
 
 @admin.register(Channel)
@@ -72,29 +72,3 @@ class ChannelAdmin(admin.ModelAdmin):
            next_link=next_link
         )
         return TemplateResponse(request, "admin/preview.html", context)
-
-
-@admin.register(TwitterChannel)
-class TwitterChannelAdmin(admin.ModelAdmin):
-    list_display = ('twitter_account', 'author', 'topic', 'enabled')
-
-    def get_field_queryset(self, db, db_field, request):
-        """
-        If the ModelAdmin specifies ordering, the queryset should respect that
-        ordering.  Otherwise don't specify the queryset, let the field decide
-        (returns None in that case).
-        """
-        if db_field.name == 'topic':
-            manager = db_field.remote_field.model._default_manager
-            try:
-                channel_id = int(request.resolver_match.kwargs['object_id'])
-            except KeyError:
-                channel_id = None
-
-            if channel_id:
-                channel = TwitterChannel.objects.get(id=channel_id)
-                if channel.author_id:
-                    return manager.filter(author_id=channel.author_id)
-            return manager.none()
-
-        super().get_field_queryset(db, db_field, request)

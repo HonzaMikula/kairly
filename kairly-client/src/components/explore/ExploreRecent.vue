@@ -6,7 +6,7 @@
       <div>
         <EditionWidget
           v-for="issue in issues"
-          :key="`${issue.edition.id}#${issue.number}`"
+          :key="`${issue.edition.fullName}#${issue.number}`"
           :edition="issue.edition"
         />
       </div>

@@ -1,18 +1,20 @@
 <template>
   <edition-widget-view>
     <picture>
-      <router-link :to="'/editions/' + edition.id">
-      <img :src="edition.picture" :alt="edition.title" />
+      <router-link :to="{name: 'edition', params: {author: edition.editor.id, edition: edition.name}}">
+        <img :src="edition.picture" :alt="edition.title" />
       </router-link>
     </picture>
 
-    <h2><router-link :to="'/editions/' + edition.id">{{ edition.title }}</router-link></h2>
+    <h2>
+      <router-link :to="{name: 'edition', params: {author: edition.editor.id, edition: edition.name}}">{{ edition.title }}</router-link>
+    </h2>
 
     <p>{{ edition.description }}</p>
 
     <edition-widget--author>
       <img :src="edition.editor.picture" :alt="edition.editor.name"/>
-      <router-link :to="{name: 'author', params: {authorId: edition.editor.id}}">{{ edition.editor.name }}</router-link>
+      <router-link :to="{name: 'author', params: {author: edition.editor.id}}">{{ edition.editor.name }}</router-link>
     </edition-widget--author>
 
     <edition-widget--subscribe>

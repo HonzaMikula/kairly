@@ -50,10 +50,10 @@ class ProfileView(View):
         editions = []
         internal_ids_mapping = {}
         for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
-            public_id = '{}/{}'.format(request.user.username, edition.slug)
-            internal_ids_mapping[edition.id] = public_id
+            full_name = '{}/{}'.format(request.user.username, edition.slug)
+            internal_ids_mapping[edition.id] = full_name
             editions.append({
-                'id': public_id,
+                'fullName': full_name,
                 'title': edition.title,
             })
 
@@ -76,6 +76,11 @@ class ProfileView(View):
         for field in fields:
             if field in payload:
                 setattr(user, field, payload[field])
+
+        integrations = payload.get('integrations')
+        if 'twitter' in integrations:
+            value = integrations['twitter']
+            user.twitter_account = value if value else None
 
         if 'picture' in payload:
             picture = file_from_data_uri(payload['picture'], user.username)

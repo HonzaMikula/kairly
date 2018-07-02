@@ -165,7 +165,7 @@ def author(request, username):
     if not topic and topics:
         data['topics'] = [{
             'name': t.name,
-            'url': '/author/{}|{}'.format(author.username, t.slug)
+            'url': '{}|{}'.format(author.username, t.slug)
         } for t in topics.values()]
     return JsonResponse(data)
 
@@ -280,6 +280,10 @@ def subscribe_author(request, username):
             author=author,
             topic=topic
         )
+        subscription.period = periodicity.frequency
+        subscription.period_time = periodicity.time
+        subscription.period_dow = periodicity.dow
+        subscription.save()
     except SubscriptionToAuthor.DoesNotExist:
         subscription = SubscriptionToAuthor.objects.create(
             user=request.user,

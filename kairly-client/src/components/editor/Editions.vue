@@ -11,8 +11,8 @@
           v-on-clickaway="() => isSelectEditionOpen = false">
           <div
             v-for="edition in editions"
-            :key="edition.id"
-            :class="{'is-selected': selectedEdition && selectedEdition.id == edition.id}"
+            :key="edition.fullName"
+            :class="{'is-selected': selectedEdition && selectedEdition.fullName == edition.fullName}"
             @click="selectEdition(edition)">
             <img :src="edition.picture" :alt="edition.title"/>
             <h3>{{ edition.title }}</h3>
@@ -126,8 +126,6 @@ export default {
     },
 
     loadData() {
-      const { authorId } = this.$route.params
-
       this.loadingProfile = true
       this.loadingPosts = true
       this.author = null
@@ -135,10 +133,10 @@ export default {
       this.posts = []
       this.cursor = null
 
-      api.getAuthorDetail(authorId).then(resp => {
+      api.getAuthorDetail(this.user.id).then(resp => {
         resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
         this.author = resp.author
-        this.editionIds = resp.editions.map(e => e.id)
+        this.editionIds = resp.editions.map(e => e.fullName)
         this.selectedEdition = resp.editions[0]
         this.loadingProfile = false
         this.topics = resp.topics

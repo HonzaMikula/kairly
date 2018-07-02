@@ -11,6 +11,7 @@ class UserAdmin(OriginalUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('name', 'email', 'medium', 'picture', 'bio', 'timezone')}),
+        (_('Integrations'), {'fields': ('twitter_account',)}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
@@ -20,7 +21,7 @@ class UserAdmin(OriginalUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('username', 'email', 'img_picture', 'name', 'is_active', 'timezone')
+    list_display = ('username', 'email', 'img_picture', 'name', 'medium', 'is_active', 'timezone')
     search_fields = ('username', 'name', 'email')
 
     def img_picture(self, obj):

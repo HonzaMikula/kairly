@@ -39,8 +39,8 @@ export default {
   },
 
   created() {
-    const { editionId, issueId } = this.$route.params
-    api.getEditionDetail(editionId, issueId).then(resp => {
+    const { author, edition, issue } = this.$route.params
+    api.getEditionDetail(`${author}/${edition}`, issue).then(resp => {
       this.edition = resp.edition
       this.issue = resp.issue
       this.loading = false

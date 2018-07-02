@@ -6,7 +6,7 @@
         <edition-detail--header>
           <h1>{{ edition.title }}</h1>
 
-          <router-link :to="{name: 'author', params: {authorId: edition.editor.id}}">
+          <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
             <img :src="edition.editor.picture" :alt="edition.editor.name"/>
             {{ edition.editor.name }}
           </router-link>
@@ -120,7 +120,8 @@ export default {
   },
 
   created() {
-    api.getEditionDetail(this.$route.params.editionId).then(resp => {
+    const { author, edition } = this.$route.params
+    api.getEditionDetail(`${author}/${edition}`).then(resp => {
       this.edition = resp.edition
       this.issue = resp.issue
       this.loading = false

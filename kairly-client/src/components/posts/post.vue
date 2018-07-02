@@ -2,13 +2,13 @@
   <post-component role="article" :class="post.type">
     <header v-on:mouseleave="closeAuthorWidget()">
       <picture>
-        <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
+        <router-link :to="{name: 'author', params: {author: post.author.id}}">
           <img :src="post.author.picture" :alt="post.author.name" />
         </router-link>
       </picture>
 
       <h3>
-        <router-link :to="{name: 'author', params: {authorId: post.author.id}}">
+        <router-link :to="{name: 'author', params: {author: post.author.id}}">
           {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
         </router-link>
       </h3>
