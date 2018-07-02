@@ -218,11 +218,10 @@ editor-editions--header--dropdown
   z-index: 1
 
   display: block
-  height: $baseline * 10
   width: 380px
 
   backdrop-filter: blur(10px) saturate(125%)
-  border-radius: $baseline / 4
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
 
   font-size: $fs--1
 
