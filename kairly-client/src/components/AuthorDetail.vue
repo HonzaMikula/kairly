@@ -12,39 +12,45 @@
           <picture>
             <img :src="'http://kairly.com'+ author.picture" :alt="author.name"/>
           </picture>
-          <h1>{{ author.name }}</h1>
-          <p>{{ author.bio }}</p>
-          <p>
-            <span v-for="topic in topics" :key="topic.url">
-              <router-link :to="topic.url">{{ topic.name}}</router-link>
-            </span>
-          </p>
+
+          <section>
+            <h1>{{ author.name }}</h1>
+            <p>{{ author.bio }}</p>
+          </section>
+
+          <author-detail--subscribe>
+            <button
+              v-if="author.subscription"
+              class="is-subscribed"
+              @click="unfollow($event)">
+              Unsubscribe author
+            </button>
+
+            <button
+              v-else
+              @click="$refs.followWidget.openSubscribeWidget()">
+              Subscribe author
+            </button>
+
+            <follow-author
+              ref="followWidget"
+              :author="author"
+              :onSelect="follow" />
+
+            <AuthorSubscription if="author.subscription"
+              :author="author"
+            />
+          </author-detail--subscribe>
+
         </author-detail--header>
 
-        <author-detail--subscribe>
-          <button
-            v-if="author.subscription"
-            class="is-subscribed"
-            @click="unfollow($event)">
-            Unsubscribe author
-          </button>
-
-          <button
-            v-else
-            @click="$refs.followWidget.openSubscribeWidget()">
-            Subscribe author
-          </button>
-
-          <follow-author
-            ref="followWidget"
-            :author="author"
-            :onSelect="follow" />
-
-          <AuthorSubscription if="author.subscription"
-            :author="author"
-          />
-
-        </author-detail--subscribe>
+        <author-detail--topics>
+          <ul>
+            <li v-for="topic in topics" :key="topic.url">
+              <router-link :to="topic.url">{{ topic.name}}</router-link>
+            </li>
+          </ul>
+        </author-detail--topics>
 
         <author-detail--editions v-if="editions.length">
           <h2>{{ author.name }}'s Editions</h2>
@@ -205,53 +211,48 @@ export default {
 
 author-detail-view
   display: block
+  padding-top: $baseline
   margin: 0 auto
   max-width: 900px
 
 //- Header
 author-detail--header
-  position: relative
+  position: sticky
+  top: 0
+  z-index: 1
 
-  display: block
-  padding: $baseline 0
+  display: grid
+  grid-template-columns: $baseline*4 1fr auto
+  grid-column-gap: $baseline
+  padding: $baseline/4 $baseline
+  margin: 0 (-$baseline) $baseline/2 (-$baseline)
+
+  backdrop-filter: blur(10px) saturate(125%)
 
   font-family: $ff-serif
-  text-align: center
+
+  @supports not (backdrop-filter: blur(10px))
+    background: rgba(250, 250, 250, 0.97)
 
   //- Author name
   h1
-    margin-bottom: $baseline
-
-    font-size: $fs-4
+    font-size: $fs-3
+    font-weight: 600
     line-height: $baseline * 2
 
+  //- Bio
+  p
+
+
   picture
-    display: table
-    margin: 0 auto
 
     img
+      display: block
       border-radius: 100%
       height: $baseline * 4
       width: $baseline * 4
 
       object-fit: cover
-
-  //- topics
-  p + p
-    margin-top: $baseline / 2
-
-    span
-      &::after
-        content: '•'
-
-      &:last-of-type::after
-        content: ''
-
-    a
-      display: inline-block
-      margin: 0 $baseline/4
-
-      color: $c-base
 
 
 //- Subsribe
@@ -268,9 +269,29 @@ author-detail--subscribe
 
     border-radius: $baseline * 0.75
     height: $baseline * 1.5
-    margin: 0 $baseline / 2
 
     font-size: $fs-1
+
+
+//- Topics
+author-detail--topics
+  display: table
+  margin: 0 auto $baseline auto
+
+  li
+    display: inline-block
+
+    &::before
+      display: inline-block
+      padding: 0 $baseline/2
+
+      content: '•'
+
+    &:first-of-type::before
+      content: ''
+
+    a
+      color: $c-base
 
 //- Editions
 author-detail--editions

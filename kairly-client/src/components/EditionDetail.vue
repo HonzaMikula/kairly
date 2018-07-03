@@ -163,9 +163,13 @@ edition-detail--header
 
   font-family: $ff-serif
 
+  @supports not (backdrop-filter: blur(10px))
+    background: rgba(250, 250, 250, 0.97)
+
   //- Title
   h1
     font-size: $fs-4
+    font-weight: 600
     line-height: $baseline * 2
     text-align: center
 
