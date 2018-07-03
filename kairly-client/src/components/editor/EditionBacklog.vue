@@ -1,6 +1,33 @@
 <template>
   <edition-backlog-view>
 
+    <edition-backlog--next-issue>
+      <PostWrapper
+        v-for="post in published"
+        :post="post"
+        :isSubscribed="true"
+        :key="post.id"
+      >
+        <template slot="controls">
+          <button-icon
+            class="up" aria-label="Move post up"
+            v-tooltip.top="'Move post up'">
+          </button-icon>
+
+          <button-icon
+            class="down" aria-label="Move post down"
+            v-tooltip.top="'Move post down'">
+          </button-icon>
+
+          <button-icon
+            class="remove" aria-label="Remove from issue"
+            v-tooltip.top="'Remove from issue'"
+            @click.prevent="undoPublish(post)">
+          </button-icon>
+        </template>
+      </PostWrapper>
+    </edition-backlog--next-issue>
+
     <edition-backlog--backlog>
       <div v-if="backlog.length == 0">no posts</div>
 
@@ -12,23 +39,6 @@
         </p>
       </div>
     </edition-backlog--backlog>
-
-    <edition-backlog--next-issue>
-      <PostWrapper
-        v-for="post in published"
-        :post="post"
-        :isSubscribed="true"
-        :key="post.id"
-      >
-        <template slot="controls">
-          <button-icon
-            class="remove" aria-label="Remove from issue"
-            v-tooltip.left="'Remove from issue'"
-            @click.prevent="undoPublish(post)">
-          </button-icon>
-        </template>
-      </PostWrapper>
-    </edition-backlog--next-issue>
   </edition-backlog-view>
 </template>
 
@@ -92,7 +102,7 @@ export default {
 <style lang="sass">
 edition-backlog-view
   display: grid
-  grid-template-columns: auto 970px
+  grid-template-columns: 970px auto
   grid-column-gap: $baseline
 
 

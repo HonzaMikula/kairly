@@ -76,16 +76,6 @@ backlog-add-view
   position: relative
 
   button-icon
-    opacity: 0.5
-
-    cursor: pointer
-
-    transition: 0.15s opacity
-
-    &:focus,
-    &:hover
-      opacity: 1
-
     &::before
       content: $fa-var-newspaper-o
 

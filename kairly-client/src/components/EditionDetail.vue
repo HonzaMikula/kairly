@@ -191,8 +191,6 @@ edition-detail--subscribe
     border-radius: $baseline * 0.75
     height: $baseline * 1.5
 
-    font-size: $fs-1
-
   button + p
     color: #777
 
@@ -287,9 +285,6 @@ edition-detail--description
       max-height: 100%
       width: 100%
       object-fit: cover
-
-
-
 
 
 edition-detail--last-edition

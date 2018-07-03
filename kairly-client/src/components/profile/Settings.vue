@@ -260,7 +260,7 @@ settings--form
     textarea
       box-sizing: border-box
       height: $baseline * 2.5
-      padding: 0 $baseline/4
+      padding: $baseline/4
       width: $baseline * 14
 
       border: 1px solid #ddd

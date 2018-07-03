@@ -25,10 +25,30 @@
         </editor-editions--header--dropdown>
 
         <div class="create-edition">
-          <a v-if="selectedEdition" href="" @click.prevent="confirmDeleteEdition">Delete edition</a>
           <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
         </div>
+
+        <div class="edition-controls" v-if="selectedEdition">
+          <button-icon
+            class="edit"
+            role="button"
+            aria-label="Edit edition"
+            v-tooltip.top.end="'Edit edition'">
+          </button-icon>
+
+          <button-icon
+            class="delete"
+            role="button"
+            aria-label="Delete edition"
+            v-tooltip.top.end="'Delete edition'"
+            @click.prevent="confirmDeleteEdition">
+          </button-icon>
+        </div>
       </editor-editions--header>
+
+      <editor-edition--info>
+        Issue <strong>#14</strong> will be automatically published in <strong>3 hours</strong>.
+      </editor-edition--info>
 
       <editor-editions--board>
         <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
@@ -109,20 +129,23 @@ export default {
   methods: {
     selectEdition(edition) {
       this.selectedEdition = edition
-
-      console.log(this.selectedEdition.title)
+      this.isSelectEditionOpen = false
     },
 
     confirmDeleteEdition() {
       if (window.confirm("Are you sure?")) {
         this.deleteEdition(this.selectedEdition)
-        this.loadData()
+
+        // hack to reload the data once new edition is added
+        setTimeout(() => {this.loadData()}, 3000)
       }
     },
 
     closeModal() {
       this.isCreateEditionOpen = false
-      this.loadData()
+
+      // hack to reload the data once new edition is added
+      setTimeout(() => {this.loadData()}, 3000)
     },
 
     loadData() {
@@ -166,16 +189,20 @@ editor-editions-view
 
     display: block
     padding: $baseline 0
+    text-align: center
 
     h1
       display: inline-block
       margin-right: $baseline / 2
 
       font-family: $ff-serif
-      font-size: $fs-2
+      font-size: $fs-4
       font-weight: 600
+      line-height: $baseline * 2
+      text-align: center
+      text-shadow: 0 0 5px #fafafa
 
-    button-icon
+    > button-icon
       display: inline-block
       border-radius: 100%
       height: $baseline * 1.25
@@ -194,8 +221,8 @@ editor-editions-view
 
     .create-edition
       position: absolute
-      right: 0
-      top: $baseline
+      left: 0
+      top: $baseline * 1.25
 
       a
         +subscribe-button
@@ -209,13 +236,43 @@ editor-editions-view
         font-family: $ff-sans
         line-height: $baseline * 1.5
 
+    .edition-controls
+      position: absolute
+      right: 0
+      top: $baseline * 1.25
+
+      > button-icon
+        display: inline-block
+        border-radius: 100%
+        height: $baseline * 1.25
+        margin-left: $baseline / 4
+        width: $baseline * 1.25
+
+        background: #fff
+
+        cursor: pointer
+        line-height: $baseline * 1.25
+        text-align: center
+
+        &:focus,
+        &:hover
+          background: #eee
+
+        &.edit::before
+          content: $fa-var-pencil
+
+        &.delete::before
+          content: $fa-var-trash
+
+
 editor-editions--header--dropdown
   position: absolute
-  left: 0
-  top: $baseline * 2.5
+  left: 50%
+  top: $baseline * 3.5
   z-index: 1
 
   display: block
+  margin-left: -190px
   width: 380px
 
   backdrop-filter: blur(10px) saturate(125%)
@@ -258,9 +315,18 @@ editor-editions--header--dropdown
     font-size: $fs--2
 
 
+//- Info when release go out
+editor-edition--info
+  display: block
+  padding: $baseline/4 0
+  margin-bottom: $baseline
 
-editor-editions--board
+  border-bottom: 1px solid #ddd
+  border-top: 1px solid #ddd
 
+  font-size: $fs--1
+  font-family: $ff-serif
+  text-align: center
 
 
 </style>

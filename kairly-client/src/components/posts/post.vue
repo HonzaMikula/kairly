@@ -23,9 +23,12 @@
         {{ post.time | moment('calendar') }}
       </time>
 
-      <slot name="controls">
-        <backlog-add :post="post" />
-      </slot>
+      <section>
+        <slot name="controls">
+          <backlog-add :post="post" />
+        </slot>
+      </section>
+
     </header>
 
     <slot></slot>
@@ -143,5 +146,23 @@ post-component > header
 
     font-size: $fs--2
     line-height: $baseline * 0.75
+
+  //-- controls
+  section
+    > button-icon
+      margin-left: $baseline / 4
+
+      opacity: 0.5
+
+      cursor: pointer
+
+      transition: 0.15s opacity
+
+      &:first-of-type
+        margin-left: 0
+
+      &:focus,
+      &:hover
+        opacity: 1
 
 </style>

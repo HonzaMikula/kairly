@@ -197,6 +197,8 @@ export default {
   top: 50px
   z-index: 10000
 
+  font-family: $ff-sans
+
   //- steps
   section
     p

@@ -272,8 +272,6 @@ author-detail--subscribe
     border-radius: $baseline * 0.75
     height: $baseline * 1.5
 
-    font-size: $fs-1
-
 
 //- Topics
 author-detail--topics
