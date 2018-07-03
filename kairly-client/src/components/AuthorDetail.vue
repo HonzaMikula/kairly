@@ -10,7 +10,7 @@
       <div v-else>
         <author-detail--header>
           <picture>
-            <img :src="author.picture" :alt="author.name"/>
+            <img :src="'http://kairly.com'+ author.picture" :alt="author.name"/>
           </picture>
           <h1>{{ author.name }}</h1>
           <p>{{ author.bio }}</p>

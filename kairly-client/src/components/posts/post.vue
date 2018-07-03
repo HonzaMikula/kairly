@@ -3,7 +3,7 @@
     <header v-on:mouseleave="closeAuthorWidget()">
       <picture>
         <router-link :to="{name: 'author', params: {author: post.author.id}}">
-          <img :src="post.author.picture" :alt="post.author.name" />
+          <img :src="'http://kairly.com'+ post.author.picture" :alt="post.author.name" />
         </router-link>
       </picture>
 

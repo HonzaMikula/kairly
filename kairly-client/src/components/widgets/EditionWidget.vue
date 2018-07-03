@@ -13,7 +13,7 @@
     <p>{{ edition.description }}</p>
 
     <edition-widget--author>
-      <img :src="edition.editor.picture" :alt="edition.editor.name"/>
+      <img :src="'http://kairly.com'+ edition.editor.picture" :alt="edition.editor.name"/>
       <router-link :to="{name: 'author', params: {author: edition.editor.id}}">{{ edition.editor.name }}</router-link>
     </edition-widget--author>
 

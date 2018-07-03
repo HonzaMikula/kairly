@@ -2,44 +2,10 @@
   <app-layout>
     <edition-detail-view>
 
-      <div v-if="!loading">
-        <edition-detail--header>
-          <h1>{{ edition.title }}</h1>
+      <edition-detail--header v-if="!loading">
+        <h1>{{ edition.title }}</h1>
 
-          <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
-            <img :src="edition.editor.picture" :alt="edition.editor.name"/>
-            {{ edition.editor.name }}
-          </router-link>
-        </edition-detail--header>
-
-        <edition-detail--description>
-          <p>
-            {{ edition.description }}
-          </p>
-
-          <div>
-            <div>
-              <h3>Periodicity</h3>
-              <p>
-                {{ edition.periodicity.frequency }}
-                {{ edition.periodicity.time }}
-                {{ edition.periodicity.dow }}
-              </p>
-            </div>
-
-            <div>
-              <h3>Issues</h3>
-              <p>{{ edition.issues }}</p>
-            </div>
-
-            <div>
-              <h3>Subscribers</h3>
-              <p>{{ edition.likes }}</p>
-            </div>
-          </div>
-        </edition-detail--description>
-
-        <edition-detail--subscribe>
+        <edition-detail--subscribe v-if="!loading">
           <button
             v-bind:class="{ 'is-subscribed': edition.subscription }"
             v-on:click="subscribe($event)"
@@ -47,15 +13,59 @@
 
           <p>10 CZK per month</p>
         </edition-detail--subscribe>
+      </edition-detail--header>
 
-        <edition-detail--picture>
-          <img :src="edition.picture" :alt="edition.title"/>
-        </edition-detail--picture>
+
+
+      <div v-if="!loading">
+
+
+        <edition-detail--info>
+          <ul>
+            <li>
+              <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
+                <img :src="'http://kairly.com'+ edition.editor.picture" :alt="edition.editor.name"/>
+                {{ edition.editor.name }}</router-link>
+            </li>
+
+            <li class="periodicity">{{ edition.periodicity.frequency }} {{ edition.periodicity.time }} {{ edition.periodicity.dow }}</li>
+
+            <li>#{{ edition.issues }}</li>
+
+            <li>{{ edition.likes }} subscribers</li>
+
+            <li>10 CZK per month</li>
+          </ul>
+        </edition-detail--info>
+
+        <edition-detail--description>
+          <section>
+            <h3>Editorial</h3>
+            <p>
+              {{ edition.description }}
+            </p>
+            <p>
+              {{ edition.description }}
+            </p>
+            <p>
+              {{ edition.description }}
+            </p>
+
+            <footer>
+              <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
+                <img :src="'http://kairly.com'+ edition.editor.picture" :alt="edition.editor.name"/>
+                {{ edition.editor.name }}
+              </router-link>
+            </footer>
+          </section>
+
+          <picture>
+            <img :src="edition.picture" :alt="edition.title"/>
+          </picture>
+        </edition-detail--description>
       </div>
 
       <edition-detail--last-edition v-if="issue">
-        <h2><span>Check the Last Issue</span></h2>
-
         <Issue :issue="issue" :subscription="edition.subscription" />
       </edition-detail--last-edition>
     </edition-detail-view>
@@ -132,88 +142,43 @@ export default {
 
 <style lang="sass">
 edition-detail-view
+  position: relative
+
   display: block
   margin: 0 auto
   max-width: 900px
 
-  > div
-    display: grid
-    grid-template-areas: "edition-detail-header edition-detail-header" "edition-detail-description edition-detail-picture" "edition-detail-subscribe edition-detail-picture"
-    grid-template-columns: 50% 50%
-    grid-template-rows: auto
-    padding: $baseline $baseline 0 $baseline
-
-    @media (max-width: $mobile)
-      grid-template-areas: "edition-detail-header" "edition-detail-picture" "edition-detail-description" "edition-detail-subscribe"
-      grid-template-columns: 100%
-
-
 //- Header
 edition-detail--header
-  grid-area: edition-detail-header
-  margin-bottom: $baseline
+  position: sticky
+  top: -1px
+  z-index: 1
+
+  display: block
+  padding: $baseline/4 $baseline
+  margin: $baseline*0.75 0
+  overflow: hidden
+
+  backdrop-filter: blur(10px) saturate(125%)
 
   font-family: $ff-serif
 
   //- Title
   h1
-    margin-bottom: $baseline / 2
-
     font-size: $fs-4
     line-height: $baseline * 2
     text-align: center
 
-  //- Editor
-  > a
-    display: table
-    margin: 0 auto
-
-    color: #999
-
-    font-size: $fs-1
-
-    img
-      border-radius: 100%
-      height: $baseline * 1.5
-      width: $baseline * 1.5
-
-      object-fit: cover
-      vertical-align: middle
-
-
-//- Editorial Intro
-edition-detail--description
-  grid-area: edition-detail-description
-
-  font-family: $ff-serif
-
-  p
-    margin-bottom: $baseline
-
-  > div
-    display: flex
-
-  > div > div
-    margin-right: $baseline
-
-    &:last-of-type
-      margin-right: 0
-
-  h3
-    font-size: $fs--1
-    text-transform: uppercase
-
-  h3 + p
-    margin-bottom: $baseline / 2
-
-    font-weight: 600
-
-
 //- Subscribe
 edition-detail--subscribe
-  grid-area: edition-detail-subscribe
-  justify-self: center
-  margin-top: $baseline
+  position: absolute
+  right: 0
+  top: 0
+
+  display: block
+  padding: $baseline / 4
+
+  backdrop-filter: blur(10px)
 
   button
     +subscribe-button
@@ -227,48 +192,102 @@ edition-detail--subscribe
     color: #777
 
     font-size: $fs--2
+    line-height: $baseline * 0.8
     text-align: center
 
 
-//- Edition Picture
-edition-detail--picture
-  grid-area: edition-detail-picture
-
-  img
-    max-width: 100%
-
-
-//- Last Edition
-edition-detail--last-edition
+edition-detail--info
   display: block
-  margin-top: $baseline
+  padding: $baseline/4 0
 
-  > h2
-    position: relative
+  border-bottom: 1px solid #ddd
+  border-top: 1px solid #ddd
 
-    margin-bottom: $baseline
+  .periodicity
+    text-transform: capitalize
 
+  ul
+    display: table
+    margin: 0 auto
+
+  li
+    display: inline-block
+
+    font-size: $fs--1
     font-family: $ff-serif
-    text-align: center
-    text-transform: uppercase
+    vertical-align: middle
 
-    span
-      position: relative
-      z-index: 1
-
+    &::after
+      display: inline-block
       padding: 0 $baseline/2
 
-      background: #fafafa
+      content: '•'
 
-    &::before
-      position: absolute
-      left: 0
-      top: $baseline / 2
+    &:last-of-type::after
+      display: none
 
-      height: 1px
+  //- Editor
+  a
+    color: #000
+
+    img
+      border-radius: 100%
+      height: $baseline
+      width: $baseline
+
+      object-fit: cover
+      vertical-align: middle
+
+
+//- Editorial Intro
+edition-detail--description
+  display: grid
+  grid-template-columns: 1fr 2fr
+  grid-column-gap: $baseline
+  grid-template-rows: auto
+  margin-top: $baseline
+
+  font-family: $ff-serif
+
+  h3
+    font-weight: 600
+
+  p
+    text-align: justify
+    text-indent: $baseline
+
+  footer
+    margin-top: $baseline / 2
+
+    font-weight: 600
+    text-align: right
+
+    a
+      color: #000
+
+    img
+      border-radius: 100%
+      height: $baseline
+      width: $baseline
+
+      object-fit: cover
+      vertical-align: middle
+
+  picture
+    height: 100%
+
+    img
+      height: 100%
+      min-height: 250px
+      max-height: 100%
       width: 100%
+      object-fit: cover
 
-      background: #eee
 
-      content: ''
+
+
+
+edition-detail--last-edition
+  display: block
+  padding-top: $baseline * 2
 </style>

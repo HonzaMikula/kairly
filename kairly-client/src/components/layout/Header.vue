@@ -12,7 +12,7 @@
 
         <app-header--user-profile v-if="user">
           <h3><router-link :to="{name: 'author', params: {author: user.id}}">{{ user.name }}</router-link></h3>
-          <router-link :to="{name: 'author', params: {author: user.id}}"><img :src="user.picture || '../../assets/user.png'" :alt="user.name"/></router-link>
+          <router-link :to="{name: 'author', params: {author: user.id}}"><img :src="'http://kairly.com'+ user.picture || '../../assets/user.png'" :alt="user.name"/></router-link>
           <button-icon v-on:click="openDropDownMenu"></button-icon>
         </app-header--user-profile>
 
