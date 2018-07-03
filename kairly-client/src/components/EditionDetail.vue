@@ -172,6 +172,7 @@ edition-detail--header
     font-weight: 600
     line-height: $baseline * 2
     text-align: center
+    text-shadow: 0 0 5px #fafafa
 
 //- Subscribe
 edition-detail--subscribe

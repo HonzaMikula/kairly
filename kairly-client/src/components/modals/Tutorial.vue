@@ -54,14 +54,6 @@ export default {
 
 <style lang="sass">
 modal-dialog
-  position: relative
-
-  display: block
-  border-radius: $baseline / 2
-  min-height: 500px
-  width: 970px
-
-  background: #fff
 
   > div
     padding-top: $baseline

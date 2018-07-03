@@ -2,43 +2,34 @@
 <template>
   <dialog-window :onClose="closeModal">
     <modal-dialog role="dialog" @click.stop>
-      <div class="dev-create-edition">
+      <header>
         <h1>Create new edition</h1>
+      </header>
 
-        <picture-input
-          ref="pictureInput"
-          @change="onPictureChange"
-          width="450"
-          height="300"
-          margin="16"
-          accept="image/jpeg,image/png"
-          size="10"
-          buttonClass="btn"
-          :customStrings="{
-            drag: 'Drag or upload image'
-          }">
-        </picture-input>
-
-        <div class="row">
-          Edition Title
-          <input v-model="title">
+      <create-edition-view>
+        <div class="title">
+          <input placeholder="What's the edition name?" v-model="title">
         </div>
 
-        <div class="row">
-          Description
-          <textarea v-model="description"></textarea>
-        </div>
-
-        <div class="row">
-          Period / release time
-
+        <div class="periodicity">
           <button
+            v-if="!periodicity"
             @click="$refs.periodWidget.openSubscribeWidget()">
             Select period
           </button>
 
-          <br>
-          Selected: <span v-if="periodicity">{{ periodicity.frequency }} / {{ periodicity.dow }} / {{ periodicity.time }}</span>
+          <span
+            v-if="periodicity"
+            @click="$refs.periodWidget.openSubscribeWidget()">
+
+            <template v-if="periodicity.frequency == '3x_per_day'">
+              3x per day at 6:00, 12:00 and 18:00
+            </template>
+
+            <template v-else>
+              {{ periodicity.frequency }} {{ DAYS[periodicity.dow - 1] }} {{ periodicity.time }}
+            </template>
+          </span>
 
           <div class="period-wrapper">
             <period-widget
@@ -47,11 +38,33 @@
           </div>
         </div>
 
-        <button
-          @click="submit">
-          Create
-        </button>
-      </div>
+        <div class="description">
+          <section>
+            <label for="editorial">Editorial</label>
+            <textarea id="editorial" v-model="description" placeholder="What this edition is about?"></textarea>
+          </section>
+
+          <picture>
+            <picture-input
+              ref="pictureInput"
+              @change="onPictureChange"
+              width="580"
+              height="250"
+              accept="image/jpeg,image/png"
+              size="10"
+              buttonClass="btn"
+              :customStrings="{
+                drag: 'Drag or upload image'
+              }">
+            </picture-input>
+          </picture>
+
+        </div>
+      </create-edition-view>
+
+      <footer>
+        <button @click="submit">Create edition</button>
+      </footer>
     </modal-dialog>
   </dialog-window>
 </template>
@@ -82,7 +95,8 @@ export default {
       description: '',
       periodicity: null,
       time: null,
-      dow: null
+      dow: null,
+      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
 
@@ -123,18 +137,59 @@ export default {
 </script>
 
 <style lang="sass">
-.dev-create-edition
-  width: 800px
-  margin: 0 auto
-  margin-top: 40px
+create-edition-view
+  display: block
+  padding: $baseline
 
-  h1
-    font-size: 26px
-    margin-bottom: 20px
+  .title
+    padding-bottom: $baseline
 
-  .row
-    margin-bottom: 20px
+    input
+      display: block
+      box-sizing: border-box
+      width: 100%
 
-  .period-wrapper
+      border: 0
+
+      font-family: $ff-serif
+      font-size: $fs-4
+      font-weight: 600
+      line-height: $baseline * 2
+      text-align: center
+
+  .periodicity
     position: relative
+
+    padding: $baseline/4 0
+
+    border-bottom: 1px solid #ddd
+    border-top: 1px solid #ddd
+
+    text-align: center
+
+    > span
+      font-family: $ff-serif
+
+      cursor: pointer
+
+  .description
+    display: grid
+    grid-template-columns: 1fr 2fr
+    grid-column-gap: $baseline
+    grid-template-rows: auto
+    margin-top: $baseline
+
+    label
+      display: table
+
+      font-weight: 600
+
+    textarea
+      height: 200px
+      width: 100%
+
+      border: 0
+
+      font-family: $ff-serif
+      font-size: $fs-0
 </style>

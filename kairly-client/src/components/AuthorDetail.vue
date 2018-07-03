@@ -239,9 +239,11 @@ author-detail--header
     font-size: $fs-3
     font-weight: 600
     line-height: $baseline * 2
+    text-shadow: 0 0 5px #fafafa
 
   //- Bio
   p
+    text-shadow: 0 0 5px #fafafa
 
 
   picture

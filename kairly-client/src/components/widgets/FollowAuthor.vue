@@ -195,7 +195,7 @@ export default {
 
   left: 50%
   top: 50px
-  z-index: 1
+  z-index: 10000
 
   //- steps
   section
