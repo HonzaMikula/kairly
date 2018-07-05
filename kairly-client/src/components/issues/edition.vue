@@ -8,7 +8,7 @@
       <p>
         <timeline-edition--editor>
           <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
-            <img v-if="issue.edition.editor.picture" :src="'http://kairly.com'+ edition.editor.picture" :alt="edition.editor.name" />
+            <img v-if="issue.edition.editor.picture" :src="edition.editor.picture" :alt="edition.editor.name" />
             {{ edition.editor.name }}
           </router-link>
         </timeline-edition--editor>

@@ -1,5 +1,6 @@
 import re
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -110,7 +111,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         res = {
             'id': id,
             'name': name,
-            'picture': self.picture.url if self.picture else '',
+            'picture': settings.MEDIA_SITE + self.picture.url if self.picture else '',
             'medium': self.medium,
             'bio': self.bio,
             'timezone': self.timezone,

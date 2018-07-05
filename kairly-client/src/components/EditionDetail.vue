@@ -24,7 +24,7 @@
           <ul>
             <li>
               <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
-                <img :src="'http://kairly.com'+ edition.editor.picture" :alt="edition.editor.name"/>
+                <img :src="edition.editor.picture" :alt="edition.editor.name"/>
                 {{ edition.editor.name }}</router-link>
             </li>
 
@@ -53,7 +53,7 @@
 
             <footer>
               <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
-                <img :src="'http://kairly.com'+ edition.editor.picture" :alt="edition.editor.name"/>
+                <img :src="edition.editor.picture" :alt="edition.editor.name"/>
                 {{ edition.editor.name }}
               </router-link>
             </footer>
