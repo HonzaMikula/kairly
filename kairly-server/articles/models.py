@@ -90,6 +90,7 @@ class Post(models.Model):
         result = {
             'id': self.id,
             "author": self.author.to_json(),
+            "source": self.source,
             "type": self.kind,
             "time": str(self.published.astimezone(tzinfo))
         }

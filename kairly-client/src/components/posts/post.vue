@@ -24,6 +24,7 @@
       </time>
 
       <section>
+        <slot name="extendedControls"></slot>
         <slot name="controls">
           <backlog-add :post="post" />
         </slot>
@@ -149,20 +150,32 @@ post-component > header
 
   //-- controls
   section
-    > button-icon
+    > button-icon,
+    > a
+      display: inline-block
       margin-left: $baseline / 4
 
+      color: #000
       opacity: 0.5
 
       cursor: pointer
 
       transition: 0.15s opacity
 
-      &:first-of-type
-        margin-left: 0
-
       &:focus,
       &:hover
-        opacity: 1
+        opacity:
+
+    > a
+      margin-right: $baseline / 2
+
+      &::before
+        +fa-icon()
+
+      &.tweet::before
+        content: $fa-var-twitter
+
+      &.external-link::before
+        content: $fa-var-external-link-square
 
 </style>

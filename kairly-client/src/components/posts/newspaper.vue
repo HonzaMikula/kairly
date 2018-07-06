@@ -15,6 +15,11 @@
         </timeline-post--continue-reading>
       </timeline-post--newspaper--content>
     </timeline-post--newspaper>
+
+    <template slot="extendedControls">
+      <a :href="post.source" class="external-link" v-tooltip.top="'Original article'"></a>
+    </template>
+
     <template slot="controls"><slot name="controls"></slot></template>
   </post>
 </template>

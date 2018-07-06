@@ -4,6 +4,11 @@
       <p v-html="post.content.content"></p>
       <img :src="post.content.picture" v-if="post.content.picture" />
     </timeline-post--tweet>
+
+    <template slot="extendedControls">
+      <a :href="post.source" class="tweet" v-tooltip.top="'Original tweet'"></a>
+    </template>
+
     <template slot="controls"><slot name="controls"></slot></template>
   </post>
 </template>
