@@ -66,8 +66,13 @@
           <button @click="submit">Save profile</button>
         </settings--form>
       </div>
+
       <portal to="modal" v-if="isChangePasswordOpen">
         <change-password :onClose="closeChangePassword"></change-password>
+      </portal>
+
+      <portal to="infoMessage">
+        <info-message type="success">Your settings were updated.</info-message>
       </portal>
     </settings-view>
   </app-layout>
@@ -80,6 +85,7 @@ import * as api from '@/api'
 import PictureInput from 'vue-picture-input'
 import AppLayout from '@/components/layout/AppLayout'
 import ChangePassword from '@/components/profile/ChangePassword'
+import InfoMessage from '@/components/InfoMessage'
 
 export default {
   name: 'Settings',
@@ -91,7 +97,8 @@ export default {
   components: {
     AppLayout,
     PictureInput,
-    ChangePassword
+    ChangePassword,
+    InfoMessage
   },
 
   data() {

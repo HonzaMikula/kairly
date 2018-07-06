@@ -2,10 +2,12 @@
   <app-view>
     <loading-spinner v-if="loadingUser"></loading-spinner>
 
-    <router-view v-if="user || $route.meta.public"></router-view>
+    <router-view v-if="(user || $route.meta.public) && !loadingUser"></router-view>
     <Homepage v-else></Homepage>
 
     <portal-target name="modal" slim></portal-target>
+
+    <portal-target name="infoMessage" slim></portal-target>
   </app-view>
 </template>
 
