@@ -22,12 +22,6 @@
 
         <edition-detail--info>
           <ul>
-            <li>
-              <router-link :to="{name: 'author', params: {author: edition.editor.id}}">
-                <img :src="edition.editor.picture" :alt="edition.editor.name"/>
-                {{ edition.editor.name }}</router-link>
-            </li>
-
             <li class="periodicity">{{ edition.periodicity.frequency }} {{ edition.periodicity.time }} {{ edition.periodicity.dow }}</li>
 
             <li>#{{ edition.issues }}</li>
@@ -40,13 +34,6 @@
 
         <edition-detail--description>
           <section>
-            <h3>Editorial</h3>
-            <p>
-              {{ edition.description }}
-            </p>
-            <p>
-              {{ edition.description }}
-            </p>
             <p>
               {{ edition.description }}
             </p>

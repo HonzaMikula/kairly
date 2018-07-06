@@ -8,6 +8,10 @@
         :isSubscribed="true"
         :key="post.id"
       >
+        <template slot="extendedControls">
+          &nbsp;
+        </template>
+
         <template slot="controls">
           <button-icon
             class="up" aria-label="Move post up"
@@ -117,6 +121,7 @@ edition-backlog--backlog
 
   h3
     font-weight: 600
+    font-family: $ff-serif
 
   p
     text-align: center

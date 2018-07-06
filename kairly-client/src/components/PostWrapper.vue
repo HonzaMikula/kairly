@@ -5,6 +5,10 @@
     :isSubscribed="isSubscribed"
     :key="post.id"
   >
+    <template slot="extendedControls">
+      <slot name="extendedControls"></slot>
+    </template>
+
     <template slot="controls">
       <slot name="controls"></slot>
     </template>

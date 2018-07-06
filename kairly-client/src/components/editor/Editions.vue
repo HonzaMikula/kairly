@@ -47,7 +47,13 @@
       </editor-editions--header>
 
       <editor-edition--info>
-        Issue <strong>#14</strong> will be automatically published in <strong>3 hours</strong>.
+        <div>
+          Issue <strong>#14</strong> will be automatically published in <strong>3 hours</strong>
+        </div>
+
+        <div>
+          <strong>17 posts</strong> are considered
+        </div>
       </editor-edition--info>
 
       <editor-editions--board>
@@ -317,7 +323,10 @@ editor-editions--header--dropdown
 
 //- Info when release go out
 editor-edition--info
-  display: block
+  display: grid
+  grid-template-columns: 970px auto
+  grid-column-gap: $baseline
+
   padding: $baseline/4 0
   margin-bottom: $baseline
 
