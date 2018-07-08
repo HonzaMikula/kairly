@@ -9,9 +9,9 @@ export default new Vuex.Store({
     profile: {
       user: null,
       subscribedEditions: [], // ids
-      managedEditions: [], // ids
-      backlog: {}
+      managedEditions: [] // ids
     },
+    backlog: {},
     editions: {},
     timeline: {
       issues: null, //null - not loaded, [] - loaded but empty

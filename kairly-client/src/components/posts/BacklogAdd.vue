@@ -16,7 +16,7 @@
 
       <section>
         <ul>
-          <li v-for="ed in managedEditions" :key="ed.id" :class="{'is-selected': containedIn.indexOf(ed.id) !== -1}">
+          <li v-for="ed in managedEditions" :key="ed.id" :class="{'is-selected': containedIn.indexOf(ed.fullName) !== -1}">
             <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
           </li>
         </ul>
