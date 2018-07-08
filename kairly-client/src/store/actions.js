@@ -1,7 +1,7 @@
 import * as api from '@/api'
 
 export const getProfile = ({ commit }) => {
-  api
+  return api
     .getProfile()
     .then(
       resp => {
@@ -9,7 +9,7 @@ export const getProfile = ({ commit }) => {
         commit('backlog', resp.backlog)
         resp.editions.forEach(edition => commit('edition', edition))
         commit('managedEditions', resp.editions.map(e => e.fullName))
-
+        return resp
       },
       () => {
         commit('user', false)
@@ -29,22 +29,27 @@ export const logout = ({ commit }) => {
 }
 
 export const getUserEditions = ({ commit }) => {
-  api
+  return api
     .getUserEditions()
     .then(
       editions => {
         editions.forEach(edition => commit('edition', edition))
         commit('subscribedEditions', editions.map(e => e.fullName))
+        return editions
       }
     )
 }
 
 export const getEditions = ({ commit, state }, editionIds) => {
-  editionIds.forEach(id => {
-    if (!(id in state.editions)) {
-      api.getEditionDetail(id).then(resp => commit('edition', resp.edition))
-    }
-  })
+  return Promise.all(
+    editionIds
+      .filter(id => !(id in state.editions))
+      .map(id => api.getEditionDetail(id).then(resp => {
+        const { edition } = resp
+        commit('edition', edition)
+        return edition
+      }))
+  )
 }
 
 export const subscribe = ({ commit }, { edition, value}) => {
@@ -55,9 +60,10 @@ export const subscribe = ({ commit }, { edition, value}) => {
   } else {
     p = api.unsubscribeEdition(edition.fullName)
   }
-  p.then(
-    edition => commit('edition', edition)
-  )
+  return p.then(edition => {
+    commit('edition', edition)
+    return edition
+  })
 }
 
 export const editionUpdated = ({ commit }, edition) => {
@@ -66,9 +72,12 @@ export const editionUpdated = ({ commit }, edition) => {
 
 export const loadMoreTimeline = ({ commit, state }) => {
   commit('timelineRequested')
-  api
+  return api
     .getTimeline(state.timeline.cursor)
-    .then(timeline => commit('timelineReceived', timeline) )
+    .then(timeline => {
+      commit('timelineReceived', timeline)
+      return timeline
+    })
 }
 
 export const invalidateTimeline = ({ commit }) => {
@@ -80,23 +89,24 @@ export const expandIssue = ({ commit }, issueId) => {
 }
 
 export const startNewEdtion = ({ commit }, { authorId, edition }) => {
-  api.createEdition(authorId, edition)
+  return api.createEdition(authorId, edition)
   .then(resp => {
     const { edition } = resp
     commit('edition', edition)
     commit('appendManagedEdition', edition.fullName)
+    return edition
   })
 }
 
 export const deleteEdition = ({ commit }, edition) => {
-  api.deleteEdition(edition.fullName)
+  return api.deleteEdition(edition.fullName)
   .then(() => {
     commit('removeEdition', edition.fullName)
   })
 }
 
 export const addToBacklog = ({ commit }, { edition, post }) => {
-  api.addToBacklog(edition.fullName, post.id)
+  return api.addToBacklog(edition.fullName, post.id)
   // TODO to have better user experience, post can be added immediately
   // and reverted when api call fails
   .then(() => {
@@ -105,7 +115,7 @@ export const addToBacklog = ({ commit }, { edition, post }) => {
 }
 
 export const removeFromBacklog = ({ commit }, { edition, post }) => {
-  api.deleteFromBacklog(edition.fullName, post.id)
+  return api.deleteFromBacklog(edition.fullName, post.id)
   // TODO to have better user experience, post can be removed immediately
   // and reverted when api call fails
   .then(() => {

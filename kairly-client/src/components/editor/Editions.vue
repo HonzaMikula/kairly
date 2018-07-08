@@ -61,7 +61,7 @@
       </editor-editions--board>
 
       <portal to="modal" v-if="isCreateEditionOpen">
-        <create-edition :onClose="closeModal"></create-edition>
+        <create-edition :onClose="closeModal" :onCreated="newEditionCreated"></create-edition>
       </portal>
     </editor-editions-view>
   </app-layout>
@@ -140,18 +140,26 @@ export default {
 
     confirmDeleteEdition() {
       if (window.confirm("Are you sure?")) {
+        const { fullName } = this.selectedEdition
         this.deleteEdition(this.selectedEdition)
 
-        // hack to reload the data once new edition is added
-        setTimeout(() => {this.loadData()}, 3000)
+        //this.selectEdition(null)
+        this.editionIds.splice(this.editionIds.indexOf(fullName), 1)
+        if (this.editionIds.length) {
+          this.selectEdition(this.editions.find(e => e.fullName !== fullName))
+        } else {
+          this.selectEdition(null)
+        }
       }
     },
 
     closeModal() {
       this.isCreateEditionOpen = false
+    },
 
-      // hack to reload the data once new edition is added
-      setTimeout(() => {this.loadData()}, 3000)
+    newEditionCreated(edition) {
+      this.editionIds.push(edition.fullName)
+      this.selectEdition(edition)
     },
 
     loadData() {

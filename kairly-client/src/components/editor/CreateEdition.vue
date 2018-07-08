@@ -80,7 +80,8 @@ export default {
   name: 'CreateEditionModal',
 
   props: {
-    'onClose': Function
+    'onClose': Function,
+    'onCreated': Function
   },
 
   components: {
@@ -126,7 +127,7 @@ export default {
           dow: this.dow,
           image: this.image
         }
-      })
+      }).then(this.onCreated)
 
       this.closeModal()
     },
