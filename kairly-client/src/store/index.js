@@ -18,7 +18,8 @@ export default new Vuex.Store({
       cursor: null,
       loading: false,
       expandedIssues: {}
-    }
+    },
+    error: null
   },
 
   mutations: {
@@ -90,11 +91,14 @@ export default new Vuex.Store({
       state.timeline.loading = false
       state.timeline.expandedIssues = {}
     },
-    expandIssue (state, issueId) {
+    expandIssue(state, issueId) {
       state.timeline.expandedIssues = {
         ...state.timeline.expandedIssues,
         [issueId]: true
       }
+    },
+    showError(state, msg) {
+      state.error = msg
     }
   },
 

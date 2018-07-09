@@ -1,5 +1,12 @@
 import * as api from '@/api'
 
+function createErrorHadler(commit) {
+  return err => {
+    commit('showError', (err + '') || 'Request failed')
+    return err
+  }
+}
+
 export const getProfile = ({ commit }) => {
   return api
     .getProfile()
@@ -11,10 +18,11 @@ export const getProfile = ({ commit }) => {
         commit('managedEditions', resp.editions.map(e => e.fullName))
         return resp
       },
-      () => {
+      err => {
         commit('user', false)
         commit('backlog', {})
         commit('managedEditions', [])
+        createErrorHadler(commit)(err)
       }
     )
 }
@@ -38,17 +46,22 @@ export const getUserEditions = ({ commit }) => {
         return editions
       }
     )
+    .catch(createErrorHadler(commit))
 }
 
 export const getEditions = ({ commit, state }, editionIds) => {
   return Promise.all(
     editionIds
       .filter(id => !(id in state.editions))
-      .map(id => api.getEditionDetail(id).then(resp => {
-        const { edition } = resp
-        commit('edition', edition)
-        return edition
-      }))
+      .map(id =>
+        api.getEditionDetail(id)
+          .then(resp => {
+            const { edition } = resp
+            commit('edition', edition)
+            return edition
+          })
+          .catch(createErrorHadler(commit))
+      )
   )
 }
 
@@ -64,6 +77,7 @@ export const subscribe = ({ commit }, { edition, value}) => {
     commit('edition', edition)
     return edition
   })
+  .catch(createErrorHadler(commit))
 }
 
 export const editionUpdated = ({ commit }, edition) => {
@@ -78,6 +92,7 @@ export const loadMoreTimeline = ({ commit, state }) => {
       commit('timelineReceived', timeline)
       return timeline
     })
+    .catch(createErrorHadler(commit))
 }
 
 export const invalidateTimeline = ({ commit }) => {
@@ -96,6 +111,7 @@ export const startNewEdtion = ({ commit }, { authorId, edition }) => {
     commit('appendManagedEdition', edition.fullName)
     return edition
   })
+  .catch(createErrorHadler(commit))
 }
 
 export const deleteEdition = ({ commit }, edition) => {
@@ -103,6 +119,7 @@ export const deleteEdition = ({ commit }, edition) => {
   .then(() => {
     commit('removeEdition', edition.fullName)
   })
+  .catch(createErrorHadler(commit))
 }
 
 export const addToBacklog = ({ commit }, { edition, post }) => {
@@ -112,6 +129,7 @@ export const addToBacklog = ({ commit }, { edition, post }) => {
   .then(() => {
     commit('backlogAdd', { editionId: edition.fullName, postId: post.id })
   })
+  .catch(createErrorHadler(commit))
 }
 
 export const removeFromBacklog = ({ commit }, { edition, post }) => {
@@ -121,4 +139,5 @@ export const removeFromBacklog = ({ commit }, { edition, post }) => {
   .then(() => {
     commit('backlogRemove', { editionId: edition.fullName, postId: post.id })
   })
+  .catch(createErrorHadler(commit))
 }
