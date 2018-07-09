@@ -81,7 +81,12 @@ class Command(BaseCommand):
         if verbosity > 1:
             self.stdout.write('Serching for issues to be published at {}'.format(now))
 
-        for edition in Edition.objects.filter(editionbacklog__publish_stamp__isnull=False).select_related('editor'):
+        query = Edition.objects\
+            .filter(editionbacklog__publish_stamp__isnull=False)\
+            .select_related('editor')\
+            .distinct()
+
+        for edition in query:
             try:
                 editor_tz = pytz.timezone(edition.editor.timezone)
                 now = now.astimezone(editor_tz)
