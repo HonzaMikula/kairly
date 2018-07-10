@@ -13,6 +13,12 @@
 
     <div>
       <edition-backlog--next-issue>
+        <div v-if="published.length == 0" class="no-post">
+          <h2>No posts for your upcoming issue!</h2>
+
+          <p>Drag articles and tweets from the right panel that you want to publish in next issue of the edition.</p>
+        </div>
+
         <PostWrapper
           v-for="post in published"
           :post="post"
@@ -44,7 +50,11 @@
       </edition-backlog--next-issue>
 
       <edition-backlog--backlog>
-        <div v-if="backlog.length == 0">no posts</div>
+        <div v-if="backlog.length == 0" class="no-post">
+          <h2>No considered posts!</h2>
+
+          <p>Go on your timeline and start adding interesting articles and tweets for considaration.</p>
+        </div>
 
         <div v-for="post in backlog" class="backlog-post" :key="post.id">
           <header>
@@ -167,6 +177,7 @@ edition-backlog-view
     display: grid
     grid-template-columns: 970px auto
     grid-column-gap: $baseline
+    min-height: 50vh
 
 
 //- Info when release go out
@@ -185,12 +196,67 @@ edition-backlog--info
   font-family: $ff-serif
   text-align: center
 
+//- Next Issue
+edition-backlog--next-issue
+  .no-post
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    height: 100%
+
+    color: #999
+
+    &::before
+      +fa-icon()
+
+      display: block
+      margin-bottom: $baseline
+
+      font-size: $fs-4
+
+      content: $fa-var-clock-o
+
+    h2
+      margin-bottom: $baseline / 2
+
+      font-size: $fs-4
+      line-height: $baseline * 2
+      text-align: center
 
 //- Backlog
 edition-backlog--backlog
+  .no-post
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    height: 100%
+
+    color: #999
+
+    &::before
+      +fa-icon()
+
+      display: block
+      margin-bottom: $baseline
+
+      font-size: $fs-4
+
+      content: $fa-var-newspaper-o
+
+    h2
+      margin-bottom: $baseline / 2
+
+      font-size: $fs-4
+      line-height: $baseline * 2
+      text-align: center
+
+
+
 
   //- post
-  > div
+  .backlog-post
     padding: $baseline / 4
     margin-bottom: $baseline / 2
     background: #fff
