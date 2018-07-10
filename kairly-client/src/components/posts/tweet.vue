@@ -6,7 +6,9 @@
     </timeline-post--tweet>
 
     <template slot="extendedControls">
-      <a :href="post.source" class="tweet" v-tooltip.top="'Original tweet'"></a>
+      <slot name="extendedControls">
+        <a :href="post.source" class="tweet" v-tooltip.top="'Original tweet'"></a>
+      </slot>
     </template>
 
     <template slot="controls"><slot name="controls"></slot></template>

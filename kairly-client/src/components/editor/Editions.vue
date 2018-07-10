@@ -46,16 +46,6 @@
         </div>
       </editor-editions--header>
 
-      <editor-edition--info>
-        <div>
-          Issue <strong>#14</strong> will be automatically published in <strong>3 hours</strong>
-        </div>
-
-        <div>
-          <strong>17 posts</strong> are considered
-        </div>
-      </editor-edition--info>
-
       <editor-editions--board>
         <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
       </editor-editions--board>
@@ -327,23 +317,6 @@ editor-editions--header--dropdown
     color: #777
 
     font-size: $fs--2
-
-
-//- Info when release go out
-editor-edition--info
-  display: grid
-  grid-template-columns: 970px auto
-  grid-column-gap: $baseline
-
-  padding: $baseline/4 0
-  margin-bottom: $baseline
-
-  border-bottom: 1px solid #ddd
-  border-top: 1px solid #ddd
-
-  font-size: $fs--1
-  font-family: $ff-serif
-  text-align: center
 
 
 </style>
