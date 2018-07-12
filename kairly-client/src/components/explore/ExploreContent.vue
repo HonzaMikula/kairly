@@ -62,6 +62,8 @@ export default {
 
   methods: {
     loadData() {
+      this.$store.dispatch('getEditions', this.tab.editions)
+
       const authors = []
       this.tab.sections.forEach(section => authors.push(...section.authors))
       Promise.all(authors.map(authorId => {
@@ -83,8 +85,6 @@ export default {
   },
 
   created() {
-    // TODO in future replace with loading only used editions
-    this.$store.dispatch('getEditions', this.tab.editions)
     this.loadData()
   }
 }
