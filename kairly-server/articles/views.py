@@ -82,7 +82,7 @@ def recent_issues(request):
     resp = []
     for issue in issues:
         issue.edition = editions[issue.edition_id]
-        resp.append(issue.to_json(posts=False, tzinfo=request.tzinfo)),
+        resp.append(issue.to_json(posts=True, tzinfo=request.tzinfo)),
 
     return JsonResponse(resp, safe=False)
 

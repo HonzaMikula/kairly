@@ -16,9 +16,9 @@
     </issue-widget--author>
 
     <ul>
-      <li><a href="">Vláda posvětila přesun brněnského nádraží k Řece</a></li>
-      <li><a href="">Babiš, už mě nebabiš. Sice postavil "psí boudu", ale vládu neumí, neumí, neumí</a></li>
-      <li><a href="">ANO podepsalo koaliční smlouvu s ČSSD, i dohodu o toleranci s KSČM</a></li>
+      <li v-for="post in issue.posts">
+        <router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</router-link>
+      </li>
     </ul>
 
     <issue-widget--subscribe>
