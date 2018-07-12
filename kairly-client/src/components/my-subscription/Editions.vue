@@ -44,4 +44,8 @@ my-editions-view
   grid-template-columns: 1fr 1fr 1fr
   grid-column-gap: $baseline / 2
   grid-row-gap: $baseline / 2
+
+  @media (max-width: $mobile)
+    grid-template-columns: 1fr 1fr
+    grid-column-gap: $baseline / 4
 </style>

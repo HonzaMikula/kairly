@@ -31,13 +31,12 @@ my-subscription-view
   padding: 0 $baseline/2
 
   @media (max-width: $mobile)
-    padding: 0 $baseline
+    padding: 0 $baseline/4
 
   //- heading
   nav
     margin-bottom: $baseline
 
-    font-family: $ff-serif
     font-size: $fs-2
 
     a
@@ -46,7 +45,7 @@ my-subscription-view
 
       color: $c-base
 
-      font-weight: 600
+      font-weight: 500
 
       &.is-active
         color: #000

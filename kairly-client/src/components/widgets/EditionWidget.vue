@@ -70,8 +70,6 @@ edition-widget-view
 
   text-align: left
 
-  @media (max-width: $mobile)
-    width: 260px
 
   //- header picture
   picture
@@ -79,6 +77,9 @@ edition-widget-view
     display: block
     margin: 0 (-$baseline)/4 0 (-$baseline)/4
     height: 120px
+
+    @media (max-width: $mobile)
+      height: 80px
 
     img
       height: 100%
@@ -109,6 +110,9 @@ edition-widget--author
   order: 2
   margin: $baseline/2 0
 
+  @media (max-width: $mobile)
+    margin: $baseline/4 0
+
   img
     border-radius: 100%
     float: left
@@ -130,6 +134,9 @@ edition-widget--subscribe
 
   text-align: center
 
+  @media (max-width: $mobile)
+    padding-bottom: $baseline / 4
+
   //- button
   button
     +subscribe-button
@@ -140,4 +147,7 @@ edition-widget--subscribe
   //- info
   p
     font-size: $fs--2
+
+    @media (max-width: $mobile)
+      display: none
 </style>
