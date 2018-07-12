@@ -48,6 +48,7 @@ class Command(BaseCommand):
 
         backlog_query = EditionBacklog.objects\
             .filter(edition=edition, publish_stamp__isnull=False)\
+            .order_by('ordering')\
             .select_related('post')
 
         for i, backlog in enumerate(backlog_query):

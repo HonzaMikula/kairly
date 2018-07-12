@@ -13,6 +13,7 @@ urlpatterns = [
     path('editions/<username>/<slug:edition_slug>/subscribe', views.subscribe, name='subscribe'),
     path('editions/<username>/<slug:edition_slug>/unsubscribe', views.unsubscribe, name='unsubscribe'),
     path('editions/<username>/<slug:edition_slug>/backlog', views.edition_backlog, name='edition_backlog'),
+    path('editions/<username>/<slug:edition_slug>/backlog/publish', views.edition_backlog_publish, name='edition_backlog'),
 
     path('user/authors', views.user_authors, name='user_authors'),
     path('authors/<username>', views.author, name='author'),

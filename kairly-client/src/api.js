@@ -163,11 +163,11 @@ export const getEditionBacklog = editionId => {
     .then(res => res.body)
 }
 
-export const addToBacklog = (editionId, postId, publish=false) => {
+export const addToBacklog = (editionId, postId) => {
   if (!token) return Promise.reject();
   return agent
     .put(`${API_URI}/editions/${editionId}/backlog`)
-    .send({post: postId, publish})
+    .send({post: postId})
 }
 
 export const deleteFromBacklog = (editionId, postId) => {
@@ -175,6 +175,13 @@ export const deleteFromBacklog = (editionId, postId) => {
   return agent
     .delete(`${API_URI}/editions/${editionId}/backlog`)
     .send({post: postId})
+}
+
+export const publishBacklog = (editionId, postIds) => {
+  if (!token) return Promise.reject();
+  return agent
+    .post(`${API_URI}/editions/${editionId}/backlog/publish`)
+    .send(postIds)
 }
 
 export const signUp = user => {

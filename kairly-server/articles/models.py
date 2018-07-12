@@ -153,6 +153,7 @@ class EditionBacklog(models.Model):
     edition = models.ForeignKey(Edition, models.CASCADE)
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
+    ordering = models.IntegerField(null=True)
 
 
 class EditionIssue(models.Model):

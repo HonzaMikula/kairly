@@ -198,28 +198,31 @@ def edition_backlog(request, username, edition_slug):
 
     if request.method == 'GET':
         result = {'backlog': [], 'publish': []}
-        for log in EditionBacklog.objects.filter(edition=edition).select_related('post'):
-            target = result['publish'] if log.publish_stamp else result['backlog']
-            target.append(log.post.to_json())
+
+        query = EditionBacklog.objects.filter(
+            edition=edition, publish_stamp__isnull=True).select_related('post')
+        for log in query:
+            result['backlog'].append(log.post.to_json())
+
+        query = EditionBacklog.objects.filter(
+            edition=edition, publish_stamp__isnull=False)\
+            .order_by('ordering').select_related('post')
+        for log in query:
+            result['publish'].append(log.post.to_json())
         return JsonResponse(result)
 
     if request.method == 'PUT':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
-        publish = payload.get('publish', False)
-        publish_stamp = datetime.now() if publish else None
 
-        try:
-            log = EditionBacklog.objects.get(edition=edition, post=post)
-            log.publish_stamp = publish_stamp
-            log.save()
-        except EditionBacklog.DoesNotExist:
+        if EditionBacklog.objects.filter(edition=edition, post=post).exists():
+            return HttpResponse(status=204)
+        else:
             EditionBacklog.objects.create(
                 edition=edition,
-                post=post,
-                publish_stamp=publish_stamp
+                post=post
             )
-        return HttpResponse(status=204)
+            return HttpResponse(status=201)
 
     if request.method == 'DELETE':
         payload = json.loads(request.body.decode('utf-8'))
@@ -228,6 +231,29 @@ def edition_backlog(request, username, edition_slug):
         return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)
+
+
+@ajax_login_required
+@require_POST
+def edition_backlog_publish(request, username, edition_slug):
+    edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+    if edition.editor_id != request.user.id:
+        return HttpResponseForbidden()
+
+    post_ids = json.loads(request.body.decode('utf-8'))
+    publish_stamp = datetime.now()
+    for log in EditionBacklog.objects.filter(edition=edition):
+        try:
+            idx = post_ids.index(log.post_id)
+            log.publish_stamp = publish_stamp
+            log.ordering = idx + 1
+        except ValueError:
+            if log.publish_stamp is None:
+                continue
+            log.publish_stamp = None
+            log.ordering = None
+        log.save()
+    return HttpResponse(status=204)
 
 
 @ajax_login_required

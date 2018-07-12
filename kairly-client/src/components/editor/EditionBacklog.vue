@@ -20,7 +20,7 @@
         </div>
 
         <PostWrapper
-          v-for="post in published"
+          v-for="(post, idx) in published"
           :post="post"
           :isSubscribed="true"
           :key="post.id"
@@ -32,12 +32,16 @@
           <template slot="controls">
             <button-icon
               class="up" aria-label="Move post up"
-              v-tooltip.top="'Move post up'">
+              v-tooltip.top="'Move post up'"
+              v-show="idx !== 0"
+              @click="moveUp(idx)">
             </button-icon>
 
             <button-icon
               class="down" aria-label="Move post down"
-              v-tooltip.top="'Move post down'">
+              v-tooltip.top="'Move post down'"
+              v-show="idx !== published.length - 1"
+              @click="moveDown(idx)">
             </button-icon>
 
             <button-icon
@@ -104,6 +108,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapActions } from 'vuex'
 
 import * as api from '@/api'
@@ -137,19 +142,33 @@ export default {
     },
 
     publish(post) {
-      api.addToBacklog(this.edition.fullName, post.id, true)
-      .then(() => {
-        this.backlog.splice(this.backlog.indexOf(post), 1)
-        this.published.push(post)
-      })
+      this.backlog.splice(this.backlog.indexOf(post), 1)
+      this.published.push(post)
+      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      .catch(this.init)
     },
 
     undoPublish(post) {
-      api.addToBacklog(this.edition.fullName, post.id, false)
-      .then(() => {
-        this.published.splice(this.published.indexOf(post), 1)
-        this.backlog.push(post)
-      })
+      this.published.splice(this.published.indexOf(post), 1)
+      this.backlog.push(post)
+      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      .catch(this.init)
+    },
+
+    moveUp(idx) {
+      const post = this.published[idx]
+      Vue.set(this.published, idx, this.published[idx - 1])
+      Vue.set(this.published, idx - 1, post)
+      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      .catch(this.init)
+    },
+
+    moveDown(idx) {
+      const post = this.published[idx]
+      Vue.set(this.published, idx, this.published[idx + 1])
+      Vue.set(this.published, idx + 1, post)
+      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      .catch(this.init)
     },
 
     removePost(post) {
