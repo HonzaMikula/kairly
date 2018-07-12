@@ -3,9 +3,9 @@ export default [
       name: 'Best of Kairly',
       slug: undefined,
       editions: [
-        'janmikula/kairly',
-        'janmikula/olympijskyzapisnik',
-        'janmikula/bitsontheblock'
+        'janmikula/malostranskenoviny',
+        'janmikula/technologicky-denik',
+        'janmikula/kairly'
       ],
       sections: [
         {
@@ -22,14 +22,15 @@ export default [
         }, {
           name: 'New Authors',
           authors: [
+            'osel',
+            'macekvbotach',
             'vesmircz',
             'neviditelny-pes',
             'jablickar',
             'karel-fillner',
             'mirektopolanek',
             'miroslavkalousek',
-            'obcansky-institut',
-            'my-cooking-diary'
+            'obcansky-institut'
           ]
         }
       ]
@@ -38,9 +39,7 @@ export default [
       name: 'Politics',
       slug: 'politics',
       editions: [
-        'janmikula/prezidentskevolby',
-        'janmikula/malostranskenoviny',
-        'janmikula/pokrokaprosperita'
+        'janmikula/malostranskenoviny'
       ],
       sections: [
         {
@@ -119,8 +118,6 @@ export default [
       name: 'Technology',
       slug: 'technology',
       editions: [
-        'janmikula/bitsontheblock',
-        'janmikula/pokrokaprosperita'
       ],
       sections: [
         {

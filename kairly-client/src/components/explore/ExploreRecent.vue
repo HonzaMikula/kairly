@@ -4,10 +4,10 @@
       <h2>Recent Issues</h2>
 
       <div>
-        <EditionWidget
+        <IssueWidget
           v-for="issue in issues"
           :key="`${issue.edition.fullName}#${issue.number}`"
-          :edition="issue.edition"
+          :issue="issue"
         />
       </div>
 
@@ -31,14 +31,14 @@
 import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
-import EditionWidget from '@/components/widgets/EditionWidget'
+import IssueWidget from '@/components/widgets/IssueWidget'
 import PostWrapper from '@/components/PostWrapper'
 
 export default {
   name: 'ExploreContent',
 
   components: {
-    EditionWidget,
+    IssueWidget,
     PostWrapper
   },
 

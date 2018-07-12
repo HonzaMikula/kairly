@@ -14,7 +14,7 @@
     <div>
       <edition-backlog--next-issue>
         <div v-if="published.length == 0" class="no-post">
-          <h2>No posts for your upcoming issue!</h2>
+          <h2>No posts for the upcoming issue!</h2>
 
           <p>Drag articles and tweets from the right panel that you want to publish in next issue of the edition.</p>
         </div>
@@ -204,6 +204,7 @@ edition-backlog--next-issue
     justify-content: center
     flex-direction: column
     height: 100%
+    max-height: 50vh
 
     color: #999
 
@@ -232,6 +233,7 @@ edition-backlog--backlog
     justify-content: center
     flex-direction: column
     height: 100%
+    max-height: 50vh
 
     color: #999
 
@@ -251,8 +253,6 @@ edition-backlog--backlog
       font-size: $fs-4
       line-height: $baseline * 2
       text-align: center
-
-
 
 
   //- post
