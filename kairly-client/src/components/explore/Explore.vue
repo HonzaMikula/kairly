@@ -83,6 +83,11 @@ explore-view
     @at-root .lifestyle > header
       background-image: url(http://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)
 
+    @media (max-width: $mobile)
+      height: 200px
+
+      grid-template-rows: auto min-content
+
     nav
       grid-area: nav
 
@@ -122,6 +127,9 @@ explore-view
       font-family: $ff-serif
       text-shadow: 0 0 10px #000
 
+      @media (max-width: $mobile)
+        font-size: $fs-4
+
 
   //- Sections
   main
@@ -133,6 +141,12 @@ explore-view
     grid-template-columns: 50% 50%
     grid-template-rows: auto auto
     grid-template-areas: "explore-top-editions explore-top-editions" "explore-0 explore-1" "explore-2 explore-3"
+
+    @media (max-width: $mobile)
+      padding: 0 $baseline/4
+      grid-template-columns: 100%
+      grid-template-areas: "explore-top-editions" "explore-0" "explore-1" "explore-2" "explore-3"
+
 
   @at-root .recent > main
     grid-template-areas: "explore-top-editions explore-top-editions" "explore-recent explore-recent"
@@ -151,6 +165,12 @@ explore--top-editions
     grid-row-gap: $baseline
     grid-template-columns: 1fr 1fr 1fr
     grid-column-gap: $baseline / 2
+
+    @media (max-width: $mobile)
+      grid-template-columns: 1fr 1fr
+
+      edition-widget-view:last-of-type
+        display: none
 
 section
   > h2

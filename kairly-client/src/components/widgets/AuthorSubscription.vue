@@ -1,16 +1,18 @@
 <template>
   <author-subscription-view>
-    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-if="frequency == '3x_per_day'">
-      Daily at <strong>6:00</strong>,
-      <strong>12:00</strong> and <strong>18:00</strong>
-    </a>
+    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-tooltip.top.end="'Change the subscription'">
+      <template v-if="frequency == '3x_per_day'">
+        Daily at <strong>6:00</strong>,
+        <strong>12:00</strong> and <strong>18:00</strong>
+      </template>
 
-    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-else-if="frequency == 'daily'">
-      Daily at <strong>{{ time }}</strong>
-    </a>
+      <template v-if="frequency == 'daily'">
+        Daily at <strong>{{ time }}</strong>
+      </template>
 
-    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-else-if="frequency == 'weekly'">
-      Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>
+      <template v-if="frequency == 'weekly'">
+        Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>
+      </template>
     </a>
 
     <follow-author
