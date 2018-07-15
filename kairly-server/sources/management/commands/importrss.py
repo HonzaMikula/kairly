@@ -1,3 +1,4 @@
+import re
 import time
 import traceback
 import dateutil.parser
@@ -34,8 +35,14 @@ class Command(BaseCommand):
     def import_post(self, channel, entry, options):
         verbosity = options.get('verbosity')
 
-        guid = "{}|{}".format(channel.provider, entry.id)
         url = entry.link.split('#', maxsplit=1)[0]
+
+        # some feeds has not guid attribute
+        if hasattr(entry, 'id'):
+            entry_id = entry.id
+        else:
+            entry_id = re.sub('^https?://', '', url)
+        guid = "{}|{}".format(channel.provider, entry_id)
 
         try:
             post = Post.objects.get(guid=guid)
