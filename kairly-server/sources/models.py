@@ -109,7 +109,15 @@ class Channel(models.Model):
                 html = entry.description
         else:
             resp = requests.get(url)
-            html = resp.content.decode(resp.encoding)
+
+            # hack, use utf-8 if meta with such value exists, needed at least for osel.cz
+            # which sends bad encoding header from server
+            if b"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" in resp.content:
+                encoding = 'utf-8'
+            else:
+                encoding = resp.encoding
+
+            html = resp.content.decode(encoding)
 
         htmltree = lxml.html.fromstring(html)
         try:
