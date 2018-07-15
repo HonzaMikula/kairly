@@ -52,7 +52,8 @@ export const getUserEditions = ({ commit }) => {
 export const getEditions = ({ commit, state }, editionIds) => {
   return Promise.all(
     editionIds
-      .filter(id => !(id in state.editions))
+      // HACK: check for periodicity => edition is fully loaded (not just name and title), TODO do not save partialy loaded into store
+      .filter(id => !(id in state.editions && state.editions.periodicity))
       .map(id =>
         api.getEditionDetail(id)
           .then(resp => {
