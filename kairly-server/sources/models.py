@@ -29,7 +29,7 @@ class Channel(models.Model):
     provider = models.CharField(max_length=32, help_text="Source identifier (namespace for guid)")
     rss = models.CharField(max_length=250)
     parse_content_from_rss = models.BooleanField(default=False)
-    parser = models.TextField(help_text="Parse rules to get content from webpage.", blank=True)
+    parser = models.TextField(help_text="Parse rules to get content from webpage/rss.", blank=False)
     skip_rules = models.TextField(help_text="YAML", blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
     topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
