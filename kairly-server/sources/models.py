@@ -29,6 +29,7 @@ class Channel(models.Model):
     provider = models.CharField(max_length=32, help_text="Source identifier (namespace for guid)")
     rss = models.CharField(max_length=250)
     parse_content_from_rss = models.BooleanField(default=False)
+    user_agent = models.CharField(help_text="Force User-Agent header when fetching RSS or post", max_length=250, null=True, blank=True)
     parser = models.TextField(help_text="Parse rules to get content from webpage/rss.", blank=False)
     skip_rules = models.TextField(help_text="YAML", blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
@@ -52,7 +53,10 @@ class Channel(models.Model):
         super().save(*args, **kwargs)
 
     def parse_rss(self):
-        return feedparser.parse(self.rss)
+        kwargs = {}
+        if self.user_agent:
+            kwargs['agent'] = self.user_agent
+        return feedparser.parse(self.rss, **kwargs)
 
     def parse_entry(self, entry):
         article = self.parse_article_from_entry(entry)
@@ -108,7 +112,10 @@ class Channel(models.Model):
             if html is None:
                 html = entry.description
         else:
-            resp = requests.get(url)
+            headers = {}
+            if self.user_agent:
+                headers['User-Agent'] = self.user_agent
+            resp = requests.get(url, headers=headers)
 
             # hack, use utf-8 if meta with such value exists, needed at least for osel.cz
             # which sends bad encoding header from server

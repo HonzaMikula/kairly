@@ -169,10 +169,12 @@ class ArticleParser:
     def parse(self, htmltree):
         self.props = defaultdict(dict)
 
-        # self._print(htmltree, "Raw HTML")
+        self._print(htmltree, "Raw HTML")
 
         for comment in htmltree.xpath('//comment()'):
-            comment.getparent().remove(comment)
+            parent = comment.getparent()
+            if parent:
+                parent.remove(comment)
 
         # first remove dangerous elements
         for el in htmltree.cssselect(self.DANGEROUS_ELEMENTS):
