@@ -107,9 +107,10 @@ class AuthorIssueItem(TimelineItem):
     @property
     def json(self):
         posts = Post.objects.filter(id__in=self.post_ids)
+        suffix = '|' + self.topic.slug if self.topic else ''
         isodate = str(self.published)
         return {
-            'id': '{}-{}'.format(self.author.username, isodate),
+            'id': '{}{}-{}'.format(self.author.username, suffix, isodate),
             'type': 'author',
             'title': self.title,
             'time': isodate,
