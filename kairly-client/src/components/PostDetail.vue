@@ -352,6 +352,21 @@ post-detail--perex
       font-size: $fs--2
       line-height: $baseline * 0.9
 
+  //-- table
+  table
+    margin-bottom: $baseline
+
+    font-family: $ff-sans
+
+    td, th
+      padding: 0 $baseline/4
+
+    thead td,
+    thead th
+      background: #eee
+
+      font-size: $fs--1
+
 
 //- Post Footer
 post-detail--footer
