@@ -14,6 +14,14 @@ class ArticleParser:
     REGEX_ONLINE = re.compile("//.*?\n")
     REGEX_SPACE = re.compile("\s*")
 
+    DANGEROUS_ELEMENTS = ', '.join((
+        'script', 'noscript',
+        'style',
+        'iframe', 'applet', 'object', 'canvas',
+        'audio', 'input', 'textarea', 'button', 'select', 'datalist', 'meter',
+        'output'
+    ))
+
     def __init__(self, rules):
         self.rules = rules
 
@@ -105,6 +113,8 @@ class ArticleParser:
         for attr in el.attrib.keys():
             if attr not in preserve:
                 del el.attrib[attr]
+            elif attr == 'href' and el.attrib[attr].startswith('javascript'):
+                del el.attrib[attr]
 
     def _prune(self, el):
         def reverse_enumerate(arr):
@@ -115,6 +125,8 @@ class ArticleParser:
         tag = self._getprop(el, 'tag')
         if tag and tag != 'auto':
             el.tag = tag.lower()
+        elif el.tag == 'form' or el.tag == 'fieldset':
+            el.tag = 'div'
 
         self._strip_attibutes(el)
 
@@ -163,7 +175,7 @@ class ArticleParser:
             comment.getparent().remove(comment)
 
         # first remove dangerous elements
-        for el in htmltree.cssselect('script, style, iframe, applet, object, canvas, noscript, audio, form'):
+        for el in htmltree.cssselect(self.DANGEROUS_ELEMENTS):
             el.getparent().remove(el)
 
         # fix self closing A tags
@@ -172,7 +184,6 @@ class ArticleParser:
                 el.getparent().remove(el)
 
         for rule in self.flatten_rules():
-
             if rule.selector == '*':
                 elements = [htmltree]
             else:

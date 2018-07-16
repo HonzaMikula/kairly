@@ -61,6 +61,9 @@ class ChannelAdmin(admin.ModelAdmin):
         else:
             next_link = None
 
+        # source = html.fromstring('{}<div class="hr">--------------- continue reading ---------------</div>{}'.format(perex, content))
+        # source = etree.tostring(source, encoding='utf-8', pretty_print=True).decode('utf-8')
+
         context = dict(
            # Include common variables for rendering the admin template.
            self.admin_site.each_context(request),
@@ -69,6 +72,7 @@ class ChannelAdmin(admin.ModelAdmin):
            article_title=entry.title,
            perex=perex,
            content=content,
+           #source=source,
            next_link=next_link
         )
         return TemplateResponse(request, "admin/preview.html", context)

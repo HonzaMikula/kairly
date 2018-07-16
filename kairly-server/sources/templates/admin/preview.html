@@ -16,6 +16,10 @@
   flex: 1;
 }
 
+.preview-wrapper {
+  display: flex
+}
+
 .preview {
   font-family: serif;
   font-size: 16px;
@@ -27,6 +31,10 @@
   font-family: serif;
   font-size: 24px;
   font-weight: bold;
+}
+
+.html-preview {
+  max-width: 600px;
 }
 
 .hr {
@@ -43,12 +51,19 @@
   {% endif %}
 </div>
 
-<article class="preview">
-  <h1>{{ article_title }}</h1>
-  {{ perex|safe }}
-  <div class="hr">--------------- continue reading ---------------</div>
+<div class="preview-wrapper">
+  <article class="preview">
+    <h1>{{ article_title }}</h1>
+    {{ perex|safe }}
+    <div class="hr">--------------- continue reading ---------------</div>
 
-  {{ content|safe }}
-</article>
+    {{ content|safe }}
+  </article>
+  {% comment %}
+  <code class="html-preview">
+<pre>{{ source }}</pre>
+  </code>
+  {% endcomment %}
+</div>
 
 {% endblock %}
