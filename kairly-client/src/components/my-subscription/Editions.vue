@@ -25,11 +25,9 @@ export default {
     EditionWidget
   },
 
-  computed: {
-    ...mapGetters({
-      editions: 'subscribedEditions'
-    })
-  },
+  computed: mapGetters({
+    editions: 'subscribedEditions'
+  }),
 
   created() {
     this.$store.dispatch('getUserEditions')

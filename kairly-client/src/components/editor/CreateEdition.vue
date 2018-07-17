@@ -1,6 +1,6 @@
 
 <template>
-  <dialog-window :onClose="closeModal">
+  <dialog-window :onClose="onClose">
     <modal-dialog role="dialog" @click.stop>
       <header>
         <h1>Create new edition</h1>
@@ -80,8 +80,8 @@ export default {
   name: 'CreateEditionModal',
 
   props: {
-    'onClose': Function,
-    'onCreated': Function
+    onClose: Function,
+    onCreated: Function
   },
 
   components: {
@@ -104,10 +104,6 @@ export default {
   computed: mapGetters(['user']),
 
   methods: {
-    closeModal() {
-      this.onClose()
-    },
-
     onPictureChange(image) {
       this.image = image
     },
@@ -129,7 +125,7 @@ export default {
         }
       }).then(this.onCreated)
 
-      this.closeModal()
+      this.onClose()
     },
 
     ...mapActions(['startNewEdtion'])

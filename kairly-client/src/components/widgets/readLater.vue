@@ -24,6 +24,7 @@
 
 export default {
   name: 'ReadLaterWidget',
+
   methods: {
     closeReadLaterMessage() {
       this.$emit('readlaterwidgetclose');

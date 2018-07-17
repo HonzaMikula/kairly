@@ -30,8 +30,9 @@ import * as api from '@/api'
 
 export default {
   name: 'AuthorSubscription',
+
   props: {
-    'author': Object
+    author: Object
   },
 
   components: {

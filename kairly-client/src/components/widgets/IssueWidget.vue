@@ -41,7 +41,10 @@ import * as api from '@/api'
 
 export default {
   name: 'IssueWidget',
-  props: ['issue'],
+
+  props: {
+    issue: Object
+  },
 
   methods: {
     subscribe(ev) {
