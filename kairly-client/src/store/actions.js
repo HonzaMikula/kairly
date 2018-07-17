@@ -115,6 +115,18 @@ export const startNewEdtion = ({ commit }, { authorId, edition }) => {
   .catch(createErrorHadler(commit))
 }
 
+export const updateEdtion = ({ commit }, { fullName, fields }) => {
+  return api.updateEdition(fullName, fields)
+  .then(resp => {
+    const { edition } = resp
+    commit('edition', edition)
+    return edition
+  })
+  .catch(createErrorHadler(commit))
+}
+
+
+
 export const deleteEdition = ({ commit }, edition) => {
   return api.deleteEdition(edition.fullName)
   .then(() => {

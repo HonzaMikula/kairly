@@ -150,6 +150,14 @@ export const createEdition = (authorId, edition) => {
     .then(res => res.body)
 }
 
+export const updateEdition = (fullName, fields) => {
+  if (!token) return Promise.reject();
+  return agent
+    .patch(`${API_URI}/editions/${fullName}`)
+    .send(fields)
+    .then(res => res.body)
+}
+
 export const deleteEdition = editionId => {
   if (!token) return Promise.reject();
   return agent
