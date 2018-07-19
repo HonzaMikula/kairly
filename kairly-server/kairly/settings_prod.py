@@ -1,5 +1,7 @@
 from .settings import *  # NOQA
 
+DEBUG = False
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
