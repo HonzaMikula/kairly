@@ -22,7 +22,9 @@ export const getProfile = ({ commit }) => {
         commit('user', false)
         commit('backlog', {})
         commit('managedEditions', [])
-        createErrorHadler(commit)(err)
+        if (err.status !== 401) {
+          createErrorHadler(commit)(err)
+        }
       }
     )
 }
