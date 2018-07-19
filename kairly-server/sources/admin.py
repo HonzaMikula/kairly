@@ -8,6 +8,7 @@ from .models import Channel
 @admin.register(Channel)
 class ChannelAdmin(admin.ModelAdmin):
     list_display = ('name', 'provider', 'author', 'topic', 'enabled', 'rss')
+    search_fields = ('name', 'provider', 'author__name')
 
     def get_field_queryset(self, db, db_field, request):
         """

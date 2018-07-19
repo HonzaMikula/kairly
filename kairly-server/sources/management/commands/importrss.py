@@ -2,6 +2,7 @@ import re
 import time
 import traceback
 import dateutil.parser
+from django.utils import timezone
 
 from django.core.management.base import BaseCommand
 
@@ -59,14 +60,19 @@ class Command(BaseCommand):
 
         perex, content = channel.parse_entry(entry)
 
-        try:
-            published = entry.published
-        except AttributeError:
-            published = entry.date
+        for attr in ['published', 'date']:
+            try:
+                published = dateutil.parser.parse(getattr(entry, attr))
+                break
+            except AttributeError:
+                pass
+        else:
+            # some fields has no published time in feed, eg kitchenette
+            published = timezone.now()
 
         args = dict(
             kind=Post.NEWSPAPER,
-            published=dateutil.parser.parse(published),
+            published=published,
             draft=options.get('draft'),
             guid=guid,
             source=url,
