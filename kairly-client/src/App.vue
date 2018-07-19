@@ -41,11 +41,12 @@ export default {
 
   watch: {
     '$route' (to, from) {
+      this.show404(false)
       this.showError(null)
     }
   },
 
-  methods: mapMutations(['showError']),
+  methods: mapMutations(['showError', 'show404']),
 
   created: function () {
     this.$store.dispatch('getProfile')

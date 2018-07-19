@@ -19,7 +19,8 @@ export default new Vuex.Store({
       loading: false,
       expandedIssues: {}
     },
-    error: null
+    error: null,
+    show404: false
   },
 
   mutations: {
@@ -99,6 +100,9 @@ export default new Vuex.Store({
     },
     showError(state, msg) {
       state.error = msg
+    },
+    show404(state, value=true) {
+      state.show404 = value
     }
   },
 

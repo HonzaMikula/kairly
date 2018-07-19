@@ -38,9 +38,6 @@ export default new Router({
     {path: '/:author', name: 'author', component: AuthorDetail},
     {path: '/:author/:edition', name: 'edition', component: EditionDetail},
     {path: '/:author/:edition/:issue', name: 'issue', component: IssueDetail},
-
-
-
   ],
   linkActiveClass: 'is-active',
   linkExactActiveClass: 'is-active'
