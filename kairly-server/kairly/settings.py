@@ -141,7 +141,7 @@ STATICFILES_FINDERS = (
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-MEDIA_SITE = 'http://kairly.com'
+MEDIA_SITE = 'https://kairly.com'
 
 APPEND_SLASH = False
 
