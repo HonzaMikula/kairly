@@ -308,6 +308,9 @@ author-detail--topics
 
       content: '•'
 
+      @media (max-width: $mobile)
+        padding: 0 $baseline/4
+
     &:first-of-type::before
       content: ''
 

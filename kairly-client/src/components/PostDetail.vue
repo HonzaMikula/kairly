@@ -9,10 +9,6 @@
           v-on:click="$router.go(-1)">
         </post-detail--back-button>
 
-        <post-detail--read-later
-          v-tooltip.right="'Read Later'">
-        </post-detail--read-later>
-
         <main>
           <post-detail--header>
             <router-link :to="{name: 'author', params: {author: post.author.id}}">
@@ -36,8 +32,6 @@
           <post-detail--content v-html="post.content.content"></post-detail--content>
 
           <post-detail--footer>
-            <button-icon class="recommend">Recommend</button-icon>
-            <button-icon class="share">Share</button-icon>
             <button-icon class="consider-for-edition">Consider for Edition</button-icon>
           </post-detail--footer>
 
@@ -116,6 +110,9 @@ post-detail
     margin: 0 auto
     max-width: 900px
 
+    @media (max-width: $mobile)
+      padding: $baseline/4 0
+
   main
     margin: 0 auto
     max-width: 700px
@@ -138,6 +135,9 @@ post-detail--back-button
   font-size: $fs-1
   line-height: $baseline * 2
   text-align: center
+
+  @media (max-width: $mobile)
+    display: none
 
   &:focus,
   &:hover
@@ -191,6 +191,10 @@ post-detail--header
   margin-bottom: $baseline
   margin-top: -$baseline * 2
   width: 100%
+
+  @media (max-width: $mobile)
+    margin-top: 0
+    margin-bottom: $baseline / 4
 
   a
     color: #555
