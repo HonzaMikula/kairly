@@ -15,20 +15,16 @@
         </edition-detail--subscribe>
       </edition-detail--header>
 
-
-
       <div v-if="!loading">
-
-
         <edition-detail--info>
           <ul>
             <li class="periodicity">{{ edition.periodicity.frequency }} {{ edition.periodicity.time }} {{ edition.periodicity.dow }}</li>
 
             <li>#{{ edition.issues }}</li>
 
-            <li>{{ edition.likes }} subscribers</li>
+            <li>{{ edition.likes }} readers</li>
 
-            <li>10 CZK per month</li>
+            <li>10 CZK / month</li>
           </ul>
         </edition-detail--info>
 
@@ -161,6 +157,11 @@ edition-detail--header
   @supports not (backdrop-filter: blur(10px))
     background: rgba(250, 250, 250, 0.97)
 
+  @media (max-width: $mobile)
+    position: static
+    padding-bottom: 0
+    margin: 0
+
   //- Title
   h1
     font-size: $fs-4
@@ -168,6 +169,9 @@ edition-detail--header
     line-height: $baseline * 2
     text-align: center
     text-shadow: 0 0 5px #fafafa
+
+    @media (max-width: $mobile)
+      font-size: $fs-3
 
 //- Subscribe
 edition-detail--subscribe
@@ -179,6 +183,10 @@ edition-detail--subscribe
   padding: $baseline / 4
 
   backdrop-filter: blur(10px)
+
+  @media (max-width: $mobile)
+    position: static
+    text-align: center
 
   button
     +subscribe-button
@@ -208,6 +216,9 @@ edition-detail--info
     display: table
     margin: 0 auto
 
+    @media (max-width: $mobile)
+      padding: 0 $baseline/4
+
   li
     display: inline-block
 
@@ -220,6 +231,9 @@ edition-detail--info
       padding: 0 $baseline/2
 
       content: '•'
+
+      @media (max-width: $mobile)
+        padding: 0 $baseline/4
 
     &:last-of-type::after
       display: none
@@ -246,6 +260,12 @@ edition-detail--description
   margin-top: $baseline
 
   font-family: $ff-serif
+
+  @media (max-width: $mobile)
+    grid-template-columns: 1fr
+    grid-row-gap: $baseline / 2
+    padding: $baseline / 4
+    margin-top: 0
 
   h3
     font-weight: 600
