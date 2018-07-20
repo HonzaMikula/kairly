@@ -39,7 +39,10 @@ import * as api from '@/api'
 
 export default {
   name: 'EditionWidget',
-  props: ['edition'],
+
+  props: {
+    edition: Object
+  },
 
   methods: {
     subscribe(ev) {

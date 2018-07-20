@@ -1,12 +1,12 @@
 
 <template>
-  <dialog-window :onClose="closeModal">
+  <dialog-window :onClose="onClose">
     <modal-dialog role="dialog" @click.stop>
       <header>
-        <h1>Create new edition</h1>
+        <h1>{{ edition ? 'Modify edition' : 'Create new edition' }}</h1>
       </header>
 
-      <create-edition-view>
+      <edit-edition-view>
         <div class="title">
           <input placeholder="What's the edition name?" v-model="title">
         </div>
@@ -53,6 +53,7 @@
               accept="image/jpeg,image/png"
               size="10"
               buttonClass="btn"
+              :prefill="this.edition && this.edition.picture"
               :customStrings="{
                 drag: 'Drag or upload image'
               }">
@@ -60,10 +61,10 @@
           </picture>
 
         </div>
-      </create-edition-view>
+      </edit-edition-view>
 
       <footer>
-        <button @click="submit">Create edition</button>
+        <button @click="submit">{{ this.edition ? 'Save' : 'Create edition' }}</button>
       </footer>
     </modal-dialog>
   </dialog-window>
@@ -77,11 +78,12 @@ import PictureInput from 'vue-picture-input'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
 export default {
-  name: 'CreateEditionModal',
+  name: 'EditEditionModal',
 
   props: {
-    'onClose': Function,
-    'onCreated': Function
+    edition: Object,
+    onClose: Function,
+    onCreated: Function
   },
 
   components: {
@@ -92,11 +94,9 @@ export default {
 
   data() {
     return {
-      title: '',
-      description: '',
-      periodicity: null,
-      time: null,
-      dow: null,
+      title: this.edition ? this.edition.title : '',
+      description: this.edition ? this.edition.description : '',
+      periodicity: this.edition ? this.edition.periodicity : null,
       DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
@@ -104,10 +104,6 @@ export default {
   computed: mapGetters(['user']),
 
   methods: {
-    closeModal() {
-      this.onClose()
-    },
-
     onPictureChange(image) {
       this.image = image
     },
@@ -117,28 +113,67 @@ export default {
     },
 
     submit() {
-      this.startNewEdtion({
-        authorId: this.user.id,
-        edition: {
-          title: this.title,
-          description: this.description,
-          periodicity: this.periodicity,
-          time: this.time,
-          dow: this.dow,
-          image: this.image
-        }
-      }).then(this.onCreated)
+      // TODO show validation in form
+      if (this.title.trim() === '') {
+        alert("Title is empty")
+        return
+      }
 
-      this.closeModal()
+      if (this.description.trim() === '') {
+        alert("Editorial is empty")
+        return
+      }
+
+      if (this.periodicity === null) {
+        alert("Periodicity is not selected")
+        return
+      }
+
+      if (this.image === null && !this.edition) {
+        alert("Image is not selected")
+        return
+      }
+
+      if (this.edition) {
+        const fields = {}
+        if (this.title !== this.edition.title) {
+          fields.title = this.title
+        }
+        if (this.description !== this.edition.description) {
+          fields.description = this.description
+        }
+        if (this.periodicity) { //TODO compare periodicity
+          fields.periodicity = this.periodicity
+        }
+        if (this.image) {
+          fields.image = this.image
+        }
+        this.updateEdtion({
+          fullName: this.edition.fullName,
+          fields
+        })
+      } else {
+        this.startNewEdtion({
+          authorId: this.user.id,
+          edition: {
+            title: this.title,
+            description: this.description,
+            periodicity: this.periodicity,
+            image: this.image
+          }
+        }).then(this.onCreated)
+      }
+
+      this.onClose()
     },
 
-    ...mapActions(['startNewEdtion'])
+    ...mapActions(['startNewEdtion', 'updateEdtion'])
   }
 }
 </script>
 
 <style lang="sass">
-create-edition-view
+edit-edition-view
   display: block
   padding: $baseline
 

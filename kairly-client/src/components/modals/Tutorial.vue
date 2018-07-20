@@ -1,10 +1,10 @@
 <template>
-  <dialog-window :onClose="closeModal">
+  <dialog-window :onClose="onClose">
     <modal-dialog role="dialog" @click.stop>
       <div v-if="!loading">
         <Issue :issue="issue" :subscription="edition.subscription" />
       </div>
-      <button-close tabindex="0" role="button" @click="closeModal()">Close</button-close>
+      <button-close tabindex="0" role="button" @click="onClose">Close</button-close>
     </modal-dialog>
   </dialog-window>
 </template>
@@ -20,7 +20,7 @@ export default {
   name: 'TutorialModalComponent',
 
   props: {
-    'onClose': Function
+    onClose: Function
   },
 
   components: {
@@ -42,12 +42,6 @@ export default {
       this.issue = resp.issue
       this.loading = false
     })
-  },
-
-  methods: {
-    closeModal() {
-      this.onClose()
-    }
   }
 }
 </script>

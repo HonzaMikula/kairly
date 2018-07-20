@@ -5,6 +5,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.http import (Http404, JsonResponse, HttpResponse,
                          HttpResponseForbidden, HttpResponseBadRequest)
+from django.views import View
 from django.views.decorators.http import require_POST
 from django.utils.text import slugify
 
@@ -114,32 +115,74 @@ def delete_edition(request, edition):
     return HttpResponse(status=204)
 
 
-@ajax_login_required
-def edition(request, username, edition_slug):
-    edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
-    if request.method == 'DELETE':
-        return delete_edition(request, edition)
+class EditionView(View):
+    @ajax_login_required
+    def get(self, request, username, edition_slug):
+        edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
 
-    try:
-        edition.user_subscription = Subscription.objects.get(user=request.user, edition=edition)
-    except Subscription.DoesNotExist:
-        edition.user_subscription = None
-    edition.issues = edition.editionissue_set.count()
-    edition.likes = edition.subscription_set.count()
-
-    issueNo = request.GET.get('issue')
-    if issueNo:
-        issue = get_object_or_404(EditionIssue, edition=edition, number=int(issueNo))
-    else:
         try:
-            issue = EditionIssue.objects.filter(edition=edition).order_by('-number').select_related('editor')[0]
-        except IndexError:
-            issue = None
+            edition.user_subscription = Subscription.objects.get(user=request.user, edition=edition)
+        except Subscription.DoesNotExist:
+            edition.user_subscription = None
+        edition.issues = edition.editionissue_set.count()
+        edition.likes = edition.subscription_set.count()
 
-    return JsonResponse({
-        'edition': edition.to_json(),
-        'issue': issue.to_json() if issue else None,
-    })
+        issueNo = request.GET.get('issue')
+        if issueNo:
+            issue = get_object_or_404(EditionIssue, edition=edition, number=int(issueNo))
+        else:
+            try:
+                issue = EditionIssue.objects.filter(edition=edition).order_by('-number').select_related('editor')[0]
+            except IndexError:
+                issue = None
+
+        return JsonResponse({
+            'edition': edition.to_json(),
+            'issue': issue.to_json() if issue else None,
+        })
+
+    @ajax_login_required
+    def patch(self, request, username, edition_slug):
+        edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+        payload = json.loads(request.body.decode('utf-8'))
+
+        if edition.editor_id != request.user.id:
+            return HttpResponseForbidden()
+
+        if 'title' in payload:
+            edition.title = payload['title'].strip()
+
+        if 'description' in payload:
+            edition.title = payload['description'].strip()
+
+        if 'periodicity' in payload:
+            try:
+                periodicity = parse_periodicity(payload['periodicity'])
+            except ValueError as e:
+                return HttpResponseBadRequest(str(e))
+            edition.period = periodicity.frequency
+            edition.period_time = periodicity.time
+            edition.period_dow = periodicity.dow
+
+        if 'image' in payload:
+            image = file_from_data_uri(payload['image'], "{}-{}".format(request.user.username, edition.slug))
+            edition.image = image
+
+        edition.save()
+
+        return JsonResponse({
+            'edition': edition.to_json(),
+        })
+
+    @ajax_login_required
+    def delete(self, request, username, edition_slug):
+        edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+
+        if edition.editor_id != request.user.id:
+            return HttpResponseForbidden()
+
+        edition.delete()
+        return HttpResponse(status=204)
 
 
 @ajax_login_required
@@ -359,7 +402,12 @@ def get_type_from_data_uri(data):
 def create_edition(request, username):
     author, topic = get_user_and_topic(username)
     payload = json.loads(request.body.decode('utf-8'))
-    title = payload['title']
+
+    if author.id != request.user.id:
+        return HttpResponseForbidden()
+
+    title = payload['title'].strip()
+    description = payload['description'].strip()
 
     try:
         periodicity = parse_periodicity(payload['periodicity'])
@@ -377,7 +425,7 @@ def create_edition(request, username):
     edition = Edition.objects.create(
         title=title,
         slug=slug,
-        description=payload['description'],
+        description=description,
         image=image,
         period=periodicity.frequency,
         period_time=periodicity.time,

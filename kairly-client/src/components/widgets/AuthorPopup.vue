@@ -80,7 +80,10 @@
 
 export default {
   name: 'AuthorWidget',
-  props: ["author"],
+
+  props: {
+    author: Object
+  },
 
   created() {
     // set all 'active' arrays to false

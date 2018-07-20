@@ -2,7 +2,7 @@
 
 > New way how we consume and produce news
 
-http://kairly.com/
+https://kairly.com/
 
 ## Build Vue Prototype
 

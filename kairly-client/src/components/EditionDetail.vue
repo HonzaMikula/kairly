@@ -61,7 +61,7 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 import * as api from '@/api'
 
@@ -113,7 +113,9 @@ export default {
       })
       this.edition.subscription = !this.edition.subscription
       ev.target.blur()
-    }
+    },
+
+    ...mapMutations(['show404'])
   },
 
   created() {
@@ -122,6 +124,12 @@ export default {
       this.edition = resp.edition
       this.issue = resp.issue
       this.loading = false
+    }).catch(err => {
+      if (err.status == 404) {
+        this.show404()
+      } else {
+        return Promise.reject(err)
+      }
     })
   }
 }

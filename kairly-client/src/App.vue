@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 import Homepage from '@/components/Homepage'
 import InfoMessage from '@/components/InfoMessage'
@@ -38,6 +38,15 @@ export default {
     }),
     ...mapGetters(['user', 'loadingUser'])
   },
+
+  watch: {
+    '$route' (to, from) {
+      this.show404(false)
+      this.showError(null)
+    }
+  },
+
+  methods: mapMutations(['showError', 'show404']),
 
   created: function () {
     this.$store.dispatch('getProfile')

@@ -45,7 +45,10 @@ import FollowAuthor from '@/components/widgets/FollowAuthor'
 
 export default {
   name: 'AuthorWidget',
-  props: ['author'],
+
+  props: {
+    author: Object
+  },
 
   components: {
     FollowAuthor,

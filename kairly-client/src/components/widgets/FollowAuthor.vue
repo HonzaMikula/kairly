@@ -103,9 +103,9 @@ export default {
   name: 'FollowAuthor',
 
   props: {
-    'author': Object,
-    'onSelect': Function,
-    'cancelingSubscription': Boolean
+    author: Object,
+    onSelect: Function,
+    cancelingSubscription: Boolean
   },
 
   directives: {

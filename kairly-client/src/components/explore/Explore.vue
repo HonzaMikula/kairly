@@ -72,16 +72,16 @@ explore-view
     background-size: cover
 
     @at-root .politics > header
-      background-image: url(http://kairly.com/media/editions/uspolitics.jpg)
+      background-image: url(https://kairly.com/media/editions/uspolitics.jpg)
 
     @at-root .sport > header
-      background-image: url(http://kairly.com/media/editions/olymp.jpg)
+      background-image: url(https://kairly.com/media/editions/olymp.jpg)
 
     @at-root .technology > header
-      background-image: url(http://kairly.com/media/editions/bitcoin.jpg)
+      background-image: url(https://kairly.com/media/editions/bitcoin.jpg)
 
     @at-root .lifestyle > header
-      background-image: url(http://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)
+      background-image: url(https://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)
 
     @media (max-width: $mobile)
       height: 200px

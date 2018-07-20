@@ -40,6 +40,11 @@ import TutorialModal from '@/components/modals/Tutorial'
 
 export default {
   name: 'AppHeader',
+
+  components: {
+    TutorialModal
+  },
+
   data: function() {
     return {
       username: null,
@@ -47,10 +52,6 @@ export default {
       isDropDownMenuOpen: false,
       isTutorialOpen: false
     }
-  },
-
-  components: {
-    TutorialModal
   },
 
   computed: mapGetters(['user', 'loadingUser']),

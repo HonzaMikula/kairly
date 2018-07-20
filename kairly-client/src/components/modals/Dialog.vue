@@ -1,5 +1,5 @@
 <template>
-  <modal-window @click="closeModal()">
+  <modal-window @click="onClose">
     <slot></slot>
   </modal-window>
 </template>
@@ -10,13 +10,7 @@ export default {
   name: 'DialogWindowComponent',
 
   props: {
-    'onClose': Function
-  },
-
-  methods: {
-    closeModal() {
-      this.onClose()
-    }
+    onClose: Function
   }
 }
 </script>

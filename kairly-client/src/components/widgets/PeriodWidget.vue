@@ -54,7 +54,7 @@ export default {
   name: 'PeriodWidget',
 
   props: {
-    'onSelect': Function
+    onSelect: Function
   },
 
   directives: {

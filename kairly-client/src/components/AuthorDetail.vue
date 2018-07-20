@@ -88,7 +88,7 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 
 import * as api from '@/api'
 
@@ -195,9 +195,17 @@ export default {
         this.editionIds = resp.editions.map(e => e.fullName)
         this.loadingProfile = false
         this.topics = resp.topics
+      }).catch(err => {
+        if (err.status == 404) {
+          this.show404()
+        } else {
+          return Promise.reject(err)
+        }
       })
       api.getAuthorPosts(author, null).then(this.handlePostsData)
-    }
+    },
+
+    ...mapMutations(['show404'])
   },
 
   created() {

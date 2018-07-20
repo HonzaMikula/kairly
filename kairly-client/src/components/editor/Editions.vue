@@ -33,7 +33,8 @@
             class="edit"
             role="button"
             aria-label="Edit edition"
-            v-tooltip.top.end="'Edit edition'">
+            v-tooltip.top.end="'Edit edition'"
+            @click="editionToEdit = selectedEdition">
           </button-icon>
 
           <button-icon
@@ -51,7 +52,11 @@
       </editor-editions--board>
 
       <portal to="modal" v-if="isCreateEditionOpen">
-        <create-edition :onClose="closeModal" :onCreated="newEditionCreated"></create-edition>
+        <edit-edition :onClose="closeModal" :onCreated="newEditionCreated"></edit-edition>
+      </portal>
+
+      <portal to="modal" v-if="editionToEdit">
+        <edit-edition :onClose="closeModal" :edition="editionToEdit"></edit-edition>
       </portal>
     </editor-editions-view>
   </app-layout>
@@ -66,7 +71,7 @@ import * as api from '@/api'
 
 import AppLayout from '@/components/layout/AppLayout'
 import EditionWidget from '@/components/widgets/EditionWidget'
-import CreateEdition from '@/components/editor/CreateEdition'
+import EditEdition from '@/components/editor/EditEdition'
 import EditionBacklog from '@/components/editor/EditionBacklog'
 
 export default {
@@ -81,7 +86,7 @@ export default {
   components: {
     AppLayout,
     EditionWidget,
-    CreateEdition,
+    EditEdition,
     EditionBacklog
   },
 
@@ -98,6 +103,7 @@ export default {
       cursor: null,
       isCreateEditionOpen: false,
       isSelectEditionOpen: false,
+      editionToEdit: null,
       selectedEdition: null
     }
   },
@@ -145,6 +151,7 @@ export default {
 
     closeModal() {
       this.isCreateEditionOpen = false
+      this.editionToEdit = null
     },
 
     newEditionCreated(edition) {

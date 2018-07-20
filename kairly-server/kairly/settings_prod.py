@@ -1,5 +1,7 @@
 from .settings import *  # NOQA
 
+DEBUG = False
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -16,8 +18,6 @@ DATABASES = {
 }
 
 ALLOWED_HOSTS = [
-    'kairly-2648.rostiapp.cz',
-    'kairly.honzamikula.cz',
     'kairly.com'
 ]
 
@@ -30,6 +30,11 @@ TEMPLATES[0]['DIRS'] = (
 )
 
 MEDIA_ROOT = '/srv/kairly/kairly-server/media'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 TWITTER_CONSUMER_KEY = 'vYuzgkErlgcU8hLSDG0yS8gry'
 TWITTER_CONSUMER_SECRET = 'U0hVZVDahNoC4r9imOPkyKLQCJE343h2YK6OcD5s47RD2tSUYK'
