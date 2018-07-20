@@ -201,7 +201,7 @@ app-header--user-profile-menu
   position: absolute
   right: 0
   top: $baseline * 2
-  z-index: 1
+  z-index: 100000000
 
   padding: $baseline / 4 0
   min-width: 150px
