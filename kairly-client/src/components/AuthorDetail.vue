@@ -44,7 +44,7 @@
 
         </author-detail--header>
 
-        <author-detail--topics>
+        <author-detail--topics v-if="topics">
           <ul>
             <li v-for="topic in topics" :key="topic.url">
               <router-link :to="topic.url">{{ topic.name}}</router-link>
@@ -55,7 +55,7 @@
         <author-detail--editions v-if="editions.length">
           <h2>{{ author.name }}'s Editions</h2>
 
-          <div>
+          <div :class="{'show-all': showAllEditions}">
             <EditionWidget
               v-for="edition in editions"
               :key="edition.fullName"
@@ -223,6 +223,10 @@ author-detail-view
   margin: 0 auto
   max-width: 900px
 
+  @media (max-width: $mobile)
+    padding-top: 0
+
+
 //- Header
 author-detail--header
   position: sticky
@@ -242,6 +246,14 @@ author-detail--header
   @supports not (backdrop-filter: blur(10px))
     background: rgba(250, 250, 250, 0.97)
 
+  @media (max-width: $mobile)
+    position: static
+    grid-template-columns: $baseline*4 1fr
+    grid-template-rows: auto auto
+    grid-row-gap: $baseline / 2
+    padding: $baseline / 4
+    margin: 0
+
   //- Author name
   h1
     font-size: $fs-3
@@ -253,16 +265,13 @@ author-detail--header
   p
     text-shadow: 0 0 5px #fafafa
 
+  picture img
+    display: block
+    border-radius: 100%
+    height: $baseline * 4
+    width: $baseline * 4
 
-  picture
-
-    img
-      display: block
-      border-radius: 100%
-      height: $baseline * 4
-      width: $baseline * 4
-
-      object-fit: cover
+    object-fit: cover
 
 
 //- Subsribe
@@ -273,6 +282,10 @@ author-detail--subscribe
   margin-bottom: $baseline
 
   text-align: center
+
+  @media (max-width: $mobile)
+    grid-column: 1 / span 2
+    margin-bottom: 0
 
   button
     +subscribe-button
@@ -306,6 +319,9 @@ author-detail--editions
   display: block
   margin-bottom: $baseline
 
+  @media (max-width: $mobile)
+    padding: $baseline / 4
+
   h2
     margin-bottom: $baseline / 2
 
@@ -324,6 +340,16 @@ author-detail--editions
     grid-column-gap: $baseline / 2
     grid-row-gap: $baseline / 2
     margin-bottom: $baseline / 2
+
+    @media (max-width: $mobile)
+      grid-template-columns: 1fr 1fr
+      grid-column-gap: $baseline / 4
+
+      edition-widget-view:last-of-type
+        display: none
+
+      &.show-all edition-widget-view:last-of-type
+        display: block
 
   //- show/hide more editions
   > button
@@ -356,5 +382,8 @@ author-detail--posts
     font-family: $ff-serif
     font-size: $fs-1
     font-weight: 600
+
+    @media (max-width: $mobile)
+      padding: 0 $baseline/4
 
 </style>
