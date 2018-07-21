@@ -1,13 +1,13 @@
 <template>
   <issue-widget-view>
     <picture>
-      <router-link :to="{name: 'issue', params: {author: issue.edition.editor.id, issue: issue.edition.name}}">
+      <router-link :to="{name: 'issue', params: {author: issue.edition.editor.id, edition: issue.edition.name, issue: issue.number}}">
         <img :src="issue.edition.picture" :alt="issue.edition.title" />
       </router-link>
     </picture>
 
     <h2>
-      <router-link :to="{name: 'issue', params: {author: issue.edition.editor.id, issue: issue.edition.name}}">{{ issue.edition.title }} #{{ issue.number }}</router-link>
+      <router-link :to="{name: 'issue', params: {author: issue.edition.editor.id, edition: issue.edition.name, issue: issue.number}}">{{ issue.edition.title }} #{{ issue.number }}</router-link>
     </h2>
 
     <issue-widget--author>

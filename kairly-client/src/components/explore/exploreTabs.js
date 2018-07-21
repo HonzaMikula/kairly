@@ -6,33 +6,6 @@ export default [
         'janmikula/malostranskenoviny',
         'janmikula/technologicky-denik',
         'janmikula/kairly'
-      ],
-      sections: [
-        {
-          name: 'Recommended',
-          authors: [
-            'idnescz',
-            'aktualnecz',
-            'technet',
-            'jindrichsidlo',
-            'intercom',
-            'liberalni-institut',
-            'celiaxmoni'
-          ]
-        }, {
-          name: 'New Authors',
-          authors: [
-            'osel',
-            'macekvbotach',
-            'vesmircz',
-            'neviditelny-pes',
-            'jablickar',
-            'karel-fillner',
-            'mirektopolanek',
-            'miroslavkalousek',
-            'obcansky-institut'
-          ]
-        }
       ]
     },
     {
@@ -40,45 +13,6 @@ export default [
       slug: 'politics',
       editions: [
         'janmikula/malostranskenoviny'
-      ],
-      sections: [
-        {
-          name: 'News',
-          authors: [
-            'idnescz',
-            'aktualnecz',
-            'finmag',
-            'neviditelny-pes',
-          ]
-        },
-        {
-          name: 'Politics',
-          authors: [
-            'mirektopolanek',
-            'miroslavkalousek',
-            'andrejbabis',
-            'michalhoracek',
-            'petrfiala'
-          ]
-        },
-        {
-          name: 'Journalists & Commentators',
-          authors: [
-            'jindrichsidlo',
-            'eriktabery',
-            'alexandrmitrofanov',
-            'pavelsafr',
-            'petrhonzejk'
-          ]
-        },
-        {
-          name: 'Think-thanks',
-          authors: [
-            'liberalni-institut',
-            'obcansky-institut',
-            'misescz'
-          ]
-        }
       ]
     },
     {
@@ -86,95 +20,18 @@ export default [
       slug: 'sport',
       editions: [
         'janmikula/olympijskyzapisnik',
-      ],
-      sections: [
-        {
-          name: 'Sport News',
-          authors: [
-            'aktualnecz/sport',
-            'sportcz'
-          ]
-        }, {
-          name: 'Athletes',
-          authors: [
-            'aktualnecz/sport'
-          ]
-        }, {
-          name: 'Sport Journalists',
-          authors: [
-            'robertzaruba',
-            'darinavymetalikova',
-            'michaldusik'
-          ]
-        }, {
-          name: 'Sport Clubs',
-          authors: [
-            'ceskyolympijskytym'
-          ]
-        }
       ]
     },
     {
       name: 'Technology',
       slug: 'technology',
       editions: [
-      ],
-      sections: [
-        {
-          name: 'Tech News',
-          authors: [
-            'technet',
-            'lupacz',
-            'jablickar'
-          ]
-        }, {
-          name: 'Web Technologies',
-          authors: [
-            'smashing-magazine',
-            'list-apart',
-            'google-developers'
-          ]
-        }, {
-          name: 'Product Design',
-          authors: [
-            'intercom',
-            'mind-product'
-          ]
-        }, {
-          name: 'Cryptocurrencies',
-          authors: [
-            'karel-fillner',
-            'joseftetek'
-          ]
-        }, {
-          name: 'Tech Companies',
-          authors: [
-            'opera',
-            'microsoft',
-            'mozilla'
-          ]
-        }, {
-          name: 'Science',
-          authors: [
-            'vesmircz'
-          ]
-        }
       ]
     },
     {
       name: 'Lifestyle',
       slug: 'lifestyle',
-      editions: [],
-      sections: [
-        {
-          name: 'Recipes',
-          authors: [
-            'cukr-free',
-            'celiaxmoni',
-            'my-cooking-diary'
-          ]
-        }
-      ]
+      editions: []
     },
     {
       name: 'Most Recent',

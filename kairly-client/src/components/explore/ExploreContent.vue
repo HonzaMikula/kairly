@@ -13,16 +13,13 @@
 
     </explore--top-editions>
 
-    <section :class="`explore-${index}`" v-for="(section, index) in tab.sections" :key="index">
-      <h2>{{ section.name }}</h2>
-
-      <div v-for="authorId in section.authors" :key="authorId">
+    <section :class="`explore-${index}`" v-for="(category, index) in categories" :key="index">
+      <h2>{{ category.name }}</h2>
         <AuthorWidget
-          v-if="authors[authorId]"
-          :key="authorId"
-          :author="authors[authorId]"
+          v-for="author in category.authors"
+          :key="category.id"
+          :author="author"
         />
-      </div>
     </section>
   </main>
 </template>
@@ -48,7 +45,7 @@ export default {
 
   data() {
     return {
-      authors: {}
+      categories: []
     }
   },
 
@@ -64,17 +61,8 @@ export default {
     loadData() {
       this.$store.dispatch('getEditions', this.tab.editions)
 
-      const authors = []
-      this.tab.sections.forEach(section => authors.push(...section.authors))
-      Promise.all(authors.map(authorId => {
-        const params = authorId.split('/')
-        return api.getAuthorDetail(...authorId.split('/')).then(res => {
-          // save loaded edition to store
-          res.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
-          this.authors = {...this.authors, [authorId]: res.author}
-          return res.author
-        })
-      }))
+      // TODO nice to have cache result + cache authors in store !
+      api.getExploreTab(this.tab.name).then(payload => this.categories = payload.categories)
     }
   },
 

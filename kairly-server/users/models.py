@@ -101,7 +101,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.name
 
-    def to_json(self, topic=None):
+    def to_json(self, topic=None, private=False):
         id = self.username
         name = self.name or self.username
         if topic:
@@ -114,11 +114,15 @@ class User(AbstractBaseUser, PermissionsMixin):
             'picture': settings.MEDIA_SITE + self.picture.url if self.picture else '',
             'medium': self.medium,
             'bio': self.bio,
-            'timezone': self.timezone,
-            'integrations': {
-                'twitter': self.twitter_account
-            }
         }
+
+        if private:
+            res.update({
+                'timezone': self.timezone,
+                'integrations': {
+                    'twitter': self.twitter_account
+                }
+            })
 
         # TODO what about param (ma)
         if hasattr(self, 'user_subscription'):

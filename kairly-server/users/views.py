@@ -8,6 +8,7 @@ import urllib.error
 from libgravatar import Gravatar
 
 from django.db.utils import IntegrityError
+from django.db.models import Count
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
@@ -22,7 +23,7 @@ from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
 from articles.models import Edition, EditionBacklog
-from .models import User
+from .models import User, Category
 
 
 @require_POST
@@ -63,7 +64,7 @@ class ProfileView(View):
 
         # TODO merge author and user props
         return JsonResponse({
-            "user": request.user.to_json(),
+            "user": request.user.to_json(private=True),
             "editions": editions,
             "backlog": backlog
         })
@@ -149,3 +150,28 @@ def change_password(request):
     user.set_password(password)
     user.save()
     return JsonResponse(user.to_json())
+
+
+def explore_tab(request, tab):
+    categories = []
+    for category in Category.objects.filter(explore_tab=tab):
+        categories.append({
+            'name': category.name,
+            'authors': [u.to_json() for u in User.objects.filter(category=category)]
+        })
+
+    if tab == 'Best of Kairly':
+        categories.append({
+            'name': 'New Authors',
+            'authors': [
+                u.to_json() for u in
+                User.objects.all()
+                    .annotate(post_count=Count('post'))
+                    .filter(post_count__gt=1)
+                    .order_by('-date_joined')[:10]
+            ]
+        })
+
+    return JsonResponse({
+        'categories': categories
+    })

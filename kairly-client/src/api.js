@@ -211,3 +211,10 @@ export const changePassword = ({oldPassword, newPassword}) => {
     .post(API_URI + '/change-password')
     .send({oldPassword, newPassword})
 }
+
+export const getExploreTab = tab => {
+  if (!token) return Promise.reject();
+  return agent
+    .get(`${API_URI}/explore/${tab}`)
+    .then(res => res.body)
+}
