@@ -34,9 +34,11 @@ modal-window
 modal-dialog
   position: relative
 
-  display: block
+  display: grid
+  grid-template-rows: $baseline*2 1fr $baseline*2
   border-radius: $baseline / 2
   min-height: 500px
+  max-height: 95vh
   overflow: hidden
   width: 970px
 

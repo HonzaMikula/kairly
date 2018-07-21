@@ -193,6 +193,9 @@ edit-edition-view
       line-height: $baseline * 2
       text-align: center
 
+      @media (max-width: $mobile)
+        font-size: $fs-3
+
   .periodicity
     position: relative
 
@@ -214,6 +217,9 @@ edit-edition-view
     grid-column-gap: $baseline
     grid-template-rows: auto
     margin-top: $baseline
+
+    @media (max-width: $mobile)
+      grid-template-columns: 1fr
 
     label
       display: table

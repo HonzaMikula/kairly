@@ -2,30 +2,32 @@
   <app-layout>
     <editor-editions-view>
       <editor-editions--header>
-        <h1 v-if="selectedEdition">{{ selectedEdition.title }}</h1>
-
-        <button-icon v-if="selectedEdition" role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
-
-        <editor-editions--header--dropdown
-          v-if="isSelectEditionOpen"
-          v-on-clickaway="() => isSelectEditionOpen = false">
-          <div
-            v-for="edition in editions"
-            :key="edition.fullName"
-            :class="{'is-selected': selectedEdition && selectedEdition.fullName == edition.fullName}"
-            @click="selectEdition(edition)">
-            <img :src="edition.picture" :alt="edition.title"/>
-            <h3>{{ edition.title }}</h3>
-            <p>
-              <strong>#{{ edition.issues + 1 }}</strong> is releasing in
-              <strong>4 hours</strong> with
-              <strong>3 posts</strong>.
-            </p>
-          </div>
-        </editor-editions--header--dropdown>
-
         <div class="create-edition">
           <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
+        </div>
+
+        <div class="title">
+          <h1 v-if="selectedEdition">{{ selectedEdition.title }}</h1>
+
+          <button-icon v-if="selectedEdition" role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
+
+          <editor-editions--header--dropdown
+            v-if="isSelectEditionOpen"
+            v-on-clickaway="() => isSelectEditionOpen = false">
+            <div
+              v-for="edition in editions"
+              :key="edition.fullName"
+              :class="{'is-selected': selectedEdition && selectedEdition.fullName == edition.fullName}"
+              @click="selectEdition(edition)">
+              <img :src="edition.picture" :alt="edition.title"/>
+              <h3>{{ edition.title }}</h3>
+              <p>
+                <strong>#{{ edition.issues + 1 }}</strong> is releasing in
+                <strong>4 hours</strong> with
+                <strong>3 posts</strong>.
+              </p>
+            </div>
+          </editor-editions--header--dropdown>
         </div>
 
         <div class="edition-controls" v-if="selectedEdition">
@@ -43,6 +45,13 @@
             aria-label="Delete edition"
             v-tooltip.top.end="'Delete edition'"
             @click.prevent="confirmDeleteEdition">
+          </button-icon>
+        </div>
+
+        <div class="mobile-menu">
+          <button-icon
+            class="menu"
+            aria-label="Context menu">
           </button-icon>
         </div>
       </editor-editions--header>
@@ -198,42 +207,56 @@ editor-editions-view
   editor-editions--header
     position: relative
 
-    display: block
+    display: grid
+    grid-template-columns: 2fr auto 2fr
     padding: $baseline 0
     text-align: center
 
-    h1
-      display: inline-block
-      margin-right: $baseline / 2
+    @media (max-width: 800px)
+      grid-template-columns: 1fr auto
 
-      font-family: $ff-serif
-      font-size: $fs-4
-      font-weight: 600
-      line-height: $baseline * 2
-      text-align: center
-      text-shadow: 0 0 5px #fafafa
 
-    > button-icon
-      display: inline-block
-      border-radius: 100%
-      height: $baseline * 1.25
-      width: $baseline * 1.25
+    //- Edition Title
+    .title
 
-      cursor: pointer
-      line-height: $baseline * 1.25
-      text-align: center
+      h1
+        display: inline-block
+        margin-right: $baseline / 2
 
-      &:focus,
-      &:hover
-        background: #eee
+        font-family: $ff-serif
+        font-size: $fs-4
+        font-weight: 600
+        line-height: $baseline * 2
+        vertical-align: middle
+        text-align: center
+        text-shadow: 0 0 5px #fafafa
 
-      &::before
-        content: $fa-var-chevron-down
+        @media (max-width: $mobile)
+          font-size: $fs-3
+
+      > button-icon
+        display: inline-block
+        border-radius: 100%
+        height: $baseline * 1.25
+        width: $baseline * 1.25
+
+        cursor: pointer
+        line-height: $baseline * 1.25
+        text-align: center
+
+        &:focus,
+        &:hover
+          background: #eee
+
+        &::before
+          content: $fa-var-chevron-down
 
     .create-edition
-      position: absolute
-      left: 0
-      top: $baseline * 1.25
+      align-self: center
+      justify-self: start
+
+      @media (max-width: 800px)
+        display: none
 
       a
         +subscribe-button
@@ -248,9 +271,11 @@ editor-editions-view
         line-height: $baseline * 1.5
 
     .edition-controls
-      position: absolute
-      right: 0
-      top: $baseline * 1.25
+      align-self: center
+      justify-self: end
+
+      @media (max-width: 800px)
+        display: none
 
       > button-icon
         display: inline-block
@@ -274,6 +299,30 @@ editor-editions-view
 
         &.delete::before
           content: $fa-var-trash
+
+    .mobile-menu
+      display: none
+      align-self: center
+
+
+      @media (max-width: 800px)
+        display: block
+
+      > button-icon
+        display: inline-block
+        border-radius: 100%
+        height: $baseline * 1.25
+        width: $baseline * 1.25
+
+        cursor: pointer
+        line-height: $baseline * 1.25
+        text-align: center
+
+        &:focus,
+        &:hover
+          background: #eee
+
+
 
 
 editor-editions--header--dropdown
