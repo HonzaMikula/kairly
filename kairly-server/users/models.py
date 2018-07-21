@@ -126,3 +126,17 @@ class User(AbstractBaseUser, PermissionsMixin):
             res['subscription'] = periodicity_to_json(sub) if sub else None
 
         return res
+
+
+class Category(models.Model):
+    name = models.CharField(_("Name"), max_length=160)
+    explore_tab = models.CharField(_("Explore Tab"), max_length=160)
+    ordering = models.IntegerField(_("Ordering"))
+    users = models.ManyToManyField(User)
+
+    class Meta:
+        ordering = ('explore_tab', 'ordering')
+        verbose_name_plural = _('Categories')
+
+    def __str__(self):
+        return '{} > {}'.format(self.explore_tab, self.name)

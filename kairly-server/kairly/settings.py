@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ckeditor',
     'corsheaders',
+    'searchableselect',
     'articles',
     'sources',
     'users',

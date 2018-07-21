@@ -1,12 +1,18 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 
-from .models import User
+from searchableselect.widgets import SearchableSelect
+
+from .models import User, Category
+
+admin.site.unregister(Group)
 
 
+@admin.register(User)
 class UserAdmin(OriginalUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
@@ -31,7 +37,17 @@ class UserAdmin(OriginalUserAdmin):
             return ''
 
 
-admin.site.register(User, UserAdmin)
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        exclude = ()
+        widgets = {
+            'users': SearchableSelect(model='users.User', search_field='username', limit=20)
+        }
 
 
-admin.site.unregister(Group)
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    form = CategoryForm
+    list_display = ('name', 'explore_tab', 'ordering')
+    search_fields = ('name',)

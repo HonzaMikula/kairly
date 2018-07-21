@@ -39,6 +39,7 @@ urlpatterns += [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('articles.urls')),
+    path('searchableselect/', include('searchableselect.urls')),
 
     # frontend paths, match anything, needs regexp!
     re_path(r'', index, name='index'),
