@@ -6,7 +6,6 @@ from . import timeline
 urlpatterns = [
     path('timeline', timeline.timeline, name='timeline'),
 
-    path('user/editions', views.user_editions, name='user_editions'),
     path('recent/issues', views.recent_issues, name='recent_issues'),
     path('recent/posts', views.recent_posts, name='recent_posts'),
     path('editions/<username>/<slug:edition_slug>', views.EditionView.as_view(), name='edition'),
@@ -15,7 +14,6 @@ urlpatterns = [
     path('editions/<username>/<slug:edition_slug>/backlog', views.edition_backlog, name='edition_backlog'),
     path('editions/<username>/<slug:edition_slug>/backlog/publish', views.edition_backlog_publish, name='edition_backlog'),
 
-    path('user/authors', views.user_authors, name='user_authors'),
     path('authors/<username>', views.author, name='author'),
     path('authors/<username>/posts', views.author_posts, name='author_posts'),
     path('authors/<username>/new-edition', views.create_edition, name='create_edition'),

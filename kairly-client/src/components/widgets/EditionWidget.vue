@@ -19,7 +19,7 @@
 
     <edition-widget--subscribe>
       <button
-        v-bind:class="{ 'is-subscribed': edition.subscription }"
+        v-bind:class="{ 'is-subscribed': isSubscribed }"
         v-on:click="subscribe($event)"
       >{{ edition.subscription ? 'Subscribed' : 'Subscribe'}}</button>
       <p>
@@ -44,13 +44,19 @@ export default {
     edition: Object
   },
 
+  computed: {
+    isSubscribed() {
+      return this.edition.fullName in this.$store.state.subscriptions.editions
+    }
+  },
+
   methods: {
     subscribe(ev) {
-      const value = !this.edition.subscription
-      this.$store.dispatch('subscribe', {
-        edition: this.edition,
-        value
-      })
+      if (this.isSubscribed) {
+        this.$store.dispatch('unsubscribe', this.edition.fullName)
+      } else {
+        this.$store.dispatch('subscribe', this.edition.fullName)
+      }
       ev.target.blur()
     }
   }

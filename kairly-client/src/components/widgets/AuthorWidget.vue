@@ -14,8 +14,8 @@
 
       <section>
         <AuthorSubscription
-          v-if="author.subscription"
-          :subscription="author.subscription" :author="author"
+          v-if="subscription"
+          :subscription="subscription" :author="author"
         />
 
         <button
@@ -55,12 +55,18 @@ export default {
     AuthorSubscription
   },
 
+  computed: {
+    subscription() {
+      return this.$store.state.subscriptions.authors[this.author.id]
+    }
+  },
+
   methods: {
-    follow(period, time, dow) {
-      // TODO split handlers
-      this.$store.dispatch('invalidateTimeline')
-      api.subscribeAuthor(this.author, period, time, dow).then(author => this.author)
-      this.author.subscription = { period, time, dow }
+    follow(periodicity) {
+      this.$store.dispatch('subscribeAuthor', {
+        authorId: this.author.id,
+        periodicity
+      })
     }
   }
 }

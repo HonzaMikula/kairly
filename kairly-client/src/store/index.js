@@ -8,8 +8,11 @@ export default new Vuex.Store({
   state: {
     profile: {
       user: null,
-      subscribedEditions: [], // ids
       managedEditions: [] // ids
+    },
+    subscriptions: {
+      authors: {},
+      editions: {}
     },
     backlog: {},
     editions: {},
@@ -50,8 +53,20 @@ export default new Vuex.Store({
       }
       state.backlog = backlog
     },
-    subscribedEditions(state, editionIds) {
-      state.profile.subscribedEditions = editionIds
+    subscriptions(state, subscriptions) {
+      state.subscriptions = subscriptions
+    },
+    addEditionSubscription(state, fullName) {
+      Vue.set(state.subscriptions.editions, fullName, true)
+    },
+    removeEditionSubscription(state, fullName) {
+      Vue.delete(state.subscriptions.editions, fullName)
+    },
+    addAuthorSubscription(state, { authorId, periodicity }) {
+      Vue.set(state.subscriptions.authors, authorId, periodicity)
+    },
+    removeAuthorSubscription(state, { authorId }) {
+      Vue.delete(state.subscriptions.authors, authorId)
     },
     managedEditions(state, editionIds) {
       state.profile.managedEditions = editionIds
@@ -66,10 +81,10 @@ export default new Vuex.Store({
         state.profile.managedEditions.splice(idx, 1)
       }
       // remove from subscribed
-      idx = state.profile.subscribedEditions.indexOf(editionId)
-      if (idx !== -1) {
-        state.profile.subscribedEditions.splice(idx, 1)
+      if (state.subscriptions.editions[editionId]) {
+        Vue.delete(state.subscriptions.editions, editionId)
       }
+
       Vue.delete(state.editions, editionId)
     },
     edition(state, edition) {
@@ -109,7 +124,7 @@ export default new Vuex.Store({
   getters: {
     user: state => state.profile.user,
     loadingUser: state => state.profile.user === null, // Unauthorized -> user === false
-    subscribedEditions: state => state.profile.subscribedEditions.map(id => state.editions[id]),
+    //subscribedEditions: state => state.profile.subscribedEditions.map(id => state.editions[id]),
     managedEditions: state => state.profile.managedEditions.map(id => state.editions[id]),
     backlog: state => state.backlog,
     edition: state => id => state.editions[id]

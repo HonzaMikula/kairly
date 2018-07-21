@@ -133,7 +133,7 @@ class Edition(models.Model, PeriodMixin):
         return self.title
 
     def to_json(self):
-        result = {
+        return {
             "name": self.slug,
             "fullName": "{}/{}".format(self.editor.username, self.slug),
             "title": self.title,
@@ -144,9 +144,6 @@ class Edition(models.Model, PeriodMixin):
             "issues": getattr(self, 'issues', 0),
             "likes": getattr(self, 'likes', 0)
         }
-        if hasattr(self, 'user_subscription'):
-            result['subscription'] = bool(self.user_subscription)
-        return result
 
 
 class EditionBacklog(models.Model):

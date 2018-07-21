@@ -16,12 +16,14 @@ export const getProfile = ({ commit }) => {
         commit('backlog', resp.backlog)
         resp.editions.forEach(edition => commit('edition', edition))
         commit('managedEditions', resp.editions.map(e => e.fullName))
+        commit('subscriptions', resp.subscriptions)
         return resp
       },
       err => {
         commit('user', false)
         commit('backlog', {})
         commit('managedEditions', [])
+        commit('subscriptions', { authors: {}, editions: {}})
         if (err.status !== 401) {
           createErrorHadler(commit)(err)
         }
@@ -31,24 +33,8 @@ export const getProfile = ({ commit }) => {
 
 export const logout = ({ commit }) => {
   api.clearToken()
-  commit('user', false)
-  commit('backlog', {})
-  commit('managedEditions', [])
   // fot now rather reload page to clear cache in store
   window.location.reload()
-}
-
-export const getUserEditions = ({ commit }) => {
-  return api
-    .getUserEditions()
-    .then(
-      editions => {
-        editions.forEach(edition => commit('edition', edition))
-        commit('subscribedEditions', editions.map(e => e.fullName))
-        return editions
-      }
-    )
-    .catch(createErrorHadler(commit))
 }
 
 export const getEditions = ({ commit, state }, editionIds) => {
@@ -68,19 +54,38 @@ export const getEditions = ({ commit, state }, editionIds) => {
   )
 }
 
-export const subscribe = ({ commit }, { edition, value}) => {
+export const subscribe = ({ commit }, fullName) => {
   commit('invalidateTimeline')
-  let p
-  if (value) {
-    p = api.subscribeEdition(edition.fullName)
-  } else {
-    p = api.unsubscribeEdition(edition.fullName)
-  }
-  return p.then(edition => {
+  return api.subscribeEdition(fullName).then(edition => {
     commit('edition', edition)
+    commit('addEditionSubscription', fullName)
     return edition
   })
   .catch(createErrorHadler(commit))
+}
+
+export const unsubscribe = ({ commit }, fullName) => {
+  commit('invalidateTimeline')
+  return api.unsubscribeEdition(fullName).then(edition => {
+    commit('edition', edition)
+    commit('removeEditionSubscription', fullName)
+    return edition
+  })
+  .catch(createErrorHadler(commit))
+}
+
+export const subscribeAuthor = ({ commit }, { authorId, periodicity }) => {
+  commit('invalidateTimeline')
+  return api.subscribeAuthor(authorId, periodicity).then(author => {
+    commit('addAuthorSubscription', { authorId, periodicity })
+  })
+}
+
+export const unsubscribeAuthor = ({ commit }, { authorId }) => {
+  commit('invalidateTimeline')
+  return api.unsubscribeAuthor(authorId).then(author => {
+    commit('removeAuthorSubscription', { authorId })
+  })
 }
 
 export const editionUpdated = ({ commit }, edition) => {

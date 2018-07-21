@@ -25,12 +25,22 @@ export default {
     EditionWidget
   },
 
-  computed: mapGetters({
-    editions: 'subscribedEditions'
-  }),
+  computed: {
+    ...mapState({
+      editionIds: state => Object.keys(state.subscriptions.editions)
+    }),
+
+    editions() {
+      const editions = this.editionIds
+        .map(id => this.$store.getters.edition(id))
+        .filter(edition => edition !== undefined)
+      editions.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
+      return editions
+    }
+  },
 
   created() {
-    this.$store.dispatch('getUserEditions')
+    this.$store.dispatch('getEditions', this.editionIds)
   }
 }
 </script>

@@ -51,20 +51,6 @@ export const getTimeline = (cursor) => {
     .then(res => res.body)
 }
 
-export const getUserEditions = () => {
-  if (!token) return Promise.reject();
-  return agent
-    .get(API_URI + '/user/editions')
-    .then(res => res.body)
-}
-
-export const getUserAuthors = () => {
-  if (!token) return Promise.reject();
-  return agent
-    .get(API_URI + '/user/authors')
-    .then(res => res.body)
-}
-
 export const getEditionDetail = (editionId, issueId=null) => {
   if (!token) return Promise.reject();
   let url = `${API_URI}/editions/${editionId}`
@@ -126,18 +112,18 @@ export const unsubscribeEdition = editionId => {
     .then(res => res.body)
 }
 
-export const subscribeAuthor = (author, periodicity) => {
+export const subscribeAuthor = (authorId, periodicity) => {
   if (!token) return Promise.reject();
   return agent
-    .post(`${API_URI}/authors/${author.id}/subscribe`)
+    .post(`${API_URI}/authors/${authorId}/subscribe`)
     .send(periodicity)
     .then(res => res.body)
 }
 
-export const unsubscribeAuthor = author => {
+export const unsubscribeAuthor = authorId => {
   if (!token) return Promise.reject();
   return agent
-    .post(`${API_URI}/authors/${author.id}/unsubscribe`)
+    .post(`${API_URI}/authors/${authorId}/unsubscribe`)
     .then(res => res.body)
 }
 

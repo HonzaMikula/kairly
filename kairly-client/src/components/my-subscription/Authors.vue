@@ -31,10 +31,22 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState({
+      authorIds: state => Object.keys(state.subscriptions.authors)
+    }),
+
+    // authors() {
+    //    ....
+    // }
+  },
+
   created() {
-    api.getUserAuthors().then(resp => {
-      this.authors = resp
-    })
+    // TODO make single endpoint to fetch authors (and fetch them without editions)
+    // TODO cache authors in state same as edtions are currently cached
+    Promise.all(
+      this.authorIds.map(id => api.getAuthorDetail(id).then(resp => resp.author))
+    ).then(authors => this.authors = authors )
   }
 }
 </script>

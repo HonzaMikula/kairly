@@ -108,7 +108,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             id = '{}|{}'.format(id, topic.slug)
             name = '{} | {}'.format(name, topic.name)
 
-        res = {
+        result = {
             'id': id,
             'name': name,
             'picture': settings.MEDIA_SITE + self.picture.url if self.picture else '',
@@ -117,19 +117,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         }
 
         if private:
-            res.update({
+            result.update({
                 'timezone': self.timezone,
                 'integrations': {
                     'twitter': self.twitter_account
                 }
             })
 
-        # TODO what about param (ma)
-        if hasattr(self, 'user_subscription'):
-            sub = self.user_subscription
-            res['subscription'] = periodicity_to_json(sub) if sub else None
-
-        return res
+        return result
 
 
 class Category(models.Model):

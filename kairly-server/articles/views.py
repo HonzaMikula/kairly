@@ -38,37 +38,9 @@ def get_user_and_topic(username):
 
 
 def annotate_editions(request, editions):
-    editions = editions \
+    yield from editions \
         .annotate(issues=Count('editionissue', distinct=True)) \
         .annotate(likes=Count('subscription', distinct=True))
-
-    subscribed = set(Edition.objects
-                     .filter(subscription__user=request.user)
-                     .values_list('id', flat=True))
-
-    def annotate(edition):
-        # HACK passing boolean instead full Subscription object
-        # currenly value is only tested to not null
-        edition.user_subscription = edition.id in subscribed
-        return edition
-
-    for edition in editions:
-        yield annotate(edition)
-
-
-@ajax_login_required
-def user_editions(request):
-    editions = Edition.objects \
-        .filter(subscription__user=request.user) \
-        .annotate(issues=Count('editionissue', distinct=True)) \
-        .annotate(likes=Count('subscription', distinct=True))
-
-    resp = []
-    for edition in editions:
-        edition.user_subscription = True
-        resp.append(edition.to_json())
-
-    return JsonResponse(resp, safe=False)
 
 
 @ajax_login_required
@@ -94,20 +66,6 @@ def recent_posts(request):
     return JsonResponse([post.to_json(tzinfo=request.tzinfo) for post in posts], safe=False)
 
 
-@ajax_login_required
-def user_authors(request):
-    subscriptions = SubscriptionToAuthor.objects.filter(user=request.user) \
-        .select_related('author').order_by('author__name')
-
-    def map_to_author(sub):
-        author = sub.author
-        author.user_subscription = sub
-        return author
-
-    return JsonResponse([map_to_author(sub).to_json(topic=sub.topic) for sub in subscriptions],
-                        safe=False)
-
-
 def delete_edition(request, edition):
     if edition.editor_id != request.user.id:
         return HttpResponseForbidden()
@@ -120,10 +78,6 @@ class EditionView(View):
     def get(self, request, username, edition_slug):
         edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
 
-        try:
-            edition.user_subscription = Subscription.objects.get(user=request.user, edition=edition)
-        except Subscription.DoesNotExist:
-            edition.user_subscription = None
         edition.issues = edition.editionissue_set.count()
         edition.likes = edition.subscription_set.count()
 
@@ -189,16 +143,6 @@ class EditionView(View):
 def author(request, username):
     author, topic = get_user_and_topic(username)
     topics = {t.slug: t for t in Topic.objects.filter(author=author)}
-
-    try:
-        if topic:
-            author.user_subscription = SubscriptionToAuthor.objects.get(
-                user=request.user, author=author, topic=topic)
-        else:
-            author.user_subscription = SubscriptionToAuthor.objects.get(
-                user=request.user, author=author, topic__isnull=True)
-    except SubscriptionToAuthor.DoesNotExist:
-        author.user_subscription = None
 
     editions = Edition.objects.filter(editor=author).order_by('-likes')
     data = {
@@ -306,7 +250,7 @@ def subscribe(request, username, edition_slug):
     edition = get_object_or_404(Edition, editor=author, slug=edition_slug)
     Subscription.objects.create(user=request.user, edition=edition)
 
-    edition.user_subscription = True
+    # TODO return user subscription instead
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
     return JsonResponse(edition.to_json())
@@ -319,7 +263,7 @@ def unsubscribe(request, username, edition_slug):
     edition = get_object_or_404(Edition, editor=author, slug=edition_slug)
     Subscription.objects.filter(user=request.user, edition=edition).delete()
 
-    edition.user_subscription = False
+    # TODO return user subscription instead
     edition.issues = edition.editionissue_set.count()
     edition.likes = edition.subscription_set.count()
     return JsonResponse(edition.to_json())
@@ -354,7 +298,7 @@ def subscribe_author(request, username):
         subscription.period_dow = periodicity.dow
         subscription.save()
     except SubscriptionToAuthor.DoesNotExist:
-        subscription = SubscriptionToAuthor.objects.create(
+        SubscriptionToAuthor.objects.create(
             user=request.user,
             author=author,
             topic=topic,
@@ -363,7 +307,7 @@ def subscribe_author(request, username):
             period_dow=periodicity.dow,
         )
 
-    author.user_subscription = subscription
+    # TODO return user subscription instead
     return JsonResponse(author.to_json(topic=topic))
 
 
@@ -374,7 +318,7 @@ def unsubscribe_author(request, username):
     SubscriptionToAuthor.objects.filter(
         user=request.user, author=author, topic=topic).delete()
 
-    author.user_subscription = None
+    # TODO return user subscription instead
     return JsonResponse(author.to_json(topic=topic))
 
 

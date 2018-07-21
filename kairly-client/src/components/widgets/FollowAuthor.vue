@@ -178,11 +178,10 @@ export default {
     },
 
     cancelSubscription() {
-      // TODO split handlers
       this.showCanceling = false
-      this.$store.dispatch('invalidateTimeline')
-      api.unsubscribeAuthor(this.author).then(author => this.author)
-      this.author.subscription = null
+      this.$store.dispatch('unsubscribeAuthor', {
+        authorId: this.author.id
+      })
     }
   }
 }

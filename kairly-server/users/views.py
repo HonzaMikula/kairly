@@ -22,7 +22,8 @@ from django.views.decorators.http import require_POST
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
-from articles.models import Edition, EditionBacklog
+from articles.models import Edition, EditionBacklog, SubscriptionToAuthor
+from articles.period import periodicity_to_json
 from .models import User, Category
 
 
@@ -47,7 +48,7 @@ def get_token(request):
 class ProfileView(View):
     @ajax_login_required
     def get(self, request):
-        # TODO load edition and backlog in separate endpoint
+        # TODO reconsider loading  edition and backlog in separate endpoint? maybe it's eventually not good idea
         editions = []
         internal_ids_mapping = {}
         for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
@@ -62,11 +63,26 @@ class ProfileView(View):
         for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
             backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
 
-        # TODO merge author and user props
+        subscribed_authors = {}
+        query = SubscriptionToAuthor.objects.filter(user=request.user).select_related('author', 'topic')
+        for s in query:
+            author_id = '{}|{}'.format(s.author.username, s.topic.slug) if s.topic else s.author.username
+            subscribed_authors[author_id] = periodicity_to_json(s)
+
+        subscribed_editions = {}
+        query = Edition.objects.filter(subscription__user=request.user).select_related('editor')
+        for edition in query:
+            full_name = "{}/{}".format(edition.editor.username, edition.slug)
+            subscribed_editions[full_name] = True
+
         return JsonResponse({
             "user": request.user.to_json(private=True),
             "editions": editions,
-            "backlog": backlog
+            "backlog": backlog,
+            "subscriptions": {
+                "authors": subscribed_authors,
+                "editions": subscribed_editions,
+            }
         })
 
     @ajax_login_required

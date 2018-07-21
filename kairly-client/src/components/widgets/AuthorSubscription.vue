@@ -32,7 +32,8 @@ export default {
   name: 'AuthorSubscription',
 
   props: {
-    author: Object
+    author: Object,
+    subscription: Object
   },
 
   components: {
@@ -46,17 +47,17 @@ export default {
   },
 
   computed: {
-    frequency() { return this.author.subscription && this.author.subscription.frequency },
-    dow() { return this.author.subscription && this.author.subscription.dow },
-    time() { return this.author.subscription && this.author.subscription.time }
+    frequency() { return this.subscription && this.subscription.frequency },
+    dow() { return this.subscription && this.subscription.dow },
+    time() { return this.subscription && this.subscription.time }
   },
 
   methods: {
     follow(periodicity) {
-      // TODO split handlers
-      this.$store.dispatch('invalidateTimeline')
-      api.subscribeAuthor(this.author, periodicity).then(author => this.author)
-      this.author.subscription = periodicity
+      this.$store.dispatch('subscribeAuthor', {
+        authorId: this.author.id,
+        periodicity
+      })
     }
   }
 }

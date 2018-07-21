@@ -20,7 +20,7 @@
 
           <author-detail--subscribe>
             <button
-              v-if="author.subscription"
+              v-if="subscription"
               class="is-subscribed"
               @click="unfollow($event)">
               Unsubscribe author
@@ -37,8 +37,8 @@
               :author="author"
               :onSelect="follow" />
 
-            <AuthorSubscription if="author.subscription"
-              :author="author"
+            <AuthorSubscription if="subscription"
+              :author="author" :subscription="subscription"
             />
           </author-detail--subscribe>
 
@@ -66,7 +66,6 @@
           <button v-if="editionIds.length > 3" v-on:click="toggleEditions()">{{ !showAllEditions ? 'Show all editions' : 'Hide editions' }}</button>
 
         </author-detail--editions>
-
 
         <author-detail--posts v-if="posts.length">
           <h2>{{ author.name }}'s Posts</h2>
@@ -134,6 +133,10 @@ export default {
       return ids.map(id => this.$store.getters.edition(id))
     },
 
+    subscription() {
+      return this.$store.state.subscriptions.authors[this.author.id]
+    },
+
     ...mapGetters(['user'])
   },
 
@@ -144,18 +147,17 @@ export default {
   },
 
   methods: {
-    follow(period, time, dow) {
-      // TODO split handlers
-      this.$store.dispatch('invalidateTimeline')
-      api.subscribeAuthor(this.author, period, time, dow).then(author => this.author)
-      this.author.subscription = { period, time, dow }
+    follow(periodicity) {
+      this.$store.dispatch('subscribeAuthor', {
+        authorId: this.author.id,
+        periodicity
+      })
     },
 
     unfollow(ev) {
-      // TODO split handlers
-      this.$store.dispatch('invalidateTimeline')
-      api.unsubscribeAuthor(this.author).then(author => this.author)
-      this.author.subscription = null
+      this.$store.dispatch('unsubscribeAuthor', {
+        authorId: this.author.id,
+      })
       ev.target.blur()
     },
 
