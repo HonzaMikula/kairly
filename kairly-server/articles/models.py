@@ -76,7 +76,7 @@ class Post(models.Model):
         cache_key = Post.READ_TIME_CACHE_KEY.format(id=self.id)
         value = cache.get(cache_key)
         if value is None:
-            soup = BeautifulSoup(self.content)
+            soup = BeautifulSoup(self.content, "lxml")
             for script in soup(["script", "style"]):
                 script.extract()
 

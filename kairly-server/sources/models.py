@@ -5,6 +5,7 @@ import requests
 import yaml
 import lxml.html
 from lxml.etree import tostring
+from bs4 import UnicodeDammit
 
 from django.db import models
 from django.conf import settings
@@ -92,6 +93,7 @@ class Channel(models.Model):
 
     def parse_article_from_entry(self, entry):
         url = entry.link.split('#', maxsplit=1)[0]
+        html = None
         if self.parse_content_from_rss:
             # some feeds has full article in content attribute, see issue #40
             # eg http://www.mindtheproduct.com/feed/ or https://blogs.windows.com/msedgedev/feed/
@@ -103,7 +105,6 @@ class Channel(models.Model):
             # This means that sometimes descrption is proper source otherways
             # content must be used. For now best approach seems to be use
             # content only if contains text/html type.
-            html = None
             if hasattr(entry, 'content'):
                 for content in entry.content:
                     if content.type == 'text/html':
@@ -117,14 +118,14 @@ class Channel(models.Model):
                 headers['User-Agent'] = self.user_agent
             resp = requests.get(url, headers=headers)
 
-            # hack, use utf-8 if meta with such value exists, needed at least for osel.cz
-            # which sends bad encoding header from server
-            if b"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" in resp.content:
-                encoding = 'utf-8'
-            else:
-                encoding = resp.encoding
+            if resp.encoding == 'ISO-8859-1':
+                # some sources doesn't sent proper encoding header, eg osel.cz or atletika.cz
+                ud = UnicodeDammit(resp.content)
+                if ud.unicode_markup:
+                    html = ud.unicode_markup
 
-            html = resp.content.decode(encoding)
+            if html is None:
+                html = resp.content.decode(resp.encoding)
 
         htmltree = lxml.html.fromstring(html)
         try:
