@@ -28,7 +28,7 @@ def get_user_and_topic(username):
 
     user = get_object_or_404(User, username=username)
     if topic_slug:
-        topic = Topic.objects.get(slug=topic_slug)
+        topic = Topic.objects.get(author=user, slug=topic_slug)
         if not topic:
             raise Http404
     else:
