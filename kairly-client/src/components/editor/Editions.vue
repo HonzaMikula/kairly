@@ -51,12 +51,45 @@
         <div class="mobile-menu">
           <button-icon
             class="menu"
-            aria-label="Context menu">
+            :class="{'is-active': isMobileMenuOpen}"
+            aria-label="Context menu"
+            @click="isMobileMenuOpen = !isMobileMenuOpen">
           </button-icon>
+
+          <div
+            class="mobile-menu--dropdown"
+            v-if="isMobileMenuOpen"
+            v-on-clickaway="() => isMobileMenuOpen = false">
+            <ul>
+              <li><a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a></li>
+              <li><a href="" @click.prevent="editionToEdit = selectedEdition">Edit edition</a></li>
+              <li><a href="" @click.prevent="confirmDeleteEdition">Delete edition</a></li>
+            </ul>
+          </div>
         </div>
       </editor-editions--header>
 
-      <editor-editions--board>
+      <editor-editions--mobile-switcher>
+        <nav>
+          <a
+            href=""
+            :class="{'is-active': mobileSwitcher == 1}"
+            @click.prevent="mobileSwitcher = 1">
+            Upcoming issue
+          </a>
+
+          <a
+            href=""
+            :class="{'is-active': mobileSwitcher == 2}"
+            @click.prevent="mobileSwitcher = 2">
+            Considered posts
+          </a>
+        </nav>
+      </editor-editions--mobile-switcher>
+
+      <editor-editions--board
+        :class="{'upcoming-issue': mobileSwitcher == 1, 'backlog': mobileSwitcher ==2}"
+      >
         <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
       </editor-editions--board>
 
@@ -112,6 +145,8 @@ export default {
       cursor: null,
       isCreateEditionOpen: false,
       isSelectEditionOpen: false,
+      isMobileMenuOpen: false,
+      mobileSwitcher: 1,
       editionToEdit: null,
       selectedEdition: null
     }
@@ -200,8 +235,11 @@ editor-editions-view
   position: relative
 
   display: block
-  margin: 0 $baseline
+  padding: 0 $baseline
   max-width: 1600px
+
+  @media (max-width: $mobile)
+    padding: 0 $baseline/4
 
   //- Header
   editor-editions--header
@@ -319,10 +357,34 @@ editor-editions-view
         text-align: center
 
         &:focus,
-        &:hover
+        &:hover,
+        &.is-active
           background: #eee
 
+      .mobile-menu--dropdown
+        position: absolute
+        right: 0
+        top: $baseline * 3
+        z-index: 100
 
+        display: block
+        padding: $baseline / 4
+
+        backdrop-filter: blur(10px) saturate(125%)
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+
+        font-size: $fs--1
+        text-align: left
+
+        li
+          margin-bottom: $baseline/4
+
+          &:last-of-type
+            margin-bottom: 0
+
+        a
+          display: block
+          color: #000
 
 
 editor-editions--header--dropdown
@@ -373,6 +435,53 @@ editor-editions--header--dropdown
     color: #777
 
     font-size: $fs--2
+
+
+//- Mobile switcher (upcoming release, considered posts)
+editor-editions--mobile-switcher
+  display: none
+
+  @media (max-width: 1260px)
+    display: block
+
+  nav
+    display: table
+    margin: 0 auto $baseline auto
+
+    font-size: $fs-2
+
+    a
+      display: inline-block
+      margin-right: $baseline/2
+
+      color: $c-base
+
+      font-weight: 500
+
+      &:last-of-type
+        margin-right: 0
+
+      &.is-active
+        color: #000
+
+// Board
+editor-editions--board
+  @media (max-width: 1260px)
+    edition-backlog--info
+      display: none
+
+    edition-backlog-view > div
+        grid-template-columns: 1fr
+
+    //- if upcoming issue is opened
+    &.upcoming-issue
+      edition-backlog--backlog
+        display: none
+
+    //- if backlog is opened
+    &.backlog
+      edition-backlog--next-issue
+        display: none
 
 
 </style>
