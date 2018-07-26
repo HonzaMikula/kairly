@@ -368,23 +368,22 @@ editor-editions-view
         z-index: 100
 
         display: block
-        padding: $baseline / 4
 
-        backdrop-filter: blur(10px) saturate(125%)
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+        +blur
+        +box-shadow
 
         font-size: $fs--1
         text-align: left
 
-        li
-          margin-bottom: $baseline/4
-
-          &:last-of-type
-            margin-bottom: 0
-
         a
           display: block
+          padding: $baseline/4
+
           color: #000
+
+          &:focus,
+          &:hover
+            background: #fff
 
 
 editor-editions--header--dropdown
@@ -397,8 +396,8 @@ editor-editions--header--dropdown
   margin-left: -190px
   width: 380px
 
-  backdrop-filter: blur(10px) saturate(125%)
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+  +blur(10px)
+  +box-shadow
 
   font-size: $fs--1
 

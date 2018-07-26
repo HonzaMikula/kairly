@@ -26,6 +26,8 @@ export default [
       name: 'Technology',
       slug: 'technology',
       editions: [
+        'janmikula/technologicky-denik',
+        'janmikula/product-design-weekly'
       ]
     },
     {

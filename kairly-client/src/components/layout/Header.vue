@@ -13,11 +13,16 @@
         <app-header--user-profile v-if="user">
           <h3><router-link :to="{name: 'author', params: {author: user.id}}">{{ user.name }}</router-link></h3>
           <router-link :to="{name: 'author', params: {author: user.id}}"><img :src="user.picture || '../../assets/user.png'" :alt="user.name"/></router-link>
-          <button-icon v-on:click="openDropDownMenu"></button-icon>
+          <button-icon v-on:click="isDropDownMenuOpen = true"></button-icon>
         </app-header--user-profile>
 
-        <app-header--user-profile-menu v-if="user && isDropDownMenuOpen" v-on:mouseleave="closeDropDownMenu">
+        <app-header--user-profile-menu
+          v-if="user && isDropDownMenuOpen"
+          v-on-clickaway="() => isDropDownMenuOpen = false">
           <ul>
+            <li class="my-subscription"><router-link :to="{name: 'subscription'}"><span>My Subscription</span></router-link></li>
+            <li class="my-editions"><router-link :to="{name: 'author-editions'}"><span>My Editions</span></router-link></li>
+            <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
             <li><router-link :to="{name: 'settings'}"><span>Settings</span></router-link></li>
             <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
             <li><a href="" v-on:click.prevent="logout">Logout</a></li>
@@ -33,6 +38,7 @@
 </template>
 
 <script>
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapGetters, mapActions } from 'vuex'
 import store from '@/store'
 
@@ -43,6 +49,10 @@ export default {
 
   components: {
     TutorialModal
+  },
+
+  directives: {
+    onClickaway
   },
 
   data: function() {
@@ -58,14 +68,6 @@ export default {
 
   methods: {
     ...mapActions(['login', 'logout']),
-
-    openDropDownMenu() {
-      this.isDropDownMenuOpen = true
-    },
-
-    closeDropDownMenu() {
-      this.isDropDownMenuOpen = false
-    },
 
     closeTutorial() {
       this.isTutorialOpen = false
@@ -124,6 +126,12 @@ app-header--nav
 
       span
         display: none
+
+  @media (max-width: $mobile)
+    .my-subscription,
+    .my-editions,
+    .explore
+      display: none
 
 
 
@@ -203,26 +211,32 @@ app-header--user-profile-menu
   right: 0
   top: $baseline * 2
   z-index: 100000000
-
-  padding: $baseline / 4 0
-  min-width: 150px
-
-  background: #fff
-  border: 1px solid #eee
-  box-shadow: 1px 1px 3px #999
+  min-width: 120px
+  +box-shadow
 
   font-size: $fs--2
   line-height: $baseline
 
+  ul
+    +blur
+
   a
     display: block
-    padding: 0 $baseline / 2
+    padding: $baseline / 4
 
     color: #555
 
     &:focus,
     &:hover
-      background: #eee
+      background: #fff
+
+  .my-subscription,
+  .my-editions,
+  .explore
+    display: none
+
+    @media (max-width: $mobile)
+      display: block
 
 
 </style>
