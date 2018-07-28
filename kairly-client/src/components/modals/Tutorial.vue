@@ -48,6 +48,7 @@ export default {
 
 <style lang="sass">
 modal-dialog
+  grid-template-rows: 1fr
 
   > div
     padding-top: $baseline

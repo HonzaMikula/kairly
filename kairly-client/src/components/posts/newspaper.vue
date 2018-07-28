@@ -17,7 +17,7 @@
     </timeline-post--newspaper>
 
     <template slot="extendedControls">
-      <slot name="extendedControls">
+      <slot v-if="post.source" name="extendedControls">
         <a :href="post.source" class="external-link" v-tooltip.top="'Original article'"></a>
       </slot>
     </template>

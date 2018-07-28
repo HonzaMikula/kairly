@@ -20,6 +20,7 @@ modal-window
   position: fixed
   top: 0
   left: 0
+  z-index: 100000000
 
   display: flex
   align-items: center
