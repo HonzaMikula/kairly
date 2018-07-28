@@ -19,12 +19,23 @@
 
     <edition-widget--subscribe>
       <button
-        :class="{ 'is-subscribed': isSubscribed }"
-        v-on:click="subscribe($event)"
-      >{{ edition.subscription ? 'Subscribed' : 'Subscribe'}}</button>
+        v-if="isSubscribed"
+        class="is-subscribed"
+        @click="unsubscribe($event)">
+        <span class="default">Subscribed</span>
+        <span class="on-hover">Unsubscribe</span>
+      </button>
+
+      <button
+        v-else
+        class="to-subscribe"
+        @click="subscribe($event)">
+        Subscribe
+      </button>
+
       <p>
-        10 CZK per month
-         •
+        {{ edition.periodicity.frequency }} {{ edition.periodicity.time }} {{ edition.periodicity.dow }}
+        •
         {{ edition.likes }} subscribers
         •
         #{{ edition.issues }}
@@ -52,13 +63,14 @@ export default {
 
   methods: {
     subscribe(ev) {
-      if (this.isSubscribed) {
-        this.$store.dispatch('unsubscribe', this.edition.fullName)
-      } else {
-        this.$store.dispatch('subscribe', this.edition.fullName)
-      }
-      ev.target.blur()
-    }
+      this.$store.dispatch('subscribe', this.edition.fullName)
+      document.activeElement.blur()
+    },
+
+    unsubscribe(ev) {
+      this.$store.dispatch('unsubscribe', this.edition.fullName)
+      document.activeElement.blur()
+    },
   }
 }
 </script>
@@ -146,12 +158,36 @@ edition-widget--subscribe
   @media (max-width: $mobile)
     padding-bottom: $baseline / 4
 
-  //- button
-  button
+  //- when edition is subscribed
+  button.is-subscribed
+    +subscribed-button
+
+    border-radius: $baseline * 0.5
+    height: $baseline * 1
+    width: 140px
+
+    line-height: $baseline * 1
+
+    .on-hover
+      display: none
+
+    &:hover,
+    &:focus
+      .on-hover
+        display: block
+
+      .default
+        display: none
+
+  //- when edition is ready to be subsribed
+  button.to-subscribe
     +subscribe-button
 
-    font-family: $ff-sans
-    font-size: $fs--1
+    border-radius: $baseline * 0.5
+    height: $baseline * 1
+    width: 140px
+
+    line-height: $baseline * 1
 
   //- info
   p

@@ -33,7 +33,7 @@
 
           <post-detail--footer>
             <button-icon class="consider-for-edition">Consider for Edition</button-icon>
-            <a href="">Original article</a>
+            <a :href="post.source" class="external-link">Original article</a>
           </post-detail--footer>
 
           <post-detail--author>
@@ -381,7 +381,7 @@ post-detail--footer
 
   border-bottom: 1px solid #eee
 
-  button-icon
+  button-icon, a
     border-radius: 5px
     display: inline-block
     height: $baseline * 1.25
@@ -389,6 +389,7 @@ post-detail--footer
     padding: 0 $baseline/4
 
     background: #eee
+    color: #000
 
     cursor: pointer
     font-size: $fs--2
@@ -408,6 +409,14 @@ post-detail--footer
     &:hover
       background: #bbb
       color: #000
+
+    &.external-link::before
+      +fa-icon()
+
+      font-size: $fs-1
+
+      content: $fa-var-external-link-square
+
 
 //- Post Author
 post-detail--author
