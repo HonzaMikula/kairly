@@ -19,7 +19,7 @@
 
     <edition-widget--subscribe>
       <button
-        v-bind:class="{ 'is-subscribed': isSubscribed }"
+        :class="{ 'is-subscribed': isSubscribed }"
         v-on:click="subscribe($event)"
       >{{ edition.subscription ? 'Subscribed' : 'Subscribe'}}</button>
       <p>

@@ -2,6 +2,35 @@
 
 
 //- Subscribe Button
+=subscribed-button
+  border-radius: $baseline / 2
+  box-sizing: border-box
+  padding: 0 $baseline
+
+  background: $c-base
+  border: 1px solid $c-base
+  color: #000
+
+  cursor: pointer
+  font-family: $ff-sans
+  font-size: $fs--1
+  line-height: $baseline
+
+  &:hover,
+  &:focus
+    background: $c-base
+    color: #fff
+
+  &.is-subscribed
+    background: $c-base
+    color: #fff
+
+    &:hover,
+    &:focus
+      background: $c-red
+
+
+//- To Subscribe Button
 =subscribe-button
   border-radius: $baseline / 2
   box-sizing: border-box

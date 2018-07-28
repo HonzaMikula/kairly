@@ -7,9 +7,19 @@
 
         <edition-detail--subscribe v-if="!loading">
           <button
-            v-bind:class="{ 'is-subscribed': edition.subscription }"
-            v-on:click="subscribe($event)"
-          >{{ edition.subscription ? 'Subscribed' : 'Subscribe Edition'}}</button>
+            v-if="isSubscribed"
+            class="is-subscribed"
+            @click="unsubscribe($event)">
+            <span class="default">Subscribed</span>
+            <span class="on-hover">Unsubscribe</span>
+          </button>
+
+          <button
+            v-else
+            class="to-subscribe"
+            @click="subscribe($event)">
+            Subscribe
+          </button>
 
           <p>10 CZK per month</p>
         </edition-detail--subscribe>
@@ -98,17 +108,22 @@ export default {
       }
     },
 
+    isSubscribed() {
+      return this.edition.fullName in this.$store.state.subscriptions.editions
+    },
+
     ...mapGetters(['user'])
   },
 
   methods: {
     subscribe(ev) {
-      this.$store.dispatch('subscribe', {
-        edition: this.edition,
-        value: !this.edition.subscription
-      })
-      this.edition.subscription = !this.edition.subscription
-      ev.target.blur()
+      this.$store.dispatch('subscribe', this.edition.fullName)
+      document.activeElement.blur()
+    },
+
+    unsubscribe(ev) {
+      this.$store.dispatch('unsubscribe', this.edition.fullName)
+      document.activeElement.blur()
     },
 
     ...mapMutations(['show404'])
@@ -188,11 +203,36 @@ edition-detail--subscribe
     position: static
     text-align: center
 
-  button
+  button.is-subscribed
+    +subscribed-button
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    width: 150px
+
+    line-height: $baseline * 1.5
+
+    .on-hover
+      display: none
+
+    &:hover,
+    &:focus
+      .on-hover
+        display: block
+
+      .default
+        display: none
+
+  button.to-subscribe
     +subscribe-button
 
     border-radius: $baseline * 0.75
     height: $baseline * 1.5
+    width: 150px
+
+    line-height: $baseline * 1.5
+
+
 
   button + p
     color: #777

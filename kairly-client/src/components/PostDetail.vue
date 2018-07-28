@@ -33,6 +33,7 @@
 
           <post-detail--footer>
             <button-icon class="consider-for-edition">Consider for Edition</button-icon>
+            <a href="">Original article</a>
           </post-detail--footer>
 
           <post-detail--author>

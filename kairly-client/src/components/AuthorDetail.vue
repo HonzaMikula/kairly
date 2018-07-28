@@ -23,13 +23,15 @@
               v-if="subscription"
               class="is-subscribed"
               @click="unfollow($event)">
-              Unsubscribe author
+              <span class="default">Subscribed</span>
+              <span class="on-hover">Unsubscribe</span>
             </button>
 
             <button
+              class="to-subscribe"
               v-else
               @click="$refs.followWidget.openSubscribeWidget()">
-              Subscribe author
+              Subscribe
             </button>
 
             <follow-author
@@ -152,6 +154,7 @@ export default {
         authorId: this.author.id,
         periodicity
       })
+      ev.target.blur()
     },
 
     unfollow(ev) {
@@ -289,11 +292,34 @@ author-detail--subscribe
     grid-column: 1 / span 2
     margin-bottom: 0
 
-  button
+  button.is-subscribed
+    +subscribed-button
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    width: 150px
+
+    line-height: $baseline * 1.5
+
+    .on-hover
+      display: none
+
+    &:hover,
+    &:focus
+      .on-hover
+        display: block
+
+      .default
+        display: none
+
+  button.to-subscribe
     +subscribe-button
 
     border-radius: $baseline * 0.75
     height: $baseline * 1.5
+    width: 150px
+
+    line-height: $baseline * 1.5
 
 
 //- Topics

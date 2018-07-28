@@ -132,7 +132,7 @@ export default {
     EditionBacklog
   },
 
-   directives: {
+  directives: {
     onClickaway
   },
 
