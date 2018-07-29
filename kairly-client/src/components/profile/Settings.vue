@@ -70,10 +70,6 @@
       <portal to="modal" v-if="isChangePasswordOpen">
         <change-password :onClose="closeChangePassword"></change-password>
       </portal>
-
-      <portal to="infoMessage">
-        <info-message type="success">Your settings were updated.</info-message>
-      </portal>
     </settings-view>
   </app-layout>
 </template>
@@ -129,6 +125,7 @@ export default {
         const user = res.body
         this.updateComponentData(user)
         this.updateUserInStore(user)
+        this.showSuccess('Your settings were updated.')
       })
     },
 
@@ -142,7 +139,7 @@ export default {
       this.updateProfile({ name, medium, bio, timezone, integrations: { twitter }})
     },
 
-    ...mapMutations({updateUserInStore: 'user'}),
+    ...mapMutations({updateUserInStore: 'user', showSuccess: 'showSuccess'}),
 
     closeChangePassword() {
       this.isChangePasswordOpen = false

@@ -3,6 +3,7 @@ import * as api from '@/api'
 function createErrorHadler(commit) {
   return err => {
     commit('showError', (err + '') || 'Request failed')
+    // eslint-disable-next-line no-console
     console.log(err)
     return err
   }
@@ -32,7 +33,7 @@ export const getProfile = ({ commit }) => {
     )
 }
 
-export const logout = ({ commit }) => {
+export const logout = () => {
   api.clearToken()
   // fot now rather reload page to clear cache in store
   window.location.reload()
@@ -77,14 +78,14 @@ export const unsubscribe = ({ commit }, fullName) => {
 
 export const subscribeAuthor = ({ commit }, { authorId, periodicity }) => {
   commit('invalidateTimeline')
-  return api.subscribeAuthor(authorId, periodicity).then(author => {
+  return api.subscribeAuthor(authorId, periodicity).then(() => {
     commit('addAuthorSubscription', { authorId, periodicity })
   })
 }
 
 export const unsubscribeAuthor = ({ commit }, { authorId }) => {
   commit('invalidateTimeline')
-  return api.unsubscribeAuthor(authorId).then(author => {
+  return api.unsubscribeAuthor(authorId).then(() => {
     commit('removeAuthorSubscription', { authorId })
   })
 }

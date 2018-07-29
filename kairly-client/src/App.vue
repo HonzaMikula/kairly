@@ -7,9 +7,8 @@
 
     <portal-target name="modal" slim></portal-target>
 
-    <portal-target name="infoMessage" slim></portal-target>
-
     <info-message v-if="errorMessage" type="error">{{ errorMessage }}</info-message>
+    <info-message v-if="successMessage" type="success">{{ successMessage }}</info-message>
   </app-view>
 </template>
 
@@ -34,7 +33,8 @@ export default {
   computed: {
     ...mapState({
       showTutorial: state => state.showTutorial,
-      errorMessage: state => state.error
+      errorMessage: state => state.messages.error,
+      successMessage: state => state.messages.success
     }),
     ...mapGetters(['user', 'loadingUser'])
   },
@@ -43,10 +43,11 @@ export default {
     '$route' (to, from) {
       this.show404(false)
       this.showError(null)
+      this.showSuccess(null)
     }
   },
 
-  methods: mapMutations(['showError', 'show404']),
+  methods: mapMutations(['showError', 'showSuccess', 'show404']),
 
   created: function () {
     this.$store.dispatch('getProfile')

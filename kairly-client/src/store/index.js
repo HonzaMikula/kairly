@@ -22,7 +22,10 @@ export default new Vuex.Store({
       loading: false,
       expandedIssues: {}
     },
-    error: null,
+    messages: {
+      error: null,
+      success: null,
+    },
     show404: false
   },
 
@@ -122,7 +125,10 @@ export default new Vuex.Store({
       }
     },
     showError(state, msg) {
-      state.error = msg
+      state.messages = {...state.messages, error: msg }
+    },
+    showSuccess(state, msg) {
+      state.messages = {...state.messages, success: msg }
     },
     show404(state, value=true) {
       state.show404 = value

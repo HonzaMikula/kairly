@@ -104,7 +104,7 @@ class ProfileView(View):
             user.picture = picture
 
         user.save()
-        return JsonResponse(user.to_json())
+        return JsonResponse(user.to_json(private=True))
 
 
 # TODO enable CSRF protection
