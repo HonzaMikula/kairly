@@ -3,6 +3,7 @@ import * as api from '@/api'
 function createErrorHadler(commit) {
   return err => {
     commit('showError', (err + '') || 'Request failed')
+    console.log(err)
     return err
   }
 }

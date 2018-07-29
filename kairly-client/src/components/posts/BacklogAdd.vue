@@ -16,7 +16,7 @@
 
       <section>
         <ul>
-          <li v-for="ed in managedEditions" :key="ed.id" :class="{'is-selected': containedIn.indexOf(ed.fullName) !== -1}">
+          <li v-for="ed in managedEditions" :key="ed.id" :class="{'is-selected': ed.fullName in containedIn}">
             <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
           </li>
         </ul>
@@ -52,16 +52,16 @@ export default {
     ...mapGetters(['managedEditions', 'backlog']),
 
     containedIn() {
-      return this.backlog[this.post.id] || []
+      return this.backlog[this.post.id] || {}
     }
   },
 
   methods: {
     toggle(edition, ev) {
-      if (this.containedIn.indexOf(edition.fullName) === -1) {
-        this.addToBacklog({edition, post: this.post})
-      } else {
+      if (edition.fullName in this.containedIn) {
         this.removeFromBacklog({edition, post: this.post})
+      } else {
+        this.addToBacklog({edition, post: this.post})
       }
       ev.target.blur()
     },

@@ -24,7 +24,7 @@
               <p>
                 <strong>#{{ edition.issues + 1 }}</strong> is releasing in
                 <strong>{{ timeFrom(edition.nextRelease) }}</strong> with
-                <strong>X posts</strong>.
+                <strong>{{ publishedPostCount(edition) }} posts</strong>.
               </p>
             </div>
           </editor-editions--header--dropdown>
@@ -164,7 +164,7 @@ export default {
       return this.author && this.user.id == this.author.id
     },
 
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'backlog'])
   },
 
   watch: {
@@ -176,6 +176,16 @@ export default {
   methods: {
     timeFrom(dt) {
       return moment(dt).from()
+    },
+
+    publishedPostCount(edition) {
+      let count = 0
+      Object.keys(this.backlog).forEach(postId => {
+        if (this.backlog[postId][edition.fullName] === 'P') {
+          count++
+        }
+      })
+      return count
     },
 
     selectEdition(edition) {

@@ -34,19 +34,27 @@ export default new Vuex.Store({
       state.backlog = backlog
     },
     backlogAdd(state, { postId, editionId }) {
-      const currEditions = state.backlog[postId] || []
-      state.backlog = {...state.backlog, [postId]: [...currEditions, editionId]}
+      const currEditions = state.backlog[postId] || {}
+      state.backlog = {
+        ...state.backlog,
+        [postId]: {...currEditions, [editionId]: 'C'}
+      }
+    },
+    backlogSetPostState(state, { postId, editionId, val }) {
+      const currEditions = state.backlog[postId] || {}
+      state.backlog = {
+        ...state.backlog,
+        [postId]: {...currEditions, [editionId]: val}
+      }
     },
     backlogRemove(state, { postId, editionId }) {
       // TODO this would be nice move to utils function
       // we need shallow copy with updated nested object
-      let currEditions = [...state.backlog[postId]] || []
-      const idx = currEditions.findIndex(i => i == editionId)
-      if (idx !== -1) {
-        currEditions.splice(idx, 1)
-      }
+      let currEditions = {...state.backlog[postId]}
+      delete currEditions[editionId]
+
       const backlog = {...state.backlog}
-      if (currEditions.length) {
+      if (Object.keys(currEditions).length) {
         backlog[postId] = currEditions
       } else {
         delete backlog[postId]

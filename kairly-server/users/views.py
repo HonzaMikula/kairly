@@ -59,9 +59,9 @@ class ProfileView(View):
                 'title': edition.title,
             })
 
-        backlog = defaultdict(list)
+        backlog = defaultdict(dict)
         for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
-            backlog[bl.post_id].append(internal_ids_mapping[bl.edition_id])
+            backlog[bl.post_id][internal_ids_mapping[bl.edition_id]] = 'C' if bl.publish_stamp is None else 'P'
 
         subscribed_authors = {}
         query = SubscriptionToAuthor.objects.filter(user=request.user).select_related('author', 'topic')

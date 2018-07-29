@@ -3,7 +3,8 @@
 
     <edition-backlog--info>
       <div>
-        Issue <strong>#{{edition.issues + 1}}</strong> will be automatically published in <strong>{{ timeFrom(edition.nextRelease) }}</strong>
+        Issue <strong>#{{edition.issues + 1}}</strong> will be automatically
+        published in <strong :title="edition.nextRelease">{{ timeFrom(edition.nextRelease) }}</strong>
       </div>
 
       <div>
@@ -109,7 +110,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import moment from 'moment'
 
 import * as api from '@/api'
@@ -151,6 +152,7 @@ export default {
       this.published.push(post)
       api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
       .catch(this.init)
+      this.backlogSetPostState({edition: this.edition, post: post, state: 'P'})
     },
 
     undoPublish(post) {
@@ -158,6 +160,7 @@ export default {
       this.backlog.push(post)
       api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
       .catch(this.init)
+      this.backlogSetPostState({edition: this.edition, post: post, state: 'C'})
     },
 
     moveUp(idx) {
@@ -181,8 +184,8 @@ export default {
       this.init()
     },
 
-    ...mapActions(['removeFromBacklog'])
-
+    ...mapActions(['removeFromBacklog']),
+    ...mapMutations(['backlogSetPostState'])
   },
 
   created() {
