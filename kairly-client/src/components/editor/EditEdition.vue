@@ -97,6 +97,7 @@ export default {
       title: this.edition ? this.edition.title : '',
       description: this.edition ? this.edition.description : '',
       periodicity: this.edition ? this.edition.periodicity : null,
+      image: null,
       DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
@@ -113,24 +114,27 @@ export default {
     },
 
     submit() {
-      // TODO show validation in form
+      const errors = []
+
       if (this.title.trim() === '') {
-        alert("Title is empty")
-        return
+        errors.push("Title is empty")
       }
 
       if (this.description.trim() === '') {
-        alert("Editorial is empty")
-        return
+        errors.push("Editorial is empty")
       }
 
       if (this.periodicity === null) {
-        alert("Periodicity is not selected")
-        return
+        errors.push("Periodicity is not selected")
       }
 
       if (this.image === null && !this.edition) {
-        alert("Image is not selected")
+        errors.push("Image is not selected")
+      }
+
+      if (errors.length) {
+        // TODO show validation in form
+        alert(errors.join("\n"))
         return
       }
 
