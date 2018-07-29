@@ -1,7 +1,8 @@
 import math
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
+import pytz
 
 from django.conf import settings
 from django.core.cache import cache
@@ -132,6 +133,12 @@ class Edition(models.Model, PeriodMixin):
     def __str__(self):
         return self.title
 
+    @property
+    def next_release(self):
+        editor_tz = pytz.timezone(self.editor.timezone)
+        now_dt = now().astimezone(editor_tz)
+        return self.get_period_interval(now_dt).end
+
     def to_json(self):
         return {
             "name": self.slug,
@@ -141,6 +148,7 @@ class Edition(models.Model, PeriodMixin):
             "description": self.description,
             "editor": self.editor.to_json(),
             "periodicity": periodicity_to_json(self),
+            "nextRelease": self.next_release,
             "issues": getattr(self, 'issues', 0),
             "likes": getattr(self, 'likes', 0)
         }
@@ -216,53 +224,6 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         if self.topic and self.topic.author_id != self.author_id:
             raise ValueError("Topic doesn't match author")
         return super().save(*args, **kwargs)
-
-    def get_issue_interval(self, dt):
-        """Construct time interval which includes given datetime and matches
-        period of author subscription.
-        """
-        # TODO move this to period module
-        if self.period == SubscriptionToAuthor.X3_PER_DAY:
-            if dt.hour < 6:
-                return (
-                    dt.replace(hour=18, minute=0, second=0, microsecond=0) - timedelta(days=1),
-                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
-                    'Evening summary'
-                )
-            elif dt.hour >= 6 and dt.hour < 12:
-                return (
-                    dt.replace(hour=6, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
-                    'Morning summary'
-                )
-            elif dt.hour >= 12 and dt.hour < 18:
-                return (
-                    dt.replace(hour=12, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
-                    'Afternoon summary'
-                )
-            else:
-                return (
-                    dt.replace(hour=18, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=6, minute=0, second=0, microsecond=0) + timedelta(days=1),
-                    'Evening summary'
-                )
-        elif self.period == SubscriptionToAuthor.DAILY:
-            sub_time = self.period_time
-            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
-            if start > dt:
-                start -= timedelta(days=1)
-            return start, start + timedelta(days=1), 'Daily summary'
-        elif self.period == SubscriptionToAuthor.WEEKLY:
-            sub_time = self.period_time
-            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
-            if start > dt:
-                start -= timedelta(days=1)
-            while start.isoweekday() != self.period_dow:
-                start -= timedelta(days=1)
-            return start, start + timedelta(days=7), 'Weekly summary'
-        else:
-            raise ValueError()
 
 
 @receiver(post_save, sender=Post)

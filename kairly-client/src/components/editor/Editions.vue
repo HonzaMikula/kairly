@@ -23,8 +23,8 @@
               <h3>{{ edition.title }}</h3>
               <p>
                 <strong>#{{ edition.issues + 1 }}</strong> is releasing in
-                <strong>4 hours</strong> with
-                <strong>3 posts</strong>.
+                <strong>{{ timeFrom(edition.nextRelease) }}</strong> with
+                <strong>X posts</strong>.
               </p>
             </div>
           </editor-editions--header--dropdown>
@@ -108,6 +108,7 @@
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapActions, mapGetters } from 'vuex'
+import moment from 'moment'
 
 import * as api from '@/api'
 
@@ -173,6 +174,10 @@ export default {
   },
 
   methods: {
+    timeFrom(dt) {
+      return moment(dt).from()
+    },
+
     selectEdition(edition) {
       this.selectedEdition = edition
       this.isSelectEditionOpen = false

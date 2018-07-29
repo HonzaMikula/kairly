@@ -1,7 +1,8 @@
-from datetime import time
+from datetime import time, timedelta
 from collections import namedtuple
 
 Periodicity = namedtuple('Periodicity', ['frequency', 'time', 'dow'])
+PeriodInterval = namedtuple('PeriodInterval', ['start', 'end', 'title'])
 
 
 class PeriodMixin:
@@ -15,8 +16,57 @@ class PeriodMixin:
         (WEEKLY, 'Weekly'),
     )
 
-    # TODO refactor get_issue_interval(), use constant
     X3_PER_DAY_HOURS = [6, 12, 18]
+
+    def get_period_interval(self, dt):
+        """Construct time interval which includes given datetime and matches
+        current periodicity.
+        """
+        if self.period == self.X3_PER_DAY:
+            H1, H2, H3 = self.X3_PER_DAY_HOURS
+            if dt.hour < H1:
+                return PeriodInterval(
+                    dt.replace(hour=H3, minute=0, second=0, microsecond=0) - timedelta(days=1),
+                    dt.replace(hour=H1, minute=0, second=0, microsecond=0),
+                    'Evening'
+                )
+            elif dt.hour >= H1 and dt.hour < H2:
+                return PeriodInterval(
+                    dt.replace(hour=H1, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=H2, minute=0, second=0, microsecond=0),
+                    'Morning'
+                )
+            elif dt.hour >= H2 and dt.hour < H3:
+                return PeriodInterval(
+                    dt.replace(hour=H2, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=H3, minute=0, second=0, microsecond=0),
+                    'Afternoon'
+                )
+            else:
+                return PeriodInterval(
+                    dt.replace(hour=H3, minute=0, second=0, microsecond=0),
+                    dt.replace(hour=H1, minute=0, second=0, microsecond=0) + timedelta(days=1),
+                    'Evening'
+                )
+
+        elif self.period == self.DAILY:
+            sub_time = self.period_time
+            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
+            if start > dt:
+                start -= timedelta(days=1)
+            return PeriodInterval(start, start + timedelta(days=1), 'Daily')
+
+        elif self.period == self.WEEKLY:
+            sub_time = self.period_time
+            start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
+            if start > dt:
+                start -= timedelta(days=1)
+            while start.isoweekday() != self.period_dow:
+                start -= timedelta(days=1)
+            return PeriodInterval(start, start + timedelta(days=7), 'Weekly')
+
+        else:
+            raise ValueError()
 
 
 def parse_periodicity(periodicity):

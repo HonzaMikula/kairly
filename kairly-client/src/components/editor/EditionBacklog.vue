@@ -3,7 +3,7 @@
 
     <edition-backlog--info>
       <div>
-        Issue <strong>#{{edition.issues + 1}}</strong> will be automatically published in <strong>3 hours</strong>
+        Issue <strong>#{{edition.issues + 1}}</strong> will be automatically published in <strong>{{ timeFrom(edition.nextRelease) }}</strong>
       </div>
 
       <div>
@@ -110,6 +110,7 @@
 <script>
 import Vue from 'vue'
 import { mapActions } from 'vuex'
+import moment from 'moment'
 
 import * as api from '@/api'
 
@@ -134,6 +135,10 @@ export default {
   },
 
   methods: {
+    timeFrom(dt) {
+      return moment(dt).from()
+    },
+
     init() {
       api.getEditionBacklog(this.edition.fullName).then(resp => {
         this.backlog = resp.backlog

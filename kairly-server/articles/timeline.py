@@ -143,8 +143,8 @@ class AuthorStream(TimelineStream):
 
         for post in QueryIterator(posts_query, self.QUERY_PAGE_SIZE):
             published = post['published'].astimezone(self.tzinfo)
-            _, end, title = self.subscription.get_issue_interval(published)
-            if issue_end != end:
+            interval = self.subscription.get_period_interval(published)
+            if issue_end != interval.end:
                 # Post from "unpublished" summary may already exists in database
                 # Or due paging, some post individua may be published before self.before
                 # but their interval belong to prev page and not match time condition
@@ -153,8 +153,8 @@ class AuthorStream(TimelineStream):
                         issue_end, issue_title, self.author,
                         self.subscription.topic, post_ids, self.tzinfo)
                 post_ids = []
-                issue_end = end
-                issue_title = title
+                issue_end = interval.end
+                issue_title = interval.title + ' summary'
             post_ids.append(post['id'])
 
         if post_ids:
