@@ -1,5 +1,12 @@
 <template>
   <div>
+    <my-authors--empty
+      v-if="authors.length === 0">
+      <h1>No authors</h1>
+      <p>You haven't subscribe to any author yet. On Explore page you can find authors you might like.</p>
+      <router-link to="/explore">Explore authors</router-link>
+    </my-authors--empty>
+
     <AuthorWidget
       v-for="author in authors"
       :key="author.slug"
@@ -54,5 +61,32 @@ export default {
 <style lang="sass">
 my-editions-view author-widget-view
   width: 576px
+
+my-authors--empty
+  display: block
+  padding: $baseline
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
+  h1
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
+
+  p
+    margin-bottom: $baseline
+
+  a
+    +subscribed-button
+
+    display: inline-block
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    line-height: $baseline * 1.5
 
 </style>

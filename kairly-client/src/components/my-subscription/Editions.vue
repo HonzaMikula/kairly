@@ -1,6 +1,14 @@
   <template>
   <my-editions-view>
+    <my-editions--empty
+      v-if="editions.length === 0">
+      <h1>No editions</h1>
+      <p>You haven't subscribe to any edition yet. On Explore page you can find editions you might like.</p>
+      <router-link to="/explore">Explore editions</router-link>
+    </my-editions--empty>
+
     <EditionWidget
+      v-else
       v-for="edition in editions"
       :key="edition.fullName"
       :edition="edition"
@@ -56,4 +64,33 @@ my-editions-view
   @media (max-width: $mobile)
     grid-template-columns: 1fr 1fr
     grid-column-gap: $baseline / 4
+
+my-editions--empty
+  grid-column: 1 / span 3
+
+  padding: $baseline
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
+  h1
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
+
+  p
+    margin-bottom: $baseline
+
+  a
+    +subscribed-button
+
+    display: inline-block
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    line-height: $baseline * 1.5
+
 </style>
