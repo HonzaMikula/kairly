@@ -26,27 +26,31 @@
       </form>
     </homepage--login>
 
-    <homepage--values>
-      <h2>What we believe in?</h2>
+    <homepage--roles>
+      <div>
+        <h3>Authors</h3>
+        <p>
+          Authors focus on writing.
+          They are creating high quality articles & tweets.
+        </p>
+      </div>
 
-      <p>
-        In the world full of fake news, manipulations and attacks on journalism, we stand for <strong>truth</strong>.
-      </p>
+      <div>
+        <h3>Editors</h3>
+        <p>
+          Editors run their newspaper.
+          They are selecting the best articles & tweets from authors.
+        </p>
+      </div>
 
-      <p>In the world full of censorship and propaganda, we stand for <strong>free speach</strong>.</p>
-
-      <p>
-        In the world full of distraction and lack of focus, we stand for
-        <strong>control of your time and undistracted reading experience</strong>.
-      </p>
-
-      <p>
-        In the world where journalist are dependent on advertisment or big corporations with their interests,
-        we stand for <strong>fair reward for high-quality content</strong>.
-      </p>
-
-      <p>Stand with us!</p>
-    </homepage--values>
+      <div>
+        <h3>Readers</h3>
+        <p>
+          Readers choose what they want to read and when.
+          They subscribe either directly to authors or to newspapers.
+        </p>
+      </div>
+    </homepage--roles>
 
     <homepage--how-it-works>
       <h2>How it works?</h2>
@@ -71,6 +75,28 @@
         Those money are then shared between editors and authors.
       </p>
     </homepage--how-it-works>
+
+    <homepage--values>
+      <h2>What we believe in?</h2>
+
+      <p>
+        In the world full of fake news, manipulations and attacks on journalism, we stand for <strong>truth</strong>.
+      </p>
+
+      <p>In the world full of censorship and propaganda, we stand for <strong>free speach</strong>.</p>
+
+      <p>
+        In the world full of distraction and lack of focus, we stand for
+        <strong>control of your time and undistracted reading experience</strong>.
+      </p>
+
+      <p>
+        In the world where journalist are dependent on advertisment or big corporations with their interests,
+        we stand for <strong>fair reward for high-quality content</strong>.
+      </p>
+
+      <p>Stand with us!</p>
+    </homepage--values>
 
     <homepage--help-us>
       <h2>How you can help?</h2>
@@ -205,6 +231,9 @@ homepage--login
 
   backdrop-filter: blur(10px) saturate(125%)
 
+  @supports not (backdrop-filter: blur(10px))
+    background: rgba(250, 250, 250, 0.97)
+
   @media (max-width: $mobile)
     position: static
 
@@ -227,6 +256,7 @@ homepage--login
     display: block
 
     font-size: $fs--2
+    text-shadow: 0 0 5px #fafafa
 
   //- input
   input
@@ -298,6 +328,41 @@ homepage--login--error-message
   //- when added to DOM
   &:not(:empty)
     opacity: 1
+
+//- Roles
+homepage--roles
+  display: flex
+  max-width: 900px
+  margin: 0 auto
+
+  font-family: $ff-serif
+
+  div
+    position: relative
+
+    flex: 1
+    padding: $baseline 0
+    margin-right: $baseline*2
+
+    &::after
+      +fa-icon()
+
+      position: absolute
+      right: -$baseline * 1.25
+      top: $baseline * 3
+
+      content: $fa-var-arrow-right
+
+    &:last-of-type
+      margin-right: 0
+
+      &::after
+        display: none
+
+  h3
+    margin-bottom: $baseline / 2
+    font-size: $fs-2
+    font-weight: 600
 
 
 //- Values
