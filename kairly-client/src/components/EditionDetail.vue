@@ -61,6 +61,14 @@
       <edition-detail--last-edition v-if="issue">
         <Issue :issue="issue" :subscription="edition.subscription" />
       </edition-detail--last-edition>
+
+      <edition-detail--empty-edition v-else>
+        <h2>No issue yet</h2>
+
+        <p>
+          Subscribe the edition and once it's published, we will show you on your timeline.
+        </p>
+      </edition-detail--empty-edition>
     </edition-detail-view>
   </app-layout>
 </template>
@@ -345,4 +353,20 @@ edition-detail--description
 edition-detail--last-edition
   display: block
   padding-top: $baseline * 2
+
+edition-detail--empty-edition
+  display: block
+  margin-top: $baseline * 2
+  padding: $baseline
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
+  h2
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
 </style>
