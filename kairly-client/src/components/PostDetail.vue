@@ -32,7 +32,8 @@
           <post-detail--content v-html="post.content.content"></post-detail--content>
 
           <post-detail--footer>
-            <button-icon class="consider-for-edition">Consider for Edition</button-icon>
+            <consider-post :post="post" :showText="true" />
+
             <a :href="post.source" class="external-link">Original article</a>
           </post-detail--footer>
 
@@ -50,6 +51,25 @@
             </h3>
 
             <p>{{post.author.bio}}</p>
+
+            <post-detail--author--subscription>
+              <AuthorSubscription
+                v-if="subscription"
+                :subscription="subscription" :author="post.author"
+              />
+
+              <button
+                v-else
+                @click="$refs.followWidget.openSubscribeWidget()">
+                Subscribe author
+              </button>
+
+              <follow-author
+                ref="followWidget"
+                :author="post.author"
+                :onSelect="follow"
+              />
+            </post-detail--author--subscription>
           </post-detail--author>
         </main>
       </div>
@@ -62,12 +82,33 @@ import request from 'superagent'
 import * as api from '@/api'
 
 import AppLayout from '@/components/layout/AppLayout'
+import ConsiderPost from '@/components/widgets/ConsiderPost'
+import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+import FollowAuthor from '@/components/widgets/FollowAuthor'
 
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
 
   components: {
-    AppLayout
+    AppLayout,
+    ConsiderPost,
+    FollowAuthor,
+    AuthorSubscription
+  },
+
+  computed: {
+    subscription() {
+      return this.$store.state.subscriptions.authors[this.post.author.id]
+    }
+  },
+
+  methods: {
+    follow(periodicity) {
+      this.$store.dispatch('subscribeAuthor', {
+        authorId: this.post.author.id,
+        periodicity
+      })
+    }
   },
 
   data() {
@@ -100,7 +141,7 @@ post-detail
   position: relative
 
   display: block
-  padding: 0 $baseline/2
+  padding: 0 $baseline/2 $baseline*10 $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
 
   background: #fff
@@ -149,38 +190,6 @@ post-detail--back-button
     +fa-icon()
 
     content: $fa-var-arrow-left
-
-  @media (max-width: $mobile)
-    position: static
-
-
-//- Read Later Button
-post-detail--read-later
-  position: sticky
-  top: $baseline
-
-  display: inline-block
-  border-radius: 100%
-  height: $baseline * 2
-  float: right
-  width: $baseline * 2
-
-  background: #eee
-
-  cursor: pointer
-  font-size: $fs-1
-  line-height: $baseline * 2
-  text-align: center
-
-  &:focus,
-  &:hover
-    background: $c-base
-    color: #fff
-
-  &::before
-    +fa-icon()
-
-    content: $fa-var-bookmark
 
   @media (max-width: $mobile)
     position: static
@@ -381,7 +390,8 @@ post-detail--footer
 
   border-bottom: 1px solid #eee
 
-  button-icon, a
+  button-icon,
+  > a
     border-radius: 5px
     display: inline-block
     height: $baseline * 1.25
@@ -421,8 +431,8 @@ post-detail--footer
 //- Post Author
 post-detail--author
   display: grid
-  grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-bio"
-  grid-template-columns: $baseline*3 auto
+  grid-template-areas: "post-detail-author-image post-detail-author-name post-detail-author-subscription" "post-detail-author-image post-detail-author-bio post-detail-author-bio"
+  grid-template-columns: $baseline*3 1fr auto
   grid-template-rows: $baseline auto
   grid-gap: 0 $baseline/2
 
@@ -452,4 +462,19 @@ post-detail--author
     grid-area: post-detail-author-bio
 
     font-size: $fs--1
+
+//- Author subscription
+post-detail--author--subscription
+  position: relative
+
+  > button
+    +subscribe-button
+
+    height: $baseline
+    padding: 0 $baseline/2
+
+    font-family: $ff-sans
+    font-size: $fs--2
+    line-height: $baseline
+
 </style>

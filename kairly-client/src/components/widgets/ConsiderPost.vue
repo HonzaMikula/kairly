@@ -2,11 +2,20 @@
   <backlog-add-view v-if="managedEditions.length">
 
     <button-icon
+      v-if="!showText"
       role="button"
       tabindex="0"
-      aria-label="Consider for Edition"
-      v-tooltip.top="'Consider for Edition'"
+      aria-label="Consider for edition"
+      v-tooltip.top="'Consider for edition'"
       @click.prevent="showEditions = true">
+    </button-icon>
+
+    <button-icon
+      v-else
+      role="button"
+      tabindex="0"
+      @click.prevent="showEditions = true">
+      Consider for edition
     </button-icon>
 
     <backlog-add--dropdown
@@ -32,9 +41,10 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 import * as api from '@/api'
 
 export default {
-  name: 'BacklogAdd',
+  name: 'ConsiderPost',
   props: {
-    post: Object
+    post: Object,
+    showText: Boolean
   },
 
   directives: {
@@ -84,6 +94,7 @@ backlog-add--dropdown
 
   position: absolute
   left: 50%
+
   top: 40px
   z-index: 1
 

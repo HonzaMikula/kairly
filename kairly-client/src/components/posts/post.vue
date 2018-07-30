@@ -26,7 +26,7 @@
       <section>
         <slot name="extendedControls"></slot>
         <slot name="controls">
-          <backlog-add :post="post" />
+          <consider-post :post="post" />
         </slot>
       </section>
 
@@ -39,7 +39,7 @@
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
-import BacklogAdd from '@/components/posts/BacklogAdd'
+import ConsiderPost from '@/components/widgets/ConsiderPost'
 
 export default {
   name: 'post',
@@ -47,7 +47,7 @@ export default {
 
   components: {
     AuthorPopup,
-    BacklogAdd
+    ConsiderPost
   },
 
   directives: {
