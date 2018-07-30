@@ -3,7 +3,7 @@
     <template v-if="!loading">
       <Issue :issue="issue" :subscription="edition.subscription" />
 
-      <router-link to="/explore">Start with exploring</router-link>
+      <router-link to="/explore">Start exploring</router-link>
     </template>
   </timeline-welcome>
 </template>

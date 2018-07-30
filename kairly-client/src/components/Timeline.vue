@@ -58,10 +58,6 @@ export default {
     if (!this.loading && this.issues === null) {
       this.$store.dispatch('loadMoreTimeline')
     }
-
-    if (!this.loading && this.issues.length === 0) {
-      this.$router.push({ path: '/explore' })
-    }
   }
 }
 </script>

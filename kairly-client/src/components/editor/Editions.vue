@@ -1,97 +1,112 @@
 <template>
   <app-layout>
     <editor-editions-view>
-      <editor-editions--header>
-        <div class="create-edition">
-          <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
-        </div>
+      <editor-editions--empty
+        v-if="editions.length === 0">
 
-        <div class="title">
-          <h1 v-if="selectedEdition">{{ selectedEdition.title }}</h1>
+        <h1>Start your first newspaper!</h1>
 
-          <button-icon v-if="selectedEdition" role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
+        <p>
+          Are you interested in specific topic? Found a newspaper and start providing
+          selection of best articles and tweets to others.
+        </p>
 
-          <editor-editions--header--dropdown
-            v-if="isSelectEditionOpen"
-            v-on-clickaway="() => isSelectEditionOpen = false">
-            <div
-              v-for="edition in editions"
-              :key="edition.fullName"
-              :class="{'is-selected': selectedEdition && selectedEdition.fullName == edition.fullName}"
-              @click="selectEdition(edition)">
-              <img :src="edition.picture" :alt="edition.title"/>
-              <h3>{{ edition.title }}</h3>
-              <p>
-                <strong>#{{ edition.issues + 1 }}</strong> is releasing in
-                <strong>{{ timeFrom(edition.nextRelease) }}</strong> with
-                <strong>{{ publishedPostCount(edition) }} posts</strong>.
-              </p>
-            </div>
-          </editor-editions--header--dropdown>
-        </div>
+        <a href="" @click.prevent="isCreateEditionOpen = true">Start a newspaper</a>
+      </editor-editions--empty>
 
-        <div class="edition-controls" v-if="selectedEdition">
-          <button-icon
-            class="edit"
-            role="button"
-            aria-label="Edit edition"
-            v-tooltip.top.end="'Edit edition'"
-            @click="editionToEdit = selectedEdition">
-          </button-icon>
-
-          <button-icon
-            class="delete"
-            role="button"
-            aria-label="Delete edition"
-            v-tooltip.top.end="'Delete edition'"
-            @click.prevent="confirmDeleteEdition">
-          </button-icon>
-        </div>
-
-        <div class="mobile-menu">
-          <button-icon
-            class="menu"
-            :class="{'is-active': isMobileMenuOpen}"
-            aria-label="Context menu"
-            @click="isMobileMenuOpen = !isMobileMenuOpen">
-          </button-icon>
-
-          <div
-            class="mobile-menu--dropdown"
-            v-if="isMobileMenuOpen"
-            v-on-clickaway="() => isMobileMenuOpen = false">
-            <ul>
-              <li><a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a></li>
-              <li><a href="" @click.prevent="editionToEdit = selectedEdition">Edit edition</a></li>
-              <li><a href="" @click.prevent="confirmDeleteEdition">Delete edition</a></li>
-            </ul>
+      <template v-else>
+        <editor-editions--header>
+          <div class="create-edition">
+            <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
           </div>
-        </div>
-      </editor-editions--header>
 
-      <editor-editions--mobile-switcher>
-        <nav>
-          <a
-            href=""
-            :class="{'is-active': mobileSwitcher == 1}"
-            @click.prevent="mobileSwitcher = 1">
-            Upcoming issue
-          </a>
+          <div class="title">
+            <h1 v-if="selectedEdition">{{ selectedEdition.title }}</h1>
 
-          <a
-            href=""
-            :class="{'is-active': mobileSwitcher == 2}"
-            @click.prevent="mobileSwitcher = 2">
-            Considered posts
-          </a>
-        </nav>
-      </editor-editions--mobile-switcher>
+            <button-icon v-if="selectedEdition" role="button" class="dropdown" @click="isSelectEditionOpen = !isSelectEditionOpen"></button-icon>
 
-      <editor-editions--board
-        :class="{'upcoming-issue': mobileSwitcher == 1, 'backlog': mobileSwitcher ==2}"
-      >
-        <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
-      </editor-editions--board>
+            <editor-editions--header--dropdown
+              v-if="isSelectEditionOpen"
+              v-on-clickaway="() => isSelectEditionOpen = false">
+              <div
+                v-for="edition in editions"
+                :key="edition.fullName"
+                :class="{'is-selected': selectedEdition && selectedEdition.fullName == edition.fullName}"
+                @click="selectEdition(edition)">
+                <img :src="edition.picture" :alt="edition.title"/>
+                <h3>{{ edition.title }}</h3>
+                <p>
+                  <strong>#{{ edition.issues + 1 }}</strong> is releasing in
+                  <strong>{{ timeFrom(edition.nextRelease) }}</strong> with
+                  <strong>{{ publishedPostCount(edition) }} posts</strong>.
+                </p>
+              </div>
+            </editor-editions--header--dropdown>
+          </div>
+
+          <div class="edition-controls" v-if="selectedEdition">
+            <button-icon
+              class="edit"
+              role="button"
+              aria-label="Edit edition"
+              v-tooltip.top.end="'Edit edition'"
+              @click="editionToEdit = selectedEdition">
+            </button-icon>
+
+            <button-icon
+              class="delete"
+              role="button"
+              aria-label="Delete edition"
+              v-tooltip.top.end="'Delete edition'"
+              @click.prevent="confirmDeleteEdition">
+            </button-icon>
+          </div>
+
+          <div class="mobile-menu">
+            <button-icon
+              class="menu"
+              :class="{'is-active': isMobileMenuOpen}"
+              aria-label="Context menu"
+              @click="isMobileMenuOpen = !isMobileMenuOpen">
+            </button-icon>
+
+            <div
+              class="mobile-menu--dropdown"
+              v-if="isMobileMenuOpen"
+              v-on-clickaway="() => isMobileMenuOpen = false">
+              <ul>
+                <li><a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a></li>
+                <li><a href="" @click.prevent="editionToEdit = selectedEdition">Edit edition</a></li>
+                <li><a href="" @click.prevent="confirmDeleteEdition">Delete edition</a></li>
+              </ul>
+            </div>
+          </div>
+        </editor-editions--header>
+
+        <editor-editions--mobile-switcher>
+          <nav>
+            <a
+              href=""
+              :class="{'is-active': mobileSwitcher == 1}"
+              @click.prevent="mobileSwitcher = 1">
+              Upcoming issue
+            </a>
+
+            <a
+              href=""
+              :class="{'is-active': mobileSwitcher == 2}"
+              @click.prevent="mobileSwitcher = 2">
+              Considered posts
+            </a>
+          </nav>
+        </editor-editions--mobile-switcher>
+
+        <editor-editions--board
+          :class="{'upcoming-issue': mobileSwitcher == 1, 'backlog': mobileSwitcher ==2}"
+        >
+          <edition-backlog v-if="selectedEdition" :edition="selectedEdition" />
+        </editor-editions--board>
+      </template>
 
       <portal to="modal" v-if="isCreateEditionOpen">
         <edit-edition :onClose="closeModal" :onCreated="newEditionCreated"></edit-edition>
@@ -246,6 +261,35 @@ export default {
 </script>
 
 <style lang="sass">
+editor-editions--empty
+  display: block
+  max-width: 600px
+  margin: $baseline auto
+  padding: $baseline
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
+  > h1
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
+
+  > p
+    margin-bottom: $baseline
+
+  > a
+    +subscribed-button
+
+    display: inline-block
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    line-height: $baseline * 1.5
+
 editor-editions-view
   position: relative
 
@@ -255,6 +299,7 @@ editor-editions-view
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4
+
 
   //- Header
   editor-editions--header
