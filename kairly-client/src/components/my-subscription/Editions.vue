@@ -2,9 +2,9 @@
   <my-editions-view>
     <my-editions--empty
       v-if="editions.length === 0">
-      <h1>No editions</h1>
-      <p>You haven't subscribe to any edition yet. On Explore page you can find editions you might like.</p>
-      <router-link to="/explore">Explore editions</router-link>
+      <h1>No newspapers</h1>
+      <p>You haven't subscribe to any newspapers yet. On Explore page you can find newspapers you might like.</p>
+      <router-link to="/explore">Explore newspapers</router-link>
     </my-editions--empty>
 
     <EditionWidget
@@ -26,7 +26,7 @@ export default {
   name: 'MyEditions',
 
   metaInfo: {
-    title: 'My Subscription - Editions'
+    title: 'Newspapers - My Subscription - Kairly'
   },
 
   components: {

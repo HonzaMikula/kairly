@@ -9,7 +9,7 @@
             <router-link :to="{ name: 'post', params: { postId: post.id }, hash: '#continue'}">Continue reading</router-link>
           </div>
           <div v-else>
-            Subscribe edition to continue reading
+            Subscribe newspaper to continue reading
           </div>
           ({{ post.timeRead }} read)
         </timeline-post--continue-reading>

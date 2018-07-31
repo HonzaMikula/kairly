@@ -5,7 +5,7 @@
 
       <div v-if="post">
         <post-detail--back-button
-          v-tooltip.right="'Back to Browsing Editions'"
+          v-tooltip.right="'Back'"
           v-on:click="$router.go(-1)">
         </post-detail--back-button>
 

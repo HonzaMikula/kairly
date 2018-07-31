@@ -17,7 +17,7 @@
       <template v-else>
         <editor-editions--header>
           <div class="create-edition">
-            <a href="" @click.prevent="isCreateEditionOpen = true">Start new edition</a>
+            <a href="" @click.prevent="isCreateEditionOpen = true">Start a newspaper</a>
           </div>
 
           <div class="title">
@@ -48,16 +48,16 @@
             <button-icon
               class="edit"
               role="button"
-              aria-label="Edit edition"
-              v-tooltip.top.end="'Edit edition'"
+              aria-label="Edit newspaper"
+              v-tooltip.top.end="'Edit newspaper'"
               @click="editionToEdit = selectedEdition">
             </button-icon>
 
             <button-icon
               class="delete"
               role="button"
-              aria-label="Delete edition"
-              v-tooltip.top.end="'Delete edition'"
+              aria-label="Delete newspaper"
+              v-tooltip.top.end="'Delete newspaper'"
               @click.prevent="confirmDeleteEdition">
             </button-icon>
           </div>

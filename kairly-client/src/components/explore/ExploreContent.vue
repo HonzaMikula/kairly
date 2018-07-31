@@ -1,7 +1,7 @@
 <template>
   <main>
     <explore--top-editions>
-      <h2>Top Editions</h2>
+      <h2>Top Newspapers</h2>
 
       <div>
         <EditionWidget

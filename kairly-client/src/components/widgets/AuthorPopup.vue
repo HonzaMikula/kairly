@@ -6,7 +6,7 @@
 
     <author-widget--stats>
       <div>
-      <h3>Editions</h3>
+      <h3>Newspapers</h3>
       <p>137</p>
       </div>
 

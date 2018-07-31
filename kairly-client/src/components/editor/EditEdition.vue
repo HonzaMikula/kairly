@@ -3,12 +3,12 @@
   <dialog-window :onClose="onClose">
     <modal-dialog role="dialog" @click.stop>
       <header>
-        <h1>{{ edition ? 'Modify edition' : 'Create new edition' }}</h1>
+        <h1>{{ edition ? 'Modify edition' : 'Create new newspaper' }}</h1>
       </header>
 
       <edit-edition-view>
         <div class="title">
-          <input placeholder="What's the edition name?" v-model="title">
+          <input placeholder="What's the newspaper name?" v-model="title">
         </div>
 
         <div class="periodicity">
@@ -41,7 +41,7 @@
         <div class="description">
           <section>
             <label for="editorial">Editorial</label>
-            <textarea id="editorial" v-model="description" placeholder="What this edition is about?"></textarea>
+            <textarea id="editorial" v-model="description" placeholder="What this newspaper is about?"></textarea>
           </section>
 
           <picture>

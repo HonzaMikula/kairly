@@ -5,8 +5,8 @@
       v-if="!showText"
       role="button"
       tabindex="0"
-      aria-label="Consider for edition"
-      v-tooltip.top="'Consider for edition'"
+      aria-label="Consider for newspaper"
+      v-tooltip.top="'Consider for newspaper'"
       @click.prevent="showEditions = true">
     </button-icon>
 
@@ -15,13 +15,13 @@
       role="button"
       tabindex="0"
       @click.prevent="showEditions = true">
-      Consider for edition
+      Consider for newspaper
     </button-icon>
 
     <backlog-add--dropdown
       v-if="showEditions"
       v-on-clickaway="() => showEditions = false">
-      <header>For which edition?</header>
+      <header>For which newspaper?</header>
 
       <section>
         <ul>

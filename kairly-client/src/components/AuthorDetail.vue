@@ -55,7 +55,7 @@
         </author-detail--topics>
 
         <author-detail--editions v-if="editions.length">
-          <h2>{{ author.name }}'s Editions</h2>
+          <h2>{{ author.name }}'s newspapers</h2>
 
           <div :class="{'show-all': showAllEditions}">
             <EditionWidget
@@ -65,7 +65,7 @@
             />
           </div>
 
-          <button v-if="editionIds.length > 3" v-on:click="toggleEditions()">{{ !showAllEditions ? 'Show all editions' : 'Hide editions' }}</button>
+          <button v-if="editionIds.length > 3" v-on:click="toggleEditions()">{{ !showAllEditions ? 'Show all newspapers' : 'Hide editions' }}</button>
 
         </author-detail--editions>
 

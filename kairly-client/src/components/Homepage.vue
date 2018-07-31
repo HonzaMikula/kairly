@@ -71,7 +71,7 @@
       </div>
 
       <p>
-        In Kairly readers are subsribing editions and paying for them.
+        In Kairly readers are subsribing newspapers and paying for them.
         Those money are then shared between editors and authors.
       </p>
     </homepage--how-it-works>
@@ -115,7 +115,7 @@
           <h3>Editors</h3>
           <p>
             Do you want to change how current journalism and its business models work?
-            Start creating editions in our private beta program.
+            Start creating newspapers in our private beta program.
           </p>
         </section>
 
