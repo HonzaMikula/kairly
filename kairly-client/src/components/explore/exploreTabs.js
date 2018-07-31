@@ -18,9 +18,7 @@ export default [
     {
       name: 'Sport',
       slug: 'sport',
-      editions: [
-        'janmikula/olympijskyzapisnik',
-      ]
+      editions: []
     },
     {
       name: 'Technology',
