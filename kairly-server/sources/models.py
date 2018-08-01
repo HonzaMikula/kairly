@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import urlsplit, urlunsplit
 
 import feedparser
 import requests
@@ -92,7 +92,8 @@ class Channel(models.Model):
         return perex, content
 
     def parse_article_from_entry(self, entry):
-        url = entry.link.split('#', maxsplit=1)[0]
+        parsed_url = urlsplit(entry.link)
+        url = urlunsplit(parsed_url[:-1] + ("",))  # strip fragment
         html = None
         if self.parse_content_from_rss:
             # some feeds has full article in content attribute, see issue #40
@@ -134,7 +135,7 @@ class Channel(models.Model):
         except IndexError:
             pass
 
-        self.fix_images(htmltree, url)
+        self.fix_relative_links(htmltree, parsed_url)
         parser = ArticleParser(self.parser)
         return parser.parse(htmltree)
 
@@ -145,12 +146,19 @@ class Channel(models.Model):
         domain = skip_rules.get('domain')
         if domain:
             url = url.split('#', maxsplit=1)[0]
-            return urlparse(url).hostname != domain
+            return urlsplit(url).hostname != domain
         return True
 
-    def fix_images(self, htmltree, url):
-        host = '//' + urlparse(url).hostname
+    def fix_relative_links(self, htmltree, parsed_url):
+        host = '//' + parsed_url.hostname
+
+        def fix_attr(el, attr):
+            link = el.attrib.get(attr)
+            if link and link.startswith('/') and not link.startswith('//'):
+                el.attrib[attr] = host + link
+
         for el in htmltree.cssselect('img'):
-            src = el.attrib.get('src')
-            if src and src.startswith('/') and not src.startswith('//'):
-                el.attrib['src'] = host + el.attrib['src']
+            fix_attr(el, 'src')
+
+        for el in htmltree.cssselect('a'):
+            fix_attr(el, 'href')
