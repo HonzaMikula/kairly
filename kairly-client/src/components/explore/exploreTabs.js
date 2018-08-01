@@ -9,6 +9,14 @@ export default [
       ]
     },
     {
+      name: 'News',
+      slug: 'news',
+      editions: [
+        'janmikula/malostranskenoviny',
+        'janmikula/technologicky-denik',
+      ]
+    },
+    {
       name: 'Politics',
       slug: 'politics',
       editions: [
@@ -29,8 +37,8 @@ export default [
       ]
     },
     {
-      name: 'Lifestyle',
-      slug: 'lifestyle',
+      name: 'Life',
+      slug: 'life',
       editions: []
     },
     {
