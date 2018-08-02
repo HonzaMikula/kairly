@@ -63,18 +63,18 @@ class TimelineStream:
             yield next(streams[mx_idx])
 
 
-class EditionIssueItem(TimelineItem):
+class NewspaperIssueItem(TimelineItem):
 
-    def __init__(self, issue, edition, tzinfo):
+    def __init__(self, issue, newspaper, tzinfo):
         super().__init__(issue.published.astimezone(tzinfo))
         self.issue = issue
-        self.edition = edition
+        self.newspaper = newspaper
         self.tzinfo = tzinfo
 
     @property
     def json(self):
         return self.issue.to_json(
-            edition=self.edition,
+            newspaper=self.newspaper,
             tzinfo=self.tzinfo
         )
 
@@ -88,10 +88,10 @@ class EditionIssueStream(TimelineStream):
         self.user = user
 
     def __iter__(self):
-        editions = {e.id: e for e in Newspaper.objects.filter(subscription__user=self.user)}
-        query = Issue.objects.filter(published__lt=self.before, edition_id__in=editions.keys())
+        newspapers = {e.id: e for e in Newspaper.objects.filter(subscription__user=self.user)}
+        query = Issue.objects.filter(published__lt=self.before, newspaper_id__in=newspapers.keys())
         for issue in QueryIterator(query, self.QUERY_PAGE_SIZE):
-            yield EditionIssueItem(issue, editions[issue.edition_id], self.tzinfo)
+            yield NewspaperIssueItem(issue, newspapers[issue.newspaper_id], self.tzinfo)
 
 
 class AuthorIssueItem(TimelineItem):

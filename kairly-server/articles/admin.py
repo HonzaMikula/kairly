@@ -43,7 +43,7 @@ class PostAdmin(admin.ModelAdmin):
 #
 # @admin.register(Issue)
 # class EditionIssueAdmin(admin.ModelAdmin):
-#     list_display = ('__str__', 'editor', 'published', 'edition')
+#     list_display = ('__str__', 'editor', 'published', 'newspaper')
 #     inlines = [
 #         PostInline,
 #     ]
@@ -59,4 +59,4 @@ class NewspaperAdmin(admin.ModelAdmin):
 
 # @admin.register(Subscription)
 # class SubscriptionAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'edition')
+#     list_display = ('user', 'newspaper')

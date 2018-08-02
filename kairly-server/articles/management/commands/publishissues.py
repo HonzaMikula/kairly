@@ -30,24 +30,24 @@ class Command(BaseCommand):
         )
 
     @transaction.atomic
-    def create_edition_issue(self, edition, now, verbosity, dry_run):
-        mx_num = Issue.objects.filter(edition=edition)\
+    def create_issue(self, newspaper, now, verbosity, dry_run):
+        mx_num = Issue.objects.filter(newspaper=newspaper)\
             .aggregate(Max('number'))['number__max']
         number = 1 if mx_num is None else mx_num + 1
 
         if verbosity > 0:
-            self.stdout.write('Creating {} #{}'.format(edition, number))
+            self.stdout.write('Creating {} #{}'.format(newspaper, number))
 
         if not dry_run:
             issue = Issue.objects.create(
                 number=number,
                 published=now,
-                editor=edition.editor,
-                edition=edition
+                editor=newspaper.editor,
+                newspaper=newspaper
             )
 
         backlog_query = Backlog.objects\
-            .filter(edition=edition, publish_stamp__isnull=False)\
+            .filter(newspaper=newspaper, publish_stamp__isnull=False)\
             .order_by('ordering')\
             .select_related('post')
 
@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 self.stdout.write('Adding post {}'.format(backlog.post))
             if not dry_run:
                 IssuePost.objects.create(
-                    edition=issue, post=backlog.post, ordering=i)
+                    issue=issue, post=backlog.post, ordering=i)
                 backlog.delete()
 
     def get_now(self, hour=None):
@@ -83,26 +83,26 @@ class Command(BaseCommand):
             self.stdout.write('Serching for issues to be published at {}'.format(now))
 
         query = Newspaper.objects\
-            .filter(editionbacklog__publish_stamp__isnull=False)\
+            .filter(backlog__publish_stamp__isnull=False)\
             .select_related('editor')\
             .distinct()
 
-        for edition in query:
+        for newspaper in query:
             try:
-                editor_tz = pytz.timezone(edition.editor.timezone)
+                editor_tz = pytz.timezone(newspaper.editor.timezone)
                 now = now.astimezone(editor_tz)
 
-                if edition.period == PeriodMixin.X3_PER_DAY:
+                if newspaper.period == PeriodMixin.X3_PER_DAY:
                     if now.hour not in PeriodMixin.X3_PER_DAY_HOURS:
                         continue
                 else:
-                    if now.hour != edition.period_time.hour:
+                    if now.hour != newspaper.period_time.hour:
                         continue
 
-                    if edition.period == PeriodMixin.WEEKLY:
-                        if now.isoweekday() != edition.period_dow:
+                    if newspaper.period == PeriodMixin.WEEKLY:
+                        if now.isoweekday() != newspaper.period_dow:
                             continue
 
-                self.create_edition_issue(edition, now, verbosity, dry_run)
+                self.create_issue(newspaper, now, verbosity, dry_run)
             except Exception:
                 traceback.print_exc()

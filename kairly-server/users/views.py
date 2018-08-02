@@ -48,20 +48,20 @@ def get_token(request):
 class ProfileView(View):
     @ajax_login_required
     def get(self, request):
-        # TODO reconsider loading  edition and backlog in separate endpoint? maybe it's eventually not good idea
-        editions = []
+        # TODO reconsider loading newspaper and backlog in separate endpoint? maybe it's eventually not good idea
+        newspapers = []
         internal_ids_mapping = {}
-        for edition in Newspaper.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
-            full_name = '{}/{}'.format(request.user.username, edition.slug)
-            internal_ids_mapping[edition.id] = full_name
-            editions.append({
+        for newspaper in Newspaper.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
+            full_name = '{}/{}'.format(request.user.username, newspaper.slug)
+            internal_ids_mapping[newspaper.id] = full_name
+            newspapers.append({
                 'fullName': full_name,
-                'title': edition.title,
+                'title': newspaper.title,
             })
 
         backlog = defaultdict(dict)
-        for bl in Backlog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
-            backlog[bl.post_id][internal_ids_mapping[bl.edition_id]] = 'C' if bl.publish_stamp is None else 'P'
+        for bl in Backlog.objects.filter(newspaper_id__in=internal_ids_mapping.keys()):
+            backlog[bl.post_id][internal_ids_mapping[bl.newspaper_id]] = 'C' if bl.publish_stamp is None else 'P'
 
         subscribed_authors = {}
         query = SubscriptionToAuthor.objects.filter(user=request.user).select_related('author', 'topic')
@@ -69,19 +69,19 @@ class ProfileView(View):
             author_id = '{}|{}'.format(s.author.username, s.topic.slug) if s.topic else s.author.username
             subscribed_authors[author_id] = periodicity_to_json(s)
 
-        subscribed_editions = {}
+        subscribed_newspapers = {}
         query = Newspaper.objects.filter(subscription__user=request.user).select_related('editor')
-        for edition in query:
-            full_name = "{}/{}".format(edition.editor.username, edition.slug)
-            subscribed_editions[full_name] = True
+        for newspaper in query:
+            full_name = "{}/{}".format(newspaper.editor.username, newspaper.slug)
+            subscribed_newspapers[full_name] = True
 
         return JsonResponse({
             "user": request.user.to_json(private=True),
-            "editions": editions,
+            "editions": newspapers,
             "backlog": backlog,
             "subscriptions": {
                 "authors": subscribed_authors,
-                "editions": subscribed_editions,
+                "editions": subscribed_newspapers,
             }
         })
 

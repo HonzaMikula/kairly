@@ -37,8 +37,8 @@ def get_user_and_topic(username):
     return user, topic
 
 
-def annotate_editions(request, editions):
-    yield from editions \
+def annotate_newspapers(request, newspapers):
+    yield from newspapers \
         .annotate(issues=Count('issue', distinct=True)) \
         .annotate(likes=Count('subscription', distinct=True))
 
@@ -46,15 +46,15 @@ def annotate_editions(request, editions):
 @ajax_login_required
 def recent_issues(request):
     issues = list(Issue.objects.all().order_by('-published')[:3])
-    edition_ids = [issue.edition_id for issue in issues]
-    editions = {
-        edition.id: edition for edition in
-        annotate_editions(request, Newspaper.objects.filter(id__in=edition_ids))
+    newspaper_ids = [issue.newspaper_id for issue in issues]
+    newspapers = {
+        newspaper.id: newspaper for newspaper in
+        annotate_newspapers(request, Newspaper.objects.filter(id__in=newspaper_ids))
     }
 
     resp = []
     for issue in issues:
-        issue.edition = editions[issue.edition_id]
+        issue.newspaper = newspapers[issue.newspaper_id]
         resp.append(issue.to_json(posts=True, tzinfo=request.tzinfo)),
 
     return JsonResponse(resp, safe=False)
@@ -66,76 +66,76 @@ def recent_posts(request):
     return JsonResponse([post.to_json(tzinfo=request.tzinfo) for post in posts], safe=False)
 
 
-def delete_edition(request, edition):
-    if edition.editor_id != request.user.id:
+def delete_newspaper(request, newspaper):
+    if newspaper.editor_id != request.user.id:
         return HttpResponseForbidden()
-    edition.delete()
+    newspaper.delete()
     return HttpResponse(status=204)
 
 
 class EditionView(View):
     @ajax_login_required
     def get(self, request, username, newspapeper_slug):
-        edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
-        edition.issues = edition.issue_set.count()
-        edition.likes = edition.subscription_set.count()
+        newspaper.issues = newspaper.issue_set.count()
+        newspaper.likes = newspaper.subscription_set.count()
 
         issueNo = request.GET.get('issue')
         if issueNo:
-            issue = get_object_or_404(Issue, edition=edition, number=int(issueNo))
+            issue = get_object_or_404(Issue, newspaper=newspaper, number=int(issueNo))
         else:
             try:
-                issue = Issue.objects.filter(edition=edition).order_by('-number').select_related('editor')[0]
+                issue = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[0]
             except IndexError:
                 issue = None
 
         return JsonResponse({
-            'edition': edition.to_json(),
+            'edition': newspaper.to_json(),
             'issue': issue.to_json() if issue else None,
         })
 
     @ajax_login_required
     def patch(self, request, username, newspapeper_slug):
-        edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         payload = json.loads(request.body.decode('utf-8'))
 
-        if edition.editor_id != request.user.id:
+        if newspaper.editor_id != request.user.id:
             return HttpResponseForbidden()
 
         if 'title' in payload:
-            edition.title = payload['title'].strip()
+            newspaper.title = payload['title'].strip()
 
         if 'description' in payload:
-            edition.title = payload['description'].strip()
+            newspaper.title = payload['description'].strip()
 
         if 'periodicity' in payload:
             try:
                 periodicity = parse_periodicity(payload['periodicity'])
             except ValueError as e:
                 return HttpResponseBadRequest(str(e))
-            edition.period = periodicity.frequency
-            edition.period_time = periodicity.time
-            edition.period_dow = periodicity.dow
+            newspaper.period = periodicity.frequency
+            newspaper.period_time = periodicity.time
+            newspaper.period_dow = periodicity.dow
 
         if 'image' in payload:
-            image = file_from_data_uri(payload['image'], "{}-{}".format(request.user.username, edition.slug))
-            edition.image = image
+            image = file_from_data_uri(payload['image'], "{}-{}".format(request.user.username, newspaper.slug))
+            newspaper.image = image
 
-        edition.save()
+        newspaper.save()
 
         return JsonResponse({
-            'edition': edition.to_json(),
+            'edition': newspaper.to_json(),
         })
 
     @ajax_login_required
     def delete(self, request, username, newspapeper_slug):
-        edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
-        if edition.editor_id != request.user.id:
+        if newspaper.editor_id != request.user.id:
             return HttpResponseForbidden()
 
-        edition.delete()
+        newspaper.delete()
         return HttpResponse(status=204)
 
 
@@ -144,10 +144,10 @@ def author(request, username):
     author, topic = get_user_and_topic(username)
     topics = {t.slug: t for t in Topic.objects.filter(author=author)}
 
-    editions = Newspaper.objects.filter(editor=author).order_by('-likes')
+    newspapers = Newspaper.objects.filter(editor=author).order_by('-likes')
     data = {
         'author': author.to_json(topic=topic),
-        'editions': [e.to_json() for e in annotate_editions(request, editions)],
+        'editions': [e.to_json() for e in annotate_newspapers(request, newspapers)],
     }
     if not topic and topics:
         data['topics'] = [{
@@ -179,20 +179,20 @@ def author_posts(request, username):
 
 @ajax_login_required
 def backlog(request, username, newspapeper_slug):
-    edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
-    if edition.editor_id != request.user.id:
+    newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+    if newspaper.editor_id != request.user.id:
         return HttpResponseForbidden()
 
     if request.method == 'GET':
         result = {'backlog': [], 'publish': []}
 
         query = Backlog.objects.filter(
-            edition=edition, publish_stamp__isnull=True).select_related('post')
+            newspaper=newspaper, publish_stamp__isnull=True).select_related('post')
         for log in query:
             result['backlog'].append(log.post.to_json())
 
         query = Backlog.objects.filter(
-            edition=edition, publish_stamp__isnull=False)\
+            newspaper=newspaper, publish_stamp__isnull=False)\
             .order_by('ordering').select_related('post')
         for log in query:
             result['publish'].append(log.post.to_json())
@@ -202,11 +202,11 @@ def backlog(request, username, newspapeper_slug):
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
 
-        if Backlog.objects.filter(edition=edition, post=post).exists():
+        if Backlog.objects.filter(newspaper=newspaper, post=post).exists():
             return HttpResponse(status=204)
         else:
             Backlog.objects.create(
-                edition=edition,
+                newspaper=newspaper,
                 post=post
             )
             return HttpResponse(status=201)
@@ -214,7 +214,7 @@ def backlog(request, username, newspapeper_slug):
     if request.method == 'DELETE':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
-        Backlog.objects.filter(edition=edition, post=post).delete()
+        Backlog.objects.filter(newspaper=newspaper, post=post).delete()
         return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)
@@ -223,13 +223,13 @@ def backlog(request, username, newspapeper_slug):
 @ajax_login_required
 @require_POST
 def backlog_publish(request, username, newspapeper_slug):
-    edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
-    if edition.editor_id != request.user.id:
+    newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+    if newspaper.editor_id != request.user.id:
         return HttpResponseForbidden()
 
     post_ids = json.loads(request.body.decode('utf-8'))
     publish_stamp = datetime.now()
-    for log in Backlog.objects.filter(edition=edition):
+    for log in Backlog.objects.filter(newspaper=newspaper):
         try:
             idx = post_ids.index(log.post_id)
             log.publish_stamp = publish_stamp
@@ -247,26 +247,26 @@ def backlog_publish(request, username, newspapeper_slug):
 @require_POST
 def subscribe(request, username, newspapeper_slug):
     author, _ = get_user_and_topic(username)
-    edition = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
-    Subscription.objects.create(user=request.user, edition=edition)
+    newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
+    Subscription.objects.create(user=request.user, newspaper=newspaper)
 
     # TODO return user subscription instead
-    edition.issues = edition.issue_set.count()
-    edition.likes = edition.subscription_set.count()
-    return JsonResponse(edition.to_json())
+    newspaper.issues = newspaper.issue_set.count()
+    newspaper.likes = newspaper.subscription_set.count()
+    return JsonResponse(newspaper.to_json())
 
 
 @ajax_login_required
 @require_POST
 def unsubscribe(request, username, newspapeper_slug):
     author, _ = get_user_and_topic(username)
-    edition = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
-    Subscription.objects.filter(user=request.user, edition=edition).delete()
+    newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
+    Subscription.objects.filter(user=request.user, newspaper=newspaper).delete()
 
     # TODO return user subscription instead
-    edition.issues = edition.issue_set.count()
-    edition.likes = edition.subscription_set.count()
-    return JsonResponse(edition.to_json())
+    newspaper.issues = newspaper.issue_set.count()
+    newspaper.likes = newspaper.subscription_set.count()
+    return JsonResponse(newspaper.to_json())
 
 
 @ajax_login_required
@@ -327,8 +327,8 @@ def post(request, post_id):
     post = get_object_or_404(Post, id=post_id, draft=False, published__lt=datetime.now())
 
     # Doesn't work, post can be part of multiple issues or just related to author
-    # edition = Issue.objects.get(posts=post).edition
-    # is_subscribed = Subscription.objects.filter(user=request.user, edition=edition).count() > 0
+    # newspaper = Issue.objects.get(posts=post).newspaper
+    # is_subscribed = Subscription.objects.filter(user=request.user, newspaper=newspaper).count() > 0
     # if not is_subscribed:
     #     return HttpResponse('402 Payment Required', status=402)
 
@@ -366,7 +366,7 @@ def start_newspaper(request, username):
         slug = '{}-{}'.format(base_slug, slug_suffix)
 
     image = file_from_data_uri(payload['image'], "{}-{}".format(author.username, base_slug))
-    edition = Newspaper.objects.create(
+    newspaper = Newspaper.objects.create(
         title=title,
         slug=slug,
         description=description,
@@ -378,5 +378,5 @@ def start_newspaper(request, username):
     )
 
     return JsonResponse({
-        "edition": edition.to_json()
+        "edition": newspaper.to_json()
     })

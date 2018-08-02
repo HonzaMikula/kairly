@@ -155,7 +155,7 @@ class Newspaper(models.Model, PeriodMixin):
 
 
 class Backlog(models.Model):
-    edition = models.ForeignKey(Newspaper, models.CASCADE)
+    newspaper = models.ForeignKey(Newspaper, models.CASCADE)
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
@@ -164,23 +164,23 @@ class Backlog(models.Model):
 class Issue(models.Model):
     number = models.IntegerField()
     published = models.DateTimeField(_('Published'), default=now)
-    editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from edition
+    editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from newspaper
     posts = models.ManyToManyField(Post, blank=True, through='IssuePost')
-    edition = models.ForeignKey(Newspaper, models.CASCADE)
+    newspaper = models.ForeignKey(Newspaper, models.CASCADE)
 
     class Meta:
         ordering = ('-published',)
 
     def __str__(self):
-        return "{} #{}".format(self.edition.title, self.number)
+        return "{} #{}".format(self.newspaper.title, self.number)
 
-    def to_json(self, posts=True, edition=None, tzinfo=timezone.utc):
-        if edition is None:
-            edition = self.edition
+    def to_json(self, posts=True, newspaper=None, tzinfo=timezone.utc):
+        if newspaper is None:
+            newspaper = self.newspaper
         result = {
             "number": self.number,
             "type": 'edition',
-            "edition": edition.to_json(),
+            "edition": newspaper.to_json(),
         }
         if posts:
             result["posts"] = [
@@ -192,7 +192,7 @@ class Issue(models.Model):
 
 
 class IssuePost(models.Model):
-    edition = models.ForeignKey(Issue, on_delete=models.CASCADE)
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     ordering = models.IntegerField(default=1)
 
@@ -202,10 +202,10 @@ class IssuePost(models.Model):
 
 class Subscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE)
-    edition = models.ForeignKey(Newspaper, models.CASCADE)
+    newspaper = models.ForeignKey(Newspaper, models.CASCADE)
 
     class Meta:
-        unique_together = (("user", "edition"),)
+        unique_together = (("user", "newspaper"),)
 
 
 class SubscriptionToAuthor(models.Model, PeriodMixin):
