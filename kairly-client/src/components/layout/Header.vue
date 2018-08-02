@@ -5,7 +5,7 @@
         <ul v-if="user">
           <li class="home"><router-link :to="{name: 'timeline'}" exact><span>Home</span></router-link></li>
           <li class="my-subscription"><router-link :to="{name: 'subscription'}"><span>My Subscription</span></router-link></li>
-          <li class="my-editions"><router-link :to="{name: 'author-editions'}"><span>My Newspapers</span></router-link></li>
+          <li class="my-editions"><router-link :to="{name: 'author-newspapepers'}"><span>My Newspapers</span></router-link></li>
           <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
         </ul>
         </app-header--nav>
@@ -33,7 +33,7 @@
           v-on-clickaway="() => isDropDownMenuOpen = false">
           <ul>
             <li class="my-subscription"><router-link :to="{name: 'subscription'}"><span>My Subscription</span></router-link></li>
-            <li class="my-editions"><router-link :to="{name: 'author-editions'}"><span>My Newspapers</span></router-link></li>
+            <li class="my-editions"><router-link :to="{name: 'author-newspapepers'}"><span>My Newspapers</span></router-link></li>
             <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
             <li><router-link :to="{name: 'settings'}"><span>Settings</span></router-link></li>
             <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>

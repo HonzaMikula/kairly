@@ -75,8 +75,8 @@ def delete_edition(request, edition):
 
 class EditionView(View):
     @ajax_login_required
-    def get(self, request, username, edition_slug):
-        edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+    def get(self, request, username, newspapeper_slug):
+        edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
 
         edition.issues = edition.editionissue_set.count()
         edition.likes = edition.subscription_set.count()
@@ -96,8 +96,8 @@ class EditionView(View):
         })
 
     @ajax_login_required
-    def patch(self, request, username, edition_slug):
-        edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+    def patch(self, request, username, newspapeper_slug):
+        edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
         payload = json.loads(request.body.decode('utf-8'))
 
         if edition.editor_id != request.user.id:
@@ -129,8 +129,8 @@ class EditionView(View):
         })
 
     @ajax_login_required
-    def delete(self, request, username, edition_slug):
-        edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+    def delete(self, request, username, newspapeper_slug):
+        edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
 
         if edition.editor_id != request.user.id:
             return HttpResponseForbidden()
@@ -178,8 +178,8 @@ def author_posts(request, username):
 
 
 @ajax_login_required
-def edition_backlog(request, username, edition_slug):
-    edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+def backlog(request, username, newspapeper_slug):
+    edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
     if edition.editor_id != request.user.id:
         return HttpResponseForbidden()
 
@@ -222,8 +222,8 @@ def edition_backlog(request, username, edition_slug):
 
 @ajax_login_required
 @require_POST
-def edition_backlog_publish(request, username, edition_slug):
-    edition = get_object_or_404(Edition, editor__username=username, slug=edition_slug)
+def backlog_publish(request, username, newspapeper_slug):
+    edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
     if edition.editor_id != request.user.id:
         return HttpResponseForbidden()
 
@@ -245,9 +245,9 @@ def edition_backlog_publish(request, username, edition_slug):
 
 @ajax_login_required
 @require_POST
-def subscribe(request, username, edition_slug):
+def subscribe(request, username, newspapeper_slug):
     author, _ = get_user_and_topic(username)
-    edition = get_object_or_404(Edition, editor=author, slug=edition_slug)
+    edition = get_object_or_404(Edition, editor=author, slug=newspapeper_slug)
     Subscription.objects.create(user=request.user, edition=edition)
 
     # TODO return user subscription instead
@@ -258,9 +258,9 @@ def subscribe(request, username, edition_slug):
 
 @ajax_login_required
 @require_POST
-def unsubscribe(request, username, edition_slug):
+def unsubscribe(request, username, newspapeper_slug):
     author, _ = get_user_and_topic(username)
-    edition = get_object_or_404(Edition, editor=author, slug=edition_slug)
+    edition = get_object_or_404(Edition, editor=author, slug=newspapeper_slug)
     Subscription.objects.filter(user=request.user, edition=edition).delete()
 
     # TODO return user subscription instead
@@ -343,7 +343,7 @@ def get_type_from_data_uri(data):
 
 @ajax_login_required
 @require_POST
-def create_edition(request, username):
+def start_newspaper(request, username):
     author, topic = get_user_and_topic(username)
     payload = json.loads(request.body.decode('utf-8'))
 

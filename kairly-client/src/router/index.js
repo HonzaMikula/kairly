@@ -23,8 +23,8 @@ export default new Router({
     {path: '/homepage', name: 'homepage', component: Homepage},
 
     {path: '/subscription', component: MySubscription, children: [
-      {path: '', name: 'subscription', redirect: { name: 'subscription.editions'}},
-      {path: 'editions', name: 'subscription.editions', component: MyEditions},
+      {path: '', name: 'subscription', redirect: { name: 'subscription.newspapers'}},
+      {path: 'newspapers', name: 'subscription.newspapers', component: MyEditions},
       {path: 'authors', name: 'subscription.authors', component: MyAuthors}
     ]},
     {path: '/explore', name: 'explore', component: Explore},
@@ -32,7 +32,7 @@ export default new Router({
     {path: '/user/settings', component: Settings, name: 'settings'},
     {path: '/join-and-read-with-kairly', component: SignUp, meta: { public: true }},
 
-    {path: '/editions', name: 'author-editions', component: Editions},
+    {path: '/newspapers', name: 'author-newspapepers', component: Editions},
     {path: '/post/:postId', name: 'post', component: PostDetail},  // TODO remap to /:author/post--:id
 
     {path: '/:author', name: 'author', component: AuthorDetail},
