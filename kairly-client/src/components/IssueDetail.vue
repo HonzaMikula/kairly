@@ -2,7 +2,7 @@
   <app-layout>
     <issue-detail-view>
       <div v-if="!loading">
-        <Issue :issue="issue" :subscription="edition.subscription" />
+        <Issue :issue="issue" :subscription="newspaper.subscription" />
       </div>
     </issue-detail-view>
   </app-layout>
@@ -21,7 +21,7 @@ export default {
 
   metaInfo() {
       return {
-        title: this.edition ? `${this.edition.title} #${this.issue.number}` : undefined
+        title: this.newspaper ? `${this.newspaper.title} #${this.issue.number}` : undefined
       }
   },
 
@@ -33,15 +33,15 @@ export default {
   data() {
     return {
       loading: true,
-      edition: null,
+      newspaper: null,
       issue: null,
     }
   },
 
   created() {
-    const { author, edition, issue } = this.$route.params
-    api.getEditionDetail(`${author}/${edition}`, issue).then(resp => {
-      this.edition = resp.edition
+    const { author, newspaper, issue } = this.$route.params
+    api.getNewspaperDetail(`${author}/${newspaper}`, issue).then(resp => {
+      this.newspaper = resp.newspaper
       this.issue = resp.issue
       this.loading = false
     })

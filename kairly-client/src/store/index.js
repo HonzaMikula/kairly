@@ -8,14 +8,14 @@ export default new Vuex.Store({
   state: {
     profile: {
       user: null,
-      managedEditions: [] // ids
+      managedNewspapers: [] // ids
     },
     subscriptions: {
       authors: {},
-      editions: {}
+      newspapers: {}
     },
     backlog: {},
-    editions: {},
+    newspapers: {},
     timeline: {
       issues: null, //null - not loaded, [] - loaded but empty
       cursor: null,
@@ -36,29 +36,29 @@ export default new Vuex.Store({
     backlog(state, backlog) {
       state.backlog = backlog
     },
-    backlogAdd(state, { postId, editionId }) {
-      const currEditions = state.backlog[postId] || {}
+    backlogAdd(state, { postId, newspaperId }) {
+      const currNewspapers = state.backlog[postId] || {}
       state.backlog = {
         ...state.backlog,
-        [postId]: {...currEditions, [editionId]: 'C'}
+        [postId]: {...currNewspapers, [newspaperId]: 'C'}
       }
     },
-    backlogSetPostState(state, { postId, editionId, val }) {
-      const currEditions = state.backlog[postId] || {}
+    backlogSetPostState(state, { postId, newspaperId, val }) {
+      const currNewspapers = state.backlog[postId] || {}
       state.backlog = {
         ...state.backlog,
-        [postId]: {...currEditions, [editionId]: val}
+        [postId]: {...currNewspapers, [newspaperId]: val}
       }
     },
-    backlogRemove(state, { postId, editionId }) {
+    backlogRemove(state, { postId, newspaperId }) {
       // TODO this would be nice move to utils function
       // we need shallow copy with updated nested object
-      let currEditions = {...state.backlog[postId]}
-      delete currEditions[editionId]
+      let currNewspapers = {...state.backlog[postId]}
+      delete currNewspapers[newspaperId]
 
       const backlog = {...state.backlog}
-      if (Object.keys(currEditions).length) {
-        backlog[postId] = currEditions
+      if (Object.keys(currNewspapers).length) {
+        backlog[postId] = currNewspapers
       } else {
         delete backlog[postId]
       }
@@ -67,11 +67,11 @@ export default new Vuex.Store({
     subscriptions(state, subscriptions) {
       state.subscriptions = subscriptions
     },
-    addEditionSubscription(state, fullName) {
-      Vue.set(state.subscriptions.editions, fullName, true)
+    addNewspaperSubscription(state, fullName) {
+      Vue.set(state.subscriptions.newspapers, fullName, true)
     },
-    removeEditionSubscription(state, fullName) {
-      Vue.delete(state.subscriptions.editions, fullName)
+    removeNewspaperSubscription(state, fullName) {
+      Vue.delete(state.subscriptions.newspapers, fullName)
     },
     addAuthorSubscription(state, { authorId, periodicity }) {
       Vue.set(state.subscriptions.authors, authorId, periodicity)
@@ -79,27 +79,27 @@ export default new Vuex.Store({
     removeAuthorSubscription(state, { authorId }) {
       Vue.delete(state.subscriptions.authors, authorId)
     },
-    managedEditions(state, editionIds) {
-      state.profile.managedEditions = editionIds
+    managedNewspapers(state, newspaperIds) {
+      state.profile.managedNewspapers = newspaperIds
     },
-    appendManagedEdition(state, editionId) {
-      state.profile.managedEditions.push(editionId)
+    appendManagedNewspaper(state, newspaperId) {
+      state.profile.managedNewspapers.push(newspaperId)
     },
-    removeEdition(state, editionId) {
+    removeNewspaper(state, newspaperId) {
       // remove from managed
-      let idx = state.profile.managedEditions.indexOf(editionId)
+      let idx = state.profile.managedNewspapers.indexOf(newspaperId)
       if (idx !== -1) {
-        state.profile.managedEditions.splice(idx, 1)
+        state.profile.managedNewspapers.splice(idx, 1)
       }
       // remove from subscribed
-      if (state.subscriptions.editions[editionId]) {
-        Vue.delete(state.subscriptions.editions, editionId)
+      if (state.subscriptions.newspapers[newspaperId]) {
+        Vue.delete(state.subscriptions.newspapers, newspaperId)
       }
 
-      Vue.delete(state.editions, editionId)
+      Vue.delete(state.newspapers, newspaperId)
     },
-    edition(state, edition) {
-      state.editions = {...state.editions, [edition.fullName]: edition}
+    newspaper(state, newspaper) {
+      state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
     },
     timelineRequested(state) {
       state.timeline.loading = true
@@ -138,10 +138,10 @@ export default new Vuex.Store({
   getters: {
     user: state => state.profile.user,
     loadingUser: state => state.profile.user === null, // Unauthorized -> user === false
-    //subscribedEditions: state => state.profile.subscribedEditions.map(id => state.editions[id]),
-    managedEditions: state => state.profile.managedEditions.map(id => state.editions[id]),
+    //subscribedNewspapers: state => state.profile.subscribedNewspapers.map(id => state.newspapers[id]),
+    managedNewspapers: state => state.profile.managedNewspapers.map(id => state.newspapers[id]),
     backlog: state => state.backlog,
-    edition: state => id => state.editions[id]
+    newspaper: state => id => state.newspapers[id]
   },
 
   actions,

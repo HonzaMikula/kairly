@@ -54,20 +54,20 @@
           </ul>
         </author-detail--topics>
 
-        <author-detail--editions v-if="editions.length">
+        <author-detail--newspapers v-if="newspapers.length">
           <h2>{{ author.name }}'s newspapers</h2>
 
-          <div :class="{'show-all': showAllEditions}">
-            <EditionWidget
-              v-for="edition in editions"
-              :key="edition.fullName"
-              v-bind:edition="edition"
+          <div :class="{'show-all': showAllNewspapers}">
+            <NewspaperWidget
+              v-for="newspaper in newspapers"
+              :key="newspaper.fullName"
+              v-bind:newspaper="newspaper"
             />
           </div>
 
-          <button v-if="editionIds.length > 3" v-on:click="toggleEditions()">{{ !showAllEditions ? 'Show all newspapers' : 'Hide editions' }}</button>
+          <button v-if="newspaperIds.length > 3" v-on:click="toggleNewspapers()">{{ !showAllNewspapers ? 'Show all newspapers' : 'Hide newspapers' }}</button>
 
-        </author-detail--editions>
+        </author-detail--newspapers>
 
         <author-detail--posts v-if="posts.length">
           <h2>{{ author.name }}'s Posts</h2>
@@ -94,7 +94,7 @@ import { mapMutations, mapGetters } from 'vuex'
 import * as api from '@/api'
 
 import AppLayout from '@/components/layout/AppLayout'
-import EditionWidget from '@/components/widgets/EditionWidget'
+import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import PostWrapper from '@/components/PostWrapper'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
@@ -110,7 +110,7 @@ export default {
 
   components: {
     AppLayout,
-    EditionWidget,
+    NewspaperWidget,
     PostWrapper,
     FollowAuthor,
     AuthorSubscription
@@ -122,17 +122,17 @@ export default {
       loadingPosts: true,
       author: null,
       topic: null,
-      showAllEditions: false,
-      editionIds: [],
+      showAllNewspapers: false,
+      newspaperIds: [],
       posts: [],
       cursor: null
     }
   },
 
   computed: {
-    editions() {
-      const ids = this.showAllEditions ? this.editionIds : this.editionIds.slice(0, 3)
-      return ids.map(id => this.$store.getters.edition(id))
+    newspapers() {
+      const ids = this.showAllNewspapers ? this.newspaperIds : this.newspaperIds.slice(0, 3)
+      return ids.map(id => this.$store.getters.newspaper(id))
     },
 
     subscription() {
@@ -164,8 +164,8 @@ export default {
       ev.target.blur()
     },
 
-    toggleEditions() {
-      this.showAllEditions = !this.showAllEditions
+    toggleNewspapers() {
+      this.showAllNewspapers = !this.showAllNewspapers
     },
 
     handlePostsData(resp) {
@@ -189,15 +189,15 @@ export default {
       this.loadingProfile = true
       this.loadingPosts = true
       this.author = null
-      this.showAllEditions = false
-      this.editionIds = []
+      this.showAllNewspapers = false
+      this.newspaperIds = []
       this.posts = []
       this.cursor = null
 
       api.getAuthorDetail(author).then(resp => {
-        resp.editions.forEach(e => this.$store.dispatch('editionUpdated', e))
+        resp.newspapers.forEach(e => this.$store.dispatch('newspaperUpdated', e))
         this.author = resp.author
-        this.editionIds = resp.editions.map(e => e.fullName)
+        this.newspaperIds = resp.newspapers.map(e => e.fullName)
         this.loadingProfile = false
         this.topics = resp.topics
       }).catch(err => {
@@ -345,8 +345,8 @@ author-detail--topics
     a
       color: $c-base
 
-//- Editions
-author-detail--editions
+//- Newspapers
+author-detail--newspapers
   display: block
   margin-bottom: $baseline
 
@@ -363,7 +363,7 @@ author-detail--editions
   img
     max-width: 100%
 
-  //- wrapper for edition items
+  //- wrapper for newspaper items
   > div
     display: grid
     grid-row-gap: $baseline
@@ -376,13 +376,13 @@ author-detail--editions
       grid-template-columns: 1fr 1fr
       grid-column-gap: $baseline / 4
 
-      edition-widget-view:last-of-type
+      newspaper-widget-view:last-of-type
         display: none
 
-      &.show-all edition-widget-view:last-of-type
+      &.show-all newspaper-widget-view:last-of-type
         display: block
 
-  //- show/hide more editions
+  //- show/hide more newspapers
   > button
     display: table
     border-radius: $baseline

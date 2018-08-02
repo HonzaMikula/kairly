@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import issueEdition from '@/components/issues/edition'
+import issueNewspaper from '@/components/issues/newspaper'
 import issueAuthor from '@/components/issues/author'
 import PostWrapper from '@/components/PostWrapper'
 
@@ -43,7 +43,7 @@ export default {
   },
 
   components: {
-    issueEdition,
+    issueNewspaper,
     issueAuthor,
     PostWrapper,
   },
@@ -78,8 +78,8 @@ export default {
 </script>
 
 <style lang="sass">
-//- Edition
-timeline-edition
+//- Newspaper
+timeline-newspaper
   display: block
   margin: $baseline*2 0 $baseline
 

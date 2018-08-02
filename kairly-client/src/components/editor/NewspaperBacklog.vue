@@ -1,23 +1,23 @@
 <template>
-  <edition-backlog-view>
+  <newspaper-backlog-view>
 
-    <edition-backlog--info>
+    <newspaper-backlog--info>
       <div>
-        Issue <strong>#{{edition.issues + 1}}</strong> will be automatically
-        published in <strong :title="edition.nextRelease">{{ timeFrom(edition.nextRelease) }}</strong>
+        Issue <strong>#{{newspaper.issues + 1}}</strong> will be automatically
+        published in <strong :title="newspaper.nextRelease">{{ timeFrom(newspaper.nextRelease) }}</strong>
       </div>
 
       <div>
         <strong>{{backlog.length}} posts</strong> are considered
       </div>
-    </edition-backlog--info>
+    </newspaper-backlog--info>
 
     <div>
-      <edition-backlog--next-issue>
+      <newspaper-backlog--next-issue>
         <div v-if="published.length == 0" class="no-post">
           <h2>No posts for the upcoming issue!</h2>
 
-          <p>Drag articles and tweets from the right panel that you want to publish in next issue of the edition.</p>
+          <p>Drag articles and tweets from the right panel that you want to publish in next issue of the newspaper.</p>
         </div>
 
         <PostWrapper
@@ -52,9 +52,9 @@
             </button-icon>
           </template>
         </PostWrapper>
-      </edition-backlog--next-issue>
+      </newspaper-backlog--next-issue>
 
-      <edition-backlog--backlog>
+      <newspaper-backlog--backlog>
         <div v-if="backlog.length == 0" class="no-post">
           <h2>No considered posts!</h2>
 
@@ -103,9 +103,9 @@
             <h2><router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
           </template>
         </div>
-      </edition-backlog--backlog>
+      </newspaper-backlog--backlog>
     </div>
-  </edition-backlog-view>
+  </newspaper-backlog-view>
 </template>
 
 <script>
@@ -118,14 +118,14 @@ import * as api from '@/api'
 import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: 'EditionBacklog',
+  name: 'NewspaperBacklog',
 
   components: {
     PostWrapper
   },
 
   props: {
-    edition: Object
+    newspaper: Object
   },
 
   data() {
@@ -141,7 +141,7 @@ export default {
     },
 
     init() {
-      api.getEditionBacklog(this.edition.fullName).then(resp => {
+      api.getNewspaperBacklog(this.newspaper.fullName).then(resp => {
         this.backlog = resp.backlog
         this.published = resp.publish
       })
@@ -150,24 +150,24 @@ export default {
     publish(post) {
       this.backlog.splice(this.backlog.indexOf(post), 1)
       this.published.push(post)
-      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
       .catch(this.init)
-      this.backlogSetPostState({edition: this.edition, post: post, state: 'P'})
+      this.backlogSetPostState({newspaper: this.newspaper, post: post, state: 'P'})
     },
 
     undoPublish(post) {
       this.published.splice(this.published.indexOf(post), 1)
       this.backlog.push(post)
-      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
       .catch(this.init)
-      this.backlogSetPostState({edition: this.edition, post: post, state: 'C'})
+      this.backlogSetPostState({newspaper: this.newspaper, post: post, state: 'C'})
     },
 
     moveUp(idx) {
       const post = this.published[idx]
       Vue.set(this.published, idx, this.published[idx - 1])
       Vue.set(this.published, idx - 1, post)
-      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
       .catch(this.init)
     },
 
@@ -175,12 +175,12 @@ export default {
       const post = this.published[idx]
       Vue.set(this.published, idx, this.published[idx + 1])
       Vue.set(this.published, idx + 1, post)
-      api.publishBacklog(this.edition.fullName, this.published.map(p => p.id))
+      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
       .catch(this.init)
     },
 
     removePost(post) {
-      this.removeFromBacklog({edition: this.edition, post: post})
+      this.removeFromBacklog({newspaper: this.newspaper, post: post})
       this.init()
     },
 
@@ -191,7 +191,7 @@ export default {
   created() {
     this.init()
 
-    this.$watch('edition', edition => {
+    this.$watch('newspaper', newspaper => {
       this.init()
     })
   }
@@ -199,7 +199,7 @@ export default {
 </script>
 
 <style lang="sass">
-edition-backlog-view
+newspaper-backlog-view
   > div
     display: grid
     grid-template-columns: 970px auto
@@ -208,7 +208,7 @@ edition-backlog-view
 
 
 //- Info when release go out
-edition-backlog--info
+newspaper-backlog--info
   display: grid
   grid-template-columns: 970px auto
   grid-column-gap: $baseline
@@ -224,7 +224,7 @@ edition-backlog--info
   text-align: center
 
 //- Next Issue
-edition-backlog--next-issue
+newspaper-backlog--next-issue
   .no-post
     display: flex
     align-items: center
@@ -253,7 +253,7 @@ edition-backlog--next-issue
       text-align: center
 
 //- Backlog
-edition-backlog--backlog
+newspaper-backlog--backlog
   .no-post
     display: flex
     align-items: center

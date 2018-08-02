@@ -91,7 +91,7 @@ class EditionView(View):
                 issue = None
 
         return JsonResponse({
-            'edition': newspaper.to_json(),
+            'newspaper': newspaper.to_json(),
             'issue': issue.to_json() if issue else None,
         })
 
@@ -125,7 +125,7 @@ class EditionView(View):
         newspaper.save()
 
         return JsonResponse({
-            'edition': newspaper.to_json(),
+            'newspaper': newspaper.to_json(),
         })
 
     @ajax_login_required
@@ -147,7 +147,7 @@ def author(request, username):
     newspapers = Newspaper.objects.filter(editor=author).order_by('-likes')
     data = {
         'author': author.to_json(topic=topic),
-        'editions': [e.to_json() for e in annotate_newspapers(request, newspapers)],
+        'newspapers': [e.to_json() for e in annotate_newspapers(request, newspapers)],
     }
     if not topic and topics:
         data['topics'] = [{
@@ -378,5 +378,5 @@ def start_newspaper(request, username):
     )
 
     return JsonResponse({
-        "edition": newspaper.to_json()
+        'newspaper': newspaper.to_json()
     })

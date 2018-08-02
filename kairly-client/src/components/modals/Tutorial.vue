@@ -2,7 +2,7 @@
   <dialog-window :onClose="onClose">
     <modal-dialog role="dialog" @click.stop>
       <div v-if="!loading">
-        <Issue :issue="issue" :subscription="edition.subscription" />
+        <Issue :issue="issue" :subscription="newspaper.subscription" />
       </div>
       <button-close tabindex="0" role="button" @click="onClose">Close</button-close>
     </modal-dialog>
@@ -31,14 +31,14 @@ export default {
   data() {
     return {
       loading: true,
-      edition: null,
+      newspaper: null,
       issue: null,
     }
   },
 
   created() {
-    api.getEditionDetail('janmikula/kairly', 1).then(resp => {
-      this.edition = resp.edition
+    api.getNewspaperDetail('janmikula/kairly', 1).then(resp => {
+      this.newspaper = resp.newspaper
       this.issue = resp.issue
       this.loading = false
     })

@@ -1,18 +1,18 @@
 <template>
   <issue-widget-view>
     <picture>
-      <router-link :to="{name: 'issue', params: {author: issue.edition.editor.id, edition: issue.edition.name, issue: issue.number}}">
-        <img :src="issue.edition.picture" :alt="issue.edition.title" />
+      <router-link :to="{name: 'issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
+        <img :src="issue.newspaper.picture" :alt="issue.newspaper.title" />
       </router-link>
     </picture>
 
     <h2>
-      <router-link :to="{name: 'issue', params: {author: issue.edition.editor.id, edition: issue.edition.name, issue: issue.number}}">{{ issue.edition.title }} #{{ issue.number }}</router-link>
+      <router-link :to="{name: 'issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }} #{{ issue.number }}</router-link>
     </h2>
 
     <issue-widget--author>
-      <img :src="issue.edition.editor.picture" :alt="issue.edition.editor.name"/>
-      <router-link :to="{name: 'author', params: {author: issue.edition.editor.id}}">{{ issue.edition.editor.name }}</router-link>
+      <img :src="issue.newspaper.editor.picture" :alt="issue.newspaper.editor.name"/>
+      <router-link :to="{name: 'author', params: {author: issue.newspaper.editor.id}}">{{ issue.newspaper.editor.name }}</router-link>
     </issue-widget--author>
 
     <ul>
@@ -23,13 +23,13 @@
 
     <issue-widget--subscribe>
       <button
-        v-bind:class="{ 'is-subscribed': issue.edition.subscription }"
+        v-bind:class="{ 'is-subscribed': issue.newspaper.subscription }"
         v-on:click="subscribe($event)"
-      >{{ issue.edition.subscription ? 'Subscribed' : 'Subscribe'}}</button>
+      >{{ issue.newspaper.subscription ? 'Subscribed' : 'Subscribe'}}</button>
       <p>
         10 CZK per month
          •
-        {{ issue.edition.likes }} subscribers
+        {{ issue.newspaper.likes }} subscribers
       </p>
     </issue-widget--subscribe>
 
@@ -48,9 +48,9 @@ export default {
 
   methods: {
     subscribe(ev) {
-      const value = !this.issue.edition.subscription
+      const value = !this.issue.newspaper.subscription
       this.$store.dispatch('subscribe', {
-        edition: this.issue.edition,
+        newspaper: this.issue.newspaper,
         value
       })
       ev.target.blur()

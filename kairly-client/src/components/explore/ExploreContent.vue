@@ -1,17 +1,17 @@
 <template>
   <main>
-    <explore--top-editions>
+    <explore--top-newspapers>
       <h2>Top Newspapers</h2>
 
       <div>
-        <EditionWidget
-          v-for="edition in editions"
-          :key="edition.fullName"
-          :edition="edition"
+        <NewspaperWidget
+          v-for="newspaper in newspapers"
+          :key="newspaper.fullName"
+          :newspaper="newspaper"
         />
       </div>
 
-    </explore--top-editions>
+    </explore--top-newspapers>
 
     <section :class="`explore-${index}`" v-for="(category, index) in categories" :key="index">
       <h2>{{ category.name }}</h2>
@@ -28,14 +28,14 @@
 import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
-import EditionWidget from '@/components/widgets/EditionWidget'
+import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
 
 export default {
   name: 'ExploreContent',
 
   components: {
-    EditionWidget,
+    NewspaperWidget,
     AuthorWidget
   },
 
@@ -50,16 +50,16 @@ export default {
   },
 
   computed: {
-    editions() {
-      return this.tab.editions
-        .map(id => this.$store.getters.edition(id))
-        .filter(edition => edition !== undefined)
+    newspapers() {
+      return this.tab.newspapers
+        .map(id => this.$store.getters.newspaper(id))
+        .filter(newspaper => newspaper !== undefined)
     }
   },
 
   methods: {
     loadData() {
-      this.$store.dispatch('getEditions', this.tab.editions)
+      this.$store.dispatch('getNewspapers', this.tab.newspapers)
 
       // TODO nice to have cache result + cache authors in store !
       api.getExploreTab(this.tab.name).then(payload => this.categories = payload.categories)

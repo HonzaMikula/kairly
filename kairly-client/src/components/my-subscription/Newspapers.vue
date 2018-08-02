@@ -1,60 +1,60 @@
   <template>
-  <my-editions-view>
-    <my-editions--empty
-      v-if="editions.length === 0">
+  <my-newspapers-view>
+    <my-newspapers--empty
+      v-if="newspapers.length === 0">
       <h1>No newspapers</h1>
       <p>You haven't subscribe to any newspapers yet. On Explore page you can find newspapers you might like.</p>
       <router-link to="/explore">Explore newspapers</router-link>
-    </my-editions--empty>
+    </my-newspapers--empty>
 
-    <EditionWidget
+    <NewspaperWidget
       v-else
-      v-for="edition in editions"
-      :key="edition.fullName"
-      :edition="edition"
+      v-for="newspaper in newspapers"
+      :key="newspaper.fullName"
+      :newspaper="newspaper"
     />
-  </my-editions-view>
+  </my-newspapers-view>
 </template>
 
 <script>
 import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
-import EditionWidget from '@/components/widgets/EditionWidget'
+import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 
 export default {
-  name: 'MyEditions',
+  name: 'MyNewspapers',
 
   metaInfo: {
     title: 'Newspapers - My Subscription - Kairly'
   },
 
   components: {
-    EditionWidget
+    NewspaperWidget
   },
 
   computed: {
     ...mapState({
-      editionIds: state => Object.keys(state.subscriptions.editions)
+      newspaperIds: state => Object.keys(state.subscriptions.newspapers)
     }),
 
-    editions() {
-      const editions = this.editionIds
-        .map(id => this.$store.getters.edition(id))
-        .filter(edition => edition !== undefined)
-      editions.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
-      return editions
+    newspapers() {
+      const newspapers = this.newspaperIds
+        .map(id => this.$store.getters.newspaper(id))
+        .filter(newspaper => newspaper !== undefined)
+      newspapers.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
+      return newspapers
     }
   },
 
   created() {
-    this.$store.dispatch('getEditions', this.editionIds)
+    this.$store.dispatch('getNewspapers', this.newspaperIds)
   }
 }
 </script>
 
 <style lang="sass">
-my-editions-view
+my-newspapers-view
   display: grid
   grid-row-gap: $baseline
   grid-template-columns: 1fr 1fr 1fr
@@ -65,7 +65,7 @@ my-editions-view
     grid-template-columns: 1fr 1fr
     grid-column-gap: $baseline / 4
 
-my-editions--empty
+my-newspapers--empty
   grid-column: 1 / span 3
 
   padding: $baseline

@@ -51,9 +51,9 @@ export const getTimeline = (cursor) => {
     .then(res => res.body)
 }
 
-export const getEditionDetail = (editionId, issueId=null) => {
+export const getNewspaperDetail = (newspaperId, issueId=null) => {
   if (!token) return Promise.reject();
-  let url = `${API_URI}/newspapers/${editionId}`
+  let url = `${API_URI}/newspapers/${newspaperId}`
   if (issueId) {
     url += '?issue=' + issueId
   }
@@ -98,17 +98,17 @@ export const getPost = (postId) => {
     .then(res => res.body.post)
 }
 
-export const subscribeEdition = editionId => {
+export const subscribeNewspaper = newspaperId => {
   if (!token) return Promise.reject()
   return agent
-    .post(`${API_URI}/newspapers/${editionId}/subscribe`)
+    .post(`${API_URI}/newspapers/${newspaperId}/subscribe`)
     .then(res => res.body)
 }
 
-export const unsubscribeEdition = editionId => {
+export const unsubscribeNewspaper = newspaperId => {
   if (!token) return Promise.reject();
   return agent
-    .post(`${API_URI}/newspapers/${editionId}/unsubscribe`)
+    .post(`${API_URI}/newspapers/${newspaperId}/unsubscribe`)
     .then(res => res.body)
 }
 
@@ -127,16 +127,16 @@ export const unsubscribeAuthor = authorId => {
     .then(res => res.body)
 }
 
-export const createEdition = (authorId, edition) => {
-  //const { title, description, image, period, time, dow } = edition
+export const createNewspaper = (authorId, newspaper) => {
+  //const { title, description, image, period, time, dow } = newspaper
   if (!token) return Promise.reject();
   return agent
     .post(`${API_URI}/authors/${authorId}/start-newspaper`)
-    .send(edition)
+    .send(newspaper)
     .then(res => res.body)
 }
 
-export const updateEdition = (fullName, fields) => {
+export const updateNewspaper = (fullName, fields) => {
   if (!token) return Promise.reject();
   return agent
     .patch(`${API_URI}/newspapers/${fullName}`)
@@ -144,37 +144,37 @@ export const updateEdition = (fullName, fields) => {
     .then(res => res.body)
 }
 
-export const deleteEdition = editionId => {
+export const deleteNewspaper = newspaperId => {
   if (!token) return Promise.reject();
   return agent
-    .delete(`${API_URI}/newspapers/${editionId}`)
+    .delete(`${API_URI}/newspapers/${newspaperId}`)
 }
 
-export const getEditionBacklog = editionId => {
+export const getNewspaperBacklog = newspaperId => {
   if (!token) return Promise.reject();
   return agent
-    .get(`${API_URI}/newspapers/${editionId}/backlog`)
+    .get(`${API_URI}/newspapers/${newspaperId}/backlog`)
     .then(res => res.body)
 }
 
-export const addToBacklog = (editionId, postId) => {
+export const addToBacklog = (newspaperId, postId) => {
   if (!token) return Promise.reject();
   return agent
-    .put(`${API_URI}/newspapers/${editionId}/backlog`)
+    .put(`${API_URI}/newspapers/${newspaperId}/backlog`)
     .send({post: postId})
 }
 
-export const deleteFromBacklog = (editionId, postId) => {
+export const deleteFromBacklog = (newspaperId, postId) => {
   if (!token) return Promise.reject();
   return agent
-    .delete(`${API_URI}/newspapers/${editionId}/backlog`)
+    .delete(`${API_URI}/newspapers/${newspaperId}/backlog`)
     .send({post: postId})
 }
 
-export const publishBacklog = (editionId, postIds) => {
+export const publishBacklog = (newspaperId, postIds) => {
   if (!token) return Promise.reject();
   return agent
-    .post(`${API_URI}/newspapers/${editionId}/backlog/publish`)
+    .post(`${API_URI}/newspapers/${newspaperId}/backlog/publish`)
     .send(postIds)
 }
 

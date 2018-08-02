@@ -3,10 +3,10 @@
   <dialog-window :onClose="onClose">
     <modal-dialog role="dialog" @click.stop>
       <header>
-        <h1>{{ edition ? 'Modify edition' : 'Create new newspaper' }}</h1>
+        <h1>{{ newspaper ? 'Modify newspaper' : 'Create new newspaper' }}</h1>
       </header>
 
-      <edit-edition-view>
+      <edit-newspaper-view>
         <div class="title">
           <input placeholder="What's the newspaper name?" v-model="title">
         </div>
@@ -53,7 +53,7 @@
               accept="image/jpeg,image/png"
               size="10"
               buttonClass="btn"
-              :prefill="this.edition && this.edition.picture"
+              :prefill="this.newspaper && this.newspaper.picture"
               :customStrings="{
                 drag: 'Drag or upload image'
               }">
@@ -61,10 +61,10 @@
           </picture>
 
         </div>
-      </edit-edition-view>
+      </edit-newspaper-view>
 
       <footer>
-        <button @click="submit">{{ this.edition ? 'Save' : 'Create edition' }}</button>
+        <button @click="submit">{{ this.newspaper ? 'Save' : 'Create newspaper' }}</button>
       </footer>
     </modal-dialog>
   </dialog-window>
@@ -78,10 +78,10 @@ import PictureInput from 'vue-picture-input'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
 export default {
-  name: 'EditEditionModal',
+  name: 'EditNewspaperModal',
 
   props: {
-    edition: Object,
+    newspaper: Object,
     onClose: Function,
     onCreated: Function
   },
@@ -94,9 +94,9 @@ export default {
 
   data() {
     return {
-      title: this.edition ? this.edition.title : '',
-      description: this.edition ? this.edition.description : '',
-      periodicity: this.edition ? this.edition.periodicity : null,
+      title: this.newspaper ? this.newspaper.title : '',
+      description: this.newspaper ? this.newspaper.description : '',
+      periodicity: this.newspaper ? this.newspaper.periodicity : null,
       image: null,
       DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
@@ -128,7 +128,7 @@ export default {
         errors.push("Periodicity is not selected")
       }
 
-      if (this.image === null && !this.edition) {
+      if (this.image === null && !this.newspaper) {
         errors.push("Image is not selected")
       }
 
@@ -138,12 +138,12 @@ export default {
         return
       }
 
-      if (this.edition) {
+      if (this.newspaper) {
         const fields = {}
-        if (this.title !== this.edition.title) {
+        if (this.title !== this.newspaper.title) {
           fields.title = this.title
         }
-        if (this.description !== this.edition.description) {
+        if (this.description !== this.newspaper.description) {
           fields.description = this.description
         }
         if (this.periodicity) { //TODO compare periodicity
@@ -153,13 +153,13 @@ export default {
           fields.image = this.image
         }
         this.updateEdtion({
-          fullName: this.edition.fullName,
+          fullName: this.newspaper.fullName,
           fields
         })
       } else {
         this.startNewEdtion({
           authorId: this.user.id,
-          edition: {
+          newspaper: {
             title: this.title,
             description: this.description,
             periodicity: this.periodicity,
@@ -177,7 +177,7 @@ export default {
 </script>
 
 <style lang="sass">
-edit-edition-view
+edit-newspaper-view
   display: block
   padding: $baseline
 

@@ -1,5 +1,5 @@
 <template>
-  <timeline-edition>
+  <timeline-newspaper>
     <header>
       <h1>
         <router-link :to="{name: 'author', params: {author: issue.author.id}}">
@@ -28,7 +28,7 @@
     <post-issue v-for="item in issue.issues" :key="item.id">
 
     </post-issue>-->
-  </timeline-edition>
+  </timeline-newspaper>
 </template>
 
 <script>

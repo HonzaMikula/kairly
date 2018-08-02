@@ -49,7 +49,7 @@ export default {
   },
 
   created() {
-    // TODO make single endpoint to fetch authors (and fetch them without editions)
+    // TODO make single endpoint to fetch authors (and fetch them without newspapers)
     // TODO cache authors in state same as edtions are currently cached
     Promise.all(
       this.authorIds.map(id => api.getAuthorDetail(id).then(resp => resp.author))
@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="sass">
-my-editions-view author-widget-view
+my-newspapers-view author-widget-view
   width: 576px
 
 my-authors--empty

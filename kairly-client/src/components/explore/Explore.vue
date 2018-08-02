@@ -72,13 +72,13 @@ explore-view
     background-size: cover
 
     @at-root .politics > header
-      background-image: url(https://kairly.com/media/editions/uspolitics.jpg)
+      background-image: url(https://kairly.com/media/newspapers/uspolitics.jpg)
 
     @at-root .sport > header
-      background-image: url(https://kairly.com/media/editions/olymp.jpg)
+      background-image: url(https://kairly.com/media/newspapers/olymp.jpg)
 
     @at-root .technology > header
-      background-image: url(https://kairly.com/media/editions/bitcoin.jpg)
+      background-image: url(https://kairly.com/media/newspapers/bitcoin.jpg)
 
     @at-root .lifestyle > header
       background-image: url(https://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)
@@ -140,19 +140,19 @@ explore-view
     grid-row-gap: $baseline
     grid-template-columns: 50% 50%
     grid-template-rows: auto auto
-    grid-template-areas: "explore-top-editions explore-top-editions" "explore-0 explore-1" "explore-2 explore-3"
+    grid-template-areas: "explore-top-newspapers explore-top-newspapers" "explore-0 explore-1" "explore-2 explore-3"
 
     @media (max-width: $mobile)
       padding: 0 $baseline/4
       grid-template-columns: 100%
-      grid-template-areas: "explore-top-editions" "explore-0" "explore-1" "explore-2" "explore-3"
+      grid-template-areas: "explore-top-newspapers" "explore-0" "explore-1" "explore-2" "explore-3"
 
 
   @at-root .recent > main
-    grid-template-areas: "explore-top-editions explore-top-editions" "explore-recent explore-recent"
+    grid-template-areas: "explore-top-newspapers explore-top-newspapers" "explore-recent explore-recent"
 
-explore--top-editions
-  grid-area: explore-top-editions
+explore--top-newspapers
+  grid-area: explore-top-newspapers
 
   > h2
     font-size: $fs-2
@@ -169,7 +169,7 @@ explore--top-editions
     @media (max-width: $mobile)
       grid-template-columns: 1fr 1fr
 
-      edition-widget-view:last-of-type
+      newspaper-widget-view:last-of-type
         display: none
 
 section

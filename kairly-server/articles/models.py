@@ -179,8 +179,8 @@ class Issue(models.Model):
             newspaper = self.newspaper
         result = {
             "number": self.number,
-            "type": 'edition',
-            "edition": newspaper.to_json(),
+            "type": 'newspaper',
+            "newspaper": newspaper.to_json(),
         }
         if posts:
             result["posts"] = [

@@ -1,13 +1,13 @@
 <template>
   <post--issue role="article">
     <div>
-      <h2><a :href="post.edition.fullName">{{ post.title }}</a></h2>
+      <h2><a :href="post.newspaper.fullName">{{ post.title }}</a></h2>
       <picture>
-        <a :href="post.edition.fullName">
-          <img :src="post.edition.picture"/>
+        <a :href="post.newspaper.fullName">
+          <img :src="post.newspaper.picture"/>
         </a>
       </picture>
-      <p>{{ post.edition.description }}</p>
+      <p>{{ post.newspaper.description }}</p>
     </div>
   </post--issue>
 </template>

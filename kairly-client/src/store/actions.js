@@ -16,16 +16,16 @@ export const getProfile = ({ commit }) => {
       resp => {
         commit('user', resp.user)
         commit('backlog', resp.backlog)
-        resp.editions.forEach(edition => commit('edition', edition))
-        commit('managedEditions', resp.editions.map(e => e.fullName))
+        resp.newspapers.forEach(newspaper => commit('newspaper', newspaper))
+        commit('managedNewspapers', resp.newspapers.map(n => n.fullName))
         commit('subscriptions', resp.subscriptions)
         return resp
       },
       err => {
         commit('user', false)
         commit('backlog', {})
-        commit('managedEditions', [])
-        commit('subscriptions', { authors: {}, editions: {}})
+        commit('managedNewspapers', [])
+        commit('subscriptions', { authors: {}, newspapers: {}})
         if (err.status !== 401) {
           createErrorHadler(commit)(err)
         }
@@ -39,17 +39,17 @@ export const logout = () => {
   window.location.reload()
 }
 
-export const getEditions = ({ commit, state }, editionIds) => {
+export const getNewspapers = ({ commit, state }, newspaperIds) => {
   return Promise.all(
-    editionIds
-      // HACK: check for periodicity => edition is fully loaded (not just name and title), TODO do not save partialy loaded into store
-      .filter(id => !(id in state.editions && state.editions.periodicity))
+    newspaperIds
+      // HACK: check for periodicity => newspaper is fully loaded (not just name and title), TODO do not save partialy loaded into store
+      .filter(id => !(id in state.newspapers && state.newspapers.periodicity))
       .map(id =>
-        api.getEditionDetail(id)
+        api.getNewspaperDetail(id)
           .then(resp => {
-            const { edition } = resp
-            commit('edition', edition)
-            return edition
+            const { newspaper } = resp
+            commit('newspaper', newspaper)
+            return newspaper
           })
           .catch(createErrorHadler(commit))
       )
@@ -58,20 +58,20 @@ export const getEditions = ({ commit, state }, editionIds) => {
 
 export const subscribe = ({ commit }, fullName) => {
   commit('invalidateTimeline')
-  return api.subscribeEdition(fullName).then(edition => {
-    commit('edition', edition)
-    commit('addEditionSubscription', fullName)
-    return edition
+  return api.subscribeNewspaper(fullName).then(newspaper => {
+    commit('newspaper', newspaper)
+    commit('addNewspaperSubscription', fullName)
+    return newspaper
   })
   .catch(createErrorHadler(commit))
 }
 
 export const unsubscribe = ({ commit }, fullName) => {
   commit('invalidateTimeline')
-  return api.unsubscribeEdition(fullName).then(edition => {
-    commit('edition', edition)
-    commit('removeEditionSubscription', fullName)
-    return edition
+  return api.unsubscribeNewspaper(fullName).then(newspaper => {
+    commit('newspaper', newspaper)
+    commit('removeNewspaperSubscription', fullName)
+    return newspaper
   })
   .catch(createErrorHadler(commit))
 }
@@ -90,8 +90,8 @@ export const unsubscribeAuthor = ({ commit }, { authorId }) => {
   })
 }
 
-export const editionUpdated = ({ commit }, edition) => {
-  commit('edition', edition)
+export const newspaperUpdated = ({ commit }, newspaper) => {
+  commit('newspaper', newspaper)
 }
 
 export const loadMoreTimeline = ({ commit, state }) => {
@@ -113,53 +113,53 @@ export const expandIssue = ({ commit }, issueId) => {
   commit('expandIssue', issueId)
 }
 
-export const startNewEdtion = ({ commit }, { authorId, edition }) => {
-  return api.createEdition(authorId, edition)
+export const startNewEdtion = ({ commit }, { authorId, newspaper }) => {
+  return api.createNewspaper(authorId, newspaper)
   .then(resp => {
-    const { edition } = resp
-    commit('edition', edition)
-    commit('appendManagedEdition', edition.fullName)
-    return edition
+    const { newspaper } = resp
+    commit('newspaper', newspaper)
+    commit('appendManagedNewspaper', newspaper.fullName)
+    return newspaper
   })
   .catch(createErrorHadler(commit))
 }
 
 export const updateEdtion = ({ commit }, { fullName, fields }) => {
-  return api.updateEdition(fullName, fields)
+  return api.updateNewspaper(fullName, fields)
   .then(resp => {
-    const { edition } = resp
-    commit('edition', edition)
-    return edition
+    const { newspaper } = resp
+    commit('newspaper', newspaper)
+    return newspaper
   })
   .catch(createErrorHadler(commit))
 }
 
 
 
-export const deleteEdition = ({ commit }, edition) => {
-  return api.deleteEdition(edition.fullName)
+export const deleteNewspaper = ({ commit }, newspaper) => {
+  return api.deleteNewspaper(newspaper.fullName)
   .then(() => {
-    commit('removeEdition', edition.fullName)
+    commit('removeNewspaper', newspaper.fullName)
   })
   .catch(createErrorHadler(commit))
 }
 
-export const addToBacklog = ({ commit }, { edition, post }) => {
-  return api.addToBacklog(edition.fullName, post.id)
+export const addToBacklog = ({ commit }, { newspaper, post }) => {
+  return api.addToBacklog(newspaper.fullName, post.id)
   // TODO to have better user experience, post can be added immediately
   // and reverted when api call fails
   .then(() => {
-    commit('backlogAdd', { editionId: edition.fullName, postId: post.id })
+    commit('backlogAdd', { newspaperId: newspaper.fullName, postId: post.id })
   })
   .catch(createErrorHadler(commit))
 }
 
-export const removeFromBacklog = ({ commit }, { edition, post }) => {
-  return api.deleteFromBacklog(edition.fullName, post.id)
+export const removeFromBacklog = ({ commit }, { newspaper, post }) => {
+  return api.deleteFromBacklog(newspaper.fullName, post.id)
   // TODO to have better user experience, post can be removed immediately
   // and reverted when api call fails
   .then(() => {
-    commit('backlogRemove', { editionId: edition.fullName, postId: post.id })
+    commit('backlogRemove', { newspaperId: newspaper.fullName, postId: post.id })
   })
   .catch(createErrorHadler(commit))
 }

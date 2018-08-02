@@ -1,23 +1,23 @@
 <template>
-  <edition-widget-view>
+  <newspaper-widget-view>
     <picture>
-      <router-link :to="{name: 'edition', params: {author: edition.editor.id, edition: edition.name}}">
-        <img :src="edition.picture" :alt="edition.title" />
+      <router-link :to="{name: 'newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+        <img :src="newspaper.picture" :alt="newspaper.title" />
       </router-link>
     </picture>
 
     <h2>
-      <router-link :to="{name: 'edition', params: {author: edition.editor.id, edition: edition.name}}">{{ edition.title }}</router-link>
+      <router-link :to="{name: 'newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</router-link>
     </h2>
 
-    <p>{{ edition.description }}</p>
+    <p>{{ newspaper.description }}</p>
 
-    <edition-widget--author>
-      <img :src="edition.editor.picture" :alt="edition.editor.name"/>
-      <router-link :to="{name: 'author', params: {author: edition.editor.id}}">{{ edition.editor.name }}</router-link>
-    </edition-widget--author>
+    <newspaper-widget--author>
+      <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
+      <router-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</router-link>
+    </newspaper-widget--author>
 
-    <edition-widget--subscribe>
+    <newspaper-widget--subscribe>
       <button
         v-if="isSubscribed"
         class="is-subscribed"
@@ -34,41 +34,41 @@
       </button>
 
       <p>
-        {{ edition.periodicity.frequency }} {{ edition.periodicity.time }} {{ edition.periodicity.dow }}
+        {{ newspaper.periodicity.frequency }} {{ newspaper.periodicity.time }} {{ newspaper.periodicity.dow }}
         •
-        {{ edition.likes }} subscribers
+        {{ newspaper.likes }} subscribers
         •
-        #{{ edition.issues }}
+        #{{ newspaper.issues }}
       </p>
-    </edition-widget--subscribe>
+    </newspaper-widget--subscribe>
 
-  </edition-widget-view>
+  </newspaper-widget-view>
 </template>
 
 <script>
 import * as api from '@/api'
 
 export default {
-  name: 'EditionWidget',
+  name: 'NewspaperWidget',
 
   props: {
-    edition: Object
+    newspaper: Object
   },
 
   computed: {
     isSubscribed() {
-      return this.edition.fullName in this.$store.state.subscriptions.editions
+      return this.newspaper.fullName in this.$store.state.subscriptions.newspapers
     }
   },
 
   methods: {
     subscribe(ev) {
-      this.$store.dispatch('subscribe', this.edition.fullName)
+      this.$store.dispatch('subscribe', this.newspaper.fullName)
       document.activeElement.blur()
     },
 
     unsubscribe(ev) {
-      this.$store.dispatch('unsubscribe', this.edition.fullName)
+      this.$store.dispatch('unsubscribe', this.newspaper.fullName)
       document.activeElement.blur()
     },
   }
@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style lang="sass">
-edition-widget-view
+newspaper-widget-view
   position: relative
 
   display: flex
@@ -126,7 +126,7 @@ edition-widget-view
     line-height: $baseline * 0.8
 
 //- Author + Periodicity
-edition-widget--author
+newspaper-widget--author
   font-size: $fs--1
   order: 2
   margin: $baseline/2 0
@@ -147,8 +147,8 @@ edition-widget--author
     color: #000
 
 
-//- Subscribe Edition
-edition-widget--subscribe
+//- Subscribe Newspaper
+newspaper-widget--subscribe
   display: block
   padding: $baseline / 2 0 0 0
   order: 4
@@ -158,7 +158,7 @@ edition-widget--subscribe
   @media (max-width: $mobile)
     padding-bottom: $baseline / 4
 
-  //- when edition is subscribed
+  //- when newspaper is subscribed
   button.is-subscribed
     +subscribed-button
 
@@ -179,7 +179,7 @@ edition-widget--subscribe
       .default
         display: none
 
-  //- when edition is ready to be subsribed
+  //- when newspaper is ready to be subsribed
   button.to-subscribe
     +subscribe-button
 

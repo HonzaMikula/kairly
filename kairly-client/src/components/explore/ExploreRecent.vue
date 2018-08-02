@@ -1,17 +1,17 @@
 <template>
   <main>
-    <explore--top-editions>
+    <explore--top-newspapers>
       <h2>Recent Issues</h2>
 
       <div>
         <IssueWidget
           v-for="issue in issues"
-          :key="`${issue.edition.fullName}#${issue.number}`"
+          :key="`${issue.newspaper.fullName}#${issue.number}`"
           :issue="issue"
         />
       </div>
 
-    </explore--top-editions>
+    </explore--top-newspapers>
 
     <section class="explore-recent">
       <h2>Recent Posts</h2>

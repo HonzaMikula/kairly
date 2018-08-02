@@ -1,5 +1,5 @@
 <template>
-  <backlog-add-view v-if="managedEditions.length">
+  <backlog-add-view v-if="managedNewspapers.length">
 
     <button-icon
       v-if="!showText"
@@ -7,25 +7,25 @@
       tabindex="0"
       aria-label="Consider for newspaper"
       v-tooltip.top="'Consider for newspaper'"
-      @click.prevent="showEditions = true">
+      @click.prevent="showNewspapers = true">
     </button-icon>
 
     <button-icon
       v-else
       role="button"
       tabindex="0"
-      @click.prevent="showEditions = true">
+      @click.prevent="showNewspapers = true">
       Consider for newspaper
     </button-icon>
 
     <backlog-add--dropdown
-      v-if="showEditions"
-      v-on-clickaway="() => showEditions = false">
+      v-if="showNewspapers"
+      v-on-clickaway="() => showNewspapers = false">
       <header>For which newspaper?</header>
 
       <section>
         <ul>
-          <li v-for="ed in managedEditions" :key="ed.id" :class="{'is-selected': ed.fullName in containedIn}">
+          <li v-for="ed in managedNewspapers" :key="ed.id" :class="{'is-selected': ed.fullName in containedIn}">
             <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
           </li>
         </ul>
@@ -53,13 +53,13 @@ export default {
 
   data() {
     return {
-      showEditions: false,
+      showNewspapers: false,
 //      backlog: {} // TODO provide initial state
     }
   },
 
   computed: {
-    ...mapGetters(['managedEditions', 'backlog']),
+    ...mapGetters(['managedNewspapers', 'backlog']),
 
     containedIn() {
       return this.backlog[this.post.id] || {}
@@ -67,11 +67,11 @@ export default {
   },
 
   methods: {
-    toggle(edition, ev) {
-      if (edition.fullName in this.containedIn) {
-        this.removeFromBacklog({edition, post: this.post})
+    toggle(newspaper, ev) {
+      if (newspaper.fullName in this.containedIn) {
+        this.removeFromBacklog({newspaper, post: this.post})
       } else {
-        this.addToBacklog({edition, post: this.post})
+        this.addToBacklog({newspaper, post: this.post})
       }
       ev.target.blur()
     },

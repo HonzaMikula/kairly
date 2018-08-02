@@ -2,7 +2,7 @@ export default [
     {
       name: 'Best of Kairly',
       slug: undefined,
-      editions: [
+      newspapers: [
         'janmikula/malostranskenoviny',
         'janmikula/technologicky-denik',
         'janmikula/kairly'
@@ -11,7 +11,7 @@ export default [
     {
       name: 'News',
       slug: 'news',
-      editions: [
+      newspapers: [
         'janmikula/malostranskenoviny',
         'janmikula/technologicky-denik',
       ]
@@ -19,19 +19,19 @@ export default [
     {
       name: 'Politics',
       slug: 'politics',
-      editions: [
+      newspapers: [
         'janmikula/malostranskenoviny'
       ]
     },
     {
       name: 'Sport',
       slug: 'sport',
-      editions: []
+      newspapers: []
     },
     {
       name: 'Technology',
       slug: 'technology',
-      editions: [
+      newspapers: [
         'janmikula/technologicky-denik',
         'janmikula/product-design-weekly'
       ]
@@ -39,7 +39,7 @@ export default [
     {
       name: 'Life',
       slug: 'life',
-      editions: []
+      newspapers: []
     },
     {
       name: 'Most Recent',

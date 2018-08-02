@@ -77,11 +77,11 @@ class ProfileView(View):
 
         return JsonResponse({
             "user": request.user.to_json(private=True),
-            "editions": newspapers,
+            "newspapers": newspapers,
             "backlog": backlog,
             "subscriptions": {
                 "authors": subscribed_authors,
-                "editions": subscribed_newspapers,
+                "newspapers": subscribed_newspapers,
             }
         })
 

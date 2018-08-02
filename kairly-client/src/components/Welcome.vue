@@ -35,7 +35,7 @@
 
 
     <template v-if="!loading">
-      <Issue :issue="issue" :subscription="edition.subscription" />
+      <Issue :issue="issue" :subscription="newspaper.subscription" />
 
       <router-link to="/explore">Start exploring</router-link>
     </template>
@@ -58,14 +58,14 @@ export default {
   data() {
     return {
       loading: true,
-      edition: null,
+      newspaper: null,
       issue: null,
     }
   },
 
   created() {
-    api.getEditionDetail('janmikula/kairly', 1).then(resp => {
-      this.edition = resp.edition
+    api.getNewspaperDetail('janmikula/kairly', 1).then(resp => {
+      this.newspaper = resp.newspaper
       this.issue = resp.issue
       this.loading = false
     })
@@ -74,7 +74,7 @@ export default {
 </script>
 
 <style lang="sass">
-//- Welcome Edition
+//- Welcome Newspaper
 timeline-welcome
   > a
     +subscribed-button
