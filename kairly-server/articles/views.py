@@ -12,7 +12,7 @@ from django.utils.text import slugify
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
 from users.models import User
-from .models import (Edition, EditionIssue, EditionBacklog,
+from .models import (Newspaper, EditionIssue, EditionBacklog,
                      Post, Subscription, SubscriptionToAuthor, Topic)
 from .period import parse_periodicity
 
@@ -49,7 +49,7 @@ def recent_issues(request):
     edition_ids = [issue.edition_id for issue in issues]
     editions = {
         edition.id: edition for edition in
-        annotate_editions(request, Edition.objects.filter(id__in=edition_ids))
+        annotate_editions(request, Newspaper.objects.filter(id__in=edition_ids))
     }
 
     resp = []
@@ -76,7 +76,7 @@ def delete_edition(request, edition):
 class EditionView(View):
     @ajax_login_required
     def get(self, request, username, newspapeper_slug):
-        edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
+        edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
         edition.issues = edition.editionissue_set.count()
         edition.likes = edition.subscription_set.count()
@@ -97,7 +97,7 @@ class EditionView(View):
 
     @ajax_login_required
     def patch(self, request, username, newspapeper_slug):
-        edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
+        edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         payload = json.loads(request.body.decode('utf-8'))
 
         if edition.editor_id != request.user.id:
@@ -130,7 +130,7 @@ class EditionView(View):
 
     @ajax_login_required
     def delete(self, request, username, newspapeper_slug):
-        edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
+        edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
         if edition.editor_id != request.user.id:
             return HttpResponseForbidden()
@@ -144,7 +144,7 @@ def author(request, username):
     author, topic = get_user_and_topic(username)
     topics = {t.slug: t for t in Topic.objects.filter(author=author)}
 
-    editions = Edition.objects.filter(editor=author).order_by('-likes')
+    editions = Newspaper.objects.filter(editor=author).order_by('-likes')
     data = {
         'author': author.to_json(topic=topic),
         'editions': [e.to_json() for e in annotate_editions(request, editions)],
@@ -179,7 +179,7 @@ def author_posts(request, username):
 
 @ajax_login_required
 def backlog(request, username, newspapeper_slug):
-    edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
+    edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if edition.editor_id != request.user.id:
         return HttpResponseForbidden()
 
@@ -223,7 +223,7 @@ def backlog(request, username, newspapeper_slug):
 @ajax_login_required
 @require_POST
 def backlog_publish(request, username, newspapeper_slug):
-    edition = get_object_or_404(Edition, editor__username=username, slug=newspapeper_slug)
+    edition = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if edition.editor_id != request.user.id:
         return HttpResponseForbidden()
 
@@ -247,7 +247,7 @@ def backlog_publish(request, username, newspapeper_slug):
 @require_POST
 def subscribe(request, username, newspapeper_slug):
     author, _ = get_user_and_topic(username)
-    edition = get_object_or_404(Edition, editor=author, slug=newspapeper_slug)
+    edition = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
     Subscription.objects.create(user=request.user, edition=edition)
 
     # TODO return user subscription instead
@@ -260,7 +260,7 @@ def subscribe(request, username, newspapeper_slug):
 @require_POST
 def unsubscribe(request, username, newspapeper_slug):
     author, _ = get_user_and_topic(username)
-    edition = get_object_or_404(Edition, editor=author, slug=newspapeper_slug)
+    edition = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
     Subscription.objects.filter(user=request.user, edition=edition).delete()
 
     # TODO return user subscription instead
@@ -361,12 +361,12 @@ def start_newspaper(request, username):
     base_slug = slugify(title)
     slug = base_slug
     slug_suffix = 1
-    while Edition.objects.filter(editor=author, slug=slug).exists():
+    while Newspaper.objects.filter(editor=author, slug=slug).exists():
         slug_suffix += 1
         slug = '{}-{}'.format(base_slug, slug_suffix)
 
     image = file_from_data_uri(payload['image'], "{}-{}".format(author.username, base_slug))
-    edition = Edition.objects.create(
+    edition = Newspaper.objects.create(
         title=title,
         slug=slug,
         description=description,

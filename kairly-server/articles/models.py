@@ -116,7 +116,7 @@ class Post(models.Model):
         return result
 
 
-class Edition(models.Model, PeriodMixin):
+class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
     slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
@@ -155,7 +155,7 @@ class Edition(models.Model, PeriodMixin):
 
 
 class EditionBacklog(models.Model):
-    edition = models.ForeignKey(Edition, models.CASCADE)
+    edition = models.ForeignKey(Newspaper, models.CASCADE)
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
@@ -166,7 +166,7 @@ class EditionIssue(models.Model):
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from edition
     posts = models.ManyToManyField(Post, blank=True, through='EditionIssuePost')
-    edition = models.ForeignKey(Edition, models.CASCADE)
+    edition = models.ForeignKey(Newspaper, models.CASCADE)
 
     class Meta:
         ordering = ('-published',)
@@ -202,7 +202,7 @@ class EditionIssuePost(models.Model):
 
 class Subscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE)
-    edition = models.ForeignKey(Edition, models.CASCADE)
+    edition = models.ForeignKey(Newspaper, models.CASCADE)
 
     class Meta:
         unique_together = (("user", "edition"),)

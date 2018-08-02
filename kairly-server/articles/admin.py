@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Topic, Post, Edition
+from .models import Topic, Post, Newspaper
 
 
 @admin.register(Topic)
@@ -52,8 +52,8 @@ class PostAdmin(admin.ModelAdmin):
 #         return ", ".join(o.name for o in obj.tags.all())
 
 
-@admin.register(Edition)
-class EditionAdmin(admin.ModelAdmin):
+@admin.register(Newspaper)
+class NewspaperAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'period', 'period_time', 'period_dow', 'description')
 
 

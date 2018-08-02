@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.db import transaction
 from django.db.models import Max
 
-from articles.models import Edition, EditionIssue, EditionBacklog, EditionIssuePost
+from articles.models import Newspaper, EditionIssue, EditionBacklog, EditionIssuePost
 from articles.period import PeriodMixin
 
 
@@ -82,7 +82,7 @@ class Command(BaseCommand):
         if verbosity > 1:
             self.stdout.write('Serching for issues to be published at {}'.format(now))
 
-        query = Edition.objects\
+        query = Newspaper.objects\
             .filter(editionbacklog__publish_stamp__isnull=False)\
             .select_related('editor')\
             .distinct()

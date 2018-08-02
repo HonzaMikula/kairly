@@ -22,7 +22,7 @@ from django.views.decorators.http import require_POST
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
-from articles.models import Edition, EditionBacklog, SubscriptionToAuthor
+from articles.models import Newspaper, EditionBacklog, SubscriptionToAuthor
 from articles.period import periodicity_to_json
 from .models import User, Category
 
@@ -51,7 +51,7 @@ class ProfileView(View):
         # TODO reconsider loading  edition and backlog in separate endpoint? maybe it's eventually not good idea
         editions = []
         internal_ids_mapping = {}
-        for edition in Edition.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
+        for edition in Newspaper.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
             full_name = '{}/{}'.format(request.user.username, edition.slug)
             internal_ids_mapping[edition.id] = full_name
             editions.append({
@@ -70,7 +70,7 @@ class ProfileView(View):
             subscribed_authors[author_id] = periodicity_to_json(s)
 
         subscribed_editions = {}
-        query = Edition.objects.filter(subscription__user=request.user).select_related('editor')
+        query = Newspaper.objects.filter(subscription__user=request.user).select_related('editor')
         for edition in query:
             full_name = "{}/{}".format(edition.editor.username, edition.slug)
             subscribed_editions[full_name] = True
