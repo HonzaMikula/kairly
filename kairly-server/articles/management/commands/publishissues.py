@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.db import transaction
 from django.db.models import Max
 
-from articles.models import Newspaper, EditionIssue, EditionBacklog, EditionIssuePost
+from articles.models import Newspaper, Issue, Backlog, IssuePost
 from articles.period import PeriodMixin
 
 
@@ -31,7 +31,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def create_edition_issue(self, edition, now, verbosity, dry_run):
-        mx_num = EditionIssue.objects.filter(edition=edition)\
+        mx_num = Issue.objects.filter(edition=edition)\
             .aggregate(Max('number'))['number__max']
         number = 1 if mx_num is None else mx_num + 1
 
@@ -39,14 +39,14 @@ class Command(BaseCommand):
             self.stdout.write('Creating {} #{}'.format(edition, number))
 
         if not dry_run:
-            issue = EditionIssue.objects.create(
+            issue = Issue.objects.create(
                 number=number,
                 published=now,
                 editor=edition.editor,
                 edition=edition
             )
 
-        backlog_query = EditionBacklog.objects\
+        backlog_query = Backlog.objects\
             .filter(edition=edition, publish_stamp__isnull=False)\
             .order_by('ordering')\
             .select_related('post')
@@ -55,7 +55,7 @@ class Command(BaseCommand):
             if verbosity > 0:
                 self.stdout.write('Adding post {}'.format(backlog.post))
             if not dry_run:
-                EditionIssuePost.objects.create(
+                IssuePost.objects.create(
                     edition=issue, post=backlog.post, ordering=i)
                 backlog.delete()
 

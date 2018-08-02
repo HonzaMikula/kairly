@@ -6,7 +6,7 @@ from django.http import JsonResponse
 
 from users.models import User
 from utils.decorators import ajax_login_required
-from .models import EditionIssue, Post, Newspaper, SubscriptionToAuthor
+from .models import Issue, Post, Newspaper, SubscriptionToAuthor
 
 
 TIMELINE_PAGE_SIZE = 6
@@ -89,7 +89,7 @@ class EditionIssueStream(TimelineStream):
 
     def __iter__(self):
         editions = {e.id: e for e in Newspaper.objects.filter(subscription__user=self.user)}
-        query = EditionIssue.objects.filter(published__lt=self.before, edition_id__in=editions.keys())
+        query = Issue.objects.filter(published__lt=self.before, edition_id__in=editions.keys())
         for issue in QueryIterator(query, self.QUERY_PAGE_SIZE):
             yield EditionIssueItem(issue, editions[issue.edition_id], self.tzinfo)
 

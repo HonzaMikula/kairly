@@ -38,10 +38,10 @@ class PostAdmin(admin.ModelAdmin):
 
 
 # class PostInline(admin.TabularInline):
-#     model = EditionIssuePost
+#     model = IssuePost
 #
 #
-# @admin.register(EditionIssue)
+# @admin.register(Issue)
 # class EditionIssueAdmin(admin.ModelAdmin):
 #     list_display = ('__str__', 'editor', 'published', 'edition')
 #     inlines = [

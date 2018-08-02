@@ -154,18 +154,18 @@ class Newspaper(models.Model, PeriodMixin):
         }
 
 
-class EditionBacklog(models.Model):
+class Backlog(models.Model):
     edition = models.ForeignKey(Newspaper, models.CASCADE)
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
 
 
-class EditionIssue(models.Model):
+class Issue(models.Model):
     number = models.IntegerField()
     published = models.DateTimeField(_('Published'), default=now)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from edition
-    posts = models.ManyToManyField(Post, blank=True, through='EditionIssuePost')
+    posts = models.ManyToManyField(Post, blank=True, through='IssuePost')
     edition = models.ForeignKey(Newspaper, models.CASCADE)
 
     class Meta:
@@ -186,13 +186,13 @@ class EditionIssue(models.Model):
             result["posts"] = [
                 p.to_json(short=True, tzinfo=tzinfo) for p in
                 self.posts.filter(draft=False, published__lt=datetime.now())
-                    .order_by('editionissuepost__ordering', '-published')
+                    .order_by('issuepost__ordering', '-published')
             ]
         return result
 
 
-class EditionIssuePost(models.Model):
-    edition = models.ForeignKey(EditionIssue, on_delete=models.CASCADE)
+class IssuePost(models.Model):
+    edition = models.ForeignKey(Issue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     ordering = models.IntegerField(default=1)
 

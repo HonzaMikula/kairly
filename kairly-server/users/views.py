@@ -22,7 +22,7 @@ from django.views.decorators.http import require_POST
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
-from articles.models import Newspaper, EditionBacklog, SubscriptionToAuthor
+from articles.models import Newspaper, Backlog, SubscriptionToAuthor
 from articles.period import periodicity_to_json
 from .models import User, Category
 
@@ -60,7 +60,7 @@ class ProfileView(View):
             })
 
         backlog = defaultdict(dict)
-        for bl in EditionBacklog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
+        for bl in Backlog.objects.filter(edition_id__in=internal_ids_mapping.keys()):
             backlog[bl.post_id][internal_ids_mapping[bl.edition_id]] = 'C' if bl.publish_stamp is None else 'P'
 
         subscribed_authors = {}
