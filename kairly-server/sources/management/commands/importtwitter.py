@@ -84,16 +84,18 @@ class Command(BaseCommand):
             width = ''
             height = ''
             for name, attrs in m.sizes.items():
-                if attrs['w'] < 576 and attrs['resize'] == 'fit' and (selected_size is None or width < attrs['w']):
-                    selected_size = name
-                    width = attrs['w']
-                    height = attrs['h']
+                if attrs['resize'] == 'fit':
+                    if attrs['w'] < 576 and (selected_size is None or width < attrs['w']):
+                        selected_size = name
+                        width = attrs['w']
+                        height = attrs['h']
 
-            if selected_size:
-                media.append('<img src="{}{}{}" width="{}" height="{}">'.format(
-                    m.media_url_https, ':' if selected_size else '', selected_size,
-                    width, height))
-                content = content.replace(m.url, '')
+            if not selected_size:
+                selected_size = 'small'
+
+            media.append('<img src="{}:{}" width="{}" height="{}">'.format(
+                m.media_url_https, selected_size, width, height))
+            content = content.replace(m.url, '')
 
         for u in status.user_mentions:
             content = content.replace('@' + u.screen_name, '<a href="https://twitter.com/{}" title="{}">@{}</a>'.format(u.screen_name, u.name, u.screen_name))
@@ -136,9 +138,9 @@ class Command(BaseCommand):
 
                 # import pickle
                 # import json
-                # # with open('/mnt/c/Users/farin/w/honzejk.pickle', 'wb') as f:
+                # # with open('/mnt/c/Users/farin/w/robertzaruba.pickle', 'wb') as f:
                 # #     pickle.dump(timeline, f)
-                # with open('/mnt/c/Users/farin/w/honzejk.pickle', 'rb') as f:
+                # with open('/mnt/c/Users/farin/w/robertzaruba.pickle', 'rb') as f:
                 #     timeline = reversed(pickle.load(f))
 
                 for status in timeline:
