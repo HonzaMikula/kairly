@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 pu = urlsplit(u.expanded_url)
 
                 try:
-                    resp = requests.get(u.expanded_url)
+                    resp = requests.get(u.expanded_url, timeout=10)
                     page_title = bs4.BeautifulSoup(resp.content, "lxml").title.text
                     extenrnal_urls.append(
                         '<p class="external-url">'
