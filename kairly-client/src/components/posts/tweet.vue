@@ -43,7 +43,7 @@ timeline-post--tweet
     margin-top: $baseline / 2
     max-width: 100%
 
-  .external-url
+  .external-url, .quoted-status
     margin-top: 5px
     padding: 5px 10px
     background-color: #fafafa
@@ -54,6 +54,13 @@ timeline-post--tweet
   .external-url--netloc
     font-size: $fs--2
     color: #888
+
+  .quoted-status
+    // !!! be aware that external url can be probably also nested inside quoted-status
+    font-size: $fs--1 !important
+
+  .quoted-status--username
+    font-weight: 600
 
 
 </style>
