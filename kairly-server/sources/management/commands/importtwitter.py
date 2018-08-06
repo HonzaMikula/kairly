@@ -58,9 +58,9 @@ class Command(BaseCommand):
 
                 # import pickle
                 # import json
-                # # with open('/mnt/c/Users/farin/w/topolanek.pickle', 'wb') as f:
+                # # with open('/mnt/c/Users/farin/w/jiripehe.pickle', 'wb') as f:
                 # #     pickle.dump(timeline, f)
-                # with open('/mnt/c/Users/farin/w/topolanek.pickle', 'rb') as f:
+                # with open('/mnt/c/Users/farin/w/jiripehe.pickle', 'rb') as f:
                 #     timeline = reversed(pickle.load(f))
 
                 for status in timeline:
@@ -88,22 +88,31 @@ class Command(BaseCommand):
                     title = "{}: {}...".format(twitter_account, status.full_text[:60])
                     content = status.full_text
 
+                    extenrnal_urls = []
+
                     for u in status.urls:
+                        pu = urlsplit(u.expanded_url)
+
                         try:
                             resp = requests.get(u.expanded_url)
                             page_title = bs4.BeautifulSoup(resp.content, "lxml").title.text
-                            parsed_url = urlsplit(u.expanded_url)
-                            replacement = '<p class="external-url">' \
-                                '<a class="external-url--title" href="{}">{}</a><br>' \
-                                '<a class="external-url--netloc" href="{}">{}</a>' \
-                                '</p>'.format(u.expanded_url, page_title, u.expanded_url, parsed_url.netloc)
+                            extenrnal_urls.append(
+                                '<p class="external-url">'
+                                '<a class="external-url--title" href="{}">{}</a><br>'
+                                '<a class="external-url--netloc" href="{}">{}</a>'
+                                '</p>'.format(u.expanded_url, page_title, u.expanded_url, pu.netloc)
+                            )
                         except IOError:
-                            replacement = '<a href="{}">{}</a>'.format(u.expanded_url, u.expanded_url)
+                            page_title = u.expanded_url
 
-                        content = content.replace(u.url, replacement)
+                        link_body = (pu.netloc + pu.path)[:30]
+                        content = content.replace(u.url, '<a href="{}" title="{}">{}</a>'.format(u.expanded_url, page_title, link_body))
 
                     for u in status.user_mentions:
                         content = content.replace('@' + u.screen_name, '<a href="https://twitter.com/{}" title="{}">@{}</a>'.format(u.screen_name, u.name, u.screen_name))
+
+                    if extenrnal_urls:
+                        content = content + '\n'.join(extenrnal_urls)
 
                     args = dict(
                         kind=Post.TWEET,

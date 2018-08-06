@@ -44,16 +44,16 @@ timeline-post--tweet
     max-width: 100%
 
   .external-url
-    margin-top: 10px
-    padding-top: 5px
-    border-top: 1px solid #eee
+    margin-top: 5px
+    padding: 5px 10px
+    background-color: #fafafa
 
   .external-url--title
     font-size: $fs-0
 
   .external-url--netloc
     font-size: $fs--2
-    color: #999
+    color: #888
 
 
 </style>
