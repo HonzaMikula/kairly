@@ -57,9 +57,7 @@ export default {
   data: function () {
     return {
       isAuthorWidgetOpen: false,
-      isReadLaterWidgetOpen: false,
-      isNewspaperWidgetOpen: false,
-      timer: null,
+      timer: null
     }
   },
 

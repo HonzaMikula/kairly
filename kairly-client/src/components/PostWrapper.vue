@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="'post-' + post.type"
+    :is="'post-' + postType"
     :post="post"
     :isSubscribed="isSubscribed"
     :key="post.id"
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import postNewspaper from '@/components/posts/newspaper'
+import postArticle from '@/components/posts/article'
 import postTweet from '@/components/posts/tweet'
 import postPicture from '@/components/posts/picture'
 
@@ -25,9 +25,23 @@ export default {
   props: ['post', 'isSubscribed'],
 
   components: {
-    postNewspaper,
+    postArticle,
     postTweet,
     postPicture,
+  },
+
+  computed: {
+    //- TEMP hack - we can get rid of it after migration
+    postType() {
+      if (this.post.type == 'newspaper') {
+        console.log(this.post.type)
+        return 'article'
+      }
+      else {
+        return this.post.type
+      }
+    }
+
   }
 }
 </script>

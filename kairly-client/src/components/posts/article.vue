@@ -1,8 +1,8 @@
 <template>
   <post :post="post">
-    <timeline-post--newspaper>
+    <timeline-post--article>
       <h2><router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
-      <timeline-post--newspaper--content>
+      <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
         <timeline-post--continue-reading v-if="post.timeRead">
           <div v-if="isSubscribed">
@@ -13,8 +13,8 @@
           </div>
           ({{ post.timeRead }} read)
         </timeline-post--continue-reading>
-      </timeline-post--newspaper--content>
-    </timeline-post--newspaper>
+      </timeline-post--article--content>
+    </timeline-post--article>
 
     <template slot="extendedControls">
       <slot v-if="post.source" name="extendedControls">
@@ -30,7 +30,7 @@
 import post from './post';
 
 export default {
-  name: 'post-newspaper',
+  name: 'post-article',
   props: ["post", "isSubscribed"],
   components: { post }
 }
@@ -38,7 +38,7 @@ export default {
 
 
 <style lang="sass">
-timeline-post--newspaper
+timeline-post--article
   font-family: $ff-serif
 
   //- Title
@@ -59,7 +59,7 @@ timeline-post--newspaper
     color: $c-base
 
 //- Content
-timeline-post--newspaper--content
+timeline-post--article--content
   position: relative
 
   column-count: 3
