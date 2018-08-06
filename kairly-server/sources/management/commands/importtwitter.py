@@ -1,8 +1,11 @@
 import time
 import traceback
 import dateutil.parser
+from urllib.parse import urlsplit
 
 import twitter
+import requests
+import bs4
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -53,12 +56,22 @@ class Command(BaseCommand):
                     trim_user=True
                 )
 
+                # import pickle
+                # import json
+                # # with open('/mnt/c/Users/farin/w/topolanek.pickle', 'wb') as f:
+                # #     pickle.dump(timeline, f)
+                # with open('/mnt/c/Users/farin/w/topolanek.pickle', 'rb') as f:
+                #     timeline = reversed(pickle.load(f))
+
                 for status in timeline:
                     guid = 'twitter|' + status.id_str
 
                     # ignore retweets and replies
                     if status.retweeted_status or status.in_reply_to_status_id:
                         continue
+
+                    # print("-----------------------------")
+                    # print(json.dumps(status.AsDict(), indent=2, ensure_ascii=False))
 
                     source = "https://twitter.com/{}/status/{}".format(twitter_account, status.id_str)
 
@@ -74,8 +87,23 @@ class Command(BaseCommand):
 
                     title = "{}: {}...".format(twitter_account, status.full_text[:60])
                     content = status.full_text
+
                     for u in status.urls:
-                        content = content.replace(u.url, '<a href="{}">{}</a>'.format(u.expanded_url, u.url))
+                        try:
+                            resp = requests.get(u.expanded_url)
+                            page_title = bs4.BeautifulSoup(resp.content, "lxml").title.text
+                            parsed_url = urlsplit(u.expanded_url)
+                            replacement = '<p class="external-url">' \
+                                '<a class="external-url--title" href="{}">{}</a><br>' \
+                                '<a class="external-url--netloc" href="{}">{}</a>' \
+                                '</p>'.format(u.expanded_url, page_title, u.expanded_url, parsed_url.netloc)
+                        except IOError:
+                            replacement = '<a href="{}">{}</a>'.format(u.expanded_url, u.expanded_url)
+
+                        content = content.replace(u.url, replacement)
+
+                    for u in status.user_mentions:
+                        content = content.replace('@' + u.screen_name, '<a href="https://twitter.com/{}" title="{}">@{}</a>'.format(u.screen_name, u.name, u.screen_name))
 
                     args = dict(
                         kind=Post.TWEET,
