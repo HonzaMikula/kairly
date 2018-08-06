@@ -181,6 +181,7 @@ class Issue(models.Model):
             "number": self.number,
             "type": 'newspaper',
             "newspaper": newspaper.to_json(),
+            "time": str(self.published.astimezone(tzinfo))
         }
         if posts:
             result["posts"] = [
