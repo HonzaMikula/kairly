@@ -41,16 +41,24 @@ class Command(BaseCommand):
         for u in status.urls:
             quoted_status_id_str = getattr(status, 'quoted_status_id_str')
             if quoted_status_id_str and u.expanded_url.endswith(quoted_status_id_str):
-                user = self.api.GetUser(user_id=status.quoted_status.user.id_str)
-                user_url = 'https://twitter.com/' + user.screen_name
-                quoted_status_content = (
-                    '<p class="quoted-status">'
-                    '<a class="quoted-status--username" href="{}">{}</a> '
-                    '<a class="quoted-status--userid" href="{}">@{}</a><br>'
-                    '{}'
-                    '</p>'.format(user_url, user.name, user_url, user.screen_name, self.linkify_content(status.quoted_status))
-                )
-                content = content.replace(u.url, '')
+                if status.quoted_status:
+                    user = self.api.GetUser(user_id=status.quoted_status.user.id_str)
+                    user_url = 'https://twitter.com/' + user.screen_name
+                    quoted_status_content = (
+                        '<p class="quoted-status">'
+                        '<a class="quoted-status--username" href="{}">{}</a> '
+                        '<a class="quoted-status--userid" href="{}">@{}</a><br>'
+                        '{}'
+                        '</p>'.format(user_url, user.name, user_url, user.screen_name, self.linkify_content(status.quoted_status))
+                    )
+                    content = content.replace(u.url, '')
+                else:
+                    quoted_status_content = (
+                        '<p class="quoted-status">'
+                        '<em>This Tweet is unavailable.</em>'
+                        '</p>'
+                    )
+                    content = content.replace(u.url, '<a href="{}">{}</a>'.format(u.url, u.url))
             else:
                 pu = urlsplit(u.expanded_url)
 
@@ -127,9 +135,9 @@ class Command(BaseCommand):
 
                 # import pickle
                 # import json
-                # # with open('/mnt/c/Users/farin/w/jiripehe.pickle', 'wb') as f:
+                # # with open('/mnt/c/Users/farin/w/honzejk.pickle', 'wb') as f:
                 # #     pickle.dump(timeline, f)
-                # with open('/mnt/c/Users/farin/w/jiripehe.pickle', 'rb') as f:
+                # with open('/mnt/c/Users/farin/w/honzejk.pickle', 'rb') as f:
                 #     timeline = reversed(pickle.load(f))
 
                 for status in timeline:
