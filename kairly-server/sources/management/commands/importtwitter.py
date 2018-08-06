@@ -84,15 +84,16 @@ class Command(BaseCommand):
             width = ''
             height = ''
             for name, attrs in m.sizes.items():
-                if selected_size is None or (width < attrs['w'] < 576 and attrs['resize'] == 'fit'):
+                if attrs['w'] < 576 and attrs['resize'] == 'fit' and (selected_size is None or width < attrs['w']):
                     selected_size = name
                     width = attrs['w']
                     height = attrs['h']
 
-            media.append('<img src="{}{}{}" width="{}" height="{}">'.format(
-                m.media_url_https, ':' if selected_size else '', selected_size,
-                width, height))
-            content = content.replace(m.url, '')
+            if selected_size:
+                media.append('<img src="{}{}{}" width="{}" height="{}">'.format(
+                    m.media_url_https, ':' if selected_size else '', selected_size,
+                    width, height))
+                content = content.replace(m.url, '')
 
         for u in status.user_mentions:
             content = content.replace('@' + u.screen_name, '<a href="https://twitter.com/{}" title="{}">@{}</a>'.format(u.screen_name, u.name, u.screen_name))
