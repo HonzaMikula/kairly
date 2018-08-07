@@ -117,7 +117,7 @@ class Channel(models.Model):
             headers = {}
             if self.user_agent:
                 headers['User-Agent'] = self.user_agent
-            resp = requests.get(url, headers=headers)
+            resp = requests.get(url, headers=headers, timeout=10)
 
             if resp.encoding == 'ISO-8859-1':
                 # some sources doesn't sent proper encoding header, eg osel.cz or atletika.cz

@@ -79,7 +79,7 @@ class NewspaperIssueItem(TimelineItem):
         )
 
 
-class EditionIssueStream(TimelineStream):
+class NewspaperIssueStream(TimelineStream):
 
     QUERY_PAGE_SIZE = TIMELINE_PAGE_SIZE
 
@@ -196,7 +196,7 @@ def timeline(request):
     issues = []
     stop_on_next = None
     timeline_stream = TimelineStream.merge(
-        EditionIssueStream(request.user, before, request.tzinfo),
+        NewspaperIssueStream(request.user, before, request.tzinfo),
         AuthorsStream(request.user, before, request.tzinfo)
     )
     for item in timeline_stream:
