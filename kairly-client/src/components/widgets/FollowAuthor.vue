@@ -211,12 +211,11 @@ export default {
 
     ul.text
       padding: 0 $baseline/2 $baseline/2 $baseline
-
-      font-size: $fs--2
       line-height: $baseline * 0.75
 
       li
         list-style: disc
+        font-size: $fs--2
 
     li a::after
       content: $fa-var-arrow-right
