@@ -2,7 +2,7 @@
   <post :post="post">
     <timeline-post--tweet>
       <p v-html="post.content.content"></p>
-      <img :src="post.content.picture" v-if="post.content.picture" />
+      <tweet-attachment v-for="item in post.content.attachments" :item="item" :key="item.id || item.href" />
     </timeline-post--tweet>
 
     <template slot="extendedControls">
@@ -18,11 +18,17 @@
 <script>
 
 import post from './post';
+import TweetAttachment from './TweetAttachment'
 
 export default {
   name: 'post-tweet',
+
   props: ["post", "isSubscribed"],
-  components: { post },
+
+  components: {
+    post,
+    TweetAttachment
+  },
 }
 </script>
 
@@ -42,25 +48,4 @@ timeline-post--tweet
     display: block
     margin-top: $baseline / 2
     max-width: 100%
-
-  .external-url, .quoted-status
-    margin-top: 5px
-    padding: 5px 10px
-    background-color: #fafafa
-
-  .external-url--title
-    font-size: $fs-0
-
-  .external-url--netloc
-    font-size: $fs--2
-    color: #888
-
-  .quoted-status
-    // !!! be aware that external url can be probably also nested inside quoted-status
-    font-size: $fs--1 !important
-
-  .quoted-status--username
-    font-weight: 600
-
-
 </style>

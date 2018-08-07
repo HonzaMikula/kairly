@@ -1,3 +1,5 @@
+import json
+import re
 import time
 import traceback
 import dateutil.parser
@@ -31,12 +33,12 @@ class Command(BaseCommand):
             help='Override existing posts',
         )
 
-    def linkify_content(self, status):
+    def get_attachements(self, status):
         content = status.full_text
 
-        extenrnal_urls = []
+        external_urls = []
         media = []
-        quoted_status_content = None
+        quoted_status_item = []
 
         for u in status.urls:
             quoted_status_id_str = getattr(status, 'quoted_status_id_str')
@@ -44,20 +46,23 @@ class Command(BaseCommand):
                 if status.quoted_status:
                     user = self.api.GetUser(user_id=status.quoted_status.user.id_str)
                     user_url = 'https://twitter.com/' + user.screen_name
-                    quoted_status_content = (
-                        '<p class="quoted-status">'
-                        '<a class="quoted-status--username" href="{}">{}</a> '
-                        '<a class="quoted-status--userid" href="{}">@{}</a><br>'
-                        '{}'
-                        '</p>'.format(user_url, user.name, user_url, user.screen_name, self.linkify_content(status.quoted_status))
-                    )
+                    quoted_content, quoted_attachments = self.get_attachements(status.quoted_status)
+                    quoted_status_item = {
+                        'type': 'quoted_status',
+                        'id': quoted_status_id_str,
+                        'user': {
+                            'name': user.name,
+                            'screen_name': user.screen_name,
+                            'url': user_url,
+                        },
+                        'content': quoted_content,
+                        'attachments': quoted_attachments,
+                    }
                     content = content.replace(u.url, '')
                 else:
-                    quoted_status_content = (
-                        '<p class="quoted-status">'
-                        '<em>This Tweet is unavailable.</em>'
-                        '</p>'
-                    )
+                    quoted_status_item = {
+                        'type': 'quoted_status.unavailable'
+                    }
                     content = content.replace(u.url, '<a href="{}">{}</a>'.format(u.url, u.url))
             else:
                 pu = urlsplit(u.expanded_url)
@@ -65,12 +70,12 @@ class Command(BaseCommand):
                 try:
                     resp = requests.get(u.expanded_url, timeout=10)
                     page_title = bs4.BeautifulSoup(resp.content, "lxml").title.text
-                    extenrnal_urls.append(
-                        '<p class="external-url">'
-                        '<a class="external-url--title" href="{}">{}</a><br>'
-                        '<a class="external-url--netloc" href="{}">{}</a>'
-                        '</p>'.format(u.expanded_url, page_title, u.expanded_url, pu.netloc)
-                    )
+                    external_urls.append({
+                        'type': 'url',
+                        'href': u.expanded_url,
+                        'title': page_title,
+                        'host': pu.netloc
+                    })
                 except IOError:
                     page_title = u.expanded_url
 
@@ -80,36 +85,28 @@ class Command(BaseCommand):
                 content = content.replace(u.url, '<a href="{}" title="{}">{}</a>'.format(u.expanded_url, page_title, link_body))
 
         for m in (status.media or []):
-            selected_size = None
-            width = ''
-            height = ''
-            for name, attrs in m.sizes.items():
-                if attrs['resize'] == 'fit':
-                    if attrs['w'] < 576 and (selected_size is None or width < attrs['w']):
-                        selected_size = name
-                        width = attrs['w']
-                        height = attrs['h']
+            item = {
+                'type': 'media.' + m.type,
+                'id': m.id,
+                'src': m.media_url_https,
+                'sizes': m.sizes,
+            }
+            if m.video_info:
+                item['video_info'] = m.video_info
 
-            if not selected_size:
-                selected_size = 'small'
-
-            media.append('<img src="{}:{}" width="{}" height="{}">'.format(
-                m.media_url_https, selected_size, width, height))
+            media.append(item)
             content = content.replace(m.url, '')
 
         for u in status.user_mentions:
-            content = content.replace('@' + u.screen_name, '<a href="https://twitter.com/{}" title="{}">@{}</a>'.format(u.screen_name, u.name, u.screen_name))
+            pattern = re.compile('(@' + re.escape(u.screen_name) + ')', re.IGNORECASE)
+            content = pattern.sub('<a href="https://twitter.com/{}" title="{}">\\1</a>'.format(u.screen_name, u.name), content)
+            # content = content.replace('@' + u.screen_name, )
 
-        if extenrnal_urls:
-            content = content + '\n'.join(extenrnal_urls)
+        attachments = external_urls + media
+        if quoted_status_item:
+            attachments.append(quoted_status_item)
 
-        if media:
-            content = content + '\n'.join(media)
-
-        if quoted_status_content:
-            content = content + quoted_status_content
-
-        return content
+        return content, attachments or None
 
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
@@ -138,9 +135,9 @@ class Command(BaseCommand):
 
                 # import pickle
                 # import json
-                # # with open('/mnt/c/Users/farin/w/robertzaruba.pickle', 'wb') as f:
+                # # with open('/mnt/c/Users/farin/w/etabery.pickle', 'wb') as f:
                 # #     pickle.dump(timeline, f)
-                # with open('/mnt/c/Users/farin/w/robertzaruba.pickle', 'rb') as f:
+                # with open('/mnt/c/Users/farin/w/jiripehe.pickle', 'rb') as f:
                 #     timeline = reversed(pickle.load(f))
 
                 for status in timeline:
@@ -166,7 +163,7 @@ class Command(BaseCommand):
                         continue
 
                     title = "{}: {}...".format(twitter_account, status.full_text[:60])
-                    content = self.linkify_content(status)
+                    content, attachments = self.get_attachements(status)
 
                     args = dict(
                         kind=Post.TWEET,
@@ -176,6 +173,7 @@ class Command(BaseCommand):
                         source=source,
                         title=title,
                         content=content,
+                        attachments=json.dumps(attachments) if attachments else None,
                         author=user
                     )
 

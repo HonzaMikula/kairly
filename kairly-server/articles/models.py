@@ -1,3 +1,4 @@
+import json
 import math
 from datetime import datetime, timezone
 
@@ -59,6 +60,7 @@ class Post(models.Model):
     content = RichTextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
     topics = models.ManyToManyField(Topic)
+    attachments = models.TextField(null=True)
 
     def __str__(self):
         return self.title
@@ -103,8 +105,9 @@ class Post(models.Model):
         elif self.kind == Post.TWEET:
             result['content'] = {
                 'content': self.content,
-                'picture': self.picture,
             }
+            if self.attachments:
+                result['content']['attachments'] = json.loads(self.attachments)
         elif self.kind == Post.NEWSPAPER:
             result['timeRead'] = self.read_time
             result['content'] = {
