@@ -32,7 +32,7 @@ timeline-post--tweet
   margin-bottom: $baseline / 2
 
   font-family: $ff-serif
-  font-size: $fs-1
+  line-height: $baseline * 0.9
 
   a
     color: $c-base
