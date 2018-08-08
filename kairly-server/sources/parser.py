@@ -144,7 +144,7 @@ class ArticleParser:
                 if tail:
                     try:
                         el[i].tail = (el[i].tail or '') + tail
-                    except IndexError:
+                    except (IndexError, TypeError):
                         el.text += tail
             else:
                 self._prune(child)
