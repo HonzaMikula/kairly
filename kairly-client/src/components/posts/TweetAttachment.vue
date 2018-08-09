@@ -1,15 +1,20 @@
 <template>
-  <div>
-    <div v-if="baseType === 'url'" class="external-url">
-      <a class="external-url--title" :href="item.href">{{ item.title }}</a>
-      <a class="external-url--netloc" :href="item.href">{{ item.host }}</a>
-    </div>
+  <tweet-attachment-view>
+    <a v-if="baseType === 'url'"
+       class="external-url"
+       :href="item.href">
+      <h4>{{ item.title }}</h4>
+      <p class="external-url--netloc" :href="item.href">{{ item.host }}</p>
+    </a>
+
     <img v-else-if="item.type == 'media.photo'" :src="`${item.src}:small`" :width="item.sizes.small.w" height="item.sizes.small.h" />
     <video v-else-if="item.type == 'media.animated_gif'" :poster="item.src" :width="item.sizes.small.w" loop autoPlay>
       <source
         :src="item.video_info.variants[0].url"
         :type="item.video_info.variants[0].content_type" />
     </video>
+
+
     <div v-else-if="item.type == 'quoted_status.unavailable'" class="quoted-status">
       <em>This Tweet is unavailable.</em>
     </div>
@@ -21,7 +26,7 @@
       <div v-html="item.content"></div>
       <tweet-attachment v-for="a in item.attachments" :item="a" :key="a.id || a.href"/>
     </div>
-  </div>
+  </tweet-attachment-view>
 </template>
 
 <script>
@@ -42,23 +47,28 @@ export default {
 </script>
 
 <style lang="sass">
-timeline-post--tweet
-  // may be good idea keep old styles for a while because first tweets with
-  // attachments has server side rendered content with hard coded contetn
+tweet-attachment-view
+  display: block
+  margin-top: $baseline / 4
+  margin-bottom: -($baseline/2)
 
-  .external-url, .quoted-status
-    margin-top: 5px
-    padding: 5px 10px
-    background-color: #fafafa
+  font-size: $fs--1
 
-  .external-url--title
-    font-size: $fs-0
+  > a
     display: block
-    line-height: 1.2
+    padding: $baseline/4
+
+    background: #fafafa
+
+    &:hover,
+    &:focus
+      background: #eee
+
+    h4
+      color: #000
 
   .external-url--netloc
-    font-size: $fs--2
-    color: #888
+    color: #999
 
   .quoted-status
     // !!! be aware that external url can be probably also nested inside quoted-status
