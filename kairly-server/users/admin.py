@@ -5,9 +5,9 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 
-from searchableselect.widgets import SearchableSelect
+from dal import autocomplete
 
-from .models import User, Category
+from .models import User, Category, CategoryUser
 
 admin.site.unregister(Group)
 
@@ -37,17 +37,28 @@ class UserAdmin(OriginalUserAdmin):
             return ''
 
 
-class CategoryForm(forms.ModelForm):
+class CategoryUserForm(forms.ModelForm):
+    user = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        widget=autocomplete.ModelSelect2(url='user-autocomplete')
+    )
+
     class Meta:
-        model = Category
-        exclude = ()
-        widgets = {
-            'users': SearchableSelect(model='users.User', search_field='username', limit=20)
-        }
+        model = CategoryUser
+        fields = ('user', 'topic', 'ordering')
+
+
+class CategoryUserInline(admin.TabularInline):
+    model = CategoryUser
+    form = CategoryUserForm
+    extra = 0
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    form = CategoryForm
     list_display = ('name', 'explore_tab', 'ordering')
     search_fields = ('name',)
+
+    inlines = [
+        CategoryUserInline,
+    ]

@@ -27,7 +27,7 @@ class Topic(models.Model):
         unique_together = (("slug", "author"),)
 
     def __str__(self):
-        return self.name
+        return "{}/{}".format(self.author.username, self.name)
 
 
 class Post(models.Model):

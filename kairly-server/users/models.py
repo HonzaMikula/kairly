@@ -129,7 +129,6 @@ class Category(models.Model):
     name = models.CharField(_("Name"), max_length=160)
     explore_tab = models.CharField(_("Explore Tab"), max_length=160)
     ordering = models.IntegerField(_("Ordering"))
-    users = models.ManyToManyField(User)
 
     class Meta:
         ordering = ('explore_tab', 'ordering')
@@ -137,3 +136,18 @@ class Category(models.Model):
 
     def __str__(self):
         return '{} > {}'.format(self.explore_tab, self.name)
+
+
+class CategoryUser(models.Model):
+    category = models.ForeignKey(Category, models.CASCADE)
+    user = models.ForeignKey(User, models.CASCADE)
+    ordering = models.IntegerField(_("Ordering"))
+    topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True)
+
+    class Meta:
+        ordering = ('ordering',)
+
+    def save(self, *args, **kwargs):
+        if self.topic and self.topic.author != self.user:
+            raise ValueError("Topic doesn't match author.")
+        return super().save(*args, **kwargs)

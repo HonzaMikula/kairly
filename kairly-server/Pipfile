@@ -23,7 +23,7 @@ python-dateutil = "*"
 cssselect = "*"
 more-itertools = "*"
 python-twitter = "*"
-django-searchable-select = "*"
+django-autocomplete-light = "*"
 
 [requires]
 python_version = "3.6"

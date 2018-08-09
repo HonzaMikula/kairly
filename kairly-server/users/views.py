@@ -19,12 +19,14 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from dal import autocomplete
+
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
 from articles.models import Newspaper, Backlog, SubscriptionToAuthor
 from articles.period import periodicity_to_json
-from .models import User, Category
+from .models import User, Category, CategoryUser
 
 
 @require_POST
@@ -171,9 +173,10 @@ def change_password(request):
 def explore_tab(request, tab):
     categories = []
     for category in Category.objects.filter(explore_tab=tab):
+        cat_authors = CategoryUser.objects.filter(category=category).select_related('user', 'topic').order_by('ordering')
         categories.append({
             'name': category.name,
-            'authors': [u.to_json() for u in User.objects.filter(category=category)]
+            'authors': [cu.user.to_json(topic=cu.topic) for cu in cat_authors],
         })
 
     if tab == 'Best of Kairly':
@@ -191,3 +194,16 @@ def explore_tab(request, tab):
     return JsonResponse({
         'categories': categories
     })
+
+
+class UserAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            return User.objects.none()
+
+        qs = User.objects.all()
+
+        if self.q:
+            qs = qs.filter(username__istartswith=self.q)
+
+        return qs
