@@ -141,7 +141,7 @@ class Category(models.Model):
 class CategoryUser(models.Model):
     category = models.ForeignKey(Category, models.CASCADE)
     user = models.ForeignKey(User, models.CASCADE)
-    ordering = models.IntegerField(_("Ordering"))
+    ordering = models.IntegerField(_("Ordering"), default=999)
     topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True)
 
     class Meta:
