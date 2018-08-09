@@ -24,7 +24,8 @@
 
 <script>
 
-import post from './post';
+import post from './post'
+import TweetAttachmentGif from './TweetAttachmentGif'
 import TweetAttachmentLink from './TweetAttachmentLink'
 import TweetAttachmentPhoto from './TweetAttachmentPhoto'
 import TweetAttachmentQuote from './TweetAttachmentQuote'
@@ -40,7 +41,8 @@ export default {
     TweetAttachmentLink,
     TweetAttachmentPhoto,
     TweetAttachmentQuote,
-    TweetAttachmentVideo
+    TweetAttachmentVideo,
+    TweetAttachmentGif
   },
 
   computed: {
@@ -50,6 +52,9 @@ export default {
           return "photo"
           break
         case "media.animated_gif":
+          return "gif"
+          break
+        case "media.video":
           return "video"
           break
         case "url":

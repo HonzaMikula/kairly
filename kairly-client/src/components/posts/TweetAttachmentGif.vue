@@ -1,23 +1,23 @@
 <template>
-  <tweet-attachment-video-view>
-    <video v-for="item in items" :key="item.src" :poster="item.src" :width="item.sizes.small.w" controls>
+  <tweet-attachment-gif-view>
+    <video v-for="item in items" :key="item.src" :poster="item.src" :width="item.sizes.small.w" muted loop autoplay>
       <source
         :src="item.video_info.variants[0].url"
         :type="item.video_info.variants[0].content_type" />
     </video>
-  </tweet-attachment-video-view>
+  </tweet-attachment-gif-view>
 </template>
 
 <script>
 export default {
-  name: 'tweet-attachment-video',
+  name: 'tweet-attachment-gif',
 
   props: ["items"],
 }
 </script>
 
 <style lang="sass">
-tweet-attachment-video-view
+tweet-attachment-gif-view
   display: block
   margin-top: $baseline / 2
   margin-bottom: -($baseline/2)
