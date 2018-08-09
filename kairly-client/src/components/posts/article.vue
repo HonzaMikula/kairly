@@ -143,7 +143,7 @@ timeline-post--article--content
     border-top: 1px solid #eee
     color: #999
 
-    font-size: $fs-1
+    text-align: center
 
     p
       text-indent: 0

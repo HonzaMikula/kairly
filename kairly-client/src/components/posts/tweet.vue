@@ -2,7 +2,14 @@
   <post :post="post">
     <timeline-post--tweet>
       <p v-html="post.content.content"></p>
-      <tweet-attachment v-for="item in post.content.attachments" :item="item" :key="item.id || item.href" />
+
+      <component
+        v-if="post.content.attachments"
+        :is="'tweet-attachment-' + attachmentType"
+        :items="post.content.attachments"
+        :key="post.id"
+      />
+
     </timeline-post--tweet>
 
     <template slot="extendedControls">
@@ -17,8 +24,12 @@
 
 <script>
 
-import post from './post';
-import TweetAttachment from './TweetAttachment'
+import post from './post'
+import TweetAttachmentGif from './TweetAttachmentGif'
+import TweetAttachmentLink from './TweetAttachmentLink'
+import TweetAttachmentPhoto from './TweetAttachmentPhoto'
+import TweetAttachmentQuote from './TweetAttachmentQuote'
+import TweetAttachmentVideo from './TweetAttachmentVideo'
 
 export default {
   name: 'post-tweet',
@@ -27,8 +38,34 @@ export default {
 
   components: {
     post,
-    TweetAttachment
+    TweetAttachmentLink,
+    TweetAttachmentPhoto,
+    TweetAttachmentQuote,
+    TweetAttachmentVideo,
+    TweetAttachmentGif
   },
+
+  computed: {
+    attachmentType() {
+      switch (this.post.content.attachments[0].type) {
+        case "media.photo":
+          return "photo"
+          break
+        case "media.animated_gif":
+          return "gif"
+          break
+        case "media.video":
+          return "video"
+          break
+        case "url":
+          return "link"
+          break
+        case "quoted_status":
+          return "quote"
+          break
+      }
+    }
+  }
 }
 </script>
 
@@ -38,14 +75,8 @@ timeline-post--tweet
   margin-bottom: $baseline / 2
 
   font-family: $ff-serif
-  font-size: $fs-1
+  line-height: $baseline * 0.9
 
-  a
+  > p a
     color: $c-base
-
-  //- picture
-  img
-    display: block
-    margin-top: $baseline / 2
-    max-width: 100%
 </style>
