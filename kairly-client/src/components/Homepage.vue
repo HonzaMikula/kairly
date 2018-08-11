@@ -31,7 +31,7 @@
         <h3>Authors</h3>
         <p>
           Authors focus on writing.
-          They are creating high quality articles & tweets.
+          They are creating high quality articles &amp; tweets.
         </p>
       </div>
 
@@ -39,7 +39,7 @@
         <h3>Editors</h3>
         <p>
           Editors run their newspaper.
-          They are selecting the best articles & tweets from authors.
+          They are selecting the best articles &amp; tweets from authors.
         </p>
       </div>
 
@@ -161,12 +161,15 @@ export default {
   },
 
   methods: {
-    login() {
+    async login() {
       this.invalidCredentials = false
       const { username, password } = this
-      api.createToken(username, password)
-      .then(this.getProfile)
-      .catch(err => this.invalidCredentials = true)
+      try {
+        await api.createToken(username, password)
+        await this.getProfile()
+      } catch {
+        this.invalidCredentials = true
+      }
     },
 
     ...mapActions(['getProfile']),
