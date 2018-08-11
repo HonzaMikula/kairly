@@ -4,7 +4,7 @@
       <header>
         <h1>Change Password</h1>
 
-        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
+        <button-close tabindex="0" role="button" @click="closeModal"></button-close>
       </header>
 
       <change-password-view role="dialog" @click.stop>
@@ -25,14 +25,14 @@
       </change-password-view>
 
       <footer>
-        <button @click="submit">Change passoword</button>
+        <button @click="submit">Change password</button>
       </footer>
     </modal-dialog>
   </dialog-window>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import * as api from '@/api'
 
 import DialogWindow from '@/components/modals/Dialog'
@@ -41,7 +41,7 @@ export default {
   name: 'ChangePassword',
 
   props: {
-    'closeModal': Function
+    closeModal: Function
   },
 
   metaInfo: {
@@ -63,16 +63,27 @@ export default {
   computed: mapGetters(['user']),
 
   methods: {
+    ...mapMutations(['showError', 'showSuccess']),
+
     submit() {
       if (this.newPassword1 != this.newPassword2) {
-        alert("Password doesn't match")
+        this.showError("Password doesn't match")
       } else {
+        this.showError(null)
         api.changePassword({
           oldPassword: this.oldPassword,
           newPassword: this.newPassword1
         }).then(() => {
-          // even empty hanler must be here to trigger request
-          // TODO indicate password changed
+          this.showSuccess("Password has been updated.")
+          this.closeModal()
+        }, err => {
+          if (err.status === 400) {
+            this.showError(err.response.body.error)
+          } else if (err.status === 401) {
+            this.showError('Wrong old password.')
+          } else {
+            this.showError((err + '') || 'Request failed')
+          }
         })
       }
     }
