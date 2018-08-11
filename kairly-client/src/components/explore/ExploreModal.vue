@@ -1,18 +1,21 @@
 <template>
-  <dialog-window :onClose="closeModal">
-    <explore-modal-view role="dialog" @click.stop>
-      <h2>{{ category.name }}</h2>
+  <dialog-window :closeModal="closeModal">
+    <modal-dialog role="dialog" class="explore" @click.stop>
+      <header>
+        <h1>{{ category.name }}</h1>
 
-      <button-close tabindex="0" role="button" @click="onClose">X</button-close>
+        <button-close tabindex="0" role="button" @click="closeModal"></button-close>
+      </header>
 
-      <AuthorWidget
-        v-for="author in category.authors"
-        :key="author.id"
-        :author="author"
-      />
+      <explore-modal-view>
 
-
-    </explore-modal-view>
+        <AuthorWidget
+          v-for="author in category.authors"
+          :key="author.id"
+          :author="author"
+        />
+      </explore-modal-view>
+    </modal-dialog>
   </dialog-window>
 </template>
 
@@ -27,7 +30,7 @@ export default {
   name: 'ExploreModal',
 
   props: {
-    onClose: Function,
+    closeModal: Function,
     category: Object,
   },
 
@@ -47,32 +50,14 @@ export default {
 </script>
 
 <style lang="sass">
+modal-dialog.explore
+  max-width: auto
+
 explore-modal-view
   position: relative
 
   padding: $baseline
-  background: #fff
-  max-height: 80vh
-  overflow-y: auto
-
-  button-close
-    font-size: $fs-2
-    font-weight: 600
-    cursor: pointer
-    position: absolute
-    top: 0
-    right: 0
-    width: 60px
-    height: 60px
-    border: 1px solid gray
-    box-sizing: border-box
-    text-align: center
-    display: block
-    padding-top: 15px
-    z-index: 999
-
-    &:hover
-      background: #eee
+  overflow: auto
 
 
 </style>

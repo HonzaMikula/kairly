@@ -109,11 +109,11 @@
       </template>
 
       <portal to="modal" v-if="isCreateNewspaperOpen">
-        <edit-newspaper :onClose="closeModal" :onCreated="newNewspaperCreated"></edit-newspaper>
+        <edit-newspaper :closeModal="closeModal" :onCreated="newNewspaperCreated"></edit-newspaper>
       </portal>
 
       <portal to="modal" v-if="newspaperToEdit">
-        <edit-newspaper :onClose="closeModal" :newspaper="newspaperToEdit"></edit-newspaper>
+        <edit-newspaper :closeModal="closeModal" :newspaper="newspaperToEdit"></edit-newspaper>
       </portal>
     </editor-newspapers-view>
   </app-layout>

@@ -1,7 +1,7 @@
 <template>
   <main>
     <explore--top-newspapers>
-      <h2>Top Newspapers</h2>
+      <h2>{{this.tab.newspapersTitle}}</h2>
 
       <div>
         <NewspaperWidget
@@ -27,7 +27,7 @@
     </section>
 
     <portal to="modal" v-if="showCaregoryInModal">
-      <explore-modal :onClose="closeCategoryModal" :category="showCaregoryInModal" />
+      <explore-modal :closeModal="closeCategoryModal" :category="showCaregoryInModal" />
     </portal>
   </main>
 </template>

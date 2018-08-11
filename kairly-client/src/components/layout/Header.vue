@@ -43,7 +43,7 @@
     </div>
 
     <portal to="modal" v-if="isTutorialOpen">
-      <tutorial-modal :onClose="closeTutorial"></tutorial-modal>
+      <tutorial-modal :closeModal="closeTutorial"></tutorial-modal>
     </portal>
 
   </app-header-view>

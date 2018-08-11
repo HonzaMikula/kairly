@@ -1,25 +1,33 @@
 <template>
-  <dialog-window :onClose="closeModal">
-    <change-password-view role="dialog" @click.stop>
-      <div>
-        <label for="oldPassword">Old password</label>
-        <input id="oldPassword" type="password" v-model="oldPassword">
-      </div>
+  <dialog-window :closeModal="closeModal">
+    <modal-dialog role="dialog" class="change-password" @click.stop>
+      <header>
+        <h1>Change Password</h1>
 
-      <div>
-        <label for="newPassword">New password</label>
-        <input id="newPassword" type="password" v-model="newPassword1">
-      </div>
+        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
+      </header>
 
-      <div>
-        <label for="newPassword2">New password again</label>
-        <input id="newPassword2" type="password" v-model="newPassword2">
-      </div>
+      <change-password-view role="dialog" @click.stop>
+        <div>
+          <label for="oldPassword">Old password</label>
+          <input id="oldPassword" type="password" v-model="oldPassword">
+        </div>
 
-      <button @click="submit">Change Passoword</button>
+        <div>
+          <label for="newPassword">New password</label>
+          <input id="newPassword" type="password" v-model="newPassword1">
+        </div>
 
-      <button-close tabindex="0" role="button" @click="closeModal()">Close</button-close>
-    </change-password-view>
+        <div>
+          <label for="newPassword2">New password again</label>
+          <input id="newPassword2" type="password" v-model="newPassword2">
+        </div>
+      </change-password-view>
+
+      <footer>
+        <button @click="submit">Change passoword</button>
+      </footer>
+    </modal-dialog>
   </dialog-window>
 </template>
 
@@ -33,11 +41,11 @@ export default {
   name: 'ChangePassword',
 
   props: {
-    'onClose': Function
+    'closeModal': Function
   },
 
   metaInfo: {
-    title: 'Change Password'
+    title: 'Change password - Kairly'
   },
 
   components: {
@@ -55,10 +63,6 @@ export default {
   computed: mapGetters(['user']),
 
   methods: {
-    closeModal() {
-      this.onClose()
-    },
-
     submit() {
       if (this.newPassword1 != this.newPassword2) {
         alert("Password doesn't match")
@@ -99,11 +103,12 @@ change-password-view
 
       content: $fa-var-times
 
-
   > div
     dispay: table
     margin-bottom: $baseline
 
+    &:last-of-type
+      margin-bottom: 0
 
     //- label
     label, h3

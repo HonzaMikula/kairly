@@ -68,7 +68,7 @@
       </div>
 
       <portal to="modal" v-if="isChangePasswordOpen">
-        <change-password :onClose="closeChangePassword"></change-password>
+        <change-password :closeModal="closeChangePassword"></change-password>
       </portal>
     </settings-view>
   </app-layout>

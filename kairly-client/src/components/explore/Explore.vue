@@ -4,7 +4,9 @@
       <header>
         <nav>
           <ul>
-            <li v-for="tab in tabs" :key="tab.slug"><router-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</router-link></li>
+            <li v-for="tab in tabs" :key="tab.slug">
+              <router-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</router-link>
+            </li>
           </ul>
         </nav>
         <h1>{{ tab.name }}</h1>
@@ -72,16 +74,16 @@ explore-view
     background-size: cover
 
     @at-root .politics > header
-      background-image: url(https://kairly.com/media/newspapers/uspolitics.jpg)
+      background-image: url(../../assets/explore/uspolitics.jpg)
 
     @at-root .sport > header
-      background-image: url(https://kairly.com/media/newspapers/olymp.jpg)
+      background-image: url(../../assets/explore/olymp.jpg)
 
     @at-root .technology > header
-      background-image: url(https://kairly.com/media/newspapers/bitcoin.jpg)
+      background-image: url(../../assets/explore/bitcoin.jpg)
 
-    @at-root .lifestyle > header
-      background-image: url(https://www.celiaxmoni.cz/wp-content/uploads/2018/05/222C8379-5FE4-42C4-91B9-4C441AC7AC6F.jpeg)
+    @at-root .lifecd  > header
+      background-image: url(../../assets/explore/life.jpg)
 
     @media (max-width: $mobile)
       height: 200px

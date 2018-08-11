@@ -1,9 +1,10 @@
 
 <template>
-  <dialog-window :onClose="onClose">
+  <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop>
       <header>
         <h1>{{ newspaper ? 'Modify newspaper' : 'Create new newspaper' }}</h1>
+        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
 
       <edit-newspaper-view>
@@ -82,7 +83,7 @@ export default {
 
   props: {
     newspaper: Object,
-    onClose: Function,
+    closeModal: Function,
     onCreated: Function
   },
 
@@ -168,7 +169,7 @@ export default {
         }).then(this.onCreated)
       }
 
-      this.onClose()
+      this.closeModal()
     },
 
     ...mapActions(['startNewEdtion', 'updateEdtion'])
