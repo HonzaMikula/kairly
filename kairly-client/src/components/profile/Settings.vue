@@ -121,7 +121,8 @@ export default {
 
     updateProfile(payload) {
       api.updateProfile(payload)
-      .then(user => {
+      .then(res => {
+        const user = res.body
         this.updateComponentData(user)
         this.updateUserInStore(user)
         this.showSuccess('Your settings were updated.')

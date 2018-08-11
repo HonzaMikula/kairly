@@ -57,7 +57,7 @@ export default {
           .then(() => window.location = '/')
         },
         ({response}) => {
-          this.error = response.data.error
+          this.error = response.body.error
         }
       )
     }

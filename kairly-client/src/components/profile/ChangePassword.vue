@@ -78,7 +78,7 @@ export default {
           this.closeModal()
         }, err => {
           if (err.status === 400) {
-            this.showError(err.response.data.error)
+            this.showError(err.response.body.error)
           } else if (err.status === 401) {
             this.showError('Wrong old password.')
           } else {
