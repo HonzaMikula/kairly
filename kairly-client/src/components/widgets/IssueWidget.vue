@@ -16,16 +16,26 @@
     </issue-widget--author>
 
     <ul>
-      <li v-for="post in issue.posts">
+      <li v-for="post in issue.posts" :key="post.id">
         <router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</router-link>
       </li>
     </ul>
 
     <issue-widget--subscribe>
       <button
-        v-bind:class="{ 'is-subscribed': issue.newspaper.subscription }"
-        v-on:click="subscribe($event)"
-      >{{ issue.newspaper.subscription ? 'Subscribed' : 'Subscribe'}}</button>
+        v-if="isSubscribed"
+        class="is-subscribed"
+        @click="unsubscribe($event)">
+        <span class="default">Subscribed</span>
+        <span class="on-hover">Unsubscribe</span>
+      </button>
+
+      <button
+        v-else
+        class="to-subscribe"
+        @click="subscribe($event)">
+        Subscribe
+      </button>
       <p>
         10 CZK per month
          •
@@ -46,14 +56,21 @@ export default {
     issue: Object
   },
 
+  computed: {
+    isSubscribed() {
+      return this.issue.newspaper.fullName in this.$store.state.subscriptions.newspapers
+    }
+  },
+
   methods: {
     subscribe(ev) {
-      const value = !this.issue.newspaper.subscription
-      this.$store.dispatch('subscribe', {
-        newspaper: this.issue.newspaper,
-        value
-      })
-      ev.target.blur()
+      this.$store.dispatch('subscribe', this.issue.newspaper.fullName)
+      document.activeElement.blur()
+    },
+
+    unsubscribe(ev) {
+      this.$store.dispatch('unsubscribe', this.issue.newspaper.fullName)
+      document.activeElement.blur()
     }
   }
 }
@@ -144,12 +161,36 @@ issue-widget--subscribe
 
   text-align: center
 
-  //- button
-  button
+  //- when newspaper is subscribed
+  button.is-subscribed
+    +subscribed-button
+
+    border-radius: $baseline * 0.5
+    height: $baseline * 1
+    width: 140px
+
+    line-height: $baseline * 1
+
+    .on-hover
+      display: none
+
+    &:hover,
+    &:focus
+      .on-hover
+        display: block
+
+      .default
+        display: none
+
+  //- when newspaper is ready to be subsribed
+  button.to-subscribe
     +subscribe-button
 
-    font-family: $ff-sans
-    font-size: $fs--1
+    border-radius: $baseline * 0.5
+    height: $baseline * 1
+    width: 140px
+
+    line-height: $baseline * 1
 
   //- info
   p

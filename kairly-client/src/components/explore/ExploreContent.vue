@@ -1,7 +1,7 @@
 <template>
   <main>
     <explore--top-newspapers>
-      <h2>Top Newspapers</h2>
+      <h2>{{this.tab.newspapersTitle}}</h2>
 
       <div>
         <NewspaperWidget
@@ -16,11 +16,19 @@
     <section :class="`explore-${index}`" v-for="(category, index) in categories" :key="index">
       <h2>{{ category.name }}</h2>
         <AuthorWidget
-          v-for="author in category.authors"
-          :key="category.id"
+          v-for="author in category.authors.slice(0, 7)"
+          :key="author.id"
           :author="author"
         />
+
+        <button v-if="category.authors.length > 7" @click="openCategoryModal(category)">
+          Show more
+        </button>
     </section>
+
+    <portal to="modal" v-if="showCaregoryInModal">
+      <explore-modal :closeModal="closeCategoryModal" :category="showCaregoryInModal" />
+    </portal>
   </main>
 </template>
 
@@ -30,13 +38,15 @@ import { mapState, mapGetters } from 'vuex'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
+import ExploreModal from '@/components/explore/ExploreModal'
 
 export default {
   name: 'ExploreContent',
 
   components: {
     NewspaperWidget,
-    AuthorWidget
+    AuthorWidget,
+    ExploreModal
   },
 
   props: {
@@ -45,7 +55,8 @@ export default {
 
   data() {
     return {
-      categories: []
+      categories: [],
+      showCaregoryInModal: null
     }
   },
 
@@ -63,6 +74,14 @@ export default {
 
       // TODO nice to have cache result + cache authors in store !
       api.getExploreTab(this.tab.name).then(payload => this.categories = payload.categories)
+    },
+
+    openCategoryModal(category) {
+      this.showCaregoryInModal = category
+    },
+
+    closeCategoryModal() {
+      this.showCaregoryInModal = null
     }
   },
 
@@ -79,4 +98,27 @@ export default {
 </script>
 
 <style lang="sass">
+/* COPY PASTE FROM IssueWrapper.vue */
+
+section button
+  display: table
+  border-radius: $baseline
+  height: $baseline * 1.25
+  padding: 0 $baseline
+  margin: 0 auto
+
+  background: $c-base
+  border: 0
+  color: #fff
+
+  font-family: $ff-sans
+  font-size: $fs--1
+  line-height: $baseline * 1.25
+  cursor: pointer
+
+  &:hover,
+  &:focus
+    background: darken($c-base, 10%)
+
+
 </style>

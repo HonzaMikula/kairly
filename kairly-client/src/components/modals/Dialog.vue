@@ -1,5 +1,5 @@
 <template>
-  <modal-window @click="onClose">
+  <modal-window @click="closeModal">
     <slot></slot>
   </modal-window>
 </template>
@@ -10,7 +10,7 @@ export default {
   name: 'DialogWindowComponent',
 
   props: {
-    onClose: Function
+    closeModal: Function
   }
 }
 </script>
@@ -36,19 +36,19 @@ modal-dialog
   position: relative
 
   display: grid
-  grid-template-rows: $baseline*2 1fr $baseline*2
+  grid-template-rows: $baseline*2 1fr auto
   border-radius: $baseline / 2
-  min-height: 500px
   max-height: 95vh
   overflow: hidden
-  width: 970px
 
   background: #fff
 
   //- Header
   > header
+    display: grid
+    grid-template-columns: 1fr auto
+
     height: $baseline * 2
-    padding: 0 $baseline
 
     background: $c-base
     color: #fff
@@ -56,9 +56,35 @@ modal-dialog
     font-weight: 600
     line-height: $baseline * 2
 
+    //- Dialog title
+    h1
+      padding: 0 $baseline
+
+    //- Close button
+    button-close
+      height: $baseline * 2
+      width: $baseline * 2
+
+      opacity: 0.5
+
+      cursor: pointer
+      text-align: center
+
+      transition: 0.15s opacity
+
+      &:focus,
+      &:hover
+        opacity: 1
+
+
+      &::before
+        +fa-icon()
+
+        content: $fa-var-times
+
   //- Footer
   > footer
-    padding: $baseline/4 $baseline
+    padding: $baseline/2 $baseline
 
     background: #eee
 
@@ -68,10 +94,13 @@ modal-dialog
     button
       +subscribe-button
 
+      border-radius: $baseline * 1.25/2
       height: $baseline * 1.25
 
       background: $c-base
       color: #fff
+
+      line-height: $baseline * 1.25
 
       &:focus,
       &:hover

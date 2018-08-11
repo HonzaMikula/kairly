@@ -173,7 +173,7 @@ def change_password(request):
 def explore_tab(request, tab):
     categories = []
     for category in Category.objects.filter(explore_tab=tab):
-        cat_authors = CategoryUser.objects.filter(category=category).select_related('user', 'topic').order_by('ordering')
+        cat_authors = CategoryUser.objects.filter(category=category).select_related('user', 'topic').order_by('ordering', 'user__name')
         categories.append({
             'name': category.name,
             'authors': [cu.user.to_json(topic=cu.topic) for cu in cat_authors],

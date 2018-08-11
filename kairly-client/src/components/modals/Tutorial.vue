@@ -1,10 +1,13 @@
 <template>
-  <dialog-window :onClose="onClose">
-    <modal-dialog role="dialog" @click.stop>
-      <div v-if="!loading">
+  <dialog-window :closeModal="closeModal" v-if="!loading">
+    <modal-dialog role="dialog" @click.stop class="tutorial">
+      <header>
+        <h1>Tutorial</h1>
+        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
+      </header>
+      <div>
         <Issue :issue="issue" :subscription="newspaper.subscription" />
       </div>
-      <button-close tabindex="0" role="button" @click="onClose">Close</button-close>
     </modal-dialog>
   </dialog-window>
 </template>
@@ -20,7 +23,7 @@ export default {
   name: 'TutorialModalComponent',
 
   props: {
-    onClose: Function
+    closeModal: Function
   },
 
   components: {
@@ -47,28 +50,14 @@ export default {
 </script>
 
 <style lang="sass">
-modal-dialog
+modal-dialog.tutorial
+  min-height: 500px
+  width: 970px
   grid-template-rows: 1fr
 
   > div
     padding-top: $baseline
     max-height: 80vh
     overflow: auto
-
-  //- close button
-  button-close
-    position: absolute
-    top: -$baseline
-    right: 0
-
-    text-transform: lowercase
-    cursor: pointer
-
-    &::before
-      +fa-icon()
-
-      margin-right: $baseline / 4
-
-      content: $fa-var-times
 
 </style>
