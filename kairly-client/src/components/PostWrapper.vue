@@ -34,7 +34,6 @@ export default {
     //- TEMP hack - we can get rid of it after migration
     postType() {
       if (this.post.type == 'newspaper') {
-        console.log(this.post.type)
         return 'article'
       }
       else {

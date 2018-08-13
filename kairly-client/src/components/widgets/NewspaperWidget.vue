@@ -34,7 +34,7 @@
       </button>
 
       <p>
-        {{ newspaper.periodicity.frequency }} {{ newspaper.periodicity.time }} {{ newspaper.periodicity.dow }}
+        {{ periodicity }}
         •
         {{ newspaper.likes }} subscribers
         •
@@ -58,6 +58,15 @@ export default {
   computed: {
     isSubscribed() {
       return this.newspaper.fullName in this.$store.state.subscriptions.newspapers
+    },
+
+    periodicity() {
+      if (this.newspaper.periodicity.frequency == '3x_per_day') {
+        return '3x per day'
+      }
+      else {
+        return `${this.newspaper.periodicity.frequency} ${this.newspaper.periodicity.time} ${this.newspaper.periodicity.dow}`
+      }
     }
   },
 

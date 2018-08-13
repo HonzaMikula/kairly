@@ -56,8 +56,11 @@ modal-dialog.explore
 explore-modal-view
   position: relative
 
-  padding: $baseline
+  padding: $baseline $baseline * 3/4
   overflow: auto
+
+  @media (max-width: $mobile)
+    padding: $baseline / 2 0
 
 
 </style>

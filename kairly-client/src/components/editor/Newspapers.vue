@@ -1,6 +1,8 @@
 <template>
   <app-layout>
-    <editor-newspapers-view>
+    <loading-spinner v-if="loadingNewspapers"></loading-spinner>
+
+    <editor-newspapers-view v-else>
       <editor-newspapers--empty
         v-if="newspapers.length === 0">
 
@@ -164,7 +166,8 @@ export default {
       isMobileMenuOpen: false,
       mobileSwitcher: 1,
       newspaperToEdit: null,
-      selectedNewspaper: null
+      selectedNewspaper: null,
+      loadingNewspapers: true
     }
   },
 
@@ -248,6 +251,7 @@ export default {
         this.selectedNewspaper = resp.newspapers[0]
         this.loadingProfile = false
         this.topics = resp.topics
+        this.loadingNewspapers = false
       })
     },
 

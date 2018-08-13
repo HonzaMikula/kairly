@@ -1,11 +1,12 @@
 <template>
   <app-layout>
-    <newspaper-detail-view>
+    <loading-spinner v-if="loading"></loading-spinner>
 
-      <newspaper-detail--header v-if="!loading">
+    <newspaper-detail-view v-else>
+      <newspaper-detail--header>
         <h1>{{ newspaper.title }}</h1>
 
-        <newspaper-detail--subscribe v-if="!loading">
+        <newspaper-detail--subscribe>
           <button
             v-if="isSubscribed"
             class="is-subscribed"
@@ -25,7 +26,7 @@
         </newspaper-detail--subscribe>
       </newspaper-detail--header>
 
-      <div v-if="!loading">
+      <div>
         <newspaper-detail--info>
           <ul>
             <li class="periodicity">{{ newspaper.periodicity.frequency }} {{ newspaper.periodicity.time }} {{ newspaper.periodicity.dow }}</li>

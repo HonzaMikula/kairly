@@ -1,17 +1,21 @@
 <template>
   <div>
-    <my-authors--empty
-      v-if="authors.length === 0">
-      <h1>No authors</h1>
-      <p>You haven't subscribe to any author yet. On Explore page you can find authors you might like.</p>
-      <router-link to="/explore">Explore authors</router-link>
-    </my-authors--empty>
+    <loading-spinner v-if="loadingAuthors"></loading-spinner>
 
-    <AuthorWidget
-      v-for="author in authors"
-      :key="author.slug"
-      :author="author"
-    />
+    <template v-else>
+      <my-authors--empty
+        v-if="authors.length === 0">
+        <h1>No authors</h1>
+        <p>You haven't subscribe to any author yet. On Explore page you can find authors you might like.</p>
+        <router-link to="/explore">Explore authors</router-link>
+      </my-authors--empty>
+
+      <AuthorWidget
+        v-for="author in authors"
+        :key="author.slug"
+        :author="author"
+      />
+    </template>
   </div>
 </template>
 
@@ -34,7 +38,8 @@ export default {
 
   data() {
     return {
-      authors: []
+      authors: [],
+      loadingAuthors: true
     }
   },
 
@@ -53,7 +58,10 @@ export default {
     // TODO cache authors in state same as edtions are currently cached
     Promise.all(
       this.authorIds.map(id => api.getAuthorDetail(id).then(resp => resp.author))
-    ).then(authors => this.authors = authors )
+    ).then(authors => {
+      this.authors = authors
+      this.loadingAuthors = false
+    })
   }
 }
 </script>

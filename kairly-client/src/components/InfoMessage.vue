@@ -19,7 +19,7 @@ info-message-view
   position: fixed
   left: 50%
   bottom: $baseline
-  z-index: 100000
+  z-index: 9999999999
 
   display: table
   border-radius: $baseline / 4

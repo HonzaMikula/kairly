@@ -34,6 +34,7 @@ modal-window
 //- Dialog Window
 modal-dialog
   position: relative
+  z-index: 99999999999
 
   display: grid
   grid-template-rows: $baseline*2 1fr auto

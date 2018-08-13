@@ -2,13 +2,15 @@
   <app-view>
     <loading-spinner v-if="loadingUser"></loading-spinner>
 
-    <router-view v-if="(user || $route.meta.public) && !loadingUser"></router-view>
-    <Homepage v-else></Homepage>
+    <template v-else>
+      <router-view v-if="(user || $route.meta.public) && !loadingUser"></router-view>
+      <Homepage v-else></Homepage>
 
-    <portal-target name="modal" slim></portal-target>
+      <portal-target name="modal" slim></portal-target>
 
-    <info-message v-if="errorMessage" type="error">{{ errorMessage }}</info-message>
-    <info-message v-if="successMessage" type="success">{{ successMessage }}</info-message>
+      <info-message v-if="errorMessage" type="error">{{ errorMessage }}</info-message>
+      <info-message v-if="successMessage" type="success">{{ successMessage }}</info-message>
+    </template>
   </app-view>
 </template>
 
