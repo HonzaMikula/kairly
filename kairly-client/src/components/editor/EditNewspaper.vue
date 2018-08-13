@@ -1,4 +1,3 @@
-
 <template>
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop>
