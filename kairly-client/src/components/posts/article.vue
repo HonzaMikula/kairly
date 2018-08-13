@@ -192,6 +192,9 @@ timeline-post--article--content
 
   //-- pictures
   figure
+    display: table
+
+    break-inside: avoid
     text-align: center
 
     figcaption, p
@@ -199,7 +202,7 @@ timeline-post--article--content
 
       font-family: $ff-sans
       font-size: $fs--2
-      line-height: $baseline * 0.9
+      line-height: $baseline * 0.8
 
   //-- table
   table

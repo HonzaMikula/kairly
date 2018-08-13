@@ -364,7 +364,7 @@ post-detail--perex
 
       font-family: $ff-sans
       font-size: $fs--2
-      line-height: $baseline * 0.9
+      line-height: $baseline * 0.8
 
   //-- table
   table
