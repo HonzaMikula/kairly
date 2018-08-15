@@ -353,7 +353,7 @@ author-detail--newspapers
   @media (max-width: $mobile)
     padding: $baseline / 4
 
-  h2
+  > h2
     margin-bottom: $baseline / 2
 
     font-family: $ff-serif

@@ -10,7 +10,11 @@
       <router-link :to="{name: 'newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</router-link>
     </h2>
 
-    <p>{{ newspaper.description }}</p>
+    <time>{{ periodicity }}</time>
+
+    <p>
+      {{ newspaper.description }}
+    </p>
 
     <newspaper-widget--author>
       <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
@@ -34,11 +38,9 @@
       </button>
 
       <p>
-        {{ periodicity }}
+        #{{ newspaper.issues }}
         •
         {{ newspaper.likes }} subscribers
-        •
-        #{{ newspaper.issues }}
       </p>
     </newspaper-widget--subscribe>
 
@@ -55,6 +57,12 @@ export default {
     newspaper: Object
   },
 
+  data() {
+    return {
+      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    }
+  },
+
   computed: {
     isSubscribed() {
       return this.newspaper.fullName in this.$store.state.subscriptions.newspapers
@@ -62,10 +70,13 @@ export default {
 
     periodicity() {
       if (this.newspaper.periodicity.frequency == '3x_per_day') {
-        return '3x per day'
+        return 'Daily at 6:00, 12:00 and 18:00'
+      }
+      else if (this.newspaper.periodicity.frequency == 'daily') {
+        return `Daily at ${this.newspaper.periodicity.time}`
       }
       else {
-        return `${this.newspaper.periodicity.frequency} ${this.newspaper.periodicity.time} ${this.newspaper.periodicity.dow}`
+        return `Every ${this.DAYS[this.newspaper.periodicity.dow -1]} at ${this.newspaper.periodicity.time}`
       }
     }
   },
@@ -124,10 +135,21 @@ newspaper-widget-view
     a
       color: #000
 
+  //- periodicity
+  > time
+    order: 4
+    margin-bottom: $baseline / 4
+
+    color: #777
+
+    font-size: $fs--2
+    font-weight: 600
+    line-height: $baseline * 0.8
+
   //- description
   > p
     flex: 1
-    order: 4
+    order: 5
 
     color: #777
 
@@ -160,7 +182,7 @@ newspaper-widget--author
 newspaper-widget--subscribe
   display: block
   padding: $baseline / 2 0 0 0
-  order: 4
+  order: 6
 
   text-align: center
 
