@@ -6,7 +6,7 @@ export default [
       newspapers: [
         'janmikula/malostranskenoviny',
         'janmikula/technologicky-denik',
-        'janmikula/kairly'
+        'janmikula/product-design-weekly'
       ]
     },
     {
