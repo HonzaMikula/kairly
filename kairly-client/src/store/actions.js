@@ -60,7 +60,17 @@ export const subscribe = ({ commit }, fullName) => {
   commit('invalidateTimeline')
   return api.subscribeNewspaper(fullName).then(newspaper => {
     commit('newspaper', newspaper)
-    commit('addNewspaperSubscription', fullName)
+    commit('addNewspaperSubscription', {
+      fullName,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Subscribe newspaper',
+            eventAction: fullName
+          }]
+        ]
+      }
+    })
     return newspaper
   })
   .catch(createErrorHadler(commit))
@@ -70,7 +80,17 @@ export const unsubscribe = ({ commit }, fullName) => {
   commit('invalidateTimeline')
   return api.unsubscribeNewspaper(fullName).then(newspaper => {
     commit('newspaper', newspaper)
-    commit('removeNewspaperSubscription', fullName)
+    commit('removeNewspaperSubscription', {
+      fullName,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Unsubscribe newspaper',
+            eventAction: fullName
+          }]
+        ]
+      }
+    })
     return newspaper
   })
   .catch(createErrorHadler(commit))
@@ -79,14 +99,36 @@ export const unsubscribe = ({ commit }, fullName) => {
 export const subscribeAuthor = ({ commit }, { authorId, periodicity }) => {
   commit('invalidateTimeline')
   return api.subscribeAuthor(authorId, periodicity).then(() => {
-    commit('addAuthorSubscription', { authorId, periodicity })
+    commit('addAuthorSubscription', {
+      authorId,
+      periodicity,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Subscribe author',
+            eventAction: periodicity.frequency,
+            eventLabel: authorId
+          }]
+        ]
+      }
+    })
   })
 }
 
 export const unsubscribeAuthor = ({ commit }, { authorId }) => {
   commit('invalidateTimeline')
   return api.unsubscribeAuthor(authorId).then(() => {
-    commit('removeAuthorSubscription', { authorId })
+    commit('removeAuthorSubscription', {
+      authorId,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Subscribe author',
+            eventAction: authorId
+          }]
+        ]
+      }
+    })
   })
 }
 
@@ -110,7 +152,17 @@ export const invalidateTimeline = ({ commit }) => {
 }
 
 export const expandIssue = ({ commit }, issueId) => {
-  commit('expandIssue', issueId)
+  commit('expandIssue', {
+    issueId,
+    meta: {
+      analytics: [
+        ['event', {
+          eventCategory: 'Show more (issue)',
+          eventAction: issueId
+        }]
+      ]
+    }
+  })
 }
 
 export const startNewEdtion = ({ commit }, { authorId, newspaper }) => {
@@ -118,7 +170,17 @@ export const startNewEdtion = ({ commit }, { authorId, newspaper }) => {
   .then(resp => {
     const { newspaper } = resp
     commit('newspaper', newspaper)
-    commit('appendManagedNewspaper', newspaper.fullName)
+    commit('appendManagedNewspaper', {
+      newspaper,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Start newspaper',
+            eventAction: newspaper.fullName
+          }]
+        ]
+      }
+    })
     return newspaper
   })
   .catch(createErrorHadler(commit))
@@ -128,7 +190,17 @@ export const updateEdtion = ({ commit }, { fullName, fields }) => {
   return api.updateNewspaper(fullName, fields)
   .then(resp => {
     const { newspaper } = resp
-    commit('newspaper', newspaper)
+    commit('newspaper', {
+      newspaper,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Update newspaper',
+            eventAction: newspaper.fullName
+          }]
+        ]
+      }
+    })
     return newspaper
   })
   .catch(createErrorHadler(commit))
@@ -139,7 +211,17 @@ export const updateEdtion = ({ commit }, { fullName, fields }) => {
 export const deleteNewspaper = ({ commit }, newspaper) => {
   return api.deleteNewspaper(newspaper.fullName)
   .then(() => {
-    commit('removeNewspaper', newspaper.fullName)
+    commit('removeNewspaper', {
+      newspaper,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Delete newspaper',
+            eventAction: newspaper.fullName
+          }]
+        ]
+      }
+    })
   })
   .catch(createErrorHadler(commit))
 }
@@ -149,7 +231,18 @@ export const addToBacklog = ({ commit }, { newspaper, post }) => {
   // TODO to have better user experience, post can be added immediately
   // and reverted when api call fails
   .then(() => {
-    commit('backlogAdd', { newspaperId: newspaper.fullName, postId: post.id })
+    commit('backlogAdd', {
+      newspaperId: newspaper.fullName,
+      postId: post.id,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Consider for newspaper',
+            eventAction: newspaper.fullName
+          }]
+        ]
+      }
+   })
   })
   .catch(createErrorHadler(commit))
 }
@@ -159,7 +252,18 @@ export const removeFromBacklog = ({ commit }, { newspaper, post }) => {
   // TODO to have better user experience, post can be removed immediately
   // and reverted when api call fails
   .then(() => {
-    commit('backlogRemove', { newspaperId: newspaper.fullName, postId: post.id })
+    commit('backlogRemove', {
+      newspaperId: newspaper.fullName,
+      postId: post.id,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Stop considering for newspaper',
+            eventAction: newspaper.fullName
+          }]
+        ]
+      }
+    })
   })
   .catch(createErrorHadler(commit))
 }

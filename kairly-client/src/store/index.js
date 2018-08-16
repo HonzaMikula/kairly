@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as actions from './actions'
+import { analyticsMiddleware } from 'vue-analytics'
 
 Vue.use(Vuex)
 
@@ -67,10 +68,10 @@ export default new Vuex.Store({
     subscriptions(state, subscriptions) {
       state.subscriptions = subscriptions
     },
-    addNewspaperSubscription(state, fullName) {
+    addNewspaperSubscription(state, {fullName}) {
       Vue.set(state.subscriptions.newspapers, fullName, true)
     },
-    removeNewspaperSubscription(state, fullName) {
+    removeNewspaperSubscription(state, {fullName}) {
       Vue.delete(state.subscriptions.newspapers, fullName)
     },
     addAuthorSubscription(state, { authorId, periodicity }) {
@@ -82,21 +83,21 @@ export default new Vuex.Store({
     managedNewspapers(state, newspaperIds) {
       state.profile.managedNewspapers = newspaperIds
     },
-    appendManagedNewspaper(state, newspaperId) {
-      state.profile.managedNewspapers.push(newspaperId)
+    appendManagedNewspaper(state, {newspaper}) {
+      state.profile.managedNewspapers.push(newspaper.fullName)
     },
-    removeNewspaper(state, newspaperId) {
+    removeNewspaper(state, {newspaper}) {
       // remove from managed
-      let idx = state.profile.managedNewspapers.indexOf(newspaperId)
+      let idx = state.profile.managedNewspapers.indexOf(newspaper.fullName)
       if (idx !== -1) {
         state.profile.managedNewspapers.splice(idx, 1)
       }
       // remove from subscribed
-      if (state.subscriptions.newspapers[newspaperId]) {
-        Vue.delete(state.subscriptions.newspapers, newspaperId)
+      if (state.subscriptions.newspapers[newspaper.fullName]) {
+        Vue.delete(state.subscriptions.newspapers, newspaper.fullName)
       }
 
-      Vue.delete(state.newspapers, newspaperId)
+      Vue.delete(state.newspapers, newspaper.fullName)
     },
     newspaper(state, newspaper) {
       state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
@@ -118,7 +119,7 @@ export default new Vuex.Store({
       state.timeline.loading = false
       state.timeline.expandedIssues = {}
     },
-    expandIssue(state, issueId) {
+    expandIssue(state, { issueId }) {
       state.timeline.expandedIssues = {
         ...state.timeline.expandedIssues,
         [issueId]: true
@@ -145,5 +146,8 @@ export default new Vuex.Store({
   },
 
   actions,
-  strict: process.env.NODE_ENV !== 'production'
+  strict: process.env.NODE_ENV !== 'production',
+  plugins: [
+    analyticsMiddleware
+  ]
 })
