@@ -1,6 +1,5 @@
 <template>
   <backlog-add-view v-if="managedNewspapers.length">
-
     <button-icon
       v-if="!showText"
       role="button"
@@ -109,8 +108,13 @@ backlog-add--dropdown
   li
     a::after
       content: $fa-var-check
+      transition: 0.15s opacity
 
     &.is-selected a::after
       opacity: 1 !important
+
+      font-size: $fs-0
+      content: $fa-var-check-circle
+      transition: 0.15s opacity
 
 </style>

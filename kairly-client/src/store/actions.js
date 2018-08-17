@@ -14,7 +14,18 @@ export const getProfile = ({ commit }) => {
     .getProfile()
     .then(
       resp => {
-        commit('user', resp.user)
+        const { user } = resp
+        commit('user', {
+          user,
+          meta: {
+            analytics: [
+              ['event', {
+                eventCategory: 'User visit',
+                eventAction: user.name
+              }]
+            ]
+          }
+        })
         commit('backlog', resp.backlog)
         resp.newspapers.forEach(newspaper => commit('newspaper', newspaper))
         commit('managedNewspapers', resp.newspapers.map(n => n.fullName))
