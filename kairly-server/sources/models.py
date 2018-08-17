@@ -8,6 +8,7 @@ from lxml.etree import tostring
 from bs4 import UnicodeDammit
 
 from django.db import models
+from django.core.cache import cache
 from django.conf import settings
 
 from .parser import ArticleParser
@@ -114,6 +115,23 @@ class Channel(models.Model):
             if html is None:
                 html = entry.description
         else:
+            html = self.fetch_url(url)
+
+        htmltree = lxml.html.fromstring(html)
+        try:
+            # if descrption contains full html, dive into
+            htmltree = htmltree.cssselect("body")[0]
+        except IndexError:
+            pass
+
+        self.fix_relative_links(htmltree, parsed_url)
+        parser = ArticleParser(self.parser)
+        return parser.parse(htmltree)
+
+    def fetch_url(self, url):
+        cache_key = 'url-' + url
+        html = cache.get(cache_key)
+        if html is None:
             headers = {}
             if self.user_agent:
                 headers['User-Agent'] = self.user_agent
@@ -127,17 +145,8 @@ class Channel(models.Model):
 
             if html is None:
                 html = resp.content.decode(resp.encoding)
-
-        htmltree = lxml.html.fromstring(html)
-        try:
-            # if descrption contains full html, dive into
-            htmltree = htmltree.cssselect("body")[0]
-        except IndexError:
-            pass
-
-        self.fix_relative_links(htmltree, parsed_url)
-        parser = ArticleParser(self.parser)
-        return parser.parse(htmltree)
+            cache.set(cache_key, html, 3600)
+        return html
 
     def is_url_valid(self, url):
         if not self.skip_rules:

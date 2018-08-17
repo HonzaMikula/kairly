@@ -1,69 +1,206 @@
 {% extends "admin/base_site.html" %}
-{% block content %}
+{% block extrahead %}
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 <style>
-#content {
+div#content {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+div#content br, div#footer {
+  display: none;
+}
+
+.preview-page {
+  display: flex;
+  align-items: stretch;
+  height: calc(100vh - 105px);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.preview-rules {
+  width: 400px;
+}
+
+.preview-rules {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.preview-rules .preview-rules-header {
+  display: flex;
+  align-items: center;
+}
+
+.preview-rules .preview-rules-header h2 {
+  flex-grow: 1;
+  padding-left: 10px;
+}
+
+.preview-rules .button-bar {
+  margin-right: 5px;
+}
+
+.preview-rules .button-bar button {
+  background: #417690;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+}
+.preview-rules .preview-disclaimer {
+  margin: 3px 10px;
+  font-style: italic;
+  color: IndianRed;
+}
+
+.preview-rules textarea {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.preview-source {
+  width: 400px;
+  padding: 5px 10px;
+  overflow-y: auto;
+}
+.preview-source ul {
+  margin: 0;
   padding: 0;
 }
+.preview-source ul li {
+  list-style: none;
+  margin: 0 -10px;
+  padding: 3px 10px;
+}
+.preview-source ul li:nth-child(odd) {
+  background: #f0f0f0;
+}
+.preview-source ul li:hover {
+  background: #79aec8;
+}
+.preview-source ul li:hover a {
+  color: white;
+}
 
-.preview-header {
-  padding: 20px;
-  margin-bottom: 20px;
+.preview-content {
+  width: 740px;
+  margin-right: 5px;
+}
+.preview-content-urlbar {
+  padding: 5px 10px;
   background-color: #eee;
-  display: flex;
+  /*border-bottom: 1px solid #eee;*/
+}
+.preview-content-urlbar input {
+  width: 100%;
+  border: 1px solid #777;
+}
+.preview-content-document {
+  overflow-y: scroll;
+  height: 100%;
+  padding: 0 20px 10px 20px;
+}
+.preview-content-document img {
+  height: auto;
+  max-width: 100%;
+}
+.preview-content-document.loading {
+  padding: 60px 0;
+  text-align: center;
+  font-size: 64px;
+  color: gray;
 }
 
-.preview-header .url {
-  flex: 1;
-}
-
-.preview-wrapper {
-  display: flex
-}
-
-.preview {
-  font-family: serif;
-  font-size: 16px;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.preview h1 {
-  font-family: serif;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.html-preview {
-  max-width: 600px;
-}
 
 .hr {
+  margin-top: 20px;
+  position: relative;
+  border-top: 2px dashed black;
+}
+.hr div {
+  width: 140px;
+  margin: 0 auto;
+  background-color: white;
+  position: relative;
+  top: -11px;
   text-align: center;
 }
+
 </style>
+{% endblock %}
 
-<div class="preview-header">
-  <div class="url">
-    Preview of <a href="{{ url }}">{{ url }}</a>
+{% block content %}
+<div class="preview-page">
+  <div class="preview-rules">
+    <div class="preview-rules-header">
+      <h2>{{ channel.name }}</h2>
+      <div class="button-bar">
+        <button class="button-refresh">Refresh</button>
+      </div>
+    </div>
+    <div class="preview-disclaimer">Don't forget copy &amp; paste rules to channel detail and save them there.</div>
+    <textarea>{{ channel.parser }}</textarea>
   </div>
-  {% if next_link %}
-    <a href="{{ next_link }}">Next article</a>
-  {% endif %}
+  <div class="preview-source">
+    <h2>RSS entries</h2>
+    <ul>
+    {% for re in rss_entries %}
+      <li><a href="{{ re.link }}">{{ re.title }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div class="preview-content">
+    <div class="preview-content-urlbar">
+      <input/>
+    </div>
+    <div class="preview-content-document">
+    </div>
+  </div>
 </div>
 
-<div class="preview-wrapper">
-  <article class="preview">
-    <h1>{{ article_title }}</h1>
-    {{ perex|safe }}
-    <div class="hr">--------------- continue reading ---------------</div>
+<script>
+$(function() {
+  const parseRssContent = '{{ channel.parse_content_from_rss }}' === 'True'
+  const $url = $('.preview-content-urlbar input')
+  const $rules = $('.preview-rules textarea')
+  const $doc = $('.preview-content-document')
 
-    {{ content|safe }}
-  </article>
-  {% comment %}
-  <code class="html-preview">
-<pre>{{ source }}</pre>
-  </code>
-  {% endcomment %}
-</div>
+  function refreshPreviw() {
+    if (parseRssContent) {
+      $doc.text("Parse content from RSS is not supported for now.")
+    } else {
+      $doc.text('...').addClass('loading')
+      $doc.load('../render-preview/', {
+        url: $url.val(),
+        parser: $rules.val()
+      }, () => {
+        $doc.removeClass('loading')
+      })
+    }
+  }
 
+  $('.preview-source a').each((i, el) => {
+    $(el).click((ev) => {
+      ev.preventDefault()
+      $url.val($(el).attr('href'))
+      refreshPreviw()
+    })
+  })
+
+  $url.change(refreshPreviw)
+
+  $('.button-refresh').click(refreshPreviw)
+})
+</script>
 {% endblock %}
