@@ -1,6 +1,5 @@
 <template>
   <backlog-add-view v-if="managedNewspapers.length">
-
     <button-icon
       v-if="!showText"
       role="button"

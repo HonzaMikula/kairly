@@ -31,7 +31,7 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    user(state, user) {
+    user(state, { user }) {
       state.profile.user = user
     },
     backlog(state, backlog) {
