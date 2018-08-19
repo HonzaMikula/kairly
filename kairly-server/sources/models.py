@@ -1,3 +1,4 @@
+from os.path import dirname
 from urllib.parse import urlsplit, urlunsplit
 import codecs
 
@@ -178,8 +179,12 @@ class Channel(models.Model):
 
         def fix_attr(el, attr):
             link = el.attrib.get(attr)
-            if link and link.startswith('/') and not link.startswith('//'):
+            if not link or link.startswith('//') or '://' in link:
+                return
+            if link.startswith('/'):
                 el.attrib[attr] = host + link
+            else:
+                el.attrib[attr] = host + dirname(parsed_url.path) + link
 
         for el in htmltree.cssselect('img'):
             fix_attr(el, 'src')
