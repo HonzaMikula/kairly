@@ -51,9 +51,7 @@ class ChannelAdmin(admin.ModelAdmin):
         ]
         return my_urls + urls
 
-    def preview(self, request, channel_id):
-        channel = Channel.objects.get(id=channel_id)
-
+    def get_channel_feed(self, channel):
         cache_key = 'rss-' + channel.rss
         rss_content = cache.get(cache_key)
         if rss_content is None:
@@ -67,7 +65,11 @@ class ChannelAdmin(admin.ModelAdmin):
             rss_content = resp.text
             cache.set(cache_key, rss_content, 120)
 
-        feed = feedparser.parse(rss_content)
+        return feedparser.parse(rss_content)
+
+    def preview(self, request, channel_id):
+        channel = Channel.objects.get(id=channel_id)
+        feed = self.get_channel_feed(channel)
 
         rss_entries = []
         for entry in feed.entries:
@@ -99,7 +101,17 @@ class ChannelAdmin(admin.ModelAdmin):
             user_agent=channel.user_agent,
             parse_content_from_rss=channel.parse_content_from_rss
         )
-        entry = FakeEntry(url)
+
+        if channel.parse_content_from_rss:
+            feed = self.get_channel_feed(channel)
+            for feed_entry in feed.entries:
+                if feed_entry.link.startswith(url):
+                    entry = feed_entry
+                    break
+            else:
+                return HttpResponse('Entry not found in RSS')
+        else:
+            entry = FakeEntry(url)
         perex, content = fake_channel.parse_entry(entry)
 
         document = ''.join([

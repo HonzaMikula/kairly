@@ -121,7 +121,10 @@ div#content br, div#footer {
   font-size: 64px;
   color: gray;
 }
-
+/* reset django styles */
+div#content .preview-content-document  br {
+  display: inline;
+}
 
 .hr {
   margin-top: 20px;
@@ -171,23 +174,18 @@ div#content br, div#footer {
 
 <script>
 $(function() {
-  const parseRssContent = '{{ channel.parse_content_from_rss }}' === 'True'
   const $url = $('.preview-content-urlbar input')
   const $rules = $('.preview-rules textarea')
   const $doc = $('.preview-content-document')
 
   function refreshPreviw() {
-    if (parseRssContent) {
-      $doc.text("Parse content from RSS is not supported for now.")
-    } else {
-      $doc.text('...').addClass('loading')
-      $doc.load('../render-preview/', {
-        url: $url.val(),
-        parser: $rules.val()
-      }, () => {
-        $doc.removeClass('loading')
-      })
-    }
+    $doc.text('...').addClass('loading')
+    $doc.load('../render-preview/', {
+      url: $url.val(),
+      parser: $rules.val()
+    }, () => {
+      $doc.removeClass('loading')
+    })
   }
 
   $('.preview-source a').each((i, el) => {
