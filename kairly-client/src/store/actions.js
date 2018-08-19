@@ -37,7 +37,7 @@ export const getProfile = ({ commit }) => {
         commit('backlog', {})
         commit('managedNewspapers', [])
         commit('subscriptions', { authors: {}, newspapers: {}})
-        if (err.status !== 401) {
+        if (err.status !== 401 && err.message != 'Unauthorized') {
           createErrorHadler(commit)(err)
         }
       }

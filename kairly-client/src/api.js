@@ -1,206 +1,141 @@
-import request from 'superagent'
-
-const API_URI = process.env.VUE_APP_BASE_URI + '/api'
+import axios from 'axios'
 
 let token = localStorage.getItem("token")
-let agent = createAgent(token)
+// TODO validate token validity
 
+axios.defaults.baseURL = process.env.VUE_APP_BASE_URI + '/api'
+axios.defaults.headers.common['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone
 
-function createAgent(token) {
-  let agent = request.agent()
-    .set('X-Timezone', Intl.DateTimeFormat().resolvedOptions().timeZone)
-  if (token) {
-    agent = agent.set('Authorization', 'Bearer ' + token)
-  }
-  return agent
+if (token) {
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 }
 
 export const clearToken = () => {
   localStorage.removeItem("token")
   token = null;
-  agent = null;
+  delete axios.defaults.headers.common['Authorization']
 }
 
-export const createToken = (username, password) => {
-  return request
-    .post(API_URI + '/token')
-    .send({username, password})
-    .then(res => {
-       token = res.body.token
-       localStorage.setItem('token', token)
-       agent = createAgent(token)
-       return token;
-    })
+export const createToken = async (username, password) => {
+  const res = await axios.post('/token', {username, password})
+  token = res.data.token
+  localStorage.setItem('token', token)
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+  return token
 }
 
-export const getProfile = () => {
-  if (!token) return Promise.reject();
-  return agent
-    .get(API_URI + '/profile')
-    .then(res => res.body)
+export const getProfile = async () => {
+  if (!token) throw Error("Unauthorized")
+  const res = await axios.get('/profile')
+  return res.data
 }
 
-export const getTimeline = (cursor) => {
-  if (!token) return Promise.reject();
-  let url = API_URI + '/timeline'
-  if (cursor) {
-    url += '?cursor=' + cursor
-  }
-  return agent
-    .get(url)
-    .then(res => res.body)
+export const getTimeline = async (cursor) => {
+  const res = await axios.get('/timeline', {params: {cursor}})
+  return res.data
 }
 
-export const getNewspaperDetail = (newspaperId, issueId=null) => {
-  if (!token) return Promise.reject();
-  let url = `${API_URI}/newspapers/${newspaperId}`
-  if (issueId) {
-    url += '?issue=' + issueId
-  }
-  return agent
-    .get(url)
-    .then(res => res.body)
+export const getNewspaperDetail = async (newspaperId, issue) => {
+  const res = await axios.get(`/newspapers/${newspaperId}`, {params: {issue}})
+  return res.data
 }
 
-export const getRecentIssues = () => {
-  if (!token) return Promise.reject();
-  let url = API_URI + '/recent/issues'
-  return agent
-    .get(url)
-    .then(res => res.body)
+export const getRecentIssues = async () => {
+  const res = await axios.get('/recent/issues')
+  return res.data
 }
 
-export const getRecentPosts = () => {
-  if (!token) return Promise.reject();
-  let url = API_URI + '/recent/posts'
-  return agent
-    .get(url)
-    .then(res => res.body)
+export const getRecentPosts = async () => {
+  const res = await axios.get('/recent/posts')
+  return res.data
 }
 
-export const getAuthorDetail = (authorId) => {
-  if (!token) return Promise.reject()
-  let req = agent.get(`${API_URI}/authors/${authorId}`)
-  return req.then(res => res.body)
+export const getAuthorDetail = async (authorId) => {
+  const res = await axios.get(`/authors/${authorId}`)
+  return res.data
 }
 
-export const getAuthorPosts = (authorId, cursor) => {
-  if (!token) return Promise.reject()
-  let req = agent.get(`${API_URI}/authors/${authorId}/posts`)
-  if (cursor) { req = req.query({ cursor }) }
-  return req.then(res => res.body)
+export const getAuthorPosts = async (authorId, cursor) => {
+  const res = await axios.get(`/authors/${authorId}/posts`, {params: {cursor}})
+  return res.data
 }
 
-export const getPost = (postId) => {
-  if (!token) return Promise.reject();
-  return agent
-    .get(`${API_URI}/post/${postId}`)
-    .then(res => res.body.post)
+export const getPost = async (postId) => {
+  const res = await axios.get(`/post/${postId}`)
+  return res.data.post
 }
 
-export const subscribeNewspaper = newspaperId => {
-  if (!token) return Promise.reject()
-  return agent
-    .post(`${API_URI}/newspapers/${newspaperId}/subscribe`)
-    .then(res => res.body)
+export const subscribeNewspaper = async (newspaperId) => {
+  const res = await axios.post(`/newspapers/${newspaperId}/subscribe`)
+  return res.data
 }
 
-export const unsubscribeNewspaper = newspaperId => {
-  if (!token) return Promise.reject();
-  return agent
-    .post(`${API_URI}/newspapers/${newspaperId}/unsubscribe`)
-    .then(res => res.body)
+export const unsubscribeNewspaper = async (newspaperId) => {
+   const res = await axios.post(`/newspapers/${newspaperId}/unsubscribe`)
+   return res.data
 }
 
-export const subscribeAuthor = (authorId, periodicity) => {
-  if (!token) return Promise.reject();
-  return agent
-    .post(`${API_URI}/authors/${authorId}/subscribe`)
-    .send(periodicity)
-    .then(res => res.body)
+export const subscribeAuthor = async (authorId, periodicity) => {
+  const res = await axios.post(`/authors/${authorId}/subscribe`, periodicity)
+  return res.data
 }
 
-export const unsubscribeAuthor = authorId => {
-  if (!token) return Promise.reject();
-  return agent
-    .post(`${API_URI}/authors/${authorId}/unsubscribe`)
-    .then(res => res.body)
+export const unsubscribeAuthor = async (authorId) => {
+  const res = await axios.post(`/authors/${authorId}/unsubscribe`)
+  return res.data
 }
 
-export const createNewspaper = (authorId, newspaper) => {
-  //const { title, description, image, period, time, dow } = newspaper
-  if (!token) return Promise.reject();
-  return agent
-    .post(`${API_URI}/authors/${authorId}/start-newspaper`)
-    .send(newspaper)
-    .then(res => res.body)
+export const createNewspaper = async (authorId, newspaper) => {
+  const res = await axios.post(`/authors/${authorId}/start-newspaper`, newspaper)
+  return res.data
 }
 
-export const updateNewspaper = (fullName, fields) => {
-  if (!token) return Promise.reject();
-  return agent
-    .patch(`${API_URI}/newspapers/${fullName}`)
-    .send(fields)
-    .then(res => res.body)
+export const updateNewspaper = async (fullName, fields) => {
+  const res = await axios.patch(`/newspapers/${fullName}`, fields)
+  return res.data
 }
 
-export const deleteNewspaper = newspaperId => {
-  if (!token) return Promise.reject();
-  return agent
-    .delete(`${API_URI}/newspapers/${newspaperId}`)
+export const deleteNewspaper = async (newspaperId) => {
+  const res = await axios.delete(`/newspapers/${newspaperId}`)
+  return res.data
 }
 
-export const getNewspaperBacklog = newspaperId => {
-  if (!token) return Promise.reject();
-  return agent
-    .get(`${API_URI}/newspapers/${newspaperId}/backlog`)
-    .then(res => res.body)
+export const getNewspaperBacklog = async newspaperId => {
+  const res = await axios.get(`/newspapers/${newspaperId}/backlog`)
+  return res.data
 }
 
-export const addToBacklog = (newspaperId, postId) => {
-  if (!token) return Promise.reject();
-  return agent
-    .put(`${API_URI}/newspapers/${newspaperId}/backlog`)
-    .send({post: postId})
+export const addToBacklog = async (newspaperId, postId) => {
+  const res = await axios.put(`/newspapers/${newspaperId}/backlog`, {post: postId})
+  return res.data
 }
 
-export const deleteFromBacklog = (newspaperId, postId) => {
-  if (!token) return Promise.reject();
-  return agent
-    .delete(`${API_URI}/newspapers/${newspaperId}/backlog`)
-    .send({post: postId})
+export const deleteFromBacklog = async (newspaperId, postId) => {
+  const res = await axios.delete(`/newspapers/${newspaperId}/backlog`, { data: {post: postId}})
+  return res.data
 }
 
-export const publishBacklog = (newspaperId, postIds) => {
-  if (!token) return Promise.reject();
-  return agent
-    .post(`${API_URI}/newspapers/${newspaperId}/backlog/publish`)
-    .send(postIds)
+export const publishBacklog = async (newspaperId, postIds) => {
+  const res = await axios.post(`/newspapers/${newspaperId}/backlog/publish`, postIds)
+  return res.data
 }
 
-export const signUp = user => {
-  return agent
-    .post(API_URI + '/signup')
-    .send(user)
+export const signUp = async (user) => {
+  const res = await axios.post('/signup', user)
+  return res.data
 }
 
-export const updateProfile = profile => {
-  if (!token) return Promise.reject();
-  return agent
-    .patch(API_URI + '/profile')
-    .send(profile)
+export const updateProfile = async (profile) => {
+  const res = await axios.patch('/profile', profile)
+  return res.data
 }
 
-export const changePassword = ({oldPassword, newPassword}) => {
-  if (!token) return Promise.reject();
-  return agent
-    .post(API_URI + '/change-password')
-    .send({oldPassword, newPassword})
+export const changePassword = async ({oldPassword, newPassword}) => {
+  const res = await axios.post('/change-password', {oldPassword, newPassword})
+  return res.data
 }
 
-export const getExploreTab = tab => {
-  if (!token) return Promise.reject();
-  return agent
-    .get(`${API_URI}/explore/${tab}`)
-    .then(res => res.body)
+export const getExploreTab = async (tab) => {
+  const res = await axios.get(`/explore/${tab}`)
+  return res.data
 }

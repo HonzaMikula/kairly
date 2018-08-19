@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import request from 'superagent'
 import * as api from '@/api'
 
 import AppLayout from '@/components/layout/AppLayout'
