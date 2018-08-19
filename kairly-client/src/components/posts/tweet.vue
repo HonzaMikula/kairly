@@ -14,7 +14,7 @@
 
     <template slot="extendedControls">
       <slot name="extendedControls">
-        <a :href="post.source" class="tweet" v-tooltip.top="'Original tweet'"></a>
+        <a :href="post.source" class="tweet" v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}" title="Original tweet"></a>
       </slot>
     </template>
 

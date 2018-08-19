@@ -5,7 +5,8 @@
 
       <div v-if="post">
         <post-detail--back-button
-          v-tooltip.right="'Back'"
+          title="Back"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
           v-on:click="$router.go(-1)">
         </post-detail--back-button>
 
@@ -16,7 +17,11 @@
               {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
             </router-link>
 
-            <button-icon class="read-later" v-tooltip.top="'Read Later'"></button-icon>
+            <button-icon
+              class="read-later"
+              title="Read later"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            </button-icon>
           </post-detail--header>
 
           <post-detail--title>

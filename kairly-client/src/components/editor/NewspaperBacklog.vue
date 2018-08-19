@@ -32,22 +32,25 @@
 
           <template slot="controls">
             <button-icon
-              class="up" aria-label="Move post up"
-              v-tooltip.top="'Move post up'"
+              class="up"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              title="Move post up"
               v-show="idx !== 0"
               @click="moveUp(idx)">
             </button-icon>
 
             <button-icon
-              class="down" aria-label="Move post down"
-              v-tooltip.top="'Move post down'"
+              class="down"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              title="Move post down"
               v-show="idx !== published.length - 1"
               @click="moveDown(idx)">
             </button-icon>
 
             <button-icon
-              class="remove" aria-label="Remove from issue"
-              v-tooltip.top="'Remove from issue'"
+              class="remove"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              title="Remove from issue"
               @click.prevent="undoPublish(post)">
             </button-icon>
           </template>
@@ -85,8 +88,8 @@
               <button-icon
                 class="remove"
                 role="button"
-                aria-label="Remove post from considaration"
-                v-tooltip.top.end="'Remove post from considaration'"
+                title="Remove post from considaration"
+                v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
                 @click.prevent="removePost(post)">
               </button-icon>
 

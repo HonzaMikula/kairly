@@ -50,16 +50,16 @@
             <button-icon
               class="edit"
               role="button"
-              aria-label="Edit newspaper"
-              v-tooltip.top.end="'Edit newspaper'"
+              title="Edit newspaper"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               @click="newspaperToEdit = selectedNewspaper">
             </button-icon>
 
             <button-icon
               class="delete"
               role="button"
-              aria-label="Delete newspaper"
-              v-tooltip.top.end="'Delete newspaper'"
+              title="Delete newspaper"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               @click.prevent="confirmDeleteNewspaper">
             </button-icon>
           </div>

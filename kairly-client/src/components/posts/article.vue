@@ -18,7 +18,7 @@
 
     <template slot="extendedControls">
       <slot v-if="post.source" name="extendedControls">
-        <a :href="post.source" class="external-link" v-tooltip.top="'Original article'"></a>
+        <a :href="post.source" class="external-link" v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}" title="Original article"></a>
       </slot>
     </template>
 

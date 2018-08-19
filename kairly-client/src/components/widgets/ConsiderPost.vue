@@ -5,7 +5,8 @@
       role="button"
       tabindex="0"
       aria-label="Consider for newspaper"
-      v-tooltip.top="'Consider for newspaper'"
+      v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+      title="Consider for newspaper"
       @click.prevent="showNewspapers = true">
     </button-icon>
 

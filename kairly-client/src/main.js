@@ -9,7 +9,7 @@ import VueAnalytics from 'vue-analytics'
 import VueKeepScroll from 'vue-keep-scroll'
 import VueMeta from 'vue-meta'
 import VueMoment from 'vue-moment-jalaali'
-import VueTooltip from 'vue-directive-tooltip'
+import { Tooltip } from 'bootstrap-vue/es/directives'
 
 import App from './App'
 import router from './router'
@@ -25,7 +25,7 @@ Vue.use(PortalVue)
 Vue.use(VueKeepScroll)
 Vue.use(VueMoment)
 Vue.use(VueMeta)
-Vue.use(VueTooltip)
+Vue.use(Tooltip);
 
 Vue.use(VueAnalytics, {
   id: 'UA-114180015-1',

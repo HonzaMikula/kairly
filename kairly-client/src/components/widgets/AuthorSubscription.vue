@@ -1,6 +1,10 @@
 <template>
   <author-subscription-view>
-    <a href="" v-on:click.prevent="$refs.followWidget.openSubscribeWidget()" v-tooltip.top.end="'Change the subscription'">
+    <a
+      href=""
+      v-on:click.prevent="$refs.followWidget.openSubscribeWidget()"
+      v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+      title="Change the subscription">
       <template v-if="frequency == '3x_per_day'">
         Daily at <strong>6:00</strong>,
         <strong>12:00</strong> and <strong>18:00</strong>
