@@ -5,9 +5,9 @@
   "author": "Jan Mikula <janm@salsitasoft.com>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --mode development",
-    "local": "vue-cli-service serve --mode local",
-    "build": "vue-cli-service build && mv dist/static/index.html dist/index.html",
+    "serve": "vue-cli-service serve --modern --mode development",
+    "local": "vue-cli-service serve --modern --mode local",
+    "build": "vue-cli-service build --modern && mv dist/static/index.html dist/index.html",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
