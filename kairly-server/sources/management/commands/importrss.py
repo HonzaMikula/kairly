@@ -35,6 +35,7 @@ class Command(BaseCommand):
 
     def import_post(self, channel, entry, options):
         verbosity = options.get('verbosity')
+        force = options.get('force')
 
         url = entry.link.split('#', maxsplit=1)[0]
 
@@ -50,7 +51,7 @@ class Command(BaseCommand):
         except Post.DoesNotExist:
             post = None
 
-        if post and not options.get('force'):
+        if post and not force:
             if verbosity > 1:
                 self.stdout.write('Skipping {}. Already imported'.format(url))
             return post
@@ -58,7 +59,7 @@ class Command(BaseCommand):
         if verbosity > 0:
             self.stdout.write('Importing {}'.format(url))
 
-        perex, content = channel.parse_entry(entry)
+        perex, content = channel.parse_entry(entry, nocache=force)
 
         for attr in ['published', 'date']:
             try:

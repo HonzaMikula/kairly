@@ -1,4 +1,5 @@
 from urllib.parse import urlsplit, urlunsplit
+import codecs
 
 import feedparser
 import requests
@@ -60,8 +61,8 @@ class Channel(models.Model):
             kwargs['agent'] = self.user_agent
         return feedparser.parse(self.rss, **kwargs)
 
-    def parse_entry(self, entry):
-        article = self.parse_article_from_entry(entry)
+    def parse_entry(self, entry, *, nocache=False):
+        article = self.parse_article_from_entry(entry, nocache=nocache)
         htmltree = lxml.html.fromstring(article)
         chars = 0
         perex = []
@@ -92,7 +93,7 @@ class Channel(models.Model):
         content = '' if nocontent else tostring(htmltree, encoding='utf-8').decode('utf-8')
         return perex, content
 
-    def parse_article_from_entry(self, entry):
+    def parse_article_from_entry(self, entry, *, nocache=False):
         parsed_url = urlsplit(entry.link)
         url = urlunsplit(parsed_url[:-1] + ("",))  # strip fragment
         html = None
@@ -115,7 +116,7 @@ class Channel(models.Model):
             if html is None:
                 html = entry.description
         else:
-            html = self.fetch_url(url)
+            html = self.fetch_url(url, nocache=nocache)
 
         htmltree = lxml.html.fromstring(html)
         try:
@@ -128,9 +129,9 @@ class Channel(models.Model):
         parser = ArticleParser(self.parser)
         return parser.parse(htmltree)
 
-    def fetch_url(self, url):
+    def fetch_url(self, url, *, nocache=False):
         cache_key = 'url-' + url
-        html = cache.get(cache_key)
+        html = None if nocache else cache.get(cache_key)
         if html is None:
             headers = {}
             if self.user_agent:
@@ -139,14 +140,28 @@ class Channel(models.Model):
 
             if resp.encoding == 'ISO-8859-1':
                 # some sources doesn't sent proper encoding header, eg osel.cz or atletika.cz
-                ud = UnicodeDammit(resp.content)
-                if ud.unicode_markup:
-                    html = ud.unicode_markup
+                encoding = self.get_encoding_From_meta(resp.content)
+                if encoding is not None:
+                    html = resp.content.decode(encoding)
+
+                if html is None:
+                    ud = UnicodeDammit(resp.content)
+                    if ud.unicode_markup:
+                        html = ud.unicode_markup
 
             if html is None:
                 html = resp.content.decode(resp.encoding)
             cache.set(cache_key, html, 3600)
         return html
+
+    def get_encoding_From_meta(self, content):
+        for meta in lxml.html.fromstring(content).cssselect('meta'):
+            try:
+                if meta.attrib['http-equiv'] == 'Content-Type':
+                    _, charset = meta.attrib['content'].split('=')
+                    return codecs.lookup(charset).name
+            except (KeyError, ValueError, LookupError):
+                pass
 
     def is_url_valid(self, url):
         if not self.skip_rules:
