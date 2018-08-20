@@ -29,6 +29,10 @@
     "eslint": "^4.15.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
-    "eslint-plugin-vue": "^4.0.0"
+    "eslint-plugin-vue": "^4.0.0",
+    "font-awesome": "^4.7.0",
+    "node-reset-scss": "^1.0.1",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0"
   }
 }

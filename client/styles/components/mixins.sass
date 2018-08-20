@@ -1,0 +1,11 @@
+//- BLUR BACKGROUND -//
+=blur($blur: 30px)
+  background: rgba(255, 255, 255, 0.3)
+  backdrop-filter: blur($blur) saturate(125%)
+
+  @supports not (backdrop-filter: blur($blur))
+    background: rgba(250, 250, 250, 1)
+
+//- BOX SHADOW -//
+=box-shadow
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)

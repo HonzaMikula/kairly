@@ -1,0 +1,108 @@
+//- CONTEXT MENU -//
+
+=context-menu
+  position: absolute
+  left: 50%
+  top: 40px
+  z-index: 1
+
+  margin-left: -125px
+
+  background-color: white
+
+  display: block
+  border-radius: 5px
+  width: 250px
+
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15)
+
+  //- arrow up
+  &::after
+    bottom: 100%
+    left: 50%
+    border: solid transparent
+    content: " "
+    height: 0
+    width: 0
+    position: absolute
+    pointer-events: none
+    border-bottom-color: lighten($c-base, 30%)
+    border-width: 15px
+    margin-left: -15px
+
+  //- header
+  header
+    position: relative
+
+    border-radius: 5px 5px 0 0
+
+    background: lighten($c-base, 30%)
+    color: #000
+
+    font-weight: 600
+    font-size: $fs--1
+    line-height: $baseline * 1.25
+    text-align: center
+
+    //-- arrow back
+    button-icon
+      position: absolute
+      left: 0
+
+      width: $baseline * 1.25
+
+      color: darken($c-base, 20%)
+
+      cursor: pointer
+      font-size: $fs--2
+
+      &:focus,
+      &:hover
+        background: lighten($c-base, 15%)
+        color: #000
+
+      &::before
+        content: $fa-var-arrow-left
+
+
+  //- section
+  section
+    +blur
+
+    text-align: left
+
+    //- menu item
+    li
+      font-size: $fs--1
+
+      a
+        position: relative
+
+        display: block
+        padding: 0 $baseline/2
+
+        color: #000
+
+        line-height: $baseline * 1.25
+
+        transition: 0.15s all
+
+        &::after
+          +fa-icon()
+
+          position: absolute
+          right: $baseline / 2
+          top: 8px
+
+          color: darken($c-base, 20%)
+          opacity: 0
+
+          font-size: $fs--2
+
+          transition: 0.15s all
+
+        &:hover
+          background: #fff
+
+          &::after
+            opacity: 0.5
