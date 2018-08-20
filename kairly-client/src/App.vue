@@ -61,10 +61,12 @@ export default {
 //- Libraries
 @import '../node_modules/node-reset-scss/scss/_reset'
 @import '../node_modules/font-awesome/scss/font-awesome'
+@import '../node_modules/bootstrap/scss/_tooltip'
 
 //- Scaffolding
 @import 'styles/scaffolding/layout'
 @import 'styles/scaffolding/typography'
+@import 'styles/components/mixins'
 
 //- Components
 @import 'styles/components/loading-spinner'
