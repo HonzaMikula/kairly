@@ -22,10 +22,11 @@ module.exports = {
   loading: { color: '#3B8070' },
   /* TODO add https://github.com/nuxt-community/analytics-module */
   plugins: [
+    '~/plugins/ignored-elements',
     '~/plugins/portal-vue',
     {src: '~/plugins/tooltip', ssr: false},
     {src: '~/plugins/vue-infinite-scroll', ssr: false},
-    {src: '~/plugins/vue-keep-scroll', ssr: false},
+    //{src: '~/plugins/vue-keep-scroll', ssr: false},
     '~/plugins/vue-moment',
   ],
   modules: [
