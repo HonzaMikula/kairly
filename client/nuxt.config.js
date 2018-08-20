@@ -17,6 +17,17 @@ module.exports = {
   ** Customize the progress bar color
   */
   loading: { color: '#3B8070' },
+  /* TODO add https://github.com/nuxt-community/analytics-module */
+  plugins: [
+    '~/plugins/portal-vue',
+    '~/plugins/tooltip',
+    '~/plugins/vue-infinite-scroll',
+    '~/plugins/vue-keep-scroll',
+    '~/plugins/vue-moment',
+  ],
+  modules: [
+    '@nuxtjs/axios',
+  ],
   /*
   ** Build configuration
   */
@@ -36,4 +47,3 @@ module.exports = {
     }
   }
 }
-
