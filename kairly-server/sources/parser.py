@@ -85,7 +85,7 @@ class ArticleParser:
             if children:
                 for el in children:
                     if el.tag == 'div':
-                        yield from self.flatten_tree(el)
+                        yield from flatten_tree(el)
                     else:
                         yield el
             else:
