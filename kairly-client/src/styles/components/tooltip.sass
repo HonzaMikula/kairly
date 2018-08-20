@@ -1,64 +1,23 @@
-.vue-tooltip, .tooltip
-  z-index: 100
+.tooltip
+  height: $baseline * 1.25
+  padding: 0
+  font-family: $ff-sans
+  font-size: $fs--2
 
-  box-sizing: border-box
-  max-width: 320px
-  padding: 3px 10px
+.tooltip .arrow
+  height: $baseline / 4
+  width: $baseline / 2
+
+  &::before
+    border-width: $baseline/4 $baseline/4 0
+
+
+.tooltip-inner
   border-radius: 3px
+  padding: 0 $baseline / 4
+  max-width: 320px
+
+  line-height: $baseline * 1
 
   background-color: #000
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4)
-  color: #fff
-
-  font-size: $fs--2
-
-.vue-tooltip .vue-tooltip-content
-    text-align: center
-
-.vue-tooltip .tooltip-arrow
-    content: ''
-    width: 0
-    height: 0
-    border-style: solid
-    position: absolute
-    margin: 6px
-
-.vue-tooltip[x-placement^="top"]
-    margin-bottom: 6px
-
-.vue-tooltip[x-placement^="top"] .tooltip-arrow
-    border-width: 6px 6px 0 6px
-    border-color: #000 transparent transparent transparent
-    bottom: -6px
-    margin-top: 0
-    margin-bottom: 0
-
-.vue-tooltip[x-placement^="bottom"]
-    margin-top: 6px
-
-.vue-tooltip[x-placement^="bottom"] .tooltip-arrow
-    border-width: 6 6px 6px 6px
-    border-color: transparent transparent #000 transparent
-    top: -6px
-    margin-top: 0
-    margin-bottom: 0
-
-.vue-tooltip[x-placement^="right"]
-    margin-left: 6px
-
-.vue-tooltip[x-placement^="right"] .tooltip-arrow
-    border-width: 6px 6px 6px 0
-    border-color: transparent #000 transparent transparent
-    left: -6px
-    margin-left: 0
-    margin-right: 0
-
-.vue-tooltip[x-placement^="left"]
-    margin-right: 6px
-
-.vue-tooltip[x-placement^="left"] .tooltip-arrow
-    border-width: 6px 0 6px 6px
-    border-color: transparent transparent transparent #000
-    right: -6px
-    margin-left: 0
-    margin-right: 0
