@@ -8,6 +8,10 @@ Rule = namedtuple('Rule', ['props', 'selector'])
 NestingLevel = namedtuple('NestingLevel', ['indent', 'parts'])
 
 
+def fragments_to_string(fragments):
+    return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in fragments)
+
+
 class ArticleParser:
 
     REGEX_MULTI = re.compile("/\*.*?\*/", re.DOTALL)
@@ -24,6 +28,73 @@ class ArticleParser:
 
     def __init__(self, rules):
         self.rules = rules
+
+    def parse(self, htmltree):
+        """Returns list of fragments (etree Elements)"""
+        self.props = defaultdict(dict)
+
+        # self._print(htmltree, "Raw HTML")
+
+        for comment in htmltree.xpath('//comment()'):
+            parent = comment.getparent()
+            if parent is not None:
+                parent.remove(comment)
+
+        # first remove dangerous elements
+        for el in htmltree.cssselect(self.DANGEROUS_ELEMENTS):
+            el.getparent().remove(el)
+
+        # fix self closing A tags
+        for el in htmltree.xpath('//a[not(text())]'):
+            if not list(el):  # if not child elements exists
+                el.getparent().remove(el)
+
+        for rule in self.flatten_rules():
+            if rule.selector == '*':
+                elements = [htmltree]
+            else:
+                elements = self.cssselect_with_slice(htmltree, rule.selector)
+
+            move_after = None
+            move_after_selector = rule.props.get('move-after')
+            if move_after_selector:
+                try:
+                    move_after = htmltree.cssselect(move_after_selector)[0]
+                except IndexError:
+                    pass
+
+            for el in elements:
+                props = self.props[el]
+                props.update({'tag': 'auto'})
+                props.update(rule.props)
+
+                if move_after is not None:
+                    el.getparent().remove(el)
+                    parent = move_after.getparent()
+                    parent.insert(parent.index(move_after) + 1, el)
+
+        elements = self._find_elements(htmltree)
+
+        self.props = None
+        return elements
+
+    def normalize(self, fragments):
+        # TODO find p/div/text with <br><br> - fix larryarnhart source
+        def flatten_tree(htmltree):
+            children = list(htmltree)
+            if children:
+                for el in children:
+                    if el.tag == 'div':
+                        yield from self.flatten_tree(el)
+                    else:
+                        yield el
+            else:
+                yield htmltree
+
+        result = []
+        for el in fragments:
+            result.extend(flatten_tree(el))
+        return result
 
     def remove_comments(self, s):
         # remove all occurance streamed comments (/*COMMENT */) from string
@@ -99,6 +170,34 @@ class ArticleParser:
 
         return rules
 
+    def cssselect_with_slice(self, root, selector):
+        result = []
+        for plain_selector in selector.split(','):
+            plain_selector = plain_selector.strip()
+            # replace "div [0]" to "div *[0]"
+            plain_selector = re.sub(r"\s(\[\d)", r" *\1", plain_selector)
+
+            items = re.split(r"(\[\d[:\d]*\])", plain_selector)
+            items = [x for x in items if x]
+            if len(items) > 2:
+                raise ValueError("Only one slice is currently allowed ({})".format(plain_selector))
+
+            elements = root.cssselect(items[0])
+            if len(items) == 2:
+                m = re.match(r"\[(\d*)(:)?(\d*)\]", items[1])
+                assert m, "Second token should be slice"
+                b1 = int(m.group(1)) if m.group(1) else None
+                b2 = int(m.group(3)) if m.group(3) else None
+                if m.group(2) == ':':
+                    sl = slice(b1, b2)
+                else:
+                    sl = slice(b1, b1 + 1)
+
+                elements = elements[sl]
+            result.extend(elements)
+
+        return result
+
     def _getprop(self, el, name):
         return self.props[el].get(name)
 
@@ -166,78 +265,8 @@ class ArticleParser:
         print(etree.tostring(htmltree, pretty_print=True).decode('utf-8'))
         print("────────────────────────────────")
 
-    def parse(self, htmltree):
-        self.props = defaultdict(dict)
-
-        # self._print(htmltree, "Raw HTML")
-
-        for comment in htmltree.xpath('//comment()'):
-            parent = comment.getparent()
-            if parent is not None:
-                parent.remove(comment)
-
-        # first remove dangerous elements
-        for el in htmltree.cssselect(self.DANGEROUS_ELEMENTS):
-            el.getparent().remove(el)
-
-        # fix self closing A tags
-        for el in htmltree.xpath('//a[not(text())]'):
-            if not list(el):  # if not child elements exists
-                el.getparent().remove(el)
-
-        for rule in self.flatten_rules():
-            if rule.selector == '*':
-                elements = [htmltree]
-            else:
-                elements = self.cssselect_with_slice(htmltree, rule.selector)
-
-            move_after = None
-            move_after_selector = rule.props.get('move-after')
-            if move_after_selector:
-                try:
-                    move_after = htmltree.cssselect(move_after_selector)[0]
-                except IndexError:
-                    pass
-
-            for el in elements:
-                props = self.props[el]
-                props.update({'tag': 'auto'})
-                props.update(rule.props)
-
-                if move_after is not None:
-                    el.getparent().remove(el)
-                    parent = move_after.getparent()
-                    parent.insert(parent.index(move_after) + 1, el)
-
-        elements = self._find_elements(htmltree)
-
-        self.props = None
-        return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in elements)
-
-    def cssselect_with_slice(self, root, selector):
-        result = []
-        for plain_selector in selector.split(','):
-            plain_selector = plain_selector.strip()
-            # replace "div [0]" to "div *[0]"
-            plain_selector = re.sub(r"\s(\[\d)", r" *\1", plain_selector)
-
-            items = re.split(r"(\[\d[:\d]*\])", plain_selector)
-            items = [x for x in items if x]
-            if len(items) > 2:
-                raise ValueError("Only one slice is currently allowed ({})".format(plain_selector))
-
-            elements = root.cssselect(items[0])
-            if len(items) == 2:
-                m = re.match(r"\[(\d*)(:)?(\d*)\]", items[1])
-                assert m, "Second token should be slice"
-                b1 = int(m.group(1)) if m.group(1) else None
-                b2 = int(m.group(3)) if m.group(3) else None
-                if m.group(2) == ':':
-                    sl = slice(b1, b2)
-                else:
-                    sl = slice(b1, b1 + 1)
-
-                elements = elements[sl]
-            result.extend(elements)
-
-        return result
+    def _print_tree(self, htmltree, indent=''):
+        """Debug helper"""
+        print(htmltree.tag)
+        for child in htmltree:
+            self._print_tree(child, indent + '  ')

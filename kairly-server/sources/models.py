@@ -6,26 +6,13 @@ import feedparser
 import requests
 import yaml
 import lxml.html
-from lxml.etree import tostring
 from bs4 import UnicodeDammit
 
 from django.db import models
 from django.core.cache import cache
 from django.conf import settings
 
-from .parser import ArticleParser
-
-
-def flatten_tree(htmltree):
-    childs = list(htmltree)
-    if childs:
-        for el in childs:
-            if el.tag == 'div':
-                yield from flatten_tree(el)
-            else:
-                yield el
-    else:
-        yield htmltree
+from .parser import ArticleParser, fragments_to_string
 
 
 class Channel(models.Model):
@@ -63,35 +50,36 @@ class Channel(models.Model):
         return feedparser.parse(self.rss, **kwargs)
 
     def parse_entry(self, entry, *, nocache=False):
-        article = self.parse_article_from_entry(entry, nocache=nocache)
-        htmltree = lxml.html.fromstring(article)
+        fragments = self.parse_article_from_entry(entry, nocache=nocache)
+
         chars = 0
-        perex = []
+        perex_fragments = []
+        content_fragments = []
         nocontent = False
-        for i, el in enumerate(flatten_tree(htmltree)):
-            if el.tag == 'img':
-                element_size = 180
-            else:
-                element_size = len(el.text_content())
-
-            if perex and chars + element_size > 1600:
-                break
-
-            t = (el.tag, tostring(el, encoding='utf-8').decode('utf-8'))
-            chars += element_size
-            perex.append(t)
-            el.getparent().remove(el)
-        else:
-            nocontent = True
 
         def is_hx(tag):
             return tag[0] == 'h' and len(tag) == 2
 
-        while perex and is_hx(perex[-1][0]):
-            perex.pop()
+        for i, el in enumerate(fragments):
+            if not perex_fragments and is_hx(el.tag):
+                continue
 
-        perex = '\n\n'.join(p[1] for p in perex)
-        content = '' if nocontent else tostring(htmltree, encoding='utf-8').decode('utf-8')
+            element_size = len(el.text_content())
+            # for each image inside add 200 chars comensation
+            # nice to have, calculated image height and add exact compensation
+            element_size += len(el.cssselect('img')) * 200
+
+            if perex_fragments and chars + element_size > 1600:
+                content_fragments = fragments[i + 1:]
+                break
+
+            chars += element_size
+            perex_fragments.append(el)
+        else:
+            nocontent = True
+
+        perex = fragments_to_string(perex_fragments)
+        content = '' if nocontent else fragments_to_string(content_fragments)
         return perex, content
 
     def parse_article_from_entry(self, entry, *, nocache=False):
@@ -128,7 +116,9 @@ class Channel(models.Model):
 
         self.fix_relative_links(htmltree, parsed_url)
         parser = ArticleParser(self.parser)
-        return parser.parse(htmltree)
+        fragments = parser.parse(htmltree)
+        fragments = parser.normalize(fragments)
+        return fragments
 
     def fetch_url(self, url, *, nocache=False):
         cache_key = 'url-' + url

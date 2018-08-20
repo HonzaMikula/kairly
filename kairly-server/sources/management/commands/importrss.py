@@ -32,6 +32,12 @@ class Command(BaseCommand):
             dest='draft',
             help='Create posts as draft',
         )
+        parser.add_argument(
+            '--last',
+            action='store_true',
+            dest='last',
+            help='Import single document only for each channel',
+        )
 
     def import_post(self, channel, entry, options):
         verbosity = options.get('verbosity')
@@ -114,5 +120,8 @@ class Command(BaseCommand):
                         post.topics.add(channel.topic)
                 except Exception:
                     traceback.print_exc()
+
+                if options.get('last'):
+                    break
 
                 time.sleep(0.05)

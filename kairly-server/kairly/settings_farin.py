@@ -17,6 +17,17 @@ DATABASES = {
     },
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': ['localhost:6379'],
+        'TIMEOUT': 120,
+        'OPTIONS': {
+            'DB': 5,
+        },
+    }
+}
+
 TWITTER_CONSUMER_KEY = 'vYuzgkErlgcU8hLSDG0yS8gry'
 TWITTER_CONSUMER_SECRET = 'U0hVZVDahNoC4r9imOPkyKLQCJE343h2YK6OcD5s47RD2tSUYK'
 TWITTER_ACCESS_TOKEN_KEY = '321647013-HGaOJzhg6hfrNYfWGj1NsV6ufNLgNb2fdUbeNi2j'
