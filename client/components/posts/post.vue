@@ -42,7 +42,7 @@ import AuthorPopup from '@/components/widgets/AuthorPopup'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 
 export default {
-  name: 'post',
+  name: 'post-postId',
   props: ["post", "isSubscribed"],
 
   components: {

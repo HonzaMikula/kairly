@@ -1,9 +1,8 @@
+import Vue from 'vue'
 import Vuex from 'vuex'
 
 import * as actions from './actions'
 // import { analyticsMiddleware } from 'vue-analytics'
-
-// Vue.use(Vuex)
 
 const createStore = () => {
   return new Vuex.Store({

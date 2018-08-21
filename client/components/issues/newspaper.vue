@@ -2,7 +2,7 @@
   <timeline-newspaper>
     <header>
       <h1>
-        <router-link :to="{name: 'newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ issue.newspaper.title }}</router-link>&nbsp;<router-link :to="{name: 'issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">#{{ issue.number }}</router-link>
+        <router-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ issue.newspaper.title }}</router-link>&nbsp;<router-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">#{{ issue.number }}</router-link>
       </h1>
 
       <p>

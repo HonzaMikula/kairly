@@ -1,13 +1,13 @@
 <template>
   <issue-widget-view>
     <picture>
-      <router-link :to="{name: 'issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
+      <router-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
         <img :src="issue.newspaper.picture" :alt="issue.newspaper.title" />
       </router-link>
     </picture>
 
     <h2>
-      <router-link :to="{name: 'issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }} #{{ issue.number }}</router-link>
+      <router-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }} #{{ issue.number }}</router-link>
     </h2>
 
     <issue-widget--author>
@@ -17,7 +17,7 @@
 
     <ul>
       <li v-for="post in issue.posts" :key="post.id">
-        <router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</router-link>
+        <router-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</router-link>
       </li>
     </ul>
 

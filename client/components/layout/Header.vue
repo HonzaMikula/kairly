@@ -5,7 +5,7 @@
         <ul v-if="user">
           <li class="home"><router-link :to="{name: 'index'}" exact><span>Home</span></router-link></li>
           <li class="my-subscription"><router-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></router-link></li>
-          <li class="my-newspapers"><router-link :to="{name: 'author-newspapepers'}"><span>My Newspapers</span></router-link></li>
+          <li class="my-newspapers"><router-link :to="{name: 'newspapers'}"><span>My Newspapers</span></router-link></li>
           <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
         </ul>
         </app-header--nav>

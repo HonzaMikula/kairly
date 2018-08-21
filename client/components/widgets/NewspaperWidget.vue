@@ -1,13 +1,13 @@
 <template>
   <newspaper-widget-view>
     <picture>
-      <router-link :to="{name: 'newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+      <router-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
         <img :src="newspaper.picture" :alt="newspaper.title" />
       </router-link>
     </picture>
 
     <h2>
-      <router-link :to="{name: 'newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</router-link>
+      <router-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</router-link>
     </h2>
 
     <time>{{ periodicity }}</time>
