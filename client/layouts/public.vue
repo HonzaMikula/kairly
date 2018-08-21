@@ -1,10 +1,7 @@
 <template>
   <app-view>
-    <loading-spinner v-if="loadingUser"></loading-spinner>
-
-    <template v-else>
-      <nuxt v-if="user"></nuxt>
-      <Homepage v-else></Homepage>
+    <template>
+      <nuxt></nuxt>
 
       <portal-target name="modal" slim></portal-target>
 
@@ -17,14 +14,12 @@
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex'
 
-import Homepage from '@/components/Homepage'
 import InfoMessage from '@/components/InfoMessage'
 
 export default {
   name: 'app',
 
   components: {
-    Homepage,
     InfoMessage
   },
 
@@ -34,11 +29,9 @@ export default {
 
   computed: {
     ...mapState({
-      showTutorial: state => state.showTutorial,
       errorMessage: state => state.messages.error,
       successMessage: state => state.messages.success
-    }),
-    ...mapGetters(['user', 'loadingUser'])
+    })
   },
 
   watch: {
@@ -50,10 +43,6 @@ export default {
   },
 
   methods: mapMutations(['showError', 'showSuccess', 'show404']),
-
-  created: function () {
-    this.$store.dispatch('getProfile')
-  }
 }
 </script>
 
