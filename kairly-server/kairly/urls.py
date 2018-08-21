@@ -16,10 +16,13 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path, re_path
-from django.views.generic.base import RedirectView
+from django.http import FileResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.shortcuts import render
-from django.http import HttpResponseBadRequest, HttpResponseNotFound
+from django.urls import include, path, re_path
+from django.views.static import serve
+from django.views.generic.base import RedirectView
+
+from corsheaders.middleware import CorsMiddleware
 
 
 def index(request, *args, **kwargs):
@@ -32,7 +35,15 @@ def index(request, *args, **kwargs):
     return render(request, 'index.html')
 
 
-urlpatterns = static('/media', document_root=settings.MEDIA_ROOT)
+def serve_cors(request, *args, **kwargs):
+    response = serve(request, *args, **kwargs)
+    if isinstance(response, FileResponse):
+        cmw = CorsMiddleware()
+        return cmw.process_response(request, response)
+    return response
+
+
+urlpatterns = static('/media', view=serve_cors, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin', RedirectView.as_view(url='admin/')),
