@@ -7,6 +7,7 @@ Vue.config.ignoredElements = [
   'app-header-view',
   'app-main',
   'app-view',
+  'author-detail--newspapers',
   'author-detail--posts',
   'author-detail--subscribe',
   'author-detail--header',

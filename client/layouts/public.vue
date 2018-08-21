@@ -23,10 +23,6 @@ export default {
     InfoMessage
   },
 
-  metaInfo: {
-      title: 'Kairly - exceptional journalism & great reading experience',
-  },
-
   computed: {
     ...mapState({
       errorMessage: state => state.messages.error,

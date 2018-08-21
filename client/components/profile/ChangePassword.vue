@@ -44,7 +44,7 @@ export default {
     closeModal: Function
   },
 
-  metaInfo: {
+  head: {
     title: 'Change password - Kairly'
   },
 

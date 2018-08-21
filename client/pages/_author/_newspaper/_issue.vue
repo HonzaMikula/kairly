@@ -19,7 +19,7 @@ import Issue from '@/components/IssueWrapper'
 export default {
   name: 'IssueDetail',
 
-  metaInfo() {
+  head() {
       return {
         title: this.newspaper ? `${this.newspaper.title} #${this.issue.number}` : undefined
       }

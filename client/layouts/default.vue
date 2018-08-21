@@ -28,10 +28,6 @@ export default {
     InfoMessage
   },
 
-  metaInfo: {
-      title: 'Kairly - exceptional journalism & great reading experience',
-  },
-
   computed: {
     ...mapState({
       showTutorial: state => state.showTutorial,

@@ -87,7 +87,7 @@ import NewspaperBacklog from '@/components/editor/NewspaperBacklog'
 export default {
   name: 'NewspaperDetail',
 
-  metaInfo() {
+  head() {
       return {
         title: this.newspaper ? this.newspaper.title : undefined
       }

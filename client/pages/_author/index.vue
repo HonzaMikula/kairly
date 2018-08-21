@@ -102,7 +102,7 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 export default {
   name: 'AuthorDetail',
 
-  metaInfo() {
+  head() {
       return {
         title: this.author ? this.author.name : undefined
       }

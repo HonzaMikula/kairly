@@ -6,14 +6,16 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'kairly',
+    title: 'Kairly - exceptional journalism & great reading experience',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'New way how we consume and produce news' }
+      { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' }
+      //{ hid: 'description', name: 'description', content: 'New way how we consume and produce news' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      //{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i" }
     ]
   },
   /*

@@ -86,7 +86,7 @@ import InfoMessage from '@/components/InfoMessage'
 export default {
   name: 'Settings',
 
-  metaInfo: {
+  head: {
     title: 'Account Settings'
   },
 

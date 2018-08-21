@@ -34,10 +34,10 @@ export default {
     category: Object,
   },
 
-  metaInfo() {
-      return {
-        title: this.category ? this.category.name : 'Explore'
-      }
+  head() {
+    return {
+      title: this.category ? this.category.name : 'Explore'
+    }
   },
 
   components: {

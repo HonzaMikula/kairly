@@ -25,7 +25,7 @@ import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 export default {
   name: 'MyNewspapers',
 
-  metaInfo: {
+  head: {
     title: 'Newspapers - My Subscription - Kairly'
   },
 

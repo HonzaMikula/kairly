@@ -33,10 +33,10 @@ import ExploreRecent from '@/components/explore/ExploreRecent'
 export default {
   name: 'Explore',
 
-  metaInfo() {
-      return {
-        title: this.tab ? `Explore - ${this.tab.name}` : 'Explore',
-      }
+  head() {
+    return {
+      title: this.tab ? `Explore - ${this.tab.name}` : 'Explore',
+    }
   },
 
   components: {
