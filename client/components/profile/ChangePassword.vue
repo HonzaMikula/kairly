@@ -77,9 +77,9 @@ export default {
           this.showSuccess("Password has been updated.")
           this.closeModal()
         }, err => {
-          if (err.status === 400) {
+          if (err.response.status === 400) {
             this.showError(err.response.data.error)
-          } else if (err.status === 401) {
+          } else if (err.response.status === 401) {
             this.showError('Wrong old password.')
           } else {
             this.showError((err + '') || 'Request failed')

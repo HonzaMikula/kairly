@@ -194,20 +194,25 @@ export default {
       this.posts = []
       this.cursor = null
 
+      function handleErr(err) {
+        if (err.response.status == 404) {
+          this.show404()
+        } else {
+          console.log(err)
+        }
+      }
+
       api.getAuthorDetail(author).then(resp => {
         resp.newspapers.forEach(e => this.$store.dispatch('newspaperUpdated', e))
         this.author = resp.author
         this.newspaperIds = resp.newspapers.map(e => e.fullName)
         this.loadingProfile = false
         this.topics = resp.topics
-      }).catch(err => {
-        if (err.status == 404) {
-          this.show404()
-        } else {
-          return Promise.reject(err)
-        }
-      })
-      api.getAuthorPosts(author, null).then(this.handlePostsData)
+      }, handleErr)
+
+      api.getAuthorPosts(author, null).then(
+        this.handlePostsData,
+        handleErr)
     },
 
     ...mapMutations(['show404'])
