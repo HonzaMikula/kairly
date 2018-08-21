@@ -4,7 +4,7 @@
       v-if="newspapers.length === 0">
       <h1>No newspapers</h1>
       <p>You haven't subscribe to any newspapers yet. On Explore page you can find newspapers you might like.</p>
-      <router-link to="/explore">Explore newspapers</router-link>
+      <nuxt-link to="/explore">Explore newspapers</nuxt-link>
     </my-newspapers--empty>
 
     <NewspaperWidget

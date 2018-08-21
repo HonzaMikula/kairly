@@ -3,16 +3,16 @@
     <div>
       <app-header--nav role="navigation">
         <ul v-if="user">
-          <li class="home"><router-link :to="{name: 'timeline'}" exact><span>Home</span></router-link></li>
-          <li class="my-subscription"><router-link :to="{name: 'subscription'}"><span>My Subscription</span></router-link></li>
+          <li class="home"><router-link :to="{name: 'index'}" exact><span>Home</span></router-link></li>
+          <li class="my-subscription"><router-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></router-link></li>
           <li class="my-newspapers"><router-link :to="{name: 'author-newspapepers'}"><span>My Newspapers</span></router-link></li>
           <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
         </ul>
         </app-header--nav>
 
         <app-header--user-profile v-if="user">
-          <h3><router-link :to="{name: 'author', params: {author: user.id}}">{{ user.name }}</router-link></h3>
-          <router-link :to="{name: 'author', params: {author: user.id}}">
+          <h3><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ user.name }}</nuxt-link></h3>
+          <nuxt-link :to="{name: 'author', params: {author: user.id}}">
             <img
               v-if="user.picture"
               :src="user.picture || '~/assets/user.png'"
@@ -24,7 +24,7 @@
               src="~/assets/user.png"
               :alt="user.name"
             />
-          </router-link>
+          </nuxt-link>
           <button-icon v-on:click="isDropDownMenuOpen = true"></button-icon>
         </app-header--user-profile>
 
@@ -32,10 +32,10 @@
           v-if="user && isDropDownMenuOpen"
           v-on-clickaway="() => isDropDownMenuOpen = false">
           <ul>
-            <li class="my-subscription"><router-link :to="{name: 'subscription'}"><span>My Subscription</span></router-link></li>
-            <li class="my-newspapers"><router-link :to="{name: 'author-newspapepers'}"><span>My Newspapers</span></router-link></li>
-            <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
-            <li><router-link :to="{name: 'settings'}"><span>Settings</span></router-link></li>
+            <li class="my-subscription"><nuxt-link :to="{name: 'subscription'}"><span>My Subscription</span></nuxt-link></li>
+            <li class="my-newspapers"><nuxt-link :to="{name: 'author-newspapepers'}"><span>My Newspapers</span></nuxt-link></li>
+            <li class="explore"><nuxt-link :to="{name: 'explore'}"><span>Explore</span></nuxt-link></li>
+            <li><nuxt-link :to="{name: 'settings'}"><span>Settings</span></nuxt-link></li>
             <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
             <li><a href="" v-on:click.prevent="logout">Logout</a></li>
           </ul>
