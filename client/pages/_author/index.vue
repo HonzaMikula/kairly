@@ -49,7 +49,7 @@
         <author-detail--topics v-if="topics">
           <ul>
             <li v-for="topic in topics" :key="topic.url">
-              <router-link :to="topic.url">{{ topic.name}}</router-link>
+              <nuxt-link :to="topic.url">{{ topic.name}}</nuxt-link>
             </li>
           </ul>
         </author-detail--topics>

@@ -2,15 +2,15 @@
   <timeline-newspaper>
     <header>
       <h1>
-        <router-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ issue.newspaper.title }}</router-link>&nbsp;<router-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">#{{ issue.number }}</router-link>
+        <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ issue.newspaper.title }}</nuxt-link>&nbsp;<nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">#{{ issue.number }}</nuxt-link>
       </h1>
 
       <p>
         <timeline-newspaper--editor>
-          <router-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
+          <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
             <img v-if="issue.newspaper.editor.picture" :src="newspaper.editor.picture" :alt="newspaper.editor.name" />
             {{ newspaper.editor.name }}
-          </router-link>
+          </nuxt-link>
         </timeline-newspaper--editor>
         •
         {{ newspaper.periodicity.frequency }}

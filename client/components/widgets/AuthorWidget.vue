@@ -2,14 +2,14 @@
   <author-widget-view>
     <header>
       <picture>
-        <router-link :to="{name: 'author', params: {author: author.id}}">
+        <nuxt-link :to="{name: 'author', params: {author: author.id}}">
           <img :src="author.picture" :alt="author.name"/>
-        </router-link>
+        </nuxt-link>
       </picture>
       <h3>
-        <router-link :to="{name: 'author', params: {author: author.id}}">
+        <nuxt-link :to="{name: 'author', params: {author: author.id}}">
           {{ author.name }}
-        </router-link>
+        </nuxt-link>
       </h3>
 
       <section>

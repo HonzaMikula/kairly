@@ -1,12 +1,12 @@
 <template>
   <post :post="post">
     <timeline-post--article>
-      <h2><router-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
+      <h2><nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</nuxt-link></h2>
       <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
         <timeline-post--continue-reading v-if="post.timeRead">
           <div v-if="isSubscribed">
-            <router-link :to="{ name: 'post-postId', params: { postId: post.id }, hash: '#continue'}">Continue reading</router-link>
+            <nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }, hash: '#continue'}">Continue reading</nuxt-link>
           </div>
           <div v-else>
             Subscribe newspaper to continue reading

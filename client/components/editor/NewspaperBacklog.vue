@@ -67,15 +67,15 @@
         <div v-for="post in backlog" class="backlog-post" :key="post.id">
           <header>
             <picture>
-              <router-link :to="{name: 'author', params: {author: post.author.id}}">
+              <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
                 <img :src="post.author.picture" :alt="post.author.name" />
-              </router-link>
+              </nuxt-link>
             </picture>
 
             <h3>
-              <router-link :to="{name: 'author', params: {author: post.author.id}}">
+              <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
                 {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-              </router-link>
+              </nuxt-link>
             </h3>
 
             <time>
@@ -103,7 +103,7 @@
           </template>
 
           <template v-else>
-            <h2><router-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
+            <h2><nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</nuxt-link></h2>
           </template>
         </div>
       </newspaper-backlog--backlog>

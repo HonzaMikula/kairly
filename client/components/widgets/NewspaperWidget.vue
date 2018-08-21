@@ -1,13 +1,13 @@
 <template>
   <newspaper-widget-view>
     <picture>
-      <router-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+      <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
         <img :src="newspaper.picture" :alt="newspaper.title" />
-      </router-link>
+      </nuxt-link>
     </picture>
 
     <h2>
-      <router-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</router-link>
+      <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</nuxt-link>
     </h2>
 
     <time>{{ periodicity }}</time>
@@ -18,7 +18,7 @@
 
     <newspaper-widget--author>
       <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
-      <router-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</router-link>
+      <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
     </newspaper-widget--author>
 
     <newspaper-widget--subscribe>

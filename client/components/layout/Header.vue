@@ -3,10 +3,10 @@
     <div>
       <app-header--nav role="navigation">
         <ul v-if="user">
-          <li class="home"><router-link :to="{name: 'index'}" exact><span>Home</span></router-link></li>
-          <li class="my-subscription"><router-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></router-link></li>
-          <li class="my-newspapers"><router-link :to="{name: 'newspapers'}"><span>My Newspapers</span></router-link></li>
-          <li class="explore"><router-link :to="{name: 'explore'}"><span>Explore</span></router-link></li>
+          <li class="home"><nuxt-link :to="{name: 'index'}" exact><span>Home</span></nuxt-link></li>
+          <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></nuxt-link></li>
+          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>My Newspapers</span></nuxt-link></li>
+          <li class="explore"><nuxt-link :to="{name: 'explore'}"><span>Explore</span></nuxt-link></li>
         </ul>
         </app-header--nav>
 

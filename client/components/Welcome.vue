@@ -30,14 +30,14 @@
         </div>
       </welcome--roles>
 
-      <router-link to="/explore">Start exploring authors &amp; newspapers</router-link>
+      <nuxt-link to="/explore">Start exploring authors &amp; newspapers</nuxt-link>
     </welcome-view>
 
 
     <template v-if="!loading">
       <Issue :issue="issue" :subscription="newspaper.subscription" />
 
-      <router-link to="/explore">Start exploring</router-link>
+      <nuxt-link to="/explore">Start exploring</nuxt-link>
     </template>
   </timeline-welcome>
 </template>

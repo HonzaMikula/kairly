@@ -18,6 +18,7 @@ Vue.config.ignoredElements = [
   'backlog-add-view',
   'button-close',
   'button-icon',
+  'change-password-view',
   'edit-newspaper-view',
   'editor-newspapers--board',
   'editor-newspapers--header',

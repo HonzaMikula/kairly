@@ -1,23 +1,23 @@
 <template>
   <issue-widget-view>
     <picture>
-      <router-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
+      <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
         <img :src="issue.newspaper.picture" :alt="issue.newspaper.title" />
-      </router-link>
+      </nuxt-link>
     </picture>
 
     <h2>
-      <router-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }} #{{ issue.number }}</router-link>
+      <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }} #{{ issue.number }}</nuxt-link>
     </h2>
 
     <issue-widget--author>
       <img :src="issue.newspaper.editor.picture" :alt="issue.newspaper.editor.name"/>
-      <router-link :to="{name: 'author', params: {author: issue.newspaper.editor.id}}">{{ issue.newspaper.editor.name }}</router-link>
+      <nuxt-link :to="{name: 'author', params: {author: issue.newspaper.editor.id}}">{{ issue.newspaper.editor.name }}</nuxt-link>
     </issue-widget--author>
 
     <ul>
       <li v-for="post in issue.posts" :key="post.id">
-        <router-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</router-link>
+        <nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</nuxt-link>
       </li>
     </ul>
 

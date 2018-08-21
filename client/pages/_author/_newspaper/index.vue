@@ -46,10 +46,10 @@
             </p>
 
             <footer>
-              <router-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
+              <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
                 <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
                 {{ newspaper.editor.name }}
-              </router-link>
+              </nuxt-link>
             </footer>
           </section>
 
