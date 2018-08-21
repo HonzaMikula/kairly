@@ -68,7 +68,6 @@ timeline-post--article--content
   display: block
 
   line-height: $baseline * 0.9
-  text-align: justify
   hyphens: auto
 
   @media (max-width: $mobile)
