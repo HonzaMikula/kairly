@@ -25,14 +25,14 @@ from django.views.generic.base import RedirectView
 from corsheaders.middleware import CorsMiddleware
 
 
-def index(request, *args, **kwargs):
-    if request.path.startswith('/api') or request.path == '/favicon.ico':
-        return HttpResponseNotFound()
-    accept = request.META.get('HTTP_ACCEPT')
-    if accept and 'text/html' not in accept:
-        return HttpResponseBadRequest()
-
-    return render(request, 'index.html')
+# def index(request, *args, **kwargs):
+#     if request.path.startswith('/api') or request.path == '/favicon.ico':
+#         return HttpResponseNotFound()
+#     accept = request.META.get('HTTP_ACCEPT')
+#     if accept and 'text/html' not in accept:
+#         return HttpResponseBadRequest()
+#
+#     return render(request, 'index.html')
 
 
 def serve_cors(request, *args, **kwargs):
@@ -52,5 +52,5 @@ urlpatterns += [
     path('api/', include('articles.urls')),
 
     # frontend paths, match anything, needs regexp!
-    re_path(r'', index, name='index'),
+    # re_path(r'', index, name='index'),
 ]

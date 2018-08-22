@@ -5,34 +5,45 @@
 from invoke import task, Collection
 
 # Production
-HOST = 'app@node-13.rosti.cz'
-PORT = 14076
+PY_HOST = 'app@node-13.rosti.cz'
+PY_PORT = 14076
 
+JS_HOST = 'app@node-13.rosti.cz'
+JS_PORT = 14930
+
+
+# It would be better compile app on server, but current plab
+# is not sufficient (no enough RAM)
 
 @task
 def compile_js(ctx):
-    print("Deleting previous webpack build...")
-    ctx.run("cd kairly-client && rm -rf dist")
-    print("Running webpack...")
-    ctx.run("cd kairly-client && npm run build")
+    print("Deleting previous nuxt build...")
+    ctx.run("cd client && rm -rf .nuxt")
+    print("Running nuxt build...")
+    ctx.run("cd client && npm run build")
 
 
 @task
 def upload_js(ctx):
-    ctx.run("scp -r -P {} kairly-client/dist {}:/tmp/dist".format(PORT, HOST))
+    print("Uploading nuxt build...")
+    ctx.run("scp -r -P {} client/.nuxt {}:/tmp/.nuxt".format(JS_PORT, JS_HOST))
 
 
 @task(compile_js, upload_js)
 def deploy_js(ctx):
+    print("Promoting nuxt build...")
     remote_commands = [
         'export TERM=xterm',
         'source /srv/.bashrc',
-        'rm -rf /srv/kairly/kairly-client/dist',
-        'mv /tmp/dist /srv/kairly/kairly-client/dist',
+        'cd /srv/kairly',
+        'git pull',
         'cd /srv/app',
-        "./manage.py collectstatic --noinput --settings='kairly.settings_prod'",
+        'rm -rf /srv/kairly/client/.nuxt',
+        'mv /tmp/.nuxt /srv/kairly/client/.nuxt',
+        'cd /srv/app',
+        "supervisorctl restart app",
     ]
-    ctx.run("ssh -T -p {} {} '{}'".format(PORT, HOST, ' && '.join(remote_commands)))
+    ctx.run("ssh -T -p {} {} '{}'".format(JS_PORT, JS_HOST, ' && '.join(remote_commands)))
 
 
 @task()
@@ -47,24 +58,12 @@ def deploy_py(ctx):
         "./manage.py collectstatic --noinput --settings='kairly.settings_prod'",
         'supervisorctl restart app',
     ]
-    ctx.run("ssh -T -p {} {} '{}'".format(PORT, HOST, ' && '.join(remote_commands)))
+    ctx.run("ssh -T -p {} {} '{}'".format(PY_PORT, PY_HOST, ' && '.join(remote_commands)))
 
 
-@task(compile_js, upload_js)
+@task(deploy_py, deploy_js)
 def deploy_all(ctx):
-    remote_commands = [
-        'export TERM=xterm',
-        'source /srv/.bashrc',
-        'cd /srv/kairly',
-        'git pull',
-        'rm -rf /srv/kairly/kairly-client/dist',
-        'mv /tmp/dist /srv/kairly/kairly-client/dist',
-        'cd /srv/app',
-        "./manage.py migrate --settings='kairly.settings_prod'",
-        "./manage.py collectstatic --noinput --settings='kairly.settings_prod'",
-        'supervisorctl restart app',
-    ]
-    ctx.run("ssh -T -p {} {} '{}'".format(PORT, HOST, ' && '.join(remote_commands)))
+    pass
 
 
 deploy_ns = Collection('deploy')
