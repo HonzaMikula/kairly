@@ -3,8 +3,11 @@ import axios from 'axios'
 let token = localStorage.getItem("token")
 // TODO validate token validity
 
-//axios.defaults.baseURL = process.env.VUE_APP_BASE_URI + '/api'
-axios.defaults.baseURL = 'http://localhost:8000/api'
+
+// TODO move to action to get access to $axios with baseURL
+// https://axios.nuxtjs.org/usage.html
+console.log(process.env.API_URL)
+axios.defaults.baseURL = process.env.API_URL
 axios.defaults.headers.common['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 if (token) {

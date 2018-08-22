@@ -32,8 +32,8 @@
           v-if="user && isDropDownMenuOpen"
           v-on-clickaway="() => isDropDownMenuOpen = false">
           <ul>
-            <li class="my-subscription"><nuxt-link :to="{name: 'subscription'}"><span>My Subscription</span></nuxt-link></li>
-            <li class="my-newspapers"><nuxt-link :to="{name: 'author-newspapepers'}"><span>My Newspapers</span></nuxt-link></li>
+            <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></nuxt-link></li>
+            <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>My Newspapers</span></nuxt-link></li>
             <li class="explore"><nuxt-link :to="{name: 'explore'}"><span>Explore</span></nuxt-link></li>
             <li><nuxt-link :to="{name: 'user-settings'}"><span>Settings</span></nuxt-link></li>
             <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>

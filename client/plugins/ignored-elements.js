@@ -21,6 +21,7 @@ Vue.config.ignoredElements = [
   'change-password-view',
   'edit-newspaper-view',
   'editor-newspapers--board',
+  'editor-newspapers--empty',
   'editor-newspapers--header',
   'editor-newspapers--header--dropdown',
   'editor-newspapers--mobile-switcher',
@@ -81,4 +82,5 @@ Vue.config.ignoredElements = [
   'timeline-post--continue-reading',
   'timeline-post--tweet',
   'timeline-view',
+  'tweet-attachment-link-view'
 ]

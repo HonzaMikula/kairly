@@ -2,6 +2,10 @@ const fs = require('fs')
 const path = require('path')
 
 module.exports = {
+  env: {
+    API_URL: process.env.API_URL || 'https://kairly.com/api'
+  },
+  mode: 'spa',
   /*
   ** Headers of the page
   */
