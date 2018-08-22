@@ -16,23 +16,13 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.http import FileResponse, HttpResponseBadRequest, HttpResponseNotFound
-from django.shortcuts import render
-from django.urls import include, path, re_path
+from django.http import FileResponse
+# from django.shortcuts import render
+from django.urls import include, path
 from django.views.static import serve
 from django.views.generic.base import RedirectView
 
 from corsheaders.middleware import CorsMiddleware
-
-
-# def index(request, *args, **kwargs):
-#     if request.path.startswith('/api') or request.path == '/favicon.ico':
-#         return HttpResponseNotFound()
-#     accept = request.META.get('HTTP_ACCEPT')
-#     if accept and 'text/html' not in accept:
-#         return HttpResponseBadRequest()
-#
-#     return render(request, 'index.html')
 
 
 def serve_cors(request, *args, **kwargs):
@@ -43,14 +33,15 @@ def serve_cors(request, *args, **kwargs):
     return response
 
 
-urlpatterns = static('/media', view=serve_cors, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns = static('/media', view=serve_cors, document_root=settings.MEDIA_ROOT)
+else:
+    urlpatterns = []
+
 urlpatterns += [
-    path('accounts/', include('django.contrib.auth.urls')),
+    # path('accounts/', include('django.contrib.auth.urls')),
     path('admin', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('articles.urls')),
-
-    # frontend paths, match anything, needs regexp!
-    # re_path(r'', index, name='index'),
 ]
