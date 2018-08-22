@@ -25,7 +25,7 @@
 
       <section>
         <ul>
-          <li v-for="ed in managedNewspapers" :key="ed.id" :class="{'is-selected': ed.fullName in containedIn}">
+          <li v-for="ed in managedNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in containedIn}">
             <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
           </li>
         </ul>

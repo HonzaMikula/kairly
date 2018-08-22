@@ -3,10 +3,8 @@ import axios from 'axios'
 let token = localStorage.getItem("token")
 // TODO validate token validity
 
-
-// TODO move to action to get access to $axios with baseURL
+// TODO move to action to get access to $axios
 // https://axios.nuxtjs.org/usage.html
-console.log(process.env.API_URL)
 axios.defaults.baseURL = process.env.API_URL
 axios.defaults.headers.common['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone
 

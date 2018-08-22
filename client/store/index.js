@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 import * as actions from './actions'
 // import { analyticsMiddleware } from 'vue-analytics'
 
+// TODO use Immer for state manipulation. Or better, modular state from Nuxt
+
 const createStore = () => {
   return new Vuex.Store({
     state: {
@@ -17,6 +19,7 @@ const createStore = () => {
       },
       backlog: {},
       newspapers: {},
+      newspaperTitles: {},
       timeline: {
         issues: null, //null - not loaded, [] - loaded but empty
         cursor: null,
@@ -98,9 +101,14 @@ const createStore = () => {
         }
 
         Vue.delete(state.newspapers, newspaper.fullName)
+        Vue.delete(state.newspaperTitles, newspaper.fullName)
       },
       newspaper(state, newspaper) {
         state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
+        Vue.set(state.newspaperTitles, newspaper.fullName, newspaper.title)
+      },
+      newspaperTitle(state, newspaper) {
+        Vue.set(state.newspaperTitles, newspaper.fullName, newspaper.title)
       },
       timelineRequested(state) {
         state.timeline.loading = true
@@ -140,7 +148,7 @@ const createStore = () => {
       user: state => state.profile.user,
       loadingUser: state => state.profile.user === null, // Unauthorized -> user === false
       //subscribedNewspapers: state => state.profile.subscribedNewspapers.map(id => state.newspapers[id]),
-      managedNewspapers: state => state.profile.managedNewspapers.map(id => state.newspapers[id]),
+      managedNewspapers: state => state.profile.managedNewspapers.map(fullName => ({fullName, title: state.newspaperTitles[fullName]})),
       backlog: state => state.backlog,
       newspaper: state => id => state.newspapers[id]
     },

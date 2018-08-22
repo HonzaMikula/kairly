@@ -1,5 +1,7 @@
 import * as api from '@/api'
 
+// TODO use async/await
+
 function createErrorHadler(commit) {
   return err => {
     commit('showError', (err + '') || 'Request failed')
@@ -27,7 +29,7 @@ export const getProfile = ({ commit }) => {
           }
         })
         commit('backlog', resp.backlog)
-        resp.newspapers.forEach(newspaper => commit('newspaper', newspaper))
+        resp.newspapers.forEach(newspaper => commit('newspaperTitle', newspaper))
         commit('managedNewspapers', resp.newspapers.map(n => n.fullName))
         commit('subscriptions', resp.subscriptions)
         return resp
@@ -53,8 +55,7 @@ export const logout = () => {
 export const getNewspapers = ({ commit, state }, newspaperIds) => {
   return Promise.all(
     newspaperIds
-      // HACK: check for periodicity => newspaper is fully loaded (not just name and title), TODO do not save partialy loaded into store
-      .filter(id => !(id in state.newspapers && state.newspapers.periodicity))
+      .filter(id => !(id in state.newspapers))
       .map(id =>
         api.getNewspaperDetail(id)
           .then(resp => {
