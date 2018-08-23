@@ -1,49 +1,41 @@
 import * as api from '@/api'
 
-// TODO use async/await
-
-function createErrorHadler(commit) {
-  return err => {
-    commit('showError', (err + '') || 'Request failed')
-    // eslint-disable-next-line no-console
-    console.log(err)
-    return err
-  }
+function onError(err, commit) {
+  commit('showError', (err + '') || 'Request failed')
+  // eslint-disable-next-line no-console
+  console.log(err)
 }
 
-export const getProfile = ({ commit }) => {
-  return api
-    .getProfile()
-    .then(
-      resp => {
-        const { user } = resp
-        commit('user', {
-          user,
-          meta: {
-            analytics: [
-              ['event', {
-                eventCategory: 'User visit',
-                eventAction: user.name
-              }]
-            ]
-          }
-        })
-        commit('backlog', resp.backlog)
-        resp.newspapers.forEach(newspaper => commit('newspaperTitle', newspaper))
-        commit('managedNewspapers', resp.newspapers.map(n => n.fullName))
-        commit('subscriptions', resp.subscriptions)
-        return resp
-      },
-      err => {
-        commit('user', false)
-        commit('backlog', {})
-        commit('managedNewspapers', [])
-        commit('subscriptions', { authors: {}, newspapers: {}})
-        if (err.status !== 401 && err.message != 'Unauthorized') {
-          createErrorHadler(commit)(err)
-        }
+export const getProfile = async ({ commit }) => {
+  try {
+    const resp = await api.getProfile()
+    const { user } = resp
+    commit('user', {
+      user,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'User visit',
+            eventAction: user.name
+          }]
+        ]
       }
-    )
+    })
+    commit('backlog', resp.backlog)
+    resp.newspapers.forEach(newspaper => commit('newspaperTitle', newspaper))
+    commit('managedNewspapers', resp.newspapers.map(n => n.fullName))
+    commit('subscriptions', resp.subscriptions)
+    return resp
+  } catch (err) {
+    commit('user', false)
+    commit('backlog', {})
+    commit('managedNewspapers', [])
+    commit('subscriptions', { authors: {}, newspapers: {}})
+    const isUnauthorized = err.message == 'Unauthorized' || (err.response && err.response.status === 401)
+    if (!isUnauthorized) {
+      onError(err, commit)
+    }
+  }
 }
 
 export const logout = () => {
@@ -63,14 +55,15 @@ export const getNewspapers = ({ commit, state }, newspaperIds) => {
             commit('newspaper', newspaper)
             return newspaper
           })
-          .catch(createErrorHadler(commit))
+          .catch(err => onError(err, commit))
       )
   )
 }
 
-export const subscribe = ({ commit }, fullName) => {
+export const subscribe = async ({ commit }, fullName) => {
   commit('invalidateTimeline')
-  return api.subscribeNewspaper(fullName).then(newspaper => {
+  try {
+    const newspaper = await api.subscribeNewspaper(fullName)
     commit('newspaper', newspaper)
     commit('addNewspaperSubscription', {
       fullName,
@@ -84,13 +77,15 @@ export const subscribe = ({ commit }, fullName) => {
       }
     })
     return newspaper
-  })
-  .catch(createErrorHadler(commit))
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
-export const unsubscribe = ({ commit }, fullName) => {
+export const unsubscribe = async ({ commit }, fullName) => {
   commit('invalidateTimeline')
-  return api.unsubscribeNewspaper(fullName).then(newspaper => {
+  try {
+    const newspaper = await api.unsubscribeNewspaper(fullName)
     commit('newspaper', newspaper)
     commit('removeNewspaperSubscription', {
       fullName,
@@ -104,13 +99,15 @@ export const unsubscribe = ({ commit }, fullName) => {
       }
     })
     return newspaper
-  })
-  .catch(createErrorHadler(commit))
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
-export const subscribeAuthor = ({ commit }, { authorId, periodicity }) => {
+export const subscribeAuthor = async ({ commit }, { authorId, periodicity }) => {
   commit('invalidateTimeline')
-  return api.subscribeAuthor(authorId, periodicity).then(() => {
+  try {
+    await api.subscribeAuthor(authorId, periodicity)
     commit('addAuthorSubscription', {
       authorId,
       periodicity,
@@ -124,12 +121,15 @@ export const subscribeAuthor = ({ commit }, { authorId, periodicity }) => {
         ]
       }
     })
-  })
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
-export const unsubscribeAuthor = ({ commit }, { authorId }) => {
+export const unsubscribeAuthor = async ({ commit }, { authorId }) => {
   commit('invalidateTimeline')
-  return api.unsubscribeAuthor(authorId).then(() => {
+  try {
+    await api.unsubscribeAuthor(authorId)
     commit('removeAuthorSubscription', {
       authorId,
       meta: {
@@ -141,22 +141,24 @@ export const unsubscribeAuthor = ({ commit }, { authorId }) => {
         ]
       }
     })
-  })
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
 export const newspaperUpdated = ({ commit }, newspaper) => {
   commit('newspaper', newspaper)
 }
 
-export const loadMoreTimeline = ({ commit, state }) => {
+export const loadMoreTimeline = async ({ commit, state }) => {
   commit('timelineRequested')
-  return api
-    .getTimeline(state.timeline.cursor)
-    .then(timeline => {
-      commit('timelineReceived', timeline)
-      return timeline
-    })
-    .catch(createErrorHadler(commit))
+  try {
+    const timeline = await api.getTimeline(state.timeline.cursor)
+    commit('timelineReceived', timeline)
+    return timeline
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
 export const invalidateTimeline = ({ commit }) => {
@@ -177,10 +179,9 @@ export const expandIssue = ({ commit }, issueId) => {
   })
 }
 
-export const startNewEdtion = ({ commit }, { authorId, newspaper }) => {
-  return api.createNewspaper(authorId, newspaper)
-  .then(resp => {
-    const { newspaper } = resp
+export const startNewspaper = async ({ commit }, { authorId, newspaper: newspaperData }) => {
+  try {
+    const newspaper = await api.createNewspaper(authorId, newspaperData)
     commit('newspaper', newspaper)
     commit('appendManagedNewspaper', {
       newspaper,
@@ -194,14 +195,14 @@ export const startNewEdtion = ({ commit }, { authorId, newspaper }) => {
       }
     })
     return newspaper
-  })
-  .catch(createErrorHadler(commit))
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
-export const updateEdtion = ({ commit }, { fullName, fields }) => {
-  return api.updateNewspaper(fullName, fields)
-  .then(resp => {
-    const { newspaper } = resp
+export const updateNewspaper = async ({ commit }, { fullName, fields }) => {
+  try {
+    const newspaper = await api.updateNewspaper(fullName, fields)
     commit('newspaper', {
       newspaper,
       meta: {
@@ -214,15 +215,14 @@ export const updateEdtion = ({ commit }, { fullName, fields }) => {
       }
     })
     return newspaper
-  })
-  .catch(createErrorHadler(commit))
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
-
-
-export const deleteNewspaper = ({ commit }, newspaper) => {
-  return api.deleteNewspaper(newspaper.fullName)
-  .then(() => {
+export const deleteNewspaper = async ({ commit }, newspaper) => {
+  try {
+    await api.deleteNewspaper(newspaper.fullName)
     commit('removeNewspaper', {
       newspaper,
       meta: {
@@ -234,15 +234,16 @@ export const deleteNewspaper = ({ commit }, newspaper) => {
         ]
       }
     })
-  })
-  .catch(createErrorHadler(commit))
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
-export const addToBacklog = ({ commit }, { newspaper, post }) => {
-  return api.addToBacklog(newspaper.fullName, post.id)
-  // TODO to have better user experience, post can be added immediately
-  // and reverted when api call fails
-  .then(() => {
+export const addToBacklog = async ({ commit }, { newspaper, post }) => {
+  try {
+    // TODO to have better user experience, post can be added immediately
+    // and reverted when api call fails
+    await api.addToBacklog(newspaper.fullName, post.id)
     commit('backlogAdd', {
       newspaperId: newspaper.fullName,
       postId: post.id,
@@ -254,16 +255,17 @@ export const addToBacklog = ({ commit }, { newspaper, post }) => {
           }]
         ]
       }
-   })
-  })
-  .catch(createErrorHadler(commit))
+    })
+  } catch (err) {
+    onError(err, commit)
+  }
 }
 
-export const removeFromBacklog = ({ commit }, { newspaper, post }) => {
-  return api.deleteFromBacklog(newspaper.fullName, post.id)
-  // TODO to have better user experience, post can be removed immediately
-  // and reverted when api call fails
-  .then(() => {
+export const removeFromBacklog = async ({ commit }, { newspaper, post }) => {
+  try {
+    // TODO to have better user experience, post can be removed immediately
+    // and reverted when api call fails
+    await api.deleteFromBacklog(newspaper.fullName, post.id)
     commit('backlogRemove', {
       newspaperId: newspaper.fullName,
       postId: post.id,
@@ -276,6 +278,7 @@ export const removeFromBacklog = ({ commit }, { newspaper, post }) => {
         ]
       }
     })
-  })
-  .catch(createErrorHadler(commit))
+  } catch (err) {
+    onError(err, commit)
+  }
 }

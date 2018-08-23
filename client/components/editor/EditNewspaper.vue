@@ -152,12 +152,12 @@ export default {
         if (this.image) {
           fields.image = this.image
         }
-        this.updateEdtion({
+        this.updateNewspaper({
           fullName: this.newspaper.fullName,
           fields
         })
       } else {
-        this.startNewEdtion({
+        this.startNewspaper({
           authorId: this.user.id,
           newspaper: {
             title: this.title,
@@ -171,7 +171,7 @@ export default {
       this.closeModal()
     },
 
-    ...mapActions(['startNewEdtion', 'updateEdtion'])
+    ...mapActions(['startNewspaper', 'updateNewspaper'])
   }
 }
 </script>

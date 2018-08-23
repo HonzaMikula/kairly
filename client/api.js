@@ -89,12 +89,12 @@ export const unsubscribeAuthor = async (authorId) => {
 
 export const createNewspaper = async (authorId, newspaper) => {
   const res = await axios.post(`/authors/${authorId}/start-newspaper`, newspaper)
-  return res.data
+  return res.data.newspaper
 }
 
 export const updateNewspaper = async (fullName, fields) => {
   const res = await axios.patch(`/newspapers/${fullName}`, fields)
-  return res.data
+  return res.data.newspaper
 }
 
 export const deleteNewspaper = async (newspaperId) => {
