@@ -17,7 +17,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import FileResponse
-# from django.shortcuts import render
 from django.urls import include, path
 from django.views.static import serve
 from django.views.generic.base import RedirectView
@@ -33,15 +32,18 @@ def serve_cors(request, *args, **kwargs):
     return response
 
 
-if settings.DEBUG:
-    urlpatterns = static('/media', view=serve_cors, document_root=settings.MEDIA_ROOT)
-else:
-    urlpatterns = []
-
-urlpatterns += [
+urlpatterns = [
     # path('accounts/', include('django.contrib.auth.urls')),
     path('admin', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('articles.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns.extend(
+        static('/media', view=serve_cors, document_root=settings.MEDIA_ROOT)
+    )
+    urlpatterns.append(
+        path('', RedirectView.as_view(url='http://localhost:3000'))
+    )
