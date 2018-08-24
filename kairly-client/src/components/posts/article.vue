@@ -1,7 +1,7 @@
 <template>
   <post :post="post">
     <timeline-post--article>
-      <h2><router-link :to="{ name: 'post', params: { postId: post.id }}">{{ post.content.title }}</router-link></h2>
+      <h2><router-link :to="{ name: 'post', params: { postId: post.id }, hash: '#start'}">{{ post.content.title }}</router-link></h2>
       <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
         <timeline-post--continue-reading v-if="post.timeRead">

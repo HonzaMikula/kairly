@@ -24,7 +24,7 @@
             </button-icon>
           </post-detail--header>
 
-          <post-detail--title>
+          <post-detail--title id="start">
             <h1>{{post.content.title}}</h1>
           </post-detail--title>
 
