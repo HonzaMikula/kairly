@@ -84,7 +84,7 @@ class ArticleParser:
             children = list(htmltree)
             if children:
                 for el in children:
-                    if el.tag == 'div':
+                    if el.tag in ('div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'):
                         yield from flatten_tree(el)
                     else:
                         yield el

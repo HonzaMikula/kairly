@@ -1,0 +1,250 @@
+<template>
+  <post :post="post">
+    <timeline-post--article>
+      <h2><nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</nuxt-link></h2>
+      <timeline-post--article--content>
+        <div v-html="post.content.perex"></div>
+        <timeline-post--continue-reading v-if="post.timeRead">
+          <div v-if="isSubscribed">
+            <nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }, hash: '#continue'}">Continue reading</nuxt-link>
+          </div>
+          <div v-else>
+            Subscribe newspaper to continue reading
+          </div>
+          ({{ post.timeRead }} read)
+        </timeline-post--continue-reading>
+      </timeline-post--article--content>
+    </timeline-post--article>
+
+    <template slot="extendedControls">
+      <slot v-if="post.source" name="extendedControls">
+        <a :href="post.source" class="external-link" v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}" title="Original article"></a>
+      </slot>
+    </template>
+
+    <template slot="controls"><slot name="controls"></slot></template>
+  </post>
+</template>
+
+<script>
+import post from './post';
+
+export default {
+  name: 'post-article',
+  props: ["post", "isSubscribed"],
+  components: { post }
+}
+</script>
+
+
+<style lang="sass">
+timeline-post--article
+  font-family: $ff-serif
+
+  //- Title
+  > h2
+    display: block
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-1
+    font-weight: 600
+
+    @media (max-width: $mobile)
+      font-size: $fs-0
+
+    a
+      color: #000
+
+  a
+    color: $c-base
+
+//- Content
+timeline-post--article--content
+  position: relative
+
+  column-count: 3
+  column-rule: 1px dotted #ddd
+  column-gap: $baseline
+  display: block
+
+  line-height: $baseline * 0.9
+  hyphens: auto
+
+  @media (max-width: $mobile)
+    column-count: 2
+    column-gap: $baseline / 2
+
+    font-size: $fs--2
+    line-height: $baseline * 0.8
+
+
+  //-- heading
+  h1, h2, h3, h4, h5, h6
+    margin: $baseline / 4 0
+    font-weight: 600
+
+    break-after: avoid-column
+
+  //-- paragraph
+  p
+    text-indent: $baseline
+
+    @media (max-width: $mobile)
+      text-indent: $baseline / 2
+
+  //-- illustration image
+  img
+    display: block
+    margin: $baseline / 4 auto
+    height: auto
+    max-height: 200px
+    max-width: 100%
+
+  //- Video
+  video
+    height: auto
+    max-width: 100%
+
+  //-- link
+  a[href]
+    text-decoration: none
+
+  //-- strong
+  strong, b
+    font-weight: 600
+
+  //-- italic
+  em, i
+    font-style: italic
+
+  //-- bullet points
+  ul li
+    margin-left: $baseline
+    list-style: disc outside
+
+  //-- ordered list
+  ol li
+    margin-left: $baseline
+    list-style: decimal outside
+
+  //-- horizontal line
+  hr
+    border: 0
+    height: 1px
+    background: #ddd
+
+  //-- quotes
+  blockquote
+    margin: ($baseline / 4 - 2rem) 0
+    padding: $baseline / 4 0
+
+    border-bottom: 1px solid #eee
+    border-top: 1px solid #eee
+    color: #999
+
+    text-align: center
+
+    p
+      text-indent: 0
+
+      &::before
+        content: "„"
+
+      &::after
+        content: "“"
+
+  //-- cite
+  cite
+    display: block
+    margin: ($baseline / 4 - 2rem) 0
+    padding: $baseline / 4 0
+
+    border-bottom: 1px solid #eee
+    border-top: 1px solid #eee
+    color: #999
+
+    font-size: $fs-1
+    text-indent: 0
+
+    &::before
+      content: "„"
+
+    &::after
+      content: "“"
+
+  //-- code inline
+  code
+    background: #fafafa
+    font-family: "courier new", courier, monospace
+    font-size: $fs--1
+
+  //-- code block
+  pre
+    overflow: auto
+
+    background: #fafafa
+    border: 1px solid #eee
+
+    font-family: "courier new", courier, monospace
+    font-size: $fs--2
+
+
+  //-- pictures
+  figure
+    display: table
+
+    break-inside: avoid
+    text-align: center
+
+    figcaption, p
+      color: #999
+
+      font-family: $ff-sans
+      font-size: $fs--2
+      line-height: $baseline * 0.8
+
+  //-- table
+  table
+    margin-bottom: $baseline
+
+    font-family: $ff-sans
+
+    td, th
+      padding: 0 $baseline/4
+
+    thead td,
+    thead th
+      background: #eee
+
+      font-size: $fs--1
+
+
+//- Continue Reading
+timeline-post--continue-reading
+  display: block
+
+  color: #999
+
+  font-family: $ff-sans
+  font-size: $fs--2
+  text-align: center
+
+  a
+    display: table
+    border-radius: 15px
+    clear: both
+    margin: $baseline / 2 auto 0 auto
+    padding: 0 $baseline / 2
+
+    border: 1px solid transparent
+
+    font-size: $fs--2
+    line-height: $baseline
+    text-transform: uppercase
+
+    &:focus,
+    &:hover
+      background: $c-base
+      color: #fff
+
+</style>

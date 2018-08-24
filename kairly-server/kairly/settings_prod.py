@@ -21,13 +21,13 @@ ALLOWED_HOSTS = [
     'kairly.com'
 ]
 
-STATICFILES_DIRS = (
-    '/srv/kairly/kairly-client/dist/static',
-)
-
-TEMPLATES[0]['DIRS'] = (
-    '/srv/kairly/kairly-client/dist',
-)
+# STATICFILES_DIRS = (
+#     '/srv/kairly/kairly-client/dist/static',
+# )
+#
+# TEMPLATES[0]['DIRS'] = (
+#     '/srv/kairly/kairly-client/dist',
+# )
 
 MEDIA_ROOT = '/srv/kairly/kairly-server/media'
 
