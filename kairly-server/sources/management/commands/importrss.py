@@ -36,7 +36,13 @@ class Command(BaseCommand):
             '--last',
             action='store_true',
             dest='last',
-            help='Import single document only for each channel',
+            help='Import single document only for each channel (debug option)',
+        )
+        parser.add_argument(
+            '--url',
+            action='store',
+            dest='url',
+            help='Import only post with selected url (debug option)',
         )
 
     def import_post(self, channel, entry, options):
@@ -44,6 +50,9 @@ class Command(BaseCommand):
         force = options.get('force')
 
         url = entry.link.split('#', maxsplit=1)[0]
+
+        if options.get('url') and url != options.get('url'):
+            return None
 
         # some feeds has not guid attribute
         if hasattr(entry, 'id'):
@@ -113,6 +122,9 @@ class Command(BaseCommand):
 
                 try:
                     post = self.import_post(channel, entry, options)
+
+                    if post is None:
+                        continue
 
                     if channel.topic and not post.topics.filter(id=channel.topic_id).exists():
                         if verbosity > 1:

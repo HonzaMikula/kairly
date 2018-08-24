@@ -70,7 +70,7 @@ class Channel(models.Model):
             element_size += len(el.cssselect('img')) * 200
 
             if perex_fragments and chars + element_size > 1600:
-                content_fragments = fragments[i + 1:]
+                content_fragments = fragments[i:]
                 break
 
             chars += element_size
