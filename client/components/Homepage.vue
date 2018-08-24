@@ -1,9 +1,12 @@
 <template>
   <homepage-view>
     <homepage--cover>
-      <h1>Kairly</h1>
+      <div>
+        <h1>Kairly</h1>
 
-      <p>We stand for exceptional journalism<br /> &amp; great reading experience.</p>
+        <p>We stand for exceptional journalism<br /> &amp; great reading experience.</p>
+      </div>
+
     </homepage--cover>
 
     <homepage--login>
@@ -53,49 +56,53 @@
     </homepage--roles>
 
     <homepage--how-it-works>
-      <h2>How it works?</h2>
-      <p>
-        In old times we bought newspapers every day. Each issue of newspaper was prepared by professional editors who selected the
-        best articles from proffesional authors. By buying a newspaper, you pay those editors and authors.
-      </p>
-
-      <p>
-        In modern world of social media we lost professional editors and authors are dependent on advertisment.
-        Now it's your friends who are selecting the content in your timeline. The result is not good.
-        Exceptional journalism depends on professional editors and authors, who will get paid fairly.
-      </p>
-
       <div>
-        <img src="~/assets/homepage/kairly-screenshot.png" alt="Kairly Screenshot"/>
-        <img src="~/assets/homepage/kairly-screenshot2.png" alt="Kairly Screenshot"/>
-      </div>
+        <h2>How it works?</h2>
+        <p>
+          In old times we bought newspapers every day. Each issue of newspaper was prepared by professional editors who selected the
+          best articles from proffesional authors. By buying a newspaper, you pay those editors and authors.
+        </p>
 
-      <p>
-        In Kairly readers are subsribing newspapers and paying for them.
-        Those money are then shared between editors and authors.
-      </p>
+        <p>
+          In modern world of social media we lost professional editors and authors are dependent on advertisment.
+          Now it's your friends who are selecting the content in your timeline. The result is not good.
+          Exceptional journalism depends on professional editors and authors, who will get paid fairly.
+        </p>
+
+        <div>
+          <img src="~/assets/homepage/kairly-screenshot.png" alt="Kairly Screenshot"/>
+          <img src="~/assets/homepage/kairly-screenshot2.png" alt="Kairly Screenshot"/>
+        </div>
+
+        <p>
+          In Kairly readers are subsribing newspapers and paying for them.
+          Those money are then shared between editors and authors.
+        </p>
+      </div>
     </homepage--how-it-works>
 
     <homepage--values>
-      <h2>What we believe in?</h2>
+      <div>
+        <h2>What we believe in?</h2>
 
-      <p>
-        In the world full of fake news, manipulations and attacks on journalism, we stand for <strong>truth</strong>.
-      </p>
+        <p>
+          In the world full of fake news, manipulations and attacks on journalism, we stand for <strong>truth</strong>.
+        </p>
 
-      <p>In the world full of censorship and propaganda, we stand for <strong>free speach</strong>.</p>
+        <p>In the world full of censorship and propaganda, we stand for <strong>free speach</strong>.</p>
 
-      <p>
-        In the world full of distraction and lack of focus, we stand for
-        <strong>control of your time and undistracted reading experience</strong>.
-      </p>
+        <p>
+          In the world full of distraction and lack of focus, we stand for
+          <strong>control of your time and undistracted reading experience</strong>.
+        </p>
 
-      <p>
-        In the world where journalist are dependent on advertisment or big corporations with their interests,
-        we stand for <strong>fair reward for high-quality content</strong>.
-      </p>
+        <p>
+          In the world where journalist are dependent on advertisment or big corporations with their interests,
+          we stand for <strong>fair reward for high-quality content</strong>.
+        </p>
 
-      <p>Stand with us!</p>
+        <p>Stand with us!</p>
+      </div>
     </homepage--values>
 
     <homepage--help-us>
@@ -124,14 +131,6 @@
           <p>
             Do you want to help improve our payments mechanism for authors?
             Start publishing your blogs and tweets in our private beta program.
-          </p>
-        </section>
-
-        <section>
-          <h3>Investors</h3>
-          <p>
-            Do you want to help us create enviroonment for exceptional journalism?
-            Become one of our investors.
           </p>
         </section>
       </div>
@@ -183,7 +182,7 @@ homepage--cover
   display: block
   box-sizing: border-box
   height: 580px
-  padding: $baseline * 2
+  padding: $baseline * 1
 
   background: url('~/assets/homepage/hero.png') center center no-repeat
   background-size: cover
@@ -195,6 +194,10 @@ homepage--cover
   @media (max-width: $mobile)
     padding: $baseline / 2
     height: 160px
+
+  > div
+    max-width: 900px
+    margin: 0 auto
 
   //- kairly Heading
   h1
@@ -364,8 +367,9 @@ homepage--roles
 
   h3
     margin-bottom: $baseline / 2
-    font-size: $fs-2
-    font-weight: 600
+
+    font-size: $fs-3
+    font-family: $ff-serif
 
 
 //- Values
@@ -373,10 +377,9 @@ homepage--values
   display: block
   padding: $baseline * 2 $baseline
 
-  text-align: center
-
-  @media (max-width: $mobile)
-    text-align: left
+  > div
+    margin: 0 auto
+    max-width: 900px
 
   //- heading
   h2
@@ -390,7 +393,7 @@ homepage--values
   //- values
   p
     margin: 0 auto $baseline auto
-    max-width: 700px
+    max-width: 900px
 
     font-size: $fs-1
     font-family: $ff-serif
@@ -410,13 +413,13 @@ homepage--how-it-works
   display: block
   padding: $baseline * 2 $baseline
 
-  background: lighten($c-base, 20%)
+  background: #eee
 
   font-family: $ff-serif
-  text-align: center
 
-  @media (max-width: $mobile)
-    text-align: left
+  > div
+    margin: 0 auto
+    max-width: 900px
 
   //- heading
   h2
@@ -428,7 +431,7 @@ homepage--how-it-works
       margin-bottom: $baseline
 
   p
-    max-width: 700px
+    max-width: 900px
     margin: 0 auto $baseline auto
 
     font-size: $fs-1
@@ -439,7 +442,7 @@ homepage--how-it-works
       &:last-of-type
         margin: 0
 
-  > div
+  > div > div
     display: table
     margin: 0 auto $baseline auto
 
@@ -463,7 +466,7 @@ homepage--help-us
   display: block
   padding: $baseline
 
-  background: lighten($c-base, 40%)
+  background: #eee
 
   font-family: $ff-serif
   text-align: center
@@ -482,7 +485,7 @@ homepage--help-us
   //- wrapper
   > div
     display: flex
-    max-width: 1200px
+    max-width: 900px
     margin: $baseline*2 auto
 
     @media (max-width: $mobile)
@@ -495,7 +498,6 @@ homepage--help-us
 
     @media (max-width: $mobile)
       margin: 0 0 $baseline 0
-
 
 
     &:last-of-type

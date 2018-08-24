@@ -95,8 +95,9 @@ app-header-view
   height: $baseline * 2
   padding: 0 $baseline
 
-  background: $c-base
-  color: #fff
+  background: #fff
+  border-bottom: 1px solid #eee
+  color: #555
 
   font-size: $fs--1
   line-height: $baseline * 2
@@ -124,14 +125,14 @@ app-header--nav
     display: block
     padding: 0 $baseline / 2
 
-    color: #fff
+    color: #555
 
     &:focus,
     &:hover
-      background: darken($c-base, 10%)
+      background: #eee
 
-    &.is-active
-      background: darken($c-base, 15%)
+    &.nuxt-link-active
+      background: #eee
 
     @media (max-width: $mobile)
       padding: 0 $baseline*0.75
@@ -144,7 +145,6 @@ app-header--nav
     .my-newspapers,
     .explore
       display: none
-
 
 
   li a::before
@@ -211,7 +211,7 @@ app-header--user-profile
 
     &:focus,
     &:hover
-      background: darken($c-base, 10%)
+      background: #eee
 
     &::before
       content: $fa-var-chevron-down

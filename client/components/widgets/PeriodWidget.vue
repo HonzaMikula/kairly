@@ -4,7 +4,7 @@
     v-on-clickaway="() => closeSubscribeWidget()">
 
     <section v-if="frequency === null">
-      <header>How often?</header>
+      <header>How often do you want to read it?</header>
       <ul>
         <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
         <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
@@ -135,7 +135,7 @@ export default {
 
   display: block
   border-radius: 5px
-  width: 250px
+  width: 270px
 
   background: #fff
   border: 1px solid #eee

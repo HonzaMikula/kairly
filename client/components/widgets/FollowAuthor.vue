@@ -15,7 +15,7 @@
     </div>
 
     <div v-else-if="frequency === null">
-      <header>How often?</header>
+      <header>How often do you want to read it?</header>
 
       <section>
         <ul>
@@ -195,6 +195,9 @@ export default {
   left: 50%
   top: 50px
   z-index: 10000
+
+  margin-left: -135px
+  width: 270px
 
   font-family: $ff-sans
 
