@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
 import AuthorWidget from '@/components/widgets/AuthorWidget'
@@ -43,25 +42,28 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState({
-      authorIds: state => Object.keys(state.subscriptions.authors)
-    }),
+  computed: mapState({
+    subscriptions: state => state.subscriptions.authors
+  }),
 
-    // authors() {
-    //    ....
-    // }
+  async fetch({ store, redirect }) {
+    if (!store.state.auth.loggedIn) {
+      redirect('/homepage')
+      return
+    }
+
+    await store.dispatch('getSubscriptions')
   },
 
-  created() {
+  async created() {
     // TODO make single endpoint to fetch authors (and fetch them without newspapers)
     // TODO cache authors in state same as edtions are currently cached
-    Promise.all(
-      this.authorIds.map(id => api.getAuthorDetail(id).then(resp => resp.author))
-    ).then(authors => {
-      this.authors = authors
-      this.loadingAuthors = false
-    })
+    const ids = Object.keys(this.subscriptions)
+    const details = await Promise.all(
+      ids.map(id => this.$store.dispatch('getAuthor', id))
+    )
+    this.authors = details.map(d => d.author)
+    this.loadingAuthors = false
   }
 }
 </script>

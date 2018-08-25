@@ -1,11 +1,12 @@
 const fs = require('fs')
 const path = require('path')
 
+const API_URL = process.env.API_URL || 'https://kairly.com/api'
+
 module.exports = {
   env: {
-    API_URL: process.env.API_URL || 'https://kairly.com/api'
+    API_URL
   },
-  mode: 'spa',
   /*
   ** Headers of the page
   */
@@ -25,7 +26,8 @@ module.exports = {
   /*
   ** Customize the progress bar color
   */
-  loading: { color: '#3B8070' },
+  // loadingIndicator: { name: 'circle', color: '#57ad68', background: 'white'}
+  // loading: { color: '#57ad68' },
   /* TODO add https://github.com/nuxt-community/analytics-module */
   plugins: [
     '~/plugins/ignored-elements',
@@ -37,6 +39,7 @@ module.exports = {
   ],
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
     ['@nuxtjs/google-analytics', {
       id: 'UA-114180015-1'
     }],
@@ -61,5 +64,22 @@ module.exports = {
         })
       }
     }
+  },
+
+  auth: {
+    redirect: false,
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/token', method: 'post', propertyName: 'token' },
+          logout: false,
+          user: { url: '/profile', method: 'get', propertyName: 'user' }
+        }
+        // tokenRequired: true,
+        // tokenType: 'bearer',
+      }
+    },
+    plugins: [ '~/plugins/token_header.js' ] // TEMP Workaround
   }
+
 }

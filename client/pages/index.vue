@@ -1,6 +1,6 @@
 <template>
   <app-layout>
-    <timeline-view v-infinite-scroll="loadMore"
+    <timeline-view v-infinite-scroll="loadTimeline"
       infinite-scroll-disabled="loadDisabled"
       infinite-scroll-distance="100"
     >
@@ -18,10 +18,9 @@
 </template>
 
 <script>
-import * as api from '@/api'
-import { mapState } from 'vuex'
-import AppLayout from '@/components/layout/AppLayout'
+import { mapActions, mapState } from 'vuex'
 
+import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
 import Welcome from '@/components/Welcome'
 
@@ -47,15 +46,22 @@ export default {
     })
   },
 
-  methods: {
-    loadMore() {
-      this.$store.dispatch('loadMoreTimeline')
-    }
-  },
+  methods: mapActions(['loadTimeline']),  
 
-  created() {
-    if (!this.loading && this.issues === null) {
-      this.$store.dispatch('loadMoreTimeline')
+  async fetch ({ store, params, redirect }) {
+    if (!store.state.auth.loggedIn) {
+      redirect('/homepage')
+      return
+    }
+
+    // TODO load when needed (user opens dropdown) or better
+    // on background after component is displayed
+    await store.dispatch('getUserBacklog')
+
+    // TODO nice to have fetch new data when timeline is too old
+    const { timeline } = store.state
+    if (!timeline.loading && timeline.issues === null) {
+      await store.dispatch('loadTimeline')
     }
   }
 }

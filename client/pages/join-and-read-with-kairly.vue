@@ -26,15 +26,8 @@
 </template>
 
 <script>
-import * as api from '@/api'
-
 export default {
   name: 'SignUp',
-
-  // TODO use different layout, but rathen than differentiate public/private
-  // use default/noheader etc and handle public routes by middleware
-
-  layout: 'public',
 
   head() {
     return {
@@ -52,26 +45,29 @@ export default {
   },
 
   methods: {
-    submit() {
-      const { username, email, password }  = this
-      api.signUp({ username, email, password })
-      .then(
-        () => {
-          api.createToken(username, password)
-          .then(this.getProfile)
-          //.then(() => this.$router.push({ path: '/' }))
-          // workaround for now, make reload
-          .then(() => window.location = '/')
-        },
-        ({response}) => {
-          this.error = response.data.error
+    async submit() {
+      const { username, email, password } = this
+      try {
+        await this.$axios.post('/signup', { username, email, password })
+        await this.$auth.loginWith('local', {
+          data: { username, password }
+        })
+        this.$router.push("/")
+      } catch (err) {
+        if (err.response) {
+          this.error = err.response.data.error
+        } else {
+          this.error = err
         }
-      )
+      }
     }
   },
 
-  created() {
-    // TODO redirect to home when user is already logged in
+  async fetch ({ store, redirect }) {
+    if (store.state.auth.loggedIn) {
+      redirect('/')
+      return
+    }
   }
 }
 </script>

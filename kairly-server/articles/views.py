@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from collections import defaultdict
 
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
@@ -14,7 +15,7 @@ from utils.upload import file_from_data_uri
 from users.models import User
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor, Topic)
-from .period import parse_periodicity
+from .period import parse_periodicity, periodicity_to_json
 
 
 AUTOR_POSTS_PAGE_SIZE = 20
@@ -44,6 +45,40 @@ def annotate_newspapers(request, newspapers):
 
 
 @ajax_login_required
+def subscriptions(request):
+    subscribed_authors = {}
+    query = SubscriptionToAuthor.objects.filter(user=request.user).select_related('author', 'topic')
+    for s in query:
+        author_id = '{}|{}'.format(s.author.username, s.topic.slug) if s.topic else s.author.username
+        subscribed_authors[author_id] = periodicity_to_json(s)
+
+    subscribed_newspapers = {}
+    query = Newspaper.objects.filter(subscription__user=request.user).select_related('editor')
+    for newspaper in query:
+        full_name = "{}/{}".format(newspaper.editor.username, newspaper.slug)
+        subscribed_newspapers[full_name] = True
+
+    return JsonResponse({
+        "subscriptions": {
+            "authors": subscribed_authors,
+            "newspapers": subscribed_newspapers,
+        }
+    })
+
+
+@ajax_login_required
+def user_backlog(request):
+    backlog = defaultdict(dict)
+    for bl in Backlog.objects.filter(newspaper__editor=request.user).select_related('newspaper'):
+        full_name = "{}/{}".format(request.user.username, bl.newspaper.slug)
+        backlog[bl.post_id][full_name] = 'C' if bl.publish_stamp is None else 'P'
+
+    return JsonResponse({
+        "backlog": backlog
+    })
+
+
+# @ajax_login_required # TODO REVIEW PUBLIC
 def recent_issues(request):
     issues = list(Issue.objects.all().order_by('-published')[:3])
     newspaper_ids = [issue.newspaper_id for issue in issues]
@@ -60,7 +95,7 @@ def recent_issues(request):
     return JsonResponse(resp, safe=False)
 
 
-@ajax_login_required
+# @ajax_login_required # TODO REVIEW PUBLIC
 def recent_posts(request):
     posts = Post.objects.filter(draft=False, published__lt=datetime.now()).select_related('author').order_by('-published')[:12]
     return JsonResponse([post.to_json(tzinfo=request.tzinfo) for post in posts], safe=False)
@@ -73,8 +108,8 @@ def delete_newspaper(request, newspaper):
     return HttpResponse(status=204)
 
 
-class EditionView(View):
-    @ajax_login_required
+class NewspaperView(View):
+    # @ajax_login_required # TODO REVIEW PUBLIC
     def get(self, request, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
@@ -107,7 +142,7 @@ class EditionView(View):
             newspaper.title = payload['title'].strip()
 
         if 'description' in payload:
-            newspaper.title = payload['description'].strip()
+            newspaper.description = payload['description'].strip()
 
         if 'periodicity' in payload:
             try:
@@ -178,7 +213,7 @@ def author_posts(request, username):
 
 
 @ajax_login_required
-def backlog(request, username, newspapeper_slug):
+def newspaper_backlog(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
         return HttpResponseForbidden()

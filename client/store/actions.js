@@ -1,4 +1,4 @@
-import * as api from '@/api'
+
 
 function onError(err, commit) {
   commit('showError', (err + '') || 'Request failed')
@@ -6,64 +6,76 @@ function onError(err, commit) {
   console.log(err)
 }
 
-export const getProfile = async ({ commit }) => {
-  try {
-    const resp = await api.getProfile()
-    const { user } = resp
-    commit('user', {
-      user,
-      meta: {
-        analytics: [
-          ['event', {
-            eventCategory: 'User visit',
-            eventAction: user.name
-          }]
-        ]
-      }
-    })
-    commit('backlog', resp.backlog)
-    resp.newspapers.forEach(newspaper => commit('newspaperTitle', newspaper))
-    commit('managedNewspapers', resp.newspapers.map(n => n.fullName))
-    commit('subscriptions', resp.subscriptions)
-    return resp
-  } catch (err) {
-    commit('user', false)
-    commit('backlog', {})
-    commit('managedNewspapers', [])
-    commit('subscriptions', { authors: {}, newspapers: {}})
-    const isUnauthorized = err.message == 'Unauthorized' || (err.response && err.response.status === 401)
-    if (!isUnauthorized) {
-      onError(err, commit)
-    }
+
+export async function getUserBacklog({ commit, state }) {
+  if (state.backlog) {
+    return state.backlog
   }
+  const { backlog } = await this.$axios.$get('/backlog')
+  commit('backlog', backlog)
+  return backlog
 }
 
-export const logout = () => {
-  api.clearToken()
-  // fot now rather reload page to clear cache in store
-  window.location.reload()
+export async function getSubscriptions({ commit, state }) {
+  if (state.subscriptions) {
+    return state.subscriptions
+  }
+  const { subscriptions } = await this.$axios.$get('/subscriptions')
+  commit('subscriptions', subscriptions)
+  return subscriptions
 }
 
-export const getNewspapers = ({ commit, state }, newspaperIds) => {
-  return Promise.all(
-    newspaperIds
-      .filter(id => !(id in state.newspapers))
-      .map(id =>
-        api.getNewspaperDetail(id)
-          .then(resp => {
-            const { newspaper } = resp
-            commit('newspaper', newspaper)
-            return newspaper
-          })
-          .catch(err => onError(err, commit))
-      )
-  )
+export async function loadTimeline({ commit, state }) {
+  commit('timelineRequested')
+  //try {
+  const { cursor } = state.timeline
+  const timeline = await this.$axios.$get('/timeline', {params: {cursor}})
+  commit('timelineReceived', timeline)
+  return timeline
+  // } catch (err) {
+  //   onError(err, commit)
+  // }
 }
 
-export const subscribe = async ({ commit }, fullName) => {
+export const invalidateTimeline = ({ commit }) => {
+  commit('invalidateTimeline')
+}
+
+export async function getNewspaperDetail({ commit }, { newspaperId, issue }) {
+  const data = await this.$axios.$get(`/newspapers/${newspaperId}`, {params: {issue}})
+  commit('newspaper', data.newspaper)
+  return data
+}
+
+export async function getNewspapers(store, newspaperIds) {
+  const missing = newspaperIds.filter(id => !(id in store.state.newspapers))
+  if (missing.length) {
+    const promises = missing.map(id => getNewspaperDetail.call(this, store, { newspaperId: id }))
+    await Promise.all(promises)
+  }
+  return newspaperIds.map(id => store.state.newspapers[id])
+}
+
+export async function getAuthor({ commit, state, dispatch }, authorId) {
+  const data = await this.$axios.$get(`/authors/${authorId}`)
+  data.newspapers.forEach(n => dispatch('newspaperUpdated', n))
+  return data
+}
+
+// export async function getAuthor({ commit, state }, id) {
+//   let author = state.authors[id]
+//   if (author) {
+//     return author
+//   }
+//   resp = await api.getAuthor(id)
+//   commit('author', author)
+//   return author
+// }
+
+export async function subscribe({ commit }, fullName) {
   commit('invalidateTimeline')
   try {
-    const newspaper = await api.subscribeNewspaper(fullName)
+    const newspaper = await this.$axios.$post(`/newspapers/${fullName}/subscribe`)
     commit('newspaper', newspaper)
     commit('addNewspaperSubscription', {
       fullName,
@@ -82,10 +94,10 @@ export const subscribe = async ({ commit }, fullName) => {
   }
 }
 
-export const unsubscribe = async ({ commit }, fullName) => {
+export async function unsubscribe({ commit }, fullName) {
   commit('invalidateTimeline')
   try {
-    const newspaper = await api.unsubscribeNewspaper(fullName)
+    const newspaper = await this.$axios.$post(`/newspapers/${fullName}/unsubscribe`)
     commit('newspaper', newspaper)
     commit('removeNewspaperSubscription', {
       fullName,
@@ -104,10 +116,10 @@ export const unsubscribe = async ({ commit }, fullName) => {
   }
 }
 
-export const subscribeAuthor = async ({ commit }, { authorId, periodicity }) => {
+export async function subscribeAuthor({ commit }, { authorId, periodicity }) {
   commit('invalidateTimeline')
   try {
-    await api.subscribeAuthor(authorId, periodicity)
+    await this.$axios.post(`/authors/${authorId}/subscribe`, periodicity)
     commit('addAuthorSubscription', {
       authorId,
       periodicity,
@@ -126,10 +138,10 @@ export const subscribeAuthor = async ({ commit }, { authorId, periodicity }) => 
   }
 }
 
-export const unsubscribeAuthor = async ({ commit }, { authorId }) => {
+export async function unsubscribeAuthor({ commit }, { authorId }) {
   commit('invalidateTimeline')
   try {
-    await api.unsubscribeAuthor(authorId)
+    await this.$axios.post(`/authors/${authorId}/unsubscribe`)
     commit('removeAuthorSubscription', {
       authorId,
       meta: {
@@ -146,44 +158,11 @@ export const unsubscribeAuthor = async ({ commit }, { authorId }) => {
   }
 }
 
-export const newspaperUpdated = ({ commit }, newspaper) => {
-  commit('newspaper', newspaper)
-}
-
-export const loadMoreTimeline = async ({ commit, state }) => {
-  commit('timelineRequested')
+export async function startNewspaper({ commit }, { authorId, newspaper: postData }) {
   try {
-    const timeline = await api.getTimeline(state.timeline.cursor)
-    commit('timelineReceived', timeline)
-    return timeline
-  } catch (err) {
-    onError(err, commit)
-  }
-}
-
-export const invalidateTimeline = ({ commit }) => {
-  commit('invalidateTimeline')
-}
-
-export const expandIssue = ({ commit }, issueId) => {
-  commit('expandIssue', {
-    issueId,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Show more (issue)',
-          eventAction: issueId
-        }]
-      ]
-    }
-  })
-}
-
-export const startNewspaper = async ({ commit }, { authorId, newspaper: newspaperData }) => {
-  try {
-    const newspaper = await api.createNewspaper(authorId, newspaperData)
+    const { newspaper } = await this.$axios.$post(`/authors/${authorId}/start-newspaper`, postData)
     commit('newspaper', newspaper)
-    commit('appendManagedNewspaper', {
+    commit('appendOwnedNewspaper', {
       newspaper,
       meta: {
         analytics: [
@@ -200,9 +179,9 @@ export const startNewspaper = async ({ commit }, { authorId, newspaper: newspape
   }
 }
 
-export const updateNewspaper = async ({ commit }, { fullName, fields }) => {
+export async function updateNewspaper({ commit }, { fullName, fields }) {
   try {
-    const newspaper = await api.updateNewspaper(fullName, fields)
+    const { newspaper } = await this.$axios.$patch(`/newspapers/${fullName}`, fields)
     commit('newspaper', {
       newspaper,
       meta: {
@@ -220,9 +199,9 @@ export const updateNewspaper = async ({ commit }, { fullName, fields }) => {
   }
 }
 
-export const deleteNewspaper = async ({ commit }, newspaper) => {
+export async function deleteNewspaper({ commit }, newspaper) {
   try {
-    await api.deleteNewspaper(newspaper.fullName)
+    await this.$axios.delete(`/newspapers/${newspaper.fullName}`)
     commit('removeNewspaper', {
       newspaper,
       meta: {
@@ -239,11 +218,11 @@ export const deleteNewspaper = async ({ commit }, newspaper) => {
   }
 }
 
-export const addToBacklog = async ({ commit }, { newspaper, post }) => {
+export async function addToBacklog({ commit }, { newspaper, post }) {
   try {
     // TODO to have better user experience, post can be added immediately
     // and reverted when api call fails
-    await api.addToBacklog(newspaper.fullName, post.id)
+    await this.$axios.put(`/newspapers/${newspaper.fullName}/backlog`, {post: post.id})
     commit('backlogAdd', {
       newspaperId: newspaper.fullName,
       postId: post.id,
@@ -261,11 +240,11 @@ export const addToBacklog = async ({ commit }, { newspaper, post }) => {
   }
 }
 
-export const removeFromBacklog = async ({ commit }, { newspaper, post }) => {
+export async function removeFromBacklog({ commit }, { newspaper, post }) {
   try {
     // TODO to have better user experience, post can be removed immediately
     // and reverted when api call fails
-    await api.deleteFromBacklog(newspaper.fullName, post.id)
+    await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: post.id}})
     commit('backlogRemove', {
       newspaperId: newspaper.fullName,
       postId: post.id,
@@ -281,4 +260,22 @@ export const removeFromBacklog = async ({ commit }, { newspaper, post }) => {
   } catch (err) {
     onError(err, commit)
   }
+}
+
+export const newspaperUpdated = ({ commit }, newspaper) => {
+  commit('newspaper', newspaper)
+}
+
+export const expandIssue = ({ commit }, issueId) => {
+  commit('expandIssue', {
+    issueId,
+    meta: {
+      analytics: [
+        ['event', {
+          eventCategory: 'Show more (issue)',
+          eventAction: issueId
+        }]
+      ]
+    }
+  })
 }

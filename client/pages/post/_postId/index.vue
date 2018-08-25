@@ -1,90 +1,84 @@
 <template>
   <app-layout>
     <post-detail role="article">
-      <loading-spinner v-if="!post"></loading-spinner>
+      <post-detail--back-button
+        title="Back"
+        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+        v-on:click="$router.go(-1)">
+      </post-detail--back-button>
 
-      <div v-if="post">
-        <post-detail--back-button
-          title="Back"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-          v-on:click="$router.go(-1)">
-        </post-detail--back-button>
+      <main>
+        <post-detail--header>
+          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+            <img :src="post.author.picture" :alt="post.author.name"/>
+            {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+          </nuxt-link>
 
-        <main>
-          <post-detail--header>
+          <button-icon
+            class="read-later"
+            title="Read later"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+          </button-icon>
+        </post-detail--header>
+
+        <post-detail--title id="start">
+          <h1>{{post.content.title}}</h1>
+        </post-detail--title>
+
+        <post-detail--content v-html="post.content.perex"></post-detail--content>
+
+        <post-detail--continue-reading id="continue" v-if="post.content.content">
+          continue reading
+        </post-detail--continue-reading>
+
+        <post-detail--content v-html="post.content.content"></post-detail--content>
+
+        <post-detail--footer>
+          <consider-post :post="post" :showText="true" />
+
+          <a :href="post.source" class="external-link">Original article</a>
+        </post-detail--footer>
+
+        <post-detail--author>
+          <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
               <img :src="post.author.picture" :alt="post.author.name"/>
+            </nuxt-link>
+          </picture>
+
+          <h3>
+            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
               {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
             </nuxt-link>
+          </h3>
 
-            <button-icon
-              class="read-later"
-              title="Read later"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-            </button-icon>
-          </post-detail--header>
+          <p>{{post.author.bio}}</p>
 
-          <post-detail--title id="start">
-            <h1>{{post.content.title}}</h1>
-          </post-detail--title>
+          <post-detail--author--subscription>
+            <AuthorSubscription
+              v-if="subscription"
+              :subscription="subscription" :author="post.author"
+            />
 
-          <post-detail--content v-html="post.content.perex"></post-detail--content>
+            <button
+              v-else
+              @click="$refs.followWidget.openSubscribeWidget()">
+              Subscribe author
+            </button>
 
-          <post-detail--continue-reading id="continue" v-if="post.content.content">
-            continue reading
-          </post-detail--continue-reading>
-
-          <post-detail--content v-html="post.content.content"></post-detail--content>
-
-          <post-detail--footer>
-            <consider-post :post="post" :showText="true" />
-
-            <a :href="post.source" class="external-link">Original article</a>
-          </post-detail--footer>
-
-          <post-detail--author>
-            <picture>
-              <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-                <img :src="post.author.picture" :alt="post.author.name"/>
-              </nuxt-link>
-            </picture>
-
-            <h3>
-              <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-                {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-              </nuxt-link>
-            </h3>
-
-            <p>{{post.author.bio}}</p>
-
-            <post-detail--author--subscription>
-              <AuthorSubscription
-                v-if="subscription"
-                :subscription="subscription" :author="post.author"
-              />
-
-              <button
-                v-else
-                @click="$refs.followWidget.openSubscribeWidget()">
-                Subscribe author
-              </button>
-
-              <follow-author
-                ref="followWidget"
-                :author="post.author"
-                :onSelect="follow"
-              />
-            </post-detail--author--subscription>
-          </post-detail--author>
-        </main>
-      </div>
+            <follow-author
+              ref="followWidget"
+              :author="post.author"
+              :onSelect="follow"
+            />
+          </post-detail--author--subscription>
+        </post-detail--author>
+      </main>
     </post-detail>
   </app-layout>
 </template>
 
 <script>
-import * as api from '@/api'
-
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
@@ -102,7 +96,7 @@ export default {
 
   computed: {
     subscription() {
-      return this.$store.state.subscriptions.authors[this.post.author.id]
+      return this.$store.getters.getAuthorSubscription(this.post.author)
     }
   },
 
@@ -115,20 +109,16 @@ export default {
     }
   },
 
-  data() {
-    return {
-      post: null
-    }
-  },
-
-  created() {
-    api.getPost(this.$route.params.postId).then(post => this.post = post)
+  async asyncData({ app, params }) {
+    const { postId } = params
+    const { post } = await app.$axios.$get(`/post/${postId}`)
+    return { post }
   },
 
   updated() {
     // TODO dangerous if more component properties exists and updated called more
     // then once
-    if (this.$route.hash) {
+    if (process.client && this.$route.hash) {
       const anchor = document.querySelector(this.$route.hash)
       if (anchor) {
         anchor.scrollIntoView(true)

@@ -1,6 +1,6 @@
 <template>
   <app-main>
-    <AppHeader />
+    <AppHeader v-if="loggedIn" />
     <not-found v-if="show404"></not-found>
     <slot v-else></slot>
   </app-main>
@@ -22,6 +22,7 @@ export default {
 
   computed: mapState({
     show404: state => state.show404,
+    loggedIn: state => state.auth.loggedIn
   })
 }
 </script>

@@ -1,27 +1,24 @@
 <template>
   <app-layout>
     <issue-detail-view>
-      <div v-if="!loading">
-        <Issue :issue="issue" :subscription="newspaper.subscription" />
-      </div>
+      <Issue :issue="issue" :subscription="newspaper.subscription" />
     </issue-detail-view>
   </app-layout>
 </template>
 
 
 <script>
-import * as api from '@/api'
+import { mapActions } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
-
 
 export default {
   name: 'IssueDetail',
 
   head() {
       return {
-        title: this.newspaper ? `${this.newspaper.title} #${this.issue.number}` : undefined
+        title: `${this.newspaper.title} #${this.issue.number}`
       }
   },
 
@@ -30,21 +27,18 @@ export default {
     Issue
   },
 
-  data() {
-    return {
-      loading: true,
-      newspaper: null,
-      issue: null,
-    }
-  },
+  async asyncData({ store, params }) {
+    const fullName = `${params.author}/${params.newspaper}`
 
-  created() {
-    const { author, newspaper, issue } = this.$route.params
-    api.getNewspaperDetail(`${author}/${newspaper}`, issue).then(resp => {
-      this.newspaper = resp.newspaper
-      this.issue = resp.issue
-      this.loading = false
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
+    }
+    
+    const { newspaper, issue } = await store.dispatch('getNewspaperDetail', {
+      newspaperId: fullName,
+      issue: params.issue
     })
+    return { newspaper, issue }
   }
 }
 </script>

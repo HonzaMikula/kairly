@@ -24,38 +24,35 @@
       />
     </section>
 
+    <portal to="explore-header">Most Recent</portal>
+
   </main>
 </template>
 
 <script>
-import * as api from '@/api'
-import { mapState, mapGetters } from 'vuex'
-
 import IssueWidget from '@/components/widgets/IssueWidget'
 import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: 'ExploreContent',
+  name: 'ExploreRecentTab',
 
   components: {
     IssueWidget,
     PostWrapper
   },
 
-  props: {
-    tab: Object
-  },
-
-  data() {
+  head() {
     return {
-      issues: [],
-      posts: [],
+      title: 'Explore - Most Recent',
     }
   },
 
-  created() {
-    api.getRecentIssues().then(issues => this.issues = issues)
-    api.getRecentPosts().then(posts => this.posts = posts)
+  async asyncData({ app }) {
+    const [issues, posts] = await Promise.all([
+      app.$axios.$get('/recent/issues'),
+      app.$axios.$get('/recent/posts')
+    ])
+    return { issues, posts }
   }
 }
 </script>

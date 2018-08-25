@@ -46,9 +46,10 @@ export default [
       slug: 'life',
       newspapersTitle: 'Life newspapers',
       newspapers: []
-    },
-    {
-      name: 'Most Recent',
-      slug: 'recent',
     }
+    // },
+    // {
+    //   name: 'Most Recent',
+    //   slug: 'recent',
+    // }
 ]

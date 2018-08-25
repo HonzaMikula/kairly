@@ -10,7 +10,7 @@
       <explore-modal-view>
 
         <AuthorWidget
-          v-for="author in category.authors"
+          v-for="author in category.authors.slice(limit)"
           :key="author.id"
           :author="author"
         />
@@ -20,8 +20,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import * as api from '@/api'
+
 
 import DialogWindow from '@/components/modals/Dialog'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
@@ -32,6 +31,7 @@ export default {
   props: {
     closeModal: Function,
     category: Object,
+    limit: Number
   },
 
   head() {
@@ -43,9 +43,7 @@ export default {
   components: {
     DialogWindow,
     AuthorWidget
-  },
-
-  computed: mapGetters(['user']),
+  }
 }
 </script>
 

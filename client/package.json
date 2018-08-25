@@ -5,8 +5,10 @@
   "author": "Jan Mikula <janm@salsitasoft.com>",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
+    "dev": "API_URL=https://kairly.com/api nuxt",
     "local": "API_URL=http://localhost:8000/api nuxt",
+    "dev-spa": "API_URL=https://kairly.com/api nuxt --spa",
+    "local-spa": "API_URL=http://localhost:8000/api nuxt --spa",
     "build": "nuxt build",
     "start": "nuxt start -p 8080",
     "generate": "nuxt generate",
@@ -14,10 +16,11 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/auth": "^4.5.1",
     "@nuxtjs/axios": "^5.3.1",
     "@nuxtjs/google-analytics": "^2.0.2",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "nuxt-edge": "^2.0.0-25581162.820f0fa",
+    "nuxt-edge": "^2.0.0-25585457.ac841ed",
     "nuxt-sass-resources-loader": "^2.0.4",
     "portal-vue": "^1.3.0",
     "vue-infinite-scroll": "^2.0.2",
@@ -28,9 +31,9 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
-    "eslint": "^4.19.1",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
+    "eslint": "^5.4.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.1.0",
     "eslint-plugin-vue": "^4.0.0",
     "font-awesome": "^4.7.0",
     "node-reset-scss": "^1.0.1",

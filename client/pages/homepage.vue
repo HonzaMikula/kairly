@@ -144,10 +144,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
-
-import * as api from '@/api'
-
 export default {
   name: 'Homepage',
 
@@ -164,14 +160,21 @@ export default {
       this.invalidCredentials = false
       const { username, password } = this
       try {
-        await api.createToken(username, password)
-        await this.getProfile()
+        await this.$auth.loginWith('local', {
+          data: { username, password }
+        })        
+        this.$router.push("/")
       } catch (e) {
         this.invalidCredentials = true
       }
-    },
+    }
+  },
 
-    ...mapActions(['getProfile']),
+  async fetch ({ store, redirect }) {
+    if (store.state.auth.loggedIn) {
+      redirect('/')
+      return
+    }
   }
 }
 </script>

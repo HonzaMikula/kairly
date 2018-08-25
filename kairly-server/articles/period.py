@@ -71,22 +71,30 @@ class PeriodMixin:
 
 def parse_periodicity(periodicity):
     frequency = periodicity.get('frequency')
+    if frequency is None:
+        raise ValueError('frequency is missing')
     if frequency not in (PeriodMixin.X3_PER_DAY, PeriodMixin.DAILY, PeriodMixin.WEEKLY):
-        return ValueError('Invalid period')
+        raise ValueError('Invalid period')
 
     if frequency == PeriodMixin.X3_PER_DAY:
         time_of_day = None
         dow = None
     else:
         time_str = periodicity.get('time')
+        if time_str is None:
+            raise ValueError('time is missing')
+        time_str = time_str.lstrip('0')
         if time_str not in ('6:00', '9:00', '12:00', '15:00', '18:00', '21:00'):
-            return ValueError('Invalid time format')
+            raise ValueError('Invalid time format')
         time_of_day = time(*map(int, time_str.split(':', maxsplit=1)))
 
         if frequency == PeriodMixin.WEEKLY:
-            dow = int(periodicity.get('dow'))
+            dow = periodicity.get('dow')
+            if dow is None:
+                raise ValueError('dow is missing')
+            dow = int(dow)
             if dow < 1 or dow > 7:
-                return ValueError('Invalid day of week')
+                raise ValueError('Invalid day of week')
         else:
             dow = None
     return Periodicity(frequency, time_of_day, dow)

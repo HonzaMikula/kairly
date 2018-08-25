@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import * as api from '@/api'
+
 
 export default {
   name: 'IssueWidget',
@@ -58,7 +58,7 @@ export default {
 
   computed: {
     isSubscribed() {
-      return this.issue.newspaper.fullName in this.$store.state.subscriptions.newspapers
+      return this.$store.getters.getNewspaperSubscription(this.issue.newspaper)
     }
   },
 

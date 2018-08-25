@@ -6,7 +6,7 @@
           <li class="home"><nuxt-link :to="{name: 'index'}" exact><span>Home</span></nuxt-link></li>
           <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></nuxt-link></li>
           <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>My Newspapers</span></nuxt-link></li>
-          <li class="explore"><nuxt-link :to="{name: 'explore'}"><span>Explore</span></nuxt-link></li>
+          <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>Explore</span></nuxt-link></li>
         </ul>
         </app-header--nav>
 
@@ -51,7 +51,7 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { mapGetters, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import store from '@/store'
 
 import TutorialModal from '@/components/modals/Tutorial'
@@ -76,10 +76,15 @@ export default {
     }
   },
 
-  computed: mapGetters(['user', 'loadingUser']),
+  computed: mapState({
+    user: state => state.auth.user
+  }),
 
   methods: {
-    ...mapActions(['login', 'logout']),
+    async logout() {
+      await this.$auth.logout()
+      this.$router.push("/homepage")
+    },
 
     closeTutorial() {
       this.isTutorialOpen = false

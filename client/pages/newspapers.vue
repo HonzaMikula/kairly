@@ -1,8 +1,6 @@
 <template>
   <app-layout>
-    <loading-spinner v-if="loadingNewspapers"></loading-spinner>
-
-    <editor-newspapers-view v-else>
+    <editor-newspapers-view>
       <editor-newspapers--empty
         v-if="newspapers.length === 0">
 
@@ -103,11 +101,16 @@
           </nav>
         </editor-newspapers--mobile-switcher>
 
-        <editor-newspapers--board
+        <editor-newspapers--board v-if="isBacklogLoaded"
           :class="{'upcoming-issue': mobileSwitcher == 1, 'backlog': mobileSwitcher ==2}"
         >
-          <newspaper-backlog v-if="selectedNewspaper" :newspaper="selectedNewspaper" />
+          <newspaper-backlog v-if="selectedNewspaper"
+            :newspaper="selectedNewspaper"
+            :backlog="postsBacklog"
+            :published="postsPublished"
+          />
         </editor-newspapers--board>
+        <loading-spinner v-else />
       </template>
 
       <portal to="modal" v-if="isCreateNewspaperOpen">
@@ -123,11 +126,10 @@
 
 
 <script>
-import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { mapActions, mapGetters } from 'vuex'
 import moment from 'moment'
 
-import * as api from '@/api'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
+import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
@@ -145,8 +147,8 @@ export default {
 
   components: {
     AppLayout,
-    NewspaperWidget,
     EditNewspaper,
+    NewspaperWidget,
     NewspaperBacklog
   },
 
@@ -156,39 +158,29 @@ export default {
 
   data() {
     return {
-      loadingProfile: true,
-      author: null,
-      topic: null,
-      newspaperIds: [],
-      cursor: null,
       isCreateNewspaperOpen: false,
       isSelectNewspaperOpen: false,
       isMobileMenuOpen: false,
       mobileSwitcher: 1,
       newspaperToEdit: null,
+
       selectedNewspaper: null,
-      loadingNewspapers: true
+      isBacklogLoaded: false,
+      postsBacklog: [],
+      postsPublished: []
     }
   },
 
   computed: {
-
     newspapers() {
-      const ids = this.newspaperIds
+      const ids = this.$store.state.auth.user.newspapers.map(newspaper => newspaper.fullName)
       return ids.map(id => this.$store.getters.newspaper(id))
     },
 
-    canCreateNewspaper() {
-      return this.author && this.user.id == this.author.id
-    },
-
-    ...mapGetters(['user', 'backlog'])
-  },
-
-  watch: {
-    '$route' (to, from) {
-      this.loadData()
-    }
+    ...mapState({
+      backlog: state => state.backlog,
+      user: state => state.auth.user
+    })
   },
 
   methods: {
@@ -206,9 +198,16 @@ export default {
       return count
     },
 
-    selectNewspaper(newspaper) {
+    async selectNewspaper(newspaper) {
       this.selectedNewspaper = newspaper
       this.isSelectNewspaperOpen = false
+      this.isBacklogLoaded = false
+
+      const { fullName } = newspaper
+      const { backlog, publish } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
+      this.postsBacklog = backlog
+      this.postsPublished = publish
+      this.isBacklogLoaded = true
     },
 
     confirmDeleteNewspaper() {
@@ -216,9 +215,7 @@ export default {
         const { fullName } = this.selectedNewspaper
         this.deleteNewspaper(this.selectedNewspaper)
 
-        //this.selectNewspaper(null)
-        this.newspaperIds.splice(this.newspaperIds.indexOf(fullName), 1)
-        if (this.newspaperIds.length) {
+        if (this.newspapers.length) {
           this.selectNewspaper(this.newspapers.find(e => e.fullName !== fullName))
         } else {
           this.selectNewspaper(null)
@@ -232,34 +229,30 @@ export default {
     },
 
     newNewspaperCreated(newspaper) {
-      this.newspaperIds.push(newspaper.fullName)
       this.selectNewspaper(newspaper)
-    },
-
-    loadData() {
-      this.loadingProfile = true
-      this.loadingPosts = true
-      this.author = null
-      this.newspaperIds = []
-      this.posts = []
-      this.cursor = null
-
-      api.getAuthorDetail(this.user.id).then(resp => {
-        resp.newspapers.forEach(e => this.$store.dispatch('newspaperUpdated', e))
-        this.author = resp.author
-        this.newspaperIds = resp.newspapers.map(e => e.fullName)
-        this.selectedNewspaper = resp.newspapers[0]
-        this.loadingProfile = false
-        this.topics = resp.topics
-        this.loadingNewspapers = false
-      })
     },
 
     ...mapActions(['deleteNewspaper'])
   },
 
+  async fetch({ store, redirect }) {
+    if (!store.state.auth.loggedIn) {
+      redirect('/homepage')
+      return
+    }
+
+    const { user } = store.state.auth
+
+    await store.dispatch('getUserBacklog')
+
+    const newspaperIds = user.newspapers.map(newspaper => newspaper.fullName)
+    await store.dispatch('getNewspapers', newspaperIds)
+  },
+
   created() {
-    this.loadData()
+    if (this.newspapers.length) {
+      this.selectNewspaper(this.newspapers[0])
+    }
   },
 }
 </script>

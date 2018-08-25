@@ -75,8 +75,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import * as api from '@/api'
+import { mapState, mapMutations } from 'vuex'
 
 import PictureInput from 'vue-picture-input'
 import AppLayout from '@/components/layout/AppLayout'
@@ -108,7 +107,9 @@ export default {
     }
   },
 
-  computed: mapGetters(['user']),
+  computed: mapState({
+    user: state => state.auth.user
+  }),
 
   methods: {
     updateComponentData({ name, medium, bio, timezone, integrations: { twitter }}) {
@@ -119,13 +120,13 @@ export default {
       this.twitter = twitter
     },
 
-    updateProfile(payload) {
-      api.updateProfile(payload)
-      .then(user => {
-        this.updateComponentData(user)
-        this.updateUserInStore(user)
-        this.showSuccess('Your settings were updated.')
-      })
+    async updateProfile(payload) {
+      const user = await this.$axios.$patch('/profile', payload)
+      this.updateComponentData(user)
+      // update user in store. Merge properties because GET on /profile endpoint
+      // returns more then update (eg owned newspapers)
+      this.$auth.setUser({...this.user, ...user})
+      this.showSuccess('Your settings were updated.')
     },
 
     onPictureChange(picture) {
@@ -138,7 +139,7 @@ export default {
       this.updateProfile({ name, medium, bio, timezone, integrations: { twitter }})
     },
 
-    ...mapMutations({updateUserInStore: 'user', showSuccess: 'showSuccess'}),
+    ...mapMutations({ showSuccess: 'showSuccess'}),
 
     closeChangePassword() {
       this.isChangePasswordOpen = false

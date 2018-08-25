@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import * as api from '@/api'
+
 
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
@@ -57,7 +57,7 @@ export default {
 
   computed: {
     subscription() {
-      return this.$store.state.subscriptions.authors[this.author.id]
+      return this.$store.getters.getAuthorSubscription(this.author)
     }
   },
 

@@ -24,8 +24,7 @@ from dal import autocomplete
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
-from articles.models import Newspaper, Backlog, SubscriptionToAuthor
-from articles.period import periodicity_to_json
+from articles.models import Newspaper
 from .models import User, Category, CategoryUser
 
 
@@ -53,7 +52,7 @@ class ProfileView(View):
         # TODO reconsider loading newspaper and backlog in separate endpoint? maybe it's eventually not good idea
         newspapers = []
         internal_ids_mapping = {}
-        for newspaper in Newspaper.objects.filter(editor=request.user).values_list('id', 'editor_id', 'slug', 'title', named=True):
+        for newspaper in Newspaper.objects.filter(editor=request.user).values_list('id', 'slug', 'title', named=True):
             full_name = '{}/{}'.format(request.user.username, newspaper.slug)
             internal_ids_mapping[newspaper.id] = full_name
             newspapers.append({
@@ -61,30 +60,11 @@ class ProfileView(View):
                 'title': newspaper.title,
             })
 
-        backlog = defaultdict(dict)
-        for bl in Backlog.objects.filter(newspaper_id__in=internal_ids_mapping.keys()):
-            backlog[bl.post_id][internal_ids_mapping[bl.newspaper_id]] = 'C' if bl.publish_stamp is None else 'P'
-
-        subscribed_authors = {}
-        query = SubscriptionToAuthor.objects.filter(user=request.user).select_related('author', 'topic')
-        for s in query:
-            author_id = '{}|{}'.format(s.author.username, s.topic.slug) if s.topic else s.author.username
-            subscribed_authors[author_id] = periodicity_to_json(s)
-
-        subscribed_newspapers = {}
-        query = Newspaper.objects.filter(subscription__user=request.user).select_related('editor')
-        for newspaper in query:
-            full_name = "{}/{}".format(newspaper.editor.username, newspaper.slug)
-            subscribed_newspapers[full_name] = True
+        user = request.user.to_json(private=True)
+        user['newspapers'] = newspapers
 
         return JsonResponse({
-            "user": request.user.to_json(private=True),
-            "newspapers": newspapers,
-            "backlog": backlog,
-            "subscriptions": {
-                "authors": subscribed_authors,
-                "newspapers": subscribed_newspapers,
-            }
+            "user": user
         })
 
     @ajax_login_required

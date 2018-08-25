@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import * as api from '@/api'
 import { mapState, mapGetters } from 'vuex'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
@@ -33,22 +32,20 @@ export default {
     NewspaperWidget
   },
 
-  computed: {
-    ...mapState({
-      newspaperIds: state => Object.keys(state.subscriptions.newspapers)
-    }),
-
-    newspapers() {
-      const newspapers = this.newspaperIds
-        .map(id => this.$store.getters.newspaper(id))
-        .filter(newspaper => newspaper !== undefined)
-      newspapers.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
-      return newspapers
+  async fetch({ store, redirect }) {
+    if (!store.state.auth.loggedIn) {
+      redirect('/homepage')
+      return
     }
   },
 
-  created() {
-    this.$store.dispatch('getNewspapers', this.newspaperIds)
+  async asyncData({ store }) {    
+    const { newspapers: ids } = await store.dispatch('getSubscriptions')
+    const newspapers = await store.dispatch('getNewspapers', Object.keys(ids))
+    newspapers.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
+    return {
+      newspapers
+    }
   }
 }
 </script>

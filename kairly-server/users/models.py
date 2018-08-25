@@ -20,18 +20,19 @@ class KairlyUsernameValidator(validators.RegexValidator):
     flags = re.ASCII
 
     min_length = 3
-    reserved_names = [
+    reserved_names = {
         'login', 'logout', 'signin', 'signout',
         'signup', 'register', 'join', 'invite',
-        'admin', 'home', 'pricing', 'welcome', 'timeline', 'about', 'help', 'settings',
+        'home', 'homepage', 'index', 'welcome', 'tutorial',
+        'admin', 'pricing', 'timeline', 'about', 'help', 'settings',
         'site', 'page', 'app', 'post', 'action',
         'sites', 'pages', 'apps', 'posts', 'actions',
-        'user', 'author', 'edition', 'profile', 'issue', "newspaper",
-        'users', 'authors', 'editions', 'profiles', 'issues', "newspapers",
+        'user', 'author', 'editor', 'edition', 'profile', 'issue', "newspaper",
+        'users', 'authors', 'editors', 'editions', 'profiles', 'issues', "newspapers",
         'explore', 'dashboard', 'recent',
         'subscription', 'subscriptions',
         'join-and-read-with-kairly',
-    ]
+    }
 
     def __call__(self, value):
         if len(value) < self.min_length:
@@ -89,6 +90,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+    @property
+    def picture_url(self):
+        if not self.picture:
+            return ''
+        value = str(self.picture)
+        if value.startswith('http://') or value.startswith('https://'):
+            return value
+        return settings.MEDIA_SITE + self.picture.url
+
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
@@ -109,7 +119,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         result = {
             'id': id,
             'name': name,
-            'picture': settings.MEDIA_SITE + self.picture.url if self.picture else '',
+            'picture': self.picture_url,
             'medium': self.medium,
             'bio': self.bio,
         }

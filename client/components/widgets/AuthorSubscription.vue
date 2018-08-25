@@ -30,7 +30,7 @@
 
 <script>
 import FollowAuthor from '@/components/widgets/FollowAuthor'
-import * as api from '@/api'
+
 
 export default {
   name: 'AuthorSubscription',

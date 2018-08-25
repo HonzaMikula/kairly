@@ -1,87 +1,83 @@
 <template>
   <app-layout>
     <author-detail-view
-      v-infinite-scroll="loadMore"
+      v-infinite-scroll="loadPosts"
       infinite-scroll-disabled="loadingPosts"
       infinite-scroll-distance="100"
     >
-      <loading-spinner v-if="loadingProfile"></loading-spinner>
+      <author-detail--header>
+        <picture>
+          <img :src="author.picture" :alt="author.name"/>
+        </picture>
 
-      <div v-else>
-        <author-detail--header>
-          <picture>
-            <img :src="author.picture" :alt="author.name"/>
-          </picture>
+        <section>
+          <h1>{{ author.name }}</h1>
+          <p>{{ author.bio }}</p>
+        </section>
 
-          <section>
-            <h1>{{ author.name }}</h1>
-            <p>{{ author.bio }}</p>
-          </section>
+        <author-detail--subscribe>
+          <button
+            v-if="subscription"
+            class="is-subscribed"
+            @click="unfollow($event)">
+            <span class="default">Subscribed</span>
+            <span class="on-hover">Unsubscribe</span>
+          </button>
 
-          <author-detail--subscribe>
-            <button
-              v-if="subscription"
-              class="is-subscribed"
-              @click="unfollow($event)">
-              <span class="default">Subscribed</span>
-              <span class="on-hover">Unsubscribe</span>
-            </button>
+          <button
+            class="to-subscribe"
+            v-else
+            @click="$refs.followWidget.openSubscribeWidget()">
+            Subscribe
+          </button>
 
-            <button
-              class="to-subscribe"
-              v-else
-              @click="$refs.followWidget.openSubscribeWidget()">
-              Subscribe
-            </button>
+          <follow-author
+            ref="followWidget"
+            :author="author"
+            :onSelect="follow" />
 
-            <follow-author
-              ref="followWidget"
-              :author="author"
-              :onSelect="follow" />
-
-            <AuthorSubscription if="subscription"
-              :author="author" :subscription="subscription"
-            />
-          </author-detail--subscribe>
-
-        </author-detail--header>
-
-        <author-detail--topics v-if="topics">
-          <ul>
-            <li v-for="topic in topics" :key="topic.url">
-              <nuxt-link :to="topic.url">{{ topic.name}}</nuxt-link>
-            </li>
-          </ul>
-        </author-detail--topics>
-
-        <author-detail--newspapers v-if="newspapers.length">
-          <h2>{{ author.name }}'s newspapers</h2>
-
-          <div :class="{'show-all': showAllNewspapers}">
-            <NewspaperWidget
-              v-for="newspaper in newspapers"
-              :key="newspaper.fullName"
-              v-bind:newspaper="newspaper"
-            />
-          </div>
-
-          <button v-if="newspaperIds.length > 3" v-on:click="toggleNewspapers()">{{ !showAllNewspapers ? 'Show all newspapers' : 'Hide newspapers' }}</button>
-
-        </author-detail--newspapers>
-
-        <author-detail--posts v-if="posts.length">
-          <h2>{{ author.name }}'s Posts</h2>
-
-          <PostWrapper
-            v-for="post in posts"
-            :post="post"
-            :isSubscribed="true"
-            :key="post.id"
+          <AuthorSubscription if="subscription"
+            :author="author" :subscription="subscription"
           />
-        </author-detail--posts>
+        </author-detail--subscribe>
 
-        <loading-spinner v-if="loadingPosts"></loading-spinner>
-      </div>
+      </author-detail--header>
+
+      <author-detail--topics v-if="topics">
+        <ul>
+          <li v-for="topic in topics" :key="topic.url">
+            <nuxt-link :to="topic.url">{{ topic.name}}</nuxt-link>
+          </li>
+        </ul>
+      </author-detail--topics>
+
+      <author-detail--newspapers v-if="newspapers.length">
+        <h2>{{ author.name }}'s newspapers</h2>
+
+        <div :class="{'show-all': showAllNewspapers}">
+          <NewspaperWidget
+            v-for="newspaper in visibleNewspapers"
+            :key="newspaper.fullName"
+            v-bind:newspaper="newspaper"
+          />
+        </div>
+
+        <button v-if="newspapers.length > 3" v-on:click="toggleNewspapers()">{{ !showAllNewspapers ? 'Show all newspapers' : 'Hide newspapers' }}</button>
+
+      </author-detail--newspapers>
+
+      <author-detail--posts v-if="posts.length">
+        <h2>{{ author.name }}'s Posts</h2>
+
+        <PostWrapper
+          v-for="post in posts"
+          :post="post"
+          :isSubscribed="true"
+          :key="post.id"
+        />
+      </author-detail--posts>
+
+      <loading-spinner v-if="loadingPosts"></loading-spinner>
 
     </author-detail-view>
   </app-layout>
@@ -89,9 +85,7 @@
 
 
 <script>
-import { mapMutations, mapGetters } from 'vuex'
-
-import * as api from '@/api'
+import { mapMutations } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
@@ -118,35 +112,28 @@ export default {
 
   data() {
     return {
-      loadingProfile: true,
       loadingPosts: true,
-      author: null,
-      topic: null,
       showAllNewspapers: false,
-      newspaperIds: [],
       posts: [],
-      cursor: null
+      cursor: 0
     }
   },
 
   computed: {
-    newspapers() {
-      const ids = this.showAllNewspapers ? this.newspaperIds : this.newspaperIds.slice(0, 3)
-      return ids.map(id => this.$store.getters.newspaper(id))
+    visibleNewspapers() {
+      return this.showAllNewspapers ? this.newspapers : this.newspapers.slice(0, 3)
     },
 
     subscription() {
-      return this.$store.state.subscriptions.authors[this.author.id]
-    },
-
-    ...mapGetters(['user'])
-  },
-
-  watch: {
-    '$route' (to, from) {
-      this.loadData()
+      return this.$store.getters.getAuthorSubscription(this.author)
     }
   },
+
+  // watch: {
+  //   '$route' (to, from) {
+  //     this.loadData()
+  //   }
+  // },
 
   methods: {
     follow(periodicity) {
@@ -154,7 +141,6 @@ export default {
         authorId: this.author.id,
         periodicity
       })
-      ev.target.blur()
     },
 
     unfollow(ev) {
@@ -168,58 +154,41 @@ export default {
       this.showAllNewspapers = !this.showAllNewspapers
     },
 
-    handlePostsData(resp) {
-      resp.posts.forEach(post => this.posts.push(post))
-      this.cursor = resp.cursor
-      this.loadingPosts = false
-    },
-
-    loadMore() {
-      if (this.cursor) {
-        const { author } = this.$route.params
-
-        this.loadingPosts = true
-        api.getAuthorPosts(author, this.cursor).then(this.handlePostsData)
+    async loadPosts() {
+      if (this.cursor === null) {
+        return
       }
-    },
+      const { author: authorId } = this.$route.params
 
-    loadData() {
-      const { author } = this.$route.params
-
-      this.loadingProfile = true
       this.loadingPosts = true
-      this.author = null
-      this.showAllNewspapers = false
-      this.newspaperIds = []
-      this.posts = []
-      this.cursor = null
 
-      function handleErr(err) {
-        if (err.response.status == 404) {
-          this.show404()
-        } else {
-          console.log(err)
-        }
-      }
+      const { posts, cursor } = await this.$axios.$get(
+        `/authors/${authorId}/posts`, {params: {cursor: this.cursor}})
 
-      api.getAuthorDetail(author).then(resp => {
-        resp.newspapers.forEach(e => this.$store.dispatch('newspaperUpdated', e))
-        this.author = resp.author
-        this.newspaperIds = resp.newspapers.map(e => e.fullName)
-        this.loadingProfile = false
-        this.topics = resp.topics
-      }, handleErr)
-
-      api.getAuthorPosts(author, null).then(
-        this.handlePostsData,
-        handleErr)
+      posts.forEach(post => this.posts.push(post))
+      this.cursor = cursor
+      this.loadingPosts = false
     },
 
     ...mapMutations(['show404'])
   },
 
+  async asyncData({ store, params: { author: authorId }}) {
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
+    }
+
+    const { author, newspapers, topics=null } = await store.dispatch('getAuthor', authorId)
+
+    return {
+      author,
+      newspapers,
+      topics
+    }
+  },
+
   created() {
-    this.loadData()
+    this.loadPosts()
   },
 }
 </script>

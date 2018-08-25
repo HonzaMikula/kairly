@@ -116,8 +116,6 @@ import Vue from 'vue'
 import { mapActions, mapMutations } from 'vuex'
 import moment from 'moment'
 
-import * as api from '@/api'
-
 import PostWrapper from '@/components/PostWrapper'
 
 export default {
@@ -128,14 +126,9 @@ export default {
   },
 
   props: {
-    newspaper: Object
-  },
-
-  data() {
-    return {
-      backlog: [],
-      published: []
-    }
+    newspaper: Object,
+    backlog: Array,
+    published: Array
   },
 
   methods: {
@@ -143,26 +136,23 @@ export default {
       return moment(dt).from()
     },
 
-    init() {
-      api.getNewspaperBacklog(this.newspaper.fullName).then(resp => {
-        this.backlog = resp.backlog
-        this.published = resp.publish
-      })
+    async publishBacklog() {
+      const { fullName } = this.newspaper
+      const postIds = this.published.map(p => p.id)
+      await this.$axios.post(`/newspapers/${fullName}/backlog/publish`, postIds)
     },
 
     publish(post) {
       this.backlog.splice(this.backlog.indexOf(post), 1)
       this.published.push(post)
-      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
-      .catch(this.init)
+      this.publishBacklog()
       this.backlogSetPostState({newspaper: this.newspaper, post: post, state: 'P'})
     },
 
     undoPublish(post) {
       this.published.splice(this.published.indexOf(post), 1)
       this.backlog.push(post)
-      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
-      .catch(this.init)
+      this.publishBacklog()
       this.backlogSetPostState({newspaper: this.newspaper, post: post, state: 'C'})
     },
 
@@ -170,33 +160,23 @@ export default {
       const post = this.published[idx]
       Vue.set(this.published, idx, this.published[idx - 1])
       Vue.set(this.published, idx - 1, post)
-      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
-      .catch(this.init)
+      this.publishBacklog()
     },
 
     moveDown(idx) {
       const post = this.published[idx]
       Vue.set(this.published, idx, this.published[idx + 1])
       Vue.set(this.published, idx + 1, post)
-      api.publishBacklog(this.newspaper.fullName, this.published.map(p => p.id))
-      .catch(this.init)
+      this.publishBacklog()
     },
 
     removePost(post) {
+      this.backlog.splice(this.backlog.indexOf(post), 1)
       this.removeFromBacklog({newspaper: this.newspaper, post: post})
-      this.init()
     },
 
     ...mapActions(['removeFromBacklog']),
     ...mapMutations(['backlogSetPostState'])
-  },
-
-  created() {
-    this.init()
-
-    this.$watch('newspaper', newspaper => {
-      this.init()
-    })
   }
 }
 </script>

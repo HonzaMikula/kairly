@@ -1,7 +1,9 @@
 <template>
   <post :post="post">
     <timeline-post--tweet>
-      <p v-html="post.content.content"></p>
+      <!-- p tag is not allowed here because content can cointains other <p>
+          (eg extrnal url). And it brokes hydrating server side rendered page-->
+      <div class="tweet-content" v-html="post.content.content"></div>
 
       <component
         v-if="post.content.attachments"
@@ -77,6 +79,6 @@ timeline-post--tweet
   font-family: $ff-serif
   line-height: $baseline * 0.9
 
-  > p a
+  > .tweet-content a
     color: $c-base
 </style>

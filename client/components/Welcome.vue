@@ -43,8 +43,7 @@
 </template>
 
 <script>
-import * as api from '@/api'
-import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 import Issue from '@/components/IssueWrapper'
 
@@ -63,12 +62,16 @@ export default {
     }
   },
 
-  created() {
-    api.getNewspaperDetail('janmikula/kairly', 1).then(resp => {
-      this.newspaper = resp.newspaper
-      this.issue = resp.issue
-      this.loading = false
+  methods: mapActions(['getNewspaperDetail']),
+
+  async created() {
+    const resp = await getNewspaperDetail({
+      newspaperId: 'janmikula/kairly',
+      issue: 1
     })
+    this.newspaper = resp.newspaper
+    this.issue = resp.issue
+    this.loading = false
   }
 }
 </script>

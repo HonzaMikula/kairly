@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import * as api from '@/api'
+import { mapMutations } from 'vuex'
+
 
 import DialogWindow from '@/components/modals/Dialog'
 
@@ -60,31 +60,31 @@ export default {
     }
   },
 
-  computed: mapGetters(['user']),
-
   methods: {
     ...mapMutations(['showError', 'showSuccess']),
 
-    submit() {
+    async submit() {
       if (this.newPassword1 != this.newPassword2) {
         this.showError("Password doesn't match")
-      } else {
-        this.showError(null)
-        api.changePassword({
+        return
+      }
+
+      this.showError(null)
+      try {
+        const res = await this.$axios.post('/change-password', {
           oldPassword: this.oldPassword,
           newPassword: this.newPassword1
-        }).then(() => {
-          this.showSuccess("Password has been updated.")
-          this.closeModal()
-        }, err => {
-          if (err.response.status === 400) {
-            this.showError(err.response.data.error)
-          } else if (err.response.status === 401) {
-            this.showError('Wrong old password.')
-          } else {
-            this.showError((err + '') || 'Request failed')
-          }
         })
+        this.showSuccess("Password has been updated.")
+        this.closeModal()
+      } catch (err) {
+        if (err.response.status === 400) {
+          this.showError(err.response.data.error)
+        } else if (err.response.status === 401) {
+          this.showError('Wrong old password.')
+        } else {
+          this.showError((err + '') || 'Request failed')
+        }
       }
     }
   }

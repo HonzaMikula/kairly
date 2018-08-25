@@ -71,10 +71,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
+import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import DialogWindow from '@/components/modals/Dialog'
-import PictureInput from 'vue-picture-input'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
 export default {
@@ -102,7 +102,9 @@ export default {
     }
   },
 
-  computed: mapGetters(['user']),
+  computed: mapState({
+    user: state => state.auth.user
+  }),
 
   methods: {
     onPictureChange(image) {
@@ -113,7 +115,7 @@ export default {
       this.periodicity = periodicity
     },
 
-    submit() {
+    async submit() {
       const errors = []
 
       if (this.title.trim() === '') {
@@ -152,12 +154,12 @@ export default {
         if (this.image) {
           fields.image = this.image
         }
-        this.updateNewspaper({
+        await this.updateNewspaper({
           fullName: this.newspaper.fullName,
           fields
         })
       } else {
-        this.startNewspaper({
+        const createdNewspaper = await this.startNewspaper({
           authorId: this.user.id,
           newspaper: {
             title: this.title,
@@ -165,7 +167,8 @@ export default {
             periodicity: this.periodicity,
             image: this.image
           }
-        }).then(this.onCreated)
+        })
+        this.onCreated(createdNewspaper)
       }
 
       this.closeModal()

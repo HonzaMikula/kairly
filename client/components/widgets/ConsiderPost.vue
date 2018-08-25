@@ -1,5 +1,5 @@
 <template>
-  <backlog-add-view v-if="managedNewspapers.length">
+  <backlog-add-view v-if="userNewspapers.length">
     <button-icon
       v-if="!showText"
       role="button"
@@ -25,7 +25,7 @@
 
       <section>
         <ul>
-          <li v-for="ed in managedNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in containedIn}">
+          <li v-for="ed in userNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in containedIn}">
             <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
           </li>
         </ul>
@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
-import * as api from '@/api'
+
 
 export default {
   name: 'ConsiderPost',
@@ -59,7 +59,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['managedNewspapers', 'backlog']),
+    ...mapState({
+      backlog: state => state.backlog
+    }),
+
+    ...mapGetters(['userNewspapers']),
 
     containedIn() {
       return this.backlog[this.post.id] || {}

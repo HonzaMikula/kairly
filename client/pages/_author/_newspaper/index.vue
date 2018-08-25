@@ -1,8 +1,6 @@
 <template>
   <app-layout>
-    <loading-spinner v-if="loading"></loading-spinner>
-
-    <newspaper-detail-view v-else>
+    <newspaper-detail-view>
       <newspaper-detail--header>
         <h1>{{ newspaper.title }}</h1>
 
@@ -76,9 +74,7 @@
 
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-
-import * as api from '@/api'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
@@ -89,7 +85,7 @@ export default {
 
   head() {
       return {
-        title: this.newspaper ? this.newspaper.title : undefined
+        title: this.newspaper.title
       }
   },
 
@@ -97,14 +93,6 @@ export default {
     AppLayout,
     Issue,
     NewspaperBacklog
-  },
-
-  data() {
-    return {
-      loading: true,
-      newspaper: null,
-      issue: null,
-    }
   },
 
   computed: {
@@ -118,10 +106,12 @@ export default {
     },
 
     isSubscribed() {
-      return this.newspaper.fullName in this.$store.state.subscriptions.newspapers
+      return this.$store.getters.getNewspaperSubscription(this.newspaper)
     },
 
-    ...mapGetters(['user'])
+    ...mapState({
+      user: state => state.auth.user
+    })
   },
 
   methods: {
@@ -135,22 +125,19 @@ export default {
       document.activeElement.blur()
     },
 
-    ...mapMutations(['show404'])
+    //...mapMutations(['show404']),
+    //...mapActions(['getNewspaperDetail']),
   },
 
-  created() {
-    const { author, newspaper } = this.$route.params
-    api.getNewspaperDetail(`${author}/${newspaper}`).then(resp => {
-      this.newspaper = resp.newspaper
-      this.issue = resp.issue
-      this.loading = false
-    }).catch(err => {
-      if (err.status == 404) {
-        this.show404()
-      } else {
-        return Promise.reject(err)
-      }
-    })
+  async asyncData({ store, params }) {
+    const fullName = `${params.author}/${params.newspaper}`
+
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
+    }
+    
+    const { newspaper, issue } = await store.dispatch('getNewspaperDetail', { newspaperId: fullName })
+    return { newspaper, issue }
   }
 }
 </script>
