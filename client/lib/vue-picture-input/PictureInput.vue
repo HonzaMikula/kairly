@@ -87,7 +87,7 @@ export default {
       default: 'btn btn-secondary button secondary'
     },
     prefill: {
-      type: process.server ? [String] : [String, File],
+      type: (typeof File === 'undefined') ? [String] : [String, File],
       default: ''
     },
     prefillOptions: {
