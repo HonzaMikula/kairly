@@ -13,17 +13,8 @@
         <app-header--user-profile v-if="user">
           <h3><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ user.name }}</nuxt-link></h3>
           <nuxt-link :to="{name: 'author', params: {author: user.id}}">
-            <img
-              v-if="user.picture"
-              :src="user.picture || '~/assets/user.png'"
-              :alt="user.name"
-            />
-
-            <img
-              v-else
-              src="~/assets/user.png"
-              :alt="user.name"
-            />
+            <img v-if="user.picture" :src="user.picture" :alt="user.name" />
+            <img v-else src="~/assets/user.png" :alt="user.name"/>
           </nuxt-link>
           <button-icon v-on:click="isDropDownMenuOpen = true"></button-icon>
         </app-header--user-profile>

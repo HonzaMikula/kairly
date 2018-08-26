@@ -149,7 +149,7 @@ export default {
     async submit() {
       try {
         await this.subscribeAuthor({
-          authorId: this.author.id,
+          author: this.author,
           periodicity: {
             frequency: this.frequency,
             time: this.time,
@@ -189,7 +189,7 @@ export default {
     cancelSubscription() {
       this.showCanceling = false
       this.$store.dispatch('unsubscribeAuthor', {
-        authorId: this.author.id
+        author: this.author
       })
     }
   }

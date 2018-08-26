@@ -2,8 +2,9 @@
   <author-widget-view>
     <header>
       <picture>
-        <nuxt-link :to="{name: 'author', params: {author: author.id}}">
-          <img :src="author.picture" :alt="author.name"/>
+        <nuxt-link :to="{name: 'author', params: {author: author.id}}">          
+          <img v-if="author.picture" :src="author.picture" :alt="author.name" />
+          <img v-else src="~/assets/user.png" :alt="author.name"/>
         </nuxt-link>
       </picture>
       <h3>

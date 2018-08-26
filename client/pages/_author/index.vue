@@ -7,7 +7,8 @@
     >
       <author-detail--header>
         <picture>
-          <img :src="author.picture" :alt="author.name"/>
+          <img v-if="author.picture" :src="author.picture" :alt="author.name" />
+          <img v-else src="~/assets/user.png" :alt="author.name"/>
         </picture>
 
         <section>
@@ -138,7 +139,7 @@ export default {
   methods: {
     unfollow(ev) {
       this.$store.dispatch('unsubscribeAuthor', {
-        authorId: this.author.id,
+        author: this.author,
       })
       ev.target.blur()
     },

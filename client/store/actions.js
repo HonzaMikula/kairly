@@ -110,36 +110,36 @@ export async function unsubscribeNewspaper({ commit }, fullName) {
   return newspaper
 }
 
-export async function subscribeAuthor({ commit }, { authorId, periodicity }) {
+export async function subscribeAuthor({ commit }, { author, periodicity }) {
   commit('invalidateTimeline')
 
-  await this.$axios.post(`/authors/${authorId}/subscribe`, periodicity)
+  await this.$axios.post(`/authors/${author.id}/subscribe`, periodicity)
   commit('addAuthorSubscription', {
-    authorId,
+    author,
     periodicity,
     meta: {
       analytics: [
         ['event', {
           eventCategory: 'Subscribe author',
           eventAction: periodicity.frequency,
-          eventLabel: authorId
+          eventLabel: author.id
         }]
       ]
     }
   })
 }
 
-export async function unsubscribeAuthor({ commit }, { authorId }) {
+export async function unsubscribeAuthor({ commit }, { author }) {
   commit('invalidateTimeline')
 
-  await this.$axios.post(`/authors/${authorId}/unsubscribe`)
+  await this.$axios.post(`/authors/${author.id}/unsubscribe`)
   commit('removeAuthorSubscription', {
-    authorId,
+    author,
     meta: {
       analytics: [
         ['event', {
           eventCategory: 'Subscribe author',
-          eventAction: authorId
+          eventAction: author.id
         }]
       ]
     }
