@@ -168,22 +168,25 @@ export default {
       posts.forEach(post => this.posts.push(post))
       this.cursor = cursor
       this.loadingPosts = false
-    },
-
-    ...mapMutations(['show404'])
+    }
   },
 
-  async asyncData({ store, params: { author: authorId }}) {
+  async asyncData({ store, params: { author: authorId }, error}) {
     if (store.state.auth.loggedIn) {
       await store.dispatch('getSubscriptions')
     }
 
-    const { author, newspapers, topics=null } = await store.dispatch('getAuthor', authorId)
+    try {
+      const { author, newspapers, topics=null } = await store.dispatch('getAuthor', authorId)
 
-    return {
-      author,
-      newspapers,
-      topics
+      return {
+        author,
+        newspapers,
+        topics
+      }
+    } catch (err) {
+      const { status: statusCode, statusText: message } = err.response
+      error({ statusCode, message })
     }
   },
 

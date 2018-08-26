@@ -22,8 +22,7 @@ const createStore = () => {
       messages: {
         error: null,
         success: null,
-      },
-      show404: false
+      }
     },
 
     mutations: {
@@ -131,9 +130,6 @@ const createStore = () => {
       },
       showSuccess(state, msg) {
         state.messages = {...state.messages, success: msg }
-      },
-      show404(state, value=true) {
-        state.show404 = value
       }
     },
 

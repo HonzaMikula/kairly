@@ -109,10 +109,15 @@ export default {
     }
   },
 
-  async asyncData({ app, params }) {
+  async asyncData({ app, params, error }) {
     const { postId } = params
-    const { post } = await app.$axios.$get(`/post/${postId}`)
-    return { post }
+    try {
+      const { post } = await app.$axios.$get(`/post/${postId}`)
+      return { post }
+    } catch (err) {
+      const { status: statusCode, statusText: message } = err.response
+      error({ statusCode, message })
+    }
   },
 
   updated() {

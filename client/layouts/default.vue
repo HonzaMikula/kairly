@@ -32,13 +32,12 @@ export default {
 
   watch: {
     '$route' (to, from) {
-      this.show404(false)
       this.showError(null)
       this.showSuccess(null)
     }
   },
 
-  methods: mapMutations(['showError', 'showSuccess', 'show404']),
+  methods: mapMutations(['showError', 'showSuccess']),
 
   middleware: ['timezone-header', 'auth'],
 }

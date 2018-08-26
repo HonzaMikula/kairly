@@ -125,19 +125,23 @@ export default {
       document.activeElement.blur()
     },
 
-    //...mapMutations(['show404']),
     //...mapActions(['getNewspaperDetail']),
   },
 
-  async asyncData({ store, params }) {
+  async asyncData({ store, params, error }) {
     const fullName = `${params.author}/${params.newspaper}`
 
     if (store.state.auth.loggedIn) {
       await store.dispatch('getSubscriptions')
     }
-    
-    const { newspaper, issue } = await store.dispatch('getNewspaperDetail', { newspaperId: fullName })
-    return { newspaper, issue }
+
+    try {
+      const { newspaper, issue } = await store.dispatch('getNewspaperDetail', { newspaperId: fullName })
+      return { newspaper, issue }
+    } catch (err) {
+      const { status: statusCode, statusText: message } = err.response
+      error({ statusCode, message })
+    }
   }
 }
 </script>

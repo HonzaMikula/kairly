@@ -1,8 +1,7 @@
 <template>
   <app-main>
     <AppHeader v-if="loggedIn" />
-    <not-found v-if="show404"></not-found>
-    <slot v-else></slot>
+    <slot></slot>
   </app-main>
 </template>
 
@@ -10,18 +9,15 @@
 import { mapState } from 'vuex'
 
 import AppHeader from '@/components/layout/Header'
-import NotFound from '@/components/NotFound'
 
 export default {
   name: 'AppLayout',
 
   components: {
-    AppHeader,
-    NotFound
+    AppHeader
   },
 
   computed: mapState({
-    show404: state => state.show404,
     loggedIn: state => state.auth.loggedIn
   })
 }
