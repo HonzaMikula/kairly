@@ -1,7 +1,6 @@
 import jwt
 import json
 import time
-from collections import defaultdict
 import urllib.request
 import urllib.error
 
@@ -49,12 +48,9 @@ def get_token(request):
 class ProfileView(View):
     @ajax_login_required
     def get(self, request):
-        # TODO reconsider loading newspaper and backlog in separate endpoint? maybe it's eventually not good idea
         newspapers = []
-        internal_ids_mapping = {}
         for newspaper in Newspaper.objects.filter(editor=request.user).values_list('id', 'slug', 'title', named=True):
             full_name = '{}/{}'.format(request.user.username, newspaper.slug)
-            internal_ids_mapping[newspaper.id] = full_name
             newspapers.append({
                 'fullName': full_name,
                 'title': newspaper.title,

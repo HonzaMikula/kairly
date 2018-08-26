@@ -138,7 +138,13 @@ const createStore = () => {
       userNewspapers: state => state.auth.user ? state.auth.user.newspapers : [],
       newspaper: state => id => state.newspapers[id],
       getNewspaperSubscription: state => newspaper => state.subscriptions === null ? false : state.subscriptions.newspapers[newspaper.fullName],
-      getAuthorSubscription: state => author => state.subscriptions === null ? null : state.subscriptions.authors[author.id]
+      getAuthorSubscription: state => author => {
+        if (state.subscriptions === null) {
+          return null
+        }
+        const subscription = state.subscriptions.authors[author.id]
+        return subscription ? subscription.periodicity : null
+      }
     },
 
     actions,

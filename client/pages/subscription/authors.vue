@@ -1,8 +1,6 @@
 <template>
   <div>
-    <loading-spinner v-if="loadingAuthors"></loading-spinner>
-
-    <template v-else>
+    <template>
       <my-authors--empty
         v-if="authors.length === 0">
         <h1>No authors</h1>
@@ -35,15 +33,14 @@ export default {
     AuthorWidget
   },
 
-  data() {
-    return {
-      authors: [],
-      loadingAuthors: true
-    }
-  },
-
   computed: mapState({
-    subscriptions: state => state.subscriptions.authors
+    authors: state => {
+      const subscriptions = state.subscriptions.authors
+      const ids = Object.keys(subscriptions)
+      const authors = ids.map(id => subscriptions[id].author)
+      authors.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
+      return authors
+    }
   }),
 
   async fetch({ store, redirect }) {
@@ -53,17 +50,6 @@ export default {
     }
 
     await store.dispatch('getSubscriptions')
-  },
-
-  async created() {
-    // TODO make single endpoint to fetch authors (and fetch them without newspapers)
-    // TODO cache authors in state same as edtions are currently cached
-    const ids = Object.keys(this.subscriptions)
-    const details = await Promise.all(
-      ids.map(id => this.$store.dispatch('getAuthor', id))
-    )
-    this.authors = details.map(d => d.author)
-    this.loadingAuthors = false
   }
 }
 </script>

@@ -49,8 +49,11 @@ def subscriptions(request):
     subscribed_authors = {}
     query = SubscriptionToAuthor.objects.filter(user=request.user).select_related('author', 'topic')
     for s in query:
-        author_id = '{}|{}'.format(s.author.username, s.topic.slug) if s.topic else s.author.username
-        subscribed_authors[author_id] = periodicity_to_json(s)
+        author_json = s.author.to_json(topic=s.topic)
+        subscribed_authors[author_json['id']] = {
+            'author': author_json,
+            'periodicity': periodicity_to_json(s)
+        }
 
     subscribed_newspapers = {}
     query = Newspaper.objects.filter(subscription__user=request.user).select_related('editor')
