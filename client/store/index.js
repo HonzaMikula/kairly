@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import * as actions from './actions'
-// import { analyticsMiddleware } from 'vue-analytics'
+import { analyticsMiddleware } from 'vue-analytics'
 
 // TODO use Immer for state manipulation. Or better, modular state from Nuxt
 
@@ -148,10 +148,10 @@ const createStore = () => {
     },
 
     actions,
-    strict: process.env.NODE_ENV !== 'production'
-    // plugins: [
-    //   analyticsMiddleware
-    // ]
+    strict: process.env.NODE_ENV !== 'production',
+    plugins: [
+      analyticsMiddleware
+    ]
   })
 }
 
