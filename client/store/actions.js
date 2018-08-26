@@ -72,7 +72,7 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
 //   return author
 // }
 
-export async function subscribe({ commit }, fullName) {
+export async function subscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 
   const newspaper = await this.$axios.$post(`/newspapers/${fullName}/subscribe`)
@@ -91,7 +91,7 @@ export async function subscribe({ commit }, fullName) {
   return newspaper
 }
 
-export async function unsubscribe({ commit }, fullName) {
+export async function unsubscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 
   const newspaper = await this.$axios.$post(`/newspapers/${fullName}/unsubscribe`)

@@ -27,7 +27,6 @@
         <follow-author
           ref="followWidget"
           :author="author"
-          :onSelect="follow"
         />
 
       </section>
@@ -58,15 +57,6 @@ export default {
   computed: {
     subscription() {
       return this.$store.getters.getAuthorSubscription(this.author)
-    }
-  },
-
-  methods: {
-    follow(periodicity) {
-      this.$store.dispatch('subscribeAuthor', {
-        authorId: this.author.id,
-        periodicity
-      })
     }
   }
 }

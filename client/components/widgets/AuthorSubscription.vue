@@ -21,8 +21,7 @@
 
     <follow-author
       ref="followWidget"
-      :author="author"
-      :onSelect="follow"
+      :author="author"      
       :cancelingSubscription="true"
     />
   </author-subscription-view>
@@ -54,15 +53,6 @@ export default {
     frequency() { return this.subscription && this.subscription.frequency },
     dow() { return this.subscription && this.subscription.dow },
     time() { return this.subscription && this.subscription.time }
-  },
-
-  methods: {
-    follow(periodicity) {
-      this.$store.dispatch('subscribeAuthor', {
-        authorId: this.author.id,
-        periodicity
-      })
-    }
   }
 }
 </script>

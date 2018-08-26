@@ -95,7 +95,7 @@
 </template>
 
 <script>
-
+import { mapActions, mapMutations } from 'vuex'
 
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
@@ -104,7 +104,6 @@ export default {
 
   props: {
     author: Object,
-    onSelect: Function,
     cancelingSubscription: Boolean
   },
 
@@ -124,6 +123,9 @@ export default {
   },
 
   methods: {
+    ...mapActions(['subscribeAuthor']),
+    ...mapMutations(['showError']),
+
     openSubscribeWidget() {
       this.show = true
     },
@@ -144,12 +146,19 @@ export default {
       }
     },
 
-    submit() {
-      this.onSelect({
-        frequency: this.frequency,
-        time: this.time,
-        dow: this.dow
-      })
+    async submit() {
+      try {
+        await this.subscribeAuthor({
+          authorId: this.author.id,
+          periodicity: {
+            frequency: this.frequency,
+            time: this.time,
+            dow: this.dow
+          }
+        })
+      } catch (err) {
+        this.showError((err + '') || 'Request failed')
+      }
     },
 
     selectHowOften(frequency, ev) {

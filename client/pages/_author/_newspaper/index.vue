@@ -116,12 +116,12 @@ export default {
 
   methods: {
     subscribe(ev) {
-      this.$store.dispatch('subscribe', this.newspaper.fullName)
+      this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
       document.activeElement.blur()
     },
 
     unsubscribe(ev) {
-      this.$store.dispatch('unsubscribe', this.newspaper.fullName)
+      this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
       document.activeElement.blur()
     },
 
