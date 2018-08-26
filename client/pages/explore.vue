@@ -1,6 +1,6 @@
 <template>
   <app-layout>
-    <explore-view :class="$route.params.tab">
+    <explore-view :class="$route.name === 'explore-recent' ? 'recent' : $route.params.tab">
       <header>
         <nav>
           <ul>
