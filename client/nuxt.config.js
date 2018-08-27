@@ -78,8 +78,7 @@ module.exports = {
         // tokenRequired: true,
         // tokenType: 'bearer',
       }
-    },
-    plugins: [ '~/plugins/token_header.js' ] // TEMP Workaround
+    }
   }
 
 }

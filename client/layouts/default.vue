@@ -39,7 +39,7 @@ export default {
 
   methods: mapMutations(['showError', 'showSuccess']),
 
-  middleware: ['timezone-header', 'token-security-fix', 'auth'],
+  middleware: ['timezone-header', 'auth'],
 }
 </script>
 
