@@ -102,7 +102,7 @@ const createStore = () => {
 
         Vue.delete(state.newspapers, newspaper.fullName)
       },
-      newspaper(state, newspaper) {
+      newspaper(state, { newspaper }) {
         state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
       },
       timelineRequested(state) {

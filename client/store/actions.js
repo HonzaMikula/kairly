@@ -43,7 +43,7 @@ export const invalidateTimeline = ({ commit }) => {
 
 export async function getNewspaperDetail({ commit }, { newspaperId, issue }) {
   const data = await this.$axios.$get(`/newspapers/${newspaperId}`, {params: {issue}})
-  commit('newspaper', data.newspaper)
+  commit('newspaper', { newspaper: data.newspaper })
   return data
 }
 
@@ -76,7 +76,7 @@ export async function subscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 
   const newspaper = await this.$axios.$post(`/newspapers/${fullName}/subscribe`)
-  commit('newspaper', newspaper)
+  commit('newspaper', { newspaper })
   commit('addNewspaperSubscription', {
     fullName,
     meta: {
@@ -95,7 +95,7 @@ export async function unsubscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 
   const newspaper = await this.$axios.$post(`/newspapers/${fullName}/unsubscribe`)
-  commit('newspaper', newspaper)
+  commit('newspaper', { newspaper })
   commit('removeNewspaperSubscription', {
     fullName,
     meta: {
@@ -148,7 +148,7 @@ export async function unsubscribeAuthor({ commit }, { author }) {
 
 export async function startNewspaper({ commit }, { authorId, newspaper: postData }) {
   const { newspaper } = await this.$axios.$post(`/authors/${authorId}/start-newspaper`, postData)
-  commit('newspaper', newspaper)
+  commit('newspaper', { newspaper })
   commit('appendOwnedNewspaper', {
     newspaper,
     meta: {
@@ -231,7 +231,7 @@ export async function removeFromBacklog({ commit }, { newspaper, post }) {
 }
 
 export const newspaperUpdated = ({ commit }, newspaper) => {
-  commit('newspaper', newspaper)
+  commit('newspaper', { newspaper })
 }
 
 export const expandIssue = ({ commit }, issueId) => {

@@ -164,7 +164,7 @@ export default {
       mobileSwitcher: 1,
       newspaperToEdit: null,
 
-      selectedNewspaper: null,
+      selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
       isBacklogLoaded: false,
       postsBacklog: [],
       postsPublished: []
@@ -175,6 +175,11 @@ export default {
     newspapers() {
       const ids = this.$store.state.auth.user.newspapers.map(newspaper => newspaper.fullName)
       return ids.map(id => this.$store.getters.newspaper(id))
+    },
+
+    selectedNewspaper() {
+      if (!this.selectedFullName || !this.newspapers) return null
+      return this.newspapers.find(n => n.fullName === this.selectedFullName)
     },
 
     ...mapState({
@@ -199,11 +204,19 @@ export default {
     },
 
     async selectNewspaper(newspaper) {
-      this.selectedNewspaper = newspaper
       this.isSelectNewspaperOpen = false
-      this.isBacklogLoaded = false
+
+      if (!newspaper) {
+        this.selectedFullName = null
+        this.postsBacklog = []
+        this.postsPublished = []
+        return
+      }
 
       const { fullName } = newspaper
+      this.selectedFullName = fullName
+
+      this.isBacklogLoaded = false
       const { backlog, publish } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
       this.postsBacklog = backlog
       this.postsPublished = publish
