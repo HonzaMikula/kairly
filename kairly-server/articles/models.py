@@ -90,7 +90,7 @@ class Post(models.Model):
             cache.set(cache_key, value, None)
         return '{} min'.format(max(1, value))
 
-    def to_json(self, short=False, tzinfo=timezone.utc):
+    def to_json(self, short=False, anonymous=False, tzinfo=timezone.utc):
         result = {
             'id': self.id,
             "author": self.author.to_json(),
@@ -110,13 +110,20 @@ class Post(models.Model):
             if self.attachments:
                 result['content']['attachments'] = json.loads(self.attachments)
         elif self.kind == Post.NEWSPAPER:
-            result['timeRead'] = self.read_time
-            result['content'] = {
-                'title': self.title,
-                'perex': self.perex,
-            }
-            if not short:
-                result['content']['content'] = self.content
+            if anonymous and self.protected:
+                result['content'] = {
+                    'title': self.title,
+                    'protected': True
+                }
+            else:
+                result['timeRead'] = self.read_time
+                result['content'] = {
+                    'title': self.title,
+                    'perex': self.perex,
+                    'protected': False
+                }
+                if not short:
+                    result['content']['content'] = self.content
         return result
 
 

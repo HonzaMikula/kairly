@@ -109,7 +109,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.name
 
-    def to_json(self, topic=None, private=False):
+    def to_json(self, topic=None, owner=False):
         id = self.username
         name = self.name or self.username
         if topic:
@@ -124,7 +124,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'bio': self.bio,
         }
 
-        if private:
+        if owner:
             result.update({
                 'timezone': self.timezone,
                 'integrations': {

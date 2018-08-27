@@ -56,7 +56,7 @@ class ProfileView(View):
                 'title': newspaper.title,
             })
 
-        user = request.user.to_json(private=True)
+        user = request.user.to_json(owner=True)
         user['newspapers'] = newspapers
 
         return JsonResponse({
@@ -82,7 +82,7 @@ class ProfileView(View):
             user.picture = picture
 
         user.save()
-        return JsonResponse(user.to_json(private=True))
+        return JsonResponse(user.to_json(owner=True))
 
 
 # TODO enable CSRF protection

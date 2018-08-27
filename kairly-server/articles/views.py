@@ -360,15 +360,7 @@ def unsubscribe_author(request, username):
     return JsonResponse(author.to_json(topic=topic))
 
 
-@ajax_login_required
 def post(request, post_id):
-    # import pprint
-    # pprint.pprint(request.META)
-    print('---------')
-    print(request.user)
-    print(request.META.get('HTTP_AUTHORIZATION'))
-    print(request.META.get('HTTP_COOKIE'))
-    print('---------')
     post = get_object_or_404(Post, id=post_id, draft=False, published__lt=datetime.now())
     # Doesn't work, post can be part of multiple issues or just related to author
     # newspaper = Issue.objects.get(posts=post).newspaper
@@ -377,7 +369,7 @@ def post(request, post_id):
     #     return HttpResponse('402 Payment Required', status=402)
 
     return JsonResponse({
-        'post': post.to_json()
+        'post': post.to_json(anonymous=request.user.is_anonymous)
     })
 
 
