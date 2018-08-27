@@ -26,6 +26,7 @@ class Channel(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
     topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
     enabled = models.BooleanField(default=True)
+    protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
 
     class Meta:
         ordering = ('name',)
