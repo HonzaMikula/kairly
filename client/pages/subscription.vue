@@ -47,7 +47,7 @@ my-subscription-view
 
       font-weight: 500
 
-      &.is-active
+      &.nuxt-link-active
         color: #000
 
 </style>

@@ -103,7 +103,7 @@ explore-view
 
         &:hover,
         &:focus,
-        &.is-active
+        &.nuxt-link-active
           background: rgba(0, 0, 0, 0.3)
 
 

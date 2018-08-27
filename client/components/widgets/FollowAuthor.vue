@@ -162,7 +162,7 @@ export default {
     },
 
     selectHowOften(frequency, ev) {
-      ev.target.blur()
+      document.activeElement.blur()
       this.frequency = frequency
 
       if (frequency == '3x_per_day') {
@@ -171,18 +171,18 @@ export default {
     },
 
     selectWhatTime(time, ev) {
-      ev.target.blur()
+      document.activeElement.blur()
       this.time = time
       this.submit()
     },
 
     selectWhatDay(dow, ev) {
-      ev.target.blur()
+      document.activeElement.blur()
       this.dow = dow
     },
 
     editSubscription(ev) {
-      ev.target.blur()
+      document.activeElement.blur()
       this.showCanceling = false
     },
 

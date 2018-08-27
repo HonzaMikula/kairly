@@ -130,7 +130,7 @@ post-detail
   position: relative
 
   display: block
-  padding: 0 $baseline/2 $baseline*10 $baseline/2
+  padding: $baseline $baseline/2 $baseline*10 $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
 
   background: #fff

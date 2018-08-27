@@ -141,7 +141,7 @@ export default {
       this.$store.dispatch('unsubscribeAuthor', {
         author: this.author,
       })
-      ev.target.blur()
+      document.activeElement.blur()
     },
 
     toggleNewspapers() {
