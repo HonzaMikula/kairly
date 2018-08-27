@@ -77,7 +77,7 @@ export default {
       } else {
         this.addToBacklog({newspaper, post: this.post})
       }
-      ev.target.blur()
+      document.activeElement.blur()
     },
 
     ...mapActions(['addToBacklog', 'removeFromBacklog'])
