@@ -18,7 +18,7 @@ def forwards_func(apps, schema_editor):
         ch.protected = False
         ch.save()
 
-        if ch.author.id in updated_authors:
+        if ch.author is None or ch.author.id in updated_authors:
             continue
 
         updated_authors.add(ch.author.id)
