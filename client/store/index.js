@@ -91,7 +91,7 @@ const createStore = () => {
       },
       removeNewspaper(state, { newspaper }) {
         // remove from owned
-        let idx = state.auth.user.newspapers.indexOf(newspaper.fullName)
+        let idx = state.auth.user.newspapers.findIndex(n => n.fullName === newspaper.fullName)
         if (idx !== -1) {
           state.auth.user.newspapers.splice(idx, 1)
         }
