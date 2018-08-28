@@ -20,6 +20,7 @@ FakeEntry = namedtuple('FakeEntry', ['link'])
 @admin.register(Channel)
 class ChannelAdmin(admin.ModelAdmin):
     list_display = ('name', 'provider', 'author', 'topic', 'enabled', 'rss', 'parse_content_from_rss')
+    list_filter = ('enabled', 'parse_content_from_rss')
     search_fields = ('name', 'provider', 'author__name')
 
     def get_field_queryset(self, db, db_field, request):
