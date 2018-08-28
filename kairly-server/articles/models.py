@@ -185,7 +185,7 @@ class Issue(models.Model):
     def __str__(self):
         return "{} #{}".format(self.newspaper.title, self.number)
 
-    def to_json(self, posts=True, newspaper=None, tzinfo=timezone.utc):
+    def to_json(self, posts=True, newspaper=None, anonymous=False, tzinfo=timezone.utc):
         if newspaper is None:
             newspaper = self.newspaper
         result = {
@@ -196,7 +196,7 @@ class Issue(models.Model):
         }
         if posts:
             result["posts"] = [
-                p.to_json(short=True, tzinfo=tzinfo) for p in
+                p.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo) for p in
                 self.posts.filter(draft=False, published__lt=datetime.now())
                     .order_by('issuepost__ordering', '-published')
             ]

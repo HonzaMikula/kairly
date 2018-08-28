@@ -27,7 +27,10 @@
 
         <div v-if="post.content.protected">
           <post-detail--footer>
-            Content is protected. Look at <a :href="post.source" class="external-link">Original article</a>            
+            Content is protected.
+            <span v-if="post.source">
+              Read <a :href="post.source" class="external-link">Original article</a>
+            </span>
           </post-detail--footer>
         </div>
         <div v-else>
@@ -42,7 +45,7 @@
           <post-detail--footer>
             <consider-post :post="post" :showText="true" />
 
-            <a :href="post.source" class="external-link">Original article</a>
+            <a v-if="post.source" :href="post.source" class="external-link">Original article</a>
           </post-detail--footer>
         </div>
 

@@ -130,7 +130,7 @@ class NewspaperView(View):
 
         return JsonResponse({
             'newspaper': newspaper.to_json(),
-            'issue': issue.to_json() if issue else None,
+            'issue': issue.to_json(anonymous=request.user.is_anonymous) if issue else None,
         })
 
     @ajax_login_required

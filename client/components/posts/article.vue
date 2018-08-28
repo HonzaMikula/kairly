@@ -2,7 +2,13 @@
   <post :post="post">
     <timeline-post--article>
       <h2><nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</nuxt-link></h2>
-      <timeline-post--article--content>
+      <div v-if="post.content.protected">
+        Content is protected.
+        <span v-if="post.source">
+          <a :href="post.source" class="external-link" v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}" title="Original article"></a>
+        </span>
+      </div>
+      <timeline-post--article--content v-else>
         <div v-html="post.content.perex"></div>
         <timeline-post--continue-reading v-if="post.timeRead">
           <div v-if="isSubscribed">
