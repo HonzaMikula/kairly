@@ -113,6 +113,7 @@ class Post(models.Model):
             if anonymous and self.protected:
                 result['content'] = {
                     'title': self.title,
+                    'perex': self.perex,
                     'protected': True
                 }
             else:

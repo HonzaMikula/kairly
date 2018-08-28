@@ -25,21 +25,22 @@
           <h1>{{post.content.title}}</h1>
         </post-detail--title>
 
+        <post-detail--content v-html="post.content.perex"></post-detail--content>
+
+        <post-detail--continue-reading id="continue" v-if="post.content.content">
+          continue reading
+        </post-detail--continue-reading>
+
         <div v-if="post.content.protected">
           <post-detail--footer>
-            Content is protected.
+            Rest of the article is protected. Read the orginal article here.
             <span v-if="post.source">
               Read <a :href="post.source" class="external-link">Original article</a>
             </span>
           </post-detail--footer>
         </div>
+
         <div v-else>
-          <post-detail--content v-html="post.content.perex"></post-detail--content>
-
-          <post-detail--continue-reading id="continue" v-if="post.content.content">
-            continue reading
-          </post-detail--continue-reading>
-
           <post-detail--content v-html="post.content.content"></post-detail--content>
 
           <post-detail--footer>
