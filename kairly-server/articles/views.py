@@ -177,7 +177,6 @@ class NewspaperView(View):
         return HttpResponse(status=204)
 
 
-@ajax_login_required
 def author(request, username):
     author, topic = get_user_and_topic(username)
     topics = {t.slug: t for t in Topic.objects.filter(author=author)}
@@ -195,7 +194,6 @@ def author(request, username):
     return JsonResponse(data)
 
 
-@ajax_login_required
 def author_posts(request, username):
     try:
         offset = int(request.GET.get('cursor', 0))
@@ -208,7 +206,7 @@ def author_posts(request, username):
     if topic:
         posts_query = posts_query.filter(topics=topic)
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
-    posts = [post.to_json(short=True) for post in posts_query]
+    posts = [post.to_json(short=True, anonymous=request.user.is_anonymous) for post in posts_query]
     return JsonResponse({
         'posts': posts,
         'cursor': offset + AUTOR_POSTS_PAGE_SIZE if len(posts) == AUTOR_POSTS_PAGE_SIZE else None

@@ -165,7 +165,7 @@ export default {
     }
   },
 
-  async asyncData({ store, params: { author: authorId }, error}) {
+  async asyncData({ app, store, params: { author: authorId }, error}) {
     if (store.state.auth.loggedIn) {
       await store.dispatch('getSubscriptions')
     }
@@ -173,11 +173,20 @@ export default {
     try {
       const { author, newspapers, topics=null } = await store.dispatch('getAuthor', authorId)
 
-      return {
+      const data = {
         author,
         newspapers,
         topics
       }
+
+      if (process.server) {
+        const { posts, cursor } = await app.$axios.$get(
+          `/authors/${authorId}/posts`, {params: {cursor: 0}})
+        data.posts = posts
+        data.cursor = cursor
+      }
+
+      return data
     } catch (err) {
       const { status: statusCode, statusText: message } = err.response
       error({ statusCode, message })
@@ -185,7 +194,9 @@ export default {
   },
 
   created() {
-    this.loadPosts()
+    if (process.client) {
+      this.loadPosts()
+    }
   },
 }
 </script>
