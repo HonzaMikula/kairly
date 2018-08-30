@@ -76,6 +76,8 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 
+import { errorToParams } from '@/utils/errors'
+
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 import NewspaperBacklog from '@/components/editor/NewspaperBacklog'
@@ -139,8 +141,7 @@ export default {
       const { newspaper, issue } = await store.dispatch('getNewspaperDetail', { newspaperId: fullName })
       return { newspaper, issue }
     } catch (err) {
-      const { status: statusCode, statusText: message } = err.response
-      error({ statusCode, message })
+      error(errorToParams(err))
     }
   }
 }

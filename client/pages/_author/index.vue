@@ -88,6 +88,8 @@
 <script>
 import { mapMutations } from 'vuex'
 
+import { errorToParams } from '@/utils/errors'
+
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import PostWrapper from '@/components/PostWrapper'
@@ -188,8 +190,7 @@ export default {
 
       return data
     } catch (err) {
-      const { status: statusCode, statusText: message } = err.response
-      error({ statusCode, message })
+      error(errorToParams(err))
     }
   },
 
