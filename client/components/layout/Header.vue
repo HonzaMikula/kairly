@@ -1,43 +1,64 @@
 <template>
-  <app-header-view>
+  <header class="app-header">
     <div>
-      <app-header--nav role="navigation">
+      <nav class="app-header--navigation">
         <ul v-if="user">
-          <li class="home"><nuxt-link :to="{name: 'index'}" exact><span>Home</span></nuxt-link></li>
+          <li class="home">
+            <nuxt-link :to="{name: 'index'}" exact></nuxt-link>
+          </li>
+          <li class="my-newspapers">
+            <nuxt-link
+              :to="{name: 'newspapers'}"
+              title="My newspapers">
+              <span>My Newspapers</span>
+            </nuxt-link>
+          </li>
+          <li class="explore">
+            <nuxt-link
+              :to="{name: 'explore-tab'}"
+              title="My newspapers">
+              <span>Explore</span>
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
+
+      <h1 class="app-header--logo"><nuxt-link :to="{name: 'index'}" exact>Kairly</nuxt-link></h1>
+
+      <nav class="app-header--user-profile" v-if="user">
+        <nuxt-link :to="{name: 'subscription-newspapers'}">
+          <span>My subscription</span>
+          <img v-if="user.picture" :src="user.picture" :alt="user.name" />
+          <img v-else src="~/assets/user.png" :alt="user.name"/>
+        </nuxt-link>
+        <button-icon
+          v-on:click="isDropDownMenuOpen = true"
+          :class="{'is-active': isDropDownMenuOpen}"
+        />
+      </nav>
+
+      <nav class="app-header--user-profile-menu"
+        v-if="user && isDropDownMenuOpen"
+        v-on-clickaway="() => isDropDownMenuOpen = false">
+        <ul>
+          <li class="user-name">{{user.name}}</li>
+          <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">Profile</nuxt-link></li>
           <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></nuxt-link></li>
           <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>My Newspapers</span></nuxt-link></li>
-          <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>Explore</span></nuxt-link></li>
+          <li><nuxt-link :to="{name: 'user-settings'}"><span>Settings</span></nuxt-link></li>
+          <li class="divider"></li>
+          <li class="explore"><nuxt-link :to="{name: 'explore'}"><span>Explore</span></nuxt-link></li>
+          <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
+          <li><a href="" v-on:click.prevent="logout">Logout</a></li>
         </ul>
-        </app-header--nav>
-
-        <app-header--user-profile v-if="user">
-          <h3><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ user.name }}</nuxt-link></h3>
-          <nuxt-link :to="{name: 'author', params: {author: user.id}}">
-            <img v-if="user.picture" :src="user.picture" :alt="user.name" />
-            <img v-else src="~/assets/user.png" :alt="user.name"/>
-          </nuxt-link>
-          <button-icon v-on:click="isDropDownMenuOpen = true"></button-icon>
-        </app-header--user-profile>
-
-        <app-header--user-profile-menu
-          v-if="user && isDropDownMenuOpen"
-          v-on-clickaway="() => isDropDownMenuOpen = false">
-          <ul>
-            <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></nuxt-link></li>
-            <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>My Newspapers</span></nuxt-link></li>
-            <li class="explore"><nuxt-link :to="{name: 'explore'}"><span>Explore</span></nuxt-link></li>
-            <li><nuxt-link :to="{name: 'user-settings'}"><span>Settings</span></nuxt-link></li>
-            <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
-            <li><a href="" v-on:click.prevent="logout">Logout</a></li>
-          </ul>
-        </app-header--user-profile-menu>
+      </nav>
     </div>
 
     <portal to="modal" v-if="isTutorialOpen">
       <tutorial-modal :closeModal="closeTutorial"></tutorial-modal>
     </portal>
 
-  </app-header-view>
+  </header>
 </template>
 
 <script>
@@ -86,7 +107,7 @@ export default {
 
 <style lang="sass">
 //- HEADER -//
-app-header-view
+.app-header
   display: block
   height: $baseline * 2
   padding: 0 $baseline
@@ -105,13 +126,14 @@ app-header-view
   > div
     position: relative
 
-    display: flex
+    display: grid
+    grid-template-columns: 1fr 1fr 1fr
     margin: 0 auto
     max-width: 900px
 
 
 //- Main Navigation
-app-header--nav
+.app-header--navigation
   margin-right: auto
 
   ul
@@ -119,7 +141,7 @@ app-header--nav
 
   a
     display: block
-    padding: 0 $baseline / 2
+    padding: 0 $baseline/2
 
     color: #555
 
@@ -130,9 +152,7 @@ app-header--nav
     &.nuxt-link-active
       background: #eee
 
-    @media (max-width: $mobile)
-      padding: 0 $baseline*0.75
-
+    @media (max-width: 850px)
       span
         display: none
 
@@ -146,19 +166,25 @@ app-header--nav
   li a::before
     +fa-icon()
 
-    margin-right: $baseline / 4
+    font-size: $fs-1
+    text-align: center
 
   li.home a::before
     content: $fa-var-home
 
-  li.my-subscription a::before
-    content: $fa-var-clock-o
-
   li.my-newspapers a::before
     content: $fa-var-newspaper-o
+    display: none
+
+    @media (max-width: 850px)
+      display: inline-block
 
   li.explore a::before
     content: $fa-var-hashtag
+    display: none
+
+    @media (max-width: 850px)
+      display: inline-block
 
   @media (max-width: $mobile)
     li a::before
@@ -169,25 +195,47 @@ app-header--nav
       margin-right: 0
 
 
+.app-header--logo
+  font-family: $ff-serif
+  font-weight: 600
+  font-size: $fs-3
+  text-align: center
+
+  @media (max-width: $mobile)
+    font-size: $fs-2
+
+  a
+    color: #000
+
+
 //- User Profile
-app-header--user-profile
+.app-header--user-profile
+  justify-self: end
+
   cursor: pointer
 
-  //- profile name
-  h3
+  > a
     display: inline-block
-    margin-right: $baseline / 4
+    padding: 0 $baseline/2
 
-    @media (max-width: $mobile)
-      display: none
+    color: #000
 
-    a
-      color: #fff
+    &:focus,
+    &:hover
+      background: #eee
+
+    &.nuxt-link-active
+      background: #eee
+
+    @media (max-width: 850px)
+      span
+        display: none
 
   //- profile picture
   img
     border-radius: 100%
     height: $baseline * 1.25
+    margin-left: $baseline / 4
     width: $baseline * 1.25
     vertical-align: middle
 
@@ -198,7 +246,6 @@ app-header--user-profile
     display: inline-block
     border-radius: 100%
     height: $baseline * 1.25
-    margin-left: $baseline / 4
     width: $baseline * 1.25
 
     line-height: $baseline * 1.25
@@ -206,7 +253,8 @@ app-header--user-profile
     text-align: center
 
     &:focus,
-    &:hover
+    &:hover,
+    &.is-active
       background: #eee
 
     &::before
@@ -214,7 +262,7 @@ app-header--user-profile
 
 
 //- User Profile Menu
-app-header--user-profile-menu
+.app-header--user-profile-menu
   position: absolute
   right: 0
   top: $baseline * 2
@@ -230,7 +278,7 @@ app-header--user-profile-menu
 
   a
     display: block
-    padding: $baseline / 4
+    padding: $baseline / 4 $baseline / 2
 
     color: #555
 
@@ -238,13 +286,14 @@ app-header--user-profile-menu
     &:hover
       background: #fff
 
-  .my-subscription,
-  .my-newspapers,
-  .explore
-    display: none
+  //- user name
+  .user-name
+    font-weight: 600
+    padding: $baseline / 4 $baseline / 2
 
-    @media (max-width: $mobile)
-      display: block
+  //- divider
+  .divider
+    border-top: 1px solid #eee
 
 
 </style>

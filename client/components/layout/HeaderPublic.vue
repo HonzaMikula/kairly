@@ -1,7 +1,7 @@
 <template>
   <header class="app-header-public">
     <div>
-      <h1>Kairly</h1>
+      <h1><a href="/">Kairly</a></h1>
 
       <p>We aim for good journalism</p>
 
@@ -36,7 +36,7 @@ export default {
   line-height: $baseline * 2
 
   @media (max-width: $mobile)
-    padding: 0 $baseline/4 0 0
+    padding: 0 $baseline/2
 
   //- wrapper
   > div
@@ -52,6 +52,14 @@ export default {
     font-size: $fs-3
     text-align: center
 
+    a
+      color: #000
+
+    @media (max-width: $mobile)
+      font-size: $fs-2
+      text-align: left
+
+  //- motto
   p
     position: absolute
     left: 0
@@ -59,6 +67,9 @@ export default {
 
     font-family: $ff-serif
     font-size: $fs-0
+
+    @media (max-width: $mobile)
+      display: none
 
 
   //- join us / sign in
