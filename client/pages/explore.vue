@@ -90,6 +90,12 @@ explore-view
         display: table
         margin: 0 auto
 
+        @media (max-width: $mobile)
+          display: block
+
+          white-space: nowrap
+          overflow-x: auto
+
       li
         display: inline-block
 
@@ -126,11 +132,11 @@ explore-view
   //- Sections
   main
     display: grid
-    max-width: 970px
+    max-width: 900px
     margin: $baseline auto
     grid-column-gap: $baseline
     grid-row-gap: $baseline
-    grid-template-columns: 50% 50%
+    grid-template-columns: 1fr 1fr
     grid-template-rows: auto auto
     grid-template-areas: "explore-top-newspapers explore-top-newspapers" "explore-0 explore-1" "explore-2 explore-3"
 
