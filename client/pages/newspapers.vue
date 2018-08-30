@@ -308,6 +308,7 @@ editor-newspapers-view
   display: block
   padding: 0 $baseline
   max-width: 1600px
+  margin: 0 auto
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4

@@ -28,8 +28,10 @@ modal-window
   height: 100%
   width: 100%
 
-  background: rgba(0, 0, 0, 0.1)
-  backdrop-filter: blur(5px)
+  +blur(7px)
+
+  @supports not (backdrop-filter: blur(10px))
+    background: rgba(0, 0, 0, 0.3)
 
 //- Dialog Window
 modal-dialog
@@ -43,6 +45,7 @@ modal-dialog
   overflow: hidden
 
   background: #fff
+  +box-shadow
 
   //- Header
   > header
