@@ -9,8 +9,8 @@
     "local": "API_URL=http://localhost:8000/api nuxt",
     "dev-spa": "API_URL=https://kairly.com/api nuxt --spa",
     "local-spa": "API_URL=http://localhost:8000/api nuxt --spa",
-    "build": "API_URL=https://kairly.com/api nuxt build --spa",
-    "start": "nuxt start --spa",
+    "build": "API_URL=https://kairly.com/api nuxt build",
+    "start": "API_URL=https://kairly.com/api nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
