@@ -96,17 +96,20 @@ sign-up-page
     h1
       margin-bottom: $baseline
 
+
       font-size: 50px
       text-align: center
 
     p
+      padding: 0 $baseline/2
+
       font-size: $fs-2
 
 
   //- Form
   main
     padding: $baseline
-    width: 300px
+    width: 240px
     margin: 0 auto
 
     backdrop-filter: blur(10px) saturate(125%)
