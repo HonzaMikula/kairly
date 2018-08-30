@@ -3,22 +3,51 @@
     <div>
       <h1><a href="/">Kairly</a></h1>
 
-      <p>We aim for good journalism</p>
+      <p>We aim for exceptional journalism</p>
 
       <nav>
         <ul>
-          <li><a href="/">Join us</a></li>
-          <li><a href="/">Sign In</a></li>
+          <li><a href="" v-on:click.prevent="isJoinUsModalOpen = true">Join us</a></li>
+          <li><a href="" v-on:click.prevent="isSignInModalOpen = true">Sign In</a></li>
         </ul>
       </nav>
     </div>
+
+    <portal to="modal" v-if="isJoinUsModalOpen">
+      <JoinUsModal :closeModal="closeModals"></JoinUsModal>
+    </portal>
+
+    <portal to="modal" v-if="isSignInModalOpen">
+      <SignInModal :closeModal="closeModals"></SignInModal>
+    </portal>
   </header>
 </template>
 
 <script>
+import JoinUsModal from '@/components/modals/JoinUs'
+import SignInModal from '@/components/modals/SignIn'
 
 export default {
-  name: 'AppHeaderPublic'
+  name: 'AppHeaderPublic',
+
+  components: {
+    JoinUsModal,
+    SignInModal
+  },
+
+  data() {
+    return {
+      isJoinUsModalOpen: null,
+      isSignInModalOpen: null
+    }
+  },
+
+  methods: {
+    closeModals() {
+      this.isJoinUsModalOpen = null
+      this.isSignInModalOpen = null
+    }
+  }
 }
 </script>
 
