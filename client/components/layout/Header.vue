@@ -241,6 +241,9 @@ export default {
 
     object-fit: cover
 
+    @media (max-width: 850px)
+      margin-left: 0
+
   //- dropdown button
   button-icon
     display: inline-block
