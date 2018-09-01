@@ -244,7 +244,10 @@ class ArticleParser:
                     try:
                         el[i].tail = (el[i].tail or '') + tail
                     except (IndexError, TypeError):
-                        el.text += tail
+                        if el.text is None:
+                            el.text = tail
+                        else:
+                            el.text += tail
             else:
                 self._prune(child)
 
