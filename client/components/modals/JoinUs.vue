@@ -14,11 +14,11 @@
           </li>
           <li>
             Participate in
-            <a href="mailto:jan.mikula@hotmail.com?subject=Kairly user testing&body=Hi, I would like to do user testing for Kairly.">user testing over Skype</a>
+            <a href="mailto:info@kairly.com?subject=Kairly user testing&body=Hi, I would like to do user testing for Kairly.">user testing over Skype</a>
           </li>
           <li>
             Request to join
-            <a href="mailto:jan.mikula@hotmail.com?subject=Kairly join beta&body=Hi, I would like to join Kairly private beta.">private beta program</a>
+            <a href="mailto:info@kairly.com?subject=Kairly join beta&body=Hi, I would like to join Kairly private beta.">private beta program</a>
           </li>
         </ul>
       </div>
