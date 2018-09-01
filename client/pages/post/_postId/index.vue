@@ -99,6 +99,82 @@ import FollowAuthor from '@/components/widgets/FollowAuthor'
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
 
+  name: 'IssueDetail',
+
+  head() {
+    var description = this.post.content.perex.replace(/<\/?[^>]+(>|$)/g, " ").substring(0,350)
+    var re = /<img[^>]*src="([^"]*)"/g
+    var image = null
+    if (this.post.content.perex.match(re))
+      image = re.exec(this.post.content.perex)[1]
+
+    return {
+      title: `${this.post.content.title} – ${this.post.author.name} – Kairly`,
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: description
+        },
+        {
+          hid: `og:title`,
+          property: 'og:title',
+          content: `${this.post.content.title} – ${this.post.author.name} – Kairly`
+        },
+        {
+          hid: `og:description`,
+          property: 'og:description',
+          content: description
+        },
+        {
+          hid: `og:image`,
+          property: 'og:image',
+          content: image
+        },
+        {
+          hid: `og:image:alt`,
+          property: 'og:image:alt',
+          content: this.post.content.title
+        },
+        {
+          hid: `og:type`,
+          property: 'og:type',
+          content: 'article'
+        },
+        {
+          hid: `og:url`,
+          property: 'og:url',
+          content: `https://www.kairly.com/${this.post.id}`
+        },
+        {
+          hid: `twitter:card`,
+          property: 'twitter:card',
+          content: 'summary'
+        },
+        {
+          hid: `twitter:site`,
+          property: 'twitter:site',
+          content: '@kairlyapp'
+        },
+        {
+          hid: `twitter:title`,
+          property: 'twitter:title',
+          content: `${this.post.content.title} – ${this.post.author.name} – Kairly`
+        },
+        {
+          hid: `twitter:description`,
+          property: 'twitter:description',
+          content: description
+        },
+        {
+          hid: `twitter:image`,
+          property: 'twitter:image',
+          content: image
+        },
+      ]
+    }
+  },
+
   components: {
     AppLayout,
     ConsiderPost,

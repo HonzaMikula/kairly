@@ -23,6 +23,11 @@ export default {
         title: `${this.newspaper.title} #${this.issue.number} – Kairly`,
         meta: [
           {
+            hid: 'description',
+            name: 'description',
+            content: this.newspaper.description
+          },
+          {
             hid: `og:title`,
             property: 'og:title',
             content: `${this.newspaper.title} #${this.issue.number} – Kairly`
