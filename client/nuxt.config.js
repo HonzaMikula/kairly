@@ -14,7 +14,7 @@ module.exports = {
       //{ hid: 'description', name: 'description', content: 'New way how we consume and produce news' }
     ],
     link: [
-      //{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i" }
     ]
   },
