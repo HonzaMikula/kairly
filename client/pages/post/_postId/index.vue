@@ -198,6 +198,12 @@ export default {
     }
   },
 
+  async created() {
+    if (process.client) {
+      await this.$store.dispatch('getUserBacklog')
+    }
+  },
+
   updated() {
     // TODO dangerous if more component properties exists and updated called more
     // then once

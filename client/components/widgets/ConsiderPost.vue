@@ -66,7 +66,7 @@ export default {
     ...mapGetters(['userNewspapers']),
 
     containedIn() {
-      return this.backlog[this.post.id] || {}
+      return this.backlog ? ( this.backlog[this.post.id] || {} ) : {}
     }
   },
 

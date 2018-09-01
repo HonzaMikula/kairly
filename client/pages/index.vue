@@ -46,7 +46,7 @@ export default {
     })
   },
 
-  methods: mapActions(['loadTimeline']),  
+  methods: mapActions(['loadTimeline']),
 
   async fetch ({ store, params, redirect }) {
     if (!store.state.auth.loggedIn) {
@@ -54,14 +54,16 @@ export default {
       return
     }
 
-    // TODO load when needed (user opens dropdown) or better
-    // on background after component is displayed
-    await store.dispatch('getUserBacklog')
-
     // TODO nice to have fetch new data when timeline is too old
     const { timeline } = store.state
     if (!timeline.loading && timeline.issues === null) {
       await store.dispatch('loadTimeline')
+    }
+  },
+
+  async created() {
+    if (process.client) {
+      await this.$store.dispatch('getUserBacklog')
     }
   }
 }
