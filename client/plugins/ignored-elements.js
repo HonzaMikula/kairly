@@ -85,6 +85,7 @@ Vue.config.ignoredElements = [
   'timeline-post--tweet',
   'timeline-view',
   'timeline-welcome',
+  'tweet-attachment-gallery',
   'tweet-attachment-link-view',
   'welcome-view',
   'welcome--roles',

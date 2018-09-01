@@ -89,6 +89,8 @@
 </template>
 
 <script>
+import { errorToParams } from '@/utils/errors'
+
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
@@ -116,8 +118,7 @@ export default {
       const { post } = await app.$axios.$get(`/post/${postId}`)
       return { post }
     } catch (err) {
-      const { status: statusCode, statusText: message } = err.response
-      error({ statusCode, message })
+      error(errorToParams(err))
     }
   },
 

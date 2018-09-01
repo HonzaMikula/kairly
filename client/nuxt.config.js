@@ -1,12 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const API_URL = process.env.API_URL || 'https://kairly.com/api'
-
 module.exports = {
-  env: {
-    API_URL
-  },
   /*
   ** Headers of the page
   */
@@ -55,6 +50,9 @@ module.exports = {
     ** Run ESLint on save
     */
     extend (config, { isDev }) {
+      // fix stuck on 91% additional chunk assets processing when buildin again stable Nuxt
+      //config.plugins = config.plugins.filter((plugin) => plugin.constructor.name !== 'UglifyJsPlugin')
+
       if (isDev && process.client) {
         config.module.rules.push({
           enforce: 'pre',

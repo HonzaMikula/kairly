@@ -10,6 +10,8 @@
 <script>
 import { mapActions } from 'vuex'
 
+import { errorToParams } from '@/utils/errors'
+
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 
@@ -98,8 +100,7 @@ export default {
       })
       return { newspaper, issue }
     } catch (err) {
-      const { status: statusCode, statusText: message } = err.response
-      error({ statusCode, message })
+      error(errorToParams(err))
     }
   }
 }
