@@ -188,9 +188,13 @@ export default {
     }
   },
 
-  async asyncData({ app, params, error }) {
+  async asyncData({ app, store, params, error }) {
     const { postId } = params
     try {
+      if (store.state.auth.loggedIn) {
+        await store.dispatch('getSubscriptions')
+      }
+
       const { post } = await app.$axios.$get(`/post/${postId}`)
       return { post }
     } catch (err) {
