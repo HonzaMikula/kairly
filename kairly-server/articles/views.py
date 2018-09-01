@@ -83,6 +83,7 @@ def user_backlog(request):
 
 # @ajax_login_required # TODO REVIEW PUBLIC
 def recent_issues(request):
+    tzinfo = request.user.tzinfo
     issues = list(Issue.objects.all().order_by('-published')[:3])
     newspaper_ids = [issue.newspaper_id for issue in issues]
     newspapers = {
@@ -93,15 +94,16 @@ def recent_issues(request):
     resp = []
     for issue in issues:
         issue.newspaper = newspapers[issue.newspaper_id]
-        resp.append(issue.to_json(posts=True, tzinfo=request.tzinfo)),
+        resp.append(issue.to_json(posts=True, tzinfo=tzinfo)),
 
     return JsonResponse(resp, safe=False)
 
 
 # @ajax_login_required # TODO REVIEW PUBLIC
 def recent_posts(request):
+    tzinfo = request.user.tzinfo
     posts = Post.objects.filter(draft=False, published__lt=datetime.now()).select_related('author').order_by('-published')[:12]
-    return JsonResponse([post.to_json(tzinfo=request.tzinfo) for post in posts], safe=False)
+    return JsonResponse([post.to_json(tzinfo=tzinfo) for post in posts], safe=False)
 
 
 def delete_newspaper(request, newspaper):

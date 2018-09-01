@@ -48,7 +48,11 @@ export default {
     async submit() {
       const { username, email, password } = this
       try {
-        await this.$axios.post('/signup', { username, email, password })
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        await this.$axios.post('/signup',
+          { username, email, password },
+          { headers: { 'X-Timezone': timeZone }}
+        )
         await this.$auth.loginWith('local', {
           data: { username, password }
         })

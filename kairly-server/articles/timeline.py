@@ -186,18 +186,19 @@ def timeline(request):
     # Group author issues by period defined by client local zone
     # It means that timeline for same user may differ when user is in different
     # timezone.
+    tzinfo = request.user.tzinfo
 
     try:
         ts = int(request.GET.get('cursor'))
-        before = datetime.fromtimestamp(ts, request.tzinfo)
+        before = datetime.fromtimestamp(ts, tzinfo)
     except (ValueError, TypeError):
-        before = datetime.now(request.tzinfo)
+        before = datetime.now(tzinfo)
 
     issues = []
     stop_on_next = None
     timeline_stream = TimelineStream.merge(
-        NewspaperIssueStream(request.user, before, request.tzinfo),
-        AuthorsStream(request.user, before, request.tzinfo)
+        NewspaperIssueStream(request.user, before, tzinfo),
+        AuthorsStream(request.user, before, tzinfo)
     )
     for item in timeline_stream:
         if stop_on_next and item.published != stop_on_next:

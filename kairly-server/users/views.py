@@ -4,6 +4,7 @@ import time
 import urllib.request
 import urllib.error
 
+from pytz import timezone, UnknownTimeZoneError
 from libgravatar import Gravatar
 
 from django.db.utils import IntegrityError
@@ -108,6 +109,12 @@ def signup(request):
     except urllib.error.HTTPError:
         picture = ''
 
+    name = request.META.get('HTTP_X_TIMEZONE', '')
+    try:
+        tzinfo = timezone(name)
+    except UnknownTimeZoneError:
+        tzinfo = timezone('GMT')
+
     try:
         user = User.objects.create_user(
             username=username,
@@ -116,7 +123,7 @@ def signup(request):
             picture=picture,
             medium='',
             bio='',
-            timezone=str(request.tzinfo)
+            timezone=str(tzinfo)
         )
     except IntegrityError as e:
         name = get_column_if_duplicate(e)

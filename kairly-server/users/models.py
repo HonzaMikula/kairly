@@ -1,4 +1,5 @@
 import re
+import pytz
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
@@ -98,6 +99,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         if value.startswith('http://') or value.startswith('https://'):
             return value
         return settings.MEDIA_SITE + self.picture.url
+
+    @property
+    def tzinfo(self):
+        try:
+            return pytz.timezone(self.timezone)
+        except pytz.UnknownTimeZoneError:
+            return pytz.timezone('GMT')
 
     def clean(self):
         super().clean()
