@@ -38,8 +38,6 @@ export default {
   },
 
   methods: mapMutations(['showError', 'showSuccess']),
-
-  middleware: ['auth'],
 }
 </script>
 

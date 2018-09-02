@@ -25,6 +25,8 @@ import AuthorWidget from '@/components/widgets/AuthorWidget'
 export default {
   name: 'MyAuthors',
 
+  middleware: ['auth'],
+
   head: {
     title: 'My Subscription - Authors'
   },
@@ -44,11 +46,6 @@ export default {
   }),
 
   async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
-      return
-    }
-
     await store.dispatch('getSubscriptions')
   }
 }

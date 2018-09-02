@@ -65,7 +65,11 @@ module.exports = {
   },
 
   auth: {
-    redirect: false,
+    redirect: {
+      login: '/homepage',
+      logout: '/homepage',
+      home: '/'
+    },
     strategies: {
       local: {
         endpoints: {

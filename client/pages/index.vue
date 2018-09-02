@@ -27,6 +27,8 @@ import Welcome from '@/components/Welcome'
 export default {
   name: 'Timeline',
 
+  middleware: ['auth'],
+
   components: {
     IssueWrapper,
     Welcome,
