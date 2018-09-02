@@ -14,24 +14,40 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
+    branches:
+      only:
+        - master
+
     working_directory: ~/repo
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "47:93:33:75:8e:e3:c0:42:3f:2d:9c:2e:6d:0d:b4:43"
+
+      - run: ssh-keyscan -H -p 14076 node-13.rosti.cz >> ~/.ssh/known_hosts
+      - run: ssh-keyscan -H -p 14930 node-13.rosti.cz >> ~/.ssh/known_hosts
+
+      - run: sudo apt update && sudo apt install -y python3 python3-pip
+      - run: sudo pip3 install invoke
+
       - checkout
 
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-{{ checksum "client/package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: yarn install
+      - run:
+          command: |
+            cd client
+            npm install
 
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - client/node_modules
+          key: v1-dependencies-{{ checksum "client/package.json" }}
 
-      # run tests!
-      - run: yarn test
+      - run: invoke deploy

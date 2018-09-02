@@ -29,8 +29,8 @@ def upload_js(ctx):
     ctx.run("scp -r -P {} client/.nuxt {}:/tmp/.nuxt".format(JS_PORT, JS_HOST))
 
 
-@task(compile_js, upload_js)
-def deploy_js(ctx):
+@task
+def promote_js(ctx):
     print("Promoting nuxt build...")
     remote_commands = [
         'export TERM=xterm',
@@ -46,7 +46,12 @@ def deploy_js(ctx):
     ctx.run("ssh -T -p {} {} '{}'".format(JS_PORT, JS_HOST, ' && '.join(remote_commands)))
 
 
-@task()
+@task(compile_js, upload_js, promote_js)
+def deploy_js(ctx):
+    pass
+
+
+@task
 def deploy_py(ctx):
     remote_commands = [
         'export TERM=xterm',
@@ -61,7 +66,7 @@ def deploy_py(ctx):
     ctx.run("ssh -T -p {} {} '{}'".format(PY_PORT, PY_HOST, ' && '.join(remote_commands)))
 
 
-@task(deploy_py, deploy_js)
+@task(compile_js, upload_js, deploy_py, promote_js)
 def deploy_all(ctx):
     pass
 
