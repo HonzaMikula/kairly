@@ -55,6 +55,7 @@ Vue.config.ignoredElements = [
   'newspaper-backlog--next-issue',
   'newspaper-backlog-view',
   'newspaper-detail--description',
+  'newspaper-detail--empty-newspaper',
   'newspaper-detail--header',
   'newspaper-detail--info',
   'newspaper-detail--last-newspaper',

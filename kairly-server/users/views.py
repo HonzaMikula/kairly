@@ -34,9 +34,11 @@ def get_token(request):
     data = json.loads(request.body.decode())
     user = authenticate(request, username=data.get('username'), password=data.get('password'))
     if user:
+        now = int(time.time())
         payload = {
             'uid': user.id,
-            'iat': int(time.time()),
+            'iat': now,
+            'exp': now + 5 * 86400,
         }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
         return JsonResponse({

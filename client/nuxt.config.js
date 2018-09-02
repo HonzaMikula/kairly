@@ -70,6 +70,12 @@ module.exports = {
       logout: '/homepage',
       home: '/'
     },
+    localStorage: false,
+    cookie: {
+      options: {
+        expires: 60
+      }
+    },
     strategies: {
       local: {
         endpoints: {
