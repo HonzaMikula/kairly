@@ -27,6 +27,8 @@ import Welcome from '@/components/Welcome'
 export default {
   name: 'Timeline',
 
+  middleware: ['auth'],
+
   components: {
     IssueWrapper,
     Welcome,
@@ -39,8 +41,8 @@ export default {
     },
 
     ...mapState({
-      issues: state => state.timeline.issues,
-      loading: state => state.timeline.loading,
+      issues: state => state.timeline.issues || [] ,
+      loading: state => process.server || state.timeline.loading,
       hasMore: state => !!state.timeline.cursor,
       expandedIssues: state => state.timeline.expandedIssues
     })
@@ -53,17 +55,17 @@ export default {
       redirect('/homepage')
       return
     }
-
-    // TODO nice to have fetch new data when timeline is too old
-    const { timeline } = store.state
-    if (!timeline.loading && timeline.issues === null) {
-      await store.dispatch('loadTimeline')
-    }
   },
 
-  async created() {
+  created() {
     if (process.client) {
-      await this.$store.dispatch('getUserBacklog')
+      // load timeline and black in parallel
+
+      const { timeline } = this.$store.state
+      if (timeline.issues === null) {
+        this.$store.dispatch('loadTimeline')
+      }
+      this.$store.dispatch('getUserBacklog')
     }
   }
 }

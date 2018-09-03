@@ -4,26 +4,18 @@
 
 https://kairly.com/
 
-## Build Vue Prototype
+## Build Vue client
 
 ``` bash
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:3000
 npm run dev
 
-# serve with hot reload at localhost:8080 and connect to local Python server
+# serve with hot reload at localhost:3000 and connect to local Python server
 npm run local
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 ## Setup Python Environment
 
@@ -50,12 +42,6 @@ pipenv run ./manage.py createsuperuser
 ```
 
 ## Run Dev server
-
-First run Webpack on client
-
-```
-webpack --watch --config build/webpack.prod.conf.js
-```
 
 ```
 pipenv run ./manage.py runserver

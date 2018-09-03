@@ -26,6 +26,11 @@ export async function getSubscriptions({ commit, state }) {
 }
 
 export async function loadTimeline({ commit, state }) {
+  if (state.timeline.loading) {
+    // TODO wait for loading timeline ?
+    return []
+  }
+
   commit('timelineRequested')
   //try {
   const { cursor } = state.timeline

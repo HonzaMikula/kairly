@@ -24,6 +24,8 @@ import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 export default {
   name: 'MyNewspapers',
 
+  middleware: ['auth'],
+
   head: {
     title: 'Newspapers - My Subscription - Kairly'
   },
@@ -32,14 +34,7 @@ export default {
     NewspaperWidget
   },
 
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
-      return
-    }
-  },
-
-  async asyncData({ store }) {    
+  async asyncData({ store }) {
     const { newspapers: ids } = await store.dispatch('getSubscriptions')
     const newspapers = await store.dispatch('getNewspapers', Object.keys(ids))
     newspapers.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))

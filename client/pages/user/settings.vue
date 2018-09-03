@@ -85,6 +85,8 @@ import InfoMessage from '@/components/InfoMessage'
 export default {
   name: 'Settings',
 
+  middleware: ['auth'],
+
   head: {
     title: 'Account Settings'
   },
