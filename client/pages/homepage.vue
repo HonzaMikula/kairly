@@ -112,26 +112,26 @@
         <div>
           <section>
             <h3>Readers</h3>
-            <p>
-              Do you like the project and you want to help us improve the experience for readers?
-              Participate in our user tests and private beta program.
-            </p>
+            <ul>
+              <li>join our private beta program</li>
+              <li>participate in user testing interviews over Skype</li>
+            </ul>
           </section>
 
           <section>
             <h3>Editors</h3>
-            <p>
-              Do you want to change how current journalism and its business models work?
-              Start creating newspapers in our private beta program.
-            </p>
+            <ul>
+              <li>start your newspaper on Kairly</li>
+              <li>participate in user testing interviews over Skype</li>
+            </ul>
           </section>
 
           <section>
             <h3>Authors</h3>
-            <p>
-              Do you want to help improve our payments mechanism for authors?
-              Start publishing your blogs and tweets in our private beta program.
-            </p>
+            <ul>
+              <li>start publishing your content on Kairly</li>
+              <li>participate in  user testing interviews over Skype</li>
+            </ul>
           </section>
         </div>
 
@@ -427,6 +427,8 @@ homepage--help-us
     flex: 1
     margin-right: $baseline * 2
 
+    text-align: left
+
     @media (max-width: $mobile)
       margin: 0 0 $baseline 0
 
@@ -442,29 +444,10 @@ homepage--help-us
       @media (max-width: $mobile)
         font-size: $fs-1
 
-      &::before
-        +fa-icon()
+    ul li
+      list-style: disc
+      text-align: left
 
-        display: block
-        margin-bottom: $baseline / 2
-
-        font-size: 60px
-        text-align: center
-
-        @media (max-width: $mobile)
-          display: none
-
-  section:nth-of-type(1) h3::before
-    content: $fa-var-book
-
-  section:nth-of-type(2) h3::before
-   content: $fa-var-newspaper-o
-
-  section:nth-of-type(3) h3::before
-    content: $fa-var-pencil
-
-  section:nth-of-type(4) h3::before
-   content: $fa-var-money
 
 
 //- Contact us button
