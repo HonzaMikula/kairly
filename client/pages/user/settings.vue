@@ -77,7 +77,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 
-import PictureInput from 'vue-picture-input'
+import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import AppLayout from '@/components/layout/AppLayout'
 import ChangePassword from '@/components/profile/ChangePassword'
 import InfoMessage from '@/components/InfoMessage'

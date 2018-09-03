@@ -175,6 +175,10 @@ export default {
     }
   },
   mounted () {
+    if (process.server) {
+      return
+    }
+
     this.updateStrings()
     if (this.prefill) {
       this.preloadImage(this.prefill, this.prefillOptions)
@@ -538,6 +542,9 @@ export default {
   },
   computed: {
     supportsUpload () {
+      if (process.server) {
+        return true
+      }
       if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\/(1.0|2.0|2.5|3.0))/)) {
         return false
       }
@@ -546,9 +553,15 @@ export default {
       return !el.disabled
     },
     supportsPreview () {
+      if (process.server) {
+        return true
+      }
       return window.FileReader && !!window.CanvasRenderingContext2D
     },
     supportsDragAndDrop () {
+      if (process.server) {
+        return true
+      }
       const div = document.createElement('div')
       return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && !('ontouchstart' in window || navigator.msMaxTouchPoints)
     },
