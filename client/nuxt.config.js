@@ -6,15 +6,16 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'Kairly - exceptional journalism & great reading experience',
+    title: 'Kairly – We aim for exceptional journalism',
     meta: [
       { charset: 'utf-8' },
       { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' }
-      //{ hid: 'description', name: 'description', content: 'New way how we consume and produce news' }
+      { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
+      { hid: 'description', name: 'description', content: 'New way how we consume and produce news' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+      { rel: 'icon', sizes: '192x192', href: '/favicon.png' },
+      { rel: 'apple-touch-icon', sizes: '192x192', href: '/favicon.png' },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i" }
     ]
   },
