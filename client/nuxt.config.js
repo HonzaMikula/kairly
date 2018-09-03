@@ -37,7 +37,7 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     ['@nuxtjs/google-analytics', {
-      id: process.env.GOOGLE_ANALYTICS_ID
+      id: 'UA-114180015-1'
     }],
     ['nuxt-sass-resources-loader', {
       resources: '@/styles/base.sass'
