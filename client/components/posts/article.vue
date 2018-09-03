@@ -2,22 +2,23 @@
   <post :post="post">
     <timeline-post--article>
       <h2><nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</nuxt-link></h2>
-      <div v-if="post.content.protected">
-        Content is protected.
-        <span v-if="post.source">
-          <a :href="post.source" class="external-link" v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}" title="Original article"></a>
-        </span>
-      </div>
-      <timeline-post--article--content v-else>
+
+      <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
+        {{post.timeRead}}
         <timeline-post--continue-reading v-if="post.timeRead">
-          <div v-if="isSubscribed">
-            <nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }, hash: '#continue'}">Continue reading</nuxt-link>
-          </div>
-          <div v-else>
-            Subscribe newspaper to continue reading
-          </div>
-          ({{ post.timeRead }} read)
+          <template v-if="post.content.protected">
+            <a :href="post.source">Read the article</a>
+          </template>
+          <template v-else>
+            <div v-if="isSubscribed">
+              <nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }, hash: '#continue'}">Continue reading</nuxt-link>
+            </div>
+            <div v-else>
+              Subscribe newspaper to continue reading
+            </div>
+            ({{ post.timeRead }} read)
+          </template>
         </timeline-post--continue-reading>
       </timeline-post--article--content>
     </timeline-post--article>

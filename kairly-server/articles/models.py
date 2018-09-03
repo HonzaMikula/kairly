@@ -111,6 +111,7 @@ class Post(models.Model):
                 result['content']['attachments'] = json.loads(self.attachments)
         elif self.kind == Post.NEWSPAPER:
             if anonymous and self.protected:
+                result['timeRead'] = self.read_time
                 result['content'] = {
                     'title': self.title,
                     'perex': self.perex,
