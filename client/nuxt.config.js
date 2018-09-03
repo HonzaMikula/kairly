@@ -1,6 +1,8 @@
 const fs = require('fs')
 const path = require('path')
 
+console.log(process.env)
+
 module.exports = {
   /*
   ** Headers of the page
@@ -37,7 +39,7 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     ['@nuxtjs/google-analytics', {
-      id: 'UA-114180015-1'
+      id: process.env.GA_ID
     }],
     ['nuxt-sass-resources-loader', {
       resources: '@/styles/base.sass'
@@ -53,7 +55,6 @@ module.exports = {
     extend (config, { isDev }) {
       // fix stuck on 91% additional chunk assets processing when buildin again stable Nuxt
       //config.plugins = config.plugins.filter((plugin) => plugin.constructor.name !== 'UglifyJsPlugin')
-
       if (isDev && process.client) {
         config.module.rules.push({
           enforce: 'pre',
