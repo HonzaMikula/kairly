@@ -8,7 +8,8 @@
         {{post.timeRead}}
         <timeline-post--continue-reading v-if="post.timeRead">
           <template v-if="post.content.protected">
-            <a :href="post.source">Read the article</a>
+            <a :href="post.source" target="_blank">Read the article</a>
+            ({{ post.timeRead }} read)
           </template>
           <template v-else>
             <div v-if="isSubscribed">

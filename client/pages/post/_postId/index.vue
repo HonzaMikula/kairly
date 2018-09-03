@@ -65,7 +65,7 @@
 
           <p>{{post.author.bio}}</p>
 
-          <post-detail--author--subscription>
+          <post-detail--author--subscription v-if="loggedIn">
             <AuthorSubscription
               v-if="subscription"
               :subscription="subscription" :author="post.author"
@@ -90,6 +90,7 @@
 
 <script>
 import { errorToParams } from '@/utils/errors'
+import { mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
@@ -98,8 +99,6 @@ import FollowAuthor from '@/components/widgets/FollowAuthor'
 
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
-
-  name: 'IssueDetail',
 
   head() {
     var description = this.post.content.perex.replace(/<\/?[^>]+(>|$)/g, " ").substring(0,350)
@@ -183,6 +182,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
     subscription() {
       return this.$store.getters.getAuthorSubscription(this.post.author)
     }
