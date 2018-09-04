@@ -179,7 +179,7 @@ export default {
       color: darken($c-base, 20%)
 
       cursor: pointer
-      font-size: $fs--2
+      font-size: $fs--1
 
       &:focus,
       &:hover
@@ -198,7 +198,7 @@ export default {
     p
       padding: $baseline / 2
 
-      font-size: $fs--2
+      font-size: $fs--1
       line-height: $baseline * 0.75
 
       strong
@@ -207,7 +207,7 @@ export default {
     ul.text
       padding: 0 $baseline/2 $baseline/2 $baseline
 
-      font-size: $fs--2
+      font-size: $fs--1
       line-height: $baseline * 0.75
 
       li
@@ -235,7 +235,7 @@ export default {
         color: darken($c-base, 20%)
         opacity: 0
 
-        font-size: $fs--2
+        font-size: $fs--1
 
         content: $fa-var-arrow-right
 

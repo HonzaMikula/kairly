@@ -62,6 +62,7 @@ export default {
   border-bottom: 1px solid #eee
   color: #555
 
+  font-size: $fs-1
   line-height: $baseline * 2
 
   @media (max-width: $mobile)

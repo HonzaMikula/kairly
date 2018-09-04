@@ -2,7 +2,7 @@
   <author-widget-view>
     <header>
       <picture>
-        <nuxt-link :to="{name: 'author', params: {author: author.id}}">          
+        <nuxt-link :to="{name: 'author', params: {author: author.id}}">
           <img v-if="author.picture" :src="author.picture" :alt="author.name" />
           <img v-else src="~/assets/user.png" :alt="author.name"/>
         </nuxt-link>
@@ -115,7 +115,7 @@ author-widget-view
       grid-area: author-widget-subscription
       justify-self: end
 
-      font-size: $fs--2
+      font-size: $fs--1
 
       button
         +subscribe-button
@@ -124,7 +124,7 @@ author-widget-view
         padding: 0 $baseline/2
 
         font-family: $ff-sans
-        font-size: $fs--2
+        font-size: $fs--1
         line-height: $baseline
 
   //- bio
@@ -133,7 +133,7 @@ author-widget-view
 
     color: #777
 
-    font-size: $fs--2
+    font-size: $fs--1
     line-height: $baseline * 0.8
 
 </style>

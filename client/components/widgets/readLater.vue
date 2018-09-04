@@ -98,7 +98,7 @@ read-later-widget--buttons
     opacity: 0.7
 
     font-family: $ff-sans
-    font-size: $fs--2
+    font-size: $fs--1
     font-weight: 100
 
     cursor: pointer

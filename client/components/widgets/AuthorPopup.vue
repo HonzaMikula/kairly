@@ -199,7 +199,7 @@ author-widget
   border: 1px solid #eee
   box-shadow: 1px 1px 3px #999
 
-  font-size: $fs--2
+  font-size: $fs--1
   line-height: 22rem
 
   //- arrow
@@ -243,7 +243,7 @@ author-widget--medium
 
   color: #555
 
-  font-size: $fs--2
+  font-size: $fs--1
   line-height: 18px
 
 
@@ -253,8 +253,8 @@ author-widget--bio
 
   margin-top: $baseline / 2
 
-  font-size: $fs--2
-  line-height: 20px
+  font-size: $fs--1
+  line-height: 1.52
 
 //- Stats
 author-widget--stats

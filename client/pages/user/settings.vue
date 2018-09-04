@@ -167,7 +167,7 @@ settings-view
   h1
     margin-bottom: $baseline
 
-    font-size: $fs-2
+    font-size: $fs-3
     font-weight: 600
 
     @media (max-width: $mobile)
@@ -176,7 +176,7 @@ settings-view
   //- Sections heading
   h2
     margin-bottom: $baseline / 2
-    font-size: $fs-1
+    font-size: $fs-2
     font-weight: 600
 
   //- Wrapper
@@ -208,7 +208,7 @@ settings--profile-picture
       color: rgba(255, 255, 255, 0.7)
       opacity: 0
 
-      font-size: $fs-2
+      font-size: $fs-3
       line-height: $baseline * 4
       text-align: center
 
@@ -246,7 +246,7 @@ settings--form
     label, h3
       display: table
 
-      font-size: $fs--2
+      font-size: $fs--1
       font-weight: 600
 
     //- input fields
@@ -259,7 +259,7 @@ settings--form
       border: 1px solid #ddd
 
       font-family: $ff-sans
-      font-size: $fs--2
+      font-size: $fs--1
 
 
     //- textarea
@@ -272,7 +272,7 @@ settings--form
       border: 1px solid #ddd
 
       font-family: $ff-sans
-      font-size: $fs--2
+      font-size: $fs--1
 
       @media (max-width: $mobile)
         width: 100%
@@ -288,7 +288,7 @@ settings--form
       border: 1px solid #ddd
 
       font-family: $ff-sans
-      font-size: $fs--2
+      font-size: $fs--1
 
 
     //- help
@@ -296,8 +296,8 @@ settings--form
       margin-top: $baseline / 4
       color: #555
 
-      font-size: $fs--3
-      line-height: $baseline * 0.7
+      font-size: $fs--1
+      line-height: 1.42
 
       a
         color: darken($c-base, 20%)
@@ -320,7 +320,7 @@ settings--form
     color: #fff
 
     font-family: $ff-sans
-    font-size: $fs--1
+    font-size: $fs-0
 
     &:focus,
     &:hover

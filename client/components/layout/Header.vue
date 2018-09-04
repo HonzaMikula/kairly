@@ -116,7 +116,6 @@ export default {
   border-bottom: 1px solid #eee
   color: #555
 
-  font-size: $fs--1
   line-height: $baseline * 2
 
   @media (max-width: $mobile)
@@ -273,7 +272,7 @@ export default {
   min-width: 120px
   +box-shadow
 
-  font-size: $fs--2
+  font-size: $fs--1
   line-height: $baseline
 
   ul
