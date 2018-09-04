@@ -20,10 +20,5 @@ class Migration(migrations.Migration):
             model_name='post',
             name='published',
             field=models.DateTimeField(db_index=True, default=django.utils.timezone.now, verbose_name='Published'),
-        ),
-        migrations.AlterField(
-            model_name='post',
-            name='source',
-            field=models.CharField(blank=True, db_index=True, max_length=300, null=True, verbose_name='Link to original article'),
-        ),
+        )
     ]
