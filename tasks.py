@@ -71,10 +71,46 @@ def deploy_all(ctx):
     pass
 
 
+@task()
+def dump_prod(ctx):
+    import os
+    import sys
+    server_root = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'kairly-server')
+    sys.path.append(server_root)
+
+    from kairly import settings_prod as settings
+    dbconf = settings.DATABASES['default']
+    tmp_file = '/tmp/kairly.sql.gz'
+
+    dump_cmd = 'mysqldump --user="{}" --password="{}" -h {} --default-character-set=utf8mb4 {} | gzip > {}'.format(
+        dbconf['USER'], dbconf['PASSWORD'], dbconf['HOST'], dbconf['NAME'], tmp_file
+    )
+    remote_commands = [
+        'export TERM=xterm',
+        'source /srv/.bashrc',
+        dump_cmd
+    ]
+    ctx.run("ssh -T -p {} {} '{}'".format(PY_PORT, PY_HOST, ' && '.join(remote_commands)))
+    ctx.run("scp -r -P {} {}:{} .".format(PY_PORT, PY_HOST, tmp_file))
+    remote_commands = [
+        'export TERM=xterm',
+        'source /srv/.bashrc',
+        'rm ' + tmp_file
+    ]
+    ctx.run("ssh -T -p {} {} '{}'".format(PY_PORT, PY_HOST, ' && '.join(remote_commands)))
+    # to import
+    # Drop schema and recreate database with utf8mb4
+    # CREATE SCHEMA `kairly` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+
+
 deploy_ns = Collection('deploy')
 deploy_ns.add_task(deploy_all, 'all', default=True)
 deploy_ns.add_task(deploy_js, 'js')
 deploy_ns.add_task(deploy_py, 'py')
 
+dbdump_ns = Collection('dbdump')
+dbdump_ns.add_task(dump_prod, 'prod')
+
 ns = Collection()
 ns.add_collection(deploy_ns)
+ns.add_collection(dbdump_ns)
