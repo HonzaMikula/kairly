@@ -5,7 +5,6 @@
 
       <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
-        {{post.timeRead}}
         <timeline-post--continue-reading v-if="post.timeRead">
           <template v-if="post.content.protected">
             <a :href="post.source" target="_blank">Read the article</a>

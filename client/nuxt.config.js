@@ -1,8 +1,6 @@
 const fs = require('fs')
 const path = require('path')
 
-console.log(process.env)
-
 module.exports = {
   /*
   ** Headers of the page
