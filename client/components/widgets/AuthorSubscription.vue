@@ -21,7 +21,7 @@
 
     <follow-author
       ref="followWidget"
-      :author="author"      
+      :author="author"
       :cancelingSubscription="true"
     />
   </author-subscription-view>
@@ -61,7 +61,7 @@ export default {
 author-subscription-view
   display: block
 
-  font-size: $fs--2
+  font-size: $fs--1
 
   a
     color: #333

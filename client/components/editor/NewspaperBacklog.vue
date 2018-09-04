@@ -316,7 +316,7 @@ newspaper-backlog--backlog
 
         color: $c-base
 
-        font-size: $fs--2
+        font-size: $fs--1
         line-height: $baseline * 0.75
 
         a
@@ -330,7 +330,7 @@ newspaper-backlog--backlog
 
         color: #999
 
-        font-size: $fs--2
+        font-size: $fs--1
         line-height: $baseline * 0.75
 
       //-- controls

@@ -55,6 +55,7 @@ timeline-post--article
 
     font-size: $fs-1
     font-weight: 600
+    line-height: 1.58
 
     @media (max-width: $mobile)
       font-size: $fs-0
@@ -74,15 +75,15 @@ timeline-post--article--content
   column-gap: $baseline
   display: block
 
-  line-height: $baseline * 0.9
+  line-height: 1.58
   hyphens: auto
 
   @media (max-width: $mobile)
     column-count: 2
     column-gap: $baseline / 2
 
-    font-size: $fs--2
-    line-height: $baseline * 0.8
+    font-size: $fs--1
+    line-height: 1.58
 
 
   //-- heading
@@ -207,8 +208,8 @@ timeline-post--article--content
       color: #999
 
       font-family: $ff-sans
-      font-size: $fs--2
-      line-height: $baseline * 0.8
+      font-size: $fs--1
+      line-height: 1.58
 
   //-- table
   table
@@ -233,7 +234,7 @@ timeline-post--continue-reading
   color: #999
 
   font-family: $ff-sans
-  font-size: $fs--2
+  font-size: $fs--1
   text-align: center
 
   a
@@ -245,8 +246,8 @@ timeline-post--continue-reading
 
     border: 1px solid transparent
 
-    font-size: $fs--2
-    line-height: $baseline
+    font-size: $fs--1
+    line-height: 1.58
     text-transform: uppercase
 
     &:focus,

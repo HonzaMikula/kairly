@@ -125,7 +125,7 @@ change-password-view
     label, h3
       display: table
 
-      font-size: $fs--2
+      font-size: $fs--1
       font-weight: 600
 
     //- input fields
@@ -138,7 +138,7 @@ change-password-view
       border: 1px solid #ddd
 
       font-family: $ff-sans
-      font-size: $fs--2
+      font-size: $fs--1
 
   //- submit button
   button
@@ -151,7 +151,7 @@ change-password-view
     color: #fff
 
     font-family: $ff-sans
-    font-size: $fs--1
+    font-size: $fs-0
 
     &:focus,
     &:hover

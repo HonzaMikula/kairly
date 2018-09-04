@@ -215,7 +215,7 @@ export default {
     p
       padding: $baseline / 2
 
-      font-size: $fs--2
+      font-size: $fs--1
       line-height: $baseline * 0.75
 
       strong
@@ -227,7 +227,7 @@ export default {
 
       li
         list-style: disc
-        font-size: $fs--2
+        font-size: $fs--1
 
     li a::after
       content: $fa-var-arrow-right

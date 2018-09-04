@@ -147,7 +147,7 @@ newspaper-widget-view
 
     color: #777
 
-    font-size: $fs--2
+    font-size: $fs--1
     font-weight: 600
     line-height: $baseline * 0.8
 
@@ -158,12 +158,11 @@ newspaper-widget-view
 
     color: #777
 
-    font-size: $fs--2
+    font-size: $fs--1
     line-height: $baseline * 0.8
 
 //- Author + Periodicity
 newspaper-widget--author
-  font-size: $fs--1
   order: 2
   margin: $baseline/2 0
 
@@ -227,7 +226,7 @@ newspaper-widget--subscribe
 
   //- info
   p
-    font-size: $fs--2
+    font-size: $fs--1
 
     @media (max-width: $mobile)
       display: none

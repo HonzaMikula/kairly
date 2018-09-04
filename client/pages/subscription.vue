@@ -37,7 +37,7 @@ my-subscription-view
   nav
     margin-bottom: $baseline
 
-    font-size: $fs-2
+    font-size: $fs-3
 
     a
       display: inline-block
@@ -45,7 +45,7 @@ my-subscription-view
 
       color: $c-base
 
-      font-weight: 500
+      font-weight: 600
 
       &.nuxt-link-active
         color: #000

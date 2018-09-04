@@ -322,11 +322,11 @@ post-detail--title
   font-family: $ff-serif
   font-size: $fs-3
   font-weight: 600
-  line-height: $baseline * 1.25
+  line-height: 1.58
 
   @media (max-width: $mobile)
     font-size: $fs-2
-    line-height: $baseline
+    line-height: 1.58
 
 
 //- Continue Reading
@@ -369,11 +369,11 @@ post-detail--perex
 
   font-family: $ff-serif
   font-size: $fs-1
-  line-height: $baseline * 1.25
+  line-height: 1.58
 
   @media (max-width: $mobile)
     font-size: $fs-0
-    line-height: $baseline
+    line-height: 1.58
 
   //- title
   h1
@@ -401,7 +401,7 @@ post-detail--perex
     font-style: italic
 
   //- Lists
-  ul
+  ul, ol
     margin: 0 0 $baseline $baseline
 
   //-- bullet points
@@ -455,8 +455,8 @@ post-detail--perex
       color: #999
 
       font-family: $ff-sans
-      font-size: $fs--2
-      line-height: $baseline * 0.8
+      font-size: $fs--1
+      line-height: 1.58
 
   //-- table
   table
@@ -494,7 +494,7 @@ post-detail--footer
     color: #000
 
     cursor: pointer
-    font-size: $fs--2
+    font-size: $fs--1
     line-height: $baseline * 1.25
     vertical-align: middle
 
@@ -566,7 +566,7 @@ post-detail--author--subscription
     padding: 0 $baseline/2
 
     font-family: $ff-sans
-    font-size: $fs--2
+    font-size: $fs--1
     line-height: $baseline
 
 </style>

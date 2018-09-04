@@ -120,7 +120,7 @@ issue-widget-view
     flex: 1
     order: 4
 
-    font-size: $fs--2
+    font-size: $fs--1
     line-height: $baseline * 0.8
 
     li
@@ -194,5 +194,5 @@ issue-widget--subscribe
 
   //- info
   p
-    font-size: $fs--2
+    font-size: $fs--1
 </style>

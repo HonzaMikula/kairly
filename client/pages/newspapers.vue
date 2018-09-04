@@ -506,7 +506,7 @@ editor-newspapers--header--dropdown
   p
     color: #777
 
-    font-size: $fs--2
+    font-size: $fs--1
 
 
 //- Mobile switcher (upcoming release, considered posts)

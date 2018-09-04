@@ -306,8 +306,8 @@ newspaper-detail--subscribe
   button + p
     color: #777
 
-    font-size: $fs--2
-    line-height: $baseline * 0.8
+    font-size: $fs--1
+    line-height: 1.42
     text-align: center
 
 

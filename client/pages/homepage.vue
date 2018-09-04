@@ -240,7 +240,7 @@ homepage--cover
     color: #fff
 
     cursor: pointer
-    font-size: $fs-0
+    font-size: $fs-1
     font-family: $ff-sans
 
     &:focus,
@@ -467,6 +467,7 @@ homepage--help-us--contact-us
     color: #fff
 
     font-family: $ff-sans
+    font-size: $fs-1
     line-height: $baseline * 1.5
 
     &:hover,

@@ -33,7 +33,7 @@ tweet-attachment-quote-view
     margin-bottom: $baseline / 4
 
   p
-    line-height: $baseline * 0.9
+    line-height: 1.58
 
 
 

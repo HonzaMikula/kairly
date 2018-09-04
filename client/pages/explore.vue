@@ -105,6 +105,7 @@ explore-view
 
         color: #fff
 
+        font-size: $fs-1
         line-height: $baseline * 2
 
         &:hover,
@@ -149,6 +150,27 @@ explore-view
   @at-root .recent > main
     grid-template-areas: "explore-top-newspapers explore-top-newspapers" "explore-recent explore-recent"
 
+  section
+    > h2
+      font-size: $fs-2
+      font-weight: 600
+      line-height: $baseline * 2
+
+    &.explore-0
+      grid-area: explore-0
+
+    &.explore-1
+      grid-area: explore-1
+
+    &.explore-2
+      grid-area: explore-2
+
+    &.explore-3
+      grid-area: explore-3
+
+    &.explore-recent
+      grid-area: explore-recent
+
 explore--top-newspapers
   grid-area: explore-top-newspapers
 
@@ -170,24 +192,4 @@ explore--top-newspapers
       newspaper-widget-view:last-of-type
         display: none
 
-section
-  > h2
-    font-size: $fs-2
-    font-weight: 600
-    line-height: $baseline * 2
-
-  &.explore-0
-    grid-area: explore-0
-
-  &.explore-1
-    grid-area: explore-1
-
-  &.explore-2
-    grid-area: explore-2
-
-  &.explore-3
-    grid-area: explore-3
-
-  &.explore-recent
-    grid-area: explore-recent
 </style>
