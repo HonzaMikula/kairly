@@ -21,7 +21,7 @@
       <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
     </newspaper-widget--author>
 
-    <newspaper-widget--subscribe>
+    <newspaper-widget--subscribe v-if="loggedIn">
       <button
         v-if="isSubscribed"
         class="is-subscribed"
@@ -49,6 +49,7 @@
 
 <script>
 
+import { mapState } from 'vuex'
 
 export default {
   name: 'NewspaperWidget',
@@ -64,6 +65,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
     isSubscribed() {
       return this.$store.getters.getNewspaperSubscription(this.newspaper)
     },

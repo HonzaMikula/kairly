@@ -4,7 +4,7 @@
       <newspaper-detail--header>
         <h1>{{ newspaper.title }}</h1>
 
-        <newspaper-detail--subscribe>
+        <newspaper-detail--subscribe v-if="loggedIn">
           <button
             v-if="isSubscribed"
             class="is-subscribed"
@@ -160,6 +160,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
     isEditor() {
       if (this.newspaper) {
         const author = this.newspaper.editor

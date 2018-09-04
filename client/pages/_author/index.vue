@@ -16,7 +16,7 @@
           <p>{{ author.bio }}</p>
         </section>
 
-        <author-detail--subscribe>
+        <author-detail--subscribe v-if="loggedIn">
           <button
             v-if="subscription"
             class="is-subscribed"
@@ -86,8 +86,7 @@
 
 
 <script>
-import { mapMutations } from 'vuex'
-
+import { mapMutations, mapState } from 'vuex'
 import { errorToParams } from '@/utils/errors'
 
 import AppLayout from '@/components/layout/AppLayout'
@@ -185,6 +184,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
     visibleNewspapers() {
       return this.showAllNewspapers ? this.newspapers : this.newspapers.slice(0, 3)
     },
