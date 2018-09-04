@@ -172,7 +172,7 @@ def explore_tab(request, tab):
                 User.objects.all()
                     .annotate(post_count=Count('post'))
                     .filter(post_count__gt=1)
-                    .order_by('-date_joined')[:10]
+                    .order_by('-date_joined')[:14]  # fill list + modal, each 7 items
             ]
         })
 

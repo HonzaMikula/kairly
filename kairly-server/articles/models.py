@@ -48,11 +48,11 @@ class Post(models.Model):
         ordering = ('-published',)
 
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
-    published = models.DateTimeField(_('Published'), default=now)
+    published = models.DateTimeField(_('Published'), default=now, db_index=True)
     draft = models.BooleanField(_('Draft'), default=False)
 
     guid = models.CharField(_('External ID'), max_length=255, null=True, unique=True)
-    source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True)
+    source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True, db_index=True)
     protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
 
     title = models.CharField(max_length=160)
@@ -176,7 +176,7 @@ class Backlog(models.Model):
 
 class Issue(models.Model):
     number = models.IntegerField()
-    published = models.DateTimeField(_('Published'), default=now)
+    published = models.DateTimeField(_('Published'), default=now, db_index=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from newspaper
     posts = models.ManyToManyField(Post, blank=True, through='IssuePost')
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)

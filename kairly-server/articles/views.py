@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from collections import defaultdict
 
 from django.db.models import Count
@@ -82,7 +81,7 @@ def user_backlog(request):
     })
 
 
-# @ajax_login_required # TODO REVIEW PUBLIC
+@ajax_login_required
 def recent_issues(request):
     tzinfo = request.user.tzinfo
     issues = list(Issue.objects.all().order_by('-published')[:3])
@@ -100,7 +99,7 @@ def recent_issues(request):
     return JsonResponse(resp, safe=False)
 
 
-# @ajax_login_required # TODO REVIEW PUBLIC
+@ajax_login_required
 def recent_posts(request):
     tzinfo = request.user.tzinfo
     posts = Post.objects.filter(draft=False, published__lt=timezone.now()).select_related('author').order_by('-published')[:12]
@@ -115,7 +114,6 @@ def delete_newspaper(request, newspaper):
 
 
 class NewspaperView(View):
-    # @ajax_login_required # TODO REVIEW PUBLIC
     def get(self, request, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 

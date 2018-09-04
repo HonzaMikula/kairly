@@ -76,16 +76,6 @@ export default {
     }
   },
 
-  // watch: {
-  //   '$route' (to, from) {
-  //     this.loadData()
-  //   }
-  // },
-  //
-  // created() {
-  //   this.loadData()
-  // }
-
   async asyncData({ app, store, params }) {
     const tab = TABS.find(t => t.slug === params.tab)
     const [newspapers, { categories }] = await Promise.all([
