@@ -8,6 +8,7 @@ from django.http import (Http404, JsonResponse, HttpResponse,
                          HttpResponseForbidden, HttpResponseBadRequest)
 from django.views import View
 from django.views.decorators.http import require_POST
+from django.utils import timezone
 from django.utils.text import slugify
 
 from utils.decorators import ajax_login_required
@@ -102,7 +103,7 @@ def recent_issues(request):
 # @ajax_login_required # TODO REVIEW PUBLIC
 def recent_posts(request):
     tzinfo = request.user.tzinfo
-    posts = Post.objects.filter(draft=False, published__lt=datetime.now()).select_related('author').order_by('-published')[:12]
+    posts = Post.objects.filter(draft=False, published__lt=timezone.now()).select_related('author').order_by('-published')[:12]
     return JsonResponse([post.to_json(tzinfo=tzinfo) for post in posts], safe=False)
 
 
@@ -204,7 +205,7 @@ def author_posts(request, username):
 
     author, topic = get_user_and_topic(username)
 
-    posts_query = Post.objects.filter(author=author, draft=False, published__lt=datetime.now())
+    posts_query = Post.objects.filter(author=author, draft=False, published__lt=timezone.now())
     if topic:
         posts_query = posts_query.filter(topics=topic)
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
@@ -266,7 +267,7 @@ def backlog_publish(request, username, newspapeper_slug):
         return HttpResponseForbidden()
 
     post_ids = json.loads(request.body.decode('utf-8'))
-    publish_stamp = datetime.now()
+    publish_stamp = timezone.now()
     for log in Backlog.objects.filter(newspaper=newspaper):
         try:
             idx = post_ids.index(log.post_id)
@@ -361,7 +362,7 @@ def unsubscribe_author(request, username):
 
 
 def post(request, post_id):
-    post = get_object_or_404(Post, id=post_id, draft=False, published__lt=datetime.now())
+    post = get_object_or_404(Post, id=post_id, draft=False, published__lt=timezone.now())
     # Doesn't work, post can be part of multiple issues or just related to author
     # newspaper = Issue.objects.get(posts=post).newspaper
     # is_subscribed = Subscription.objects.filter(user=request.user, newspaper=newspaper).count() > 0

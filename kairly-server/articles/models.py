@@ -199,7 +199,7 @@ class Issue(models.Model):
         if posts:
             result["posts"] = [
                 p.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo) for p in
-                self.posts.filter(draft=False, published__lt=datetime.now())
+                self.posts.filter(draft=False, published__lt=now())
                     .order_by('issuepost__ordering', '-published')
             ]
         return result
