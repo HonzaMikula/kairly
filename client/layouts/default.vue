@@ -19,6 +19,8 @@ import InfoMessage from '@/components/InfoMessage'
 export default {
   name: 'app',
 
+  middleware: ['auth'],
+
   components: {
     InfoMessage
   },

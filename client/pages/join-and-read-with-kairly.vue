@@ -29,6 +29,8 @@
 export default {
   name: 'SignUp',
 
+  auth: false,
+
   head() {
     return {
       title: 'Sign Up'

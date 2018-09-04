@@ -45,6 +45,8 @@ import ExploreModal from '@/components/explore/ExploreModal'
 export default {
   name: 'ExploreTab',
 
+  //auth: false,
+
   components: {
     NewspaperWidget,
     AuthorWidget,

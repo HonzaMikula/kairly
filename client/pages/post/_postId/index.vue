@@ -100,6 +100,8 @@ import FollowAuthor from '@/components/widgets/FollowAuthor'
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
 
+  auth: false,
+
   head() {
     var description = this.post.content.perex.replace(/<\/?[^>]+(>|$)/g, " ").substring(0,350)
     var re = /<img[^>]*src="([^"]*)"/g

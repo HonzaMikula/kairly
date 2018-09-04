@@ -18,6 +18,8 @@ import Issue from '@/components/IssueWrapper'
 export default {
   name: 'IssueDetail',
 
+  auth: false,
+
   head() {
       return {
         title: `${this.newspaper.title} #${this.issue.number} – Kairly`,

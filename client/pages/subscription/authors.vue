@@ -25,8 +25,6 @@ import AuthorWidget from '@/components/widgets/AuthorWidget'
 export default {
   name: 'MyAuthors',
 
-  middleware: ['auth'],
-
   head: {
     title: 'My Subscription - Authors'
   },

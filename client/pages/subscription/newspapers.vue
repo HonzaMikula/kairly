@@ -24,8 +24,6 @@ import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 export default {
   name: 'MyNewspapers',
 
-  middleware: ['auth'],
-
   head: {
     title: 'Newspapers - My Subscription - Kairly'
   },

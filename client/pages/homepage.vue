@@ -154,6 +154,8 @@ import JoinUsModal from '@/components/modals/JoinUs'
 export default {
   name: 'Homepage',
 
+  auth: false,
+
   components: {
     AppLayout,
     JoinUsModal
