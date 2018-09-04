@@ -324,7 +324,7 @@ post-detail--title
 
   @media (max-width: $mobile)
     font-size: $fs-2
-    line-height: $baseline
+    line-height: 1.58
 
 
 //- Continue Reading
@@ -371,7 +371,7 @@ post-detail--perex
 
   @media (max-width: $mobile)
     font-size: $fs-0
-    line-height: $baseline
+    line-height: 1.58
 
   //- title
   h1
@@ -454,7 +454,7 @@ post-detail--perex
 
       font-family: $ff-sans
       font-size: $fs--1
-      line-height: $baseline * 0.8
+      line-height: 1.58
 
   //-- table
   table

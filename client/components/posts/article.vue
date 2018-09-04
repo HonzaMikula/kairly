@@ -55,6 +55,7 @@ timeline-post--article
 
     font-size: $fs-1
     font-weight: 600
+    line-height: 1.58
 
     @media (max-width: $mobile)
       font-size: $fs-0
@@ -82,7 +83,7 @@ timeline-post--article--content
     column-gap: $baseline / 2
 
     font-size: $fs--1
-    line-height: $baseline * 0.8
+    line-height: 1.58
 
 
   //-- heading
@@ -208,7 +209,7 @@ timeline-post--article--content
 
       font-family: $ff-sans
       font-size: $fs--1
-      line-height: $baseline * 0.8
+      line-height: 1.58
 
   //-- table
   table
@@ -246,7 +247,7 @@ timeline-post--continue-reading
     border: 1px solid transparent
 
     font-size: $fs--1
-    line-height: $baseline
+    line-height: 1.58
     text-transform: uppercase
 
     &:focus,

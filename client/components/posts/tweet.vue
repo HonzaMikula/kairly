@@ -77,7 +77,7 @@ timeline-post--tweet
   margin-bottom: $baseline / 2
 
   font-family: $ff-serif
-  line-height: $baseline * 0.9
+  line-height: 1.58
 
   > .tweet-content a
     color: $c-base
