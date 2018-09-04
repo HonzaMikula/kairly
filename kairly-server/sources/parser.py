@@ -2,6 +2,7 @@ import re
 from collections import namedtuple, defaultdict
 from itertools import product
 
+import lxml
 from lxml import etree
 
 Rule = namedtuple('Rule', ['props', 'selector'])
@@ -79,13 +80,77 @@ class ArticleParser:
         return elements
 
     def normalize(self, fragments):
-        # TODO find p/div/text with <br><br> - fix larryarnhart source
+        def fix_brbr(p):
+            """If paragraph contains <br><br>, split parts into paragraphs
+            Fixes eg. larryarnhart source.
+            """
+            needs_fix = False
+            prev = None
+            for node in p.xpath("child::node()"):
+                curr = getattr(node, 'tag', None)
+                if prev == 'br' and curr == 'br':
+                    needs_fix = True
+                    break
+                prev = curr
+
+            if not needs_fix:
+                yield p
+
+            fixed = re.sub(r'<br\s*/?>\s*<br\s*/?>', '</p><p>', fragments_to_string([p]))
+            yield from iter(lxml.html.fromstring(fixed))
+
+            # version without parsing but too complicated
+
+            # part = lxml.html.HtmlElement()
+            # part.tag = 'p'
+            # last = None
+            # prev_br = None
+            # for node in p.xpath("child::node()"):
+            #     tag = getattr(node, 'tag', None)
+            #     if tag == 'br':
+            #         if prev_br is None:
+            #             prev_br = node
+            #             continue
+            #
+            #         yield part
+            #         part = lxml.html.HtmlElement('p')
+            #         part.tag = 'p'
+            #         last = None
+            #         prev_br = None
+            #         continue
+            #
+            #     if prev_br is not None:
+            #         # only single br
+            #         part.append(prev_br)
+            #         last = prev_br
+            #
+            #     prev_br = None
+            #
+            #     if isinstance(node, str):
+            #         if last is None:
+            #             part.text = str(node)
+            #         else:
+            #             last.tail = str(node)
+            #
+            #     else:
+            #         part.append(node)
+            #         last = node
+            #
+            # if len(part) or part.text:
+            #     yield part
+
         def flatten_tree(htmltree):
             children = list(htmltree)
             if children:
                 for el in children:
                     if el.tag in ('div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'):
-                        yield from flatten_tree(el)
+                        if el.text:
+                            # TODO cant'be el.text lost? write test for it
+                            result = list(flatten_tree(el))
+                            result[0].text = el.text + '\n' + result[0].text
+                            yield from result
+                        else:
+                            yield from flatten_tree(el)
                     else:
                         yield el
             else:
@@ -93,7 +158,11 @@ class ArticleParser:
 
         result = []
         for el in fragments:
-            result.extend(flatten_tree(el))
+            for block in flatten_tree(el):
+                if block.tag == 'p':
+                    result.extend(fix_brbr(block))
+                else:
+                    result.append(block)
         return result
 
     def remove_comments(self, s):
