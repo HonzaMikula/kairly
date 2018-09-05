@@ -4,6 +4,36 @@
 #
 version: 2
 jobs:
+  test_py:
+    docker:
+      - image: circleci/python:3.6.1
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache: # restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run
+          key: pydeps-{{ checksum "kairly-server/requirements.txt" }}
+
+      - run: # install and activate virtual environment with pip
+          command: |
+            cd kairly-server
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache: # special step to save dependency cache
+          key: pydeps-{{ checksum "kairly-server/requirements.txt" }}
+          paths:
+            - "venv"
+
+      - run: # run tests
+          command: |
+            cd kairly-server
+            . venv/bin/activate
+            pytest
+
   build:
     docker:
       # specify the version you desire here
@@ -51,6 +81,10 @@ jobs:
 
 workflows:
   version: 2
+
+  test_py:
+    jobs:
+      - test_py
 
   deploy:
     jobs:
