@@ -92,27 +92,26 @@ export default {
 </script>
 
 <style lang="sass">
-/* COPY PASTE FROM IssueWrapper.vue */
+explore-view
+  section button
+    display: table
+    border-radius: $baseline
+    height: $baseline * 1.25
+    padding: 0 $baseline
+    margin: 0 auto
 
-section button
-  display: table
-  border-radius: $baseline
-  height: $baseline * 1.25
-  padding: 0 $baseline
-  margin: 0 auto
+    background: $c-base
+    border: 0
+    color: #fff
 
-  background: $c-base
-  border: 0
-  color: #fff
+    font-family: $ff-sans
+    font-size: $fs-0
+    line-height: $baseline * 1.25
+    cursor: pointer
 
-  font-family: $ff-sans
-  font-size: $fs--1
-  line-height: $baseline * 1.25
-  cursor: pointer
-
-  &:hover,
-  &:focus
-    background: darken($c-base, 10%)
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
 
 
 </style>

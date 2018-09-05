@@ -187,9 +187,10 @@ explore--top-newspapers
     grid-column-gap: $baseline / 2
 
     @media (max-width: $mobile)
-      grid-template-columns: 1fr 1fr
+      grid-column-gap: $baseline / 4
+      overflow-x: auto
 
-      newspaper-widget-view:last-of-type
-        display: none
+      newspaper-widget-view
+        min-width: 200px
 
 </style>
