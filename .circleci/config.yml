@@ -26,7 +26,7 @@ jobs:
       - save_cache: # special step to save dependency cache
           key: pydeps-{{ checksum "kairly-server/requirements.txt" }}
           paths:
-            - "venv"
+            - "kairly-server/venv"
 
       - run: # run tests
           command: |
