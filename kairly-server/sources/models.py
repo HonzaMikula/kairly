@@ -12,7 +12,7 @@ from django.db import models
 from django.core.cache import cache
 from django.conf import settings
 
-from .parser import ArticleParser, fragments_to_string
+from .parser import ArticleParser, split_article_to_perex_and_content
 
 
 class Channel(models.Model):
@@ -52,35 +52,7 @@ class Channel(models.Model):
 
     def parse_entry(self, entry, *, nocache=False):
         fragments = self.parse_article_from_entry(entry, nocache=nocache)
-
-        chars = 0
-        perex_fragments = []
-        content_fragments = []
-        nocontent = False
-
-        def is_hx(tag):
-            return tag[0] == 'h' and len(tag) == 2
-
-        for i, el in enumerate(fragments):
-            if not perex_fragments and is_hx(el.tag):
-                continue
-
-            element_size = len(el.text_content())
-            # for each image inside add 200 chars comensation
-            # nice to have, calculated image height and add exact compensation
-            element_size += len(el.cssselect('img')) * 200
-
-            if perex_fragments and chars + element_size > 1600:
-                content_fragments = fragments[i:]
-                break
-
-            chars += element_size
-            perex_fragments.append(el)
-        else:
-            nocontent = True
-
-        perex = fragments_to_string(perex_fragments)
-        content = '' if nocontent else fragments_to_string(content_fragments)
+        perex, content = split_article_to_perex_and_content(fragments, 1600)
         return perex, content
 
     def parse_article_from_entry(self, entry, *, nocache=False):

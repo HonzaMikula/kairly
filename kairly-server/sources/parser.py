@@ -13,6 +13,39 @@ def fragments_to_string(fragments):
     return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in fragments)
 
 
+def split_article_to_perex_and_content(fragments, perex_size):
+    chars = 0
+    perex_fragments = []
+    content_fragments = []
+    nocontent = False
+
+    def is_hx(tag):
+        return tag[0] == 'h' and len(tag) == 2
+
+    for i, el in enumerate(fragments):
+        # skip all headers at the beginning of article
+        if not perex_fragments and is_hx(el.tag):
+            continue
+
+        element_size = len(el.text_content())
+        # for each image inside add 200 chars comensation
+        # nice to have, calculated image height and add exact compensation
+        element_size += len(el.cssselect('img')) * 200
+
+        if perex_fragments and chars + element_size > perex_size:
+            content_fragments = fragments[i:]
+            break
+
+        chars += element_size
+        perex_fragments.append(el)
+    else:
+        nocontent = True
+
+    perex = fragments_to_string(perex_fragments)
+    content = '' if nocontent else fragments_to_string(content_fragments)
+    return perex, content
+
+
 class ArticleParser:
 
     REGEX_MULTI = re.compile("/\*.*?\*/", re.DOTALL)

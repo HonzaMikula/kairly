@@ -1,10 +1,10 @@
 import unittest
 import lxml.html
 
-from sources.parser import ArticleParser, Rule
+from sources.parser import ArticleParser, Rule, fragments_to_string
 
 
-class ArticleParserTest(unittest.TestCase):
+class ArticleParserRulesTest(unittest.TestCase):
 
     def test_flatten(self):
         rules = """
@@ -51,7 +51,8 @@ em
         expected = "<p>Hello !</p><p>Bye</p>"
 
         parser = ArticleParser(rules)
-        article = parser.parse(lxml.html.fromstring(doc))
+        fragments = parser.parse(lxml.html.fromstring(doc))
+        article = fragments_to_string(fragments)
         self.assertEqual(article, expected)
 
     def test_parse_rename_element(self):
@@ -65,7 +66,8 @@ em
         expected = "<p>Hello <i>World</i>!</p><p>Bye</p>"
 
         parser = ArticleParser(rules)
-        article = parser.parse(lxml.html.fromstring(doc))
+        fragments = parser.parse(lxml.html.fromstring(doc))
+        article = fragments_to_string(fragments)
         self.assertEqual(article, expected)
 
     def test_parse_strip_attrubutes(self):
@@ -76,7 +78,8 @@ p
         expected = '<p>Hello <em>!</em> <a href="#">Go</a></p>'
 
         parser = ArticleParser(rules)
-        article = parser.parse(lxml.html.fromstring(doc))
+        fragments = parser.parse(lxml.html.fromstring(doc))
+        article = fragments_to_string(fragments)
         self.assertEqual(article, expected)
 
     def test_parse_slicing(self):
@@ -87,7 +90,8 @@ b[0]
         expected = '<b>1</b>'
 
         parser = ArticleParser(rules)
-        article = parser.parse(lxml.html.fromstring(doc))
+        fragments = parser.parse(lxml.html.fromstring(doc))
+        article = fragments_to_string(fragments)
         self.assertEqual(article, expected)
 
     def test_parse_notroot(self):
@@ -98,5 +102,6 @@ b
         expected = '<b>B</b>'
 
         parser = ArticleParser(rules)
-        article = parser.parse(lxml.html.fromstring(doc))
+        fragments = parser.parse(lxml.html.fromstring(doc))
+        article = fragments_to_string(fragments)
         self.assertEqual(article, expected)
