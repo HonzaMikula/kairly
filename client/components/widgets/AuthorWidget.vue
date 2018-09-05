@@ -22,7 +22,7 @@
         <button
           v-else
           @click="$refs.followWidget.openSubscribeWidget()">
-          Subscribe author
+          Subscribe
         </button>
 
         <follow-author
