@@ -88,7 +88,11 @@ class NewspaperIssueStream(TimelineStream):
         self.user = user
 
     def __iter__(self):
-        newspapers = {e.id: e for e in Newspaper.objects.filter(subscription__user=self.user)}
+        now = datetime.now(self.tzinfo)
+        newspapers = {e.id: e for e in Newspaper.objects.filter(
+            subscription__user=self.user,
+            subscription__valid_from__lte=now,
+            subscription__valid_to__gt=now)}
         query = Issue.objects.filter(published__lt=self.before, newspaper_id__in=newspapers.keys())
         for issue in QueryIterator(query, self.QUERY_PAGE_SIZE):
             yield NewspaperIssueItem(issue, newspapers[issue.newspaper_id], self.tzinfo)
@@ -169,8 +173,11 @@ class AuthorsStream(TimelineStream):
         self.user = user
 
     def __iter__(self):
+        now = datetime.now(self.tzinfo)
+
         # TODO this can be probably simplified after author-user merge
-        author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(user=self.user)}
+        author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(
+            user=self.user, valid_from__lte=now, valid_to__gt=now)}
         author_ids = [asub.author_id for asub in author_subscriptions.values()]
         authors = {u.id: u for u in User.objects.filter(id__in=author_ids)}
 

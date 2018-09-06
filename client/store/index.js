@@ -63,27 +63,20 @@ const createStore = () => {
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
       },
-      addNewspaperSubscription(state, {fullName}) {
+      newspaperSubscription(state, {subscription}) {
         if (state.subscriptions) {
-          Vue.set(state.subscriptions.newspapers, fullName, true)
+          state.subscriptions = {
+            ...state.subscriptions,
+            newspapers: {...state.subscriptions.newspapers, ...subscription}
+          }
         }
       },
-      removeNewspaperSubscription(state, {fullName}) {
+      authorSubscription(state, { subscription }) {
         if (state.subscriptions) {
-          Vue.delete(state.subscriptions.newspapers, fullName)
-        }
-      },
-      addAuthorSubscription(state, { author, periodicity }) {
-        if (state.subscriptions) {
-          Vue.set(state.subscriptions.authors, author.id, {
-            author,
-            periodicity
-          })
-        }
-      },
-      removeAuthorSubscription(state, { author }) {
-        if (state.subscriptions) {
-          Vue.delete(state.subscriptions.authors, author.id)
+          state.subscriptions = {
+            ...state.subscriptions,
+            authors: {...state.subscriptions.authors, ...subscription}
+          }
         }
       },
       appendOwnedNewspaper(state, { newspaper }) {
@@ -145,8 +138,7 @@ const createStore = () => {
         if (state.subscriptions === null) {
           return null
         }
-        const subscription = state.subscriptions.authors[author.id]
-        return subscription ? subscription.periodicity : null
+        return state.subscriptions.authors[author.id]
       }
     },
 

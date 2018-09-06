@@ -35,6 +35,7 @@
           <follow-author
             ref="followWidget"
             :author="author"
+            :subscription="subscription"
           />
 
           <AuthorSubscription if="subscription"

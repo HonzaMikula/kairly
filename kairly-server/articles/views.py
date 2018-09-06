@@ -1,9 +1,11 @@
 import json
 from collections import defaultdict
+from datetime import datetime
+from operator import attrgetter
+from dateutil.relativedelta import relativedelta
 
-from django.db.models import Count
 from django.shortcuts import get_object_or_404
-from django.http import (Http404, JsonResponse, HttpResponse,
+from django.http import (Http404, JsonResponse, HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
 from django.views import View
 from django.views.decorators.http import require_POST
@@ -15,7 +17,7 @@ from utils.upload import file_from_data_uri
 from users.models import User
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor, Topic)
-from .period import parse_periodicity, periodicity_to_json
+from .period import parse_periodicity
 
 
 AUTOR_POSTS_PAGE_SIZE = 20
@@ -38,28 +40,28 @@ def get_user_and_topic(username):
     return user, topic
 
 
-def annotate_newspapers(request, newspapers):
-    yield from newspapers \
-        .annotate(issues=Count('issue', distinct=True)) \
-        .annotate(likes=Count('subscription', distinct=True))
-
-
 @ajax_login_required
 def subscriptions(request):
+    now = datetime.now(request.user.tzinfo)
     subscribed_authors = {}
-    query = SubscriptionToAuthor.objects.filter(user=request.user).select_related('author', 'topic')
+    query = SubscriptionToAuthor.objects.filter(
+        user=request.user,
+        valid_from__lte=now,
+        valid_to__gt=now
+    ).select_related('author', 'topic')
+
     for s in query:
-        author_json = s.author.to_json(topic=s.topic)
-        subscribed_authors[author_json['id']] = {
-            'author': author_json,
-            'periodicity': periodicity_to_json(s)
-        }
+        subscribed_authors.update(s.to_json())
 
     subscribed_newspapers = {}
-    query = Newspaper.objects.filter(subscription__user=request.user).select_related('editor')
-    for newspaper in query:
-        full_name = "{}/{}".format(newspaper.editor.username, newspaper.slug)
-        subscribed_newspapers[full_name] = True
+    query = Subscription.objects.filter(
+        user=request.user,
+        valid_from__lte=now,
+        valid_to__gt=now
+    ).select_related('newspaper', 'newspaper__editor')
+
+    for s in query:
+        subscribed_newspapers.update(s.to_json())
 
     return JsonResponse({
         "subscriptions": {
@@ -88,7 +90,7 @@ def recent_issues(request):
     newspaper_ids = [issue.newspaper_id for issue in issues]
     newspapers = {
         newspaper.id: newspaper for newspaper in
-        annotate_newspapers(request, Newspaper.objects.filter(id__in=newspaper_ids))
+        Newspaper.objects.filter(id__in=newspaper_ids)
     }
 
     resp = []
@@ -116,9 +118,6 @@ def delete_newspaper(request, newspaper):
 class NewspaperView(View):
     def get(self, request, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
-
-        newspaper.issues = newspaper.issue_set.count()
-        newspaper.likes = newspaper.subscription_set.count()
 
         issueNo = request.GET.get('issue')
         if issueNo:
@@ -182,10 +181,11 @@ def author(request, username):
     author, topic = get_user_and_topic(username)
     topics = {t.slug: t for t in Topic.objects.filter(author=author)}
 
-    newspapers = Newspaper.objects.filter(editor=author).order_by('-likes')
+    newspapers = list(Newspaper.objects.filter(editor=author))
+    newspapers.sort(key=attrgetter('likes'), reverse=True)
     data = {
         'author': author.to_json(topic=topic),
-        'newspapers': [e.to_json() for e in annotate_newspapers(request, newspapers)],
+        'newspapers': [e.to_json() for e in newspapers],
     }
     if not topic and topics:
         data['topics'] = [{
@@ -280,83 +280,120 @@ def backlog_publish(request, username, newspapeper_slug):
     return HttpResponse(status=204)
 
 
-@ajax_login_required
-@require_POST
-def subscribe(request, username, newspapeper_slug):
-    author, _ = get_user_and_topic(username)
-    newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
-    Subscription.objects.create(user=request.user, newspaper=newspaper)
+class NewspaperSubscriptionView(View):
 
-    # TODO return user subscription instead
-    newspaper.issues = newspaper.issue_set.count()
-    newspaper.likes = newspaper.subscription_set.count()
-    return JsonResponse(newspaper.to_json())
+    @ajax_login_required
+    def post(self, request, username, newspapeper_slug):
+        now = datetime.now(request.user.tzinfo)
+        author, _ = get_user_and_topic(username)
+        newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
+        try:
+            # just reactivate renewal if current cancelled subscription exists
+            subscription = Subscription.objects.get(
+                user=request.user, newspaper=newspaper,
+                valid_from__lte=now, valid_to__gt=now)
+            subscription.renewal = True
+            subscription.save()
+        except Subscription.DoesNotExist:
+            subscription = Subscription.objects.create(
+                user=request.user,
+                newspaper=newspaper,
+                valid_from=now,
+                valid_to=now + relativedelta(months=1)
+            )
 
-@ajax_login_required
-@require_POST
-def unsubscribe(request, username, newspapeper_slug):
-    author, _ = get_user_and_topic(username)
-    newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
-    Subscription.objects.filter(user=request.user, newspaper=newspaper).delete()
+        return JsonResponse(subscription.to_json())
 
-    # TODO return user subscription instead
-    newspaper.issues = newspaper.issue_set.count()
-    newspaper.likes = newspaper.subscription_set.count()
-    return JsonResponse(newspaper.to_json())
+    @ajax_login_required
+    def delete(self, request, username, newspapeper_slug):
+        now = datetime.now(request.user.tzinfo)
+        author, _ = get_user_and_topic(username)
+        newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
-
-@ajax_login_required
-@require_POST
-def subscribe_author(request, username):
-    author, topic = get_user_and_topic(username)
-    payload = json.loads(request.body.decode('utf-8'))
-
-    try:
-        periodicity = parse_periodicity(payload)
-    except ValueError as e:
-        return HttpResponseBadRequest(str(e))
-
-    try:
-        # Handle unique together manually, because
-        # mysql ignores key when one of values is NULL (usually topic)
-        #
-        # There is still place for race condition
-        # it could be solved by adding topic slug on this table
-        # (with empty string value when there is no topic) and
-        # make unique together on that
-        subscription = SubscriptionToAuthor.objects.get(
-            user=request.user,
-            author=author,
-            topic=topic
-        )
-        subscription.period = periodicity.frequency
-        subscription.period_time = periodicity.time
-        subscription.period_dow = periodicity.dow
-        subscription.save()
-    except SubscriptionToAuthor.DoesNotExist:
-        SubscriptionToAuthor.objects.create(
-            user=request.user,
-            author=author,
-            topic=topic,
-            period=periodicity.frequency,
-            period_time=periodicity.time,
-            period_dow=periodicity.dow,
-        )
-
-    # TODO return user subscription instead
-    return JsonResponse(author.to_json(topic=topic))
+        try:
+            subscription = Subscription.objects.get(
+                user=request.user, newspaper=newspaper,
+                valid_from__lte=now, valid_to__gt=now)
+            subscription.renewal = False
+            subscription.save()
+            return JsonResponse(subscription.to_json())
+        except Subscription.DoesNotExist:
+            return HttpResponseNotFound()
 
 
-@ajax_login_required
-@require_POST
-def unsubscribe_author(request, username):
-    author, topic = get_user_and_topic(username)
-    SubscriptionToAuthor.objects.filter(
-        user=request.user, author=author, topic=topic).delete()
+class AuthorSubscriptionView(View):
+    @ajax_login_required
+    def post(self, request, username):
+        now = datetime.now(request.user.tzinfo)
+        author, topic = get_user_and_topic(username)
+        payload = json.loads(request.body.decode('utf-8'))
 
-    # TODO return user subscription instead
-    return JsonResponse(author.to_json(topic=topic))
+        if 'periodicity' in payload:
+            try:
+                periodicity = parse_periodicity(payload['periodicity'])
+            except ValueError as e:
+                return HttpResponseBadRequest(str(e))
+        else:
+            periodicity = None
+
+        renewal = payload.get('renewal')
+
+        try:
+            # Handle unique together manually, because
+            # mysql ignores key when one of values is NULL (usually topic)
+            #
+            # There is still place for race condition
+            # it could be solved by adding topic slug on this table
+            # (with empty string value when there is no topic) and
+            # make unique together on that
+            subscription = SubscriptionToAuthor.objects.get(
+                user=request.user, author=author, topic=topic,
+                valid_from__lte=now, valid_to__gt=now
+            )
+            if periodicity or renewal:
+                if periodicity:
+                    subscription.period = periodicity.frequency
+                    subscription.period_time = periodicity.time
+                    subscription.period_dow = periodicity.dow
+                if renewal:
+                    subscription.renewal = True
+                subscription.save()
+            else:
+                return HttpResponseBadRequest("Nothing to change.")
+        except SubscriptionToAuthor.DoesNotExist:
+            if not periodicity:
+                return HttpResponseBadRequest("Periodicity is required.")
+            if renewal:
+                return HttpResponseBadRequest("Nothong to renew")
+
+            subscription = SubscriptionToAuthor.objects.create(
+                user=request.user,
+                author=author,
+                topic=topic,
+                period=periodicity.frequency,
+                period_time=periodicity.time,
+                period_dow=periodicity.dow,
+                valid_from=now,
+                valid_to=now + relativedelta(months=1)
+            )
+
+        return JsonResponse(subscription.to_json())
+
+    @ajax_login_required
+    def delete(self, request, username):
+        now = datetime.now(request.user.tzinfo)
+        author, topic = get_user_and_topic(username)
+
+        try:
+            subscription = SubscriptionToAuthor.objects.get(
+                user=request.user, author=author, topic=topic,
+                valid_from__lte=now, valid_to__gt=now)
+            subscription.renewal = False
+            subscription.save()
+            return JsonResponse(subscription.to_json())
+        except Subscription.DoesNotExist:
+            return HttpResponseNotFound()
 
 
 def post(request, post_id):

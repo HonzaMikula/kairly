@@ -5,20 +5,7 @@
         <h1>{{ newspaper.title }}</h1>
 
         <newspaper-detail--subscribe v-if="loggedIn">
-          <button
-            v-if="isSubscribed"
-            class="is-subscribed"
-            @click="unsubscribe($event)">
-            <span class="default">Subscribed</span>
-            <span class="on-hover">Unsubscribe</span>
-          </button>
-
-          <button
-            v-else
-            class="to-subscribe"
-            @click="subscribe($event)">
-            Subscribe
-          </button>
+          <newspaper-subscription :newspaper="newspaper" />
 
           <p>10 CZK per month</p>
         </newspaper-detail--subscribe>
@@ -81,6 +68,7 @@ import { errorToParams } from '@/utils/errors'
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 import NewspaperBacklog from '@/components/editor/NewspaperBacklog'
+import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
 export default {
   name: 'NewspaperDetail',
@@ -158,7 +146,8 @@ export default {
   components: {
     AppLayout,
     Issue,
-    NewspaperBacklog
+    NewspaperBacklog,
+    NewspaperSubscription
   },
 
   computed: {
@@ -175,27 +164,9 @@ export default {
       }
     },
 
-    isSubscribed() {
-      return this.$store.getters.getNewspaperSubscription(this.newspaper)
-    },
-
     ...mapState({
       user: state => state.auth.user
     })
-  },
-
-  methods: {
-    subscribe(ev) {
-      this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
-      document.activeElement.blur()
-    },
-
-    unsubscribe(ev) {
-      this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
-      document.activeElement.blur()
-    },
-
-    //...mapActions(['getNewspaperDetail']),
   },
 
   async asyncData({ store, params, error }) {
@@ -272,38 +243,8 @@ newspaper-detail--subscribe
     position: static
     text-align: center
 
-  button.is-subscribed
-    +subscribed-button
 
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
-
-    line-height: $baseline * 1.5
-
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
-  button.to-subscribe
-    +subscribe-button
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
-
-    line-height: $baseline * 1.5
-
-
-
-  button + p
+  > p
     color: #777
 
     font-size: $fs--1

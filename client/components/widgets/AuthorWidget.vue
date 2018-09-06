@@ -28,6 +28,7 @@
         <follow-author
           ref="followWidget"
           :author="author"
+          :subscription="subscription"
         />
 
       </section>

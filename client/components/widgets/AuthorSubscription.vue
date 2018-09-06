@@ -17,11 +17,16 @@
       <template v-if="frequency == 'weekly'">
         Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>
       </template>
+
+      <span v-if="!subscription.renewal">
+        ends {{ subscription.to }}
+      </span>
     </a>
 
     <follow-author
       ref="followWidget"
       :author="author"
+      :subscription="subscription"
       :cancelingSubscription="true"
     />
   </author-subscription-view>
@@ -50,9 +55,9 @@ export default {
   },
 
   computed: {
-    frequency() { return this.subscription && this.subscription.frequency },
-    dow() { return this.subscription && this.subscription.dow },
-    time() { return this.subscription && this.subscription.time }
+    frequency() { return this.subscription && this.subscription.periodicity.frequency },
+    dow() { return this.subscription && this.subscription.periodicity.dow },
+    time() { return this.subscription && this.subscription.periodicity.time }
   }
 }
 </script>

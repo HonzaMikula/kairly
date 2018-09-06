@@ -80,6 +80,7 @@
             <follow-author
               ref="followWidget"
               :author="post.author"
+              :subscription="subscription"
             />
           </post-detail--author--subscription>
         </post-detail--author>

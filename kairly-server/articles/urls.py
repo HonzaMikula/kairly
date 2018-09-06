@@ -12,16 +12,14 @@ urlpatterns = [
     path('recent/issues', views.recent_issues, name='recent_issues'),
     path('recent/posts', views.recent_posts, name='recent_posts'),
     path('newspapers/<username>/<slug:newspapeper_slug>', views.NewspaperView.as_view(), name='newspaper'),
-    path('newspapers/<username>/<slug:newspapeper_slug>/subscribe', views.subscribe, name='subscribe'),
-    path('newspapers/<username>/<slug:newspapeper_slug>/unsubscribe', views.unsubscribe, name='unsubscribe'),
+    path('newspapers/<username>/<slug:newspapeper_slug>/subscription', views.NewspaperSubscriptionView.as_view(), name='newspaper_subscribtion'),
     path('newspapers/<username>/<slug:newspapeper_slug>/backlog', views.newspaper_backlog, name='newspaper_backlog'),
     path('newspapers/<username>/<slug:newspapeper_slug>/backlog/publish', views.backlog_publish, name='backlog_publish'),
 
     path('authors/<username>', views.author, name='author'),
     path('authors/<username>/posts', views.author_posts, name='author_posts'),
     path('authors/<username>/start-newspaper', views.start_newspaper, name='start_newspaper'),
-    path('authors/<username>/subscribe', views.subscribe_author, name='subscribe_author'),
-    path('authors/<username>/unsubscribe', views.unsubscribe_author, name='unsubscribe_author'),
+    path('authors/<username>/subscription', views.AuthorSubscriptionView.as_view(), name='author_subscription'),
 
     path('post/<int:post_id>', views.post, name='post'),
 ]
