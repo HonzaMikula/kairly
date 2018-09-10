@@ -67,6 +67,7 @@
 
       </author-detail--newspapers>
 
+
       <author-detail--posts v-if="posts.length">
         <h2>{{ author.name }}'s Posts</h2>
 
@@ -77,6 +78,19 @@
           :key="post.id"
         />
       </author-detail--posts>
+
+      <div class="author-detail--empty" v-if="!newspapers.length && !posts.length">
+        <template v-if="test.user.id !== author.id">
+          <p>User didn't write any posts and didn't start any newspaper.</p>
+        </template>
+
+        <template v-else>
+          <p>You didn't write any post and didn't start any newspaper.</p>
+
+          <nuxt-link :to="{name: 'newspapers'}">Start a newspaper</nuxt-link>
+        </template>
+
+      </div>
 
       <loading-spinner v-if="loadingPosts"></loading-spinner>
 
@@ -187,7 +201,8 @@ export default {
 
   computed: {
     ...mapState({
-      loggedIn: state => state.auth.loggedIn
+      loggedIn: state => state.auth.loggedIn,
+      test: state => state.auth
     }),
 
     visibleNewspapers() {
@@ -466,5 +481,25 @@ author-detail--posts
 
     @media (max-width: $mobile)
       padding: 0 $baseline/4
+
+//- Empty
+.author-detail--empty
+  padding: $baseline
+  margin-top: $baseline * 2
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
+  a
+    +subscribed-button
+
+    display: inline-block
+    margin-top: $baseline
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    line-height: $baseline * 1.5
 
 </style>

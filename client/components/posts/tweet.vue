@@ -79,6 +79,9 @@ timeline-post--tweet
   font-family: $ff-serif
   line-height: 1.58
 
+  @media (max-width: $mobile)
+    font-size: $fs--1
+
   > .tweet-content a
     color: $c-base
 </style>
