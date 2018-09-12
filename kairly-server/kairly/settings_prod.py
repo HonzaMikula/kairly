@@ -21,6 +21,14 @@ ALLOWED_HOSTS = [
     'kairly.com'
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': ['localhost:6379'],
+        'TIMEOUT': 86400 * 14,
+    }
+}
+
 # STATICFILES_DIRS = (
 #     '/srv/kairly/kairly-client/dist/static',
 # )

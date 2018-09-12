@@ -15,3 +15,4 @@ more-itertools==4.2.0
 python-twitter==3.4.1
 django-autocomplete-light==3.2.10
 pytest==3.5.1
+django-redis-cache==1.7.1
