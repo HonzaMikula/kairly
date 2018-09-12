@@ -192,10 +192,7 @@ export default {
 
   data() {
     return {
-      loadingPosts: true,
-      showAllNewspapers: false,
-      posts: [],
-      cursor: 0
+      showAllNewspapers: false
     }
   },
 
@@ -268,6 +265,12 @@ export default {
           `/authors/${authorId}/posts`, {params: {cursor: 0}})
         data.posts = posts
         data.cursor = cursor
+        data.loadingPosts = false
+      } else {
+        // load all in created function to make transition faster
+        data.posts = []
+        data.cursor = 0
+        data.loadingPosts = true
       }
 
       return data
