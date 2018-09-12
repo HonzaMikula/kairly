@@ -52,7 +52,14 @@ pipenv run ./manage.py runserver
 
 Run command, eg.
 ```
-DJANGO_SETTINGS_MODULE=kairly.settings_prod ./manage.py importrss --provider=janmikula
+DJANGO_SETTINGS_MODULE=kairly.settings_prod ./manage.py importrss --provider=
+```
+
+## Deployment
+
+Move `production` tag to trigger Circle CI deployment task.
+```
+git tag -f production && git push -f --tags
 ```
 
 ## Import RSS

@@ -128,6 +128,7 @@ class ArticleParser:
 
             if not needs_fix:
                 yield p
+                return
 
             fixed = re.sub(r'<br\s*/?>\s*<br\s*/?>', '</p><p>', fragments_to_string([p]))
             yield from iter(lxml.html.fromstring(fixed))
@@ -180,7 +181,7 @@ class ArticleParser:
                         if el.text:
                             # TODO cant'be el.text lost? write test for it
                             result = list(flatten_tree(el))
-                            result[0].text = el.text + '\n' + result[0].text
+                            result[0].text = (el.text or '') + '\n' + (result[0].text or '')
                             yield from result
                         else:
                             yield from flatten_tree(el)
