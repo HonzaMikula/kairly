@@ -79,7 +79,7 @@
         />
       </author-detail--posts>
 
-      <div class="author-detail--empty" v-if="!newspapers.length && !posts.length">
+      <div class="author-detail--empty" v-if="!newspapers.length && !posts.length && !loadingPosts">
         <template v-if="test.user.id !== author.id">
           <p>User didn't write any posts and didn't start any newspaper.</p>
         </template>
