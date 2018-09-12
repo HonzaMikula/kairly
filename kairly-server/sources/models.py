@@ -52,7 +52,7 @@ class Channel(models.Model):
 
     def parse_entry(self, entry, *, nocache=False):
         fragments = self.parse_article_from_entry(entry, nocache=nocache)
-        perex, content = split_article_to_perex_and_content(fragments, 1600)
+        perex, content = split_article_to_perex_and_content(fragments, 950)
         return perex, content
 
     def parse_article_from_entry(self, entry, *, nocache=False):
