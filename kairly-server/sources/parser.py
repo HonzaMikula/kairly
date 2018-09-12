@@ -128,6 +128,7 @@ class ArticleParser:
 
             if not needs_fix:
                 yield p
+                return
 
             fixed = re.sub(r'<br\s*/?>\s*<br\s*/?>', '</p><p>', fragments_to_string([p]))
             yield from iter(lxml.html.fromstring(fixed))
