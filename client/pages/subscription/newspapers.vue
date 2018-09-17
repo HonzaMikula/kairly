@@ -25,7 +25,7 @@ export default {
   name: 'MyNewspapers',
 
   head: {
-    title: 'Newspapers - My Subscription - Kairly'
+    title: 'Newspapers – My Subscription – Kairly'
   },
 
   components: {

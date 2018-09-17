@@ -33,7 +33,7 @@ export default {
 
   head() {
     return {
-      title: 'Sign Up'
+      title: 'Sign Up – Kairly'
     }
   },
 

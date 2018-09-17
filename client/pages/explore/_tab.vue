@@ -55,7 +55,7 @@ export default {
 
   head() {
     return {
-      title: this.tab ? `Explore - ${this.tab.name}` : 'Explore',
+      title: this.tab ? `${this.tab.name} – Explore – Kairly` : 'Explore – Kairly',
     }
   },
 

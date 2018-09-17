@@ -86,7 +86,7 @@ export default {
   name: 'Settings',
 
   head: {
-    title: 'Account Settings'
+    title: 'Account Settings – Kairly'
   },
 
   components: {

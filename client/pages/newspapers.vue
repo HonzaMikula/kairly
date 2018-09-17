@@ -141,7 +141,7 @@ export default {
 
   metaInfo() {
     return {
-      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newspapers'
+      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newspapers – Kairly'
     }
   },
 

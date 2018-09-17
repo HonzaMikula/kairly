@@ -26,7 +26,7 @@ export default {
   name: 'MyAuthors',
 
   head: {
-    title: 'My Subscription - Authors'
+    title: 'My Subscription – Authors – Kairly'
   },
 
   components: {

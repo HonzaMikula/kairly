@@ -45,7 +45,7 @@ export default {
 
   head() {
     return {
-      title: 'Explore - Most Recent',
+      title: 'Most Recent – Explore – Kairly',
     }
   },
 
