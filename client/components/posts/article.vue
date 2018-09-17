@@ -81,8 +81,6 @@ timeline-post--article--content
   @media (max-width: $mobile)
     column-count: 2
     column-gap: $baseline / 2
-    max-height: 60vh
-    overflow-x: auto
 
     font-size: $fs--1
     line-height: 1.58

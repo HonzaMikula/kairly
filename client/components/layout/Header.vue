@@ -10,7 +10,7 @@
             <nuxt-link
               :to="{name: 'newspapers'}"
               title="My newspapers">
-              <span>My Newspapers</span>
+              <span>Manage Newspapers</span>
             </nuxt-link>
           </li>
           <li class="explore">
@@ -44,9 +44,9 @@
           <li class="user-name">{{user.name}}</li>
           <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">Profile</nuxt-link></li>
           <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></nuxt-link></li>
-          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>My Newspapers</span></nuxt-link></li>
           <li><nuxt-link :to="{name: 'user-settings'}"><span>Settings</span></nuxt-link></li>
           <li class="divider"></li>
+          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>Manage Newspapers</span></nuxt-link></li>
           <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>Explore</span></nuxt-link></li>
           <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
           <li><a href="" v-on:click.prevent="logout">Logout</a></li>

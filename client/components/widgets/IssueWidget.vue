@@ -92,9 +92,6 @@ issue-widget-view
 
   text-align: left
 
-  @media (max-width: $mobile)
-    width: 260px
-
   //- header picture
   picture
     order: 1

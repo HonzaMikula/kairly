@@ -150,6 +150,9 @@ explore-view
   @at-root .recent > main
     grid-template-areas: "explore-top-newspapers explore-top-newspapers" "explore-recent explore-recent"
 
+    @media (max-width: $mobile)
+      grid-template-areas: "explore-top-newspapers" "explore-recent"
+
   section
     > h2
       font-size: $fs-2
@@ -190,7 +193,8 @@ explore--top-newspapers
       grid-column-gap: $baseline / 4
       overflow-x: auto
 
-      newspaper-widget-view
+      newspaper-widget-view,
+      issue-widget-view
         min-width: 200px
 
 </style>
