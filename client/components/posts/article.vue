@@ -148,7 +148,7 @@ timeline-post--article--content
 
     border-bottom: 1px solid #eee
     border-top: 1px solid #eee
-    color: #999
+    color: #777
 
     text-align: center
 
@@ -169,7 +169,7 @@ timeline-post--article--content
 
     border-bottom: 1px solid #eee
     border-top: 1px solid #eee
-    color: #999
+    color: #777
 
     font-size: $fs-1
     text-indent: 0

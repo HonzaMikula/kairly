@@ -473,6 +473,42 @@ post-detail--perex
 
       font-size: $fs--1
 
+  //-- quotes
+  blockquote
+    margin: ($baseline / 4 - 2rem) 0
+    padding: $baseline / 4 0
+
+    color: #777
+
+    text-align: center
+
+    p
+      margin-bottom: 0
+      text-indent: 0
+
+      &::before
+        content: "„"
+
+      &::after
+        content: "“"
+
+  //-- cite
+  cite
+    display: block
+    margin: ($baseline / 4 - 2rem) 0
+    padding: $baseline / 4 0
+
+    color: #777
+
+    text-align: center
+    text-indent: 0
+
+    &::before
+      content: "„"
+
+    &::after
+      content: "“"
+
 
 //- Post Footer
 post-detail--footer
