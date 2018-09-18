@@ -89,7 +89,7 @@ export default {
 
   head() {
       return {
-        title: `this.newspaper.title – Kairly`,
+        title: `${this.newspaper.title} – Kairly`,
         meta: [
           {
             hid: 'description',
