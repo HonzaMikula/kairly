@@ -19,10 +19,20 @@
         <author-detail--subscribe v-if="loggedIn">
           <button
             v-if="subscription"
-            class="is-subscribed"
+            :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
             @click="unfollow($event)">
-            <span class="default">Subscribed</span>
-            <span class="on-hover">Unsubscribe</span>
+            <span class="default">
+              <template v-if="subscription.renewal">Subscribed</template>
+              <template v-else>Canceled</template>
+            </span>
+            <span class="on-hover" v-if="subscription.renewal">Unsubscribe</span>
+            <span
+              v-else
+              class="on-hover"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              :title="`Subscribtion last till ${subscription.to}`">
+              Renew
+            </span>
           </button>
 
           <button
@@ -361,6 +371,7 @@ author-detail--subscribe
     grid-column: 1 / span 2
     margin-bottom: 0
 
+  //- when author is subscribed
   button.is-subscribed
     +subscribed-button
 
@@ -381,6 +392,28 @@ author-detail--subscribe
       .default
         display: none
 
+  //- when author is canceled
+  button.is-canceled
+    +subscribed-button
+
+    border-radius: $baseline * 0.5
+    height: $baseline * 1
+    width: 140px
+
+    line-height: $baseline * 1
+
+    .on-hover
+      display: none
+
+    &:hover,
+    &:focus
+      .on-hover
+        display: block
+
+      .default
+        display: none
+
+  //- when author is ready to be subsribed
   button.to-subscribe
     +subscribe-button
 
