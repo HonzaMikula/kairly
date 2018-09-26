@@ -1,3 +1,4 @@
 */10 * * * * /srv/app/cron/importrss.sh >> /srv/logs/importrss.log 2>&1
 */15 * * * * /srv/app/cron/importtwitter.sh >> /srv/logs/importtwitter.log 2>&1
 0 * * * * /srv/app/cron/publishissues.sh >> /srv/logs/publishissues.log 2>&1
+*/5 * * * * /srv/app/cron/renewsubscriptions.sh >> /srv/logs/renewsubscriptions.log 2>&1
