@@ -6,6 +6,36 @@
     >
       <Welcome v-if="!loading && issues.length === 0"/>
 
+      <div class="timeline-navigation">
+        <button
+          @click="showJumpMenu = !showJumpMenu"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          title="Jump to different time"
+        >Today 9/25 – 06:00</button>
+
+        <div
+          v-if="showJumpMenu"
+          v-on-clickaway="() => showJumpMenu = false"
+          class="timeline-navigation--menu">
+          <header>
+            <button-icon tabindex="0"></button-icon>
+            <h3>Today 9/25</h3>
+            <button-icon tabindex="0"></button-icon>
+          </header>
+
+          <section>
+            <ul>
+              <li><a href="">Early morning (6:00)</a></li>
+              <li><a href="">Morning (9:00)</a></li>
+              <li><a href="">Noon (12:00)</a></li>
+              <li><a href="">Afternoon (15:00)</a></li>
+              <li><a href="">Evening (18:00)</a></li>
+              <li><a href="">Night (21:00)</a></li>
+            </ul>
+          </section>
+        </div>
+      </div>
+
       <IssueWrapper v-for="issue in issues"
         :key="issue.id"
         :issue="issue"
@@ -18,6 +48,7 @@
 </template>
 
 <script>
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
@@ -31,6 +62,16 @@ export default {
     IssueWrapper,
     Welcome,
     AppLayout
+  },
+
+  directives: {
+    onClickaway
+  },
+
+  data() {
+    return {
+      showJumpMenu: false
+    }
   },
 
   computed: {
@@ -78,4 +119,66 @@ timeline-view
 
   @media (max-width: $mobile)
     padding: $baseline 0
+
+
+.timeline-navigation
+  position: relative
+
+  margin-bottom: $baseline
+
+  text-align: center
+
+  &::before,
+  &::after
+    position: absolute
+
+    border-radius: 100%
+    height: 7px
+    width: 7px
+
+    background: #ddd
+
+    content: ''
+
+  &::before
+    margin: 11px 0 0 -30px
+
+  &::after
+    margin: 11px 0 0 25px
+
+
+  button
+    display: inline-block
+    border-radius: $baseline/2
+    height: $baseline
+    padding: 0 $baseline/2
+    margin-bottom: $baseline /4
+
+    background: #eee
+    border: 0
+
+    cursor: pointer
+    font-family: $ff-sans
+    font-size: $fs-0
+
+
+    &:focus,
+    &:hover
+      background: #ddd
+
+.timeline-navigation--menu
+  +context-menu
+
+  li a span
+    border-radius: 100%
+    display: inline-block
+    float: right
+    padding: 0 $baseline/4
+    margin-top: 6px
+
+    background: #ddd
+
+    line-height: $baseline * 0.8
+
+
 </style>
