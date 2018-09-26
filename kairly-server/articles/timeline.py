@@ -90,6 +90,7 @@ class NewspaperIssueStream(TimelineStream):
     def __iter__(self):
         now = datetime.now(self.tzinfo)
         newspapers = {e.id: e for e in Newspaper.objects.filter(
+            subscription__renewal=True,
             subscription__user=self.user,
             subscription__valid_from__lte=now,
             subscription__valid_to__gt=now)}
@@ -177,7 +178,7 @@ class AuthorsStream(TimelineStream):
 
         # TODO this can be probably simplified after author-user merge
         author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(
-            user=self.user, valid_from__lte=now, valid_to__gt=now)}
+            user=self.user, renewal=True, valid_from__lte=now, valid_to__gt=now)}
         author_ids = [asub.author_id for asub in author_subscriptions.values()]
         authors = {u.id: u for u in User.objects.filter(id__in=author_ids)}
 
