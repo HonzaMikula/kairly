@@ -22,20 +22,8 @@
     </ul>
 
     <issue-widget--subscribe>
-      <button
-        v-if="isSubscribed"
-        class="is-subscribed"
-        @click="unsubscribe($event)">
-        <span class="default">Subscribed</span>
-        <span class="on-hover">Unsubscribe</span>
-      </button>
+      <newspaper-subscription :newspaper="issue.newspaper" />
 
-      <button
-        v-else
-        class="to-subscribe"
-        @click="subscribe($event)">
-        Subscribe
-      </button>
       <p>
         10 CZK per month
          •
@@ -47,7 +35,7 @@
 </template>
 
 <script>
-
+import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
 export default {
   name: 'IssueWidget',
@@ -56,22 +44,8 @@ export default {
     issue: Object
   },
 
-  computed: {
-    isSubscribed() {
-      return this.$store.getters.getNewspaperSubscription(this.issue.newspaper)
-    }
-  },
-
-  methods: {
-    subscribe(ev) {
-      this.$store.dispatch('subscribeNewspaper', this.issue.newspaper.fullName)
-      document.activeElement.blur()
-    },
-
-    unsubscribe(ev) {
-      this.$store.dispatch('unsubscribeNewspaper', this.issue.newspaper.fullName)
-      document.activeElement.blur()
-    }
+  components: {
+    NewspaperSubscription
   }
 }
 </script>
@@ -157,37 +131,6 @@ issue-widget--subscribe
   order: 4
 
   text-align: center
-
-  //- when newspaper is subscribed
-  button.is-subscribed
-    +subscribed-button
-
-    border-radius: $baseline * 0.5
-    height: $baseline * 1
-    width: 140px
-
-    line-height: $baseline * 1
-
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
-  //- when newspaper is ready to be subsribed
-  button.to-subscribe
-    +subscribe-button
-
-    border-radius: $baseline * 0.5
-    height: $baseline * 1
-    width: 140px
-
-    line-height: $baseline * 1
 
   //- info
   p

@@ -1,6 +1,6 @@
 import json
 import math
-from datetime import datetime, timezone
+from datetime import timezone
 
 from bs4 import BeautifulSoup
 import pytz
@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.timezone import now
+from django.utils.timezone import now as timezone_now
 from django.utils.translation import ugettext_lazy as _
 
 from ckeditor.fields import RichTextField
@@ -48,7 +48,7 @@ class Post(models.Model):
         ordering = ('-published',)
 
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
-    published = models.DateTimeField(_('Published'), default=now, db_index=True)
+    published = models.DateTimeField(_('Published'), default=timezone_now, db_index=True)
     draft = models.BooleanField(_('Draft'), default=False)
 
     guid = models.CharField(_('External ID'), max_length=255, null=True, unique=True)
@@ -147,10 +147,28 @@ class Newspaper(models.Model, PeriodMixin):
         return self.title
 
     @property
+    def issues(self):
+        # TODO make db attribute from it
+        if not hasattr(self, '_issues'):
+            self._issues = Issue.objects.filter(newspaper=self).count()
+        return self._issues
+
+    @property
+    def likes(self):
+        # TODO cache it and probably rename
+        if not hasattr(self, '_likes'):
+            now = timezone_now()
+            self._likes = Subscription.objects.filter(
+                newspaper=self,
+                valid_from__lte=now, valid_to__gt=now).count()
+            print(self._likes)
+        return self._likes
+
+    @property
     def next_release(self):
         editor_tz = pytz.timezone(self.editor.timezone)
-        now_dt = now().astimezone(editor_tz)
-        return self.get_period_interval(now_dt).end
+        now = timezone_now().astimezone(editor_tz)
+        return self.get_period_interval(now).end
 
     def to_json(self):
         return {
@@ -162,8 +180,8 @@ class Newspaper(models.Model, PeriodMixin):
             "editor": self.editor.to_json(),
             "periodicity": periodicity_to_json(self),
             "nextRelease": self.next_release,
-            "issues": getattr(self, 'issues', 0),
-            "likes": getattr(self, 'likes', 0)
+            "issues": self.issues,
+            "likes": self.likes
         }
 
 
@@ -176,7 +194,7 @@ class Backlog(models.Model):
 
 class Issue(models.Model):
     number = models.IntegerField()
-    published = models.DateTimeField(_('Published'), default=now, db_index=True)
+    published = models.DateTimeField(_('Published'), default=timezone_now, db_index=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from newspaper
     posts = models.ManyToManyField(Post, blank=True, through='IssuePost')
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
@@ -199,7 +217,7 @@ class Issue(models.Model):
         if posts:
             result["posts"] = [
                 p.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo) for p in
-                self.posts.filter(draft=False, published__lt=now())
+                self.posts.filter(draft=False, published__lt=timezone_now())
                     .order_by('issuepost__ordering', '-published')
             ]
         return result
@@ -217,9 +235,22 @@ class IssuePost(models.Model):
 class Subscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE)
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    renewal = models.BooleanField(default=True)
 
     class Meta:
         unique_together = (("user", "newspaper"),)
+
+    def to_json(self):
+        full_name = "{}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
+        data = {}
+        data[full_name] = {
+            'from': self.valid_from,
+            'to': self.valid_to,
+            'renewal': self.renewal
+        }
+        return data
 
 
 class SubscriptionToAuthor(models.Model, PeriodMixin):
@@ -230,6 +261,9 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
     period_time = models.TimeField(null=True)  # time for daily and weekly period
     period_dow = models.IntegerField(null=True)  # ISO week day for weekly period
+    valid_from = models.DateTimeField()
+    valid_to = models.DateTimeField()
+    renewal = models.BooleanField(default=True)
 
     class Meta:
         unique_together = (("user", "author", "topic"),)
@@ -238,6 +272,18 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         if self.topic and self.topic.author_id != self.author_id:
             raise ValueError("Topic doesn't match author")
         return super().save(*args, **kwargs)
+
+    def to_json(self):
+        author_json = self.author.to_json(topic=self.topic)
+        data = {}
+        data[author_json['id']] = {
+            'author': author_json,  # is this needed?
+            'periodicity': periodicity_to_json(self),
+            'from': self.valid_from,
+            'to': self.valid_to,
+            'renewal': self.renewal
+        }
+        return data
 
 
 @receiver(post_save, sender=Post)
