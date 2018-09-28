@@ -161,7 +161,6 @@ class Newspaper(models.Model, PeriodMixin):
             self._likes = Subscription.objects.filter(
                 newspaper=self,
                 valid_from__lte=now, valid_to__gt=now).count()
-            print(self._likes)
         return self._likes
 
     @property
