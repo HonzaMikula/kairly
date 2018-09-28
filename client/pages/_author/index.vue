@@ -8,7 +8,7 @@
       <author-detail--header>
         <picture>
           <img v-if="author.picture" :src="author.picture" :alt="author.name" />
-          <img v-else src="~/assets/user.png" :alt="author.name"/>
+          <img v-else src="~assets/user.png" :alt="author.name"/>
         </picture>
 
         <section>

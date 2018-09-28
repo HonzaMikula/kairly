@@ -87,7 +87,7 @@ sign-up-page
   height: 100vh
   width: 100vw
 
-  background: url('~/assets/homepage/hero.png') center center no-repeat
+  background: url('~assets/homepage/hero.png') center center no-repeat
   background-size: cover
 
   //- Header
