@@ -20,7 +20,7 @@
           <button
             v-if="subscription"
             :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
-            @click="unfollow($event)">
+            @click="subscription.renewal ? unsubscribe() : renewSubscription()">
             <span class="default">
               <template v-if="subscription.renewal">Subscribed</template>
               <template v-else>Canceled</template>
@@ -229,9 +229,16 @@ export default {
   // },
 
   methods: {
-    unfollow(ev) {
+    unsubscribe() {
       this.$store.dispatch('unsubscribeAuthor', {
         author: this.author,
+      })
+      document.activeElement.blur()
+    },
+
+    renewSubscription() {
+      this.$store.dispatch('subscribeAuthor', {
+        author: this.author
       })
       document.activeElement.blur()
     },
