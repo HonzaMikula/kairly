@@ -298,7 +298,7 @@ export default {
   },
 
   created() {
-    if (process.client) {
+    if (process.client && this.cursor === 0) {
       this.loadPosts()
     }
   },
