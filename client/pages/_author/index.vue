@@ -8,7 +8,7 @@
       <author-detail--header>
         <picture>
           <img v-if="author.picture" :src="author.picture" :alt="author.name" />
-          <img v-else src="~/assets/user.png" :alt="author.name"/>
+          <img v-else src="~assets/user.png" :alt="author.name"/>
         </picture>
 
         <section>
@@ -20,7 +20,7 @@
           <button
             v-if="subscription"
             :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
-            @click="unfollow($event)">
+            @click="subscription.renewal ? unsubscribe() : renewSubscription()">
             <span class="default">
               <template v-if="subscription.renewal">Subscribed</template>
               <template v-else>Canceled</template>
@@ -229,9 +229,16 @@ export default {
   // },
 
   methods: {
-    unfollow(ev) {
+    unsubscribe() {
       this.$store.dispatch('unsubscribeAuthor', {
         author: this.author,
+      })
+      document.activeElement.blur()
+    },
+
+    renewSubscription() {
+      this.$store.dispatch('subscribeAuthor', {
+        author: this.author
       })
       document.activeElement.blur()
     },
@@ -291,7 +298,7 @@ export default {
   },
 
   created() {
-    if (process.client) {
+    if (process.client && this.cursor === 0) {
       this.loadPosts()
     }
   },

@@ -4,8 +4,8 @@
       href=""
       v-on:click.prevent="$refs.followWidget.openSubscribeWidget()"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-      :class="{'is-canceled': !subscription.renewal}"
-      :title="'Change the subscriptions'+ (!subscription.renewal ? ' (is canceled)': '')">
+      :class="{'is-canceled': canceled}"
+      :title="'Change the subscriptions'+ (canceled ? ' (is canceled)': '')">
 
       <template v-if="frequency == '3x_per_day'">
         Daily at <strong>6:00</strong>,
@@ -19,10 +19,6 @@
       <template v-if="frequency == 'weekly'">
         Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>
       </template>
-
-      <!-- <span v-if="!subscription.renewal">
-        ends {{ subscription.to }}
-      </span> -->
     </a>
 
     <follow-author
@@ -57,6 +53,7 @@ export default {
   },
 
   computed: {
+    canceled() { return this.subscription && !this.subscription.renewal},
     frequency() { return this.subscription && this.subscription.periodicity.frequency },
     dow() { return this.subscription && this.subscription.periodicity.dow },
     time() { return this.subscription && this.subscription.periodicity.time }

@@ -70,8 +70,8 @@
           </p>
 
           <div>
-            <img src="~/assets/homepage/kairly-screenshot.png" alt="Kairly Screenshot"/>
-            <img src="~/assets/homepage/kairly-screenshot2.png" alt="Kairly Screenshot"/>
+            <img src="~assets/homepage/kairly-screenshot.png" alt="Kairly Screenshot"/>
+            <img src="~assets/homepage/kairly-screenshot2.png" alt="Kairly Screenshot"/>
           </div>
 
           <p>
@@ -208,7 +208,7 @@ homepage--cover
   height: 400px
   padding: $baseline * 1
 
-  background: url('~/assets/homepage/hero.png') center center no-repeat
+  background: url('~assets/homepage/hero.png') center center no-repeat
   background-size: cover
 
   color: #fff
