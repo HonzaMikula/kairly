@@ -320,7 +320,7 @@ author-detail--header
   display: grid
   grid-template-columns: $baseline*4 1fr auto
   grid-column-gap: $baseline
-  padding: $baseline/4 $baseline
+  padding: 0 $baseline $baseline/4 $baseline
   margin: 0 (-$baseline) $baseline/2 (-$baseline)
 
   backdrop-filter: blur(10px) saturate(125%)
@@ -365,6 +365,10 @@ author-detail--subscribe
   display: block
   margin-bottom: $baseline
 
+  color: #555
+
+  font-family: $ff-sans
+  line-height: 1.42
   text-align: center
 
   @media (max-width: $mobile)

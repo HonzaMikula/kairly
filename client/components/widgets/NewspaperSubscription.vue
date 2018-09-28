@@ -69,11 +69,11 @@ export default {
   button.is-subscribed
     +subscribed-button
 
-    border-radius: $baseline * 0.5
-    height: $baseline * 1
-    width: 140px
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    width: 150px
 
-    line-height: $baseline * 1
+    line-height: $baseline * 1.5
 
     .on-hover
       display: none
@@ -92,7 +92,7 @@ export default {
 
     border-radius: $baseline * 0.5
     height: $baseline * 1
-    width: 140px
+    width: 150px
 
     line-height: $baseline * 1
 

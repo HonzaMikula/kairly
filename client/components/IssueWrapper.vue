@@ -93,17 +93,20 @@ timeline-newspaper
     text-align: center
 
     h1
-      margin-bottom: $baseline / 2
+      margin-bottom: $baseline / 4
 
       font-size: $fs-3
+      line-height: $baseline * 1.25
 
       img
-        height: $baseline * 1.5
-        width: $baseline * 1.5
-
-        vertical-align: middle
+        float: left
+        height: $baseline * 1.25
+        margin-right: $baseline / 4
+        width: $baseline * 1.25
 
       a
+        display: inline-block
+
         color: #000
 
     img

@@ -7,14 +7,14 @@
         <newspaper-detail--subscribe v-if="loggedIn">
           <newspaper-subscription :newspaper="newspaper" />
 
-          <p>10 CZK per month</p>
+          <p>{{ periodicity }}</p>
         </newspaper-detail--subscribe>
       </newspaper-detail--header>
 
       <div>
         <newspaper-detail--info>
           <ul>
-            <li class="periodicity">{{ newspaper.periodicity.frequency }} {{ newspaper.periodicity.time }} {{ newspaper.periodicity.dow }}</li>
+            <li>{{ periodicity }}</li>
 
             <li>#{{ newspaper.issues }}</li>
 
@@ -150,6 +150,12 @@ export default {
     NewspaperSubscription
   },
 
+  data() {
+    return {
+      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    }
+  },
+
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn
@@ -161,6 +167,18 @@ export default {
         return this.user.id === author.id
       } else {
         return false
+      }
+    },
+
+    periodicity() {
+      if (this.newspaper.periodicity.frequency == '3x_per_day') {
+        return 'Daily at 6:00, 12:00 and 18:00'
+      }
+      else if (this.newspaper.periodicity.frequency == 'daily') {
+        return `Daily at ${this.newspaper.periodicity.time}`
+      }
+      else {
+        return `Every ${this.DAYS[this.newspaper.periodicity.dow -1]} at ${this.newspaper.periodicity.time}`
       }
     },
 
@@ -245,8 +263,9 @@ newspaper-detail--subscribe
 
 
   > p
-    color: #777
+    color: #555
 
+    font-family: $ff-sans
     font-size: $fs--1
     line-height: 1.42
     text-align: center
@@ -258,9 +277,6 @@ newspaper-detail--info
 
   border-bottom: 1px solid #ddd
   border-top: 1px solid #ddd
-
-  .periodicity
-    text-transform: capitalize
 
   ul
     display: table

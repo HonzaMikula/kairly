@@ -337,6 +337,9 @@ post-detail--continue-reading
   display: block
   margin: $baseline*1.5 0
 
+  margin-top: (-$baseline)   * 2
+  padding-top: $baseline * 2
+
   color: #999
 
   font-family: $ff-serif
@@ -347,7 +350,7 @@ post-detail--continue-reading
   &::after,
   &::before
     position: absolute
-    top: $baseline / 2
+    top: $baseline*2.5
 
     height: 1px
     width: 30%
@@ -427,7 +430,7 @@ post-detail--perex
 
   //- Link
   a[href]
-    color: $c-base
+    text-decoration: underline
 
   //-- code inline
   code
@@ -453,11 +456,13 @@ post-detail--perex
     text-align: center
 
     figcaption, p
+      margin-bottom: 0
+
       color: #999
 
       font-family: $ff-sans
       font-size: $fs--1
-      line-height: 1.58
+      line-height: 1.42
 
   //-- table
   table

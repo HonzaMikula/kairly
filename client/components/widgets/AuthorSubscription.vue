@@ -71,7 +71,7 @@ author-subscription-view
   font-size: $fs--1
 
   a
-    color: #333
+    color: #555
 
     &.is-canceled::before
       +fa-icon()
