@@ -38,7 +38,7 @@ export default {
       const subscriptions = state.subscriptions.authors
       const ids = Object.keys(subscriptions)
       const authors = ids.map(id => subscriptions[id].author)
-      authors.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
+      authors.sort(({name: a}, {name: b}) => a < b ? -1 : (a > b ? 1 : 0))
       return authors
     }
   }),
