@@ -561,6 +561,18 @@ post-detail--footer
 
       content: $fa-var-external-link-square
 
+  //- Tweaks adding to backlog widget
+  backlog-add--dropdown
+    @media (max-width: 1120px)
+      left: 0
+      right: inherit
+
+      margin-left: auto
+
+      &::after
+        left: $baseline
+        right: inherit
+
 
 //- Post Author
 post-detail--author
