@@ -67,7 +67,6 @@ import { errorToParams } from '@/utils/errors'
 
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
-import NewspaperBacklog from '@/components/editor/NewspaperBacklog'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
 export default {
@@ -146,7 +145,6 @@ export default {
   components: {
     AppLayout,
     Issue,
-    NewspaperBacklog,
     NewspaperSubscription
   },
 

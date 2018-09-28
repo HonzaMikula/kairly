@@ -430,6 +430,8 @@ post-detail--perex
 
   //- Link
   a[href]
+    color: inherit
+
     text-decoration: underline
 
   //-- code inline
