@@ -60,20 +60,20 @@ explore-view
 
     height: 400px
 
-    background: url('~/assets/homepage/hero.png') center center no-repeat
+    background: url('~assets/homepage/hero.png') center center no-repeat
     background-size: cover
 
     @at-root .politics > header
-      background-image: url('~/assets/explore/uspolitics.jpg')
+      background-image: url('~assets/explore/uspolitics.jpg')
 
     @at-root .sport > header
-      background-image: url('~/assets/explore/olymp.jpg')
+      background-image: url('~assets/explore/olymp.jpg')
 
     @at-root .technology > header
-      background-image: url('~/assets/explore/bitcoin.jpg')
+      background-image: url('~assets/explore/bitcoin.jpg')
 
     @at-root .lifecd  > header
-      background-image: url('~/assets/explore/life.jpg')
+      background-image: url('~assets/explore/life.jpg')
 
     @media (max-width: $mobile)
       height: 200px

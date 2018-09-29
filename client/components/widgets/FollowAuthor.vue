@@ -9,7 +9,10 @@
       <section>
         <ul>
           <li><a href="" v-on:click.prevent="editSubscription($event)">Edit</a></li>
-          <li><a href="" v-on:click.prevent="cancelSubscription($event)">Cancel subscription</a></li>
+          <li>
+              <a v-if="subscription && subscription.renewal" href="" v-on:click.prevent="cancelSubscription($event)">Cancel subscription</a>
+              <a v-else href="" v-on:click.prevent="renewSubscription($event)">Renew subscription</a>
+          </li>
         </ul>
       </section>
     </div>
@@ -104,7 +107,8 @@ export default {
 
   props: {
     author: Object,
-    cancelingSubscription: Boolean
+    subscription: Object,
+    cancelingSubscription: Boolean, // TODO maybe this will be deleted
   },
 
   directives: {
@@ -191,6 +195,15 @@ export default {
       this.$store.dispatch('unsubscribeAuthor', {
         author: this.author
       })
+      this.closeSubscribeWidget()
+    },
+
+    renewSubscription() {
+      this.showCanceling = false
+      this.$store.dispatch('subscribeAuthor', {
+        author: this.author
+      })
+      this.closeSubscribeWidget()
     }
   }
 }

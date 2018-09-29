@@ -115,7 +115,9 @@ timeline-post--article--content
 
   //-- link
   a[href]
-    text-decoration: none
+    color: #000
+
+    text-decoration: underline
 
   //-- strong
   strong, b
@@ -209,7 +211,7 @@ timeline-post--article--content
 
       font-family: $ff-sans
       font-size: $fs--1
-      line-height: 1.58
+      line-height: 1.42
 
   //-- table
   table
@@ -237,7 +239,7 @@ timeline-post--continue-reading
   font-size: $fs--1
   text-align: center
 
-  a
+  a[href]
     display: table
     border-radius: 15px
     clear: both
@@ -245,10 +247,12 @@ timeline-post--continue-reading
     padding: 0 $baseline / 2
 
     border: 1px solid transparent
+    color: $c-base
 
     font-size: $fs--1
     line-height: 1.58
     text-transform: uppercase
+    text-decoration: none
 
     &:focus,
     &:hover

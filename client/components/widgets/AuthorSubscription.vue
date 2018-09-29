@@ -4,7 +4,9 @@
       href=""
       v-on:click.prevent="$refs.followWidget.openSubscribeWidget()"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-      title="Change the subscription">
+      :class="{'is-canceled': canceled}"
+      :title="'Change the subscriptions'+ (canceled ? ' (is canceled)': '')">
+
       <template v-if="frequency == '3x_per_day'">
         Daily at <strong>6:00</strong>,
         <strong>12:00</strong> and <strong>18:00</strong>
@@ -22,6 +24,7 @@
     <follow-author
       ref="followWidget"
       :author="author"
+      :subscription="subscription"
       :cancelingSubscription="true"
     />
   </author-subscription-view>
@@ -50,9 +53,10 @@ export default {
   },
 
   computed: {
-    frequency() { return this.subscription && this.subscription.frequency },
-    dow() { return this.subscription && this.subscription.dow },
-    time() { return this.subscription && this.subscription.time }
+    canceled() { return this.subscription && !this.subscription.renewal},
+    frequency() { return this.subscription && this.subscription.periodicity.frequency },
+    dow() { return this.subscription && this.subscription.periodicity.dow },
+    time() { return this.subscription && this.subscription.periodicity.time }
   }
 }
 </script>
@@ -64,7 +68,13 @@ author-subscription-view
   font-size: $fs--1
 
   a
-    color: #333
+    color: #555
+
+    &.is-canceled::before
+      +fa-icon()
+
+      content: $fa-var-times-circle-o
+
 
     &:focus,
     &:hover

@@ -22,20 +22,7 @@
     </newspaper-widget--author>
 
     <newspaper-widget--subscribe v-if="loggedIn">
-      <button
-        v-if="isSubscribed"
-        class="is-subscribed"
-        @click="unsubscribe($event)">
-        <span class="default">Subscribed</span>
-        <span class="on-hover">Unsubscribe</span>
-      </button>
-
-      <button
-        v-else
-        class="to-subscribe"
-        @click="subscribe($event)">
-        Subscribe
-      </button>
+      <newspaper-subscription :newspaper="newspaper" />
 
       <p>
         #{{ newspaper.issues }}
@@ -51,11 +38,17 @@
 
 import { mapState } from 'vuex'
 
+import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+
 export default {
   name: 'NewspaperWidget',
 
   props: {
     newspaper: Object
+  },
+
+  components: {
+    NewspaperSubscription
   },
 
   data() {
@@ -69,10 +62,6 @@ export default {
       loggedIn: state => state.auth.loggedIn
     }),
 
-    isSubscribed() {
-      return this.$store.getters.getNewspaperSubscription(this.newspaper)
-    },
-
     periodicity() {
       if (this.newspaper.periodicity.frequency == '3x_per_day') {
         return 'Daily at 6:00, 12:00 and 18:00'
@@ -84,18 +73,6 @@ export default {
         return `Every ${this.DAYS[this.newspaper.periodicity.dow -1]} at ${this.newspaper.periodicity.time}`
       }
     }
-  },
-
-  methods: {
-    subscribe(ev) {
-      this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
-      document.activeElement.blur()
-    },
-
-    unsubscribe(ev) {
-      this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
-      document.activeElement.blur()
-    },
   }
 }
 </script>
@@ -193,36 +170,10 @@ newspaper-widget--subscribe
   @media (max-width: $mobile)
     padding-bottom: $baseline / 4
 
-  //- when newspaper is subscribed
-  button.is-subscribed
-    +subscribed-button
+  button
+    height: $baseline * 1.25 !important
 
-    border-radius: $baseline * 0.5
-    height: $baseline * 1
-    width: 140px
-
-    line-height: $baseline * 1
-
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
-  //- when newspaper is ready to be subsribed
-  button.to-subscribe
-    +subscribe-button
-
-    border-radius: $baseline * 0.5
-    height: $baseline * 1
-    width: 140px
-
-    line-height: $baseline * 1
+    line-height: $baseline * 1.25 !important
 
   //- info
   p

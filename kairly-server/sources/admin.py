@@ -70,7 +70,10 @@ class ChannelAdmin(admin.ModelAdmin):
 
     def preview(self, request, channel_id):
         channel = Channel.objects.get(id=channel_id)
-        feed = self.get_channel_feed(channel)
+        try:
+            feed = self.get_channel_feed(channel)
+        except requests.HTTPError as e:
+            return TemplateResponse(request, "admin/preview-error.html", {"error": str(e)})
 
         rss_entries = []
         for entry in feed.entries:

@@ -5,29 +5,16 @@
         <h1>{{ newspaper.title }}</h1>
 
         <newspaper-detail--subscribe v-if="loggedIn">
-          <button
-            v-if="isSubscribed"
-            class="is-subscribed"
-            @click="unsubscribe($event)">
-            <span class="default">Subscribed</span>
-            <span class="on-hover">Unsubscribe</span>
-          </button>
+          <newspaper-subscription :newspaper="newspaper" />
 
-          <button
-            v-else
-            class="to-subscribe"
-            @click="subscribe($event)">
-            Subscribe
-          </button>
-
-          <p>10 CZK per month</p>
+          <p>{{ periodicity }}</p>
         </newspaper-detail--subscribe>
       </newspaper-detail--header>
 
       <div>
         <newspaper-detail--info>
           <ul>
-            <li class="periodicity">{{ newspaper.periodicity.frequency }} {{ newspaper.periodicity.time }} {{ newspaper.periodicity.dow }}</li>
+            <li>{{ periodicity }}</li>
 
             <li>#{{ newspaper.issues }}</li>
 
@@ -81,6 +68,7 @@ import { errorToParams } from '@/utils/errors'
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 import NewspaperBacklog from '@/components/editor/NewspaperBacklog'
+import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
 export default {
   name: 'NewspaperDetail',
@@ -158,7 +146,14 @@ export default {
   components: {
     AppLayout,
     Issue,
-    NewspaperBacklog
+    NewspaperBacklog,
+    NewspaperSubscription
+  },
+
+  data() {
+    return {
+      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    }
   },
 
   computed: {
@@ -175,27 +170,21 @@ export default {
       }
     },
 
-    isSubscribed() {
-      return this.$store.getters.getNewspaperSubscription(this.newspaper)
+    periodicity() {
+      if (this.newspaper.periodicity.frequency == '3x_per_day') {
+        return 'Daily at 6:00, 12:00 and 18:00'
+      }
+      else if (this.newspaper.periodicity.frequency == 'daily') {
+        return `Daily at ${this.newspaper.periodicity.time}`
+      }
+      else {
+        return `Every ${this.DAYS[this.newspaper.periodicity.dow -1]} at ${this.newspaper.periodicity.time}`
+      }
     },
 
     ...mapState({
       user: state => state.auth.user
     })
-  },
-
-  methods: {
-    subscribe(ev) {
-      this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
-      document.activeElement.blur()
-    },
-
-    unsubscribe(ev) {
-      this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
-      document.activeElement.blur()
-    },
-
-    //...mapActions(['getNewspaperDetail']),
   },
 
   async asyncData({ store, params, error }) {
@@ -272,40 +261,11 @@ newspaper-detail--subscribe
     position: static
     text-align: center
 
-  button.is-subscribed
-    +subscribed-button
 
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
+  > p
+    color: #555
 
-    line-height: $baseline * 1.5
-
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
-  button.to-subscribe
-    +subscribe-button
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
-
-    line-height: $baseline * 1.5
-
-
-
-  button + p
-    color: #777
-
+    font-family: $ff-sans
     font-size: $fs--1
     line-height: 1.42
     text-align: center
@@ -317,9 +277,6 @@ newspaper-detail--info
 
   border-bottom: 1px solid #ddd
   border-top: 1px solid #ddd
-
-  .periodicity
-    text-transform: capitalize
 
   ul
     display: table

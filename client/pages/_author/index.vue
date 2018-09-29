@@ -8,7 +8,7 @@
       <author-detail--header>
         <picture>
           <img v-if="author.picture" :src="author.picture" :alt="author.name" />
-          <img v-else src="~/assets/user.png" :alt="author.name"/>
+          <img v-else src="~assets/user.png" :alt="author.name"/>
         </picture>
 
         <section>
@@ -19,10 +19,20 @@
         <author-detail--subscribe v-if="loggedIn">
           <button
             v-if="subscription"
-            class="is-subscribed"
-            @click="unfollow($event)">
-            <span class="default">Subscribed</span>
-            <span class="on-hover">Unsubscribe</span>
+            :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
+            @click="subscription.renewal ? unsubscribe() : renewSubscription()">
+            <span class="default">
+              <template v-if="subscription.renewal">Subscribed</template>
+              <template v-else>Canceled</template>
+            </span>
+            <span class="on-hover" v-if="subscription.renewal">Unsubscribe</span>
+            <span
+              v-else
+              class="on-hover"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              :title="`Subscribtion last till ${subscription.to}`">
+              Renew
+            </span>
           </button>
 
           <button
@@ -35,6 +45,7 @@
           <follow-author
             ref="followWidget"
             :author="author"
+            :subscription="subscription"
           />
 
           <AuthorSubscription if="subscription"
@@ -218,9 +229,16 @@ export default {
   // },
 
   methods: {
-    unfollow(ev) {
+    unsubscribe() {
       this.$store.dispatch('unsubscribeAuthor', {
         author: this.author,
+      })
+      document.activeElement.blur()
+    },
+
+    renewSubscription() {
+      this.$store.dispatch('subscribeAuthor', {
+        author: this.author
       })
       document.activeElement.blur()
     },
@@ -280,7 +298,7 @@ export default {
   },
 
   created() {
-    if (process.client) {
+    if (process.client && this.cursor === 0) {
       this.loadPosts()
     }
   },
@@ -309,7 +327,7 @@ author-detail--header
   display: grid
   grid-template-columns: $baseline*4 1fr auto
   grid-column-gap: $baseline
-  padding: $baseline/4 $baseline
+  padding: 0 $baseline $baseline/4 $baseline
   margin: 0 (-$baseline) $baseline/2 (-$baseline)
 
   backdrop-filter: blur(10px) saturate(125%)
@@ -354,12 +372,17 @@ author-detail--subscribe
   display: block
   margin-bottom: $baseline
 
+  color: #555
+
+  font-family: $ff-sans
+  line-height: 1.42
   text-align: center
 
   @media (max-width: $mobile)
     grid-column: 1 / span 2
     margin-bottom: 0
 
+  //- when author is subscribed
   button.is-subscribed
     +subscribed-button
 
@@ -380,6 +403,28 @@ author-detail--subscribe
       .default
         display: none
 
+  //- when author is canceled
+  button.is-canceled
+    +subscribed-button
+
+    border-radius: $baseline * 0.5
+    height: $baseline * 1
+    width: 140px
+
+    line-height: $baseline * 1
+
+    .on-hover
+      display: none
+
+    &:hover,
+    &:focus
+      .on-hover
+        display: block
+
+      .default
+        display: none
+
+  //- when author is ready to be subsribed
   button.to-subscribe
     +subscribe-button
 

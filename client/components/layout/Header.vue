@@ -29,7 +29,7 @@
         <nuxt-link :to="{name: 'subscription-newspapers'}">
           <span>My subscription</span>
           <img v-if="user.picture" :src="user.picture" :alt="user.name" />
-          <img v-else src="~/assets/user.png" :alt="user.name"/>
+          <img v-else src="~assets/user.png" :alt="user.name"/>
         </nuxt-link>
         <button-icon
           v-on:click="isDropDownMenuOpen = true"

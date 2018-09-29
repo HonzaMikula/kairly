@@ -16,6 +16,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.http import HttpResponse, JsonResponse
 from django.views import View
+from django.utils.timezone import localdate
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
@@ -58,6 +59,17 @@ class ProfileView(View):
                 'fullName': full_name,
                 'title': newspaper.title,
             })
+
+        today = localdate()
+        start = request.user.activity_history_start
+        history = request.user.activity_history
+        if start != today or history & 1 == 0:
+            shift = (today - start).days
+            history = (history << shift) | 1
+            history &= (1 << 63) - 1  # pad to 62 days
+            request.user.activity_history_start = today
+            request.user.activity_history = history
+            request.user.save()
 
         user = request.user.to_json(owner=True)
         user['newspapers'] = newspapers
