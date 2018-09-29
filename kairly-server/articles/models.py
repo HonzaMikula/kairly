@@ -13,8 +13,6 @@ from django.dispatch import receiver
 from django.utils.timezone import now as timezone_now
 from django.utils.translation import ugettext_lazy as _
 
-from ckeditor.fields import RichTextField
-
 from .period import PeriodMixin, periodicity_to_json
 
 
@@ -57,8 +55,8 @@ class Post(models.Model):
 
     title = models.CharField(max_length=160)
     picture = models.CharField(_("Picture"), max_length=300, blank=True, null=True)
-    perex = RichTextField(_("Perex"), blank=True, null=True)
-    content = RichTextField(_("Content"), blank=True, null=True)
+    perex = models.TextField(_("Perex"), blank=True, null=True)
+    content = models.TextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
     topics = models.ManyToManyField(Topic)
     attachments = models.TextField(null=True)
