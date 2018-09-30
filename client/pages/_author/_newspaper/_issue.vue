@@ -13,6 +13,13 @@
 
       <div class="issue--footer--description">
         <ul>
+          <li class="author">
+            <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
+              <img :src="newspaper.editor.picture" :alt="newspaper.editor.name" />
+              {{newspaper.editor.name}}
+            </nuxt-link>
+          </li>
+
           <li>#{{ newspaper.issues }}</li>
 
           <li>{{ newspaper.likes }} readers</li>
@@ -226,6 +233,21 @@ issue-detail-view
 
       &:last-of-type::after
         content: ''
+
+      &.author img
+        border-radius: 100%
+        float: left
+        height: $baseline
+        margin-right: $baseline / 4
+        width: $baseline
+
+      a
+        color: #777
+
+        &:focus,
+        &:hover
+          color: #000
+
 
   //- subscription
   .issue--footer--subscription
