@@ -4,29 +4,29 @@
       <Issue :issue="issue" :subscription="newspaper.subscription" />
     </issue-detail-view>
 
-    <div class="newspaper-issue--footer">
-      <newspaper-detail--header>
-        <h1>{{ newspaper.title }}</h1>
+    <div class="issue--footer">
+      <h2>{{ newspaper.title }}</h2>
 
-        <newspaper-detail--subscribe v-if="loggedIn">
-          <newspaper-subscription :newspaper="newspaper" />
+      <picture>
+        <img :src="newspaper.picture" :alt="newspaper.title" />
+      </picture>
 
-          <p>{{ periodicity }}</p>
-        </newspaper-detail--subscribe>
-      </newspaper-detail--header>
+      <div class="issue--footer--description">
+        <ul>
+          <li>#{{ newspaper.issues }}</li>
 
-      <div>
-        <newspaper-detail--info>
-          <ul>
-            <li>{{ periodicity }}</li>
+          <li>{{ newspaper.likes }} readers</li>
 
-            <li>#{{ newspaper.issues }}</li>
+          <li>49 CZK / month</li>
+        </ul>
 
-            <li>{{ newspaper.likes }} readers</li>
+        <p>{{ newspaper.description }}</p>
+      </div>
 
-            <li>10 CZK / month</li>
-          </ul>
-        </newspaper-detail--info>
+      <div class="issue--footer--subscription" v-if="loggedIn">
+        <newspaper-subscription :newspaper="newspaper" />
+
+        <p>{{ periodicity }}</p>
       </div>
     </div>
   </app-layout>
@@ -172,113 +172,65 @@ export default {
 <style lang="sass">
 issue-detail-view
   display: block
-  margin: $baseline auto
+  margin: $baseline auto 0 auto
   max-width: 900px
 
-.newspaper-issue--footer
-  margin: $baseline*2 auto $baseline auto
+.issue--footer
+  display: grid
+  grid-template-areas: "issue-footer-picture issue-footer-title issue-footer-subscription" "issue-footer-picture issue-footer-description issue-footer-subscription"
+  grid-template-columns: $baseline*7 1fr auto
+  grid-template-rows: $baseline auto
+  grid-gap: $baseline/4 $baseline/2
+
+  margin: $baseline*2 auto 0 auto
   max-width: 900px
+  padding: $baseline/2 0 $baseline 0
 
-  border-top: 3px solid #eee
+  border-top: 1px solid #eee
 
-  //- Header
-  newspaper-detail--header
-    position: sticky
-    top: -1px
-    z-index: 1
+  //- picture
+  picture
+    grid-area: issue-footer-picture
 
-    display: block
-    padding: $baseline/4 0
-    margin: $baseline*0.75 0
-    overflow: hidden
-
-    backdrop-filter: blur(10px) saturate(125%)
-
-    font-family: $ff-serif
-
-    @supports not (backdrop-filter: blur(10px))
-      background: rgba(250, 250, 250, 0.97)
-
-    @media (max-width: $mobile)
-      position: static
-      padding-bottom: 0
-      margin: 0
-
-    //- Title
-    h1
-      font-size: $fs-4
-      font-weight: 600
-      line-height: $baseline * 2
-      text-shadow: 0 0 5px #fafafa
-
-      @media (max-width: $mobile)
-        font-size: $fs-3
-
-  //- Subscribe
-  newspaper-detail--subscribe
-    position: absolute
-    right: 0
-    top: 0
-
-    display: block
-    padding: $baseline / 4
-
-    backdrop-filter: blur(10px)
-
-    @media (max-width: $mobile)
-      position: static
-      text-align: center
+    img
+      width: 100%
 
 
-    > p
-      color: #555
+  //- title
+  h2
+    grid-area: issue-footer-title
 
-      font-family: $ff-sans
-      font-size: $fs--1
-      line-height: 1.42
-      text-align: center
+    font-weight: 600
+    font-size: $fs-2
 
-
-  newspaper-detail--info
-    display: block
-    padding: $baseline/4 0
-
+  //- description
+  .issue--footer--description
+    grid-area: issue-footer-description
 
     ul
-
-      @media (max-width: $mobile)
-        padding: 0 $baseline/4
+      margin-bottom: $baseline / 4
 
     li
       display: inline-block
-
-      font-size: $fs--1
-      font-family: $ff-serif
       vertical-align: middle
+
+      color: #777
+
+      font-weight: 600
 
       &::after
         display: inline-block
-        padding: 0 $baseline/2
+        padding: 0 $baseline/4
 
         content: '•'
 
-        @media (max-width: $mobile)
-          padding: 0 $baseline/4
-
       &:last-of-type::after
-        display: none
+        content: ''
 
-    //- Editor
-    a
-      color: #000
+  //- subscription
+  .issue--footer--subscription
+    grid-area: issue-footer-subscription
 
-      img
-        border-radius: 100%
-        height: $baseline
-        width: $baseline
-
-        object-fit: cover
-        vertical-align: middle
-
+    text-align: center
 
 </style>

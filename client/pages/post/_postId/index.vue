@@ -582,7 +582,7 @@ post-detail--author
   grid-template-areas: "post-detail-author-image post-detail-author-name post-detail-author-subscription" "post-detail-author-image post-detail-author-bio post-detail-author-bio"
   grid-template-columns: $baseline*3 1fr auto
   grid-template-rows: $baseline auto
-  grid-gap: 0 $baseline/2
+  grid-gap: $baseline/4 $baseline/2
 
   //- picture
   picture
@@ -599,7 +599,7 @@ post-detail--author
   h3
     grid-area: post-detail-author-name
 
-    font-size: $fs-0
+    font-size: $fs-2
     font-weight: 600
 
     a
@@ -610,6 +610,7 @@ post-detail--author
     grid-area: post-detail-author-bio
 
     font-size: $fs--1
+    line-height: 1.58
 
 //- Author subscription
 post-detail--author--subscription
