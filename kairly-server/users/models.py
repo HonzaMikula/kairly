@@ -80,6 +80,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     twitter_account = models.CharField(max_length=160, null=True, blank=True)
 
+    activity_history = models.BigIntegerField(default=0)  # bit mask for days, starting from activity_history_start
+    activity_history_start = models.DateField(auto_now_add=True)
+
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
