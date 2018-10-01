@@ -247,6 +247,7 @@ timeline-welcome
 
 //- Illustration on newspaper widget
 .welcome--tutorial--illustration
+  border-radius: 5px
   padding: $baseline / 4
   width: 200px
 
