@@ -44,7 +44,7 @@
             :expanded="expandedIssues[issue.id]" />
         </div>
         <div v-else>
-          Nothing to read for {{ day }}.
+          Nothing to read for {{ date }}.
         </div>
       </div>
 
@@ -80,7 +80,7 @@ export default {
       noSsubscriptions: false,
       loading: true,
       issues: [],
-      day: null,
+      date: null,
       prevDay: null,
       nextDay: null,
       expandedIssues: {}
@@ -103,11 +103,22 @@ export default {
   //methods: mapActions(['loadTimeline']),
 
   methods: {
-    async loadTimeline(day) {
+    async loadTimeline(date) {
       this.loading = true
-      const { issues, links }  = await this.$axios.$get('/timeline', {params: {day}})
+
+      const response = await this.$axios.get('/timeline', {params: {date}})
+
+      if (response.status === 204) {
+        this.noSsubscriptions = true
+        this.loading = false
+        return
+      }
+
+      date = response.data.date
+      const { issues, links } = response.data
+
       this.issues = issues
-      this.day = day
+      this.date = date
       this.prevDay = links.prev
       this.nextDay = links.next
       this.loading = false
@@ -130,19 +141,10 @@ export default {
       //   this.$store.dispatch('loadTimeline')
       // }
 
-      const response = await this.$axios.get('/timeline')
-      if (response.status === 204) {
-        this.noSsubscriptions = true
-      } else {
-        const { day, issues, links } = response.data
-        this.day = day
-        this.issues = issues
-        this.prevDay = links.prev
-        this.nextDay = links.next
-      }
+      await this.loadTimeline()
 
-      this.loading = false
       this.$store.dispatch('getUserBacklog')
+
     }
   }
 }

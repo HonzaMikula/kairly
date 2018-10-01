@@ -206,26 +206,26 @@ def timeline(request):
     tzinfo = request.user.tzinfo
     now = datetime.now(tzinfo)
 
-    day_str = request.GET.get('day')
-    if day_str:
-        day = dateutil.parser.parse(day_str).date()
-        start_dt = now.replace(year=day.year, month=day.month, day=day.day,
+    date_str = request.GET.get('date')
+    if date_str:
+        d = dateutil.parser.parse(date_str).date()
+        start_dt = now.replace(year=d.year, month=d.month, day=d.day,
                                hour=0, minute=0, second=0, microsecond=0)
         end_dt = start_dt + timedelta(days=1)
 
         if start_dt > now:
             return HttpResponseBadRequest("Invalid date.")
     else:
-        day = now.date()
+        d = now.date()
         start_dt = now.replace(hour=0, minute=0, second=0, microsecond=0)
         end_dt = min(now, start_dt + timedelta(days=1))
 
     links = {
-        'prev': str(day - timedelta(days=1))
+        'prev': str(d - timedelta(days=1))
     }
 
     if now > end_dt:
-        links['next'] = str(day + timedelta(days=1))
+        links['next'] = str(d + timedelta(days=1))
 
     # try:
     #     ts = int(request.GET.get('cursor'))
@@ -261,7 +261,7 @@ def timeline(request):
     #         stop_on_next = item.published
 
     return JsonResponse({
-        'day': str(day),
+        'date': str(d),
         'issues': issues,
         'links': links,
         # 'cursor': stop_on_next.timestamp() if stop_on_next else None
