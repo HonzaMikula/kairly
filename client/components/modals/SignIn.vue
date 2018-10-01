@@ -8,11 +8,13 @@
       <div>
         <form v-on:submit.prevent="login">
           <div>
-            <input name="username" placeholder="Username" v-model="username" />
+            <label for="username">Username</label>
+            <input name="username" id="username" v-model="username" />
           </div>
 
           <div>
-            <input name="password" placeholder="Password" type="password" v-model="password" />
+            <label for="password">Password</label>
+            <input name="password" id="password" type="password" v-model="password" />
           </div>
 
           <button type="submit">Sign In</button>
@@ -68,23 +70,31 @@ export default {
 
 <style lang="sass">
 modal-dialog.join-us
+  background: #eee
 
-  > div
-    padding: $baseline
+  div
+    margin-bottom: $baseline / 2
+
+    &:last-of-type
+      margin-bottom: 0
 
   input
+    border-radius: 5px
     box-sizing: border-box
     height: $baseline * 1.5
     padding: 0 $baseline/4
-    margin-bottom: $baseline / 2
     width: 100%
+
+    border: 1px solid #ccc
 
     font-size: $fs-0
     font-family: $ff-sans
 
 
   button
-    height: $baseline * 1.25
+    border-radius: 5px
+    height: $baseline * 1.5
+    margin-top: $baseline / 2
     width: 100%
 
     background: $c-base
