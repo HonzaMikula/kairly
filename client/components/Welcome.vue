@@ -65,7 +65,7 @@ export default {
   methods: mapActions(['getNewspaperDetail']),
 
   async created() {
-    const resp = await getNewspaperDetail({
+    const resp = await this.getNewspaperDetail({
       newspaperId: 'janmikula/kairly',
       issue: 1
     })

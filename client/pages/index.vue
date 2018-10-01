@@ -1,46 +1,52 @@
 <template>
   <app-layout>
-    <timeline-view v-infinite-scroll="loadTimeline"
-      infinite-scroll-disabled="loadDisabled"
-      infinite-scroll-distance="100"
-    >
-      <Welcome v-if="!loading && issues.length === 0"/>
+    <timeline-view>
+      <Welcome v-if="noSsubscriptions"/>
+      <div v-else>
+        <div class="timeline-navigation">
+          <button
+            @click="showJumpMenu = !showJumpMenu"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            title="Jump to different time"
+          >Today 9/25 – 06:00</button>
 
-      <div class="timeline-navigation">
-        <button
-          @click="showJumpMenu = !showJumpMenu"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-          title="Jump to different time"
-        >Today 9/25 – 06:00</button>
+          <a v-if="nextDay" href="#" @click.prevent="loadTimeline(nextDay)">Show {{ nextDay }}</a>
+          <a href="#" @click.prevent="loadTimeline(prevDay)">Show {{ prevDay }}</a>
 
-        <div
-          v-if="showJumpMenu"
-          v-on-clickaway="() => showJumpMenu = false"
-          class="timeline-navigation--menu">
-          <header>
-            <button-icon tabindex="0"></button-icon>
-            <h3>Today 9/25</h3>
-            <button-icon tabindex="0"></button-icon>
-          </header>
+          <div
+            v-if="showJumpMenu"
+            v-on-clickaway="() => showJumpMenu = false"
+            class="timeline-navigation--menu">
+            <header>
+              <button-icon tabindex="0"></button-icon>
+              <h3>Today 9/25</h3>
+              <button-icon tabindex="0"></button-icon>
+            </header>
 
-          <section>
-            <ul>
-              <li><a href="">Early morning (6:00)</a></li>
-              <li><a href="">Morning (9:00)</a></li>
-              <li><a href="">Noon (12:00)</a></li>
-              <li><a href="">Afternoon (15:00)</a></li>
-              <li><a href="">Evening (18:00)</a></li>
-              <li><a href="">Night (21:00)</a></li>
-            </ul>
-          </section>
+            <section>
+              <ul>
+                <li><a href="">Early morning (6:00)</a></li>
+                <li><a href="">Morning (9:00)</a></li>
+                <li><a href="">Noon (12:00)</a></li>
+                <li><a href="">Afternoon (15:00)</a></li>
+                <li><a href="">Evening (18:00)</a></li>
+                <li><a href="">Night (21:00)</a></li>
+              </ul>
+            </section>
+          </div>
+        </div>
+
+        <div v-if="issues.length">
+          <IssueWrapper v-for="issue in issues"
+            :key="issue.id"
+            :issue="issue"
+            :subscription="true"
+            :expanded="expandedIssues[issue.id]" />
+        </div>
+        <div v-else>
+          Nothing to read for {{ day }}.
         </div>
       </div>
-
-      <IssueWrapper v-for="issue in issues"
-        :key="issue.id"
-        :issue="issue"
-        :subscription="true"
-        :expanded="expandedIssues[issue.id]" />
 
       <loading-spinner v-if="loading"></loading-spinner>
     </timeline-view>
@@ -70,24 +76,43 @@ export default {
 
   data() {
     return {
-      showJumpMenu: false
+      showJumpMenu: false,
+      noSsubscriptions: false,
+      loading: true,
+      issues: [],
+      day: null,
+      prevDay: null,
+      nextDay: null,
+      expandedIssues: {}
     }
   },
 
   computed: {
-    loadDisabled() {
-      return this.loading || !this.hasMore
-    },
+    // loadDisabled() {
+    //   return this.loading || !this.hasMore
+    // },
 
     ...mapState({
-      issues: state => state.timeline.issues || [] ,
-      loading: state => process.server || state.timeline.loading,
-      hasMore: state => !!state.timeline.cursor,
-      expandedIssues: state => state.timeline.expandedIssues
+      //issues: state => state.timeline.issues || [] ,
+      //loading: state => process.server || state.timeline.loading,
+      // hasMore: state => !!state.timeline.cursor,
+      //expandedIssues: state => state.timeline.expandedIssues
     })
   },
 
-  methods: mapActions(['loadTimeline']),
+  //methods: mapActions(['loadTimeline']),
+
+  methods: {
+    async loadTimeline(day) {
+      this.loading = true
+      const { issues, links }  = await this.$axios.$get('/timeline', {params: {day}})
+      this.issues = issues
+      this.day = day
+      this.prevDay = links.prev
+      this.nextDay = links.next
+      this.loading = false
+    }
+  },
 
   async fetch ({ store, params, redirect }) {
     if (!store.state.auth.loggedIn) {
@@ -96,14 +121,27 @@ export default {
     }
   },
 
-  created() {
+  async created() {
     if (process.client) {
       // load timeline and black in parallel
 
-      const { timeline } = this.$store.state
-      if (timeline.issues === null) {
-        this.$store.dispatch('loadTimeline')
+      //const { timeline } = this.$store.state
+      // if (timeline.issues === null) {
+      //   this.$store.dispatch('loadTimeline')
+      // }
+
+      const response = await this.$axios.get('/timeline')
+      if (response.status === 204) {
+        this.noSsubscriptions = true
+      } else {
+        const { day, issues, links } = response.data
+        this.day = day
+        this.issues = issues
+        this.prevDay = links.prev
+        this.nextDay = links.next
       }
+
+      this.loading = false
       this.$store.dispatch('getUserBacklog')
     }
   }

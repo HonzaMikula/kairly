@@ -25,22 +25,22 @@ export async function getSubscriptions({ commit, state }) {
   return subscriptions
 }
 
-export async function loadTimeline({ commit, state }) {
-  if (state.timeline.loading) {
-    // TODO wait for loading timeline ?
-    return []
-  }
-
-  commit('timelineRequested')
-  //try {
-  const { cursor } = state.timeline
-  const timeline = await this.$axios.$get('/timeline', {params: {cursor}})
-  commit('timelineReceived', timeline)
-  return timeline
-  // } catch (err) {
-  //   onError(err, commit)
-  // }
-}
+// export async function loadTimeline({ commit, state }) {
+//   if (state.timeline.loading) {
+//     // TODO wait for loading timeline ?
+//     return []
+//   }
+//
+//   commit('timelineRequested')
+//   //try {
+//   const { cursor } = state.timeline
+//   const timeline = await this.$axios.$get('/timeline', {params: {cursor}})
+//   commit('timelineReceived', timeline)
+//   return timeline
+//   // } catch (err) {
+//   //   onError(err, commit)
+//   // }
+// }
 
 export const invalidateTimeline = ({ commit }) => {
   commit('invalidateTimeline')
