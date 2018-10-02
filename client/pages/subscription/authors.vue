@@ -2,7 +2,7 @@
   <div class="myauthors-view">
     <template>
       <my-authors--empty
-        v-if="authors.length === 0">
+        v-if="authors['3x_per_day'].length === 0 && authors['daily'].length === 0 && authors['weekly'].length === 0">
         <h1>No authors</h1>
         <p>You haven't subscribe to any author yet. On Explore page you can find authors you might like.</p>
         <nuxt-link to="/explore">Explore authors</nuxt-link>
