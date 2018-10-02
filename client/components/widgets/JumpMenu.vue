@@ -12,22 +12,14 @@
       v-on-clickaway="() => showJumpMenu = false"
       class="timeline-navigation--menu">
       <header>
-        <button-icon tabindex="0"></button-icon>
-        <h3>{{ dayTitle }}</h3>
-        <button-icon tabindex="0"></button-icon>
+        <h3>Jump to</h3>
       </header>
 
       <section>
         <ul>
-          <li v-for="anchor in anchors">
+          <li v-for="anchor in anchors" :key="anchor.link">
             <a :href="anchor.link">{{ anchor.title }}</a>
           </li>
-          <!--li><a href="">Early morning (6:00)</a></li>
-          <li><a href="">Morning (9:00)</a></li>
-          <li><a href="">Noon (12:00)</a></li>
-          <li><a href="">Afternoon (15:00)</a></li>
-          <li><a href="">Evening (18:00)</a></li>
-          <li><a href="">Night (21:00)</a></li-->
         </ul>
       </section>
     </div>
@@ -99,27 +91,29 @@ export default {
 .timeline-navigation
   position: relative
 
-  margin-bottom: $baseline
+  margin: $baseline * 2 0 (-$baseline)
 
   text-align: center
+
+  &:first-of-type
+    margin-top: 0
 
   &::before,
   &::after
     position: absolute
 
-    border-radius: 100%
-    height: 7px
-    width: 7px
+    height: 3px
+    width: 50px
 
     background: #ddd
 
     content: ''
 
   &::before
-    margin: 11px 0 0 -30px
+    margin: 11px 0 0 -70px
 
   &::after
-    margin: 11px 0 0 25px
+    margin: 11px 0 0 20px
 
 
   button
@@ -131,6 +125,7 @@ export default {
 
     background: #eee
     border: 0
+    color: #333
 
     cursor: pointer
     font-family: $ff-sans
@@ -140,6 +135,7 @@ export default {
     &:focus,
     &:hover
       background: #ddd
+      color: #000
 
 .timeline-navigation--menu
   +context-menu

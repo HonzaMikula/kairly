@@ -83,9 +83,6 @@ timeline-newspaper
   display: block
   margin: $baseline*2 0 $baseline
 
-  &:first-of-type
-    margin-top: 0
-
   > header
     margin-bottom: $baseline
 

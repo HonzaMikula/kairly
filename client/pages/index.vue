@@ -2,26 +2,44 @@
   <app-layout>
     <timeline-view>
       <Welcome v-if="noSubscriptions"/>
-      <div v-else>
-        <a v-if="nextDay" href="#" @click.prevent="loadTimeline(nextDay)">Show {{ nextDay }}</a>
-        <a href="#" @click.prevent="loadTimeline(prevDay)">Show {{ prevDay }}</a>
-
-        <div v-if="timeSlots.length">
-          <div v-for="timeSlot in timeSlots">
-            <jump-menu :datetime="timeSlot.time" :timeSlots="timeSlots" />
+      <template v-else>
+        <template v-if="timeSlots.length">
+          <template v-for="timeSlot in timeSlots" >
+            <jump-menu :datetime="timeSlot.time" :key="timeSlot.time" :timeSlots="timeSlots" />
 
             <IssueWrapper v-for="issue in timeSlot.issues"
               :key="issue.id"
               :issue="issue"
               :subscription="true"
               :expanded="expandedIssues[issue.id]" />
+          </template>
 
+          <div class="timeline--pagination">
+            <p>That's it. You read the entire day.</p>
+
+            <a
+              @click.prevent="loadTimeline(prevDay)"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              :title="prevDay"
+              href="#">
+              Previous day
+            </a>
+
+            <a
+              v-if="nextDay"
+              @click.prevent="loadTimeline(nextDay)"
+              href="#"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              :title="nextDay">
+              Next day
+            </a>
           </div>
-        </div>
-        <div v-else>
+        </template>
+
+        <template v-else-if="!loading">
           Nothing to read for {{ date }}.
-        </div>
-      </div>
+        </template>
+      </template>
 
       <loading-spinner v-if="loading"></loading-spinner>
     </timeline-view>
@@ -141,4 +159,41 @@ timeline-view
 
   @media (max-width: $mobile)
     padding: $baseline 0
+
+
+//- Pagination
+.timeline--pagination
+  padding-top: $baseline
+
+  border-top: 3px solid #ddd
+
+  text-align: center
+
+  //- you read the entire day title
+  p
+    margin-bottom: $baseline
+
+    font-family: $ff-serif
+    font-size: $fs-2
+
+
+  //- buttons
+  a
+    display: inline-block
+    border-radius: $baseline
+    height: $baseline * 1.5
+    padding: 0 $baseline
+    margin: 0 $baseline/2
+
+    background: $c-base
+    color: #fff
+
+    line-height: $baseline * 1.5
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+
+
+
 </style>
