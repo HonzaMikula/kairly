@@ -119,18 +119,18 @@ class NewspaperView(View):
     def get(self, request, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
-        issueNo = request.GET.get('issue')
-        if issueNo:
-            issue = get_object_or_404(Issue, newspaper=newspaper, number=int(issueNo))
+        issuesNo = request.GET.get('issues')
+        if issuesNo:
+            ids = [int(id) for id in issuesNo.split(',')]
+            if len(ids) > 3:
+                return HttpResponseBadRequest("Too much issues")
+            issues = [get_object_or_404(Issue, newspaper=newspaper, number=id) for id in ids]
         else:
-            try:
-                issue = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[0]
-            except IndexError:
-                issue = None
+            issues = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[:3]
 
         return JsonResponse({
             'newspaper': newspaper.to_json(),
-            'issue': issue.to_json(anonymous=request.user.is_anonymous) if issue else None,
+            'issues': [issue.to_json(anonymous=request.user.is_anonymous) for issue in issues]
         })
 
     @ajax_login_required

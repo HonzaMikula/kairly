@@ -44,11 +44,11 @@
         </newspaper-detail--description>
       </div>
 
-      <newspaper-detail--last-newspaper v-if="issue">
+      <newspaper-detail--last-newspaper v-for="issue in issues">
         <Issue :issue="issue" :subscription="newspaper.subscription" />
       </newspaper-detail--last-newspaper>
 
-      <newspaper-detail--empty-newspaper v-else>
+      <newspaper-detail--empty-newspaper v-if="issues.length === 0">
         <h2>No issue yet</h2>
 
         <p>
@@ -193,8 +193,8 @@ export default {
     }
 
     try {
-      const { newspaper, issue } = await store.dispatch('getNewspaperDetail', { newspaperId: fullName })
-      return { newspaper, issue }
+      const { newspaper, issues } = await store.dispatch('getNewspaperDetail', { newspaperId: fullName })
+      return { newspaper, issues }
     } catch (err) {
       error(errorToParams(err))
     }

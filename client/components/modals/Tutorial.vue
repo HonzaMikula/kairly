@@ -44,10 +44,10 @@ export default {
   async created() {
     const resp = await this.getNewspaperDetail({
       newspaperId: 'janmikula/kairly',
-      issue: 1
+      issues: [1]
     })
     this.newspaper = resp.newspaper
-    this.issue = resp.issue
+    this.issue = resp.issues[0]
     this.loading = false
   }
 }

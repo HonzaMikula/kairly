@@ -56,11 +56,8 @@
       <nuxt-link to="/explore">Start exploring authors &amp; newspapers</nuxt-link>
     </div>
 
-
     <template v-if="!loading">
       <Issue :issue="issue" :subscription="newspaper.subscription" />
-
-      <nuxt-link to="/explore">Start exploring</nuxt-link>
     </template>
   </timeline-welcome>
 </template>
@@ -88,12 +85,12 @@ export default {
   methods: mapActions(['getNewspaperDetail']),
 
   async created() {
-    const resp = await getNewspaperDetail({
+    const resp = await this.getNewspaperDetail({
       newspaperId: 'janmikula/kairly',
-      issue: 1
+      issues: [1]
     })
     this.newspaper = resp.newspaper
-    this.issue = resp.issue
+    this.issue = resp.issues[0]
     this.loading = false
   }
 }

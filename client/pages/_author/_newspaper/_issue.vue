@@ -164,11 +164,11 @@ export default {
     }
 
     try {
-      const { newspaper, issue } = await store.dispatch('getNewspaperDetail', {
+      const { newspaper, issues } = await store.dispatch('getNewspaperDetail', {
         newspaperId: fullName,
-        issue: params.issue
+        issues: [params.issue]
       })
-      return { newspaper, issue }
+      return { newspaper, issue: issues[0] }
     } catch (err) {
       error(errorToParams(err))
     }
