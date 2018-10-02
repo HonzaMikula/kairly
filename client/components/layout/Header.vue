@@ -52,11 +52,6 @@
         </ul>
       </nav>
     </div>
-
-    <portal to="modal" v-if="isTutorialOpen">
-      <tutorial-modal :closeModal="closeTutorial"></tutorial-modal>
-    </portal>
-
   </header>
 </template>
 
@@ -76,8 +71,7 @@ export default {
     return {
       username: null,
       password: null,
-      isDropDownMenuOpen: false,
-      isTutorialOpen: false
+      isDropDownMenuOpen: false
     }
   },
 
@@ -89,10 +83,6 @@ export default {
     async logout() {
       await this.$auth.logout()
       this.$router.push("/homepage")
-    },
-
-    closeTutorial() {
-      this.isTutorialOpen = false
     }
   }
 }

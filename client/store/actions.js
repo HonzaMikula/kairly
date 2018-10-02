@@ -46,9 +46,8 @@ export const invalidateTimeline = ({ commit }) => {
   commit('invalidateTimeline')
 }
 
-export async function getNewspaperDetail({ commit }, { newspaperId, issues }) {
-  const issuesParam = issues ? issues.join(',') : undefined
-  const data = await this.$axios.$get(`/newspapers/${newspaperId}`, {params: {issues: issuesParam}})
+export async function getNewspaperDetail({ commit }, { newspaperId, issue }) {
+  const data = await this.$axios.$get(`/newspapers/${newspaperId}`, {params: {issue}})
   commit('newspaper', { newspaper: data.newspaper })
   return data
 }

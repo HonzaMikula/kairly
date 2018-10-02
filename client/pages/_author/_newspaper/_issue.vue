@@ -166,7 +166,7 @@ export default {
     try {
       const { newspaper, issues } = await store.dispatch('getNewspaperDetail', {
         newspaperId: fullName,
-        issues: [params.issue]
+        issue: params.issue
       })
       return { newspaper, issue: issues[0] }
     } catch (err) {

@@ -1,6 +1,5 @@
 <template>
   <timeline-welcome>
-
     <div class="welcome-view">
       <h1>Welcome to Kairly!</h1>
 
@@ -55,44 +54,14 @@
 
       <nuxt-link to="/explore">Start exploring authors &amp; newspapers</nuxt-link>
     </div>
-
-    <template v-if="!loading">
-      <Issue :issue="issue" :subscription="newspaper.subscription" />
-    </template>
   </timeline-welcome>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
-import Issue from '@/components/IssueWrapper'
-
 export default {
   name: 'Welcome',
-
-  components: {
-    Issue
-  },
-
-  data() {
-    return {
-      loading: true,
-      newspaper: null,
-      issue: null,
-    }
-  },
-
-  methods: mapActions(['getNewspaperDetail']),
-
-  async created() {
-    const resp = await this.getNewspaperDetail({
-      newspaperId: 'janmikula/kairly',
-      issues: [1]
-    })
-    this.newspaper = resp.newspaper
-    this.issue = resp.issues[0]
-    this.loading = false
-  }
 }
 </script>
 
