@@ -8,32 +8,32 @@
         <nuxt-link to="/explore">Explore authors</nuxt-link>
       </my-authors--empty>
 
-      <div v-if="authors['3x_per_day'].length">
+      <template v-if="authors['3x_per_day'].length">
         <h2>3x per day</h2>
         <AuthorWidget
           v-for="author in authors['3x_per_day']"
           :key="author.slug"
           :author="author"
         />
-      </div>
+      </template>
 
-      <div v-if="authors['daily'].length">
+      <template v-if="authors['daily'].length">
         <h2>Daily</h2>
         <AuthorWidget
           v-for="author in authors['daily']"
           :key="author.slug"
           :author="author"
         />
-      </div>
+      </template>
 
-      <div v-if="authors['weekly'].length">
+      <template v-if="authors['weekly'].length">
         <h2>Weekly</h2>
         <AuthorWidget
           v-for="author in authors['weekly']"
           :key="author.slug"
           :author="author"
         />
-      </div>
+      </template>
 
     </template>
   </div>
@@ -107,14 +107,11 @@ export default {
 <style lang="sass">
 .myauthors-view
   h2
-    margin-bottom: $baseline / 2
+    margin: $baseline 0 $baseline / 2
 
-    font-family: $ff-serif
-    font-size: $fs-1
+    font-family: $ff-sans
+    font-size: $fs-2
     font-weight: 600
-
-    @media (max-width: $mobile)
-      padding: 0 $baseline/4
 
 my-newspapers-view author-widget-view
   width: 576px
