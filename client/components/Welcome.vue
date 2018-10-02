@@ -44,11 +44,14 @@
         </ol>
 
         <div class="welcome--tutorial--illustration">
-          <div class="picture"></div>
-          <div class="title"></div>
-          <p>Daily at 9:00</p>
-          <div class="description"></div>
-          <div class="subscribe">Subscribe</div>
+          <div>
+            <div class="picture"></div>
+            <div class="title"></div>
+            <p>Daily at 9:00</p>
+            <div class="description"></div>
+            <div class="subscribe">Subscribe</div>
+          </div>
+          <figcaption>Illustration of newspaper widget</figcaption>
         </div>
       </div>
 
@@ -213,14 +216,26 @@ timeline-welcome
 
 //- Illustration on newspaper widget
 .welcome--tutorial--illustration
-  border-radius: 5px
-  padding: $baseline / 4
-  width: 200px
-
-  background: #fff
-  border: 1px solid #eee
-
   text-align: center
+
+  figcaption
+    padding: $baseline/4 0
+
+    color: #999
+
+    font-family: $ff-sans
+    font-size: $fs--1
+    line-height: $baseline
+
+
+  //- frame
+  > div
+    border-radius: 5px
+    padding: $baseline / 4
+    width: 200px
+
+    background: #fff
+    border: 1px solid #eee
 
   //- picture
   .picture
