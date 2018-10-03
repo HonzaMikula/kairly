@@ -11,6 +11,7 @@ from .models import Issue, Post, Newspaper, Subscription, SubscriptionToAuthor
 
 
 TIMELINE_PAGE_SIZE = 6
+DAY_START_HOUR = 6
 
 
 class QueryIterator:
@@ -209,29 +210,27 @@ def timeline(request):
     date_str = request.GET.get('date')
     if date_str:
         d = dateutil.parser.parse(date_str).date()
-        start_dt = now.replace(year=d.year, month=d.month, day=d.day,
-                               hour=0, minute=0, second=0, microsecond=0)
-        end_dt = start_dt + timedelta(days=1)
-
-        if start_dt > now:
-            return HttpResponseBadRequest("Invalid date.")
     else:
         d = now.date()
-        start_dt = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_dt = min(now, start_dt + timedelta(days=1))
+        if now.hour < DAY_START_HOUR:
+            d -= timedelta(days=1)
+
+    # use now.replace to preserve tzinfo
+    start_dt = now.replace(year=d.year, month=d.month, day=d.day,
+                           hour=0, minute=0, second=0, microsecond=0)
+    end_dt = start_dt + timedelta(days=1)
+
+    if start_dt > now:
+        return HttpResponseBadRequest("Invalid date.")
+
+    recent_day = now < end_dt + timedelta(hours=DAY_START_HOUR)
 
     links = {
         'prev': str(d - timedelta(days=1))
     }
 
-    if now > end_dt:
+    if not recent_day:
         links['next'] = str(d + timedelta(days=1))
-
-    # try:
-    #     ts = int(request.GET.get('cursor'))
-    #     before = datetime.fromtimestamp(ts, tzinfo)
-    # except (ValueError, TypeError):
-    #     before = datetime.now(tzinfo)
 
     streams = [
         NewspaperIssueStream(request.user, start_dt, end_dt, tzinfo),
