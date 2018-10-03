@@ -17,22 +17,19 @@
           <div class="timeline--pagination">
             <p>That's it. You read the entire day.</p>
 
-            <a
-              @click.prevent="loadTimeline(prevDay)"
+            <nuxt-link
+              :to="{name: 'timeline-date', params: {date: prevDay}}"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="prevDay"
-              href="#">
-              Previous day
-            </a>
+            >Previous day</nuxt-link>
 
-            <a
+            <nuxt-link
               v-if="nextDay"
-              @click.prevent="loadTimeline(nextDay)"
-              href="#"
+              :to="{name: 'timeline-date', params: {date: nextDay}}"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="nextDay">
-              Next day
-            </a>
+              :title="nextDay"
+            >Next day</nuxt-link>
+            
           </div>
         </template>
 
@@ -134,17 +131,17 @@ export default {
 
   async created() {
     if (process.client) {
-      // load timeline and black in parallel
+      // TODO load timeline and backlog in parallel
 
       //const { timeline } = this.$store.state
       // if (timeline.issues === null) {
       //   this.$store.dispatch('loadTimeline')
       // }
 
-      await this.loadTimeline()
+      const { date } = this.$route.params
+      await this.loadTimeline(date)
 
       this.$store.dispatch('getUserBacklog')
-
     }
   }
 }
