@@ -483,7 +483,7 @@ post-detail--perex
 
   //-- quotes
   blockquote
-    margin: ($baseline / 4 - 2rem) 0
+    margin: $baseline 0
     padding: $baseline / 4 0
 
     color: #777
@@ -503,7 +503,7 @@ post-detail--perex
   //-- cite
   cite
     display: block
-    margin: ($baseline / 4 - 2rem) 0
+    margin: $baseline 0
     padding: $baseline / 4 0
 
     color: #777

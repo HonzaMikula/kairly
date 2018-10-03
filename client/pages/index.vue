@@ -1,16 +1,44 @@
 <template>
   <app-layout>
-    <timeline-view v-infinite-scroll="loadTimeline"
-      infinite-scroll-disabled="loadDisabled"
-      infinite-scroll-distance="100"
-    >
-      <Welcome v-if="!loading && issues.length === 0"/>
+    <timeline-view>
+      <Welcome v-if="noSubscriptions"/>
+      <template v-else>
+        <template v-if="timeSlots.length">
+          <template v-for="timeSlot in timeSlots" >
+            <jump-menu :datetime="timeSlot.time" :key="timeSlot.time" :timeSlots="timeSlots" />
 
-      <IssueWrapper v-for="issue in issues"
-        :key="issue.id"
-        :issue="issue"
-        :subscription="true"
-        :expanded="expandedIssues[issue.id]" />
+            <IssueWrapper v-for="issue in timeSlot.issues"
+              :key="issue.id"
+              :issue="issue"
+              :subscription="true"
+              :expanded="expandedIssues[issue.id]" />
+          </template>
+        </template>
+
+        <template v-else-if="!loading">
+          <div class="timeline--empty">
+            No articles or tweets.
+          </div>
+        </template>
+
+        <div class="timeline--pagination" v-if="!loading">
+          <p>That's it. You read the entire day.</p>
+
+          <nuxt-link
+            :to="{name: 'timeline-date', params: {date: links.prev}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="links.prev"
+          >Previous day</nuxt-link>
+
+          <nuxt-link
+            v-if="links.next"
+            :to="{name: 'timeline-date', params: {date: links.next}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="links.next"
+          >Next day</nuxt-link>
+
+        </div>
+      </template>
 
       <loading-spinner v-if="loading"></loading-spinner>
     </timeline-view>
@@ -23,6 +51,7 @@ import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
 import Welcome from '@/components/Welcome'
+import JumpMenu from '@/components/widgets/JumpMenu'
 
 export default {
   name: 'Timeline',
@@ -30,23 +59,50 @@ export default {
   components: {
     IssueWrapper,
     Welcome,
-    AppLayout
+    AppLayout,
+    JumpMenu
+  },
+
+  data() {
+    return {
+      date: null // date returned from timeline request
+    }
   },
 
   computed: {
-    loadDisabled() {
-      return this.loading || !this.hasMore
+    ...mapState({
+      noSubscriptions: state => state.timelineHasNoActiveSubscriptions,
+      expandedIssues: state => state.timelineExpandedIssues
+    }),
+
+    loading() {
+      return !this.noSubscriptions && !this.date
     },
 
-    ...mapState({
-      issues: state => state.timeline.issues || [] ,
-      loading: state => process.server || state.timeline.loading,
-      hasMore: state => !!state.timeline.cursor,
-      expandedIssues: state => state.timeline.expandedIssues
-    })
-  },
+    timeSlots() {
+      if (this.loading) { return [] }
 
-  methods: mapActions(['loadTimeline']),
+      const { issues } = this.$store.state.timeline[this.date]
+      const timeSlots = []
+      let slot = null
+
+      issues.forEach(issue => {
+        if (slot === null || slot.time !== issue.time) {
+          slot = { time: issue.time, issues: []}
+          timeSlots.push(slot)
+        }
+        slot.issues.push(issue)
+      })
+
+      return timeSlots
+    },
+
+    links() {
+      if (this.loading) { return {} }
+
+      return this.$store.state.timeline[this.date].links
+    }
+  },
 
   async fetch ({ store, params, redirect }) {
     if (!store.state.auth.loggedIn) {
@@ -55,14 +111,14 @@ export default {
     }
   },
 
-  created() {
-    if (process.client) {
-      // load timeline and black in parallel
+  async created() {
+    if (process.client && !this.noSubscriptions) {
+      // TODO load timeline and backlog in parallel
 
-      const { timeline } = this.$store.state
-      if (timeline.issues === null) {
-        this.$store.dispatch('loadTimeline')
-      }
+      const { date } = this.$route.params
+
+      this.date = await this.$store.dispatch('loadTimeline', date)
+
       this.$store.dispatch('getUserBacklog')
     }
   }
@@ -78,4 +134,60 @@ timeline-view
 
   @media (max-width: $mobile)
     padding: $baseline 0
+
+//- Empty timeline
+.timeline--empty
+  display: table
+  margin: $baseline*2 auto
+  padding: $baseline $baseline*2
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
+
+//- Pagination
+.timeline--pagination
+  padding-top: $baseline
+
+  border-top: 3px solid #ddd
+
+  text-align: center
+
+  //- you read the entire day title
+  p
+    margin-bottom: $baseline
+
+    font-family: $ff-serif
+    font-size: $fs-2
+
+
+  //- buttons
+  a
+    display: inline-block
+    border-radius: $baseline
+    height: $baseline * 1.5
+    margin: 0 $baseline/2
+    width: 140px
+
+    background: $c-base
+    color: #fff
+
+    line-height: $baseline * 1.5
+    text-align: center
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+
+    @media (max-width: $mobile)
+      margin: 0 $baseline/4
+      width: 120px
+
+      font-size: $fs--1
+
+
+
+
 </style>

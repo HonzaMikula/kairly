@@ -44,7 +44,7 @@
         </newspaper-detail--description>
       </div>
 
-      <newspaper-detail--last-newspaper v-for="issue in issues">
+      <newspaper-detail--last-newspaper v-for="issue in issues" :key="issue.number">
         <Issue :issue="issue" :subscription="newspaper.subscription" />
       </newspaper-detail--last-newspaper>
 

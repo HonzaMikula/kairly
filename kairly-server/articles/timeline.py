@@ -1,15 +1,17 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+import dateutil.parser
 
 from more_itertools import peekable
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 
 from users.models import User
 from utils.decorators import ajax_login_required
-from .models import Issue, Post, Newspaper, SubscriptionToAuthor
+from .models import Issue, Post, Newspaper, Subscription, SubscriptionToAuthor
 
 
 TIMELINE_PAGE_SIZE = 6
+DAY_START_HOUR = 6
 
 
 class QueryIterator:
@@ -42,7 +44,9 @@ class TimelineItem:
 
 class TimelineStream:
 
-    def __init__(self, before, tzinfo):
+    def __init__(self, after, before, tzinfo):
+        # TODO combine after and before into single object
+        self.after = after
         self.before = before
         self.tzinfo = tzinfo
 
@@ -81,21 +85,26 @@ class NewspaperIssueItem(TimelineItem):
 
 class NewspaperIssueStream(TimelineStream):
 
-    QUERY_PAGE_SIZE = TIMELINE_PAGE_SIZE
+    # QUERY_PAGE_SIZE = TIMELINE_PAGE_SIZE
 
-    def __init__(self, user, before, tzinfo):
-        super().__init__(before, tzinfo)
-        self.user = user
+    def __init__(self, user, after, before, tzinfo):
+        super().__init__(after, before, tzinfo)
+        now = datetime.now(self.tzinfo)
+
+        self.subscriptions = list(Subscription.objects.filter(
+            user=user, renewal=True, valid_from__lte=now, valid_to__gt=now))
+
+    def __bool__(self):
+        return bool(self.subscriptions)
 
     def __iter__(self):
-        now = datetime.now(self.tzinfo)
-        newspapers = {e.id: e for e in Newspaper.objects.filter(
-            subscription__renewal=True,
-            subscription__user=self.user,
-            subscription__valid_from__lte=now,
-            subscription__valid_to__gt=now)}
-        query = Issue.objects.filter(published__lt=self.before, newspaper_id__in=newspapers.keys())
-        for issue in QueryIterator(query, self.QUERY_PAGE_SIZE):
+        newspapers = {e.id: e for e in Newspaper.objects.filter(subscription__in=self.subscriptions)}
+        query = Issue.objects.filter(
+            published__gte=self.after, published__lt=self.before,
+            newspaper_id__in=newspapers.keys()
+        )
+        # for issue in QueryIterator(query, self.QUERY_PAGE_SIZE):
+        for issue in query:
             yield NewspaperIssueItem(issue, newspapers[issue.newspaper_id], self.tzinfo)
 
 
@@ -128,8 +137,8 @@ class AuthorStream(TimelineStream):
 
     QUERY_PAGE_SIZE = 100
 
-    def __init__(self, author, subscription, before, tzinfo):
-        super().__init__(before, tzinfo)
+    def __init__(self, author, subscription, after, before, tzinfo):
+        super().__init__(after, before, tzinfo)
         self.author = author
         self.subscription = subscription
 
@@ -169,22 +178,23 @@ class AuthorStream(TimelineStream):
 
 class AuthorsStream(TimelineStream):
 
-    def __init__(self, user, before, tzinfo):
-        super().__init__(before, tzinfo)
-        self.user = user
+    def __init__(self, user, after, before, tzinfo):
+        super().__init__(after, before, tzinfo)
+
+        now = datetime.now(self.tzinfo)
+        self.author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(
+            user=user, renewal=True, valid_from__lte=now, valid_to__gt=now)}
+
+    def __bool__(self):
+        return bool(self.author_subscriptions)
 
     def __iter__(self):
-        now = datetime.now(self.tzinfo)
-
-        # TODO this can be probably simplified after author-user merge
-        author_subscriptions = {s.id: s for s in SubscriptionToAuthor.objects.filter(
-            user=self.user, renewal=True, valid_from__lte=now, valid_to__gt=now)}
-        author_ids = [asub.author_id for asub in author_subscriptions.values()]
+        author_ids = [asub.author_id for asub in self.author_subscriptions.values()]
         authors = {u.id: u for u in User.objects.filter(id__in=author_ids)}
 
         streams = [
-            AuthorStream(authors[asub.author_id], asub, self.before, self.tzinfo)
-            for asub in author_subscriptions.values()
+            AuthorStream(authors[asub.author_id], asub, self.after, self.before, self.tzinfo)
+            for asub in self.author_subscriptions.values()
         ]
         yield from TimelineStream.merge(*streams)
 
@@ -195,29 +205,63 @@ def timeline(request):
     # It means that timeline for same user may differ when user is in different
     # timezone.
     tzinfo = request.user.tzinfo
+    now = datetime.now(tzinfo)
 
-    try:
-        ts = int(request.GET.get('cursor'))
-        before = datetime.fromtimestamp(ts, tzinfo)
-    except (ValueError, TypeError):
-        before = datetime.now(tzinfo)
+    date_str = request.GET.get('date')
+    if date_str:
+        d = dateutil.parser.parse(date_str).date()
+    else:
+        d = now.date()
+        if now.hour < DAY_START_HOUR:
+            d -= timedelta(days=1)
+
+    # use now.replace to preserve tzinfo
+    start_dt = now.replace(year=d.year, month=d.month, day=d.day,
+                           hour=0, minute=0, second=0, microsecond=0)
+    end_dt = start_dt + timedelta(days=1)
+
+    if start_dt > now:
+        return HttpResponseBadRequest("Invalid date.")
+
+    recent_day = now < end_dt + timedelta(hours=DAY_START_HOUR)
+
+    links = {
+        'prev': str(d - timedelta(days=1))
+    }
+
+    if not recent_day:
+        links['next'] = str(d + timedelta(days=1))
+
+    streams = [
+        NewspaperIssueStream(request.user, start_dt, end_dt, tzinfo),
+        AuthorsStream(request.user, start_dt, end_dt, tzinfo)
+    ]
+
+    if not any(streams):
+        # no subscription exists
+        return HttpResponse(status=204)
 
     issues = []
-    stop_on_next = None
-    timeline_stream = TimelineStream.merge(
-        NewspaperIssueStream(request.user, before, tzinfo),
-        AuthorsStream(request.user, before, tzinfo)
-    )
+    timeline_stream = TimelineStream.merge(*streams)
+
     for item in timeline_stream:
-        if stop_on_next and item.published != stop_on_next:
+        if item.published < start_dt:
             break
         issues.append(item.json)
-        if len(issues) >= TIMELINE_PAGE_SIZE:
-            # include all other issues with same published time
-            # this is requeire to make cursor working
-            stop_on_next = item.published
+
+    # stop_on_next = None
+    # for item in timeline_stream:
+    #     if stop_on_next and item.published != stop_on_next:
+    #         break
+    #     issues.append(item.json)
+    #     if len(issues) >= TIMELINE_PAGE_SIZE:
+    #         # include all other issues with same published time
+    #         # this is requeire to make cursor working
+    #         stop_on_next = item.published
 
     return JsonResponse({
+        'date': str(d),
         'issues': issues,
-        'cursor': stop_on_next.timestamp() if stop_on_next else None
+        'links': links,
+        # 'cursor': stop_on_next.timestamp() if stop_on_next else None
     })

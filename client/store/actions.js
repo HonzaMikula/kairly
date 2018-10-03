@@ -25,21 +25,21 @@ export async function getSubscriptions({ commit, state }) {
   return subscriptions
 }
 
-export async function loadTimeline({ commit, state }) {
-  if (state.timeline.loading) {
-    // TODO wait for loading timeline ?
-    return []
+export async function loadTimeline({ commit, state }, date) {
+
+  if (state.timeline[date]) {
+    return date
   }
 
-  commit('timelineRequested')
-  //try {
-  const { cursor } = state.timeline
-  const timeline = await this.$axios.$get('/timeline', {params: {cursor}})
-  commit('timelineReceived', timeline)
-  return timeline
-  // } catch (err) {
-  //   onError(err, commit)
-  // }
+  const { status, data } = await this.$axios.get('/timeline', {params: {date}})
+
+  if (status === 204) {
+    commit('timelineHasNoActiveSubscriptions')
+    return null
+  }
+
+  commit('timelineReceived', data)
+  return data.date
 }
 
 export const invalidateTimeline = ({ commit }) => {

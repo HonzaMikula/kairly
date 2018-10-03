@@ -87,6 +87,15 @@ module.exports = {
         // tokenType: 'bearer',
       }
     }
-  }
+  },
 
+  router: {
+    extendRoutes (routes, resolve) {
+      routes.unshift({
+        name: 'timeline-date',
+        path: '/:date(\\d{4}-\\d{2}-\\d{2})',
+        component: resolve(__dirname, 'pages/index.vue')
+      })
+    }
+  }
 }
