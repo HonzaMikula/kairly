@@ -13,12 +13,12 @@ const createStore = () => {
       backlog: null,
       newspapers: {},
       authors: {},
-      timeline: {
-        issues: null, //null - not loaded, [] - loaded but empty
-        cursor: null,
-        loading: false,
-        expandedIssues: {}
-      },
+      // timeline: {
+      //   issues: null, //null - not loaded, [] - loaded but empty
+      //   cursor: null,
+      //   loading: false,
+      //   expandedIssues: {}
+      // },
       messages: {
         error: null,
         success: null,
@@ -63,27 +63,20 @@ const createStore = () => {
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
       },
-      addNewspaperSubscription(state, {fullName}) {
+      newspaperSubscription(state, {subscription}) {
         if (state.subscriptions) {
-          Vue.set(state.subscriptions.newspapers, fullName, true)
+          state.subscriptions = {
+            ...state.subscriptions,
+            newspapers: {...state.subscriptions.newspapers, ...subscription}
+          }
         }
       },
-      removeNewspaperSubscription(state, {fullName}) {
+      authorSubscription(state, { subscription }) {
         if (state.subscriptions) {
-          Vue.delete(state.subscriptions.newspapers, fullName)
-        }
-      },
-      addAuthorSubscription(state, { author, periodicity }) {
-        if (state.subscriptions) {
-          Vue.set(state.subscriptions.authors, author.id, {
-            author,
-            periodicity
-          })
-        }
-      },
-      removeAuthorSubscription(state, { author }) {
-        if (state.subscriptions) {
-          Vue.delete(state.subscriptions.authors, author.id)
+          state.subscriptions = {
+            ...state.subscriptions,
+            authors: {...state.subscriptions.authors, ...subscription}
+          }
         }
       },
       appendOwnedNewspaper(state, { newspaper }) {
@@ -105,22 +98,22 @@ const createStore = () => {
       newspaper(state, { newspaper }) {
         state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
       },
-      timelineRequested(state) {
-        state.timeline.loading = true
-      },
-      timelineReceived(state, { issues, cursor }) {
-        if (state.timeline.issues === null) {
-          state.timeline.issues = []
-        }
-        issues.forEach(issue => state.timeline.issues.push(issue))
-        state.timeline.cursor = cursor
-        state.timeline.loading = false
-      },
+      // timelineRequested(state) {
+      //   state.timeline.loading = true
+      // },
+      // timelineReceived(state, { issues, cursor }) {
+      //   if (state.timeline.issues === null) {
+      //     state.timeline.issues = []
+      //   }
+      //   issues.forEach(issue => state.timeline.issues.push(issue))
+      //   state.timeline.cursor = cursor
+      //   state.timeline.loading = false
+      // },
       invalidateTimeline(state) {
-        state.timeline.issues = null
-        state.timeline.cursor = null
-        state.timeline.loading = false
-        state.timeline.expandedIssues = {}
+        // state.timeline.issues = null
+        // state.timeline.cursor = null
+        // state.timeline.loading = false
+        // state.timeline.expandedIssues = {}
       },
       expandIssue(state, { issueId }) {
         state.timeline.expandedIssues = {
@@ -145,8 +138,7 @@ const createStore = () => {
         if (state.subscriptions === null) {
           return null
         }
-        const subscription = state.subscriptions.authors[author.id]
-        return subscription ? subscription.periodicity : null
+        return state.subscriptions.authors[author.id]
       }
     },
 
