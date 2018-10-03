@@ -100,7 +100,7 @@ const createStore = () => {
       timelineReceived(state, { date, issues, links }) {
         Vue.set(state.timeline, date, { issues, links })
       },
-      timelineHasNoActiveSubscriptions() {
+      timelineHasNoActiveSubscriptions(state) {
         state.timelineHasNoActiveSubscriptions = true
       },
       invalidateTimeline(state) {

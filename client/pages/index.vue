@@ -74,7 +74,7 @@ export default {
     }),
 
     loading() {
-      return !this.date
+      return !this.noSubscriptions && !this.date
     },
 
     timeSlots() {
@@ -110,7 +110,7 @@ export default {
   },
 
   async created() {
-    if (process.client) {
+    if (process.client && !this.noSubscriptions) {
       // TODO load timeline and backlog in parallel
 
       const { date } = this.$route.params
