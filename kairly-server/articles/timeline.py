@@ -232,6 +232,8 @@ def timeline(request):
     if not recent_day:
         links['next'] = str(d + timedelta(days=1))
 
+    end_dt = min(now, end_dt)
+
     streams = [
         NewspaperIssueStream(request.user, start_dt, end_dt, tzinfo),
         AuthorsStream(request.user, start_dt, end_dt, tzinfo)
