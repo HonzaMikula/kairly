@@ -56,7 +56,7 @@ export default {
     },
 
     currentAnchor() {
-      return `time-slot-${this.timeTitle.replace(':', '-')}`
+      return `time_${this.timeTitle}`
     },
 
     anchors() {
@@ -72,7 +72,7 @@ export default {
         else if (h >= 9) { title = 'Morning' }
         else { title = 'Early morning' }
         return {
-          link: '#time-slot-' + dt.format("H-mm"),
+          link: '#time_' + dt.format("H:mm"),
           title: title + ' (' + dt.format("H:mm") + ')'
         }
       })

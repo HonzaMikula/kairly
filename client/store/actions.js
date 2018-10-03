@@ -27,8 +27,17 @@ export async function getSubscriptions({ commit, state }) {
 
 export async function loadTimeline({ commit, state }, date) {
 
-  if (state.timeline[date]) {
-    return date
+  let cacheKey = date
+  // TODO check not only valid to but also change of hour or too old timeline
+  // but this is not important now
+  if (!cacheKey && state.today && state.today.validTo > (Date.now() / 1000)) {
+    // if today is requested (no date arg) then lookup to helper structure which
+    // keeps current value of "today" (mind that "today" may not match real today)
+    cacheKey = state.today.date
+  }
+
+  if (state.timeline[cacheKey]) {
+    return cacheKey
   }
 
   const { status, data } = await this.$axios.get('/timeline', {params: {date}})
@@ -38,6 +47,9 @@ export async function loadTimeline({ commit, state }, date) {
     return null
   }
 
+  if (!date) {
+    commit('today', {date: data.date, validTo: data.validTo})
+  }
   commit('timelineReceived', data)
   return data.date
 }

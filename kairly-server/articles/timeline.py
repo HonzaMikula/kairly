@@ -229,7 +229,10 @@ def timeline(request):
         'prev': str(d - timedelta(days=1))
     }
 
-    if not recent_day:
+    if recent_day:
+        valid_to = end_dt.timestamp()
+    else:
+        valid_to = None
         links['next'] = str(d + timedelta(days=1))
 
     end_dt = min(now, end_dt)
@@ -251,19 +254,9 @@ def timeline(request):
             break
         issues.append(item.json)
 
-    # stop_on_next = None
-    # for item in timeline_stream:
-    #     if stop_on_next and item.published != stop_on_next:
-    #         break
-    #     issues.append(item.json)
-    #     if len(issues) >= TIMELINE_PAGE_SIZE:
-    #         # include all other issues with same published time
-    #         # this is requeire to make cursor working
-    #         stop_on_next = item.published
-
     return JsonResponse({
         'date': str(d),
+        'validTo': valid_to,
         'issues': issues,
         'links': links,
-        # 'cursor': stop_on_next.timestamp() if stop_on_next else None
     })

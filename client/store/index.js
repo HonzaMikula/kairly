@@ -13,6 +13,7 @@ const createStore = () => {
       backlog: null,
       newspapers: {},
       authors: {},
+      today: null,
       timelineHasNoActiveSubscriptions: false,
       timelineExpandedIssues: {},
       timeline: {
@@ -102,6 +103,9 @@ const createStore = () => {
       },
       timelineHasNoActiveSubscriptions(state) {
         state.timelineHasNoActiveSubscriptions = true
+      },
+      today(state, value) {
+        state.today = value
       },
       invalidateTimeline(state) {
         state.timelineHasNoActiveSubscriptions = false
