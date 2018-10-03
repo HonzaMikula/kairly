@@ -48,16 +48,10 @@
           <li class="divider"></li>
           <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>Manage Newspapers</span></nuxt-link></li>
           <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>Explore</span></nuxt-link></li>
-          <li><a href="" v-on:click.prevent="isTutorialOpen=true">Help</a></li>
           <li><a href="" v-on:click.prevent="logout">Logout</a></li>
         </ul>
       </nav>
     </div>
-
-    <portal to="modal" v-if="isTutorialOpen">
-      <tutorial-modal :closeModal="closeTutorial"></tutorial-modal>
-    </portal>
-
   </header>
 </template>
 
@@ -66,14 +60,8 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapState } from 'vuex'
 import store from '@/store'
 
-import TutorialModal from '@/components/modals/Tutorial'
-
 export default {
   name: 'AppHeader',
-
-  components: {
-    TutorialModal
-  },
 
   directives: {
     onClickaway
@@ -83,8 +71,7 @@ export default {
     return {
       username: null,
       password: null,
-      isDropDownMenuOpen: false,
-      isTutorialOpen: false
+      isDropDownMenuOpen: false
     }
   },
 
@@ -96,10 +83,6 @@ export default {
     async logout() {
       await this.$auth.logout()
       this.$router.push("/homepage")
-    },
-
-    closeTutorial() {
-      this.isTutorialOpen = false
     }
   }
 }

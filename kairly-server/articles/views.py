@@ -121,16 +121,13 @@ class NewspaperView(View):
 
         issueNo = request.GET.get('issue')
         if issueNo:
-            issue = get_object_or_404(Issue, newspaper=newspaper, number=int(issueNo))
+            issues = [get_object_or_404(Issue, newspaper=newspaper, number=int(issueNo))]
         else:
-            try:
-                issue = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[0]
-            except IndexError:
-                issue = None
+            issues = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[:3]
 
         return JsonResponse({
             'newspaper': newspaper.to_json(),
-            'issue': issue.to_json(anonymous=request.user.is_anonymous) if issue else None,
+            'issues': [issue.to_json(anonymous=request.user.is_anonymous) for issue in issues]
         })
 
     @ajax_login_required

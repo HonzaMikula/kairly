@@ -1,18 +1,40 @@
 <template>
-  <div>
+  <div class="myauthors-view">
     <template>
       <my-authors--empty
-        v-if="authors.length === 0">
+        v-if="authors['3x_per_day'].length === 0 && authors['daily'].length === 0 && authors['weekly'].length === 0">
         <h1>No authors</h1>
         <p>You haven't subscribe to any author yet. On Explore page you can find authors you might like.</p>
         <nuxt-link to="/explore">Explore authors</nuxt-link>
       </my-authors--empty>
 
-      <AuthorWidget
-        v-for="author in authors"
-        :key="author.slug"
-        :author="author"
-      />
+      <template v-if="authors['3x_per_day'].length">
+        <h2>3x per day</h2>
+        <AuthorWidget
+          v-for="author in authors['3x_per_day']"
+          :key="author.slug"
+          :author="author"
+        />
+      </template>
+
+      <template v-if="authors['daily'].length">
+        <h2>Daily</h2>
+        <AuthorWidget
+          v-for="author in authors['daily']"
+          :key="author.slug"
+          :author="author"
+        />
+      </template>
+
+      <template v-if="authors['weekly'].length">
+        <h2>Weekly</h2>
+        <AuthorWidget
+          v-for="author in authors['weekly']"
+          :key="author.slug"
+          :author="author"
+        />
+      </template>
+
     </template>
   </div>
 </template>
@@ -36,10 +58,43 @@ export default {
   computed: mapState({
     authors: state => {
       const subscriptions = state.subscriptions.authors
-      const ids = Object.keys(subscriptions)
-      const authors = ids.map(id => subscriptions[id].author)
-      authors.sort(({name: a}, {name: b}) => a < b ? -1 : (a > b ? 1 : 0))
-      return authors
+      const sections = {
+        '3x_per_day': [],
+        'daily': [],
+        'weekly': []
+      }
+      Object.keys(subscriptions).forEach(id => {
+        const subscription = subscriptions[id]
+        sections[subscription.periodicity.frequency].push(subscription)
+      })
+      sections['3x_per_day'].sort((a, b) => {
+        const aName = a.author.name, bName = b.author.name
+        return aName < bName ? -1 : (aName > bName ? 1 : 0)
+      })
+      sections['daily'].sort((a, b) => {
+        const aTime = a.periodicity.time, bTime = b.periodicity.time
+        const aName = a.author.name, bName = b.author.name
+        if (aTime < bTime) return -1
+        if (aTime > bTime) return 1
+        return aName < bName ? -1 : (aName > bName ? 1 : 0)
+      })
+      sections['weekly'].sort((a, b) => {
+        const aDow = a.periodicity.dow === 0 ? 7 : a.periodicity.dow
+        const bDow = b.periodicity.dow === 0 ? 7 : b.periodicity.dow
+        const aTime = a.periodicity.time, bTime = b.periodicity.time
+        const aName = a.author.name, bName = b.author.name
+        if (aDow < bDow) return -1
+        if (aDow > bDow) return 1
+        if (aTime < bTime) return -1
+        if (aTime > bTime) return 1
+        return aName < bName ? -1 : (aName > bName ? 1 : 0)
+      })
+
+      sections['3x_per_day'] = sections['3x_per_day'].map(s => s.author)
+      sections['daily'] = sections['daily'].map(s => s.author)
+      sections['weekly'] = sections['weekly'].map(s => s.author)
+
+      return sections
     }
   }),
 
@@ -50,6 +105,14 @@ export default {
 </script>
 
 <style lang="sass">
+.myauthors-view
+  h2
+    margin: $baseline 0 $baseline / 2
+
+    font-family: $ff-sans
+    font-size: $fs-2
+    font-weight: 600
+
 my-newspapers-view author-widget-view
   width: 576px
 

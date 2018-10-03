@@ -75,7 +75,7 @@
           </div>
 
           <p>
-            In Kairly readers are subsribing newspapers and paying for them.
+            In Kairly readers are subscribing newspapers and paying for them.
             Those money are then shared between editors and authors.
           </p>
         </div>

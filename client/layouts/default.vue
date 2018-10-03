@@ -26,7 +26,6 @@ export default {
   },
 
   computed: mapState({
-    showTutorial: state => state.showTutorial,
     errorMessage: state => state.messages.error,
     successMessage: state => state.messages.success,
     loggedIn: state => state.auth.loggedIn
