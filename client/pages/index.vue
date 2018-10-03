@@ -13,29 +13,31 @@
               :subscription="true"
               :expanded="expandedIssues[issue.id]" />
           </template>
-
-          <div class="timeline--pagination">
-            <p>That's it. You read the entire day.</p>
-
-            <nuxt-link
-              :to="{name: 'timeline-date', params: {date: links.prev}}"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="links.prev"
-            >Previous day</nuxt-link>
-
-            <nuxt-link
-              v-if="links.next"
-              :to="{name: 'timeline-date', params: {date: links.next}}"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="links.next"
-            >Next day</nuxt-link>
-
-          </div>
         </template>
 
         <template v-else-if="!loading">
-          Nothing to read for {{ date }}.
+          <div class="timeline--empty">
+            No articles or tweets.
+          </div>
         </template>
+
+        <div class="timeline--pagination" v-if="!loading">
+          <p>That's it. You read the entire day.</p>
+
+          <nuxt-link
+            :to="{name: 'timeline-date', params: {date: links.prev}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="links.prev"
+          >Previous day</nuxt-link>
+
+          <nuxt-link
+            v-if="links.next"
+            :to="{name: 'timeline-date', params: {date: links.next}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="links.next"
+          >Next day</nuxt-link>
+
+        </div>
       </template>
 
       <loading-spinner v-if="loading"></loading-spinner>
@@ -133,6 +135,17 @@ timeline-view
   @media (max-width: $mobile)
     padding: $baseline 0
 
+//- Empty timeline
+.timeline--empty
+  display: table
+  margin: $baseline*2 auto
+  padding: $baseline $baseline*2
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
 
 //- Pagination
 .timeline--pagination
@@ -155,17 +168,25 @@ timeline-view
     display: inline-block
     border-radius: $baseline
     height: $baseline * 1.5
-    padding: 0 $baseline
     margin: 0 $baseline/2
+    width: 140px
 
     background: $c-base
     color: #fff
 
     line-height: $baseline * 1.5
+    text-align: center
 
     &:hover,
     &:focus
       background: darken($c-base, 10%)
+
+    @media (max-width: $mobile)
+      margin: 0 $baseline/4
+      width: 120px
+
+      font-size: $fs--1
+
 
 
 
