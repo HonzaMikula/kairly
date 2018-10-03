@@ -18,16 +18,16 @@
             <p>That's it. You read the entire day.</p>
 
             <nuxt-link
-              :to="{name: 'timeline-date', params: {date: prevDay}}"
+              :to="{name: 'timeline-date', params: {date: links.prev}}"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="prevDay"
+              :title="links.prev"
             >Previous day</nuxt-link>
 
             <nuxt-link
-              v-if="nextDay"
-              :to="{name: 'timeline-date', params: {date: nextDay}}"
+              v-if="links.next"
+              :to="{name: 'timeline-date', params: {date: links.next}}"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="nextDay"
+              :title="links.next"
             >Next day</nuxt-link>
 
           </div>
@@ -63,47 +63,26 @@ export default {
 
   data() {
     return {
-      noSubscriptions: false,
-      loading: true,
-      timeSlots: [],
-      date: null,
-      prevDay: null,
-      nextDay: null
+      date: null // date returned from timeline request
     }
   },
 
   computed: {
-    // loadDisabled() {
-    //   return this.loading || !this.hasMore
-    // },
-
     ...mapState({
-      //issues: state => state.timeline.issues || [] ,
-      //loading: state => process.server || state.timeline.loading,
-      // hasMore: state => !!state.timeline.cursor,
+      noSubscriptions: state => state.timelineHasNoActiveSubscriptions,
       expandedIssues: state => state.timelineExpandedIssues
-    })
-  },
+    }),
 
-  //methods: mapActions(['loadTimeline']),
+    loading() {
+      return !this.date
+    },
 
-  methods: {
-    async loadTimeline(date) {
-      this.loading = true
+    timeSlots() {
+      if (this.loading) { return [] }
 
-      const response = await this.$axios.get('/timeline', {params: {date}})
-
-      if (response.status === 204) {
-        this.noSubscriptions = true
-        this.loading = false
-        return
-      }
-
-      date = response.data.date
-      const { issues, links } = response.data
-
-      let slot = null
+      const { issues } = this.$store.state.timeline[this.date]
       const timeSlots = []
+      let slot = null
 
       issues.forEach(issue => {
         if (slot === null || slot.time !== issue.time) {
@@ -113,11 +92,13 @@ export default {
         slot.issues.push(issue)
       })
 
-      this.timeSlots = timeSlots
-      this.date = date
-      this.prevDay = links.prev
-      this.nextDay = links.next
-      this.loading = false
+      return timeSlots
+    },
+
+    links() {
+      if (this.loading) { return {} }
+
+      return this.$store.state.timeline[this.date].links
     }
   },
 
@@ -132,13 +113,9 @@ export default {
     if (process.client) {
       // TODO load timeline and backlog in parallel
 
-      //const { timeline } = this.$store.state
-      // if (timeline.issues === null) {
-      //   this.$store.dispatch('loadTimeline')
-      // }
-
       const { date } = this.$route.params
-      await this.loadTimeline(date)
+
+      this.date = await this.$store.dispatch('loadTimeline', date)
 
       this.$store.dispatch('getUserBacklog')
     }

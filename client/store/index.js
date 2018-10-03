@@ -13,11 +13,10 @@ const createStore = () => {
       backlog: null,
       newspapers: {},
       authors: {},
+      timelineHasNoActiveSubscriptions: false,
       timelineExpandedIssues: {},
       timeline: {
-        // issues: null, //null - not loaded, [] - loaded but empty
-        // cursor: null,
-        // loading: false,
+        // of date : [ issues ]
       },
       messages: {
         error: null,
@@ -98,22 +97,15 @@ const createStore = () => {
       newspaper(state, { newspaper }) {
         state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
       },
-      // timelineRequested(state) {
-      //   state.timeline.loading = true
-      // },
-      // timelineReceived(state, { issues, cursor }) {
-      //   if (state.timeline.issues === null) {
-      //     state.timeline.issues = []
-      //   }
-      //   issues.forEach(issue => state.timeline.issues.push(issue))
-      //   state.timeline.cursor = cursor
-      //   state.timeline.loading = false
-      // },
+      timelineReceived(state, { date, issues, links }) {
+        Vue.set(state.timeline, date, { issues, links })
+      },
+      timelineHasNoActiveSubscriptions() {
+        state.timelineHasNoActiveSubscriptions = true
+      },
       invalidateTimeline(state) {
-        // state.timeline.issues = null
-        // state.timeline.cursor = null
-        // state.timeline.loading = false
-        // state.timeline.expandedIssues = {}
+        state.timelineHasNoActiveSubscriptions = false
+        state.timeline = {}
       },
       expandIssue(state, { issueId }) {
         state.timelineExpandedIssues = {
