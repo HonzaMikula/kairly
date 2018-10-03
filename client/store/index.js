@@ -13,12 +13,12 @@ const createStore = () => {
       backlog: null,
       newspapers: {},
       authors: {},
-      // timeline: {
-      //   issues: null, //null - not loaded, [] - loaded but empty
-      //   cursor: null,
-      //   loading: false,
-      //   expandedIssues: {}
-      // },
+      timelineExpandedIssues: {},
+      timeline: {
+        // issues: null, //null - not loaded, [] - loaded but empty
+        // cursor: null,
+        // loading: false,
+      },
       messages: {
         error: null,
         success: null,
@@ -116,8 +116,8 @@ const createStore = () => {
         // state.timeline.expandedIssues = {}
       },
       expandIssue(state, { issueId }) {
-        state.timeline.expandedIssues = {
-          ...state.timeline.expandedIssues,
+        state.timelineExpandedIssues = {
+          ...state.timelineExpandedIssues,
           [issueId]: true
         }
       },

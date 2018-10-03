@@ -29,7 +29,7 @@
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="nextDay"
             >Next day</nuxt-link>
-            
+
           </div>
         </template>
 
@@ -68,8 +68,7 @@ export default {
       timeSlots: [],
       date: null,
       prevDay: null,
-      nextDay: null,
-      expandedIssues: {}
+      nextDay: null
     }
   },
 
@@ -82,7 +81,7 @@ export default {
       //issues: state => state.timeline.issues || [] ,
       //loading: state => process.server || state.timeline.loading,
       // hasMore: state => !!state.timeline.cursor,
-      //expandedIssues: state => state.timeline.expandedIssues
+      expandedIssues: state => state.timelineExpandedIssues
     })
   },
 
