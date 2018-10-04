@@ -25,7 +25,7 @@
           <h1>{{post.content.title}}</h1>
         </post-detail--title>
 
-        <post-detail--content v-html="post.content.perex"></post-detail--content>
+        <post-detail--content v-html="post.content.perex" />
 
         <post-detail--continue-reading id="continue" v-if="post.content.content">
           continue reading
@@ -41,7 +41,7 @@
         </div>
 
         <div v-else>
-          <post-detail--content v-html="post.content.content"></post-detail--content>
+          <post-detail--content v-html="post.content.content" />
 
           <post-detail--footer>
             <consider-post :post="post" :showText="true" />
@@ -521,8 +521,9 @@ post-detail--perex
 //- Post Footer
 post-detail--footer
   display: block
-  padding-bottom: $baseline / 2
+  padding-bottom: $baseline / 4
   margin-bottom: $baseline / 2
+  margin-top: $baseline
 
   border-bottom: 1px solid #eee
 
@@ -532,6 +533,7 @@ post-detail--footer
     display: inline-block
     height: $baseline * 1.25
     margin-right: $baseline / 2
+    margin-bottom: $baseline / 4
     padding: 0 $baseline/4
 
     background: #eee
@@ -584,6 +586,12 @@ post-detail--author
   grid-template-rows: $baseline auto
   grid-gap: $baseline/4 $baseline/2
 
+  @media (max-width: $mobile)
+    grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-subscription" "post-detail-author-image post-detail-author-bio"
+    grid-template-columns: $baseline*3 1fr
+    grid-template-rows: auto auto
+
+
   //- picture
   picture
     grid-area: post-detail-author-image
@@ -609,7 +617,6 @@ post-detail--author
   p
     grid-area: post-detail-author-bio
 
-    font-size: $fs--1
     line-height: 1.58
 
 //- Author subscription
@@ -625,5 +632,9 @@ post-detail--author--subscription
     font-family: $ff-sans
     font-size: $fs--1
     line-height: $baseline
+
+  @media (max-width: $mobile)
+    .follow-author
+      left: $baseline * 2
 
 </style>

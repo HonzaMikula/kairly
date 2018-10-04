@@ -184,16 +184,26 @@ issue-detail-view
 
 .issue--footer
   display: grid
+  box-sizing: border-box
   grid-template-areas: "issue-footer-picture issue-footer-title issue-footer-subscription" "issue-footer-picture issue-footer-description issue-footer-subscription"
   grid-template-columns: $baseline*7 1fr auto
   grid-template-rows: $baseline auto
   grid-gap: $baseline/4 $baseline/2
-
   margin: $baseline*2 auto 0 auto
   max-width: 900px
-  padding: $baseline/2 0 $baseline 0
+  padding: $baseline/2 $baseline/2 $baseline $baseline/2
 
   border-top: 1px solid #eee
+
+  @media (max-width: $mobile)
+    grid-template-areas: "issue-footer-picture issue-footer-title" "issue-footer-picture issue-footer-description" "issue-footer-picture issue-footer-subscription"
+    grid-template-columns: $baseline*7 1fr
+    grid-template-rows: auto auto auto
+    padding: $baseline/4
+
+  @media (max-width: 480px)
+    grid-template-areas: "issue-footer-picture" "issue-footer-title" "issue-footer-description" "issue-footer-subscription"
+    grid-template-columns: 1fr
 
   //- picture
   picture
@@ -213,6 +223,9 @@ issue-detail-view
   //- description
   .issue--footer--description
     grid-area: issue-footer-description
+
+    p
+      line-height: 1.42
 
     ul
       margin-bottom: $baseline / 4
