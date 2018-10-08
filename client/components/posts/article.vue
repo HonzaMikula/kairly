@@ -1,7 +1,7 @@
 <template>
   <post :post="post">
     <timeline-post--article>
-      <h2><nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</nuxt-link></h2>
+      <h2><nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link></h2>
 
       <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
@@ -12,7 +12,7 @@
           </template>
           <template v-else>
             <div v-if="isSubscribed">
-              <nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }, hash: '#continue'}">Continue reading</nuxt-link>
+              <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }, hash: '#continue'}">Continue reading</nuxt-link>
             </div>
             <div v-else>
               Subscribe newspaper to continue reading

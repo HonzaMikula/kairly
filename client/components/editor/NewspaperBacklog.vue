@@ -103,7 +103,7 @@
           </template>
 
           <template v-else>
-            <h2><nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.content.title }}</nuxt-link></h2>
+            <h2><nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link></h2>
           </template>
         </div>
       </newspaper-backlog--backlog>

@@ -195,13 +195,13 @@ export default {
   },
 
   async asyncData({ app, store, params, error }) {
-    const { postId } = params
+    const { author, post: postSlug } = params
     try {
       if (store.state.auth.loggedIn) {
         await store.dispatch('getSubscriptions')
       }
 
-      const { post } = await app.$axios.$get(`/post/${postId}`)
+      const { post } = await app.$axios.$get(`/post/${author}/${postSlug}`)
       return { post }
     } catch (err) {
       error(errorToParams(err))

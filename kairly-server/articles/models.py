@@ -1,6 +1,8 @@
 import json
 import math
-from datetime import timezone
+from datetime import datetime, timezone
+import re
+import hashlib
 
 from bs4 import BeautifulSoup
 import pytz
@@ -12,6 +14,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import now as timezone_now
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
 
 from .period import PeriodMixin, periodicity_to_json
 
@@ -45,6 +48,7 @@ class Post(models.Model):
     class Meta:
         ordering = ('-published',)
 
+    slug = models.SlugField(_('Slug'), max_length=190, null=True)
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
     published = models.DateTimeField(_('Published'), default=timezone_now, db_index=True)
     draft = models.BooleanField(_('Draft'), default=False)
@@ -69,6 +73,21 @@ class Post(models.Model):
             for topic in self.topics.all():
                 if topic.author_id != self.author_id:
                     raise ValueError("Topic auhtor doesn't match author")
+
+        if not self.slug:
+            slug_words = []
+            for part in re.split(r'[\?\.|\-]', self.title):
+                words = part.split()
+                if not slug_words or len(slug_words) < 5:
+                    slug_words.extend(words)
+            slug = slugify(' '.join(slug_words[:9])[:64])
+
+            h = hashlib.sha1()
+            h.update(datetime.now().isoformat().encode())
+            h.update(self.title.encode())
+            slug += '--' + h.hexdigest()[:9]
+
+            self.slug = slug
         return super().save(*args, **kwargs)
 
     @property
@@ -90,7 +109,7 @@ class Post(models.Model):
 
     def to_json(self, short=False, anonymous=False, tzinfo=timezone.utc):
         result = {
-            'id': self.id,
+            'slug': self.slug,
             "author": self.author.to_json(),
             "source": self.source,
             "type": self.kind,

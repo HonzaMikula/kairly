@@ -17,7 +17,7 @@
 
     <ul>
       <li v-for="post in issue.posts" :key="post.id">
-        <nuxt-link :to="{ name: 'post-postId', params: { postId: post.id }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</nuxt-link>
+        <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</nuxt-link>
       </li>
     </ul>
 

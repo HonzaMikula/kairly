@@ -96,6 +96,9 @@ module.exports = {
         path: '/:date(\\d{4}-\\d{2}-\\d{2})',
         component: resolve(__dirname, 'pages/index.vue')
       })
+
+      const postRoute = routes.find(r => r.name === 'author-post')
+      postRoute.path =  '/:author/:post([-\\w]*\\-\\-[0-9a-f]{9})'
     }
   }
 }

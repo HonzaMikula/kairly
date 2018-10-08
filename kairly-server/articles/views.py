@@ -393,8 +393,8 @@ class AuthorSubscriptionView(View):
             return HttpResponseNotFound()
 
 
-def post(request, post_id):
-    post = get_object_or_404(Post, id=post_id, draft=False, published__lt=timezone.now())
+def post(request, username, post_slug):
+    post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False, published__lt=timezone.now())
     # Doesn't work, post can be part of multiple issues or just related to author
     # newspaper = Issue.objects.get(posts=post).newspaper
     # is_subscribed = Subscription.objects.filter(user=request.user, newspaper=newspaper).count() > 0
