@@ -1,15 +1,15 @@
 <template>
   <div class="timeline-navigation">
     <button
-      @click="showJumpMenu = !showJumpMenu"
+      @click="isMenuOpen = !isMenuOpen"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       title="Jump to different time"
       :id="currentAnchor"
     >{{ dayTitle }} – {{ timeTitle }}</button>
 
     <div
-      v-if="showJumpMenu"
-      v-on-clickaway="() => showJumpMenu = false"
+      v-if="isMenuOpen"
+      v-on-clickaway="hideJumpMenu"
       class="timeline-navigation--menu">
       <header>
         <h3>Jump to</h3>
@@ -18,7 +18,7 @@
       <section>
         <ul>
           <li v-for="anchor in anchors" :key="anchor.link">
-            <a :href="anchor.link">{{ anchor.title }}</a>
+            <a :href="anchor.link" @click="hideJumpMenu">{{ anchor.title }}</a>
           </li>
         </ul>
       </section>
@@ -40,6 +40,12 @@ export default {
 
   directives: {
     onClickaway
+  },
+
+  data() {
+    return {
+      isMenuOpen: false
+    }
   },
 
   computed: {
@@ -79,11 +85,11 @@ export default {
     }
   },
 
-  data() {
-    return {
-      showJumpMenu: false
+  methods: {
+    hideJumpMenu() {
+      this.isMenuOpen = false
     }
-  },
+  }
 }
 </script>
 
