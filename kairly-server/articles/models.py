@@ -109,11 +109,12 @@ class Post(models.Model):
 
     def to_json(self, short=False, anonymous=False, tzinfo=timezone.utc):
         result = {
+            'id': self.id,  # id is still used by backlog endpoints, TODO remove this
             'slug': self.slug,
-            "author": self.author.to_json(),
-            "source": self.source,
-            "type": self.kind,
-            "time": str(self.published.astimezone(tzinfo))
+            'author': self.author.to_json(),
+            'source': self.source,
+            'type': self.kind,
+            'time': str(self.published.astimezone(tzinfo))
         }
         if self.kind == Post.PICTURE:
             result['content'] = {
