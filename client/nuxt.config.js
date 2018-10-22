@@ -32,6 +32,7 @@ module.exports = {
     {src: '~/plugins/vue-infinite-scroll', ssr: false},
     //{src: '~/plugins/vue-keep-scroll', ssr: false},
     '~/plugins/vue-moment',
+    '~/plugins/axios',
   ],
   modules: [
     '@nuxtjs/axios',
