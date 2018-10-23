@@ -4,6 +4,26 @@
       <Welcome v-if="noSubscriptions"/>
       <template v-else>
         <template v-if="timeSlots.length">
+          <div
+            v-if="links.next"
+            class="timeline--top-pagination"
+          >
+            <p>{{date | moment('dddd, MMMM Do YYYY')}}</p>
+
+            <nuxt-link
+              :to="{name: 'timeline-date', params: {date: links.prev}}"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              :title="links.prev"
+            >Previous day</nuxt-link>
+
+            <nuxt-link
+              v-if="links.next"
+              :to="{name: 'timeline-date', params: {date: links.next}}"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              :title="links.next"
+            >Next day</nuxt-link>
+          </div>
+
           <template v-for="timeSlot in timeSlots" >
             <jump-menu :datetime="timeSlot.time" :key="timeSlot.time" :timeSlots="timeSlots" />
 
@@ -187,7 +207,52 @@ timeline-view
 
       font-size: $fs--1
 
+.timeline--top-pagination
+  display: flex
+  justify-content: center
+  padding-bottom: $baseline
 
+  border-bottom: 3px solid #ddd
+
+  text-align: center
+
+  p
+    margin: 0 $baseline
+    order: 2
+
+    font-family: $ff-serif
+    font-size: $fs-2
+    line-height: $baseline * 1.5
+
+  //- buttons
+  a
+    display: inline-block
+    border-radius: $baseline
+    height: $baseline * 1.5
+    margin: 0 $baseline/2
+    width: 140px
+
+    background: $c-base
+    color: #fff
+
+    line-height: $baseline * 1.5
+    text-align: center
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
+
+    &:first-of-type
+      order: 1
+
+    &:last-of-type
+      order: 3
+
+    @media (max-width: $mobile)
+      margin: 0 $baseline/4
+      width: 120px
+
+      font-size: $fs--1
 
 
 </style>
