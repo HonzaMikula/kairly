@@ -1,11 +1,11 @@
 <template>
   <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" @click.stop class="join-us">
+    <modal-dialog role="dialog" @click.stop class="sign-in">
       <header>
         <h1>Sign in</h1>
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
-      <div>
+      <main>
         <form v-on:submit.prevent="login">
           <div>
             <label for="username">Username</label>
@@ -23,7 +23,7 @@
             Wrong login or password
           </div>
         </form>
-      </div>
+      </main>
     </modal-dialog>
   </dialog-window>
 </template>
@@ -69,8 +69,11 @@ export default {
 </script>
 
 <style lang="sass">
-modal-dialog.join-us
+modal-dialog.sign-in
   background: #eee
+
+  main
+    padding: $baseline
 
   div
     margin-bottom: $baseline / 2

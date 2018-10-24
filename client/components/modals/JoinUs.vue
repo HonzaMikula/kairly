@@ -5,7 +5,7 @@
         <h1>Are you interested in Kairly?</h1>
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
-      <div>
+      <main>
         <h3>Participate in user testing</h3>
         <p>
           We are doing 30 - 60 minutes user testing interviews over Skype (or some other communication tool).
@@ -37,7 +37,7 @@
           <a href="https://www.facebook.com/groups/276916213077456/">Join Facebook group</a>
         </p>
 
-      </div>
+      </main>
     </modal-dialog>
   </dialog-window>
 </template>
@@ -63,12 +63,12 @@ export default {
 modal-dialog.join-us
   max-width: 600px
 
-  > div
+  main
     padding: $baseline
     background: #fff
 
   h3
-    margin-top: $baseline
+    margin: $baseline 0 $baseline/2 0
     font-weight: 600
     font-size: $fs-1
 

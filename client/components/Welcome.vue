@@ -37,10 +37,10 @@
 
       <div class="welcome--tutorial">
         <ol>
-          <li>Go to <nuxt-link to="/explore">Explore</nuxt-link></li>
-          <li>Subscribe newspapers</li>
-          <li>Or authors directly and choose when you want to read them</li>
-          <li>Go on your <nuxt-link to="/"><span class="icon"></span></nuxt-link> <nuxt-link to="/">Timeline</nuxt-link></li>
+          <li><p>Go to <nuxt-link to="/explore">Explore</nuxt-link></p></li>
+          <li><p>Subscribe newspapers</p></li>
+          <li><p>Or authors directly and choose when you want to read them</p></li>
+          <li><p>Go on your <nuxt-link to="/"><span class="icon"></span></nuxt-link> <nuxt-link to="/">Timeline</nuxt-link></p></li>
         </ol>
 
         <div class="welcome--tutorial--illustration">
@@ -127,11 +127,17 @@ timeline-welcome
   > div
     display: flex
 
+    @media (max-width: $mobile)
+      flex-direction: column
+
   section
     position: relative
 
     flex: 1
     margin-right: $baseline*2
+
+    @media (max-width: $mobile)
+      margin: 0 0 $baseline 0
 
     &::after
       +fa-icon()
@@ -141,6 +147,9 @@ timeline-welcome
       top: $baseline * 2
 
       content: $fa-var-arrow-right
+
+      @media (max-width: $mobile)
+        display: none
 
     &:last-of-type
       margin-right: 0
@@ -167,14 +176,20 @@ timeline-welcome
 
   counter-reset: step
 
+  @media (max-width: $mobile)
+    flex-direction: column
+
   ol
     flex: 1
 
   ol li
+    display: flex
+    align-items: center
     margin-bottom: $baseline / 2
 
     &::before
       display: inline-block
+      flex: 0 0 $baseline * 1.5
       border-radius: 100%
       height: $baseline * 1.5
       margin-right: $baseline / 2
