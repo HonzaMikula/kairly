@@ -67,6 +67,13 @@ author-subscription-view
 
   font-size: $fs--1
 
+  @media (max-width: $mobile)
+    .follow-author
+      margin-left: 0
+      left: auto
+      right: 0
+
+
   a
     color: #555
 

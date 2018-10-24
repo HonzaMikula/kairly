@@ -109,6 +109,18 @@ author-widget-view
       font-family: $ff-sans !important
       text-align: right
 
+    //- subscription menu adjustment for mobile
+    @media (max-width: $mobile)
+      .follow-author
+        margin-left: 0
+        left: auto
+        right: 0
+
+        &::after
+          left: auto
+          right: $baseline
+
+
     //- subscribe button
     section
       position: relative
