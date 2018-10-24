@@ -85,7 +85,6 @@ timeline-welcome
 //- Welcome box
 .welcome-view
   display: block
-  margin-bottom: $baseline * 2
 
   > h1
     margin-bottom: $baseline
