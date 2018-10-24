@@ -209,6 +209,7 @@ newspaper-detail-view
   display: block
   margin: 0 auto
   max-width: 900px
+  padding-bottom: $baseline
 
 //- Header
 newspaper-detail--header
@@ -368,7 +369,6 @@ newspaper-detail--description
 
 newspaper-detail--last-newspaper
   display: block
-  padding-top: $baseline * 2
 
 newspaper-detail--empty-newspaper
   display: block
