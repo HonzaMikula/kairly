@@ -408,10 +408,10 @@ author-detail--subscribe
     +subscribed-button
 
     border-radius: $baseline * 0.5
-    height: $baseline * 1
+    height: $baseline * 1.5
     width: 140px
 
-    line-height: $baseline * 1
+    line-height: $baseline * 1.5
 
     .on-hover
       display: none
