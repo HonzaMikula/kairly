@@ -170,6 +170,10 @@ newspaper-widget--subscribe
   @media (max-width: $mobile)
     padding-bottom: $baseline / 4
 
+  button
+    height: $baseline !important
+    line-height: $baseline !important
+
 
   //- info
   p
