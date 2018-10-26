@@ -74,7 +74,7 @@ class Post(models.Model):
                 if topic.author_id != self.author_id:
                     raise ValueError("Topic auhtor doesn't match author")
 
-        if not self.slug:
+        if not self.slug and not self.draft:
             slug_words = []
             for part in re.split(r'[\?\.|\-]', self.title):
                 words = part.split()
@@ -116,6 +116,9 @@ class Post(models.Model):
             'type': self.kind,
             'time': str(self.published.astimezone(tzinfo))
         }
+        if self.draft:
+            result['draft'] = True
+
         if self.kind == Post.PICTURE:
             result['content'] = {
                 'title': self.title,

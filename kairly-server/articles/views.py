@@ -11,6 +11,7 @@ from django.views import View
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.utils.text import slugify
+from django.utils.timezone import now as timezone_now
 
 from utils.decorators import ajax_login_required
 from utils.upload import file_from_data_uri
@@ -391,6 +392,95 @@ class AuthorSubscriptionView(View):
             return JsonResponse(subscription.to_json())
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()
+
+
+class DraftsView(View):
+    @ajax_login_required
+    def get(self, request):
+        posts = Post.objects.filter(author=request.user, draft=True).order_by('-published')
+        return JsonResponse({
+            'posts': [post.to_json() for post in posts]
+        })
+
+    @ajax_login_required
+    def post(self, request):
+        payload = json.loads(request.body.decode('utf-8'))
+
+        title = payload['title'].strip()
+        perex = payload['perex'].strip()
+        content = payload['content'].strip()
+
+        if not title:
+            return HttpResponseBadRequest("No title")
+        if not perex:
+            return HttpResponseBadRequest("No perex")
+
+        post = Post(
+            kind=Post.NEWSPAPER,
+            draft=True,
+            protected=False,
+            title=title,
+            perex=perex,
+            content=content,
+            author=request.user
+        )
+        post.save()
+
+        return JsonResponse({
+            'post': post.to_json()
+        })
+
+
+class DraftDetailView(View):
+
+    @ajax_login_required
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        return JsonResponse({
+            'post': post.to_json()
+        })
+
+    @ajax_login_required
+    def patch(self, request, post_id):
+        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        payload = json.loads(request.body.decode('utf-8'))
+
+        # TOD dedupe drom create
+        title = payload['title'].strip()
+        perex = payload['perex'].strip()
+        content = payload['content'].strip()
+
+        if not title:
+            return HttpResponseBadRequest("No title")
+        if not perex:
+            return HttpResponseBadRequest("No perex")
+
+        post.title = title
+        post.perex = perex
+        post.content = content
+        post.save()
+
+        return JsonResponse({
+            'post': post.to_json()
+        })
+
+    @ajax_login_required
+    def delete(self, request, post_id):
+        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        post.delete()
+        return HttpResponse(status=204)
+
+
+@ajax_login_required
+def publish_draft(request, post_id):
+    post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+    post.draft = False
+    post.published = timezone_now()
+    post.save()
+
+    return JsonResponse({
+        'post': post.to_json()
+    })
 
 
 def post(request, username, post_slug):

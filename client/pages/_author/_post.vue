@@ -201,7 +201,7 @@ export default {
         await store.dispatch('getSubscriptions')
       }
 
-      const { post } = await app.$axios.$get(`/post/${author}/${postSlug}`)
+      const { post } = await app.$axios.$get(`/posts/${author}/${postSlug}`)
       return { post }
     } catch (err) {
       error(errorToParams(err))

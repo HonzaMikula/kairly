@@ -1,11 +1,14 @@
 <template>
   <post :post="post">
     <timeline-post--article>
-      <h2><nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link></h2>
+      <h2>
+        <span v-if="post.draft">{{ post.content.title }}</span>
+        <nuxt-link v-else :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link>
+      </h2>
 
       <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
-        <timeline-post--continue-reading v-if="post.timeRead">
+        <timeline-post--continue-reading v-if="post.timeRead && !post.draft">
           <template v-if="post.content.protected">
             <a :href="post.source" target="_blank">Read the article</a>
             ({{ post.timeRead }} read)

@@ -21,5 +21,8 @@ urlpatterns = [
     path('authors/<username>/start-newspaper', views.start_newspaper, name='start_newspaper'),
     path('authors/<username>/subscription', views.AuthorSubscriptionView.as_view(), name='author_subscription'),
 
-    path('post/<username>/<post_slug>', views.post, name='post'),
+    path('drafts', views.DraftsView.as_view(), name='drafts'),
+    path('drafts/<int:post_id>', views.DraftDetailView.as_view(), name='draft'),
+    path('drafts/<int:post_id>/publish', views.publish_draft, name='publish_draft'),
+    path('posts/<username>/<post_slug>', views.post, name='post'),
 ]
