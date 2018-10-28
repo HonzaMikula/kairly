@@ -184,8 +184,7 @@ class Newspaper(models.Model, PeriodMixin):
     @property
     def next_release(self):
         editor_tz = pytz.timezone(self.editor.timezone)
-        now = timezone_now().astimezone(editor_tz)
-        return self.get_period_interval(now).end
+        return self.get_period_interval(timezone_now(), editor_tz).end
 
     def to_json(self):
         return {
