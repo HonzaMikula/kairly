@@ -10,7 +10,7 @@
             <nuxt-link
               :to="{name: 'newspapers'}"
               title="My newspapers">
-              <span>Manage Newspapers</span>
+              <span>Manage newspapers</span>
             </nuxt-link>
           </li>
           <li class="explore">
@@ -42,11 +42,14 @@
         v-on-clickaway="() => isDropDownMenuOpen = false">
         <ul>
           <li class="user-name">{{user.name}}</li>
+          <li><nuxt-link to="/posts/create">Write post</nuxt-link></li>
+          <li><nuxt-link to="/posts">My posts</nuxt-link></li>
+          <li class="divider"></li>
           <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">Profile</nuxt-link></li>
-          <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My Subscription</span></nuxt-link></li>
+          <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>My subscription</span></nuxt-link></li>
           <li><nuxt-link :to="{name: 'user-settings'}"><span>Settings</span></nuxt-link></li>
           <li class="divider"></li>
-          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>Manage Newspapers</span></nuxt-link></li>
+          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>Manage newspapers</span></nuxt-link></li>
           <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>Explore</span></nuxt-link></li>
           <li><a href="" v-on:click.prevent="logout">Logout</a></li>
         </ul>

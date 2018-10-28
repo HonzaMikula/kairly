@@ -1,21 +1,25 @@
 <template>
   <app-layout>
-    <div style="margin: 40px auto; width: 800px">
-      <h1>My posts</h1>
+    <div class="my-posts">
+      <header>
+        <nav>
+          <nuxt-link to="/posts/" class="nuxt-link-active">Drafts</nuxt-link>
+          <nuxt-link to="/posts/published">Published posts</nuxt-link>
+        </nav>
 
-      <br/>
+        <div class="my-posts--create-post">
+          <nuxt-link to="/posts/create">Create a post</nuxt-link>
+        </div>
+      </header>
 
-      <div class="create-post-link">
-        <nuxt-link to="/posts/create">Create a post</nuxt-link>
+      <div class="my-posts--empty" v-if="posts.length == 0">
+        No drafts
       </div>
-
-      <br/>
 
       <div v-for="post in posts" :key="post.id">
         <PostWrapper
           :post="post"
           :isSubscribed="true"
-
         >
           <template slot="controls">
             <button-icon v-if="post.draft"
@@ -33,7 +37,6 @@
           <button @click="publishPost(post)">Publish</button>
         </div>
       </div>
-
 
     </div>
   </app-layout>
@@ -110,23 +113,65 @@ export default {
 </script>
 
 <style lang="sass">
-.post-buttons, .create-post-link
-  a, button
-    +subscribe-button
+.my-posts
+  display: block
+  box-sizing: border-box
+  max-width: 900px
+  margin: $baseline auto
+  padding: 0 $baseline/2
 
-    height: $baseline * 1.25
+  @media (max-width: $mobile)
+    padding: 0 $baseline/4
 
-    border-radius: $baseline*0.75
-    background: $c-base
-    color: #fff
+  //- header
+  > header
+    display: flex
+    margin-bottom: $baseline / 2
 
-    font-family: $ff-sans
-    font-size: $fs-0
+    nav
+      flex: 1
+      margin-bottom: $baseline
 
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
+      font-size: $fs-3
 
-.create-post-link a
-  font-size: $fs-2
+      a
+        display: inline-block
+        margin-right: $baseline
+
+        color: $c-base
+
+        font-weight: 600
+
+        &.nuxt-link-active
+          color: #000
+
+    .my-posts--create-post a
+      +subscribe-button
+
+      display: inline-block
+      height: $baseline * 1.25
+
+      border-radius: $baseline*0.75
+      background: $c-base
+      color: #fff
+
+      font-family: $ff-sans
+      font-size: $fs-0
+      line-height: $baseline * 1.25
+
+      &:focus,
+      &:hover
+        background: darken($c-base, 10%)
+
+  //- Empty placeholder
+  .my-posts--empty
+    display: block
+    margin: $baseline 0
+    padding: $baseline
+
+    background: #eee
+    border: 1px dashed #ccc
+
+    text-align: center
+
 </style>
