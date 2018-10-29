@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <div style="margin: 40px auto; width: 800px">
-      <edit-post buttonTitle="Create post" @submit="createPost" />
+      <edit-post buttonTitle="Save a draft" @submit="createPost" />
     </div>
   </app-layout>
 </template>
