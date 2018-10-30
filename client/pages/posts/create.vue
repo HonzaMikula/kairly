@@ -1,6 +1,6 @@
 <template>
   <app-layout>
-    <div style="margin: 40px auto; width: 800px">
+    <div>
       <edit-post buttonTitle="Save a draft" @submit="createPost" />
     </div>
   </app-layout>

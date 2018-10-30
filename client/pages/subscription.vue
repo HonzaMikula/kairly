@@ -28,7 +28,6 @@ my-subscription-view
   box-sizing: border-box
   max-width: 900px
   margin: $baseline auto
-  padding: 0 $baseline/2
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4

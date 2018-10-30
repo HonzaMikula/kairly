@@ -1,36 +1,44 @@
 <template>
   <header class="app-header">
     <div>
+      <h1 class="app-header--logo"><nuxt-link :to="{name: 'index'}" exact>Kairly</nuxt-link></h1>
       <nav class="app-header--navigation">
         <ul v-if="user">
           <li class="home">
-            <nuxt-link :to="{name: 'index'}" exact></nuxt-link>
-          </li>
-          <li class="my-newspapers">
-            <nuxt-link
-              :to="{name: 'newspapers'}"
-              title="My newspapers">
-              <span>Manage newspapers</span>
+            <nuxt-link :to="{name: 'index'}" exact title="Home">
+              <span>Home</span>
             </nuxt-link>
           </li>
+
+          <li class="subscription">
+            <nuxt-link :to="{name: 'subscription-newspapers'}" title="Subscriptions">
+              <span>Subscriptions</span>
+            </nuxt-link>
+          </li>
+
+          <li class="newspapers">
+            <nuxt-link :to="{name: 'newspapers'}" title="Newspapers">
+              <span>Newspapers</span>
+            </nuxt-link>
+          </li>
+
+          <li class="new-post">
+            <nuxt-link :to="{name: 'posts'}" title="New post">
+              <span>New post</span>
+            </nuxt-link>
+          </li>
+
           <li class="explore">
-            <nuxt-link
-              :to="{name: 'explore-tab'}"
-              title="My newspapers">
+            <nuxt-link :to="{name: 'explore-tab'}" title="Explore">
               <span>Explore</span>
             </nuxt-link>
           </li>
         </ul>
       </nav>
 
-      <h1 class="app-header--logo"><nuxt-link :to="{name: 'index'}" exact>Kairly</nuxt-link></h1>
-
       <nav class="app-header--user-profile" v-if="user">
-        <nuxt-link :to="{name: 'subscription-newspapers'}">
-          <span>My subscription</span>
-          <img v-if="user.picture" :src="user.picture" :alt="user.name" />
-          <img v-else src="~assets/user.png" :alt="user.name"/>
-        </nuxt-link>
+        <img v-if="user.picture" :src="user.picture" :alt="user.name" />
+        <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon
           v-on:click="isDropDownMenuOpen = true"
           :class="{'is-active': isDropDownMenuOpen}"
@@ -112,7 +120,7 @@ export default {
     position: relative
 
     display: grid
-    grid-template-columns: 2fr 1fr 2fr
+    grid-template-columns: auto 1fr auto
     margin: 0 auto
     max-width: 900px
 
@@ -142,8 +150,10 @@ export default {
         display: none
 
   @media (max-width: $mobile)
-    .my-subscription,
-    .my-newspapers,
+    .home,
+    .subscription,
+    .newspapers,
+    .new-post,
     .explore
       display: none
 
@@ -156,9 +166,28 @@ export default {
 
   li.home a::before
     content: $fa-var-home
+    display: none
 
-  li.my-newspapers a::before
+    @media (max-width: 850px)
+      display: inline-block
+
+
+  li.subscription a::before
+    content: $fa-var-calendar
+    display: none
+
+    @media (max-width: 850px)
+      display: inline-block
+
+  li.newspapers a::before
     content: $fa-var-newspaper-o
+    display: none
+
+    @media (max-width: 850px)
+      display: inline-block
+
+  li.new-post a::before
+    content: $fa-var-pencil-square-o
     display: none
 
     @media (max-width: 850px)
@@ -181,6 +210,8 @@ export default {
 
 
 .app-header--logo
+  margin-right: $baseline
+
   font-family: $ff-serif
   font-weight: 600
   font-size: $fs-3
@@ -188,6 +219,7 @@ export default {
 
   @media (max-width: $mobile)
     font-size: $fs-2
+    padding-left: $baseline / 4
 
   a
     color: #000

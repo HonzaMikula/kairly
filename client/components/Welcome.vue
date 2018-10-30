@@ -37,10 +37,10 @@
 
       <div class="welcome--tutorial">
         <ol>
-          <li><p>Go to <nuxt-link to="/explore">Explore</nuxt-link></p></li>
-          <li><p>Subscribe newspapers</p></li>
-          <li><p>Or authors directly and choose when you want to read them</p></li>
-          <li><p>Go on your <nuxt-link to="/"><span class="icon"></span></nuxt-link> <nuxt-link to="/">Timeline</nuxt-link></p></li>
+          <li><p>Go to <nuxt-link to="/explore">Explore</nuxt-link>.</p></li>
+          <li><p>Subscribe newspapers.</p></li>
+          <li><p>Or authors directly and choose when you want to read them.</p></li>
+          <li><p>Go <nuxt-link to="/"><span class="icon"></span></nuxt-link> <nuxt-link to="/">Home</nuxt-link> to check timeline.</p></li>
         </ol>
 
         <div class="welcome--tutorial--illustration">

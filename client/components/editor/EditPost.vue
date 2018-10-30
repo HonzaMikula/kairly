@@ -63,6 +63,14 @@ export default {
 <style lang="sass">
 //- Switcher
 .edit-post-view
+  box-sizing: border-box
+  padding: $baseline 0
+  margin: 0 auto
+  max-width: 900px
+
+  @media (max-width: $mobile)
+    padding: $baseline $baseline/4
+
   nav
     margin-bottom: $baseline
 
