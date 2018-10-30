@@ -47,6 +47,21 @@
             <consider-post :post="post" :showText="true" />
 
             <a v-if="post.source" :href="post.source" class="external-link">Original article</a>
+
+            <a
+              :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${post.author.id}/${post.slug}`"
+              target="_blank"
+              class="share-fb"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              title="Share on Facebook">
+            </a>
+            <a
+              :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${post.author.id}/${post.slug}&text=${post.content.title}`"
+              target="_blank"
+              class="share-twitter"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              title="Share on Twitter">
+            </a>
           </post-detail--footer>
         </div>
 
@@ -532,7 +547,7 @@ post-detail--footer
     border-radius: 5px
     display: inline-block
     height: $baseline * 1.25
-    margin-right: $baseline / 2
+    margin-right: $baseline / 4
     margin-bottom: $baseline / 4
     padding: 0 $baseline/4
 
@@ -564,6 +579,24 @@ post-detail--footer
       font-size: $fs-1
 
       content: $fa-var-external-link-square
+
+    &.share-fb::before
+      +fa-icon()
+
+      margin-right: 0
+
+      font-size: $fs-1
+
+      content: $fa-var-facebook-square
+
+    &.share-twitter::before
+      +fa-icon()
+
+      margin-right: 0
+
+      font-size: $fs-1
+
+      content: $fa-var-twitter
 
   //- Tweaks adding to backlog widget
   backlog-add--dropdown
