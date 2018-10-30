@@ -18,7 +18,24 @@ class PeriodMixin:
 
     X3_PER_DAY_HOURS = [6, 12, 18]
 
-    def get_period_interval(self, dt):
+    def get_period_interval(self, dt, tzinfo):
+        dt = dt.astimezone(tzinfo)
+        interval = self._get_period_interval_notz(dt)
+
+        # Fix DST shift, perid must be 1 hour longer or shorter when includes DST shift
+        start = interval.start.astimezone(tzinfo)
+        if start.hour != interval.start.hour:
+            start += timedelta(hours=interval.start.hour - start.hour)
+            interval = PeriodInterval(start, interval.end, interval.title)
+
+        end = interval.end.astimezone(tzinfo)
+        if end.hour != interval.end.hour:
+            end += timedelta(hours=interval.end.hour - end.hour)
+            interval = PeriodInterval(interval.start, end, interval.title)
+
+        return interval
+
+    def _get_period_interval_notz(self, dt):
         """Construct time interval which includes given datetime and matches
         current periodicity.
         """
