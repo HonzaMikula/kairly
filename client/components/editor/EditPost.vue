@@ -11,11 +11,11 @@
     </div>
 
     <div class="edit-post--perex">
-      <textarea v-model="perex" cols="80" rows="10" placeholder="Perex"/><br/>
+      <medium-editor v-model="perex" :options="perexOptions" />
     </div>
 
     <div class="edit-post--content">
-      <textarea v-model="content" cols="80" rows="16" placeholder="Content" />
+      <medium-editor v-model="content" :options="contentOptions" />
     </div>
 
     <div class="edit-post--footer">
@@ -26,8 +26,6 @@
 
 
 <script>
-
-
 import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
@@ -45,6 +43,12 @@ export default {
       title: this.post ? this.post.content.title : '',
       perex: this.post ? this.post.content.perex : '',
       content: this.post ? this.post.content.content : '',
+      perexOptions: {
+        placeholder: {text: 'Perex', hideOnClick: true},
+      },
+      contentOptions: {
+        placeholder: {text: 'Content', hideOnClick: true},
+      },
     }
   },
 
@@ -109,20 +113,15 @@ export default {
 .edit-post--content
   margin-bottom: $baseline / 2
 
-  textarea
-    box-sizing: border-box
+  .medium-editor-wrapper
     padding: $baseline/4
     width: 100%
-
-    border: 0
-
-    font-family: $ff-serif
-    font-size: $fs-0
-    line-height: 1.58
+    min-height: 260px
 
 
 //- Footer
 .edit-post--footer
   button
     +subscribed-button
+
 </style>
