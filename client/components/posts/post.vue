@@ -33,6 +33,8 @@
     </header>
 
     <slot></slot>
+
+    <slot name="buttons"></slot>
   </post-component>
 </template>
 

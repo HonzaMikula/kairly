@@ -12,6 +12,10 @@
     <template slot="controls">
       <slot name="controls"></slot>
     </template>
+
+    <template slot="buttons">
+      <slot name="buttons"></slot>
+    </template>
   </component>
 </template>
 
@@ -40,7 +44,6 @@ export default {
         return this.post.type
       }
     }
-
   }
 }
 </script>

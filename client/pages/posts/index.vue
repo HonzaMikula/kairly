@@ -17,13 +17,14 @@
             @click.prevent="deletePost(post)">
           </button-icon>
         </template>
-      </PostWrapper>
 
-      <!-- if used this way move as template slot inside PostWrapper -->
-      <div v-if="post.draft" class="post-buttons" style="background-color: white; margin-top: -15px; padding: 20px">
-        <nuxt-link :to="`/posts/${post.id}`">Edit</nuxt-link>
-        <button @click="publishPost(post)">Publish</button>
-      </div>
+        <template slot="buttons">
+          <div v-if="post.draft">
+            <nuxt-link :to="`/posts/${post.id}`">Edit</nuxt-link>
+            <button @click="publishPost(post)">Publish</button>
+          </div>
+        </template>
+      </PostWrapper>
     </div>
   </my-posts>
 </template>
