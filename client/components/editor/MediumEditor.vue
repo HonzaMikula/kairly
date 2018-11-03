@@ -8,7 +8,10 @@ import MediumEditor from 'medium-editor'
 
 const defaultOptions = {
   toolbar: {
-    buttons: ["bold", "italic", "underline", "anchor",  "h2", "h3", "h4", "quote"]
+    buttons: [
+      "bold", "italic", "underline", "anchor",  "h2", "h3", "h4", "quote",
+      "unorderedlist", "orderedlist"
+    ]
   }
 }
 
@@ -106,6 +109,12 @@ export default {
   h4
     font-size: $fs-1
     font-weight: 600
+
+  ul
+    list-style-type: circle
+
+  ol
+    list-style-type: decimal
 
 
 .medium-editor-placeholder::after
