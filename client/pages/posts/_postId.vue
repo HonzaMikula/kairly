@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <div style="margin: 40px auto; width: 800px">
-      <edit-post :post="post" buttonTitle="Save" @submit="savePost" />
+      <edit-article :post="post" buttonTitle="Save" @submit="savePost" />
     </div>
   </app-layout>
 </template>
@@ -13,7 +13,7 @@
 import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
-import EditPost from '@/components/editor/EditPost'
+import EditArticle from '@/components/editor/EditArticle'
 
 export default {
   name: 'Posts',
@@ -26,7 +26,7 @@ export default {
 
   components: {
     AppLayout,
-    EditPost
+    EditArticle
   },
 
   methods: {

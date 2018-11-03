@@ -108,6 +108,9 @@ export default {
     font-weight: 600
 
 
+.medium-editor-placeholder::after
+  font-style: normal
+
 .medium-editor-toolbar li button.medium-editor-button-active
   background: $c-green
   color: white

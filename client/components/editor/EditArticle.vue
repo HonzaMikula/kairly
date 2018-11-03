@@ -1,24 +1,18 @@
 <template>
-  <div class="edit-post-view">
-
-    <nav>
-      <a href="" class="nuxt-link-active">Write an article</a>
-      <a href="">Write a tweet</a>
-    </nav>
-
-    <div class="edit-post--title">
+  <div>
+    <div class="edit-article--title">
       <input v-model="title" placeholder="Title" />
     </div>
 
-    <div class="edit-post--perex">
+    <div class="edit-article--perex">
       <medium-editor v-model="perex" :options="perexOptions" />
     </div>
 
-    <div class="edit-post--content">
+    <div class="edit-article--content">
       <medium-editor v-model="content" :options="contentOptions" />
     </div>
 
-    <div class="edit-post--footer">
+    <div class="edit-article--footer">
       <button @click="submit">{{ buttonTitle }}</button>
     </div>
   </div>
@@ -31,7 +25,7 @@ import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 
 export default {
-  name: 'EditPosts',
+  name: 'EditArticle',
 
   props: {
     post: Object,
@@ -44,10 +38,10 @@ export default {
       perex: this.post ? this.post.content.perex : '',
       content: this.post ? this.post.content.content : '',
       perexOptions: {
-        placeholder: {text: 'Perex', hideOnClick: true},
+        placeholder: {text: 'Perex', hideOnClick: false},
       },
       contentOptions: {
-        placeholder: {text: 'Content', hideOnClick: true},
+        placeholder: {text: 'Content', hideOnClick: false},
       },
     }
   },
@@ -65,34 +59,8 @@ export default {
 </script>
 
 <style lang="sass">
-//- Switcher
-.edit-post-view
-  box-sizing: border-box
-  padding: $baseline 0
-  margin: 0 auto
-  max-width: 900px
-
-  @media (max-width: $mobile)
-    padding: $baseline $baseline/4
-
-  nav
-    margin-bottom: $baseline
-
-    font-size: $fs-3
-
-    a
-      display: inline-block
-      margin-right: $baseline
-
-      color: $c-base
-
-      font-weight: 600
-
-      &.nuxt-link-active
-        color: #000
-
 //- Title
-.edit-post--title
+.edit-article--title
   margin-bottom: $baseline / 2
 
   input
@@ -109,8 +77,8 @@ export default {
     line-height: 1.58
 
 //- Perex, Content
-.edit-post--perex,
-.edit-post--content
+.edit-article--perex,
+.edit-article--content
   margin-bottom: $baseline / 2
 
   .medium-editor-wrapper
@@ -120,7 +88,7 @@ export default {
 
 
 //- Footer
-.edit-post--footer
+.edit-article--footer
   button
     +subscribed-button
 

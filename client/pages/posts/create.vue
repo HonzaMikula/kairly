@@ -1,49 +1,55 @@
 <template>
   <app-layout>
-    <div>
-      <edit-post buttonTitle="Save a draft" @submit="createPost" />
+    <div class="edit-post-view">
+      <nav class="create-post">
+        <nuxt-link to="/posts/create/article"> Write an article</nuxt-link>
+        <nuxt-link to="/posts/create/tweet"> Write a tweet</nuxt-link>
+      </nav>
+
+      <nuxt-child/>
     </div>
   </app-layout>
 </template>
 
 
 <script>
-
-
 import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
-import EditPost from '@/components/editor/EditPost'
 
 export default {
-  name: 'Posts',
-
-  metaInfo() {
-    return {
-      title: 'My Posts – Kairly'
-    }
-  },
+  name: 'CreatePost',
 
   components: {
-    AppLayout,
-    EditPost
-  },
-
-  methods: {
-    async createPost(data) {
-      const { post } = await this.$axios.$post(`/drafts`, data)
-      this.$router.push("/posts")
-    }
-  },
-
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
-      return
-    }
+    AppLayout
   }
 }
 </script>
 
 <style lang="sass">
+//- Switcher
+.edit-post-view
+  box-sizing: border-box
+  padding: $baseline 0
+  margin: 0 auto
+  max-width: 900px
+
+  @media (max-width: $mobile)
+    padding: $baseline $baseline/4
+
+  nav
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+
+    a
+      display: inline-block
+      margin-right: $baseline
+
+      color: $c-base
+
+      font-weight: 600
+
+      &.nuxt-link-active
+        color: #000
 </style>
