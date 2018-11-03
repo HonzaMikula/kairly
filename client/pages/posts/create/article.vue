@@ -6,14 +6,12 @@
 
 
 <script>
-
-
 import { mapActions, mapState } from 'vuex'
 
 import EditArticle from '@/components/editor/EditArticle'
 
 export default {
-  name: 'Posts',
+  name: 'CreateArticle',
 
   metaInfo() {
     return {
@@ -29,13 +27,6 @@ export default {
     async createPost(data) {
       const { post } = await this.$axios.$post(`/drafts`, data)
       this.$router.push("/posts")
-    }
-  },
-
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
-      return
     }
   }
 }

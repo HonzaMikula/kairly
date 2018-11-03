@@ -49,6 +49,7 @@ export default {
   methods: {
     submit() {
       this.$emit('submit', {
+        kind: 'newspaper',
         title: this.title,
         perex: this.perex,
         content: this.content

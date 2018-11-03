@@ -1,16 +1,16 @@
 <template>
   <div>
-    Tweet
+    <edit-tweet buttonTitle="Save a draft" @submit="createPost" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 
-//import EditArticle from '@/components/editor/EditArticle'
+import EditTweet from '@/components/editor/EditTweet'
 
 export default {
-  name: 'Posts',
+  name: 'CreateTweet',
 
   metaInfo() {
     return {
@@ -19,19 +19,13 @@ export default {
   },
 
   components: {
+    EditTweet
   },
 
-  // methods: {
-  //   async createPost(data) {
-  //     const { post } = await this.$axios.$post(`/drafts`, data)
-  //     this.$router.push("/posts")
-  //   }
-  // },
-
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
-      return
+  methods: {
+    async createPost(data) {
+      const { post } = await this.$axios.$post(`/drafts`, data)
+      this.$router.push("/posts")
     }
   }
 }

@@ -405,18 +405,31 @@ class DraftsView(View):
     @ajax_login_required
     def post(self, request):
         payload = json.loads(request.body.decode('utf-8'))
+        kind = payload['kind']
 
-        title = payload['title'].strip()
-        perex = payload['perex'].strip()
-        content = payload['content'].strip()
+        if kind == Post.NEWSPAPER:
+            title = payload['title'].strip()
+            perex = payload['perex'].strip()
+            content = payload['content'].strip()
 
-        if not title:
-            return HttpResponseBadRequest("No title")
-        if not perex:
-            return HttpResponseBadRequest("No perex")
+            if not title:
+                return HttpResponseBadRequest("No title")
+            if not perex:
+                return HttpResponseBadRequest("No perex")
+        elif kind == Post.TWEET:
+            perex = None
+            content = payload['content'].strip()
+            title = "{}: {}...".format(request.user.username, content[:60])
+
+            if not content:
+                return HttpResponseBadRequest("Tweet is empty")
+            if len(content) > 320:
+                return HttpResponseBadRequest("Content too long.")
+        else:
+            return HttpResponseBadRequest("Invalid post kind.")
 
         post = Post(
-            kind=Post.NEWSPAPER,
+            kind=kind,
             draft=True,
             protected=False,
             title=title,
