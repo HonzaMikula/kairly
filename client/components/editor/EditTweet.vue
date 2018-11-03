@@ -16,6 +16,13 @@ import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 
+function htmlDecode(input){
+  var e = document.createElement('div');
+  e.innerHTML = input;
+  // handle case of empty input
+  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+}
+
 export default {
   name: 'EditTweet',
 
@@ -26,14 +33,14 @@ export default {
 
   data() {
     return {
-      content: this.post ? this.post.content.content : ''
+      content: this.post ? htmlDecode(this.post.content.content) : ''
     }
   },
 
   methods: {
     submit() {
       this.$emit('submit', {
-        kind: 'tweet',
+        type: 'tweet',
         content: this.content
       })
     }

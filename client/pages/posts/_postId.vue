@@ -1,19 +1,19 @@
 <template>
   <app-layout>
-    <div style="margin: 40px auto; width: 800px">
-      <edit-article :post="post" buttonTitle="Save" @submit="savePost" />
+    <div class="edit-post">
+      <edit-article v-if="post.type == 'newspaper'" :post="post" buttonTitle="Save" @submit="savePost" />
+      <edit-tweet v-if="post.type == 'tweet'" :post="post" buttonTitle="Save" @submit="savePost" />
     </div>
   </app-layout>
 </template>
 
 
 <script>
-
-
 import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import EditArticle from '@/components/editor/EditArticle'
+import EditTweet from '@/components/editor/EditTweet'
 
 export default {
   name: 'Posts',
@@ -26,7 +26,8 @@ export default {
 
   components: {
     AppLayout,
-    EditArticle
+    EditArticle,
+    EditTweet,
   },
 
   methods: {
@@ -53,4 +54,7 @@ export default {
 </script>
 
 <style lang="sass">
+.edit-post
+  margin: 40px auto
+  width: 800px
 </style>

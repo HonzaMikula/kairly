@@ -1,4 +1,5 @@
 import json
+import html
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
@@ -394,6 +395,40 @@ class AuthorSubscriptionView(View):
             return HttpResponseNotFound()
 
 
+def validate_post_attributes(request, payload):
+    kind = payload['type']
+
+    if kind == Post.NEWSPAPER:
+        title = payload['title'].strip()
+        perex = payload['perex'].strip()
+        content = payload['content'].strip()
+
+        if not title:
+            raise ValueError("No title")
+        if not perex:
+            raise ValueError("No perex")
+    elif kind == Post.TWEET:
+        raw_content = payload['content'].strip()
+
+        if not raw_content:
+            raise ValueError("Tweet is empty")
+        if len(raw_content) > 320:
+            raise ValueError("Content too long.")
+
+        title = "{}: {}...".format(request.user.username, raw_content[:60])
+        perex = None
+        content = html.escape(raw_content)
+    else:
+        raise ValueError("Invalid post kind.")
+
+    return {
+        'kind': kind,
+        'title': title,
+        'perex': perex,
+        'content': content,
+    }
+
+
 class DraftsView(View):
     @ajax_login_required
     def get(self, request):
@@ -405,39 +440,18 @@ class DraftsView(View):
     @ajax_login_required
     def post(self, request):
         payload = json.loads(request.body.decode('utf-8'))
-        kind = payload['kind']
 
-        if kind == Post.NEWSPAPER:
-            title = payload['title'].strip()
-            perex = payload['perex'].strip()
-            content = payload['content'].strip()
+        try:
+            attrs = validate_post_attributes(request, payload)
+        except ValueError as e:
+            return HttpResponseBadRequest(str(e))
 
-            if not title:
-                return HttpResponseBadRequest("No title")
-            if not perex:
-                return HttpResponseBadRequest("No perex")
-        elif kind == Post.TWEET:
-            perex = None
-            content = payload['content'].strip()
-            title = "{}: {}...".format(request.user.username, content[:60])
-
-            if not content:
-                return HttpResponseBadRequest("Tweet is empty")
-            if len(content) > 320:
-                return HttpResponseBadRequest("Content too long.")
-        else:
-            return HttpResponseBadRequest("Invalid post kind.")
-
-        post = Post(
-            kind=kind,
+        post = Post.objects.create(
             draft=True,
             protected=False,
-            title=title,
-            perex=perex,
-            content=content,
-            author=request.user
+            author=request.user,
+            **attrs
         )
-        post.save()
 
         return JsonResponse({
             'post': post.to_json()
@@ -458,19 +472,12 @@ class DraftDetailView(View):
         post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
         payload = json.loads(request.body.decode('utf-8'))
 
-        # TOD dedupe drom create
-        title = payload['title'].strip()
-        perex = payload['perex'].strip()
-        content = payload['content'].strip()
+        try:
+            attrs = validate_post_attributes(request, payload)
+        except ValueError as e:
+            return HttpResponseBadRequest(str(e))
 
-        if not title:
-            return HttpResponseBadRequest("No title")
-        if not perex:
-            return HttpResponseBadRequest("No perex")
-
-        post.title = title
-        post.perex = perex
-        post.content = content
+        post.__dict__.update(attrs)
         post.save()
 
         return JsonResponse({
