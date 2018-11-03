@@ -1,6 +1,17 @@
 <template>
   <my-posts>
-    Published post
+    <PostWrapper
+      v-for="post in posts"
+      :post="post"
+      :isSubscribed="true"
+      :key="post.id"
+    />
+
+    <div v-if="!posts.length && !loadingPosts">
+      <p>You didn't publish any post.</p>
+    </div>
+
+    <loading-spinner v-if="loadingPosts"></loading-spinner>
   </my-posts>
 </template>
 
@@ -8,12 +19,22 @@
 import { mapActions, mapState } from 'vuex'
 
 import MyPosts from '@/components/layout/MyPosts'
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
   name: 'Drafts',
 
   components: {
     MyPosts,
+    PostWrapper
+  },
+
+  data() {
+    return {
+      posts: [],
+      cursor: 0,
+      loadingPosts: true
+    }
   },
 
   computed: {
@@ -22,13 +43,34 @@ export default {
     })
   },
 
+  methods: {
+    async loadPosts() {
+      if (this.cursor === null) {
+        return
+      }
+      const { author: authorId } = this.$route.params
+
+      this.loadingPosts = true
+
+      const { posts, cursor } = await this.$axios.$get(
+        `/authors/${this.user.id}/posts`, {params: {cursor: this.cursor}})
+
+      posts.forEach(post => this.posts.push(post))
+      this.cursor = cursor
+      this.loadingPosts = false
+    }
+  },
+
   async fetch({ store, redirect }) {
     if (!store.state.auth.loggedIn) {
       redirect('/homepage')
       return
     }
-  }
+  },
 
+  created() {
+    this.loadPosts()
+  }
 }
 </script>
 
