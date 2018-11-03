@@ -23,6 +23,7 @@ cssselect = "*"
 more-itertools = "*"
 python-twitter = "*"
 django-autocomplete-light = "*"
+bleach = "*"
 
 [requires]
 python_version = "3.6"

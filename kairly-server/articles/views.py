@@ -3,6 +3,7 @@ import html
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
+
 from dateutil.relativedelta import relativedelta
 
 from django.shortcuts import get_object_or_404
@@ -15,6 +16,7 @@ from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
 
 from utils.decorators import ajax_login_required
+from utils.html import sanitize
 from utils.upload import file_from_data_uri
 from users.models import User
 from .models import (Newspaper, Issue, Backlog,
@@ -400,8 +402,8 @@ def validate_post_attributes(request, payload):
 
     if kind == Post.NEWSPAPER:
         title = payload['title'].strip()
-        perex = payload['perex'].strip()
-        content = payload['content'].strip()
+        perex = sanitize(payload['perex'].strip())
+        content = sanitize(payload['content'].strip())
 
         if not title:
             raise ValueError("No title")
