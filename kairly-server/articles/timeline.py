@@ -156,8 +156,8 @@ class AuthorStream(TimelineStream):
         post_ids = None
 
         for post in QueryIterator(posts_query, self.QUERY_PAGE_SIZE):
-            published = post['published'].astimezone(self.tzinfo)
-            interval = self.subscription.get_period_interval(published)
+            interval = self.subscription.get_period_interval(post['published'], self.tzinfo)
+
             if issue_end != interval.end:
                 # Post from "unpublished" summary may already exists in database
                 # Or due paging, some post individua may be published before self.before
