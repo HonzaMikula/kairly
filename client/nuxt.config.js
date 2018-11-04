@@ -19,6 +19,10 @@ module.exports = {
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i|Roboto:400,400i,700,700i&amp;subset=latin-ext" }
     ]
   },
+  css: [
+    'medium-editor/dist/css/medium-editor.min.css',
+    'medium-editor/dist/css/themes/default.min.css',
+  ],
   /*
   ** Customize the progress bar color
   */
@@ -30,6 +34,7 @@ module.exports = {
     '~/plugins/portal-vue',
     {src: '~/plugins/tooltip', ssr: false},
     {src: '~/plugins/vue-infinite-scroll', ssr: false},
+    { src: '~/plugins/medium-editor', ssr: false },
     //{src: '~/plugins/vue-keep-scroll', ssr: false},
     '~/plugins/vue-moment',
     '~/plugins/axios',

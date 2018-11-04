@@ -1,11 +1,14 @@
 <template>
   <post :post="post">
     <timeline-post--article>
-      <h2><nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link></h2>
+      <h2>
+        <span v-if="post.draft">{{ post.content.title }}</span>
+        <nuxt-link v-else :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link>
+      </h2>
 
       <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
-        <timeline-post--continue-reading v-if="post.timeRead">
+        <timeline-post--continue-reading v-if="post.timeRead && !post.draft">
           <template v-if="post.content.protected">
             <a :href="post.source" target="_blank">Read the article</a>
             ({{ post.timeRead }} read)
@@ -30,6 +33,8 @@
     </template>
 
     <template slot="controls"><slot name="controls"></slot></template>
+
+    <template slot="buttons"><slot name="buttons"></slot></template>
   </post>
 </template>
 
@@ -86,147 +91,7 @@ timeline-post--article--content
     line-height: 1.58
 
 
-  //-- heading
-  h1, h2, h3, h4, h5, h6
-    margin: $baseline / 4 0
-    font-weight: 600
-
-    break-after: avoid-column
-
-  //-- paragraph
-  p
-    text-indent: $baseline
-
-    @media (max-width: $mobile)
-      text-indent: $baseline / 2
-
-  //-- illustration image
-  img
-    display: block
-    margin: $baseline / 4 auto
-    height: auto
-    max-height: 200px
-    max-width: 100%
-
-  //- Video
-  video
-    height: auto
-    max-width: 100%
-
-  //-- link
-  a[href]
-    color: #000
-
-    text-decoration: underline
-
-  //-- strong
-  strong, b
-    font-weight: 600
-
-  //-- italic
-  em, i
-    font-style: italic
-
-  //-- bullet points
-  ul li
-    margin-left: $baseline
-    list-style: disc outside
-
-  //-- ordered list
-  ol li
-    margin-left: $baseline
-    list-style: decimal outside
-
-  //-- horizontal line
-  hr
-    border: 0
-    height: 1px
-    background: #ddd
-
-  //-- quotes
-  blockquote
-    margin: ($baseline / 4 - 2rem) 0
-    padding: $baseline / 4 0
-
-    border-bottom: 1px solid #eee
-    border-top: 1px solid #eee
-    color: #777
-
-    text-align: center
-
-    p
-      text-indent: 0
-
-      &::before
-        content: "„"
-
-      &::after
-        content: "“"
-
-  //-- cite
-  cite
-    display: block
-    margin: ($baseline / 4 - 2rem) 0
-    padding: $baseline / 4 0
-
-    border-bottom: 1px solid #eee
-    border-top: 1px solid #eee
-    color: #777
-
-    font-size: $fs-1
-    text-indent: 0
-
-    &::before
-      content: "„"
-
-    &::after
-      content: "“"
-
-  //-- code inline
-  code
-    background: #fafafa
-    font-family: "courier new", courier, monospace
-    font-size: $fs--1
-
-  //-- code block
-  pre
-    overflow: auto
-
-    background: #fafafa
-    border: 1px solid #eee
-
-    font-family: "courier new", courier, monospace
-    font-size: $fs--2
-
-
-  //-- pictures
-  figure
-    display: table
-
-    break-inside: avoid
-    text-align: center
-
-    figcaption, p
-      color: #999
-
-      font-family: $ff-sans
-      font-size: $fs--1
-      line-height: 1.42
-
-  //-- table
-  table
-    margin-bottom: $baseline
-
-    font-family: $ff-sans
-
-    td, th
-      padding: 0 $baseline/4
-
-    thead td,
-    thead th
-      background: #eee
-
-      font-size: $fs--1
+  +article-perex
 
 
 //- Continue Reading

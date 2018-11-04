@@ -216,7 +216,7 @@ export default {
         await store.dispatch('getSubscriptions')
       }
 
-      const { post } = await app.$axios.$get(`/post/${author}/${postSlug}`)
+      const { post } = await app.$axios.$get(`/posts/${author}/${postSlug}`)
       return { post }
     } catch (err) {
       error(errorToParams(err))
@@ -401,137 +401,7 @@ post-detail--perex
     font-size: $fs-3
     font-weight: 600
 
-  //- Headings
-  h2, h3, h4, h5, h6
-    margin-bottom: $baseline
-
-    font-weight: 600
-
-  //- Paragraph
-  p
-    margin-bottom: $baseline
-
-  //- Strong
-  strong, b
-    font-weight: 600
-
-  //- Italic
-  em, i
-    font-style: italic
-
-  //- Lists
-  ul, ol
-    margin: 0 0 $baseline $baseline
-
-  //-- bullet points
-  ul li
-    margin-left: $baseline
-    list-style: disc outside
-
-  //-- ordered list
-  ol li
-    margin-left: $baseline
-    list-style: decimal outside
-
-  //- Image
-  img
-    height: auto
-    max-width: 100%
-
-  //- Video
-  video
-    height: auto
-    max-width: 100%
-
-  //- Link
-  a[href]
-    color: inherit
-
-    text-decoration: underline
-
-  //-- code inline
-  code
-    background: #fafafa
-    font-family: "courier new", courier, monospace
-    font-size: $fs--1
-
-  //-- code block
-  pre
-    overflow: auto
-
-    background: #fafafa
-    border: 1px solid #eee
-
-    font-family: "courier new", courier, monospace
-    font-size: $fs--2
-
-
-  //-- pictures
-  figure
-    margin-bottom: $baseline
-
-    text-align: center
-
-    figcaption, p
-      margin-bottom: 0
-
-      color: #999
-
-      font-family: $ff-sans
-      font-size: $fs--1
-      line-height: 1.42
-
-  //-- table
-  table
-    margin-bottom: $baseline
-
-    font-family: $ff-sans
-
-    td, th
-      padding: 0 $baseline/4
-
-    thead td,
-    thead th
-      background: #eee
-
-      font-size: $fs--1
-
-  //-- quotes
-  blockquote
-    margin: $baseline 0
-    padding: $baseline / 4 0
-
-    color: #777
-
-    text-align: center
-
-    p
-      margin-bottom: 0
-      text-indent: 0
-
-      &::before
-        content: "„"
-
-      &::after
-        content: "“"
-
-  //-- cite
-  cite
-    display: block
-    margin: $baseline 0
-    padding: $baseline / 4 0
-
-    color: #777
-
-    text-align: center
-    text-indent: 0
-
-    &::before
-      content: "„"
-
-    &::after
-      content: "“"
-
+  +article-content
 
 //- Post Footer
 post-detail--footer

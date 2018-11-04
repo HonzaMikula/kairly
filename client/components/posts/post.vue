@@ -33,6 +33,8 @@
     </header>
 
     <slot></slot>
+
+    <slot name="buttons"></slot>
   </post-component>
 </template>
 
@@ -175,5 +177,14 @@ post-component > header
 
       &.external-link::before
         content: $fa-var-external-link-square
+
+    > button
+      +subscribed-button
+
+      border-radius: 3px
+
+      padding: 0 $baseline/2
+      margin-left: $baseline / 4
+
 
 </style>

@@ -222,12 +222,6 @@ export default {
     }
   },
 
-  // watch: {
-  //   '$route' (to, from) {
-  //     this.loadData()
-  //   }
-  // },
-
   methods: {
     unsubscribe() {
       this.$store.dispatch('unsubscribeAuthor', {

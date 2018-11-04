@@ -1,38 +1,49 @@
 <template>
   <app-layout>
-    <my-subscription-view>
-      <nav>
-        <nuxt-link :to="{name: 'subscription-newspapers'}">Newspapers</nuxt-link>
-        <nuxt-link :to="{name: 'subscription-authors'}">Authors</nuxt-link>
+    <div class="edit-post-view">
+      <nav class="create-post">
+        <nuxt-link to="/posts/create/article"> Write an article</nuxt-link>
+        <nuxt-link to="/posts/create/tweet"> Write a tweet</nuxt-link>
       </nav>
+
       <nuxt-child/>
-    </my-subscription-view>
+    </div>
   </app-layout>
 </template>
 
+
 <script>
+import { mapActions, mapState } from 'vuex'
+
 import AppLayout from '@/components/layout/AppLayout'
 
 export default {
-  name: 'MySubscription',
+  name: 'CreatePost',
 
   components: {
     AppLayout
   },
+
+  async fetch({ store, redirect }) {
+    if (!store.state.auth.loggedIn) {
+      redirect('/homepage')
+      return
+    }
+  }
 }
 </script>
 
 <style lang="sass">
-my-subscription-view
-  display: block
+//- Switcher
+.edit-post-view
   box-sizing: border-box
+  padding: $baseline 0
+  margin: 0 auto
   max-width: 900px
-  margin: $baseline auto
 
   @media (max-width: $mobile)
-    padding: 0 $baseline/4
+    padding: $baseline $baseline/4
 
-  //- heading
   nav
     margin-bottom: $baseline
 
@@ -48,5 +59,4 @@ my-subscription-view
 
       &.nuxt-link-active
         color: #000
-
 </style>

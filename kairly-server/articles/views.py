@@ -1,7 +1,9 @@
 import json
+import html
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
+
 from dateutil.relativedelta import relativedelta
 
 from django.shortcuts import get_object_or_404
@@ -11,8 +13,10 @@ from django.views import View
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.utils.text import slugify
+from django.utils.timezone import now as timezone_now
 
 from utils.decorators import ajax_login_required
+from utils.html import sanitize
 from utils.upload import file_from_data_uri
 from users.models import User
 from .models import (Newspaper, Issue, Backlog,
@@ -391,6 +395,114 @@ class AuthorSubscriptionView(View):
             return JsonResponse(subscription.to_json())
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()
+
+
+def validate_post_attributes(request, payload):
+    kind = payload['type']
+
+    if kind == Post.NEWSPAPER:
+        title = payload['title'].strip()
+        perex = sanitize(payload['perex'].strip())
+        content = sanitize(payload['content'].strip())
+
+        if not title:
+            raise ValueError("No title")
+        if not perex:
+            raise ValueError("No perex")
+    elif kind == Post.TWEET:
+        raw_content = payload['content'].strip()
+
+        if not raw_content:
+            raise ValueError("Tweet is empty")
+        if len(raw_content) > 320:
+            raise ValueError("Content too long.")
+
+        title = "{}: {}...".format(request.user.username, raw_content[:60])
+        perex = None
+        content = html.escape(raw_content)
+    else:
+        raise ValueError("Invalid post kind.")
+
+    return {
+        'kind': kind,
+        'title': title,
+        'perex': perex,
+        'content': content,
+    }
+
+
+class DraftsView(View):
+    @ajax_login_required
+    def get(self, request):
+        posts = Post.objects.filter(author=request.user, draft=True).order_by('-published')
+        return JsonResponse({
+            'posts': [post.to_json() for post in posts]
+        })
+
+    @ajax_login_required
+    def post(self, request):
+        payload = json.loads(request.body.decode('utf-8'))
+
+        try:
+            attrs = validate_post_attributes(request, payload)
+        except ValueError as e:
+            return HttpResponseBadRequest(str(e))
+
+        post = Post.objects.create(
+            draft=True,
+            protected=False,
+            author=request.user,
+            **attrs
+        )
+
+        return JsonResponse({
+            'post': post.to_json()
+        })
+
+
+class DraftDetailView(View):
+
+    @ajax_login_required
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        return JsonResponse({
+            'post': post.to_json()
+        })
+
+    @ajax_login_required
+    def patch(self, request, post_id):
+        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        payload = json.loads(request.body.decode('utf-8'))
+
+        try:
+            attrs = validate_post_attributes(request, payload)
+        except ValueError as e:
+            return HttpResponseBadRequest(str(e))
+
+        post.__dict__.update(attrs)
+        post.save()
+
+        return JsonResponse({
+            'post': post.to_json()
+        })
+
+    @ajax_login_required
+    def delete(self, request, post_id):
+        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        post.delete()
+        return HttpResponse(status=204)
+
+
+@ajax_login_required
+def publish_draft(request, post_id):
+    post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+    post.draft = False
+    post.published = timezone_now()
+    post.save()
+
+    return JsonResponse({
+        'post': post.to_json()
+    })
 
 
 def post(request, username, post_slug):

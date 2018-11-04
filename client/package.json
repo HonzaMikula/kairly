@@ -20,6 +20,7 @@
     "@nuxtjs/axios": "^5.3.4",
     "@nuxtjs/google-analytics": "^2.0.2",
     "bootstrap-vue": "^2.0.0-rc.11",
+    "medium-editor": "^5.23.3",
     "nuxt": "^2.2.0",
     "nuxt-sass-resources-loader": "^2.0.5",
     "portal-vue": "^1.4.0",
