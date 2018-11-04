@@ -77,6 +77,22 @@ export default {
     font-weight: 600
     line-height: 1.58
 
+//- Perex
+.edit-article--perex .medium-editor-wrapper
+  column-count: 3
+  column-rule: 1px dotted #ddd
+  column-gap: $baseline
+
+  line-height: 1.58
+  hyphens: auto
+
+  +article-perex
+
+//- Content
+.edit-article--content .medium-editor-wrapper
+  +article-content
+
+
 //- Perex, Content
 .edit-article--perex,
 .edit-article--content
@@ -92,5 +108,9 @@ export default {
 .edit-article--footer
   button
     +subscribed-button
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    line-height: $baseline * 1.5
 
 </style>

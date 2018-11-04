@@ -63,8 +63,13 @@ export default {
     line-height: 1.58
 
 //- Footer
-.edit-article--footer
+.edit-tweet--footer
   button
     +subscribed-button
+
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    line-height: $baseline * 1.5
+
 
 </style>

@@ -91,31 +91,6 @@ export default {
   font-size: $fs-0
   line-height: 1.58
 
-  i
-    font-style: italic
-  b
-    font-weight: 600
-  blockquote
-    border-left: 3px solid #aaa
-    padding-left: 6px
-  p
-    margin-bottom: 10px
-  h2
-    font-size: $fs-3
-    font-weight: 600
-  h3
-    font-size: $fs-2
-    font-weight: 600
-  h4
-    font-size: $fs-1
-    font-weight: 600
-
-  ul
-    list-style-type: circle
-
-  ol
-    list-style-type: decimal
-
 
 .medium-editor-placeholder::after
   font-style: normal

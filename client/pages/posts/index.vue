@@ -9,20 +9,22 @@
         :post="post"
         :isSubscribed="true"
       >
-        <template slot="controls">
-          <button-icon v-if="post.draft"
+        <template slot="controls" v-if="post.draft">
+          <button-icon
             class="remove"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             title="Delete post"
             @click.prevent="deletePost(post)">
           </button-icon>
-        </template>
 
-        <template slot="buttons">
-          <div v-if="post.draft">
-            <nuxt-link :to="`/posts/${post.id}`">Edit</nuxt-link>
-            <button @click="publishPost(post)">Publish</button>
-          </div>
+          <button-icon
+            class="edit"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            title="Edit post"
+            @click.prevent="$router.push(`/posts/${post.id}`)">
+          </button-icon>
+
+          <button @click="publishPost(post)">Publish</button>
         </template>
       </PostWrapper>
     </div>
