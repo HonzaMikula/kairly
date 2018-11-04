@@ -97,14 +97,18 @@ module.exports = {
 
   router: {
     extendRoutes (routes, resolve) {
+      // make sure that author/post is before author/newspaper
+      const postRouteIdx = routes.findIndex(r => r.name === 'author-post')
+      const postRoute = routes.splice(postRouteIdx, 1)[0]
+      postRoute.path = '/:author/:post([-\\w]*\\-\\-[0-9a-f]{9})'
+      routes.unshift(postRoute)
+
       routes.unshift({
         name: 'timeline-date',
         path: '/:date(\\d{4}-\\d{2}-\\d{2})',
-        component: resolve(__dirname, 'pages/index.vue')
+        component: resolve(__dirname, 'pages/index.vue'),
+        chunkName: 'pages/index'
       })
-
-      const postRoute = routes.find(r => r.name === 'author-post')
-      postRoute.path =  '/:author/:post([-\\w]*\\-\\-[0-9a-f]{9})'
     }
   }
 }
