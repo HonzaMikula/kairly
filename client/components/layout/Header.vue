@@ -50,7 +50,7 @@
         v-on-clickaway="() => isDropDownMenuOpen = false">
         <ul>
           <li class="user-name">{{user.name}}</li>
-          <li><nuxt-link to="/posts/create">Write post</nuxt-link></li>
+          <li><nuxt-link to="/posts/create/article">Write post</nuxt-link></li>
           <li><nuxt-link to="/posts">My posts</nuxt-link></li>
           <li class="divider"></li>
           <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">Profile</nuxt-link></li>
