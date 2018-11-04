@@ -7,7 +7,7 @@
       :key="post.id"
     />
 
-    <div v-if="!posts.length && !loadingPosts">
+    <div v-if="!posts.length && !loadingPosts" class="my-posts--empty">
       <p>You didn't publish any post.</p>
     </div>
 
@@ -75,4 +75,14 @@ export default {
 </script>
 
 <style lang="sass">
+//- Empty placeholder
+.my-posts--empty
+  display: block
+  margin: $baseline 0
+  padding: $baseline
+
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
 </style>

@@ -4,7 +4,27 @@
       <input v-model="title" placeholder="Title" />
     </div>
 
-    <div class="edit-article--perex">
+    <div class="edit-article--perex" :class="{'column-view': !normalPerexView}">
+      <div class="edit-article--perex--controls">
+        <button-icon
+          class="normal-view"
+          :class="{'is-active': normalPerexView}"
+          @click="normalPerexView = true"
+          tabindex="0"
+          role="button">
+          Normal view
+        </button-icon>
+
+        <button-icon
+          class="column-view"
+          :class="{'is-active': !normalPerexView}"
+          @click="normalPerexView = false"
+          tabindex="0"
+          role="button">
+          Column view
+        </button-icon>
+      </div>
+
       <medium-editor v-model="perex" :options="perexOptions" />
     </div>
 
@@ -43,6 +63,7 @@ export default {
       contentOptions: {
         placeholder: {text: 'Content', hideOnClick: false},
       },
+      normalPerexView: true
     }
   },
 
@@ -77,16 +98,38 @@ export default {
     font-weight: 600
     line-height: 1.58
 
+//- Perex Controls
+.edit-article--perex--controls
+  margin-bottom: $baseline / 4
+
+  button-icon
+    display: inline-block
+    border-radius: 3px
+    height: $baseline * 1.25
+    margin-right: $baseline / 4
+    padding: 0 $baseline/4
+
+    border: 1px solid #eee
+    color: #777
+
+    line-height: $baseline * 1.25
+
+    &.is-active
+      background: #fff
+      color: #000
+
+
 //- Perex
 .edit-article--perex .medium-editor-wrapper
-  column-count: 3
-  column-rule: 1px dotted #ddd
-  column-gap: $baseline
-
   line-height: 1.58
   hyphens: auto
 
   +article-perex
+
+.edit-article--perex.column-view .medium-editor-wrapper
+  column-count: 3
+  column-rule: 1px dotted #ddd
+  column-gap: $baseline
 
 //- Content
 .edit-article--content .medium-editor-wrapper

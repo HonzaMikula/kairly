@@ -34,6 +34,8 @@
             <button-icon
               class="up"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              tabindex="0"
+              role="button"
               title="Move post up"
               v-show="idx !== 0"
               @click="moveUp(idx)">
@@ -42,6 +44,8 @@
             <button-icon
               class="down"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              tabindex="0"
+              role="button"
               title="Move post down"
               v-show="idx !== published.length - 1"
               @click="moveDown(idx)">
@@ -50,6 +54,8 @@
             <button-icon
               class="remove"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              tabindex="0"
+              role="button"
               title="Remove from issue"
               @click.prevent="undoPublish(post)">
             </button-icon>
@@ -90,6 +96,7 @@
                 role="button"
                 title="Remove post from considaration"
                 v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+                tabindex="0"
                 @click.prevent="removePost(post)">
               </button-icon>
 
