@@ -224,7 +224,7 @@ export default {
   },
 
   async created() {
-    if (process.client) {
+    if (process.client && this.loggedIn) {
       await this.$store.dispatch('getUserBacklog')
     }
   },
