@@ -9,8 +9,9 @@
         :post="post"
         :isSubscribed="true"
       >
-        <template slot="controls" v-if="post.draft">
+        <template slot="controls">
           <button-icon
+            v-if="post.draft"
             class="remove"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             title="Delete post"
@@ -24,7 +25,10 @@
             @click.prevent="$router.push(`/posts/${post.id}`)">
           </button-icon>
 
-          <button @click="publishPost(post)">Publish</button>
+          <button
+            v-if="post.draft"
+            @click="publishPost(post)"
+          >Publish</button>
         </template>
       </PostWrapper>
     </div>

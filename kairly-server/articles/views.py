@@ -464,14 +464,16 @@ class DraftDetailView(View):
 
     @ajax_login_required
     def get(self, request, post_id):
-        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        # user can get (and patch) also published posts
+        post = get_object_or_404(Post, author=request.user, id=post_id)
         return JsonResponse({
             'post': post.to_json()
         })
 
     @ajax_login_required
     def patch(self, request, post_id):
-        post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+        # user can patch also published posts
+        post = get_object_or_404(Post, author=request.user, id=post_id)
         payload = json.loads(request.body.decode('utf-8'))
 
         try:

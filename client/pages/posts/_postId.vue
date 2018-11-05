@@ -33,7 +33,11 @@ export default {
   methods: {
     async savePost(data) {
       const { post } = await this.$axios.$patch(`/drafts/${this.post.id}`, data)
-      this.$router.push("/posts")
+      if (post.draft) {
+        this.$router.push("/posts")
+      } else {
+        this.$router.push("/posts/published")
+      }
     }
   },
 

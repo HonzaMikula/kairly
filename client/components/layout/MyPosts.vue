@@ -3,7 +3,7 @@
     <div class="my-posts">
       <header>
         <nav>
-          <nuxt-link to="/posts/" exact>Drafts</nuxt-link>
+          <nuxt-link to="/posts" exact>Drafts</nuxt-link>
           <nuxt-link to="/posts/published">Published posts</nuxt-link>
         </nav>
 
