@@ -21,7 +21,7 @@ CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': ['localhost:6379'],
-        'TIMEOUT': 120,
+        'TIMEOUT': 300,
         'OPTIONS': {
             'DB': 5,
         },

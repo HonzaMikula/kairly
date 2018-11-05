@@ -261,6 +261,9 @@ class Subscription(models.Model):
     class Meta:
         unique_together = (("user", "newspaper"),)
 
+    def __str__(self):
+        return "Subscription to {}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
+
     def to_json(self):
         full_name = "{}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
         data = {}
@@ -286,6 +289,9 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
 
     class Meta:
         unique_together = (("user", "author", "topic"),)
+
+    def __str__(self):
+        return "SubscriptionToAuthor to {}".format(self.author.username)
 
     def save(self, *args, **kwargs):
         if self.topic and self.topic.author_id != self.author_id:
