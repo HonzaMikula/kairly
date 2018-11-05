@@ -189,7 +189,7 @@ class Newspaper(models.Model, PeriodMixin):
         editor_tz = pytz.timezone(self.editor.timezone)
         return self.get_period_interval(timezone_now(), editor_tz).end
 
-    def to_json(self):
+    def to_json(self, tzinfo):
         return {
             "name": self.slug,
             "fullName": "{}/{}".format(self.editor.username, self.slug),
@@ -198,7 +198,7 @@ class Newspaper(models.Model, PeriodMixin):
             "description": self.description,
             "editor": self.editor.to_json(),
             "periodicity": periodicity_to_json(self),
-            "nextRelease": self.next_release,
+            "nextRelease": str(self.next_release.astimezone(tzinfo)),
             "issues": self.issues,
             "likes": self.likes
         }
@@ -230,7 +230,7 @@ class Issue(models.Model):
         result = {
             "number": self.number,
             "type": 'newspaper',
-            "newspaper": newspaper.to_json(),
+            "newspaper": newspaper.to_json(tzinfo),
             "time": str(self.published.astimezone(tzinfo))
         }
         if posts:

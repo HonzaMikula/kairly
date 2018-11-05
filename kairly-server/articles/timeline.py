@@ -1,10 +1,13 @@
+import json
+import time
+import dateutil.parser
 from operator import itemgetter
 from itertools import chain
 from datetime import datetime, timedelta
-import dateutil.parser
 
 from more_itertools import peekable
 
+from django.core.cache import cache
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 
 from utils.decorators import ajax_login_required
@@ -43,20 +46,21 @@ def timeline(request):
     links = {
         'prev': str(d - timedelta(days=1))
     }
-
-    if recent_day:
-        valid_to = end_dt.timestamp()
-    else:
-        valid_to = None
+    if not recent_day:
         links['next'] = str(d + timedelta(days=1))
 
-    end_dt = min(now, end_dt)
+    if recent_day and now < end_dt:
+        cache_valid_to = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
+        cache_valid_to = int(cache_valid_to.timestamp())
+        end_dt = now
+    else:
+        cache_valid_to = None
 
     newspaper_issues, newspaper_subscription_exists = get_newspaper_issues(
-        request, now, tzinfo, start_dt, end_dt)
+        request, now, tzinfo, start_dt, end_dt, cache_valid_to)
 
     author_issues, author_subscription_exists = get_author_issues(
-        request, now, tzinfo, start_dt, end_dt)
+        request, now, tzinfo, start_dt, end_dt, cache_valid_to)
 
     if not newspaper_subscription_exists and not author_subscription_exists:
         # no subscription exists
@@ -68,13 +72,12 @@ def timeline(request):
 
     return JsonResponse({
         'date': str(d),
-        'validTo': valid_to,
         'issues': issues,
         'links': links,
     })
 
 
-def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt):
+def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = Subscription.objects.filter(
         user=request.user,
         renewal=True,
@@ -88,12 +91,23 @@ def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt):
         subscription_exists = True
 
         issues.extend(
-            get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt)
+            get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to)
         )
     return issues, subscription_exists
 
 
-def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt):
+def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to):
+    newspaper_name = "{}/{}".format(sub.newspaper.editor.username, sub.newspaper.slug)
+    cache_key = "newspaper_issues_{}_{}-{}".format(
+        newspaper_name,
+        int(start_dt.timestamp()),
+        int(end_dt.timestamp() if cache_valid_to is None else cache_valid_to)
+    )
+
+    cached_issues = cache.get(cache_key)
+    if cached_issues:
+        return json.loads(cached_issues)
+
     query = Issue.objects.filter(
         published__gte=start_dt, published__lt=end_dt,
         newspaper=sub.newspaper
@@ -104,10 +118,16 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt):
         issues.append(issue.to_json(
             newspaper=sub.newspaper,
             tzinfo=tzinfo))
+
+    if cache_valid_to is None:
+        timeout = None
+    else:
+        timeout = max(0, cache_valid_to - int(time.time()))
+    cache.set(cache_key, json.dumps(issues), timeout)
     return issues
 
 
-def get_author_issues(request, now, tzinfo, start_dt, end_dt):
+def get_author_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = SubscriptionToAuthor.objects.filter(
         user=request.user,
         renewal=True,
@@ -121,13 +141,24 @@ def get_author_issues(request, now, tzinfo, start_dt, end_dt):
     for sub in subscriptions:
         subscription_exists = True
         issues.extend(
-            get_author_subscription_issues(sub, tzinfo, start_dt, end_dt)
+            get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to)
         )
 
     return issues, subscription_exists
 
 
-def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt):
+def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to):
+    cache_key = "author_issues_{}{}_{}-{}".format(
+        sub.author, '|' + sub.topic.slug if sub.topic else '',
+        int(start_dt.timestamp()),
+        int(end_dt.timestamp() if cache_valid_to is None else cache_valid_to)
+    )
+
+    # there is still place to improve it using get_many or redis directly
+    cached_issues = cache.get(cache_key)
+    if cached_issues:
+        return json.loads(cached_issues)
+
     dt = start_dt
     intervals = []
     while True:
@@ -168,4 +199,10 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt):
                 'author': sub.author.to_json(topic=sub.topic),
                 'posts': [p.to_json(short=True, tzinfo=tzinfo) for p in interval_posts],
             })
+
+    if cache_valid_to is None:
+        timeout = None
+    else:
+        timeout = max(0, cache_valid_to - int(time.time()))
+    cache.set(cache_key, json.dumps(issues), timeout)
     return issues

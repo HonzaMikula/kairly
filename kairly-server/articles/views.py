@@ -121,6 +121,7 @@ def delete_newspaper(request, newspaper):
 
 class NewspaperView(View):
     def get(self, request, username, newspapeper_slug):
+        tzinfo = request.user.tzinfo
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
         issueNo = request.GET.get('issue')
@@ -130,12 +131,13 @@ class NewspaperView(View):
             issues = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[:3]
 
         return JsonResponse({
-            'newspaper': newspaper.to_json(),
+            'newspaper': newspaper.to_json(tzinfo),
             'issues': [issue.to_json(anonymous=request.user.is_anonymous) for issue in issues]
         })
 
     @ajax_login_required
     def patch(self, request, username, newspapeper_slug):
+        tzinfo = request.user.tzinfo
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         payload = json.loads(request.body.decode('utf-8'))
 
@@ -164,7 +166,7 @@ class NewspaperView(View):
         newspaper.save()
 
         return JsonResponse({
-            'newspaper': newspaper.to_json(),
+            'newspaper': newspaper.to_json(tzinfo),
         })
 
     @ajax_login_required
@@ -179,6 +181,7 @@ class NewspaperView(View):
 
 
 def author(request, username):
+    tzinfo = request.user.tzinfo
     author, topic = get_user_and_topic(username)
     topics = {t.slug: t for t in Topic.objects.filter(author=author)}
 
@@ -186,7 +189,7 @@ def author(request, username):
     newspapers.sort(key=attrgetter('likes'), reverse=True)
     data = {
         'author': author.to_json(topic=topic),
-        'newspapers': [e.to_json() for e in newspapers],
+        'newspapers': [n.to_json(tzinfo) for n in newspapers],
     }
     if not topic and topics:
         data['topics'] = [{
@@ -527,6 +530,7 @@ def get_type_from_data_uri(data):
 @ajax_login_required
 @require_POST
 def start_newspaper(request, username):
+    tzinfo = request.user.tzinfo
     author, topic = get_user_and_topic(username)
     payload = json.loads(request.body.decode('utf-8'))
 
@@ -561,5 +565,5 @@ def start_newspaper(request, username):
     )
 
     return JsonResponse({
-        'newspaper': newspaper.to_json()
+        'newspaper': newspaper.to_json(tzinfo)
     })
