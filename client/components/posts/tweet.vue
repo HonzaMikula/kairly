@@ -21,7 +21,6 @@
     </template>
 
     <template slot="controls"><slot name="controls"></slot></template>
-    <template slot="buttons"><slot name="buttons"></slot></template>
   </post>
 </template>
 
