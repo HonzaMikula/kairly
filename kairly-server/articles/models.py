@@ -291,7 +291,10 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         unique_together = (("user", "author", "topic"),)
 
     def __str__(self):
-        return "SubscriptionToAuthor to {}".format(self.author.username)
+        title = self.author.username
+        if self.topic:
+            title += '|' + self.topic.name
+        return "SubscriptionToAuthor to {}".format(title)
 
     def save(self, *args, **kwargs):
         if self.topic and self.topic.author_id != self.author_id:

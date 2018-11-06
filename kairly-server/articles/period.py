@@ -45,25 +45,25 @@ class PeriodMixin:
                 return PeriodInterval(
                     dt.replace(hour=H3, minute=0, second=0, microsecond=0) - timedelta(days=1),
                     dt.replace(hour=H1, minute=0, second=0, microsecond=0),
-                    'Evening'
+                    '3× per day'
                 )
             elif dt.hour >= H1 and dt.hour < H2:
                 return PeriodInterval(
                     dt.replace(hour=H1, minute=0, second=0, microsecond=0),
                     dt.replace(hour=H2, minute=0, second=0, microsecond=0),
-                    'Morning'
+                    '3× per day'
                 )
             elif dt.hour >= H2 and dt.hour < H3:
                 return PeriodInterval(
                     dt.replace(hour=H2, minute=0, second=0, microsecond=0),
                     dt.replace(hour=H3, minute=0, second=0, microsecond=0),
-                    'Afternoon'
+                    '3× per day'
                 )
             else:
                 return PeriodInterval(
                     dt.replace(hour=H3, minute=0, second=0, microsecond=0),
                     dt.replace(hour=H1, minute=0, second=0, microsecond=0) + timedelta(days=1),
-                    'Evening'
+                    '3× per day'
                 )
 
         elif self.period == self.DAILY:
@@ -71,7 +71,7 @@ class PeriodMixin:
             start = dt.replace(hour=sub_time.hour, minute=sub_time.minute, second=0, microsecond=0)
             if start > dt:
                 start -= timedelta(days=1)
-            return PeriodInterval(start, start + timedelta(days=1), 'Daily')
+            return PeriodInterval(start, start + timedelta(days=1), 'Daily summary')
 
         elif self.period == self.WEEKLY:
             sub_time = self.period_time
@@ -80,7 +80,7 @@ class PeriodMixin:
                 start -= timedelta(days=1)
             while start.isoweekday() != self.period_dow:
                 start -= timedelta(days=1)
-            return PeriodInterval(start, start + timedelta(days=7), 'Weekly')
+            return PeriodInterval(start, start + timedelta(days=7), 'Weekly summary')
 
         else:
             raise ValueError()
