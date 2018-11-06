@@ -172,11 +172,16 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
     if not intervals:
         return []
 
-    posts = peekable(Post.objects.filter(
+    posts_query = Post.objects.filter(
         author=sub.author,
         published__gte=intervals[0].start,
         published__lt=intervals[0].end,
-    ).order_by('published'))
+    )
+
+    if sub.topic:
+        posts_query = posts_query.filter(topics=sub.topic)
+
+    posts = peekable(posts_query.order_by('published'))
 
     issues = []
     for interval in intervals:
