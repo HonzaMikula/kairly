@@ -74,6 +74,7 @@ def timeline(request):
         'date': str(d),
         'issues': issues,
         'links': links,
+        'validTo': cache_valid_to,
     })
 
 
