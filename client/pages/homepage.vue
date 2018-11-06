@@ -271,38 +271,14 @@ homepage--roles
     @media (max-width: $mobile)
       padding: $baseline
 
-    &::after
-      +fa-icon()
-
-      position: absolute
-      right: -$baseline * 1.25
-      top: $baseline * 3
-
-      content: $fa-var-arrow-right
-
-      @media (max-width: $mobile)
-        top: auto
-        bottom: -10px
-        right: 50%
-        margin-right: -10px
-
-        height: $baseline
-
-        content: $fa-var-arrow-down
-
     &:last-of-type
       margin-right: 0
-
-      &::after
-        display: none
 
   h3
     margin-bottom: $baseline / 2
 
     font-size: $fs-3
     font-family: $ff-serif
-
-
 
 
 //- Values

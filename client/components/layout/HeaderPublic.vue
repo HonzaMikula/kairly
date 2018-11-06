@@ -77,12 +77,16 @@ export default {
 
   //- logo
   h1
+    display: inline-block
+
     font-family: $ff-serif
     font-weight: 600
     font-size: $fs-3
-    text-align: center
 
     a
+      display: block
+      padding-right: $baseline
+
       color: #000
 
     @media (max-width: $mobile)
@@ -91,9 +95,7 @@ export default {
 
   //- motto
   p
-    position: absolute
-    left: 0
-    top: 0
+    display: inline-block
 
     font-family: $ff-serif
     font-size: $fs-0

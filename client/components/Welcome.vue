@@ -138,23 +138,8 @@ timeline-welcome
     @media (max-width: $mobile)
       margin: 0 0 $baseline 0
 
-    &::after
-      +fa-icon()
-
-      position: absolute
-      right: -$baseline * 1.25
-      top: $baseline * 2
-
-      content: $fa-var-arrow-right
-
-      @media (max-width: $mobile)
-        display: none
-
     &:last-of-type
       margin-right: 0
-
-      &::after
-        display: none
 
   h3
     margin-bottom: $baseline / 2

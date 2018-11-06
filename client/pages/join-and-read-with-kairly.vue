@@ -10,13 +10,17 @@
         <div class="error" v-if="error">{{ error }}</div>
 
         <div>
-          <input placeholder="Username" v-model="username">
+          <label>Username</label>
+          <input v-model="username">
         </div>
         <div>
-          <input placeholder="Email" v-model="email">
+          <label>Email</label>
+          <input v-model="email" placeholder="@">
         </div>
         <div>
-          <input type="password" placeholder="Password" v-model="password">
+          <label>Password</label>
+          <input type="password" v-model="password">
+          <p>At least 8 characters</p>
         </div>
 
         <button @click="submit">Sign Up</button>
@@ -102,7 +106,6 @@ sign-up-page
     h1
       margin-bottom: $baseline
 
-
       font-size: 50px
       text-align: center
 
@@ -130,6 +133,10 @@ sign-up-page
       font-size: $fs-2
       text-align: center
 
+    //- Label
+    label
+      color: #fff
+
     //- Form Fields
     input
       box-sizing: border-box
@@ -139,7 +146,7 @@ sign-up-page
 
       background: rgba(255, 255, 255, 0.7)
       border: 0
-      border-radius: 10px
+      border-radius: 5px
 
       font-family: $ff-sans
       font-size: $fs-0
@@ -147,10 +154,17 @@ sign-up-page
       &:focus
         background: #fff
 
+    //- Note
+    p
+      color: #ddd
+
+      font-size: $fs--1
+
     //- Button
     button
       +subscribe-button
 
+      border-radius: 5px
       height: $baseline * 1.5
       width: 100%
 
@@ -158,6 +172,7 @@ sign-up-page
       color: #fff
 
       font-family: $ff-sans
+      font-size: $fs-0
 
       &:focus,
       &:hover
