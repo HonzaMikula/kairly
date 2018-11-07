@@ -256,14 +256,8 @@ post-detail
 
   background: #fff
 
-  //- wrapper
-  > div
-    padding: $baseline 0
-    margin: 0 auto
-    max-width: 900px
-
-    @media (max-width: $mobile)
-      padding: $baseline/4 0
+  @media (max-width: $mobile)
+    padding: $baseline/4 $baseline/4 $baseline *5 $baseline/4
 
   main
     margin: 0 auto
