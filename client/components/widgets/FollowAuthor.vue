@@ -22,7 +22,7 @@
 
       <section>
         <ul>
-          <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
+          <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3× per day</a></li>
           <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
           <li><a href="" v-on:click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
         </ul>

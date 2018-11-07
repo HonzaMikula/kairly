@@ -176,7 +176,7 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
     posts_query = Post.objects.filter(
         author=sub.author,
         published__gte=intervals[0].start,
-        published__lt=intervals[0].end,
+        published__lt=intervals[-1].end,
     )
 
     if sub.topic:
@@ -194,13 +194,12 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
             pass
 
         if interval_posts:
-            issue_title = interval.title + ' summary'
             suffix = '|' + sub.topic.slug if sub.topic else ''
             isodate = str(interval.end)
             issues.append({
                 'id': '{}{}-{}'.format(sub.author.username, suffix, isodate),
                 'type': 'author',
-                'title': issue_title,
+                'title': interval.title,
                 'time': isodate,
                 'author': sub.author.to_json(topic=sub.topic),
                 'posts': [p.to_json(short=True, tzinfo=tzinfo) for p in interval_posts],
