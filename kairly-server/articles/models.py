@@ -1,4 +1,4 @@
-import json
+import rapidjson as json
 import math
 from datetime import datetime, timezone
 import re
@@ -16,6 +16,7 @@ from django.utils.timezone import now as timezone_now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 
+from utils.json import datetime_isoformat_ecma262
 from .period import PeriodMixin, periodicity_to_json
 
 
@@ -114,7 +115,7 @@ class Post(models.Model):
             'author': self.author.to_json(),
             'source': self.source,
             'type': self.kind,
-            'time': str(self.published.astimezone(tzinfo))
+            'time': datetime_isoformat_ecma262(self.published.astimezone(tzinfo)),
         }
         if self.draft:
             result['draft'] = True
@@ -198,7 +199,7 @@ class Newspaper(models.Model, PeriodMixin):
             "description": self.description,
             "editor": self.editor.to_json(),
             "periodicity": periodicity_to_json(self),
-            "nextRelease": str(self.next_release.astimezone(tzinfo)),
+            "nextRelease": datetime_isoformat_ecma262(self.next_release.astimezone(tzinfo)),
             "issues": self.issues,
             "likes": self.likes
         }
@@ -231,7 +232,7 @@ class Issue(models.Model):
             "number": self.number,
             "type": 'newspaper',
             "newspaper": newspaper.to_json(tzinfo),
-            "time": str(self.published.astimezone(tzinfo))
+            "time": datetime_isoformat_ecma262(self.published.astimezone(tzinfo))
         }
         if posts:
             result["posts"] = [
@@ -268,8 +269,8 @@ class Subscription(models.Model):
         full_name = "{}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
         data = {}
         data[full_name] = {
-            'from': self.valid_from,
-            'to': self.valid_to,
+            'from': datetime_isoformat_ecma262(self.valid_from),
+            'to': datetime_isoformat_ecma262(self.valid_to),
             'renewal': self.renewal
         }
         return data
@@ -307,8 +308,8 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         data[author_json['id']] = {
             'author': author_json,  # is this needed?
             'periodicity': periodicity_to_json(self),
-            'from': self.valid_from,
-            'to': self.valid_to,
+            'from': datetime_isoformat_ecma262(self.valid_from),
+            'to': datetime_isoformat_ecma262(self.valid_to),
             'renewal': self.renewal
         }
         return data

@@ -24,6 +24,7 @@ more-itertools = "*"
 python-twitter = "*"
 django-autocomplete-light = "*"
 bleach = "*"
+python-rapidjson = "*"
 
 [requires]
 python_version = "3.6"

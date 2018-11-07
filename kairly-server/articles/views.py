@@ -1,4 +1,4 @@
-import json
+import rapidjson as json
 import html
 from collections import defaultdict
 from datetime import datetime
@@ -7,7 +7,7 @@ from operator import attrgetter
 from dateutil.relativedelta import relativedelta
 
 from django.shortcuts import get_object_or_404
-from django.http import (Http404, JsonResponse, HttpResponse, HttpResponseNotFound,
+from django.http import (Http404, HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
 from django.views import View
 from django.views.decorators.http import require_POST
@@ -17,6 +17,7 @@ from django.utils.timezone import now as timezone_now
 
 from utils.decorators import ajax_login_required
 from utils.html import sanitize
+from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
 from .models import (Newspaper, Issue, Backlog,

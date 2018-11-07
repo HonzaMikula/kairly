@@ -1,4 +1,4 @@
-import json
+import rapidjson as json
 import time
 import dateutil.parser
 from operator import itemgetter
@@ -8,8 +8,9 @@ from datetime import datetime, timedelta
 from more_itertools import peekable
 
 from django.core.cache import cache
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 
+from utils.json import JsonResponse
 from utils.decorators import ajax_login_required
 from .models import Issue, Post, Subscription, SubscriptionToAuthor
 

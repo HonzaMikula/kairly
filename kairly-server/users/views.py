@@ -1,5 +1,5 @@
 import jwt
-import json
+import rapidjson as json
 import time
 import urllib.request
 import urllib.error
@@ -14,7 +14,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.views import View
 from django.utils.timezone import localdate
 from django.views.decorators.csrf import csrf_exempt
@@ -24,6 +24,7 @@ from dal import autocomplete
 
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
+from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from articles.models import Newspaper
 from .models import User, Category, CategoryUser
