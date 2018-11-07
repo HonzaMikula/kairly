@@ -16,7 +16,7 @@ from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
 
 from utils.decorators import ajax_login_required
-from utils.html import sanitize
+from utils.html import sanitize, convert_data_uris
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
@@ -413,6 +413,9 @@ def validate_post_attributes(request, payload):
             raise ValueError("No title")
         if not perex:
             raise ValueError("No perex")
+
+        perex = convert_data_uris(perex)
+        content = convert_data_uris(content)
     elif kind == Post.TWEET:
         raw_content = payload['content'].strip()
 
