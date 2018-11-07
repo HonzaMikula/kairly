@@ -130,10 +130,6 @@ export default {
         errors.push("Periodicity is not selected")
       }
 
-      if (this.image === null && !this.newspaper) {
-        errors.push("Image is not selected")
-      }
-
       if (errors.length) {
         // TODO show validation in form
         alert(errors.join("\n"))

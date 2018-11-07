@@ -155,7 +155,7 @@ class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
     slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='editions', null=True)  # temporary allow null
+    image = models.ImageField(upload_to='editions', null=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
 
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
@@ -195,7 +195,7 @@ class Newspaper(models.Model, PeriodMixin):
             "name": self.slug,
             "fullName": "{}/{}".format(self.editor.username, self.slug),
             "title": self.title,
-            "picture": settings.MEDIA_SITE + self.image.url,
+            "picture": settings.MEDIA_SITE + self.image.url if self.image else None,
             "description": self.description,
             "editor": self.editor.to_json(),
             "periodicity": periodicity_to_json(self),

@@ -160,8 +160,9 @@ class NewspaperView(View):
             newspaper.period_time = periodicity.time
             newspaper.period_dow = periodicity.dow
 
-        if 'image' in payload:
-            image = file_from_data_uri(payload['image'], "{}-{}".format(request.user.username, newspaper.slug))
+        image = payload.get('image')
+        if image:
+            image = file_from_data_uri(image, "{}-{}".format(request.user.username, newspaper.slug))
             newspaper.image = image
 
         newspaper.save()
@@ -556,7 +557,10 @@ def start_newspaper(request, username):
         slug_suffix += 1
         slug = '{}-{}'.format(base_slug, slug_suffix)
 
-    image = file_from_data_uri(payload['image'], "{}-{}".format(author.username, base_slug))
+    image = payload.get('image')
+    if image:
+        image = file_from_data_uri(image, "{}-{}".format(author.username, base_slug))
+
     newspaper = Newspaper.objects.create(
         title=title,
         slug=slug,
