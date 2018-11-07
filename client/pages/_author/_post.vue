@@ -335,7 +335,7 @@ post-detail--header
 //- Title
 post-detail--title
   display: block
-  margin-bottom: $baseline
+  margin-bottom: $baseline / 2
 
   font-family: $ff-serif
   font-size: $fs-3
