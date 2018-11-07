@@ -17,6 +17,8 @@
           <button-icon
             class="read-later"
             title="Read later"
+            role="button"
+            tabindex="0"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
           </button-icon>
         </post-detail--header>
@@ -338,7 +340,7 @@ post-detail--title
   font-family: $ff-serif
   font-size: $fs-3
   font-weight: 600
-  line-height: 1.58
+  line-height: 1.7
 
   @media (max-width: $mobile)
     font-size: $fs-2
@@ -388,7 +390,7 @@ post-detail--perex
 
   font-family: $ff-serif
   font-size: $fs-1
-  line-height: 1.58
+  line-height: 1.7
 
   @media (max-width: $mobile)
     font-size: $fs-0

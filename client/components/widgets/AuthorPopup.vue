@@ -200,7 +200,7 @@ author-widget
   box-shadow: 1px 1px 3px #999
 
   font-size: $fs--1
-  line-height: 22rem
+  line-height: 22px
 
   //- arrow
   &::after

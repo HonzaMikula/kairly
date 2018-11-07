@@ -15,7 +15,7 @@
     <section v-else-if="frequency === 'weekly' && dow === null">
       <header>
         Which day?
-        <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" v-on:click="goOneStepBack()"></button-icon>
       </header>
       <ul>
         <li><a href="" v-on:click.prevent="selectWhatDay('1', $event)">Monday</a></li>
@@ -31,7 +31,7 @@
     <section v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
         What time?
-        <button-icon tabindex="0" v-on:click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" v-on:click="goOneStepBack()"></button-icon>
       </header>
       <ul>
         <li><a href="" v-on:click.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
