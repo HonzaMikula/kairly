@@ -81,7 +81,7 @@ def deploy_cron(ctx):
         'source /srv/.bashrc',
         'cd /srv/kairly',
         'git pull',
-        'cp /srv/kairly/kairly-server/cron/crontab  /srv/conf/crontab'
+        'cp /srv/kairly/kairly-server/cron/crontab /srv/conf',
         'crontab /srv/conf/crontab'
     ]
     ctx.run("ssh -T -p {} {} '{}'".format(CRON_PORT, CRON_HOST, ' && '.join(remote_commands)))
