@@ -103,14 +103,14 @@ def recent_issues(request):
         issue.newspaper = newspapers[issue.newspaper_id]
         resp.append(issue.to_json(posts=True, tzinfo=tzinfo)),
 
-    return JsonResponse(resp, safe=False)
+    return JsonResponse(resp)
 
 
 @ajax_login_required
 def recent_posts(request):
     tzinfo = request.user.tzinfo
     posts = Post.objects.filter(draft=False, published__lt=timezone.now()).select_related('author').order_by('-published')[:12]
-    return JsonResponse([post.to_json(tzinfo=tzinfo) for post in posts], safe=False)
+    return JsonResponse([post.to_json(tzinfo=tzinfo) for post in posts])
 
 
 def delete_newspaper(request, newspaper):
