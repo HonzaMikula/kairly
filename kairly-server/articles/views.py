@@ -81,7 +81,7 @@ def user_backlog(request):
     backlog = defaultdict(dict)
     for bl in Backlog.objects.filter(newspaper__editor=request.user).select_related('newspaper'):
         full_name = "{}/{}".format(request.user.username, bl.newspaper.slug)
-        backlog[bl.post_id][full_name] = 'C' if bl.publish_stamp is None else 'P'
+        backlog[str(bl.post_id)][full_name] = 'C' if bl.publish_stamp is None else 'P'
 
     return JsonResponse({
         "backlog": backlog
