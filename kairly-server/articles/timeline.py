@@ -10,7 +10,7 @@ from more_itertools import peekable
 from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseBadRequest
 
-from utils.json import JsonResponse
+from utils.json import JsonResponse, datetime_isoformat_ecma262
 from utils.decorators import ajax_login_required
 from .models import Issue, Post, Subscription, SubscriptionToAuthor
 
@@ -196,7 +196,7 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
 
         if interval_posts:
             suffix = '|' + sub.topic.slug if sub.topic else ''
-            isodate = str(interval.end)
+            isodate = datetime_isoformat_ecma262(interval.end)
             issues.append({
                 'id': '{}{}-{}'.format(sub.author.username, suffix, isodate),
                 'type': 'author',

@@ -53,6 +53,7 @@ jobs:
 
       - run: ssh-keyscan -H -p 14076 node-13.rosti.cz >> ~/.ssh/known_hosts
       - run: ssh-keyscan -H -p 14930 node-13.rosti.cz >> ~/.ssh/known_hosts
+      - run: ssh-keyscan -H -p 15218 node-14.rosti.cz >> ~/.ssh/known_hosts
 
       - run: sudo apt update && sudo apt install -y python3 python3-pip
       - run: sudo pip3 install invoke
@@ -77,6 +78,7 @@ jobs:
           key: v2-dependencies-{{ checksum "client/package.json" }}
 
       - run: invoke deploy
+      - run: invoke deploy.cron
 
 
 workflows:
