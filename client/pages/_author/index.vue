@@ -401,9 +401,9 @@ author-detail--subscribe
   button.is-canceled
     +subscribed-button
 
-    border-radius: $baseline * 0.5
+    border-radius: $baseline * 0.75
     height: $baseline * 1.5
-    width: 140px
+    width: 150px
 
     line-height: $baseline * 1.5
 
