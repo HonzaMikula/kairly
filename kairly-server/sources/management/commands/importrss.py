@@ -143,7 +143,7 @@ class Command(BaseCommand):
                             self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
                         post.topics.add(channel.topic)
                 except Exception:
-                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exceptions occured while fetching {}".format(timezone.now(), channel.rss))
+                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {}".format(timezone.now(), channel.rss))
                     traceback.print_exc()
 
                 if options.get('last'):

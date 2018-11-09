@@ -112,7 +112,7 @@ class Command(BaseCommand):
                 self.create_issue(newspaper, now, verbosity, dry_run)
                 counter_issues += 1
             except Exception:
-                self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exceptions occured while handling {}".format(timezone.now(), newspaper))
+                self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while handling {}".format(timezone.now(), newspaper))
                 traceback.print_exc()
 
         counter_end = time.perf_counter()

@@ -199,7 +199,7 @@ class Command(BaseCommand):
                     #     post.topics.add(channel.topic)
 
             except Exception:
-                self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exceptions occured while fetching @{}".format(timezone.now(), twitter_account))
+                self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching @{}".format(timezone.now(), twitter_account))
                 traceback.print_exc()
 
             counter_accounts += 1
