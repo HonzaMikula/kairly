@@ -1,9 +1,10 @@
 import re
 import time
 import traceback
+from datetime import timedelta
+
 import dateutil.parser
 from django.utils import timezone
-
 from django.core.management.base import BaseCommand
 
 from articles.models import Post
@@ -52,7 +53,7 @@ class Command(BaseCommand):
         url = entry.link.split('#', maxsplit=1)[0]
 
         if options.get('url') and url != options.get('url'):
-            return None
+            return None, False
 
         # some feeds has not guid attribute
         if hasattr(entry, 'id'):
@@ -69,7 +70,7 @@ class Command(BaseCommand):
         if post and not force:
             if verbosity > 1:
                 self.stdout.write('Skipping {}. Already imported'.format(url))
-            return post
+            return post, False
 
         if verbosity > 0:
             self.stdout.write('Importing {}'.format(url))
@@ -104,10 +105,16 @@ class Command(BaseCommand):
             post.__dict__.update(args)
             post.save()
 
-        return post
+        return post, True
 
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
+
+        counter_start = time.perf_counter()
+        counter_channels = 0
+        counter_posts = 0
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: importrss started".format(timezone.now()))
+
         channels = Channel.objects.filter(enabled=True).exclude(author__isnull=True)
         if options.get('provider'):
             channels = channels.filter(provider=options['provider'])
@@ -116,12 +123,17 @@ class Command(BaseCommand):
             if verbosity > 0:
                 self.stdout.write('Fetching {}'.format(channel.rss))
 
+            counter_channels += 1
+
             for entry in channel.parse_rss().entries:
                 if not channel.is_url_valid(entry.link):
                     continue
 
                 try:
-                    post = self.import_post(channel, entry, options)
+                    post, imported = self.import_post(channel, entry, options)
+
+                    if imported:
+                        counter_posts += 1
 
                     if post is None:
                         continue
@@ -131,9 +143,14 @@ class Command(BaseCommand):
                             self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
                         post.topics.add(channel.topic)
                 except Exception:
+                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exceptions occured while fetching {}".format(timezone.now(), channel.rss))
                     traceback.print_exc()
 
                 if options.get('last'):
                     break
 
-                time.sleep(0.05)
+                time.sleep(0.03)
+
+        counter_end = time.perf_counter()
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: importtrss finished in {} / {} channels / {} posts imported".format(
+            timezone.now(), timedelta(seconds=counter_end - counter_start), counter_channels, counter_posts))

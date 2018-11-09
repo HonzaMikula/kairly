@@ -1,5 +1,7 @@
 import traceback
 import datetime
+from datetime import timedelta
+import time
 
 import pytz
 
@@ -66,7 +68,7 @@ class Command(BaseCommand):
             default_tz = timezone.get_default_timezone()
             h, *tail = map(int, hour.split('+', maxsplit=1))
             if tail:
-                tz = datetime.timezone(datetime.timedelta(hours=tail[0]))
+                tz = datetime.timezone(timedelta(hours=tail[0]))
             else:
                 tz = default_tz
 
@@ -77,6 +79,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
         dry_run = options.get('dry-run', False)
+
+        counter_start = time.perf_counter()
+        counter_issues = 0
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: publishissues started".format(timezone.now()))
 
         now = self.get_now(options.get('hour'))
         if verbosity > 1:
@@ -104,5 +110,11 @@ class Command(BaseCommand):
                             continue
 
                 self.create_issue(newspaper, now, verbosity, dry_run)
+                counter_issues += 1
             except Exception:
+                self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exceptions occured while handling {}".format(timezone.now(), newspaper))
                 traceback.print_exc()
+
+        counter_end = time.perf_counter()
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: publishissues finished in {} / {} issues published".format(
+            timezone.now(), timedelta(seconds=counter_end - counter_start), counter_issues))
