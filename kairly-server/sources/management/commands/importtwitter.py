@@ -4,6 +4,7 @@ import time
 import traceback
 import dateutil.parser
 from urllib.parse import urlsplit
+from datetime import timedelta
 
 import twitter
 import requests
@@ -11,6 +12,7 @@ import bs4
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.utils import timezone
 
 from articles.models import Post
 from users.models import User
@@ -111,6 +113,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
 
+        counter_start = time.perf_counter()
+        counter_accounts = 0
+        counter_tweets = 0
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: importtwitter started".format(timezone.now()))
+
         self.api = twitter.Api(consumer_key=settings.TWITTER_CONSUMER_KEY,
                                consumer_secret=settings.TWITTER_CONSUMER_SECRET,
                                access_token_key=settings.TWITTER_ACCESS_TOKEN_KEY,
@@ -183,6 +190,8 @@ class Command(BaseCommand):
                         post.__dict__.update(args)
                         post.save()
 
+                    counter_tweets += 1
+
                     # # Topics are not supported for now
                     # if channel.topic:
                     #     if verbosity > 1:
@@ -190,6 +199,12 @@ class Command(BaseCommand):
                     #     post.topics.add(channel.topic)
 
             except Exception:
+                self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching @{}".format(timezone.now(), twitter_account))
                 traceback.print_exc()
 
-            time.sleep(0.05)
+            counter_accounts += 1
+            time.sleep(0.03)
+
+        counter_end = time.perf_counter()
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: importtwitter finished in {} / {} twitter accounts / {} tweets imported".format(
+            timezone.now(), timedelta(seconds=counter_end - counter_start), counter_accounts, counter_tweets))

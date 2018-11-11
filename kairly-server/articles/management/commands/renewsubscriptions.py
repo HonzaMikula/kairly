@@ -1,9 +1,10 @@
+import time
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 
 from django.core.management.base import BaseCommand
-from django.utils.timezone import now as timezone_now
+from django.utils import timezone
 from django.db import transaction
 
 from articles.models import Subscription, SubscriptionToAuthor
@@ -21,10 +22,20 @@ class Command(BaseCommand):
         sub.save()
 
     def handle(self, *args, **options):
-        now = timezone_now() + timedelta(minutes=10)
+        verbosity = options.get('verbosity')
+
+        counter_start = time.perf_counter()
+        counter_author = 0
+        counter_newspaper = 0
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: renewsubscriptions started".format(timezone.now()))
+
+        now = timezone.now() + timedelta(minutes=10)
 
         for sub in Subscription.objects.filter(valid_to__lt=now, renewal=True).select_related('user', 'newspaper'):
-            self.stdout.write('Extending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
+            if verbosity > 0:
+                self.stdout.write('Extending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
+
+            counter_newspaper += 1
             self.extend_subscriptions(sub)
 
         for sub in SubscriptionToAuthor.objects.filter(valid_to__lt=now, renewal=True).select_related('user', 'author'):
@@ -32,5 +43,13 @@ class Command(BaseCommand):
                 author_id = "{}|{}".format(sub.author.username, sub.topic.slug)
             else:
                 author_id = sub.author.username
-            self.stdout.write('Extending author subscription: {} -> {}'.format(sub.user, author_id))
+
+            if verbosity > 1:
+                self.stdout.write('Extending author subscription: {} -> {}'.format(sub.user, author_id))
+
+            counter_author += 1
             self.extend_subscriptions(sub)
+
+        counter_end = time.perf_counter()
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: renewsubscriptions finished in {} / extended subscriptions: {} author / {} newspaper".format(
+            timezone.now(), timedelta(seconds=counter_end - counter_start), counter_author, counter_newspaper))
