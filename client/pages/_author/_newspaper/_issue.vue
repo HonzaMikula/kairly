@@ -8,7 +8,8 @@
       <h2>{{ newspaper.title }}</h2>
 
       <picture>
-        <img :src="newspaper.picture" :alt="newspaper.title" />
+        <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
+        <div v-else class="image-placeholder"></div>
       </picture>
 
       <div class="issue--footer--description">
@@ -211,6 +212,10 @@ issue-detail-view
 
     img
       width: 100%
+
+    .image-placeholder
+      height: 100%
+      background-image: radial-gradient(#fafafa, #aaa)
 
 
   //- title

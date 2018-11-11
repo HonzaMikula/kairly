@@ -2,7 +2,8 @@
   <newspaper-widget-view>
     <picture>
       <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
-        <img :src="newspaper.picture" :alt="newspaper.title" />
+        <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
+        <div v-else class="image-placeholder"></div>
       </nuxt-link>
     </picture>
 
@@ -108,6 +109,11 @@ newspaper-widget-view
       height: 100%
       width: 100%
       object-fit: cover
+
+    .image-placeholder
+      height: 100%
+      background-image: radial-gradient(#fafafa, #aaa)
+
 
   //- title
   > h2

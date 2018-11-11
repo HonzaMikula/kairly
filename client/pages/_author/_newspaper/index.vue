@@ -39,7 +39,8 @@
           </section>
 
           <picture>
-            <img :src="newspaper.picture" :alt="newspaper.title"/>
+            <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
+            <div v-else class="image-placeholder"></div>
           </picture>
         </newspaper-detail--description>
       </div>
@@ -374,6 +375,11 @@ newspaper-detail--description
       max-height: 100%
       width: 100%
       object-fit: cover
+
+    .image-placeholder
+      min-height: 250px
+      height: 100%
+      background-image: radial-gradient(#fafafa, #aaa)
 
 
 newspaper-detail--last-newspaper

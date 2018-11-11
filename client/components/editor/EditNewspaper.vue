@@ -214,6 +214,9 @@ edit-newspaper-view
 
       cursor: pointer
 
+    > button
+      +subscribed-button
+
   .description
     display: grid
     grid-template-columns: 1fr 2fr
