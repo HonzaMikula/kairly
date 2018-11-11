@@ -89,7 +89,7 @@
             In the world full of fake news, manipulations and attacks on journalism, we stand for <strong>truth</strong>.
           </p>
 
-          <p>In the world full of censorship and propaganda, we stand for <strong>free speach</strong>.</p>
+          <p>In the world full of censorship and propaganda, we stand for <strong>free speech</strong>.</p>
 
           <p>
             In the world full of distraction and lack of focus, we stand for

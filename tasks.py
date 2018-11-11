@@ -8,6 +8,9 @@ from invoke import task, Collection
 PY_HOST = 'app@node-13.rosti.cz'
 PY_PORT = 14076
 
+CRON_HOST = 'app@node-14.rosti.cz'
+CRON_PORT = 15218
+
 JS_HOST = 'app@node-13.rosti.cz'
 JS_PORT = 14930
 
@@ -67,8 +70,21 @@ def deploy_py(ctx):
 
 
 @task(compile_js, upload_js, deploy_py, promote_js)
-def deploy_all(ctx):
+def deploy_app(ctx):
     pass
+
+
+@task
+def deploy_cron(ctx):
+    remote_commands = [
+        'export TERM=xterm',
+        'source /srv/.bashrc',
+        'cd /srv/kairly',
+        'git pull',
+        'cp /srv/kairly/kairly-server/cron/crontab /srv/conf',
+        'crontab /srv/conf/crontab'
+    ]
+    ctx.run("ssh -T -p {} {} '{}'".format(CRON_PORT, CRON_HOST, ' && '.join(remote_commands)))
 
 
 @task()
@@ -104,9 +120,10 @@ def dump_prod(ctx):
 
 
 deploy_ns = Collection('deploy')
-deploy_ns.add_task(deploy_all, 'all', default=True)
+deploy_ns.add_task(deploy_app, 'app', default=True)
 deploy_ns.add_task(deploy_js, 'js')
 deploy_ns.add_task(deploy_py, 'py')
+deploy_ns.add_task(deploy_cron, 'cron')
 
 dbdump_ns = Collection('dbdump')
 dbdump_ns.add_task(dump_prod, 'prod')

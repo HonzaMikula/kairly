@@ -69,12 +69,6 @@ export default {
   button.is-subscribed
     +subscribed-button
 
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
-
-    line-height: $baseline * 1.5
-
     .on-hover
       display: none
 
@@ -89,12 +83,6 @@ export default {
   //- when newspeper is canceled
   button.is-canceled
     +subscribed-button
-
-    border-radius: $baseline * 0.5
-    height: $baseline * 1
-    width: 150px
-
-    line-height: $baseline * 1
 
     .on-hover
       display: none
@@ -111,9 +99,4 @@ export default {
   button.to-subscribe
     +subscribe-button
 
-    border-radius: $baseline * 0.5
-    height: $baseline * 1
-    width: 140px
-
-    line-height: $baseline * 1
 </style>

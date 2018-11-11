@@ -256,10 +256,19 @@ newspaper-detail--subscribe
 
   backdrop-filter: blur(10px)
 
+  text-align: center
+
   @media (max-width: $mobile)
     position: static
-    text-align: center
 
+  .newspaper-subscription button.to-subscribe,
+  .newspaper-subscription button.is-subscribed,
+  .newspaper-subscription button.is-canceled,
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    width: 150px
+
+    line-height: $baseline * 1.5
 
   > p
     color: #555
