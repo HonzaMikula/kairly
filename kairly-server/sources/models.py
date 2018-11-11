@@ -25,6 +25,7 @@ class Channel(models.Model):
     skip_rules = models.TextField(help_text="YAML", blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
     topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True, help_text="Save first with author to select a topic here.")
+    newspaper = models.CharField(help_text="Automatically add to newspaper's backlog", max_length=160, null=True, blank=True, db_index=True)
     enabled = models.BooleanField(default=True)
     protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
 
@@ -41,6 +42,9 @@ class Channel(models.Model):
 
         if self.topic and self.topic.author_id != self.author_id:
             raise ValueError("Topic doesn't match author")
+
+        if self.newspaper is not None and not self.newspaper.strip():
+            self.newspaper = None
 
         super().save(*args, **kwargs)
 

@@ -32,7 +32,6 @@ def reverse_func(apps, schema_editor):
     pass
 
 
-
 class Migration(migrations.Migration):
 
     dependencies = [

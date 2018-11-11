@@ -98,7 +98,10 @@ class Command(BaseCommand):
                 editor_tz = pytz.timezone(newspaper.editor.timezone)
                 now = now.astimezone(editor_tz)
 
-                if newspaper.period == PeriodMixin.X3_PER_DAY:
+                if newspaper.period == PeriodMixin.X6_PER_DAY:
+                    if now.hour not in PeriodMixin.X6_PER_DAY_HOURS:
+                        continue
+                elif newspaper.period == PeriodMixin.X3_PER_DAY:
                     if now.hour not in PeriodMixin.X3_PER_DAY_HOURS:
                         continue
                 else:

@@ -1,11 +1,14 @@
 from datetime import time, timedelta
 from collections import namedtuple
 
+from more_itertools import windowed
+
 Periodicity = namedtuple('Periodicity', ['frequency', 'time', 'dow'])
 PeriodInterval = namedtuple('PeriodInterval', ['start', 'end', 'title'])
 
 
 class PeriodMixin:
+    X6_PER_DAY = '6x_per_day'
     X3_PER_DAY = '3x_per_day'
     DAILY = 'daily'
     WEEKLY = 'weekly'
@@ -17,6 +20,7 @@ class PeriodMixin:
     )
 
     X3_PER_DAY_HOURS = [6, 12, 18]
+    X6_PER_DAY_HOURS = [6, 9, 12, 15, 18, 21]
 
     def get_period_interval(self, dt, tzinfo):
         dt = dt.astimezone(tzinfo)
@@ -39,32 +43,35 @@ class PeriodMixin:
         """Construct time interval which includes given datetime and matches
         current periodicity.
         """
-        if self.period == self.X3_PER_DAY:
-            H1, H2, H3 = self.X3_PER_DAY_HOURS
-            if dt.hour < H1:
-                return PeriodInterval(
-                    dt.replace(hour=H3, minute=0, second=0, microsecond=0) - timedelta(days=1),
-                    dt.replace(hour=H1, minute=0, second=0, microsecond=0),
-                    '3× per day'
-                )
-            elif dt.hour >= H1 and dt.hour < H2:
-                return PeriodInterval(
-                    dt.replace(hour=H1, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=H2, minute=0, second=0, microsecond=0),
-                    '3× per day'
-                )
-            elif dt.hour >= H2 and dt.hour < H3:
-                return PeriodInterval(
-                    dt.replace(hour=H2, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=H3, minute=0, second=0, microsecond=0),
-                    '3× per day'
-                )
+        if self.period in [self.X3_PER_DAY, self.X6_PER_DAY]:
+            if self.period == self.X3_PER_DAY:
+                hours = self.X3_PER_DAY_HOURS
+                title = '3× per day'
             else:
+                hours = self.X6_PER_DAY_HOURS
+                title = '6× per day'
+
+            if dt.hour < hours[0]:
                 return PeriodInterval(
-                    dt.replace(hour=H3, minute=0, second=0, microsecond=0),
-                    dt.replace(hour=H1, minute=0, second=0, microsecond=0) + timedelta(days=1),
-                    '3× per day'
+                    dt.replace(hour=hours[-1], minute=0, second=0, microsecond=0) - timedelta(days=1),
+                    dt.replace(hour=hours[0], minute=0, second=0, microsecond=0),
+                    title
                 )
+
+            for h1, h2 in windowed(hours, 2):
+                if dt.hour >= h1 and dt.hour < h2:
+                    return PeriodInterval(
+                        dt.replace(hour=h1, minute=0, second=0, microsecond=0),
+                        dt.replace(hour=H2, minute=0, second=0, microsecond=0),
+                        title
+                    )
+
+            return PeriodInterval(
+                dt.replace(hour=hours[-1], minute=0, second=0, microsecond=0),
+                dt.replace(hour=hours[0], minute=0, second=0, microsecond=0) + timedelta(days=1),
+                title
+            )
+
 
         elif self.period == self.DAILY:
             sub_time = self.period_time
@@ -90,10 +97,11 @@ def parse_periodicity(periodicity):
     frequency = periodicity.get('frequency')
     if frequency is None:
         raise ValueError('frequency is missing')
-    if frequency not in (PeriodMixin.X3_PER_DAY, PeriodMixin.DAILY, PeriodMixin.WEEKLY):
+    if frequency not in (PeriodMixin.X6_PER_DAY, PeriodMixin.X3_PER_DAY,
+                         PeriodMixin.DAILY, PeriodMixin.WEEKLY):
         raise ValueError('Invalid period')
 
-    if frequency == PeriodMixin.X3_PER_DAY:
+    if frequency in (PeriodMixin.X3_PER_DAY, PeriodMixin.X6_PER_DAY):
         time_of_day = None
         dow = None
     else:
