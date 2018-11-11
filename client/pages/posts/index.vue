@@ -9,12 +9,13 @@
         :post="post"
         :isSubscribed="true"
       >
-        <template slot="controls">
+        <template slot="controls" v-if="post.draft">
           <button-icon
-            v-if="post.draft"
             class="remove"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             title="Delete post"
+            tabindex="0"
+            role="button"
             @click.prevent="deletePost(post)">
           </button-icon>
 
@@ -22,13 +23,12 @@
             class="edit"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             title="Edit post"
+            tabindex="0"
+            role="button"
             @click.prevent="$router.push(`/posts/${post.id}`)">
           </button-icon>
 
-          <button
-            v-if="post.draft"
-            @click="publishPost(post)"
-          >Publish</button>
+          <button @click="publishPost(post)">Publish</button>
         </template>
       </PostWrapper>
     </div>

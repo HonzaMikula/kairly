@@ -23,7 +23,12 @@
           <div class="title">
             <h1 v-if="selectedNewspaper">{{ selectedNewspaper.title }}</h1>
 
-            <button-icon v-if="selectedNewspaper" role="button" class="dropdown" @click="isSelectNewspaperOpen = !isSelectNewspaperOpen"></button-icon>
+            <button-icon
+              v-if="selectedNewspaper"
+              role="button"
+              tabindex="0" class="dropdown"
+              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen">
+            </button-icon>
 
             <editor-newspapers--header--dropdown
               v-if="isSelectNewspaperOpen"
@@ -48,6 +53,7 @@
             <button-icon
               class="edit"
               role="button"
+              tabindex="0"
               title="Edit newspaper"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               @click="newspaperToEdit = selectedNewspaper">
@@ -56,6 +62,7 @@
             <button-icon
               class="delete"
               role="button"
+              tabindex="0"
               title="Delete newspaper"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               @click.prevent="confirmDeleteNewspaper">
@@ -65,6 +72,8 @@
           <div class="mobile-menu">
             <button-icon
               class="menu"
+              tabindex="0"
+              role="button"
               :class="{'is-active': isMobileMenuOpen}"
               aria-label="Context menu"
               @click="isMobileMenuOpen = !isMobileMenuOpen">
