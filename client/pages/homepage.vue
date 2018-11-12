@@ -69,15 +69,14 @@
             Exceptional journalism depends on professional editors and authors, who will get paid fairly.
           </p>
 
-          <div>
-            <img src="~assets/homepage/kairly-screenshot.png" alt="Kairly Screenshot"/>
-            <img src="~assets/homepage/kairly-screenshot2.png" alt="Kairly Screenshot"/>
-          </div>
-
           <p>
             In Kairly readers are subscribing newspapers and paying for them.
             Those money are then shared between editors and authors.
           </p>
+
+          <div>
+            <img src="~assets/homepage/kairly-concept-5.png" alt="Kairly Screenshot"/>
+          </div>
         </div>
       </homepage--how-it-works>
 
@@ -320,7 +319,7 @@ homepage--values
 
 homepage--how-it-works
   display: block
-  padding: $baseline * 2 $baseline
+  padding: $baseline*2 $baseline $baseline $baseline
 
   background: #eee
 
@@ -353,14 +352,13 @@ homepage--how-it-works
 
   > div > div
     display: table
-    margin: 0 auto $baseline auto
+    margin: 0 auto
 
   img
     display: block
-    float: left
     margin-right: $baseline
 
-    max-width: 300px
+    max-width: 824px
 
     @media (max-width: $mobile)
       float: none
