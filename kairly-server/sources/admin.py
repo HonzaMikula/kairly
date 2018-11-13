@@ -23,27 +23,6 @@ class ChannelAdmin(admin.ModelAdmin):
     list_filter = ('enabled', 'parse_content_from_rss')
     search_fields = ('name', 'provider', 'author__name')
 
-    def get_field_queryset(self, db, db_field, request):
-        """
-        If the ModelAdmin specifies ordering, the queryset should respect that
-        ordering.  Otherwise don't specify the queryset, let the field decide
-        (returns None in that case).
-        """
-        if db_field.name == 'topic':
-            manager = db_field.remote_field.model._default_manager
-            try:
-                channel_id = int(request.resolver_match.kwargs['object_id'])
-            except KeyError:
-                channel_id = None
-
-            if channel_id:
-                channel = Channel.objects.get(id=channel_id)
-                if channel.author_id:
-                    return manager.filter(author_id=channel.author_id)
-            return manager.none()
-
-        super().get_field_queryset(db, db_field, request)
-
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
