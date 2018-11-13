@@ -21,28 +21,11 @@ from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
 from .models import (Newspaper, Issue, Backlog,
-                     Post, Subscription, SubscriptionToAuthor, Topic)
+                     Post, Subscription, SubscriptionToAuthor)
 from .period import parse_periodicity
 
 
 AUTOR_POSTS_PAGE_SIZE = 20
-
-
-def get_user_and_topic(username):
-    if '|' in username:
-        username, topic_slug = username.split('|', maxsplit=1)
-    else:
-        topic_slug = None
-
-    user = get_object_or_404(User, username=username)
-    if topic_slug:
-        topic = Topic.objects.get(author=user, slug=topic_slug)
-        if not topic:
-            raise Http404
-    else:
-        topic = None
-
-    return user, topic
 
 
 @ajax_login_required
@@ -53,7 +36,7 @@ def subscriptions(request):
         user=request.user,
         valid_from__lte=now,
         valid_to__gt=now
-    ).select_related('author', 'topic')
+    ).select_related('author')
 
     for s in query:
         subscribed_authors.update(s.to_json())
@@ -184,21 +167,14 @@ class NewspaperView(View):
 
 def author(request, username):
     tzinfo = request.user.tzinfo
-    author, topic = get_user_and_topic(username)
-    topics = {t.slug: t for t in Topic.objects.filter(author=author)}
+    author = get_object_or_404(User, username=username)
 
     newspapers = list(Newspaper.objects.filter(editor=author))
     newspapers.sort(key=attrgetter('likes'), reverse=True)
-    data = {
-        'author': author.to_json(topic=topic),
+    return JsonResponse({
+        'author': author.to_json(),
         'newspapers': [n.to_json(tzinfo) for n in newspapers],
-    }
-    if not topic and topics:
-        data['topics'] = [{
-            'name': t.name,
-            'url': '{}|{}'.format(author.username, t.slug)
-        } for t in topics.values()]
-    return JsonResponse(data)
+    })
 
 
 def author_posts(request, username):
@@ -207,11 +183,9 @@ def author_posts(request, username):
     except ValueError:
         offset = 0
 
-    author, topic = get_user_and_topic(username)
+    author = get_object_or_404(User, username=username)
 
     posts_query = Post.objects.filter(author=author, draft=False, published__lt=timezone.now())
-    if topic:
-        posts_query = posts_query.filter(topics=topic)
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
     posts = [post.to_json(short=True, anonymous=request.user.is_anonymous) for post in posts_query]
     return JsonResponse({
@@ -291,7 +265,7 @@ class NewspaperSubscriptionView(View):
     @ajax_login_required
     def post(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
-        author, _ = get_user_and_topic(username)
+        author = get_object_or_404(User, username=username)
         newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
         try:
@@ -314,7 +288,7 @@ class NewspaperSubscriptionView(View):
     @ajax_login_required
     def delete(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
-        author, _ = get_user_and_topic(username)
+        author = get_object_or_404(User, username=username)
         newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
         try:
@@ -332,7 +306,7 @@ class AuthorSubscriptionView(View):
     @ajax_login_required
     def post(self, request, username):
         now = datetime.now(request.user.tzinfo)
-        author, topic = get_user_and_topic(username)
+        author = get_object_or_404(User, username=username)
         payload = json.loads(request.body.decode('utf-8'))
 
         if 'periodicity' in payload:
@@ -348,13 +322,14 @@ class AuthorSubscriptionView(View):
         try:
             # Handle unique together manually, because
             # mysql ignores key when one of values is NULL (usually topic)
+            # TODO when topic removed, is it still needed?
             #
             # There is still place for race condition
             # it could be solved by adding topic slug on this table
             # (with empty string value when there is no topic) and
             # make unique together on that
             subscription = SubscriptionToAuthor.objects.get(
-                user=request.user, author=author, topic=topic,
+                user=request.user, author=author,
                 valid_from__lte=now, valid_to__gt=now
             )
             if periodicity or renewal:
@@ -376,7 +351,6 @@ class AuthorSubscriptionView(View):
             subscription = SubscriptionToAuthor.objects.create(
                 user=request.user,
                 author=author,
-                topic=topic,
                 period=periodicity.frequency,
                 period_time=periodicity.time,
                 period_dow=periodicity.dow,
@@ -389,11 +363,11 @@ class AuthorSubscriptionView(View):
     @ajax_login_required
     def delete(self, request, username):
         now = datetime.now(request.user.tzinfo)
-        author, topic = get_user_and_topic(username)
+        author = get_object_or_404(User, username=username)
 
         try:
             subscription = SubscriptionToAuthor.objects.get(
-                user=request.user, author=author, topic=topic,
+                user=request.user, author=author,
                 valid_from__lte=now, valid_to__gt=now)
             subscription.renewal = False
             subscription.save()
@@ -536,7 +510,7 @@ def get_type_from_data_uri(data):
 @require_POST
 def start_newspaper(request, username):
     tzinfo = request.user.tzinfo
-    author, topic = get_user_and_topic(username)
+    author = get_object_or_404(User, username=username)
     payload = json.loads(request.body.decode('utf-8'))
 
     if author.id != request.user.id:

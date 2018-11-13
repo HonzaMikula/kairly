@@ -55,14 +55,6 @@
 
       </author-detail--header>
 
-      <author-detail--topics v-if="topics">
-        <ul>
-          <li v-for="topic in topics" :key="topic.url">
-            <nuxt-link :to="topic.url">{{ topic.name}}</nuxt-link>
-          </li>
-        </ul>
-      </author-detail--topics>
-
       <author-detail--newspapers v-if="newspapers.length">
         <h2>{{ author.name }}'s newspapers</h2>
 
@@ -264,12 +256,11 @@ export default {
     }
 
     try {
-      const { author, newspapers, topics=null } = await store.dispatch('getAuthor', authorId)
+      const { author, newspapers } = await store.dispatch('getAuthor', authorId)
 
       const data = {
         author,
-        newspapers,
-        topics
+        newspapers
       }
 
       if (process.server) {
@@ -427,30 +418,6 @@ author-detail--subscribe
     width: 150px
 
     line-height: $baseline * 1.5
-
-
-//- Topics
-author-detail--topics
-  display: table
-  margin: 0 auto $baseline auto
-
-  li
-    display: inline-block
-
-    &::before
-      display: inline-block
-      padding: 0 $baseline/2
-
-      content: '•'
-
-      @media (max-width: $mobile)
-        padding: 0 $baseline/4
-
-    &:first-of-type::before
-      content: ''
-
-    a
-      color: $c-base
 
 //- Newspapers
 author-detail--newspapers

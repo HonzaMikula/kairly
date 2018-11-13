@@ -20,18 +20,6 @@ from utils.json import datetime_isoformat_ecma262
 from .period import PeriodMixin, periodicity_to_json
 
 
-class Topic(models.Model):
-    name = models.CharField(_("Name"), max_length=160)
-    slug = models.SlugField(_('Slug'))
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
-
-    class Meta:
-        unique_together = (("slug", "author"),)
-
-    def __str__(self):
-        return "{}/{}".format(self.author.username, self.name)
-
-
 class Post(models.Model):
 
     NEWSPAPER = 'newspaper'
@@ -63,18 +51,12 @@ class Post(models.Model):
     perex = models.TextField(_("Perex"), blank=True, null=True)
     content = models.TextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
-    topics = models.ManyToManyField(Topic)
     attachments = models.TextField(null=True)
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.id:
-            for topic in self.topics.all():
-                if topic.author_id != self.author_id:
-                    raise ValueError("Topic auhtor doesn't match author")
-
         if not self.slug and not self.draft:
             slug_words = []
             for part in re.split(r'[\?\.|\-]', self.title):
@@ -280,7 +262,6 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True, related_name='+')
-    topic = models.ForeignKey(Topic, models.CASCADE, blank=True, null=True)
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
     period_time = models.TimeField(null=True)  # time for daily and weekly period
     period_dow = models.IntegerField(null=True)  # ISO week day for weekly period
@@ -289,21 +270,14 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
     renewal = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = (("user", "author", "topic"),)
+        unique_together = (("user", "author"),)
 
     def __str__(self):
         title = self.author.username
-        if self.topic:
-            title += '|' + self.topic.name
         return "SubscriptionToAuthor to {}".format(title)
 
-    def save(self, *args, **kwargs):
-        if self.topic and self.topic.author_id != self.author_id:
-            raise ValueError("Topic doesn't match author")
-        return super().save(*args, **kwargs)
-
     def to_json(self):
-        author_json = self.author.to_json(topic=self.topic)
+        author_json = self.author.to_json()
         data = {}
         data[author_json['id']] = {
             'author': author_json,  # is this needed?

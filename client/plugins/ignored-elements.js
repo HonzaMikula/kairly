@@ -11,7 +11,6 @@ Vue.config.ignoredElements = [
   'author-detail--newspapers',
   'author-detail--posts',
   'author-detail--subscribe',
-  'author-detail--topics',
   'author-detail-view',
   'author-subscription-view',
   'author-widget-view',
