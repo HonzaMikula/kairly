@@ -37,12 +37,6 @@ export default {
     newspaper: Object
   },
 
-  data() {
-    return {
-      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    }
-  },
-
   computed: {
     subscription() {
       return this.$store.getters.getNewspaperSubscription(this.newspaper)

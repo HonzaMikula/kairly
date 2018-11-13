@@ -62,7 +62,7 @@ class PeriodMixin:
                 if dt.hour >= h1 and dt.hour < h2:
                     return PeriodInterval(
                         dt.replace(hour=h1, minute=0, second=0, microsecond=0),
-                        dt.replace(hour=H2, minute=0, second=0, microsecond=0),
+                        dt.replace(hour=h2, minute=0, second=0, microsecond=0),
                         title
                     )
 
@@ -71,7 +71,6 @@ class PeriodMixin:
                 dt.replace(hour=hours[0], minute=0, second=0, microsecond=0) + timedelta(days=1),
                 title
             )
-
 
         elif self.period == self.DAILY:
             sub_time = self.period_time

@@ -45,6 +45,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import { errorToParams } from '@/utils/errors'
+import { getPeriodicityLabel } from '@/utils/period'
 
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
@@ -129,27 +130,13 @@ export default {
     NewspaperSubscription
   },
 
-  data() {
-    return {
-      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    }
-  },
-
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn
     }),
 
     periodicity() {
-      if (this.newspaper.periodicity.frequency == '3x_per_day') {
-        return 'Daily at 6:00, 12:00 and 18:00'
-      }
-      else if (this.newspaper.periodicity.frequency == 'daily') {
-        return `Daily at ${this.newspaper.periodicity.time}`
-      }
-      else {
-        return `Every ${this.DAYS[this.newspaper.periodicity.dow -1]} at ${this.newspaper.periodicity.time}`
-      }
+      return getPeriodicityLabel(this.newspaper.periodicity)
     },
 
     ...mapState({

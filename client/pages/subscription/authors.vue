@@ -2,11 +2,20 @@
   <div class="myauthors-view">
     <template>
       <my-authors--empty
-        v-if="authors['3x_per_day'].length === 0 && authors['daily'].length === 0 && authors['weekly'].length === 0">
+        v-if="!subscriptionExists">
         <h1>No authors</h1>
         <p>You haven't subscribe to any author yet. On Explore page you can find authors you might like.</p>
         <nuxt-link to="/explore">Explore authors</nuxt-link>
       </my-authors--empty>
+
+      <template v-if="authors['6x_per_day'].length">
+        <h2>6x per day</h2>
+        <AuthorWidget
+          v-for="author in authors['6x_per_day']"
+          :key="author.slug"
+          :author="author"
+        />
+      </template>
 
       <template v-if="authors['3x_per_day'].length">
         <h2>3x per day</h2>
@@ -56,9 +65,14 @@ export default {
   },
 
   computed: mapState({
+    subscriptionExists: state => {
+      return Object.keys(state.subscriptions.authors).length > 0
+    },
+
     authors: state => {
       const subscriptions = state.subscriptions.authors
       const sections = {
+        '6x_per_day': [],
         '3x_per_day': [],
         'daily': [],
         'weekly': []
@@ -68,6 +82,10 @@ export default {
         sections[subscription.periodicity.frequency].push(subscription)
       })
       sections['3x_per_day'].sort((a, b) => {
+        const aName = a.author.name, bName = b.author.name
+        return aName < bName ? -1 : (aName > bName ? 1 : 0)
+      })
+      sections['6x_per_day'].sort((a, b) => {
         const aName = a.author.name, bName = b.author.name
         return aName < bName ? -1 : (aName > bName ? 1 : 0)
       })
@@ -90,6 +108,7 @@ export default {
         return aName < bName ? -1 : (aName > bName ? 1 : 0)
       })
 
+      sections['6x_per_day'] = sections['6x_per_day'].map(s => s.author)
       sections['3x_per_day'] = sections['3x_per_day'].map(s => s.author)
       sections['daily'] = sections['daily'].map(s => s.author)
       sections['weekly'] = sections['weekly'].map(s => s.author)
