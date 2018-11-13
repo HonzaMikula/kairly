@@ -2,7 +2,9 @@
   <timeline-newspaper>
     <header>
       <h1>
-        <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ issue.newspaper.title }}</nuxt-link>&nbsp;<nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">#{{ issue.number }}</nuxt-link>
+        <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
+          <slot name="newspaperTitle">{{ issue.newspaper.title }}</slot>
+        </nuxt-link>
       </h1>
 
       <p>
@@ -12,10 +14,9 @@
             {{ newspaper.editor.name }}
           </nuxt-link>
         </timeline-newspaper--editor>
-        •
-        {{ newspaper.periodicity.frequency }}
-        •
-        {{ issue.time | moment('calendar')}}
+        <template v-if="!hideNumber">• #{{ issue.number }}</template>
+        • {{ newspaper.periodicity.frequency }}
+        <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
     </header>
     <slot></slot>
@@ -25,7 +26,7 @@
 <script>
 export default {
   name: 'issue-newspaper',
-  props: ['issue'],
+  props: ['issue', 'hideDate', 'hideNumber'],
 
   computed: {
     newspaper() {

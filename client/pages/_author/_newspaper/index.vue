@@ -46,7 +46,9 @@
       </div>
 
       <newspaper-detail--last-newspaper v-for="issue in issues" :key="issue.number">
-        <Issue :issue="issue" :subscription="newspaper.subscription" />
+        <Issue :issue="issue" :subscription="newspaper.subscription" :hideDate="true">
+          <template slot="newspaperTitle">{{ issue.time | moment('calendar')}}</template>
+        </Issue>
       </newspaper-detail--last-newspaper>
 
       <newspaper-detail--empty-newspaper v-if="issues.length === 0">

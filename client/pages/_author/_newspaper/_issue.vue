@@ -1,15 +1,23 @@
 <template>
   <app-layout>
     <issue-detail-view>
-      <Issue :issue="issue" :subscription="newspaper.subscription" />
+      <Issue :issue="issue" :subscription="newspaper.subscription" :hideNumber="true">
+        <template slot="newspaperTitle">{{ newspaper.title }} #{{issue.number}}</template>
+      </Issue>
     </issue-detail-view>
 
     <div class="issue--footer">
-      <h2>{{ newspaper.title }}</h2>
+      <h2>
+        <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+          {{ newspaper.title }}
+        </nuxt-link>
+      </h2>
 
       <picture>
-        <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
-        <div v-else class="image-placeholder"></div>
+        <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+          <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
+          <div v-else class="image-placeholder"></div>
+        </nuxt-link>
       </picture>
 
       <div class="issue--footer--description">
@@ -224,6 +232,9 @@ issue-detail-view
 
     font-weight: 600
     font-size: $fs-2
+
+    a
+      color: #000
 
   //- description
   .issue--footer--description

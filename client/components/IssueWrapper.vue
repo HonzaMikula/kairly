@@ -2,7 +2,11 @@
   <component
     :is="'issue-' + issue.type"
     :issue="issue"
-    :key="issue.id">
+    :key="issue.id"
+    :hideDate="hideDate"
+    :hideNumber="hideNumber">
+
+    <template slot="newspaperTitle"><slot name="newspaperTitle"></slot></template>
 
     <PostWrapper
       v-for="post in headPosts"
@@ -39,7 +43,9 @@ export default {
   props: {
     issue: Object,
     subscription: Boolean,
-    expanded: Boolean
+    expanded: Boolean,
+    hideDate: Boolean,
+    hideNumber: Boolean
   },
 
   components: {
