@@ -1,22 +1,20 @@
 from django.contrib import admin
 
-from .models import Topic, Post, Newspaper
+from .models import Newspaper
 
 
-@admin.register(Topic)
-class TopicAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'author')
-    prepopulated_fields = {'slug': ('name',)}
-    search_fields = ('name',)
+# @admin.register(Post)
+# class PostAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'kind', 'author', 'draft', 'published', 'read_time')
+#     list_filter = ('kind', 'draft')
+#     exclude = ('guid',)
+#     readonly_fields = ('source',)
+#     search_fields = ('title', 'author__name', 'author__username')
 
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'kind', 'author', 'draft', 'published', 'read_time')
-    list_filter = ('kind', 'draft')
-    exclude = ('guid',)
-    readonly_fields = ('source',)
-    search_fields = ('title', 'author__name', 'author__username')
+@admin.register(Newspaper)
+class NewspaperAdmin(admin.ModelAdmin):
+    list_display = ('title', 'editor', 'slug', 'period', 'period_time', 'period_dow', 'description')
 
     def get_field_queryset(self, db, db_field, request):
         """
@@ -24,39 +22,17 @@ class PostAdmin(admin.ModelAdmin):
         ordering.  Otherwise don't specify the queryset, let the field decide
         (returns None in that case).
         """
-        if db_field.name == 'topics':
+        if db_field.name == 'editor':
             manager = db_field.remote_field.model._default_manager
-            post_id = int(request.resolver_match.kwargs['object_id'])
+            try:
+                newspaper_id = int(request.resolver_match.kwargs['object_id'])
+            except KeyError:
+                newspaper_id = None
 
-            if post_id:
-                post = Post.objects.get(id=post_id)
-                if post.author_id:
-                    return manager.filter(author_id=post.author_id)
-            return manager.none()
+            if newspaper_id:
+                newspaper = Newspaper.objects.get(id=newspaper_id)
+                if newspaper.editor_id:
+                    return manager.filter(id=newspaper.editor_id)
+            return manager.all()[:250]
 
         super().get_field_queryset(db, db_field, request)
-
-
-# class PostInline(admin.TabularInline):
-#     model = IssuePost
-#
-#
-# @admin.register(Issue)
-# class EditionIssueAdmin(admin.ModelAdmin):
-#     list_display = ('__str__', 'editor', 'published', 'newspaper')
-#     inlines = [
-#         PostInline,
-#     ]
-#
-#     def tag_list(self, obj):
-#         return ", ".join(o.name for o in obj.tags.all())
-
-
-@admin.register(Newspaper)
-class NewspaperAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'period', 'period_time', 'period_dow', 'description')
-
-
-# @admin.register(Subscription)
-# class SubscriptionAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'newspaper')
