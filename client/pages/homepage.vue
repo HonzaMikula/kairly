@@ -4,31 +4,24 @@
       <homepage--cover>
         <div>
           <h1>Help us resurrect journalism</h1>
-          <button  v-on:click.prevent="isJoinUsModalOpen = true">Join us</button>
+
+          <!-- Begin Mailchimp Signup Form -->
+          <div id="mc_embed_signup">
+            <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+              <div id="mc_embed_signup_scroll">
+                <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value=""></div>
+                <div class="clear"><input type="submit" value="Request to join" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+              </div>
+            </form>
+          </div>
+          <!--End mc_embed_signup-->
+
           <p>Become author, editor or reader.</p>
         </div>
+
       </homepage--cover>
-      <!--
-      <homepage--login>
-        <form v-on:submit.prevent="login">
-          <div>
-            <label for="username">Username</label>
-            <input name="username" id="username" v-model="username" />
-          </div>
-
-          <div>
-            <label for="password">Password</label>
-            <input name="password" type="password" v-model="password" />
-          </div>
-
-          <button type="submit">Sign In</button>
-
-          <homepage--login--error-message v-if="invalidCredentials">
-            Wrong login or password
-          </homepage--login--error-message>
-        </form>
-      </homepage--login>
-      -->
       <homepage--roles>
         <div>
           <h3>Authors</h3>
@@ -207,7 +200,7 @@ homepage--cover
   height: 400px
   padding: $baseline * 1
 
-  background: url('~assets/homepage/hero.png') center center no-repeat
+  background: url("~assets/homepage/hero.png") center center no-repeat
   background-size: cover
 
   color: #fff
@@ -229,25 +222,66 @@ homepage--cover
       font-size: $fs-3
       line-height: $baseline * 1.5
 
-  button
-    border-radius: $baseline/4
-    padding: $baseline/4 $baseline
-    margin-bottom: $baseline
-
-    background: $c-base
-    border: 0
-    color: #fff
-
-    cursor: pointer
-    font-size: $fs-1
-    font-family: $ff-sans
-
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
-
   p
     text-shadow: 0 0 10px #000
+
+  //- MailChimp
+  #mc_embed_signup
+    input[type=email]
+      border-radius: 5px
+      height: $baseline * 1.5
+      padding: 0 $baseline/2
+      margin-bottom: $baseline / 2
+      width: 250px
+
+      background: #fff
+      box-shadow: 0 0 5px #000
+      border: 0
+      opacity: 0.9
+
+      font-family: $ff-sans
+      font-size: $fs-0
+      line-height: $baseline * 1.5
+
+      transition: 0.15s opacity
+
+      &:focus
+        opacity: 1
+
+    input[type=submit]
+      border-radius: 5px
+      padding: $baseline/4 $baseline
+      margin-bottom: $baseline
+
+      background: $c-base
+      box-shadow: 0 0 5px #555
+      border: 0
+      color: #fff
+
+      cursor: pointer
+      font-size: $fs-1
+      font-family: $ff-sans
+
+      &:focus,
+      &:hover
+        background: darken($c-base, 10%)
+
+
+  #mc-embedded-subscribe-form input[type=checkbox]
+    display: inline
+    width: auto
+    margin-right: 10px
+
+  #mergeRow-gdpr
+    margin-top: 20px
+
+  #mergeRow-gdpr fieldset label
+    font-weight: normal
+
+  #mc-embedded-subscribe-form .mc_fieldset
+    border: none
+    min-height: 0px
+    padding-bottom: 0px
 
 //- Roles
 homepage--roles
