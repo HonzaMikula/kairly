@@ -115,6 +115,9 @@ modal-dialog.join-us
       display: flex
       justify-content: center
 
+      @media (max-width: $mobile)
+        display: block
+
     input[type=email]
       box-sizing: border-box
       border-radius: 5px 0 0 5px
