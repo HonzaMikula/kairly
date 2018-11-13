@@ -69,7 +69,7 @@ def forwards_func(apps, schema_editor):
                     Backlog.objects.create(
                         newspaper=newspaper,
                         post=post,
-                        publish_stam=curr.end,
+                        publish_stamp=curr.end,
                         ordering=i
                     )
 

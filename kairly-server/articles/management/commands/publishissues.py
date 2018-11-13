@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
         backlog_query = Backlog.objects\
             .filter(newspaper=newspaper, publish_stamp__isnull=False)\
-            .order_by('ordering')\
+            .order_by('ordering', 'post__published')\
             .select_related('post')
 
         for i, backlog in enumerate(backlog_query):

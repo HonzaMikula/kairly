@@ -7,7 +7,7 @@ import dateutil.parser
 from django.utils import timezone
 from django.core.management.base import BaseCommand
 
-from articles.models import Post
+from articles.models import Post, Newspaper, Backlog
 from sources.models import Channel
 
 
@@ -125,6 +125,11 @@ class Command(BaseCommand):
 
             counter_channels += 1
 
+            newspaper = None
+            if channel.newspaper:
+                username, slug = channel.newspaper.split('/')
+                newspaper = Newspaper.objects.get(slug=slug, editor__username=username)
+
             for entry in channel.parse_rss().entries:
                 if not channel.is_url_valid(entry.link):
                     continue
@@ -132,16 +137,21 @@ class Command(BaseCommand):
                 try:
                     post, imported = self.import_post(channel, entry, options)
 
-                    if imported:
-                        counter_posts += 1
-
                     if post is None:
                         continue
 
-                    if channel.topic and not post.topics.filter(id=channel.topic_id).exists():
+                    if imported:
+                        counter_posts += 1
+
+                    if newspaper and Backlog.objects.filter(newspaper=newspaper, post=post).count() == 0:
                         if verbosity > 1:
-                            self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
-                        post.topics.add(channel.topic)
+                            self.stdout.write('Publishing {} in {}'.format(post.guid, channel.newspaper))
+
+                        Backlog.objects.create(
+                            newspaper=newspaper,
+                            post=post,
+                            publish_stamp=timezone.now(),
+                        )
                 except Exception:
                     self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {}".format(timezone.now(), channel.rss))
                     traceback.print_exc()
