@@ -150,8 +150,8 @@ def get_author_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
 
 
 def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to):
-    cache_key = "author_issues_{}{}_{}-{}".format(
-        sub.author, '|' + sub.topic.slug if sub.topic else '',
+    cache_key = "author_issues_{}_{}-{}".format(
+        sub.author,
         int(start_dt.timestamp()),
         int(end_dt.timestamp() if cache_valid_to is None else cache_valid_to)
     )
@@ -180,9 +180,6 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
         published__lt=intervals[-1].end,
     )
 
-    if sub.topic:
-        posts_query = posts_query.filter(topics=sub.topic)
-
     posts = peekable(posts_query.order_by('published'))
 
     issues = []
@@ -195,14 +192,13 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
             pass
 
         if interval_posts:
-            suffix = '|' + sub.topic.slug if sub.topic else ''
             isodate = datetime_isoformat_ecma262(interval.end)
             issues.append({
-                'id': '{}{}-{}'.format(sub.author.username, suffix, isodate),
+                'id': '{}-{}'.format(sub.author.username, isodate),
                 'type': 'author',
                 'title': interval.title,
                 'time': isodate,
-                'author': sub.author.to_json(topic=sub.topic),
+                'author': sub.author.to_json(),
                 'posts': [p.to_json(short=True, tzinfo=tzinfo) for p in interval_posts],
             })
 

@@ -79,7 +79,7 @@ class CategoryUserForm(forms.ModelForm):
 
     class Meta:
         model = CategoryUser
-        fields = ('user', 'topic', 'ordering')
+        fields = ('user', 'ordering')
 
 
 class CategoryUserInline(admin.TabularInline):

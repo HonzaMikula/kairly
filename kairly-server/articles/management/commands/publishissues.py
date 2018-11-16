@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
         backlog_query = Backlog.objects\
             .filter(newspaper=newspaper, publish_stamp__isnull=False)\
-            .order_by('ordering')\
+            .order_by('ordering', 'post__published')\
             .select_related('post')
 
         for i, backlog in enumerate(backlog_query):
@@ -98,7 +98,10 @@ class Command(BaseCommand):
                 editor_tz = pytz.timezone(newspaper.editor.timezone)
                 now = now.astimezone(editor_tz)
 
-                if newspaper.period == PeriodMixin.X3_PER_DAY:
+                if newspaper.period == PeriodMixin.X6_PER_DAY:
+                    if now.hour not in PeriodMixin.X6_PER_DAY_HOURS:
+                        continue
+                elif newspaper.period == PeriodMixin.X3_PER_DAY:
                     if now.hour not in PeriodMixin.X3_PER_DAY_HOURS:
                         continue
                 else:

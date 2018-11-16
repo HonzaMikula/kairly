@@ -120,16 +120,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.name
 
-    def to_json(self, topic=None, owner=False):
-        id = self.username
-        name = self.name or self.username
-        if topic:
-            id = '{}|{}'.format(id, topic.slug)
-            name = '{} | {}'.format(name, topic.name)
-
+    def to_json(self, owner=False):
         result = {
-            'id': id,
-            'name': name,
+            'id': self.username,
+            'name': self.name or self.username,
             'picture': self.picture_url,
             'medium': self.medium,
             'bio': self.bio,
@@ -163,12 +157,6 @@ class CategoryUser(models.Model):
     category = models.ForeignKey(Category, models.CASCADE)
     user = models.ForeignKey(User, models.CASCADE)
     ordering = models.IntegerField(_("Ordering"), default=999)
-    topic = models.ForeignKey('articles.Topic', models.SET_NULL, blank=True, null=True)
 
     class Meta:
         ordering = ('ordering',)
-
-    def save(self, *args, **kwargs):
-        if self.topic and self.topic.author != self.user:
-            raise ValueError("Topic doesn't match author.")
-        return super().save(*args, **kwargs)

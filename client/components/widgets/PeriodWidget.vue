@@ -46,8 +46,6 @@
 </template>
 
 <script>
-
-
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 export default {
@@ -67,7 +65,6 @@ export default {
       frequency: null,
       dow: null,
       time: null,
-      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
   },
 

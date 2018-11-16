@@ -39,10 +39,7 @@ class Command(BaseCommand):
             self.extend_subscriptions(sub)
 
         for sub in SubscriptionToAuthor.objects.filter(valid_to__lt=now, renewal=True).select_related('user', 'author'):
-            if sub.topic:
-                author_id = "{}|{}".format(sub.author.username, sub.topic.slug)
-            else:
-                author_id = sub.author.username
+            author_id = sub.author.username
 
             if verbosity > 1:
                 self.stdout.write('Extending author subscription: {} -> {}'.format(sub.user, author_id))

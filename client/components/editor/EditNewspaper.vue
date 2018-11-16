@@ -26,8 +26,12 @@
               3x per day at 6:00, 12:00 and 18:00
             </template>
 
+            <template v-else-if="periodicity.frequency == '6x_per_day'">
+              6x per day at 6:00, 9:00, 12:00, 15:00, 18:00 and 21:00
+            </template>
+
             <template v-else>
-              {{ periodicity.frequency }} {{ DAYS[periodicity.dow - 1] }} {{ periodicity.time }}
+              {{ periodicity.frequency }} {{ DAYS_OF_WEEK[periodicity.dow - 1] }} {{ periodicity.time }}
             </template>
           </span>
 
@@ -74,6 +78,7 @@
 import { mapActions, mapState } from 'vuex'
 
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
+import { DAYS_OF_WEEK } from '@/utils/period'
 import DialogWindow from '@/components/modals/Dialog'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
@@ -98,7 +103,7 @@ export default {
       description: this.newspaper ? this.newspaper.description : '',
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
       image: null,
-      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+      DAYS_OF_WEEK
     }
   },
 

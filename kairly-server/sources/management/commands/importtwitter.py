@@ -192,12 +192,6 @@ class Command(BaseCommand):
 
                     counter_tweets += 1
 
-                    # # Topics are not supported for now
-                    # if channel.topic:
-                    #     if verbosity > 1:
-                    #         self.stdout.write('Assigning topic {} to {}'.format(channel.topic.name, post.guid))
-                    #     post.topics.add(channel.topic)
-
             except Exception:
                 self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching @{}".format(timezone.now(), twitter_account))
                 traceback.print_exc()

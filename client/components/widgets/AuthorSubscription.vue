@@ -12,12 +12,18 @@
         <strong>12:00</strong> and <strong>18:00</strong>
       </template>
 
+      <template v-if="frequency == '6x_per_day'">
+        Daily at <strong>6:00</strong>,
+        <strong>9:00</strong>, <strong>12:00</strong>, <strong>15:00</strong>,
+        <strong>18:00</strong> and <strong>21:00</strong>
+      </template>
+
       <template v-if="frequency == 'daily'">
         Daily at <strong>{{ time }}</strong>
       </template>
 
       <template v-if="frequency == 'weekly'">
-        Weekly on <strong>{{ DAYS[dow - 1] }}</strong> at <strong>{{ time }}</strong>
+        Weekly on <strong>{{ DAYS_OF_WEEK[dow - 1] }}</strong> at <strong>{{ time }}</strong>
       </template>
     </a>
 
@@ -31,8 +37,8 @@
 </template>
 
 <script>
+import { DAYS_OF_WEEK } from '@/utils/period'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
-
 
 export default {
   name: 'AuthorSubscription',
@@ -48,7 +54,7 @@ export default {
 
   data() {
     return {
-      DAYS: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+      DAYS_OF_WEEK
     }
   },
 
