@@ -9,8 +9,8 @@
     "local": "API_URL=http://localhost:8000/api GA_ID=UA-114180015-1 nuxt",
     "dev-spa": "API_URL=https://kairly.com/api GA_ID=UA-114180015-1 nuxt --spa",
     "local-spa": "API_URL=http://localhost:8000/api GA_ID=UA-114180015-1 nuxt --spa",
-    "build": "API_URL=https://kairly.com/api GA_ID=UA-114180015-2 nuxt build",
-    "start": "API_URL=https://kairly.com/api GA_ID=UA-114180015-2 nuxt start",
+    "build": "API_URL_BROWSER=https://kairly.com/api API_URL=https://kairly-2648.rostiapp.cz/api/ GA_ID=UA-114180015-2 nuxt build",
+    "start": "API_URL_BROWSER=https://kairly.com/api API_URL=https://kairly-2648.rostiapp.cz/api/ GA_ID=UA-114180015-2 nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
