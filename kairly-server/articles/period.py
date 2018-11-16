@@ -14,6 +14,7 @@ class PeriodMixin:
     WEEKLY = 'weekly'
 
     PERIOD_CHOICES = (
+        (X6_PER_DAY, '6x per day'),
         (X3_PER_DAY, '3x per day'),
         (DAILY, 'Daily'),
         (WEEKLY, 'Weekly'),
