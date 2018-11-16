@@ -23,7 +23,7 @@
 
         <post-detail--content v-html="post.content.perex" />
 
-        <post-detail--continue-reading id="continue" v-if="post.content.content">
+        <post-detail--continue-reading id="continue" v-if="post.content.content && showContinueReading">
           continue reading
         </post-detail--continue-reading>
 
@@ -194,6 +194,12 @@ export default {
     AuthorSubscription
   },
 
+  data() {
+    return {
+      showContinueReading: false
+    }
+  },
+
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn
@@ -219,6 +225,10 @@ export default {
   },
 
   async created() {
+    if(this.$route.hash == '#continue') {
+      this.showContinueReading = true
+    }
+
     if (process.client && this.loggedIn) {
       await this.$store.dispatch('getUserBacklog')
     }
