@@ -2,13 +2,13 @@
   <issue-widget-view>
     <picture>
       <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
-        <img v-if="issue.newspaper" :src="issue.newspaper.picture" :alt="issue.newspaper.title" />
+        <img v-if="issue.newspaper.picture" :src="issue.newspaper.picture" :alt="issue.newspaper.title" />
         <div v-else class="image-placeholder"></div>
       </nuxt-link>
     </picture>
 
     <h2>
-      <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }} #{{ issue.number }}</nuxt-link>
+      <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }}</nuxt-link>
     </h2>
 
     <issue-widget--author>
@@ -17,7 +17,7 @@
     </issue-widget--author>
 
     <ul>
-      <li v-for="post in issue.posts" :key="post.id">
+      <li v-for="post in issue.posts.slice(0, 3)" :key="post.id">
         <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}</nuxt-link>
       </li>
     </ul>
@@ -26,8 +26,8 @@
       <newspaper-subscription :newspaper="issue.newspaper" />
 
       <p>
-        10 CZK per month
-         •
+        #{{ issue.number }}
+        •
         {{ issue.newspaper.likes }} subscribers
       </p>
     </issue-widget--subscribe>
