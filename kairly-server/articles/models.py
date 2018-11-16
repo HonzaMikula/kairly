@@ -137,7 +137,7 @@ class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
     slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='editions', null=True)
+    image = models.ImageField(upload_to='editions', null=True, blank=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
 
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
