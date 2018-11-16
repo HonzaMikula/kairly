@@ -35,7 +35,7 @@ class UserAdmin(OriginalUserAdmin):
 
     def img(self, obj):
         if obj.picture:
-            return mark_safe('<img src="{}" style="width: 32px; height: 32px; border-radius: 100%; object-fit: cover;" />'.format(obj.picture.url))
+            return mark_safe('<img src="{}" style="width: 32px; height: 32px; border-radius: 100%; object-fit: cover;" />'.format(obj.picture_url))
         else:
             return ''
 
