@@ -141,8 +141,8 @@ class Newspaper(models.Model, PeriodMixin):
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
 
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
-    period_time = models.TimeField(null=True)  # time for daily and weekly period
-    period_dow = models.IntegerField(null=True)  # ISO week day for weekly period
+    period_time = models.TimeField(null=True, blank=True)  # time for daily and weekly period
+    period_dow = models.IntegerField(null=True, blank=True)  # ISO week day for weekly period
 
     class Meta:
         unique_together = (("slug", "editor"),)
