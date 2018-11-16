@@ -14,13 +14,7 @@
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
 
-          <button-icon
-            class="read-later"
-            title="Read later"
-            role="button"
-            tabindex="0"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-          </button-icon>
+          <a v-if="post.source" :href="post.source" class="external-link">Original article</a>
         </post-detail--header>
 
         <post-detail--title id="start">
@@ -48,8 +42,6 @@
           <post-detail--footer>
             <consider-post :post="post" :showText="true" />
 
-            <a v-if="post.source" :href="post.source" class="external-link">Original article</a>
-
             <a
               :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${post.author.id}/${post.slug}`"
               target="_blank"
@@ -57,6 +49,7 @@
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               title="Share on Facebook">
             </a>
+
             <a
               :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${post.author.id}/${post.slug}&text=${post.content.title}`"
               target="_blank"
@@ -301,8 +294,8 @@ post-detail--back-button
 
 //- Header
 post-detail--header
-  display: table
-  margin-bottom: $baseline
+  display: flex
+  margin-bottom: $baseline / 2
   margin-top: -$baseline * 2
   width: 100%
 
@@ -311,6 +304,8 @@ post-detail--header
     margin-bottom: $baseline / 4
 
   a
+    display: inline-block
+
     color: #555
 
     line-height: $baseline * 1.25
@@ -324,6 +319,40 @@ post-detail--header
       width: $baseline * 1.25
 
       object-fit: cover
+
+  a.external-link
+    border-radius: 5px
+    height: $baseline * 1.25
+    margin-right: $baseline / 4
+    margin-bottom: $baseline / 4
+    margin-left: auto
+    padding: 0 $baseline/4
+
+    background: #eee
+    color: #000
+
+    cursor: pointer
+    font-size: $fs--1
+    line-height: $baseline * 1.25
+    vertical-align: middle
+
+    &::before
+      +fa-icon()
+
+      position: relative
+      top: -1px
+
+      margin-right: $baseline / 4
+
+      font-size: $fs-1
+      vertical-align: middle
+
+      content: $fa-var-external-link-square
+
+    &:focus,
+    &:hover
+      background: #bbb
+      color: #000
 
 
 //- Title
@@ -438,13 +467,6 @@ post-detail--footer
     &:hover
       background: #bbb
       color: #000
-
-    &.external-link::before
-      +fa-icon()
-
-      font-size: $fs-1
-
-      content: $fa-var-external-link-square
 
     &.share-fb::before
       +fa-icon()
