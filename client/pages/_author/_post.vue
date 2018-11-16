@@ -14,7 +14,7 @@
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
 
-          <a v-if="post.source" :href="post.source" class="external-link">Original article</a>
+          <a v-if="post.source" :href="post.source" class="external-link"><span>Original article</span></a>
         </post-detail--header>
 
         <post-detail--title id="start">
@@ -250,7 +250,7 @@ post-detail
   background: #fff
 
   @media (max-width: $mobile)
-    padding: $baseline/4 $baseline/4 $baseline *5 $baseline/4
+    padding: $baseline/4 $baseline/2 $baseline *5 $baseline/2
 
   main
     margin: 0 auto
@@ -323,7 +323,6 @@ post-detail--header
   a.external-link
     border-radius: 5px
     height: $baseline * 1.25
-    margin-right: $baseline / 4
     margin-bottom: $baseline / 4
     margin-left: auto
     padding: 0 $baseline/4
@@ -349,10 +348,19 @@ post-detail--header
 
       content: $fa-var-external-link-square
 
+      @media (max-width: $mobile)
+        margin-right: 0
+
+        padding: 0 $baseline/4
+
     &:focus,
     &:hover
       background: #bbb
       color: #000
+
+    span
+      @media (max-width: $mobile)
+        display: none
 
 
 //- Title
