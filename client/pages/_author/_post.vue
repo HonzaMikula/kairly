@@ -4,7 +4,7 @@
       <post-detail--back-button
         title="Back"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-        v-on:click="$router.go(-1)">
+        @click="$router.go(-1)">
       </post-detail--back-button>
 
       <main>

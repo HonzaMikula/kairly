@@ -128,7 +128,7 @@
         </div>
 
         <homepage--help-us--contact-us>
-          <a href="" v-on:click.prevent="isJoinUsModalOpen = true">Join us</a>
+          <a href="" @click.prevent="isJoinUsModalOpen = true">Join us</a>
         </homepage--help-us--contact-us>
       </homepage--help-us>
 

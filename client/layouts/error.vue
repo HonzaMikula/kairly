@@ -10,7 +10,7 @@
       </template>
 
       <p>
-        <a href="#" v-on:click="$router.go(-1)">Return back</a>
+        <a href="#" @click="$router.go(-1)">Return back</a>
         or
         <nuxt-link to="/">Go to the homepage</nuxt-link>
       </p>

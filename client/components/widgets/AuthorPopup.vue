@@ -1,5 +1,5 @@
 <template>
-  <author-widget v-on:mouseleave="closeWidget()">
+  <author-widget @mouseleave="closeWidget()">
     <author-widget--name>{{ author.name }}</author-widget--name>
     <author-widget--medium>{{ author.medium }}</author-widget--medium>
     <img :src="author.picture" :alt="author.name" />
@@ -26,7 +26,7 @@
     </author-widget--bio>
 
     <author-widget--follow>
-      <button v-on:click="showPeriods = true" v-bind:class="{'is-active': showPeriods}">{{ showPeriods ? 'Following' : 'Follow' }}</button>
+      <button @click="showPeriods = true" v-bind:class="{'is-active': showPeriods}">{{ showPeriods ? 'Following' : 'Follow' }}</button>
 
       <author-widget--follow--choose-time v-if="showPeriods">
         <div>
@@ -34,7 +34,7 @@
           <button
             v-for="(period, periodIndex) in periods" :key="period"
             v-bind:class="{ 'is-active': isPeriodActive[periodIndex] }"
-            v-on:click="setActivePeriod(periodIndex)">
+            @click="setActivePeriod(periodIndex)">
             {{ period }}
           </button>
         </div>
@@ -45,7 +45,7 @@
           <button
             v-for="(day, dayIndex) in days" :key="day"
             v-bind:class="{ 'is-active': isDayActive[dayIndex] }"
-            v-on:click="setActiveDay(dayIndex)">
+            @click="setActiveDay(dayIndex)">
             {{ day }}
           </button>
         </div>
@@ -57,7 +57,7 @@
           <button
             v-for="(dayInMonth, dayInMonthIndex) in daysInMonth" :key="dayInMonth"
             v-bind:class="{ 'is-active': isDayInMonthActive[dayInMonthIndex] }"
-            v-on:click="setActiveDayInMonth(dayInMonthIndex)">
+            @click="setActiveDayInMonth(dayInMonthIndex)">
             {{ dayInMonth }}
           </button>
         </div>
@@ -67,7 +67,7 @@
           <button
             v-for="(time, timeIndex) in times" :key="time"
             v-bind:class="{ 'is-active': isTimeActive[timeIndex] }"
-            v-on:click="setActiveTime(timeIndex)">
+            @click="setActiveTime(timeIndex)">
             {{ time }}
           </button>
         </div>

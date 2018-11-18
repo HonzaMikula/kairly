@@ -1,6 +1,6 @@
 <template>
   <post-component role="article" :class="post.type">
-    <header v-on:mouseleave="closeAuthorWidget()">
+    <header @mouseleave="closeAuthorWidget()">
       <picture>
         <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
           <img :src="post.author.picture" :alt="post.author.name" />
@@ -16,7 +16,7 @@
       <authorPopup
         :author="post.author"
         v-if="isAuthorWidgetOpen"
-        v-on:authorwidgetclose="closeAuthorWidget()">
+        @authorwidgetclose="closeAuthorWidget()">
       </authorPopup>
 
       <time>

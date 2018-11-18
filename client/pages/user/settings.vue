@@ -51,7 +51,7 @@
             <h3>Password</h3>
             <p>
               Do you want to have different password?
-              <a href="" v-on:click.prevent="isChangePasswordOpen=true">Change password</a>.</p>
+              <a href="" @click.prevent="isChangePasswordOpen=true">Change password</a>.</p>
           </div>
 
           <h2>Integrations</h2>

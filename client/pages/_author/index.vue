@@ -66,7 +66,7 @@
           />
         </div>
 
-        <button v-if="newspapers.length > 3" v-on:click="toggleNewspapers()">{{ !showAllNewspapers ? 'Show all newspapers' : 'Hide newspapers' }}</button>
+        <button v-if="newspapers.length > 3" @click="toggleNewspapers()">{{ !showAllNewspapers ? 'Show all newspapers' : 'Hide newspapers' }}</button>
 
       </author-detail--newspapers>
 

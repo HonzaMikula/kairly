@@ -7,8 +7,8 @@
 
       <nav>
         <ul>
-          <li><a href="" v-on:click.prevent="isJoinUsModalOpen = true">Join us</a></li>
-          <li><a href="" v-on:click.prevent="isSignInModalOpen = true">Sign In</a></li>
+          <li><a href="" @click.prevent="isJoinUsModalOpen = true">Join us</a></li>
+          <li><a href="" @click.prevent="isSignInModalOpen = true">Sign In</a></li>
         </ul>
       </nav>
     </div>
