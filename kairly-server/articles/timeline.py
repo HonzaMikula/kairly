@@ -194,7 +194,7 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
         if interval_posts:
             isodate = datetime_isoformat_ecma262(interval.end)
             issues.append({
-                'id': '{}-{}'.format(sub.author.username, isodate),
+                'id': '{}/${}/{}'.format(sub.author.username, sub.period, int(interval.end.timestamp())),
                 'type': 'author',
                 'title': interval.title,
                 'time': isodate,

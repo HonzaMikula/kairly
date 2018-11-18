@@ -43,7 +43,6 @@ export default {
   props: {
     issue: Object,
     subscription: Boolean,
-    expanded: Boolean,
     hideDate: Boolean,
     hideNumber: Boolean
   },
@@ -61,6 +60,10 @@ export default {
   },
 
   computed: {
+    expanded() {
+      return !!this.$store.state.timelineExpandedIssues[this.issue.id]
+    },
+
     headPosts() {
       return this.issue.posts.slice(0, POST_LIMIT)
     },

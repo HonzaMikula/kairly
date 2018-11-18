@@ -59,7 +59,7 @@ export const invalidateTimeline = ({ commit }) => {
 }
 
 export async function getNewspaperDetail({ commit }, { newspaperId, issue }) {
-  const data = await this.$axios.$get(`/newspapers/${newspaperId}`, {params: {issue}})
+  const data = await this.$axios.$get(`/newspapers/${newspaperId}`, { params: {issue} })
   commit('newspaper', { newspaper: data.newspaper })
   return data
 }

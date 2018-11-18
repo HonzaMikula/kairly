@@ -31,7 +31,7 @@
               :key="issue.id"
               :issue="issue"
               :subscription="true"
-              :expanded="expandedIssues[issue.id]" />
+            />
           </template>
         </template>
 
