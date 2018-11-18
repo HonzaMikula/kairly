@@ -26,13 +26,21 @@ ALLOWED_PROTOCOLS = ['http', 'https', 'data']
 
 
 def sanitize(text):
-    return bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
+    text = bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
                         protocols=ALLOWED_PROTOCOLS)
+    if text == '<p><br></p>':
+        return ''
+    return text
 
 
 def convert_data_uris(content):
     """Extract all data uris and save them as regular media files"""
-    htmltree = lxml.html.fromstring(content)
+    try:
+        htmltree = lxml.html.fromstring(content)
+    except etree.ParserError as ex:
+        if ex.args[0] == 'Document is empty':
+            return ''
+        raise
 
     for el in htmltree.cssselect("img[src^='data:']"):
         hash = uuid.uuid4().hex

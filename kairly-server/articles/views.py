@@ -7,7 +7,7 @@ from operator import attrgetter
 from dateutil.relativedelta import relativedelta
 
 from django.shortcuts import get_object_or_404
-from django.http import (Http404, HttpResponse, HttpResponseNotFound,
+from django.http import (HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
 from django.views import View
 from django.views.decorators.http import require_POST
@@ -376,7 +376,7 @@ class AuthorSubscriptionView(View):
             return HttpResponseNotFound()
 
 
-def validate_post_attributes(request, payload):
+def validate_post_attributes(request, payload, draft):
     kind = payload['type']
 
     if kind == Post.NEWSPAPER:
@@ -386,7 +386,7 @@ def validate_post_attributes(request, payload):
 
         if not title:
             raise ValueError("No title")
-        if not perex:
+        if not draft and not perex:
             raise ValueError("No perex")
 
         perex = convert_data_uris(perex)
@@ -426,7 +426,7 @@ class DraftsView(View):
         payload = json.loads(request.body.decode('utf-8'))
 
         try:
-            attrs = validate_post_attributes(request, payload)
+            attrs = validate_post_attributes(request, payload, True)
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
@@ -459,7 +459,7 @@ class DraftDetailView(View):
         payload = json.loads(request.body.decode('utf-8'))
 
         try:
-            attrs = validate_post_attributes(request, payload)
+            attrs = validate_post_attributes(request, payload, post.draft)
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
@@ -480,6 +480,10 @@ class DraftDetailView(View):
 @ajax_login_required
 def publish_draft(request, post_id):
     post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+
+    if post.kind == Post.NEWSPAPER and post.perex == '':
+        return HttpResponseBadRequest('Perex is empty')
+
     post.draft = False
     post.published = timezone_now()
     post.save()
