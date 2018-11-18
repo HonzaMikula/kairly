@@ -65,71 +65,25 @@ export default {
   auth: false,
 
   head() {
-      return {
-        title: `${this.newspaper.title} #${this.issue.number} – Kairly`,
-        meta: [
-          {
-            hid: 'description',
-            name: 'description',
-            content: this.newspaper.description
-          },
-          {
-            hid: `og:title`,
-            property: 'og:title',
-            content: `${this.newspaper.title} #${this.issue.number} – Kairly`
-          },
-          {
-            hid: `og:description`,
-            property: 'og:description',
-            content: this.newspaper.description
-          },
-          {
-            hid: `og:image`,
-            property: 'og:image',
-            content: this.newspaper.picture
-          },
-          {
-            hid: `og:image:alt`,
-            property: 'og:image:alt',
-            content: this.newspaper.title
-          },
-          {
-            hid: `og:type`,
-            property: 'og:type',
-            content: 'product'
-          },
-          {
-            hid: `og:url`,
-            property: 'og:url',
-            content: `https://www.kairly.com/${this.newspaper.editor.id}/${this.newspaper.name}/${this.issue.number}`
-          },
-          {
-            hid: `twitter:card`,
-            property: 'twitter:card',
-            content: 'summary'
-          },
-          {
-            hid: `twitter:site`,
-            property: 'twitter:site',
-            content: '@kairlyapp'
-          },
-          {
-            hid: `twitter:title`,
-            property: 'twitter:title',
-            content: `${this.newspaper.title} #${this.issue.number} – Kairly`
-          },
-          {
-            hid: `twitter:description`,
-            property: 'twitter:description',
-            content: this.newspaper.description
-          },
-          {
-            hid: `twitter:image`,
-            property: 'twitter:image',
-            content: this.newspaper.picture
-          },
-        ]
-      }
+    const { title, name, description, editor, picture } = this.newspaper
+    const { number } = this.issue
+    return {
+      title: `${title} #${number} – Kairly`,
+      meta: [
+        { hid: 'description', name: 'description', content: description },
+        { hid: 'og:title', property: 'og:title', content: `${title} #${number} – Kairly` },
+        { hid: 'og:description', property: 'og:description', content: description },
+        { hid: 'og:image', property: 'og:image', content: picture },
+        { hid: 'og:image:alt', property: 'og:image:alt', content: title },
+        { hid: 'og:type', property: 'og:type', content: 'product' },
+        { hid: 'og:url', property: 'og:url', content: `https://www.kairly.com/${editor.id}/${name}/${number}`},
+        { hid: 'twitter:card', property: 'twitter:card', content: 'summary'},
+        { hid: 'twitter:site', property: 'twitter:site', content: '@kairlyapp'},
+        { hid: `twitter:title`, property: 'twitter:title', content: `${title} #${number} – Kairly` },
+        { hid: `twitter:description`, property: 'twitter:description', content: description },
+        { hid: `twitter:image`, property: 'twitter:image', content: picture },
+      ]
+    }
   },
 
   components: {

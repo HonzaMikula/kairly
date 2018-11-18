@@ -108,82 +108,44 @@ import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
 
+const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
+const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
+
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
 
   auth: false,
 
   head() {
-    var description = this.post.content.perex.replace(/<\/?[^>]+(>|$)/g, " ").substring(0,350)
-    var re = /<img[^>]*src="([^"]*)"/g
-    var image = null
-    if (this.post.content.perex.match(re))
-      image = re.exec(this.post.content.perex)[1]
+    const { title, perex }  = this.post.content
+    const { author, id } = this.post
+    const description = perex.replace(ELEMENTS_REGEXP, ' ').substring(0,350)
+
+    const meta = [
+      { hid: 'description', name: 'description', content: description},
+      { hid: `og:title`, property: 'og:title', content: `${title} – ${author.name} – Kairly`},
+      { hid: `og:description`, property: 'og:description', content: description},
+
+
+      { hid: `og:type`, property: 'og:type', content: 'article'},
+      { hid: `og:url`, property: 'og:url', content: `https://www.kairly.com/${id}`},
+      { hid: `twitter:card`, property: 'twitter:card', content: 'summary'},
+      { hid: `twitter:site`, property: 'twitter:site', content: '@kairlyapp'},
+      { hid: `twitter:title`, property: 'twitter:title', content: `${title} – ${author.name} – Kairly`},
+      { hid: `twitter:description`, property: 'twitter:description', content: description},
+    ]
+
+    const matches =  IMG_REGEXP.exec(perex)
+    if (matches) {
+      const image = matches[1]
+      meta.push({ hid: `og:image`, property: 'og:image', content: image})
+      meta.push({ hid: `og:image:alt`, property: 'og:image:alt', content: title})
+      meta.push({ hid: `twitter:image`, property: 'twitter:image', content: image})
+    }
 
     return {
-      title: `${this.post.content.title} – ${this.post.author.name} – Kairly`,
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: description
-        },
-        {
-          hid: `og:title`,
-          property: 'og:title',
-          content: `${this.post.content.title} – ${this.post.author.name} – Kairly`
-        },
-        {
-          hid: `og:description`,
-          property: 'og:description',
-          content: description
-        },
-        {
-          hid: `og:image`,
-          property: 'og:image',
-          content: image
-        },
-        {
-          hid: `og:image:alt`,
-          property: 'og:image:alt',
-          content: this.post.content.title
-        },
-        {
-          hid: `og:type`,
-          property: 'og:type',
-          content: 'article'
-        },
-        {
-          hid: `og:url`,
-          property: 'og:url',
-          content: `https://www.kairly.com/${this.post.id}`
-        },
-        {
-          hid: `twitter:card`,
-          property: 'twitter:card',
-          content: 'summary'
-        },
-        {
-          hid: `twitter:site`,
-          property: 'twitter:site',
-          content: '@kairlyapp'
-        },
-        {
-          hid: `twitter:title`,
-          property: 'twitter:title',
-          content: `${this.post.content.title} – ${this.post.author.name} – Kairly`
-        },
-        {
-          hid: `twitter:description`,
-          property: 'twitter:description',
-          content: description
-        },
-        {
-          hid: `twitter:image`,
-          property: 'twitter:image',
-          content: image
-        },
-      ]
+      title: `${title} – ${author.name} – Kairly`,
+      meta
     }
   },
 
