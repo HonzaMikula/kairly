@@ -32,8 +32,14 @@ def forwards_func(apps, schema_editor):
     with connection.cursor() as cursor:
         cursor.execute(query)
         for row in namedtuplefetchall(cursor):
-            numbers = map(int, row.issue_numbers.decode().split(','))
-            issue_ids = map(int, row.issue_ids.decode().split(','))
+            numbers = row.issue_number
+            issue_ids = row.issue_ids
+            if isinstance(numbers, bytes):
+                numbers = numbers.decode()
+            if isinstance(issue_ids, bytes):
+                issue_ids = issue_ids.decode()
+            numbers = map(int, numbers.split(','))
+            issue_ids = map(int, issue_ids.split(','))
             issues = list(zip(numbers, issue_ids))
             issues.sort(key=lambda t: t[0])
             for _, issue_id in issues[1:]:
