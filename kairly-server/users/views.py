@@ -155,7 +155,7 @@ def change_password(request):
     user = request.user
 
     if not user.check_password(payload['oldPassword']):
-        return HttpResponse('Unauthorized', status=401)
+        return JsonResponse({'error': 'Wrong old password.'}, status=400)
 
     password = payload['newPassword']
     try:
