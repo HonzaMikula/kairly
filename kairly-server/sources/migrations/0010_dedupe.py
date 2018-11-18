@@ -32,7 +32,7 @@ def forwards_func(apps, schema_editor):
     with connection.cursor() as cursor:
         cursor.execute(query)
         for row in namedtuplefetchall(cursor):
-            numbers = row.issue_number
+            numbers = row.issue_numbers
             issue_ids = row.issue_ids
             if isinstance(numbers, bytes):
                 numbers = numbers.decode()
