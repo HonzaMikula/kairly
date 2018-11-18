@@ -70,7 +70,7 @@ class Command(BaseCommand):
         if post and not force:
             if verbosity > 1:
                 self.stdout.write('Skipping {}. Already imported'.format(url))
-            return post, False
+            return None, False
 
         if verbosity > 0:
             self.stdout.write('Importing {}'.format(url))
@@ -101,11 +101,13 @@ class Command(BaseCommand):
 
         if post is None:
             post = Post.objects.create(**args)
+            updated = False
         else:
             post.__dict__.update(args)
             post.save()
+            updated = True
 
-        return post, True
+        return post, updated
 
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
@@ -135,15 +137,17 @@ class Command(BaseCommand):
                     continue
 
                 try:
-                    post, imported = self.import_post(channel, entry, options)
+                    post, force_updated = self.import_post(channel, entry, options)
 
                     if post is None:
                         continue
 
-                    if imported:
-                        counter_posts += 1
+                    counter_posts += 1
 
-                    if newspaper and Backlog.objects.filter(newspaper=newspaper, post=post).count() == 0:
+                    if force_updated:
+                        continue
+
+                    if newspaper:
                         if verbosity > 1:
                             self.stdout.write('Publishing {} in {}'.format(post.guid, channel.newspaper))
 
