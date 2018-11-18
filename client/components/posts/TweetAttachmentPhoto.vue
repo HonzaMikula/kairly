@@ -1,6 +1,11 @@
 <template>
   <tweet-attachment-gallery :class="'gallery-'+ items.length">
-    <a :href="`${item.src}:large`" v-for="item in items" :key="item.id" target="_blank">
+    <a
+      :href="`${item.src}:large`"
+      v-for="item in items"
+      v-if="item.type == 'media.photo'"
+      :key="item.id"
+      target="_blank">
       <img :src="`${item.src}:small`" :width="item.sizes.small.w" :height="item.sizes.small.h" />
     </a>
   </tweet-attachment-gallery>

@@ -88,6 +88,7 @@ Vue.config.ignoredElements = [
   'tweet-attachment-gallery',
   'tweet-attachment-link-view',
   'tweet-attachment-quote-view',
+  'tweet-attachment-video-view',
   'welcome-view',
   'welcome--roles',
 ]
