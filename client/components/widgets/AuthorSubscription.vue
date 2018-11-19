@@ -13,9 +13,7 @@
       </template>
 
       <template v-if="frequency == '6x_per_day'">
-        Daily at <strong>6:00</strong>,
-        <strong>9:00</strong>, <strong>12:00</strong>, <strong>15:00</strong>,
-        <strong>18:00</strong> and <strong>21:00</strong>
+        Daily every <strong>3 hours</strong>.
       </template>
 
       <template v-if="frequency == 'daily'">

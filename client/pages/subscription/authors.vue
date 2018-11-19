@@ -9,7 +9,7 @@
       </my-authors--empty>
 
       <template v-if="authors['6x_per_day'].length">
-        <h2>6x per day</h2>
+        <h2>Continously</h2>
         <AuthorWidget
           v-for="author in authors['6x_per_day']"
           :key="author.slug"

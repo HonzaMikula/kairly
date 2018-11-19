@@ -22,6 +22,7 @@
 
       <section>
         <ul>
+          <li><a href="" @click.stop.prevent="selectHowOften('6x_per_day', $event)">Immediately</a></li>
           <li><a href="" @click.stop.prevent="selectHowOften('3x_per_day', $event)">3× per day</a></li>
           <li><a href="" @click.stop.prevent="selectHowOften('daily', $event)">Daily</a></li>
           <li><a href="" @click.stop.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
@@ -68,6 +69,12 @@
 
     <div v-else>
       <header>You're subscribed!</header>
+
+      <section v-if="frequency == '6x_per_day'">
+        <p>
+          You will be receiving <strong>{{ author.name }}</strong> every 3 hours.
+        </p>
+      </section>
 
       <section v-if="frequency == '3x_per_day'">
         <p>
@@ -170,7 +177,7 @@ export default {
       document.activeElement.blur()
       this.frequency = frequency
 
-      if (frequency == '3x_per_day') {
+      if (frequency == '3x_per_day' || frequency == '6x_per_day') {
         this.submit()
       }
     },

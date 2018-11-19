@@ -4,8 +4,9 @@
     v-on-clickaway="() => closeSubscribeWidget()">
 
     <section v-if="frequency === null">
-      <header>How often do you want to read it?</header>
+      <header>How often do you want to publish new issue?</header>
       <ul>
+        <li><a href="" @click.prevent="selectHowOften('6x_per_day', $event)">Every 3 hours</a></li>
         <li><a href="" @click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
         <li><a href="" @click.prevent="selectHowOften('daily', $event)">Daily</a></li>
         <li><a href="" @click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
@@ -101,7 +102,7 @@ export default {
       document.activeElement.blur()
       this.frequency = frequency
 
-      if (frequency == '3x_per_day') {
+      if (frequency == '3x_per_day' || frequency == '6x_per_day') {
         this.submit()
       }
     },

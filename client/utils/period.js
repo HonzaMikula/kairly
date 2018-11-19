@@ -9,7 +9,7 @@ export function getPeriodicityLabel({ frequency, time, dow }) {
     return 'Daily at 6:00, 12:00 and 18:00'
   }
   if (frequency === '6x_per_day') {
-    return 'Daily at 6:00, 9:00, 12:00, 15:00, 18:00 and 21:00'
+    return 'Daily every 3 hours'
   }
   if (frequency === 'daily') {
     return `Daily at ${time}`

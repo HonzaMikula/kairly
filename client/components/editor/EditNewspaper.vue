@@ -23,11 +23,11 @@
             @click="$refs.periodWidget.openSubscribeWidget()">
 
             <template v-if="periodicity.frequency == '3x_per_day'">
-              3x per day at 6:00, 12:00 and 18:00
+              At 6:00, 12:00 and 18:00
             </template>
 
             <template v-else-if="periodicity.frequency == '6x_per_day'">
-              6x per day at 6:00, 9:00, 12:00, 15:00, 18:00 and 21:00
+              Continously every 3 hours.
             </template>
 
             <template v-else>
