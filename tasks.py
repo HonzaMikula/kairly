@@ -119,6 +119,11 @@ def dump_prod(ctx):
     # CREATE SCHEMA `kairly` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 
 
+@task()
+def download_media(ctx):
+    ctx.run("rsync -chavzP -e 'ssh -p 14076' --stats app@node-13.rosti.cz:/srv/app/media kairly-server")
+
+
 deploy_ns = Collection('deploy')
 deploy_ns.add_task(deploy_app, 'app', default=True)
 deploy_ns.add_task(deploy_js, 'js')
@@ -131,3 +136,4 @@ dbdump_ns.add_task(dump_prod, 'prod')
 ns = Collection()
 ns.add_collection(deploy_ns)
 ns.add_collection(dbdump_ns)
+ns.add_task(download_media)
