@@ -110,7 +110,11 @@ class NewspaperView(View):
 
         issueNo = request.GET.get('issue')
         if issueNo:
-            issues = [get_object_or_404(Issue, newspaper=newspaper, number=int(issueNo))]
+            try:
+                issueNo = int(issueNo)
+            except ValueError:
+                return HttpResponse('Invalid issue number.', status=400)
+            issues = [get_object_or_404(Issue, newspaper=newspaper, number=issueNo)]
         else:
             issues = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[:3]
 
