@@ -30,24 +30,38 @@ from articles.models import Newspaper
 from .models import User, Category, CategoryUser
 
 
+TOKEN_EXPIRATION = 30 * 86400
+
+
+def issue_token(user):
+    now = int(time.time())
+    payload = {
+        'uid': user.id,
+        'iat': now,
+        'exp': now + TOKEN_EXPIRATION,
+    }
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    return token.decode()
+
+
 @require_POST
 @csrf_exempt
 def get_token(request):
     data = json.loads(request.body.decode())
     user = authenticate(request, username=data.get('username'), password=data.get('password'))
     if user:
-        now = int(time.time())
-        payload = {
-            'uid': user.id,
-            'iat': now,
-            'exp': now + 5 * 86400,
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
         return JsonResponse({
-            'token': token.decode()
+            'token': issue_token(user)
         })
     else:
         return HttpResponse('Unauthorized', status=401)
+
+
+@ajax_login_required
+def refresh_token(request):
+    return JsonResponse({
+        'token': issue_token(request.user)
+    })
 
 
 class ProfileView(View):

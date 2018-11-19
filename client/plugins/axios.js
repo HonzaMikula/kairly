@@ -1,4 +1,5 @@
 import axiosRetry from 'axios-retry';
+import jwtDecode from 'jwt-decode';
 
 export default function({ app, $axios, redirect }) {
   axiosRetry($axios, {
@@ -13,4 +14,40 @@ export default function({ app, $axios, redirect }) {
       redirect('/')
     }
   })
+
+  if (process.browser) {
+    window.onNuxtReady(async (app) => {
+      const token = app.$auth.getToken('local')
+      if (token) {
+        let data = null
+        try {
+          data = jwtDecode(token.split(' ')[1])
+        } catch (e) {
+          await app.$auth.logout()
+          return
+        }
+
+        if (data && data.exp) {
+          const now = Date.now() / 1000
+          const remaining = data.exp - now
+
+          if (remaining < 0) {
+            await app.$auth.logout()
+            return
+          }
+
+          if (remaining < 7 * 86400) {
+              const resp = await $axios.$get('/refresh-token')
+              const newToken = 'Bearer ' + resp.token
+
+              await app.$auth.setStrategy('local')
+              app.$auth.setToken('local', newToken)
+              app.$auth.strategy._setToken(newToken)
+          }
+        }
+      }
+    })
+  }
+
+  //console.log(app.$auth.getToken())
 }
