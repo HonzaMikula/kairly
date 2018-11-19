@@ -34,7 +34,7 @@ module.exports = {
     '~/plugins/portal-vue',
     {src: '~/plugins/tooltip', ssr: false},
     {src: '~/plugins/vue-infinite-scroll', ssr: false},
-    { src: '~/plugins/medium-editor', ssr: false },
+    {src: '~/plugins/medium-editor', ssr: false },
     //{src: '~/plugins/vue-keep-scroll', ssr: false},
     '~/plugins/vue-moment',
     '~/plugins/axios',
