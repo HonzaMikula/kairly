@@ -121,7 +121,7 @@ def dump_prod(ctx):
 
 @task()
 def download_media(ctx):
-    ctx.run("rsync -chavzP -e 'ssh -p 14076' --stats app@node-13.rosti.cz:/srv/app/media kairly-server")
+    ctx.run("rsync -chavzP -e 'ssh -p {}' --stats {}:/srv/app/media kairly-server".format(PY_PORT, PY_HOST))
 
 
 deploy_ns = Collection('deploy')
