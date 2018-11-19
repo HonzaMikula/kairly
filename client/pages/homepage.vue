@@ -3,7 +3,7 @@
     <homepage-view>
       <homepage--cover>
         <div>
-          <h1>Help us resurrect journalism</h1>
+          <h1>Help us resurrect exceptional journalism</h1>
 
           <!-- Begin Mailchimp Signup Form -->
           <div id="mc_embed_signup">
@@ -17,8 +17,6 @@
             </form>
           </div>
           <!--End mc_embed_signup-->
-
-          <p>Become author, editor or reader.</p>
         </div>
 
       </homepage--cover>
@@ -215,18 +213,17 @@ homepage--cover
     margin-bottom: $baseline
 
     color: #000
+    text-shadow: 0 0 3px #fff
 
     font-size: $fs-4
+    font-weight: 600
     line-height: $baseline * 2
-    text-shadow: 0 0 3px #fff
+
 
     @media (max-width: $mobile)
       font-size: $fs-3
       line-height: $baseline * 1.5
 
-  p
-    color: #000
-    text-shadow: 0 0 3px #fff
 
   //- MailChimp
   #mc_embed_signup
