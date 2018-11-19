@@ -200,7 +200,7 @@ homepage--cover
   height: 400px
   padding: $baseline * 1
 
-  background: url("~assets/homepage/hero.png") center center no-repeat
+  background: url("~assets/homepage/hero-new.jpg") bottom center no-repeat
   background-size: cover
 
   color: #fff
@@ -214,16 +214,19 @@ homepage--cover
   h1
     margin-bottom: $baseline
 
+    color: #000
+
     font-size: $fs-4
     line-height: $baseline * 2
-    text-shadow: 0 0 10px #000
+    text-shadow: 0 0 3px #fff
 
     @media (max-width: $mobile)
       font-size: $fs-3
       line-height: $baseline * 1.5
 
   p
-    text-shadow: 0 0 10px #000
+    color: #000
+    text-shadow: 0 0 3px #fff
 
   //- MailChimp
   #mc_embed_signup
