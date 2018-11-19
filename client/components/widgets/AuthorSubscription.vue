@@ -2,7 +2,7 @@
   <author-subscription-view>
     <a
       href=""
-      v-on:click.prevent="$refs.followWidget.openSubscribeWidget()"
+      @click.prevent="$refs.followWidget.openSubscribeWidget()"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :class="{'is-canceled': canceled}"
       :title="'Change the subscriptions'+ (canceled ? ' (is canceled)': '')">

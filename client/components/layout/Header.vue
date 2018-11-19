@@ -40,7 +40,7 @@
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon
-          v-on:click="isDropDownMenuOpen = true"
+          @click="isDropDownMenuOpen = true"
           :class="{'is-active': isDropDownMenuOpen}"
         />
       </nav>
@@ -59,7 +59,7 @@
           <li class="divider"></li>
           <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>Manage newspapers</span></nuxt-link></li>
           <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>Explore</span></nuxt-link></li>
-          <li><a href="" v-on:click.prevent="logout">Logout</a></li>
+          <li><a href="" @click.prevent="logout">Logout</a></li>
         </ul>
       </nav>
     </div>

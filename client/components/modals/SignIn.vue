@@ -6,7 +6,7 @@
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
       <main>
-        <form v-on:submit.prevent="login">
+        <form @submit.prevent="login">
           <div>
             <label for="username">Username</label>
             <input name="username" id="username" v-model="username" />

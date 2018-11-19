@@ -8,10 +8,10 @@
 
       <section>
         <ul>
-          <li><a href="" v-on:click.prevent="editSubscription($event)">Edit</a></li>
+          <li><a href="" @click.stop.prevent="editSubscription($event)">Edit</a></li>
           <li>
-              <a v-if="subscription && subscription.renewal" href="" v-on:click.prevent="cancelSubscription($event)">Cancel subscription</a>
-              <a v-else href="" v-on:click.prevent="renewSubscription($event)">Renew subscription</a>
+              <a v-if="subscription && subscription.renewal" href="" @click.stop.prevent="cancelSubscription($event)">Cancel subscription</a>
+              <a v-else href="" @click.stop.prevent="renewSubscription($event)">Renew subscription</a>
           </li>
         </ul>
       </section>
@@ -22,9 +22,9 @@
 
       <section>
         <ul>
-          <li><a href="" v-on:click.prevent="selectHowOften('3x_per_day', $event)">3× per day</a></li>
-          <li><a href="" v-on:click.prevent="selectHowOften('daily', $event)">Daily</a></li>
-          <li><a href="" v-on:click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('3x_per_day', $event)">3× per day</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('daily', $event)">Daily</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
         </ul>
       </section>
     </div>
@@ -32,18 +32,18 @@
     <div v-else-if="frequency === 'weekly' && dow === null">
       <header>
         Which day?
-        <button-icon role="button" tabindex="0" v-on:click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
       </header>
 
       <section>
         <ul>
-          <li><a href="" v-on:click.prevent="selectWhatDay('1', $event)">Monday</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatDay('4', $event)">Thursday</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatDay('5', $event)">Friday</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatDay('6', $event)">Saturday</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatDay('7', $event)">Sunday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('1', $event)">Monday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('4', $event)">Thursday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('5', $event)">Friday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('6', $event)">Saturday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('7', $event)">Sunday</a></li>
         </ul>
       </section>
     </div>
@@ -51,17 +51,17 @@
     <div v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
         What time?
-        <button-icon role="button" tabindex="0" v-on:click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
       </header>
 
       <section>
         <ul>
-          <li><a href="" v-on:click.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatTime('9:00', $event)">Morning (9:00)</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatTime('12:00', $event)">Noon (12:00)</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatTime('15:00', $event)">After noon (15:00)</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatTime('18:00', $event)">Evening (18:00)</a></li>
-          <li><a href="" v-on:click.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('9:00', $event)">Morning (9:00)</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('12:00', $event)">Noon (12:00)</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('15:00', $event)">After noon (15:00)</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('18:00', $event)">Evening (18:00)</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
         </ul>
       </section>
     </div>

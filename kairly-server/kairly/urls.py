@@ -32,12 +32,17 @@ def serve_cors(request, *args, **kwargs):
     return response
 
 
+def always_fail(request):
+    raise ValueError("Calm down the endpoint always raise exception.")
+
+
 urlpatterns = [
     # path('accounts/', include('django.contrib.auth.urls')),
     path('admin', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('articles.urls')),
+    path('api/fail', always_fail),
 ]
 
 if settings.DEBUG:

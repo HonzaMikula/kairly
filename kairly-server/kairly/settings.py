@@ -79,6 +79,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kairly.wsgi.application'
 
 
+SERVER_EMAIL = 'info@kairly.com'
+ADMINS = (
+    ('Kairly', 'info@kairly.com'),
+)
+
+
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 

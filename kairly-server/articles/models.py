@@ -216,6 +216,7 @@ class Issue(models.Model):
             "newspaper": newspaper.to_json(tzinfo),
             "time": datetime_isoformat_ecma262(self.published.astimezone(tzinfo))
         }
+        result['id'] = '{}/{}'.format(result['newspaper']['fullName'], self.number)
         if posts:
             result["posts"] = [
                 p.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo) for p in
