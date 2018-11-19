@@ -5,7 +5,8 @@ export default [
       newspapersTitle: 'Top newspapers',
       newspapers: [
         'janmikula/malostranskenoviny',
-        'janmikula/technologicky-denik',
+        'aktualnecz/domaci',
+        'janmikula/technologicky-denik'
       ]
     },
     {
@@ -14,7 +15,8 @@ export default [
       newspapersTitle: 'Top newspapers',
       newspapers: [
         'janmikula/malostranskenoviny',
-        'janmikula/technologicky-denik',
+        'aktualnecz/domaci',
+        'rozhlas/zpravy-z-domova'
       ]
     },
     {
@@ -22,14 +24,20 @@ export default [
       slug: 'politics',
       newspapersTitle: 'Politics newpapers',
       newspapers: [
-        'janmikula/malostranskenoviny'
+        'janmikula/malostranskenoviny',
+        'aktualnecz/domaci',
+        'rozhlas/zpravy-z-domova'
       ]
     },
     {
       name: 'Sport',
       slug: 'sport',
       newspapersTitle: 'Sport newspapers',
-      newspapers: []
+      newspapers: [
+        'aktualnecz/sport',
+        'rozhlas/sport',
+        'idnescz/sport'
+      ]
     },
     {
       name: 'Technology',
@@ -37,6 +45,7 @@ export default [
       newspapersTitle: 'Technology newspapers',
       newspapers: [
         'janmikula/technologicky-denik',
+        'rozhlas/veda-technologie',
         'janmikula/product-design-weekly'
       ]
     },
@@ -44,7 +53,11 @@ export default [
       name: 'Life',
       slug: 'life',
       newspapersTitle: 'Life newspapers',
-      newspapers: []
+      newspapers: [
+        'rozhlas/kultura',
+        'aktualnecz/kultura',
+        'janmikula/tydenik-skola-hrou'
+      ]
     }
     // },
     // {
