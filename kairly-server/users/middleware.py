@@ -1,5 +1,8 @@
+import logging
+
 import jwt
-from jwt.exceptions import DecodeError
+from jwt.exceptions import PyJWTError
+
 
 from pytz import timezone, UnknownTimeZoneError
 
@@ -15,9 +18,8 @@ def JwtAuthenticationMiddleware(get_response):
             try:
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
                 request.user = User.objects.get(id=payload.get('uid'))
-            except (User.DoesNotExist, DecodeError) as e:
-                print(e)
-                pass
+            except (User.DoesNotExist, PyJWTError) as e:
+                logging.error(str(e))
         return get_response(request)
 
     return middleware
