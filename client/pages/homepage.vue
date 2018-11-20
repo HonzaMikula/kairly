@@ -130,6 +130,29 @@
         </homepage--help-us--contact-us>
       </homepage--help-us>
 
+      <div class="homepage--footer">
+        <a
+          href="https://www.facebook.com/kairlynews/"
+          class="facebook"
+          title="Follow us Facebook"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
+
+        <a
+          href="https://twitter.com/kairlynews"
+          class="twitter"
+          title="Follow us Twitter"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
+
+        <a
+          href="https://www.linkedin.com/company/kairly/"
+          class="linkedin"
+          title="Follow us LinkedIn"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
+      </div>
+
       <portal to="modal" v-if="isJoinUsModalOpen">
         <JoinUsModal :closeModal="closeJoinUs"></JoinUsModal>
       </portal>
@@ -481,4 +504,43 @@ homepage--help-us--contact-us
     &:hover,
     &:focus
       background: darken($c-base, 10%)
+
+
+.homepage--footer
+  padding: $baseline
+
+  text-align: center
+
+  a
+    border-radius: 5px
+    display: inline-block
+    height: $baseline * 1.5
+    margin: 0 $baseline/2
+    width: $baseline * 1.5
+
+    background: #eee
+    color: #555
+
+    font-size: $fs-3
+    line-height: $baseline * 1.5
+    text-align: center
+
+    &:focus,
+    &:hover
+      background: #ddd
+
+    &::before
+      +fa-icon()
+
+  a.facebook::before
+    content: $fa-var-facebook
+
+  a.twitter::before
+    content: $fa-var-twitter
+
+  a.linkedin::before
+    content: $fa-var-linkedin
+
+
+
 </style>

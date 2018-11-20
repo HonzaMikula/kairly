@@ -27,6 +27,27 @@
           <a href="https://www.facebook.com/groups/276916213077456/">Join Facebook group</a>
         </p>
 
+        <h3>Follow us on social media</h3>
+        <div class="social-media">
+          <a
+            href="https://www.facebook.com/kairlynews/"
+            class="facebook"
+            title="Follow us Facebook">
+          </a>
+
+          <a
+            href="https://twitter.com/kairlynews"
+            class="twitter"
+            title="Follow us Twitter">
+          </a>
+
+          <a
+            href="https://www.linkedin.com/company/kairly/"
+            class="linkedin"
+            title="Follow us LinkedIn">
+          </a>
+        </div>
+
         <h3>Join private beta</h3>
         <p>
           We are inviting limited number of people to use Kairly and give us feedback about the app.
@@ -46,7 +67,6 @@
           </form>
         </div>
         <!--End mc_embed_signup-->
-
       </main>
     </modal-dialog>
   </dialog-window>
@@ -174,4 +194,37 @@ modal-dialog.join-us
     border: none
     min-height: 0px
     padding-bottom: 0px
+
+
+  .social-media
+    a
+      border-radius: 5px
+      display: inline-block
+      height: $baseline * 1.5
+      margin-right: $baseline / 2
+      width: $baseline * 1.5
+
+      background: #eee
+      border: 0
+      color: #555
+
+      font-size: $fs-3
+      line-height: $baseline * 1.5
+      text-align: center
+
+      &:focus,
+      &:hover
+        background: #ddd
+
+      &::before
+        +fa-icon()
+
+    a.facebook::before
+      content: $fa-var-facebook
+
+    a.twitter::before
+      content: $fa-var-twitter
+
+    a.linkedin::before
+      content: $fa-var-linkedin
 </style>
