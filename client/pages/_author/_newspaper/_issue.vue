@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <issue-detail-view>
-      <Issue :issue="issue" :subscription="newspaper.subscription" :hideNumber="true">
+      <Issue :issue="issue" :subscription="newspaper.subscription">
         <template slot="newspaperTitle">{{ newspaper.title }} #{{issue.number}}</template>
       </Issue>
     </issue-detail-view>

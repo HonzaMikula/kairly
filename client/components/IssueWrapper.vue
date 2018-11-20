@@ -3,8 +3,7 @@
     :is="'issue-' + issue.type"
     :issue="issue"
     :key="issue.id"
-    :hideDate="hideDate"
-    :hideNumber="hideNumber">
+    :hideDate="hideDate">
 
     <template slot="newspaperTitle"><slot name="newspaperTitle"></slot></template>
 
@@ -44,7 +43,6 @@ export default {
     issue: Object,
     subscription: Boolean,
     hideDate: Boolean,
-    hideNumber: Boolean
   },
 
   components: {
@@ -130,6 +128,10 @@ timeline-newspaper
 
       a
         color: #999
+
+      @media (max-width: $mobile)
+        span
+          display: none
 
   footer
     text-align: center

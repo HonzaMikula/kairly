@@ -14,8 +14,7 @@
             {{ newspaper.editor.name }}
           </nuxt-link>
         </timeline-newspaper--editor>
-        <template v-if="!hideNumber">• #{{ issue.number }}</template>
-        • {{ frequencyLabel }}
+        <span>• {{ frequencyLabel }}</span>
         <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
     </header>
@@ -26,7 +25,7 @@
 <script>
 export default {
   name: 'issue-newspaper',
-  props: ['issue', 'hideDate', 'hideNumber'],
+  props: ['issue', 'hideDate'],
 
   computed: {
     newspaper() {
