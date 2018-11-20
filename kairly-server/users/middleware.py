@@ -16,7 +16,9 @@ def JwtAuthenticationMiddleware(get_response):
             bearer, token = request.META['HTTP_AUTHORIZATION'].split(' ', maxsplit=1)
             User = get_user_model()
             try:
-                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+                # TEMPORARY HACK, ACCEPT EXPIRED TOKENS
+                # BACAUSE OLD CLIENT MAKES INFINITE REDIRECT FOR SUCH TOKENS
+                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'], verify=False)
                 request.user = User.objects.get(id=payload.get('uid'))
             except (User.DoesNotExist, PyJWTError) as e:
                 logging.error(str(e))
