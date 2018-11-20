@@ -3,13 +3,13 @@
     <template>
       <my-authors--empty
         v-if="!subscriptionExists">
-        <h1>No authors</h1>
-        <p>You haven't subscribe to any author yet. On Explore page you can find authors you might like.</p>
-        <nuxt-link to="/explore">Explore authors</nuxt-link>
+        <h1>{{ $t('No authors') }}</h1>
+        <p>{{ $t("You haven't subscribe to any author yet. On Explore page you can find authors you might like.") }}</p>
+        <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
       </my-authors--empty>
 
       <template v-if="authors['6x_per_day'].length">
-        <h2>Continously</h2>
+        <h2>{{ $t('Continously') }}</h2>
         <AuthorWidget
           v-for="author in authors['6x_per_day']"
           :key="author.slug"
@@ -18,7 +18,7 @@
       </template>
 
       <template v-if="authors['3x_per_day'].length">
-        <h2>3x per day</h2>
+        <h2>{{ $t('3x per day') }}</h2>
         <AuthorWidget
           v-for="author in authors['3x_per_day']"
           :key="author.slug"
@@ -27,7 +27,7 @@
       </template>
 
       <template v-if="authors['daily'].length">
-        <h2>Daily</h2>
+        <h2>{{ $t('Daily') }}</h2>
         <AuthorWidget
           v-for="author in authors['daily']"
           :key="author.slug"
@@ -36,7 +36,7 @@
       </template>
 
       <template v-if="authors['weekly'].length">
-        <h2>Weekly</h2>
+        <h2>{{ $t('Weekly') }}</h2>
         <AuthorWidget
           v-for="author in authors['weekly']"
           :key="author.slug"

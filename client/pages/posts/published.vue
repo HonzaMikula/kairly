@@ -17,7 +17,7 @@
     </PostWrapper>
 
     <div v-if="!posts.length && !loadingPosts" class="my-posts--empty">
-      <p>You didn't publish any post.</p>
+      <p>{{ $t("You didn't publish any post.") }}</p>
     </div>
 
     <loading-spinner v-if="loadingPosts"></loading-spinner>

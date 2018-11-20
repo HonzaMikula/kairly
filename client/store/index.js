@@ -22,7 +22,8 @@ const createStore = () => {
       messages: {
         error: null,
         success: null,
-      }
+      },
+      locale: null
     },
 
     mutations: {
@@ -122,6 +123,9 @@ const createStore = () => {
       },
       showSuccess(state, msg) {
         state.messages = {...state.messages, success: msg }
+      },
+      setLang (state, locale) {
+        state.locale = locale
       }
     },
 

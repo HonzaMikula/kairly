@@ -4,11 +4,10 @@
       <editor-newspapers--empty
         v-if="newspapers.length === 0">
 
-        <h1>Start your first newspaper!</h1>
+        <h1>{{ $t('Start your first newspaper!') }}</h1>
 
         <p>
-          Are you interested in specific topic? Found a newspaper and start providing
-          selection of best articles and tweets to others.
+          {{ $t("Are you interested in specific topic? Found a newspaper and start providing selection of best articles and tweets to others.") }}
         </p>
 
         <a href="" @click.prevent="isCreateNewspaperOpen = true">Start a newspaper</a>
@@ -84,9 +83,9 @@
               v-if="isMobileMenuOpen"
               v-on-clickaway="() => isMobileMenuOpen = false">
               <ul>
-                <li><a href="" @click.prevent="isCreateNewspaperOpen = true">Start new newspaper</a></li>
-                <li><a href="" @click.prevent="newspaperToEdit = selectedNewspaper">Edit newspaper</a></li>
-                <li><a href="" @click.prevent="confirmDeleteNewspaper">Delete newspaper</a></li>
+                <li><a href="" @click.prevent="isCreateNewspaperOpen = true">{{ $t('Start new newspaper') }}</a></li>
+                <li><a href="" @click.prevent="newspaperToEdit = selectedNewspaper">{{ $t('Edit newspaper') }}</a></li>
+                <li><a href="" @click.prevent="confirmDeleteNewspaper">{{ $t('Delete newspaper') }}</a></li>
               </ul>
             </div>
           </div>
@@ -98,14 +97,14 @@
               href=""
               :class="{'is-active': mobileSwitcher == 1}"
               @click.prevent="mobileSwitcher = 1">
-              Upcoming issue
+              {{ $t('Upcoming issue') }}
             </a>
 
             <a
               href=""
               :class="{'is-active': mobileSwitcher == 2}"
               @click.prevent="mobileSwitcher = 2">
-              Considered posts
+              {{ $t('Considered posts') }}
             </a>
           </nav>
         </editor-newspapers--mobile-switcher>

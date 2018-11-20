@@ -2,9 +2,9 @@
   <my-newspapers-view>
     <my-newspapers--empty
       v-if="newspapers.length === 0">
-      <h1>No newspapers</h1>
-      <p>You haven't subscribe to any newspapers yet. On Explore page you can find newspapers you might like.</p>
-      <nuxt-link to="/explore">Explore newspapers</nuxt-link>
+      <h1>{{ $t('No newspapers') }}</h1>
+      <p>{{ $t("You haven't subscribe to any newspapers yet. On Explore page you can find newspapers you might like.") }}</p>
+      <nuxt-link to="/explore">{{ $t('Explore newspapers') }}</nuxt-link>
     </my-newspapers--empty>
 
     <NewspaperWidget

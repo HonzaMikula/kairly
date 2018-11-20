@@ -3,12 +3,12 @@
     <div class="my-posts">
       <header>
         <nav>
-          <nuxt-link to="/posts" exact>Drafts</nuxt-link>
-          <nuxt-link to="/posts/published">Published posts</nuxt-link>
+          <nuxt-link to="/posts" exact>{{ $t('Drafts') }}</nuxt-link>
+          <nuxt-link to="/posts/published">{{ $t('Published posts') }}</nuxt-link>
         </nav>
 
         <div class="my-posts--create-post">
-          <nuxt-link to="/posts/create/article">Create a post</nuxt-link>
+          <nuxt-link to="/posts/create/article">{{ $t('Create a post') }}</nuxt-link>
         </div>
       </header>
 

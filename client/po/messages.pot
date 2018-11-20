@@ -1,0 +1,180 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+#: components/IssueWrapper.vue:26
+#: pages/explore/_tab.vue:25
+msgid "Show more"
+msgstr ""
+
+#: components/layout/Header.vue:9
+msgid "Home"
+msgstr ""
+
+#: components/layout/Header.vue:15
+msgid "Subscriptions"
+msgstr ""
+
+#: components/layout/Header.vue:21
+#: pages/subscription.vue:5
+msgid "Newspapers"
+msgstr ""
+
+#: components/layout/Header.vue:27
+msgid "New post"
+msgstr ""
+
+#: components/layout/Header.vue:33
+msgid "Explore"
+msgstr ""
+
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr ""
+
+#: pages/index.vue:17
+#: pages/index.vue:51
+msgid "Previous day"
+msgstr ""
+
+#: pages/index.vue:24
+#: pages/index.vue:58
+msgid "Next day"
+msgstr ""
+
+#: pages/index.vue:40
+msgid "No articles or tweets."
+msgstr ""
+
+#: pages/index.vue:45
+msgid "That's it. You read the entire day."
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:6
+msgid "Sign up to help with resurrection of exceptional journalism."
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:17
+msgid "Email"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:21
+msgid "Password"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:23
+msgid "At least 8 characters"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:26
+msgid "Sign Up"
+msgstr ""
+
+#: pages/posts/create.vue:5
+msgid "Write an article"
+msgstr ""
+
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
+msgstr ""
+
+#: pages/posts/published.vue:20
+msgid "You didn't publish any post."
+msgstr ""
+
+#: pages/posts/index.vue:4
+msgid "No drafts"
+msgstr ""
+
+#: pages/posts/index.vue:31
+msgid "Publish"
+msgstr ""
+
+#: pages/subscription/authors.vue:6
+msgid "No authors"
+msgstr ""
+
+#: pages/subscription/authors.vue:7
+msgid ""
+"You haven't subscribe to any author yet. On Explore page you can find "
+"authors you might like."
+msgstr ""
+
+#: pages/subscription/authors.vue:8
+msgid "Explore authors"
+msgstr ""
+
+#: pages/subscription/authors.vue:12
+msgid "Continously"
+msgstr ""
+
+#: pages/subscription/authors.vue:21
+msgid "3x per day"
+msgstr ""
+
+#: pages/subscription/authors.vue:30
+msgid "Daily"
+msgstr ""
+
+#: pages/subscription/authors.vue:39
+msgid "Weekly"
+msgstr ""
+
+#: pages/subscription/newspapers.vue:5
+msgid "No newspapers"
+msgstr ""
+
+#: pages/subscription/newspapers.vue:6
+msgid ""
+"You haven't subscribe to any newspapers yet. On Explore page you can find "
+"newspapers you might like."
+msgstr ""
+
+#: pages/subscription/newspapers.vue:7
+msgid "Explore newspapers"
+msgstr ""
+
+#: pages/newspapers.vue:7
+msgid "Start your first newspaper!"
+msgstr ""
+
+#: pages/newspapers.vue:10
+msgid ""
+"Are you interested in specific topic? Found a newspaper and start providing "
+"selection of best articles and tweets to others."
+msgstr ""
+
+#: pages/newspapers.vue:86
+msgid "Start new newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:87
+msgid "Edit newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:88
+msgid "Delete newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:100
+msgid "Upcoming issue"
+msgstr ""
+
+#: pages/newspapers.vue:107
+msgid "Considered posts"
+msgstr ""
+
+#: pages/subscription.vue:6
+msgid "Authors"
+msgstr ""

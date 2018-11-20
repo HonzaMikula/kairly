@@ -11,3 +11,7 @@ npm-debug.log
 dist
 
 .vscode
+po/*~
+po/*.temp.*
+po/*.mo
+po/*.json

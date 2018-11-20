@@ -1,0 +1,188 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+
+#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
+msgid "Show more"
+msgstr "Zobrazit další"
+
+#: components/layout/Header.vue:9
+msgid "Home"
+msgstr "Domů"
+
+#: components/layout/Header.vue:15
+msgid "Subscriptions"
+msgstr "Sledované"
+
+#: components/layout/Header.vue:21 pages/subscription.vue:5
+msgid "Newspapers"
+msgstr "Noviny"
+
+#: components/layout/Header.vue:27
+msgid "New post"
+msgstr "Nový článek"
+
+#: components/layout/Header.vue:33
+msgid "Explore"
+msgstr "Procházet"
+
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr "Koncepty"
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr "Publikované články"
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr "Vytvořit článek"
+
+#: pages/index.vue:17 pages/index.vue:51
+msgid "Previous day"
+msgstr "Předchozí den"
+
+#: pages/index.vue:24 pages/index.vue:58
+msgid "Next day"
+msgstr "Následující den"
+
+#: pages/index.vue:40
+msgid "No articles or tweets."
+msgstr "Žádné články ani ani tweety."
+
+#: pages/index.vue:45
+msgid "That's it. You read the entire day."
+msgstr "Hotovo. Máte přečtený celý den."
+
+#: pages/join-and-read-with-kairly.vue:6
+msgid "Sign up to help with resurrection of exceptional journalism."
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: pages/join-and-read-with-kairly.vue:17
+msgid "Email"
+msgstr "Email"
+
+#: pages/join-and-read-with-kairly.vue:21
+msgid "Password"
+msgstr "Heslo"
+
+#: pages/join-and-read-with-kairly.vue:23
+msgid "At least 8 characters"
+msgstr "Nejméně 8 znaků"
+
+#: pages/join-and-read-with-kairly.vue:26
+msgid "Sign Up"
+msgstr "Zaregistrovat"
+
+#: pages/posts/create.vue:5
+msgid "Write an article"
+msgstr "Napsat článek"
+
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
+msgstr "Napsat tweet"
+
+#: pages/posts/published.vue:20
+msgid "You didn't publish any post."
+msgstr "Nepublikoval jste zatím žádný článek."
+
+#: pages/posts/index.vue:4
+msgid "No drafts"
+msgstr "Žádné koncepty"
+
+#: pages/posts/index.vue:31
+msgid "Publish"
+msgstr "Publikovat"
+
+#: pages/subscription/authors.vue:6
+msgid "No authors"
+msgstr "Žádní autoři"
+
+#: pages/subscription/authors.vue:7
+msgid ""
+"You haven't subscribe to any author yet. On Explore page you can find "
+"authors you might like."
+msgstr ""
+
+#: pages/subscription/authors.vue:8
+msgid "Explore authors"
+msgstr "Procházet autory"
+
+#: pages/subscription/authors.vue:12
+msgid "Continously"
+msgstr "Průběžně"
+
+#: pages/subscription/authors.vue:21
+msgid "3x per day"
+msgstr "3x za den"
+
+#: pages/subscription/authors.vue:30
+msgid "Daily"
+msgstr "Denně"
+
+#: pages/subscription/authors.vue:39
+msgid "Weekly"
+msgstr "Týdně"
+
+#: pages/subscription/newspapers.vue:5
+msgid "No newspapers"
+msgstr "Žádné noviny"
+
+#: pages/subscription/newspapers.vue:6
+msgid ""
+"You haven't subscribe to any newspapers yet. On Explore page you can find "
+"newspapers you might like."
+msgstr ""
+
+#: pages/subscription/newspapers.vue:7
+msgid "Explore newspapers"
+msgstr "Procházet noviny"
+
+#: pages/newspapers.vue:7
+msgid "Start your first newspaper!"
+msgstr "Začněte tvořit svoje první noviny!"
+
+#: pages/newspapers.vue:10
+msgid ""
+"Are you interested in specific topic? Found a newspaper and start providing "
+"selection of best articles and tweets to others."
+msgstr ""
+"Zajímá vás konkrétní téma? Založte noviny a začnete vybírat a poskytovat "
+"nejlepší obsah ostatním čtenářům."
+
+#: pages/newspapers.vue:86
+msgid "Start new newspaper"
+msgstr "Založit nové noviny"
+
+#: pages/newspapers.vue:87
+msgid "Edit newspaper"
+msgstr "Upravit noviny"
+
+#: pages/newspapers.vue:88
+msgid "Delete newspaper"
+msgstr "Zrušit noviny"
+
+#: pages/newspapers.vue:100
+msgid "Upcoming issue"
+msgstr "Nadcházející vydání"
+
+#: pages/newspapers.vue:107
+msgid "Considered posts"
+msgstr "Vybrané články"
+
+#: pages/subscription.vue:6
+msgid "Authors"
+msgstr "Autoři"

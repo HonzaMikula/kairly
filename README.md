@@ -7,8 +7,14 @@ https://kairly.com/
 ## Build Vue client
 
 ``` bash
+# install utilities required for i18n
+apt install gettext jq
+
 # install dependencies
 npm install
+
+# compile messages
+npm run compilemessages
 
 # serve with hot reload at localhost:3000
 npm run dev
@@ -46,6 +52,20 @@ pipenv run ./manage.py createsuperuser
 ```
 pipenv run ./manage.py runserver
 
+```
+
+## I18n
+
+``` bash
+# refresh .po files
+npm run compilemessages
+
+# edit translation strings
+poedit locales/cs.po
+# or use poedit windows port
+
+# compile .po files to JSONs used by app
+npm run makemessages
 ```
 
 ## Rosti

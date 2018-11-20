@@ -6,31 +6,31 @@
         <ul v-if="user">
           <li class="home">
             <nuxt-link :to="{name: 'index'}" exact title="Home">
-              <span>Home</span>
+              <span>{{ $t('Home') }}</span>
             </nuxt-link>
           </li>
 
           <li class="subscription">
             <nuxt-link :to="{name: 'subscription-newspapers'}" title="Subscriptions">
-              <span>Subscriptions</span>
+              <span>{{ $t('Subscriptions') }}</span>
             </nuxt-link>
           </li>
 
           <li class="newspapers">
             <nuxt-link :to="{name: 'newspapers'}" title="Newspapers">
-              <span>Newspapers</span>
+              <span>{{ $t('Newspapers') }}</span>
             </nuxt-link>
           </li>
 
           <li class="new-post">
             <nuxt-link :to="{name: 'posts'}" title="New post">
-              <span>New post</span>
+              <span>{{ $t('New post') }}</span>
             </nuxt-link>
           </li>
 
           <li class="explore">
             <nuxt-link :to="{name: 'explore-tab'}" title="Explore">
-              <span>Explore</span>
+              <span>{{ $t('Explore') }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -60,6 +60,11 @@
           <li class="divider"></li>
           <li><a href="" @click.prevent="logout">Logout</a></li>
         </ul>
+      </nav>
+
+      <nav>
+        <a href="?lang=cs" @click.prevent="setLang('cs')">CS</a>
+        <a href="?lang=en" @click.prevent="setLang('en')">EN</a>
       </nav>
     </div>
   </header>
@@ -93,6 +98,11 @@ export default {
     async logout() {
       await this.$auth.logout()
       this.$router.push("/homepage")
+    },
+
+    setLang(locale) {
+      this.setLocale(locale)
+      this.$auth.$storage.setUniversal('locale', locale)
     }
   }
 }

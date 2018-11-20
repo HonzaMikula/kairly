@@ -1,7 +1,7 @@
 <template>
   <my-posts>
     <div class="my-posts--empty" v-if="posts.length == 0">
-      No drafts
+      {{ $t('No drafts') }}
     </div>
 
     <div v-for="post in posts" :key="post.id">
@@ -28,7 +28,7 @@
             @click.prevent="$router.push(`/posts/${post.id}`)">
           </button-icon>
 
-          <button @click="publishPost(post)">Publish</button>
+          <button @click="publishPost(post)">{{ $t('Publish') }}</button>
         </template>
       </PostWrapper>
     </div>
