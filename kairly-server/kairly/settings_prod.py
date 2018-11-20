@@ -2,6 +2,11 @@ from .settings import *  # NOQA
 
 DEBUG = False
 
+# I am curious why production site need this to get admin working
+# Without trusted origin admin raises error
+# Error: CSRF Failed: Referer checking failed - ... does not match any trusted origins.
+CSRF_TRUSTED_ORIGINS = ['kairly.com']
+
 # enable loggind errors to console on production
 LOGGING = {
     'version': 1,
