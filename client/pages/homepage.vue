@@ -179,12 +179,12 @@ export default {
     }
   },
 
-  async fetch ({ store, redirect }) {
-    if (store.state.auth.loggedIn) {
-      redirect('/')
-      return
-    }
-  }
+  // async fetch ({ store, redirect }) {
+  //   if (store.state.auth.loggedIn) {
+  //     redirect('/')
+  //     return
+  //   }
+  // }
 }
 </script>
 
