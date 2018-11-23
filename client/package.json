@@ -9,23 +9,23 @@
     "local": "API_URL=http://localhost:8000/api GA_ID=UA-114180015-1 nuxt",
     "dev-spa": "API_URL=https://kairly.com/api GA_ID=UA-114180015-1 nuxt --spa",
     "local-spa": "API_URL=http://localhost:8000/api GA_ID=UA-114180015-1 nuxt --spa",
-    "build": "API_URL_BROWSER=https://kairly.com/api API_URL=https://kairly-2648.rostiapp.cz/api/ GA_ID=UA-114180015-2 nuxt build",
-    "start": "API_URL_BROWSER=https://kairly.com/api API_URL=https://kairly-2648.rostiapp.cz/api/ GA_ID=UA-114180015-2 nuxt start",
+    "build": "API_URL_BROWSER=https://kairly.com/api API_URL=https://kairly-2648.rostiapp.cz/api/ GA_ID=UA-114180015-2 nuxt build --modern=server",
+    "start": "API_URL_BROWSER=https://kairly.com/api API_URL=https://kairly-2648.rostiapp.cz/api/ GA_ID=UA-114180015-2 nuxt start --modern=server",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.5.3",
-    "@nuxtjs/axios": "^5.3.4",
+    "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/google-analytics": "^2.0.2",
     "axios-retry": "^3.1.1",
     "bootstrap-vue": "^2.0.0-rc.11",
     "jwt-decode": "^2.2.0",
     "medium-editor": "^5.23.3",
-    "nuxt": "^2.2.0",
+    "nuxt": "^2.3.2",
     "nuxt-sass-resources-loader": "^2.0.5",
-    "portal-vue": "^1.4.0",
+    "portal-vue": "^1.5.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-keep-scroll": "^0.1.1",
     "vue-moment": "^4.0.0",
@@ -34,12 +34,12 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
+    "eslint": "^5.9.0",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-vue": "^4.7.1",
     "font-awesome": "^4.7.0",
     "node-reset-scss": "^1.0.1",
-    "node-sass": "^4.9.4",
+    "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0"
   }
 }
