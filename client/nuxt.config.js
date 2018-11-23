@@ -76,8 +76,8 @@ module.exports = {
 
   auth: {
     redirect: {
-      login: '/homepage',
-      logout: '/homepage',
+      login: '/',
+      logout: '/',
       home: '/'
     },
     localStorage: false,

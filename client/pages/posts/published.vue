@@ -72,7 +72,7 @@ export default {
 
   async fetch({ store, redirect }) {
     if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
+      redirect('/')
       return
     }
   },

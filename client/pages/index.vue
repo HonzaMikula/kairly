@@ -1,6 +1,6 @@
 <template>
   <app-layout>
-    <timeline-view>
+    <timeline-view v-if="loggedIn">
       <Welcome v-if="noSubscriptions"/>
       <template v-else>
         <template v-if="timeSlots.length">
@@ -62,25 +62,31 @@
 
       <loading-spinner v-if="loading"></loading-spinner>
     </timeline-view>
+    <Homepage v-else/>
   </app-layout>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 
+import Homepage from '@/components/Homepage'
+import Welcome from '@/components/Welcome'
 import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
-import Welcome from '@/components/Welcome'
 import JumpMenu from '@/components/widgets/JumpMenu'
 
 export default {
   name: 'Timeline',
 
+  // Homepage component is displayed when user is not logged
+  auth: false,
+
   components: {
-    IssueWrapper,
-    Welcome,
     AppLayout,
-    JumpMenu
+    Homepage,
+    IssueWrapper,
+    JumpMenu,
+    Welcome,
   },
 
   data() {
@@ -91,6 +97,7 @@ export default {
 
   computed: {
     ...mapState({
+      loggedIn: state => state.auth.loggedIn,
       noSubscriptions: state => state.timelineHasNoActiveSubscriptions,
       expandedIssues: state => state.timelineExpandedIssues
     }),
@@ -124,22 +131,29 @@ export default {
     }
   },
 
-  async fetch ({ store, params, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
-      return
+  watch: {
+    loggedIn() {
+      this.loadInitialTimeline()
     }
   },
 
-  async created() {
-    if (process.client && !this.noSubscriptions) {
-      // TODO load timeline and backlog in parallel
+  methods: {
+    async loadInitialTimeline() {
+      if (this.loggedIn && !this.noSubscriptions) {
+        // TODO load timeline and backlog in parallel
 
-      const { date } = this.$route.params
+        const { date } = this.$route.params
 
-      this.date = await this.$store.dispatch('loadTimeline', date)
+        this.date = await this.$store.dispatch('loadTimeline', date)
 
-      this.$store.dispatch('getUserBacklog')
+        this.$store.dispatch('getUserBacklog')
+      }
+    }
+  },
+
+  created() {
+    if (process.client) {
+      this.loadInitialTimeline()
     }
   }
 }
