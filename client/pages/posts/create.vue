@@ -22,13 +22,6 @@ export default {
 
   components: {
     AppLayout
-  },
-
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/')
-      return
-    }
   }
 }
 </script>

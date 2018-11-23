@@ -42,14 +42,7 @@ export default {
     ...mapState({
       user: state => state.auth.user
     })
-  },
-
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/')
-      return
-    }
-  },
+  }
 }
 </script>
 

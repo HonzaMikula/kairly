@@ -70,13 +70,6 @@ export default {
     }
   },
 
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/')
-      return
-    }
-  },
-
   created() {
     this.loadPosts()
   }

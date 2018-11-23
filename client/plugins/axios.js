@@ -48,6 +48,4 @@ export default function({ app, $axios, redirect }) {
       }
     })
   }
-
-  //console.log(app.$auth.getToken())
 }

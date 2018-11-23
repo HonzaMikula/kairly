@@ -41,13 +41,6 @@ export default {
     }
   },
 
-  async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/')
-      return
-    }
-  },
-
   async asyncData({ app, store, params }) {
     const { post } = await app.$axios.$get(`/drafts/${params.postId}`)
     return {
