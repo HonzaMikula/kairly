@@ -114,7 +114,6 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 
 export default {
   name: 'AuthorDetail',
-
   auth: false,
 
   head() {

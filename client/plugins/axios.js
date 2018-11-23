@@ -12,6 +12,8 @@ export default function({ app, $axios, redirect }) {
       // delete all local tokens
       await app.$auth.logout()
       redirect('/')
+    } else {
+      throw err
     }
   })
 
@@ -48,6 +50,4 @@ export default function({ app, $axios, redirect }) {
       }
     })
   }
-
-  //console.log(app.$auth.getToken())
 }

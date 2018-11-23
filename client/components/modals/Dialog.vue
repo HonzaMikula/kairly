@@ -22,7 +22,9 @@ modal-window
   left: 0
   z-index: 100000000
 
+  box-sizing: border-box
   display: flex
+  padding: 0 $baseline/4
   align-items: center
   justify-content: center
   height: 100%
@@ -41,7 +43,7 @@ modal-dialog
   display: grid
   grid-template-rows: $baseline*2 1fr auto
   border-radius: $baseline / 2
-  max-height: 95vh
+  max-height: 90vh
   overflow: hidden
 
   background: #fff

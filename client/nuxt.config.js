@@ -68,17 +68,13 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
-    },
-
-    extractCSS: {
-      allChunks: true
     }
   },
 
   auth: {
     redirect: {
-      login: '/homepage',
-      logout: '/homepage',
+      login: '/',
+      logout: '/',
       home: '/'
     },
     localStorage: false,

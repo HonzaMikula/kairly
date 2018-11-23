@@ -79,16 +79,6 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
   return data
 }
 
-// export async function getAuthor({ commit, state }, id) {
-//   let author = state.authors[id]
-//   if (author) {
-//     return author
-//   }
-//   resp = await api.getAuthor(id)
-//   commit('author', author)
-//   return author
-// }
-
 export async function subscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 

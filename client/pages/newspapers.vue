@@ -259,11 +259,6 @@ export default {
   },
 
   async fetch({ store, redirect }) {
-    if (!store.state.auth.loggedIn) {
-      redirect('/homepage')
-      return
-    }
-
     const { user } = store.state.auth
 
     await store.dispatch('getUserBacklog')

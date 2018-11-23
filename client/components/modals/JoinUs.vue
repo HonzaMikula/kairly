@@ -93,9 +93,18 @@ export default {
 modal-dialog.join-us
   max-width: 600px
 
+  > header h1
+    @media (max-width: $mobile)
+      padding: 0 $baseline/2
+
   main
     padding: $baseline
+    overflow: auto
+
     background: #fff
+
+    @media (max-width: $mobile)
+      padding: $baseline/2
 
   h3
     margin: $baseline 0 $baseline/2 0
