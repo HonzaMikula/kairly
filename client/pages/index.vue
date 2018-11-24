@@ -89,12 +89,6 @@ export default {
     Welcome,
   },
 
-  data() {
-    return {
-      date: null // date returned from timeline request
-    }
-  },
-
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn,
@@ -133,27 +127,52 @@ export default {
 
   watch: {
     loggedIn() {
-      this.loadInitialTimeline()
+      this.loadTimeline()
     }
   },
 
   methods: {
-    async loadInitialTimeline() {
+    async loadTimeline() {
       if (this.loggedIn && !this.noSubscriptions) {
         // TODO load timeline and backlog in parallel
 
         const { date } = this.$route.params
 
-        this.date = await this.$store.dispatch('loadTimeline', date)
+        this.date = await this.$store.dispatch('loadTimeline', { date })
 
         this.$store.dispatch('getUserBacklog')
       }
     }
   },
 
+  async asyncData({ store, params }) {
+    const { state } = store
+    const { date } = params
+
+    // data.date keeps date returned from timeline request
+
+    if (!state.auth.loggedIn || state.timelineHasNoActiveSubscriptions) {
+      return {
+        date: null
+      }
+    }
+
+    /*
+      return only if timeline date is already fetched
+      we want render page immediately when all data is alredy in store
+      to keep scroll position when user is going back
+
+      on the other hand, when data is not available, make fast transtion
+      as possible and keep loading wheel dispayed inside page
+    */
+    return {
+      date: await store.dispatch('loadTimeline', { date, cachedOnly: true })
+    }
+  },
+
   created() {
-    if (process.client) {
-      this.loadInitialTimeline()
+    if (process.client && !this.date) {
+      this.loadTimeline()
     }
   }
 }
