@@ -2,67 +2,75 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="join-us">
       <header>
-        <h1>Are you interested in Kairly?</h1>
+        <h1>{{ $t('Are you interested in Kairly?') }}</h1>
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
       <main>
-        <h3>Participate in user testing</h3>
+        <h3>{{ $t('Participate in user testing') }}</h3>
         <p>
+          {{ $t('@joinus/usertesting') }}
+          <!--
           We are doing 30 - 60 minutes user testing interviews over Skype (or some other communication tool).
           We will give you access to Kairly. You will share screen with us. We will observe how you use Kairly.
           Together we will discuss what you like, what you don't like and how we can improve the app.
+          -->
         </p>
 
         <p>
-          <a href="mailto:info@kairly.com?subject=Kairly user testing&body=Hi, I would like to do user testing for Kairly.">Schedule user testing interview</a>
+          <a href="mailto:info@kairly.com?subject=Kairly user testing&amp;body=Hi, I would like to do user testing for Kairly.">{{ $t('Schedule user testing interview') }}</a>
         </p>
 
-        <h3>Join Facebook group</h3>
+        <h3>{{ $t('Join Facebook group') }}</h3>
         <p>
+          {{ $t('@joinus/joinfacebook') }}
+          <!--
           We have Kairly group on Facebook, where we regularly share what's new in Kairly and what we are planning for next weeks.
           It's place where people give us feedback and propose ideas, how we can improve Kairly.
+          -->
         </p>
 
         <p>
-          <a href="https://www.facebook.com/groups/276916213077456/">Join Facebook group</a>
+          <a href="https://www.facebook.com/groups/276916213077456/">{{ $t('Join Facebook group') }}</a>
         </p>
 
-        <h3>Follow us on social media</h3>
+        <h3>{{ $t('Follow us on social media') }}</h3>
         <div class="social-media">
           <a
             href="https://www.facebook.com/kairlynews/"
             class="facebook"
-            title="Follow us Facebook">
+            :title="$t('Follow us Facebook')">
           </a>
 
           <a
             href="https://twitter.com/kairlynews"
             class="twitter"
-            title="Follow us Twitter">
+            :title="$t('Follow us Twitter')">
           </a>
 
           <a
             href="https://www.linkedin.com/company/kairly/"
             class="linkedin"
-            title="Follow us LinkedIn">
+            :title="$t('Follow us LinkedIn')">
           </a>
         </div>
 
-        <h3>Join private beta</h3>
+        <h3>{{ $t('Join private beta') }}</h3>
         <p>
+          {{ $t('@joinus/joinprivatebeta') }}
+          <!--
           We are inviting limited number of people to use Kairly and give us feedback about the app.
           Based on the feedback we are improving the app every week. Although there can be many bugs in the app,
-          you can experience our ideas how to improve current state of journalism.
+          you can experience our ideas how to improve current state of journalism.-->
         </p>
 
         <!-- Begin Mailchimp Signup Form -->
         <div id="mc_embed_signup">
           <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
             <div id="mc_embed_signup_scroll">
-              <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+              <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
               <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
               <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value=""></div>
-              <div class="clear"><input type="submit" value="Request to join" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+              <div class="clear"><input type="submit" :value="$t('Request to join')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
             </div>
           </form>
         </div>

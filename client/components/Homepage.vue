@@ -2,7 +2,7 @@
   <homepage-view>
     <homepage--cover>
       <div>
-        <h1>Help us resurrect exceptional journalism</h1>
+        <h1>{{ $t('Help us resurrect exceptional journalism') }}</h1>
 
         <!-- Begin Mailchimp Signup Form -->
         <div id="mc_embed_signup">
@@ -11,7 +11,7 @@
               <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
               <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
               <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value=""></div>
-              <div class="clear"><input type="submit" value="Request to join" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+              <div class="clear"><input type="submit" :value="$t('Request to join')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
             </div>
           </form>
         </div>
@@ -21,48 +21,53 @@
     </homepage--cover>
     <homepage--roles>
       <div>
-        <h3>Authors</h3>
+        <h3>{{ $t('Authors') }}</h3>
         <p>
-          Authors focus on writing.
-          They are creating high quality articles &amp; tweets.
+          {{ $t('@homepage/roles/authors') }}
+          <!-- Authors focus on writing.
+          They are creating high quality articles &amp; tweets. -->
         </p>
       </div>
 
       <div>
-        <h3>Editors</h3>
+        <h3>{{ $t('Editors') }}</h3>
         <p>
-          Editors run their newspaper.
-          They are selecting the best articles &amp; tweets from authors.
+          {{ $t('@homepage/roles/editors') }}
+          <!-- Editors run their newspaper.
+          They are selecting the best articles &amp; tweets from authors.-->
         </p>
       </div>
 
       <div>
-        <h3>Readers</h3>
+        <h3>{{ $t('Readers') }}</h3>
         <p>
-          Readers choose what they want to read and when.
-          They subscribe either directly to authors or to newspapers.
+          {{ $t('@homepage/roles/readers')}}
+          <!-- Readers choose what they want to read and when.
+          They subscribe either directly to authors or to newspapers. -->
         </p>
       </div>
     </homepage--roles>
 
     <homepage--how-it-works>
       <div>
-        <h2>How it works?</h2>
-        <p>
-          In old times we bought newspapers every day. Each issue of newspaper was prepared by professional editors who selected the
-          best articles from proffesional authors. By buying a newspaper, you pay those editors and authors.
-        </p>
+        <div v-html="$t('@homepage/howitworks')">
+          <!--h2>How it works?</h2>
+          <p>
+            In old times we bought newspapers every day. Each issue of newspaper was prepared by professional editors who selected the
+            best articles from proffesional authors. By buying a newspaper, you pay those editors and authors.
+          </p>
 
-        <p>
-          In modern world of social media we lost professional editors and authors are dependent on advertisment.
-          Now it's your friends who are selecting the content in your timeline. The result is not good.
-          Exceptional journalism depends on professional editors and authors, who will get paid fairly.
-        </p>
+          <p>
+            In modern world of social media we lost professional editors and authors are dependent on advertisment.
+            Now it's your friends who are selecting the content in your timeline. The result is not good.
+            Exceptional journalism depends on professional editors and authors, who will get paid fairly.
+          </p>
 
-        <p>
-          In Kairly readers are subscribing newspapers and paying for them.
-          Those money are then shared between editors and authors.
-        </p>
+          <p>
+            In Kairly readers are subscribing newspapers and paying for them.
+            Those money are then shared between editors and authors.
+          </p-->
+        </div>
 
         <div>
           <img src="~assets/homepage/kairly-concept-5.png" alt="Kairly Screenshot"/>
@@ -71,8 +76,8 @@
     </homepage--how-it-works>
 
     <homepage--values>
-      <div>
-        <h2>What we believe in?</h2>
+      <div v-html="$t('@homepage/whatwebelievein')">
+        <!--h2>What we believe in?</h2>
 
         <p>
           In the world full of fake news, manipulations and attacks on journalism, we stand for <strong>truth</strong>.
@@ -90,42 +95,42 @@
           we stand for <strong>fair reward for high-quality content</strong>.
         </p>
 
-        <p>Stand with us!</p>
+        <p>Stand with us!</p-->
       </div>
     </homepage--values>
 
     <homepage--help-us>
-      <h2>How you can help?</h2>
-      <p>You can help us create exceptional journalism in different ways.</p>
+      <h2>{{ $t('How you can help?')}}</h2>
+      <p>{{ $t("You can help us create exceptional journalism in different ways.") }}</p>
 
       <div>
         <section>
-          <h3>Readers</h3>
+          <h3>{{ $t('Readers') }}</h3>
           <ul>
-            <li>join our private beta program</li>
-            <li>participate in user testing interviews over Skype</li>
+            <li>{{ $t("join our private beta program") }}</li>
+            <li>{{ $t("participate in user testing interviews over Skype") }}</li>
           </ul>
         </section>
 
         <section>
-          <h3>Editors</h3>
+          <h3>{{ $t('Editors') }}</h3>
           <ul>
-            <li>start your newspaper on Kairly</li>
-            <li>participate in user testing interviews over Skype</li>
+            <li>{{ $t("start your newspaper on Kairly") }}</li>
+            <li>{{ $t("participate in user testing interviews over Skype") }}</li>
           </ul>
         </section>
 
         <section>
-          <h3>Authors</h3>
+          <h3>{{ $t('Authors') }}</h3>
           <ul>
-            <li>start publishing your content on Kairly</li>
-            <li>participate in  user testing interviews over Skype</li>
+            <li>{{ $t("start publishing your content on Kairly") }}</li>
+            <li>{{ $t("participate in user testing interviews over Skype") }}</li>
           </ul>
         </section>
       </div>
 
       <homepage--help-us--contact-us>
-        <a href="" @click.prevent="isJoinUsModalOpen = true">Join us</a>
+        <a href="" @click.prevent="isJoinUsModalOpen = true">{{ $t('Join us') }}</a>
       </homepage--help-us--contact-us>
     </homepage--help-us>
 
@@ -133,21 +138,21 @@
       <a
         href="https://www.facebook.com/kairlynews/"
         class="facebook"
-        title="Follow us Facebook"
+        :title="$t('Follow us Facebook')"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
       </a>
 
       <a
         href="https://twitter.com/kairlynews"
         class="twitter"
-        title="Follow us Twitter"
+        :title="$t('Follow us Twitter')"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
       </a>
 
       <a
         href="https://www.linkedin.com/company/kairly/"
         class="linkedin"
-        title="Follow us LinkedIn"
+        :title="$t('Follow us LinkedIn')"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
       </a>
     </div>

@@ -19,9 +19,17 @@ msgstr "Uložit"
 msgid "Create newspaper"
 msgstr "Vytvořit noviny"
 
-#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
-msgid "Show more"
-msgstr "Zobrazit další"
+#: components/layout/HeaderPublic.vue:6
+msgid "We aim for exceptional journalism"
+msgstr "Usilujeme o výjimečnou žurnalistiku"
+
+#: components/layout/HeaderPublic.vue:10 components/Homepage.vue:133
+msgid "Join us"
+msgstr "Zapojte se"
+
+#: components/layout/HeaderPublic.vue:11
+msgid "Sign In"
+msgstr "Přihlásit"
 
 #: components/layout/Header.vue:9
 msgid "Home"
@@ -43,9 +51,118 @@ msgstr "Nový článek"
 msgid "Explore"
 msgstr "Procházet"
 
-#: components/widgets/NewspaperSubscription.vue:16
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr "Koncepty"
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr "Publikované články"
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr "Vytvořit článek"
+
+#: components/modals/JoinUs.vue:5
+msgid "Are you interested in Kairly?"
+msgstr "Zajímá vás Kairly?"
+
+#: components/modals/JoinUs.vue:9
+msgid "Participate in user testing"
+msgstr "Zapojte se to uživatelského testování"
+
+#: components/modals/JoinUs.vue:11
+msgid "@joinus/usertesting"
+msgstr ""
+"Děláme 30 - 60 minutové uživatelské testování skze Skype (případně jiný "
+"komunikační nástroj).\n"
+"Dostanete přístup do Kairly a budete s námi sdílet obrazovku. My budeme "
+"sledovat jak Kairly\n"
+"používáte. Společně budeme zjišťovat co se vám líbí, co ne a co by se dalo "
+"zlepšit."
+
+#: components/modals/JoinUs.vue:20
+msgid "Schedule user testing interview"
+msgstr "Naplánovat uživatelské testování"
+
+#: components/modals/JoinUs.vue:23 components/modals/JoinUs.vue:33
+msgid "Join Facebook group"
+msgstr "Přidejte se do Facebookové skupiny"
+
+#: components/modals/JoinUs.vue:25
+msgid "@joinus/joinfacebook"
+msgstr ""
+"V naší facebookové skupině pravidelně sdílíme, co je nového na Kairly, \n"
+"a co plánujeme pro příští týdny. Je to také místo, kde můžeme získat\n"
+"zpětnou vazbu a navrhovat nápady na zlepšení Kairly."
+
+#: components/modals/JoinUs.vue:36
+msgid "Follow us on social media"
+msgstr "Sledujte nás na sociálních sítích"
+
+#: components/modals/JoinUs.vue:41 components/Homepage.vue:141
+msgid "Follow us Facebook"
+msgstr "Sledujte nás Facebooku"
+
+#: components/modals/JoinUs.vue:47 components/Homepage.vue:148
+msgid "Follow us Twitter"
+msgstr "Sledujte nás na Twitteru"
+
+#: components/modals/JoinUs.vue:53 components/Homepage.vue:155
+msgid "Follow us LinkedIn"
+msgstr "Sledujte nás na LinkedInu"
+
+#: components/modals/JoinUs.vue:57
+msgid "Join private beta"
+msgstr "Vyzkoušejte privátní beta verzi"
+
+#: components/modals/JoinUs.vue:59
+msgid "@joinus/joinprivatebeta"
+msgstr ""
+"Omezený počet uživatelů zveme k používání Kairly a získání zpětné vazby.\n"
+"Na základě toho týden co týden zlepšujeme aplikaci. I když občas budete "
+"narážet na chyby,\n"
+"můžete vyzkoušet naši představu jak zlepšit současný stav žurnalistiky."
+
+#: components/modals/JoinUs.vue:70
+msgid "email address"
+msgstr "emailová adresa"
+
+#: components/modals/JoinUs.vue:73 components/Homepage.vue:14
+msgid "Request to join"
+msgstr "Žádost o pozvánku"
+
+#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
+msgid "Show more"
+msgstr "Zobrazit další"
+
+#: components/widgets/NewspaperSubscription.vue:16 pages/_author/index.vue:33
 msgid "Subscription last till {to}"
 msgstr "Odebíráno do {to}"
+
+#: pages/join-and-read-with-kairly.vue:6
+msgid "Sign up to help with resurrection of exceptional journalism."
+msgstr "Zapojte se a pomozte oživit neobyčejnou žurnalistiku."
+
+#: pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: pages/join-and-read-with-kairly.vue:17
+msgid "Email"
+msgstr "Email"
+
+#: pages/join-and-read-with-kairly.vue:21
+msgid "Password"
+msgstr "Heslo"
+
+#: pages/join-and-read-with-kairly.vue:23
+msgid "At least 8 characters"
+msgstr "Alespoň 8 znaků"
+
+#: pages/join-and-read-with-kairly.vue:26
+msgid "Sign Up"
+msgstr "Zaregistrovat"
 
 #: pages/index.vue:17 pages/index.vue:51
 msgid "Previous day"
@@ -63,14 +180,6 @@ msgstr "Žádné články ani ani tweety."
 msgid "That's it. You read the entire day."
 msgstr "Hotovo. Máte přečtený celý den."
 
-#: pages/posts/create.vue:5
-msgid "Write an article"
-msgstr "Napsat článek"
-
-#: pages/posts/create.vue:6
-msgid "Write a tweet"
-msgstr "Napsat tweet"
-
 #: pages/posts/index.vue:4
 msgid "No drafts"
 msgstr "Žádné koncepty"
@@ -82,6 +191,14 @@ msgstr "Publikovat"
 #: pages/posts/published.vue:20
 msgid "You didn't publish any post."
 msgstr "Nepublikoval jste zatím žádný článek."
+
+#: pages/posts/create.vue:5
+msgid "Write an article"
+msgstr "Napsat článek"
+
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
+msgstr "Napsat tweet"
 
 #: pages/subscription/authors.vue:6
 msgid "No authors"
@@ -113,10 +230,6 @@ msgstr "Denně"
 msgid "Weekly"
 msgstr "Týdně"
 
-#: pages/subscription.vue:6
-msgid "Authors"
-msgstr "Autoři"
-
 #: pages/subscription/newspapers.vue:5
 msgid "No newspapers"
 msgstr "Žádné noviny"
@@ -131,29 +244,118 @@ msgstr ""
 msgid "Explore newspapers"
 msgstr "Procházet noviny"
 
-#: pages/join-and-read-with-kairly.vue:6
-msgid "Sign up to help with resurrection of exceptional journalism."
-msgstr "Zapojte se a pomozte oživit neobyčejnou žurnalistiku."
+#: pages/subscription.vue:6 components/Homepage.vue:124
+#: components/Homepage.vue:24
+msgid "Authors"
+msgstr "Autoři"
 
-#: pages/join-and-read-with-kairly.vue:13
-msgid "Username"
-msgstr "Uživatelské jméno"
+#: components/Homepage.vue:5
+msgid "Help us resurrect exceptional journalism"
+msgstr "Pomozte nám oživit výjimečnou žurnalistiku"
 
-#: pages/join-and-read-with-kairly.vue:17
-msgid "Email"
-msgstr "Email"
+#: components/Homepage.vue:26
+msgid "@homepage/roles/authors"
+msgstr ""
+"Autoři se zaměřují na psaní.\n"
+"Vytvářejí kvalitní články a tweety."
 
-#: pages/join-and-read-with-kairly.vue:21
-msgid "Password"
-msgstr "Heslo"
+#: components/Homepage.vue:116 components/Homepage.vue:33
+msgid "Editors"
+msgstr "Redaktoři"
 
-#: pages/join-and-read-with-kairly.vue:23
-msgid "At least 8 characters"
-msgstr "Nejméně 8 znaků"
+#: components/Homepage.vue:35
+msgid "@homepage/roles/editors"
+msgstr ""
+"Redaktoři vydávají vlastní noviny.\n"
+"Vybírají nejlepší články a tweety od autorů."
 
-#: pages/join-and-read-with-kairly.vue:26
-msgid "Sign Up"
-msgstr "Zaregistrovat"
+#: components/Homepage.vue:108 components/Homepage.vue:42
+msgid "Readers"
+msgstr "Čtenáři"
+
+#: components/Homepage.vue:44
+msgid "@homepage/roles/readers"
+msgstr ""
+"Čtenáři si vybírají co a kdy chtějí číst.\n"
+"Odebírají noviny nebo přímo články autorů."
+
+#: components/Homepage.vue:53
+msgid "@homepage/howitworks"
+msgstr ""
+"<h2>Jak to funguje?</h2>\n"
+"<p>\n"
+"  Dříve jsme si kupovali noviny každý den. Každé vydání bylo pečlivě "
+"připraveno redaktory, kteří\n"
+"  redigovali ty nejlepší članky od profesionálních autorů.\n"
+"  Tito redaktoři i novináři byli placeni z prodeje novin.  \n"
+"</p>\n"
+"\n"
+"<p>\n"
+"  V moderním světě sociálních sítí není místo pro profesionální redaktory "
+"a \n"
+"  autoři jsou závislí na příjmech z reklamy. Jsme to my a naši přátelé na "
+"sociálních sítích,\n"
+"  kdo vybírá obsah. Výsledek není dobrý. Výjimečná žurnalisitka závisí na "
+"profesionálních\n"
+"  redaktorech a autorech, kteří jsou spravedlivě odměňováni.\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"  V Kairly čtenáři sledují noviny a platí za ně. Toto předplatné je pak\n"
+"  rozdělováno mezi redaktory a autory.\n"
+"</p>"
+
+#: components/Homepage.vue:79
+msgid "@homepage/whatwebelievein"
+msgstr ""
+"<h2>V co věřímě?</h2>\n"
+"\n"
+"<p>\n"
+"  Ve světě plném fake news, manipulace a útoků na novináře, my zastupujeme\n"
+"  <strong>pravdu</strong>.   \n"
+"</p>\n"
+"\n"
+"<p>\n"
+"  Ve světě plném cenzury a propagandy, my zastupujeme <strong>svobodu "
+"projevu</strong>.\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"  Ve světě plném rozptýlení a nesotředěnosti, my zastupujeme\n"
+"  <strong>nerušené čtení</strong>.\n"
+"</p>\n"
+"\n"
+"<p>\n"
+"  Ve světě kde jsou novináři závislý na inzerci a zájmy inzerentů, \n"
+"  my zastupujeme <strong>spravedlivou odměnu za kvalitní obsah</strong>.  \n"
+"</p>\n"
+"\n"
+"<p>Zůstaňtě s námi!</p>"
+
+#: components/Homepage.vue:103
+msgid "How you can help?"
+msgstr "Jak se zapojit?"
+
+#: components/Homepage.vue:104
+msgid "You can help us create exceptional journalism in different ways."
+msgstr "Můžete pomoct stvořit výjimečnou žurnalistiku více způsoby:"
+
+#: components/Homepage.vue:110
+msgid "join our private beta program"
+msgstr "zapojte se do privátního beta programu"
+
+#: components/Homepage.vue:111 components/Homepage.vue:119
+#: components/Homepage.vue:127
+msgid "participate in user testing interviews over Skype"
+msgstr "zapojte se to uživatelského testování přes Skype"
+
+#: components/Homepage.vue:118
+msgid "start your newspaper on Kairly"
+msgstr "začněte tvořit noviny na Kairly"
+
+#: components/Homepage.vue:126
+msgid "start publishing your content on Kairly"
+msgstr "začněte na Kairly publikovat obsah"
 
 #: pages/newspapers.vue:7
 msgid "Start your first newspaper!"
@@ -164,8 +366,8 @@ msgid ""
 "Are you interested in specific topic? Found a newspaper and start providing "
 "selection of best articles and tweets to others."
 msgstr ""
-"Zajímá vás konkrétní téma? Založte noviny a začnete vybírat a poskytovat "
-"nejlepší obsah ostatním čtenářům."
+"Zajímá vás konkrétní téma? Založte noviny a začněte poskytovat výběr těch "
+"nejlepších článků a tweetů ostatním."
 
 #: pages/newspapers.vue:86
 msgid "Start new newspaper"
@@ -193,7 +395,7 @@ msgstr "Odebíráno"
 
 #: pages/_author/index.vue:26
 msgid "Canceled"
-msgstr "Zrušeno"
+msgstr "Zrušený"
 
 #: pages/_author/index.vue:28
 msgid "Unsubscribe"
@@ -218,15 +420,3 @@ msgstr "Nenapsal jste žádný článek ani nevytvořil žádné noviny."
 #: pages/_author/index.vue:93
 msgid "Start a newspaper"
 msgstr "Vytvořit noviny"
-
-#: components/layout/MyPosts.vue:6
-msgid "Drafts"
-msgstr "Koncepty"
-
-#: components/layout/MyPosts.vue:7
-msgid "Published posts"
-msgstr "Publikované články"
-
-#: components/layout/MyPosts.vue:11
-msgid "Create a post"
-msgstr "Vytvořit článek"
