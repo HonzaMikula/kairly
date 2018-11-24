@@ -25,7 +25,7 @@ export async function getSubscriptions({ commit, state }) {
   return subscriptions
 }
 
-export async function loadTimeline({ commit, state }, date) {
+export async function loadTimeline({ commit, state }, { date, cachedOnly=false}) {
 
   let cacheKey = date
   // TODO check not only valid to but also change of hour or too old timeline
@@ -38,6 +38,10 @@ export async function loadTimeline({ commit, state }, date) {
 
   if (state.timeline[cacheKey]) {
     return cacheKey
+  }
+
+  if (cachedOnly) {
+    return null
   }
 
   const { status, data } = await this.$axios.get('/timeline', {params: {date}})

@@ -35,7 +35,6 @@ module.exports = {
     {src: '~/plugins/tooltip', ssr: false},
     {src: '~/plugins/vue-infinite-scroll', ssr: false},
     {src: '~/plugins/medium-editor', ssr: false },
-    //{src: '~/plugins/vue-keep-scroll', ssr: false},
     '~/plugins/vue-moment',
     '~/plugins/axios',
     '~/plugins/i18n.js',
