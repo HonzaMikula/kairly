@@ -22,16 +22,16 @@
             :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
             @click="subscription.renewal ? unsubscribe() : renewSubscription()">
             <span class="default">
-              <template v-if="subscription.renewal">Subscribed</template>
-              <template v-else>Canceled</template>
+              <template v-if="subscription.renewal">{{ $t('Subscribed') }}</template>
+              <template v-else>{{ $t('Canceled') }}</template>
             </span>
-            <span class="on-hover" v-if="subscription.renewal">Unsubscribe</span>
+            <span class="on-hover" v-if="subscription.renewal">{{ $t('Unsubscribe') }}</span>
             <span
               v-else
               class="on-hover"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="`Subscribtion last till ${subscription.to}`">
-              Renew
+              {{ $t('Renew') }}
             </span>
           </button>
 
@@ -39,7 +39,7 @@
             class="to-subscribe"
             v-else
             @click="$refs.followWidget.openSubscribeWidget()">
-            Subscribe
+            {{ $t('Subscribe') }}
           </button>
 
           <follow-author
@@ -84,13 +84,13 @@
 
       <div class="author-detail--empty" v-if="!newspapers.length && !posts.length && !loadingPosts">
         <template v-if="test.user.id !== author.id">
-          <p>User didn't write any posts and didn't start any newspaper.</p>
+          <p>{{ $t("User didn't write any posts and didn't start any newspaper.") }}</p>
         </template>
 
         <template v-else>
-          <p>You didn't write any post and didn't start any newspaper.</p>
+          <p>{{ $t("You didn't write any post and didn't start any newspaper.") }}</p>
 
-          <nuxt-link :to="{name: 'newspapers'}">Start a newspaper</nuxt-link>
+          <nuxt-link :to="{name: 'newspapers'}">{{ $t('Start a newspaper') }}</nuxt-link>
         </template>
 
       </div>

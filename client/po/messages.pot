@@ -6,6 +6,26 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 msgid "Show more"
 msgstr ""
 
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:71
+msgid "Save"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:71
+msgid "Create newspaper"
+msgstr ""
+
 #: components/layout/Header.vue:9
 msgid "Home"
 msgstr ""
@@ -27,18 +47,6 @@ msgstr ""
 msgid "Explore"
 msgstr ""
 
-#: components/layout/MyPosts.vue:6
-msgid "Drafts"
-msgstr ""
-
-#: components/layout/MyPosts.vue:7
-msgid "Published posts"
-msgstr ""
-
-#: components/layout/MyPosts.vue:11
-msgid "Create a post"
-msgstr ""
-
 #: pages/index.vue:17
 #: pages/index.vue:51
 msgid "Previous day"
@@ -57,30 +65,6 @@ msgstr ""
 msgid "That's it. You read the entire day."
 msgstr ""
 
-#: pages/join-and-read-with-kairly.vue:6
-msgid "Sign up to help with resurrection of exceptional journalism."
-msgstr ""
-
-#: pages/join-and-read-with-kairly.vue:13
-msgid "Username"
-msgstr ""
-
-#: pages/join-and-read-with-kairly.vue:17
-msgid "Email"
-msgstr ""
-
-#: pages/join-and-read-with-kairly.vue:21
-msgid "Password"
-msgstr ""
-
-#: pages/join-and-read-with-kairly.vue:23
-msgid "At least 8 characters"
-msgstr ""
-
-#: pages/join-and-read-with-kairly.vue:26
-msgid "Sign Up"
-msgstr ""
-
 #: pages/posts/create.vue:5
 msgid "Write an article"
 msgstr ""
@@ -89,16 +73,16 @@ msgstr ""
 msgid "Write a tweet"
 msgstr ""
 
-#: pages/posts/published.vue:20
-msgid "You didn't publish any post."
-msgstr ""
-
 #: pages/posts/index.vue:4
 msgid "No drafts"
 msgstr ""
 
 #: pages/posts/index.vue:31
 msgid "Publish"
+msgstr ""
+
+#: pages/posts/published.vue:20
+msgid "You didn't publish any post."
 msgstr ""
 
 #: pages/subscription/authors.vue:6
@@ -131,6 +115,10 @@ msgstr ""
 msgid "Weekly"
 msgstr ""
 
+#: pages/subscription.vue:6
+msgid "Authors"
+msgstr ""
+
 #: pages/subscription/newspapers.vue:5
 msgid "No newspapers"
 msgstr ""
@@ -143,6 +131,30 @@ msgstr ""
 
 #: pages/subscription/newspapers.vue:7
 msgid "Explore newspapers"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:6
+msgid "Sign up to help with resurrection of exceptional journalism."
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:17
+msgid "Email"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:21
+msgid "Password"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:23
+msgid "At least 8 characters"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:26
+msgid "Sign Up"
 msgstr ""
 
 #: pages/newspapers.vue:7
@@ -175,6 +187,34 @@ msgstr ""
 msgid "Considered posts"
 msgstr ""
 
-#: pages/subscription.vue:6
-msgid "Authors"
+#: pages/_author/index.vue:25
+msgid "Subscribed"
+msgstr ""
+
+#: pages/_author/index.vue:26
+msgid "Canceled"
+msgstr ""
+
+#: pages/_author/index.vue:28
+msgid "Unsubscribe"
+msgstr ""
+
+#: pages/_author/index.vue:34
+msgid "Renew"
+msgstr ""
+
+#: pages/_author/index.vue:42
+msgid "Subscribe"
+msgstr ""
+
+#: pages/_author/index.vue:87
+msgid "User didn't write any posts and didn't start any newspaper."
+msgstr ""
+
+#: pages/_author/index.vue:91
+msgid "You didn't write any post and didn't start any newspaper."
+msgstr ""
+
+#: pages/_author/index.vue:93
+msgid "Start a newspaper"
 msgstr ""

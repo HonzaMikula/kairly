@@ -15,6 +15,26 @@ msgstr ""
 msgid "Show more"
 msgstr "Zobrazit další"
 
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr "Koncepty"
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr "Publikované články"
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr "Vytvořit článek"
+
+#: components/editor/EditNewspaper.vue:71
+msgid "Save"
+msgstr "Uložit"
+
+#: components/editor/EditNewspaper.vue:71
+msgid "Create newspaper"
+msgstr "Vytvořit noviny"
+
 #: components/layout/Header.vue:9
 msgid "Home"
 msgstr "Domů"
@@ -35,18 +55,6 @@ msgstr "Nový článek"
 msgid "Explore"
 msgstr "Procházet"
 
-#: components/layout/MyPosts.vue:6
-msgid "Drafts"
-msgstr "Koncepty"
-
-#: components/layout/MyPosts.vue:7
-msgid "Published posts"
-msgstr "Publikované články"
-
-#: components/layout/MyPosts.vue:11
-msgid "Create a post"
-msgstr "Vytvořit článek"
-
 #: pages/index.vue:17 pages/index.vue:51
 msgid "Previous day"
 msgstr "Předchozí den"
@@ -63,30 +71,6 @@ msgstr "Žádné články ani ani tweety."
 msgid "That's it. You read the entire day."
 msgstr "Hotovo. Máte přečtený celý den."
 
-#: pages/join-and-read-with-kairly.vue:6
-msgid "Sign up to help with resurrection of exceptional journalism."
-msgstr ""
-
-#: pages/join-and-read-with-kairly.vue:13
-msgid "Username"
-msgstr "Uživatelské jméno"
-
-#: pages/join-and-read-with-kairly.vue:17
-msgid "Email"
-msgstr "Email"
-
-#: pages/join-and-read-with-kairly.vue:21
-msgid "Password"
-msgstr "Heslo"
-
-#: pages/join-and-read-with-kairly.vue:23
-msgid "At least 8 characters"
-msgstr "Nejméně 8 znaků"
-
-#: pages/join-and-read-with-kairly.vue:26
-msgid "Sign Up"
-msgstr "Zaregistrovat"
-
 #: pages/posts/create.vue:5
 msgid "Write an article"
 msgstr "Napsat článek"
@@ -95,10 +79,6 @@ msgstr "Napsat článek"
 msgid "Write a tweet"
 msgstr "Napsat tweet"
 
-#: pages/posts/published.vue:20
-msgid "You didn't publish any post."
-msgstr "Nepublikoval jste zatím žádný článek."
-
 #: pages/posts/index.vue:4
 msgid "No drafts"
 msgstr "Žádné koncepty"
@@ -106,6 +86,10 @@ msgstr "Žádné koncepty"
 #: pages/posts/index.vue:31
 msgid "Publish"
 msgstr "Publikovat"
+
+#: pages/posts/published.vue:20
+msgid "You didn't publish any post."
+msgstr "Nepublikoval jste zatím žádný článek."
 
 #: pages/subscription/authors.vue:6
 msgid "No authors"
@@ -137,6 +121,10 @@ msgstr "Denně"
 msgid "Weekly"
 msgstr "Týdně"
 
+#: pages/subscription.vue:6
+msgid "Authors"
+msgstr "Autoři"
+
 #: pages/subscription/newspapers.vue:5
 msgid "No newspapers"
 msgstr "Žádné noviny"
@@ -150,6 +138,30 @@ msgstr ""
 #: pages/subscription/newspapers.vue:7
 msgid "Explore newspapers"
 msgstr "Procházet noviny"
+
+#: pages/join-and-read-with-kairly.vue:6
+msgid "Sign up to help with resurrection of exceptional journalism."
+msgstr "Zapojte se a pomozte oživit neobyčejnou žurnalistiku."
+
+#: pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: pages/join-and-read-with-kairly.vue:17
+msgid "Email"
+msgstr "Email"
+
+#: pages/join-and-read-with-kairly.vue:21
+msgid "Password"
+msgstr "Heslo"
+
+#: pages/join-and-read-with-kairly.vue:23
+msgid "At least 8 characters"
+msgstr "Nejméně 8 znaků"
+
+#: pages/join-and-read-with-kairly.vue:26
+msgid "Sign Up"
+msgstr "Zaregistrovat"
 
 #: pages/newspapers.vue:7
 msgid "Start your first newspaper!"
@@ -183,6 +195,34 @@ msgstr "Nadcházející vydání"
 msgid "Considered posts"
 msgstr "Vybrané články"
 
-#: pages/subscription.vue:6
-msgid "Authors"
-msgstr "Autoři"
+#: pages/_author/index.vue:25
+msgid "Subscribed"
+msgstr "Odebíráno"
+
+#: pages/_author/index.vue:26
+msgid "Canceled"
+msgstr "Zrušeno"
+
+#: pages/_author/index.vue:28
+msgid "Unsubscribe"
+msgstr "Zrušit"
+
+#: pages/_author/index.vue:34
+msgid "Renew"
+msgstr "Obnovit"
+
+#: pages/_author/index.vue:42
+msgid "Subscribe"
+msgstr "Odebírat"
+
+#: pages/_author/index.vue:87
+msgid "User didn't write any posts and didn't start any newspaper."
+msgstr "Uživatel nenapsal žádný článek ani nevytvořil žádné noviny."
+
+#: pages/_author/index.vue:91
+msgid "You didn't write any post and didn't start any newspaper."
+msgstr "Nenapsal jste žádný článek ani nevytvořil žádné noviny."
+
+#: pages/_author/index.vue:93
+msgid "Start a newspaper"
+msgstr "Vytvořit noviny"

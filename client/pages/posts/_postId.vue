@@ -1,8 +1,8 @@
 <template>
   <app-layout>
     <div class="edit-post">
-      <edit-article v-if="post.type == 'newspaper'" :post="post" buttonTitle="Save" @submit="savePost" />
-      <edit-tweet v-if="post.type == 'tweet'" :post="post" buttonTitle="Save" @submit="savePost" />
+      <edit-article v-if="post.type == 'newspaper'" :post="post" :buttonTitle="$t(Save)" @submit="savePost" />
+      <edit-tweet v-if="post.type == 'tweet'" :post="post" :buttonTitle="$t(Save)" @submit="savePost" />
     </div>
   </app-layout>
 </template>
