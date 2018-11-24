@@ -17,8 +17,8 @@
     "xgettext": "xgettext-template -L vue --from-code=utf-8 -o po/messages.pot $(find components layouts pages -name \"*.vue\")",
     "msgmerge": "msgmerge -N -U po/cs.po po/messages.pot && msgmerge -N -U po/en.po po/messages.pot",
     "makemessages": "npm run xgettext && npm run msgmerge",
-    "compilemessages_cs": "pojson -s po/cs.po | jq '.items | map({(.entry): (.translation // .entry)}) | add' > po/cs.json",
-    "compilemessages_en": "pojson -s po/en.po | jq '.items | map({(.entry): (.translation // .entry)}) | add' > po/en.json",
+    "compilemessages_cs": "../scripts/po2json.py po/cs.po -o po/cs.json",
+    "compilemessages_en": "../scripts/po2json.py po/en.po -o po/en.json",
     "compilemessages": "npm run compilemessages_cs && npm run compilemessages_en"
   },
   "dependencies": {
@@ -46,7 +46,6 @@
     "eslint-plugin-vue": "^4.7.1",
     "font-awesome": "^4.7.0",
     "gettext-vue": "^0.3.1",
-    "i18n-po-json": "^1.0.7",
     "node-reset-scss": "^1.0.1",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",

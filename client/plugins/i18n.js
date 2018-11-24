@@ -23,4 +23,11 @@ export default ({ req, app, store }) => {
   }
 
   Vue.prototype.setLocale = app.setLocale
+
+  // const $t = Vue.prototype.$t
+  // Vue.prototype.$t = function(key, ...args) {
+  //   key = key.replace(/[{}]/g, '/')
+  //   console.log(key)
+  //   return $t.call(this, key, ...args)
+  // }
 }

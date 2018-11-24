@@ -1,28 +1,16 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
-msgid "Show more"
-msgstr ""
-
-#: components/layout/MyPosts.vue:6
-msgid "Drafts"
-msgstr ""
-
-#: components/layout/MyPosts.vue:7
-msgid "Published posts"
-msgstr ""
-
-#: components/layout/MyPosts.vue:11
-msgid "Create a post"
-msgstr ""
-
 #: components/editor/EditNewspaper.vue:71
 msgid "Save"
 msgstr ""
 
 #: components/editor/EditNewspaper.vue:71
 msgid "Create newspaper"
+msgstr ""
+
+#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
+msgid "Show more"
 msgstr ""
 
 #: components/layout/Header.vue:9
@@ -43,6 +31,10 @@ msgstr ""
 
 #: components/layout/Header.vue:33
 msgid "Explore"
+msgstr ""
+
+#: components/widgets/NewspaperSubscription.vue:16
+msgid "Subscription last till {to}"
 msgstr ""
 
 #: pages/index.vue:17 pages/index.vue:51
@@ -213,4 +205,16 @@ msgstr ""
 
 #: pages/_author/index.vue:93
 msgid "Start a newspaper"
+msgstr ""
+
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
 msgstr ""

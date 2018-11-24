@@ -8,7 +8,8 @@ https://kairly.com/
 
 ``` bash
 # install utilities required for i18n
-apt install gettext jq
+apt install gettext python3-pip
+python3 -m pip install polib
 
 # install dependencies
 npm install

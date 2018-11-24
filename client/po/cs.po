@@ -11,22 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2\n"
 
-#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
-msgid "Show more"
-msgstr "Zobrazit další"
-
-#: components/layout/MyPosts.vue:6
-msgid "Drafts"
-msgstr "Koncepty"
-
-#: components/layout/MyPosts.vue:7
-msgid "Published posts"
-msgstr "Publikované články"
-
-#: components/layout/MyPosts.vue:11
-msgid "Create a post"
-msgstr "Vytvořit článek"
-
 #: components/editor/EditNewspaper.vue:71
 msgid "Save"
 msgstr "Uložit"
@@ -34,6 +18,10 @@ msgstr "Uložit"
 #: components/editor/EditNewspaper.vue:71
 msgid "Create newspaper"
 msgstr "Vytvořit noviny"
+
+#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
+msgid "Show more"
+msgstr "Zobrazit další"
 
 #: components/layout/Header.vue:9
 msgid "Home"
@@ -54,6 +42,10 @@ msgstr "Nový článek"
 #: components/layout/Header.vue:33
 msgid "Explore"
 msgstr "Procházet"
+
+#: components/widgets/NewspaperSubscription.vue:16
+msgid "Subscription last till {to}"
+msgstr "Odebíráno do {to}"
 
 #: pages/index.vue:17 pages/index.vue:51
 msgid "Previous day"
@@ -226,3 +218,15 @@ msgstr "Nenapsal jste žádný článek ani nevytvořil žádné noviny."
 #: pages/_author/index.vue:93
 msgid "Start a newspaper"
 msgstr "Vytvořit noviny"
+
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr "Koncepty"
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr "Publikované články"
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr "Vytvořit článek"

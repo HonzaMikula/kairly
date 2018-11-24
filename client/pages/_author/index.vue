@@ -30,7 +30,7 @@
               v-else
               class="on-hover"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="`Subscribtion last till ${subscription.to}`">
+              :title="$t('Subscription last till {to}', { to: subscription.to })">
               {{ $t('Renew') }}
             </span>
           </button>
