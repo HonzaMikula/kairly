@@ -37,6 +37,7 @@ module.exports = {
     {src: '~/plugins/medium-editor', ssr: false },
     '~/plugins/vue-moment',
     '~/plugins/axios',
+    '~/plugins/i18n.js',
   ],
   modules: [
     '@nuxtjs/axios',
@@ -99,6 +100,7 @@ module.exports = {
   },
 
   router: {
+    middleware: ['i18n'],
     extendRoutes (routes, resolve) {
       // make sure that author/post is before author/newspaper
       const postRouteIdx = routes.findIndex(r => r.name === 'author-post')

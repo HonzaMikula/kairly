@@ -2,8 +2,8 @@
   <app-layout>
     <my-subscription-view>
       <nav>
-        <nuxt-link :to="{name: 'subscription-newspapers'}">Newspapers</nuxt-link>
-        <nuxt-link :to="{name: 'subscription-authors'}">Authors</nuxt-link>
+        <nuxt-link :to="{name: 'subscription-newspapers'}">{{ $t('Newspapers') }}</nuxt-link>
+        <nuxt-link :to="{name: 'subscription-authors'}">{{ $t('Authors') }}</nuxt-link>
       </nav>
       <nuxt-child/>
     </my-subscription-view>

@@ -22,7 +22,7 @@
         />
 
         <button v-if="category.authors.length > LIMIT" @click="openCategoryModal(category)">
-          Show more
+          {{ $t('Show more') }}
         </button>
     </section>
 

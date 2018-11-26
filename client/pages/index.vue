@@ -14,14 +14,14 @@
               :to="{name: 'timeline-date', params: {date: links.prev}}"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="links.prev"
-            >Previous day</nuxt-link>
+            >{{ $t('Previous day') }}</nuxt-link>
 
             <nuxt-link
               v-if="links.next"
               :to="{name: 'timeline-date', params: {date: links.next}}"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="links.next"
-            >Next day</nuxt-link>
+            >{{ $t('Next day') }}</nuxt-link>
           </div>
 
           <template v-for="timeSlot in timeSlots" >
@@ -37,25 +37,25 @@
 
         <template v-else-if="!loading">
           <div class="timeline--empty">
-            No articles or tweets.
+            {{ $t('No articles or tweets.') }}
           </div>
         </template>
 
         <div class="timeline--pagination" v-if="!loading">
-          <p>That's it. You read the entire day.</p>
+          <p>{{ $t("That's it. You read the entire day.") }}</p>
 
           <nuxt-link
             :to="{name: 'timeline-date', params: {date: links.prev}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="links.prev"
-          >Previous day</nuxt-link>
+          >{{ $t('Previous day') }}</nuxt-link>
 
           <nuxt-link
             v-if="links.next"
             :to="{name: 'timeline-date', params: {date: links.next}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="links.next"
-          >Next day</nuxt-link>
+          >{{ $t('Next day') }}</nuxt-link>
 
         </div>
       </template>

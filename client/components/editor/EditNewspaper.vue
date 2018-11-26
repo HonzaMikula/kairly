@@ -68,7 +68,7 @@
       </edit-newspaper-view>
 
       <footer>
-        <button @click="submit">{{ this.newspaper ? 'Save' : 'Create newspaper' }}</button>
+        <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
       </footer>
     </modal-dialog>
   </dialog-window>

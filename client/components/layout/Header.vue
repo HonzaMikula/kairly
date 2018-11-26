@@ -6,31 +6,31 @@
         <ul v-if="user">
           <li class="home">
             <nuxt-link :to="{name: 'index'}" exact title="Home">
-              <span>Home</span>
+              <span>{{ $t('Home') }}</span>
             </nuxt-link>
           </li>
 
           <li class="subscription">
             <nuxt-link :to="{name: 'subscription-newspapers'}" title="Subscriptions">
-              <span>Subscriptions</span>
+              <span>{{ $t('Subscriptions') }}</span>
             </nuxt-link>
           </li>
 
           <li class="newspapers">
             <nuxt-link :to="{name: 'newspapers'}" title="Newspapers">
-              <span>Newspapers</span>
+              <span>{{ $t('Newspapers') }}</span>
             </nuxt-link>
           </li>
 
           <li class="new-post">
             <nuxt-link :to="{name: 'posts'}" title="New post">
-              <span>New post</span>
+              <span>{{ $t('New post') }}</span>
             </nuxt-link>
           </li>
 
           <li class="explore">
             <nuxt-link :to="{name: 'explore-tab'}" title="Explore">
-              <span>Explore</span>
+              <span>{{ $t('Explore') }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -50,15 +50,32 @@
         v-on-clickaway="() => isDropDownMenuOpen = false">
         <ul>
           <li class="user-name">{{user.name}}</li>
-          <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">Profile</nuxt-link></li>
-          <li><nuxt-link :to="{name: 'user-settings'}"><span>Settings</span></nuxt-link></li>
+          <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ $t('Profile') }}</nuxt-link></li>
+          <li><nuxt-link :to="{name: 'user-settings'}"><span>{{ $t('Settings') }}</span></nuxt-link></li>
           <li class="divider"></li>
-          <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>Subscriptions</span></nuxt-link></li>
-          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>Newspapers</span></nuxt-link></li>
-          <li><nuxt-link to="/posts">New post</nuxt-link></li>
-          <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>Explore</span></nuxt-link></li>
+          <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>{{ $t('Subscriptions') }}</span></nuxt-link></li>
+          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>{{ $t('Newspapers') }}</span></nuxt-link></li>
+          <li><nuxt-link to="/posts">{{ $t('New post') }}</nuxt-link></li>
+          <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>{{ $t('Explore') }}</span></nuxt-link></li>
           <li class="divider"></li>
-          <li><a href="" @click.prevent="logout">Logout</a></li>
+          <li class="language">
+            {{ $t('Language') }}
+            <a
+              href="?lang=cs"
+              @click.prevent="setLang('cs')"
+              :class="{'is-active': currentLocale == 'cs'}">
+              CS
+            </a>
+
+            <a
+              href="?lang=en"
+              @click.prevent="setLang('en')"
+              :class="{'is-active': currentLocale == 'en'}">
+              EN
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li><a href="" @click.prevent="logout">{{ $t('Logout') }}</a></li>
         </ul>
       </nav>
     </div>
@@ -86,12 +103,18 @@ export default {
   },
 
   computed: mapState({
-    user: state => state.auth.user
+    user: state => state.auth.user,
+    currentLocale: state => state.auth.locale || 'en'
   }),
 
   methods: {
     async logout() {
       await this.$auth.logout()
+    },
+
+    setLang(locale) {
+      this.setLocale(locale)
+      this.$auth.$storage.setUniversal('locale', locale)
     }
   }
 }
@@ -313,5 +336,16 @@ export default {
   .divider
     border-top: 1px solid #eee
 
+  //- language
+  .language
+    padding: $baseline / 4 $baseline / 2
+
+    a
+      display: inline-block
+      padding: 0 $baseline / 4
+
+      &.is-active
+        font-weight: 600
+        color: #000
 
 </style>

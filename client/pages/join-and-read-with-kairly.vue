@@ -3,27 +3,27 @@
     <div>
       <header>
         <h1>Kairly</h1>
-        <p>Sign up to help with resurrection of exceptional journalism.</p>
+        <p>{{ $t('Sign up to help with resurrection of exceptional journalism.') }}</p>
       </header>
 
       <main>
         <div class="error" v-if="error">{{ error }}</div>
 
         <div>
-          <label>Username</label>
+          <label>{{ $t('Username') }}</label>
           <input v-model="username">
         </div>
         <div>
-          <label>Email</label>
+          <label>{{ $t('Email') }}</label>
           <input v-model="email" placeholder="@">
         </div>
         <div>
-          <label>Password</label>
+          <label>{{ $t('Password') }}</label>
           <input type="password" v-model="password">
-          <p>At least 8 characters</p>
+          <p>{{ $t('At least 8 characters') }}</p>
         </div>
 
-        <button @click="submit">Sign Up</button>
+        <button @click="submit">{{ $t('Sign Up') }}</button>
       </main>
     </div>
   </sign-up-page>

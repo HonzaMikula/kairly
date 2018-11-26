@@ -1,0 +1,381 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+#: components/editor/EditNewspaper.vue:71
+msgid "Save"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:71
+msgid "Create newspaper"
+msgstr ""
+
+#: components/IssueWrapper.vue:26
+#: pages/explore/_tab.vue:25
+msgid "Show more"
+msgstr ""
+
+#: components/layout/Header.vue:9
+msgid "Home"
+msgstr ""
+
+#: components/layout/Header.vue:15
+#: components/layout/Header.vue:56
+msgid "Subscriptions"
+msgstr ""
+
+#: components/layout/Header.vue:21
+#: components/layout/Header.vue:57
+#: pages/subscription.vue:5
+msgid "Newspapers"
+msgstr ""
+
+#: components/layout/Header.vue:27
+#: components/layout/Header.vue:58
+msgid "New post"
+msgstr ""
+
+#: components/layout/Header.vue:33
+#: components/layout/Header.vue:59
+msgid "Explore"
+msgstr ""
+
+#: components/layout/Header.vue:53
+msgid "Profile"
+msgstr ""
+
+#: components/layout/Header.vue:54
+msgid "Settings"
+msgstr ""
+
+#: components/layout/Header.vue:62
+msgid "Language"
+msgstr ""
+
+#: components/layout/Header.vue:67
+msgid "Logout"
+msgstr ""
+
+#: components/layout/HeaderPublic.vue:6
+msgid "We aim for exceptional journalism"
+msgstr ""
+
+#: components/layout/HeaderPublic.vue:10
+#: components/Homepage.vue:133
+msgid "Join us"
+msgstr ""
+
+#: components/layout/HeaderPublic.vue:11
+msgid "Sign In"
+msgstr ""
+
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr ""
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr ""
+
+#: components/modals/JoinUs.vue:5
+msgid "Are you interested in Kairly?"
+msgstr ""
+
+#: components/modals/JoinUs.vue:9
+msgid "Participate in user testing"
+msgstr ""
+
+#: components/modals/JoinUs.vue:11
+msgid "@joinus/usertesting"
+msgstr ""
+
+#: components/modals/JoinUs.vue:20
+msgid "Schedule user testing interview"
+msgstr ""
+
+#: components/modals/JoinUs.vue:23
+#: components/modals/JoinUs.vue:33
+msgid "Join Facebook group"
+msgstr ""
+
+#: components/modals/JoinUs.vue:25
+msgid "@joinus/joinfacebook"
+msgstr ""
+
+#: components/modals/JoinUs.vue:36
+msgid "Follow us on social media"
+msgstr ""
+
+#: components/modals/JoinUs.vue:41
+#: components/Homepage.vue:141
+msgid "Follow us Facebook"
+msgstr ""
+
+#: components/modals/JoinUs.vue:47
+#: components/Homepage.vue:148
+msgid "Follow us Twitter"
+msgstr ""
+
+#: components/modals/JoinUs.vue:53
+#: components/Homepage.vue:155
+msgid "Follow us LinkedIn"
+msgstr ""
+
+#: components/modals/JoinUs.vue:57
+msgid "Join private beta"
+msgstr ""
+
+#: components/modals/JoinUs.vue:59
+msgid "@joinus/joinprivatebeta"
+msgstr ""
+
+#: components/modals/JoinUs.vue:70
+msgid "email address"
+msgstr ""
+
+#: components/modals/JoinUs.vue:73
+#: components/Homepage.vue:14
+msgid "Request to join"
+msgstr ""
+
+#: components/widgets/NewspaperSubscription.vue:16
+#: pages/_author/index.vue:33
+msgid "Subscription last till {to}"
+msgstr ""
+
+#: pages/index.vue:17
+#: pages/index.vue:51
+msgid "Previous day"
+msgstr ""
+
+#: pages/index.vue:24
+#: pages/index.vue:58
+msgid "Next day"
+msgstr ""
+
+#: pages/index.vue:40
+msgid "No articles or tweets."
+msgstr ""
+
+#: pages/index.vue:45
+msgid "That's it. You read the entire day."
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:6
+msgid "Sign up to help with resurrection of exceptional journalism."
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:17
+msgid "Email"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:21
+msgid "Password"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:23
+msgid "At least 8 characters"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:26
+msgid "Sign Up"
+msgstr ""
+
+#: pages/posts/create.vue:5
+msgid "Write an article"
+msgstr ""
+
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
+msgstr ""
+
+#: pages/posts/index.vue:4
+msgid "No drafts"
+msgstr ""
+
+#: pages/posts/index.vue:31
+msgid "Publish"
+msgstr ""
+
+#: pages/posts/published.vue:20
+msgid "You didn't publish any post."
+msgstr ""
+
+#: pages/subscription/authors.vue:6
+msgid "No authors"
+msgstr ""
+
+#: pages/subscription/authors.vue:7
+msgid ""
+"You haven't subscribe to any author yet. On Explore page you can find "
+"authors you might like."
+msgstr ""
+
+#: pages/subscription/authors.vue:8
+msgid "Explore authors"
+msgstr ""
+
+#: pages/subscription/authors.vue:12
+msgid "Continously"
+msgstr ""
+
+#: pages/subscription/authors.vue:21
+msgid "3x per day"
+msgstr ""
+
+#: pages/subscription/authors.vue:30
+msgid "Daily"
+msgstr ""
+
+#: pages/subscription/authors.vue:39
+msgid "Weekly"
+msgstr ""
+
+#: pages/subscription/newspapers.vue:5
+msgid "No newspapers"
+msgstr ""
+
+#: pages/subscription/newspapers.vue:6
+msgid ""
+"You haven't subscribe to any newspapers yet. On Explore page you can find "
+"newspapers you might like."
+msgstr ""
+
+#: pages/subscription/newspapers.vue:7
+msgid "Explore newspapers"
+msgstr ""
+
+#: pages/subscription.vue:6
+#: components/Homepage.vue:124
+#: components/Homepage.vue:24
+msgid "Authors"
+msgstr ""
+
+#: components/Homepage.vue:5
+msgid "Help us resurrect exceptional journalism"
+msgstr ""
+
+#: components/Homepage.vue:26
+msgid "@homepage/roles/authors"
+msgstr ""
+
+#: components/Homepage.vue:116
+#: components/Homepage.vue:33
+msgid "Editors"
+msgstr ""
+
+#: components/Homepage.vue:35
+msgid "@homepage/roles/editors"
+msgstr ""
+
+#: components/Homepage.vue:108
+#: components/Homepage.vue:42
+msgid "Readers"
+msgstr ""
+
+#: components/Homepage.vue:44
+msgid "@homepage/roles/readers"
+msgstr ""
+
+#: components/Homepage.vue:53
+msgid "@homepage/howitworks"
+msgstr ""
+
+#: components/Homepage.vue:79
+msgid "@homepage/whatwebelievein"
+msgstr ""
+
+#: components/Homepage.vue:103
+msgid "How you can help?"
+msgstr ""
+
+#: components/Homepage.vue:104
+msgid "You can help us create exceptional journalism in different ways."
+msgstr ""
+
+#: components/Homepage.vue:110
+msgid "join our private beta program"
+msgstr ""
+
+#: components/Homepage.vue:111
+#: components/Homepage.vue:119
+#: components/Homepage.vue:127
+msgid "participate in user testing interviews over Skype"
+msgstr ""
+
+#: components/Homepage.vue:118
+msgid "start your newspaper on Kairly"
+msgstr ""
+
+#: components/Homepage.vue:126
+msgid "start publishing your content on Kairly"
+msgstr ""
+
+#: pages/newspapers.vue:7
+msgid "Start your first newspaper!"
+msgstr ""
+
+#: pages/newspapers.vue:10
+msgid ""
+"Are you interested in specific topic? Found a newspaper and start providing "
+"selection of best articles and tweets to others."
+msgstr ""
+
+#: pages/newspapers.vue:86
+msgid "Start new newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:87
+msgid "Edit newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:88
+msgid "Delete newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:100
+msgid "Upcoming issue"
+msgstr ""
+
+#: pages/newspapers.vue:107
+msgid "Considered posts"
+msgstr ""
+
+#: pages/_author/index.vue:25
+msgid "Subscribed"
+msgstr ""
+
+#: pages/_author/index.vue:26
+msgid "Canceled"
+msgstr ""
+
+#: pages/_author/index.vue:28
+msgid "Unsubscribe"
+msgstr ""
+
+#: pages/_author/index.vue:34
+msgid "Renew"
+msgstr ""
+
+#: pages/_author/index.vue:42
+msgid "Subscribe"
+msgstr ""
+
+#: pages/_author/index.vue:87
+msgid "User didn't write any posts and didn't start any newspaper."
+msgstr ""
+
+#: pages/_author/index.vue:91
+msgid "You didn't write any post and didn't start any newspaper."
+msgstr ""
+
+#: pages/_author/index.vue:93
+msgid "Start a newspaper"
+msgstr ""

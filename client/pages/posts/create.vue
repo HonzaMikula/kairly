@@ -2,8 +2,8 @@
   <app-layout>
     <div class="edit-post-view">
       <nav class="create-post">
-        <nuxt-link to="/posts/create/article"> Write an article</nuxt-link>
-        <nuxt-link to="/posts/create/tweet"> Write a tweet</nuxt-link>
+        <nuxt-link to="/posts/create/article">{{ $t('Write an article') }}</nuxt-link>
+        <nuxt-link to="/posts/create/tweet">{{ $t('Write a tweet') }}</nuxt-link>
       </nav>
 
       <nuxt-child/>

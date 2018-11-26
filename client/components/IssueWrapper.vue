@@ -23,7 +23,7 @@
 
     <footer>
       <button v-if="tailPostsCount > 0 && !expanded" @click.prevent="expandIssue">
-        Show more ({{tailPostsCount}})
+        {{ $t('Show more') }} ({{tailPostsCount}})
       </button>
     </footer>
 

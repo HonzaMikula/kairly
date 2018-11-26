@@ -3,12 +3,12 @@
     <div>
       <h1><a href="/">Kairly</a></h1>
 
-      <p>We aim for exceptional journalism</p>
+      <p>{{ $t('We aim for exceptional journalism') }}</p>
 
       <nav>
         <ul>
-          <li><a href="" @click.prevent="isJoinUsModalOpen = true">Join us</a></li>
-          <li><a href="" @click.prevent="isSignInModalOpen = true">Sign In</a></li>
+          <li><a href="" @click.prevent="isJoinUsModalOpen = true">{{ $t('Join us') }}</a></li>
+          <li><a href="" @click.prevent="isSignInModalOpen = true">{{ $t('Sign In') }}</a></li>
         </ul>
       </nav>
     </div>
