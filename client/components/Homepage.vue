@@ -2,7 +2,7 @@
   <homepage-view>
     <homepage--cover>
       <div>
-        <h1>{{ $t('Help us resurrect exceptional journalism') }}</h1>
+        <h1>{{ $t('Help us create exceptional journalism') }}</h1>
 
         <!-- Begin Mailchimp Signup Form -->
         <div id="mc_embed_signup">
@@ -135,26 +135,43 @@
     </homepage--help-us>
 
     <div class="homepage--footer">
-      <a
-        href="https://www.facebook.com/kairlynews/"
-        class="facebook"
-        :title="$t('Follow us Facebook')"
-        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-      </a>
+      <p>
+        <a
+          href="https://www.facebook.com/kairlynews/"
+          class="facebook"
+          :title="$t('Follow us Facebook')"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
 
-      <a
-        href="https://twitter.com/kairlynews"
-        class="twitter"
-        :title="$t('Follow us Twitter')"
-        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-      </a>
+        <a
+          href="https://twitter.com/kairlynews"
+          class="twitter"
+          :title="$t('Follow us Twitter')"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
 
-      <a
-        href="https://www.linkedin.com/company/kairly/"
-        class="linkedin"
-        :title="$t('Follow us LinkedIn')"
-        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-      </a>
+        <a
+          href="https://www.linkedin.com/company/kairly/"
+          class="linkedin"
+          :title="$t('Follow us LinkedIn')"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
+      </p>
+      <p>
+        <a
+          href="?lang=cs"
+          @click.prevent="setLang('cs')"
+          :class="{'is-active': currentLocale == 'cs'}">
+          Česky
+        </a>
+
+        <a
+          href="?lang=en"
+          @click.prevent="setLang('en')"
+          :class="{'is-active': currentLocale == 'en'}">
+          English
+        </a>
+      </p>
     </div>
 
     <portal to="modal" v-if="isJoinUsModalOpen">
@@ -164,6 +181,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import store from '@/store'
 import JoinUsModal from '@/components/modals/JoinUs'
 
 export default {
@@ -182,6 +201,10 @@ export default {
     }
   },
 
+  computed: mapState({
+    currentLocale: state => state.auth.locale || 'en'
+  }),
+
   methods: {
     async login() {
       this.invalidCredentials = false
@@ -198,6 +221,11 @@ export default {
 
     closeJoinUs() {
       this.isJoinUsModalOpen = null
+    },
+
+    setLang(locale) {
+      this.setLocale(locale)
+      this.$auth.$storage.setUniversal('locale', locale)
     }
   }
 }
@@ -503,36 +531,48 @@ homepage--help-us--contact-us
 
   text-align: center
 
-  a
-    border-radius: 5px
-    display: inline-block
-    height: $baseline * 1.5
-    margin: 0 $baseline/2
-    width: $baseline * 1.5
+  p:first-of-type
+    margin-bottom: $baseline / 2
 
-    background: #eee
-    color: #555
+    a
+      border-radius: 5px
+      display: inline-block
+      height: $baseline * 1.5
+      margin: 0 $baseline/2
+      width: $baseline * 1.5
 
-    font-size: $fs-3
-    line-height: $baseline * 1.5
-    text-align: center
+      background: #eee
+      color: #555
 
-    &:focus,
-    &:hover
-      background: #ddd
+      font-size: $fs-3
+      line-height: $baseline * 1.5
+      text-align: center
 
-    &::before
-      +fa-icon()
+      &:focus,
+      &:hover
+        background: #ddd
 
-  a.facebook::before
-    content: $fa-var-facebook
+      &::before
+        +fa-icon()
 
-  a.twitter::before
-    content: $fa-var-twitter
+    a.facebook::before
+      content: $fa-var-facebook
 
-  a.linkedin::before
-    content: $fa-var-linkedin
+    a.twitter::before
+      content: $fa-var-twitter
 
+    a.linkedin::before
+      content: $fa-var-linkedin
 
+  p:last-of-type
+    a
+      display: inline-block
+      padding: 0 $baseline/4
+
+      color: $c-base
+
+      &.is-active
+        color: #000
+        font-weight: 600
 
 </style>

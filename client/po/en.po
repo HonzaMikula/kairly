@@ -19,6 +19,47 @@ msgstr ""
 msgid "Create newspaper"
 msgstr ""
 
+#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
+msgid "Show more"
+msgstr ""
+
+#: components/layout/Header.vue:9
+msgid "Home"
+msgstr ""
+
+#: components/layout/Header.vue:15 components/layout/Header.vue:56
+msgid "Subscriptions"
+msgstr ""
+
+#: components/layout/Header.vue:21 components/layout/Header.vue:57
+#: pages/subscription.vue:5
+msgid "Newspapers"
+msgstr ""
+
+#: components/layout/Header.vue:27 components/layout/Header.vue:58
+msgid "New post"
+msgstr ""
+
+#: components/layout/Header.vue:33 components/layout/Header.vue:59
+msgid "Explore"
+msgstr ""
+
+#: components/layout/Header.vue:53
+msgid "Profile"
+msgstr ""
+
+#: components/layout/Header.vue:54
+msgid "Settings"
+msgstr ""
+
+#: components/layout/Header.vue:62
+msgid "Language"
+msgstr ""
+
+#: components/layout/Header.vue:67
+msgid "Logout"
+msgstr ""
+
 #: components/layout/HeaderPublic.vue:6
 msgid "We aim for exceptional journalism"
 msgstr ""
@@ -29,26 +70,6 @@ msgstr ""
 
 #: components/layout/HeaderPublic.vue:11
 msgid "Sign In"
-msgstr ""
-
-#: components/layout/Header.vue:9
-msgid "Home"
-msgstr ""
-
-#: components/layout/Header.vue:15
-msgid "Subscriptions"
-msgstr ""
-
-#: components/layout/Header.vue:21 pages/subscription.vue:5
-msgid "Newspapers"
-msgstr "Noviny"
-
-#: components/layout/Header.vue:27
-msgid "New post"
-msgstr "Nový článek"
-
-#: components/layout/Header.vue:33
-msgid "Explore"
 msgstr ""
 
 #: components/layout/MyPosts.vue:6
@@ -76,10 +97,6 @@ msgid "@joinus/usertesting"
 msgstr ""
 "We are doing 30 - 60 minutes user testing interviews over Skype (or some "
 "other communication tool).\n"
-"We will give you access to Kairly. You will share screen with us. We will "
-"observe how you use Kairly.\n"
-"Together we will discuss what you like, what you don't like and how we can "
-"improve the app."
 
 #: components/modals/JoinUs.vue:20
 msgid "Schedule user testing interview"
@@ -133,12 +150,24 @@ msgstr ""
 msgid "Request to join"
 msgstr ""
 
-#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:25
-msgid "Show more"
-msgstr ""
-
 #: components/widgets/NewspaperSubscription.vue:16 pages/_author/index.vue:33
 msgid "Subscription last till {to}"
+msgstr ""
+
+#: pages/index.vue:17 pages/index.vue:51
+msgid "Previous day"
+msgstr ""
+
+#: pages/index.vue:24 pages/index.vue:58
+msgid "Next day"
+msgstr ""
+
+#: pages/index.vue:40
+msgid "No articles or tweets."
+msgstr ""
+
+#: pages/index.vue:45
+msgid "That's it. You read the entire day."
 msgstr ""
 
 #: pages/join-and-read-with-kairly.vue:6
@@ -165,20 +194,12 @@ msgstr ""
 msgid "Sign Up"
 msgstr ""
 
-#: pages/index.vue:17 pages/index.vue:51
-msgid "Previous day"
+#: pages/posts/create.vue:5
+msgid "Write an article"
 msgstr ""
 
-#: pages/index.vue:24 pages/index.vue:58
-msgid "Next day"
-msgstr ""
-
-#: pages/index.vue:40
-msgid "No articles or tweets."
-msgstr ""
-
-#: pages/index.vue:45
-msgid "That's it. You read the entire day."
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
 msgstr ""
 
 #: pages/posts/index.vue:4
@@ -191,14 +212,6 @@ msgstr ""
 
 #: pages/posts/published.vue:20
 msgid "You didn't publish any post."
-msgstr ""
-
-#: pages/posts/create.vue:5
-msgid "Write an article"
-msgstr ""
-
-#: pages/posts/create.vue:6
-msgid "Write a tweet"
 msgstr ""
 
 #: pages/subscription/authors.vue:6
@@ -267,7 +280,7 @@ msgstr ""
 msgid "@homepage/roles/editors"
 msgstr ""
 "Editors run their newspaper. They are selecting the best articles &amp; "
-"tweets from authors."
+"tweets among all authors."
 
 #: components/Homepage.vue:108 components/Homepage.vue:42
 msgid "Readers"

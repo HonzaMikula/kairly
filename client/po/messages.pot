@@ -9,6 +9,52 @@ msgstr ""
 msgid "Create newspaper"
 msgstr ""
 
+#: components/IssueWrapper.vue:26
+#: pages/explore/_tab.vue:25
+msgid "Show more"
+msgstr ""
+
+#: components/layout/Header.vue:9
+msgid "Home"
+msgstr ""
+
+#: components/layout/Header.vue:15
+#: components/layout/Header.vue:56
+msgid "Subscriptions"
+msgstr ""
+
+#: components/layout/Header.vue:21
+#: components/layout/Header.vue:57
+#: pages/subscription.vue:5
+msgid "Newspapers"
+msgstr ""
+
+#: components/layout/Header.vue:27
+#: components/layout/Header.vue:58
+msgid "New post"
+msgstr ""
+
+#: components/layout/Header.vue:33
+#: components/layout/Header.vue:59
+msgid "Explore"
+msgstr ""
+
+#: components/layout/Header.vue:53
+msgid "Profile"
+msgstr ""
+
+#: components/layout/Header.vue:54
+msgid "Settings"
+msgstr ""
+
+#: components/layout/Header.vue:62
+msgid "Language"
+msgstr ""
+
+#: components/layout/Header.vue:67
+msgid "Logout"
+msgstr ""
+
 #: components/layout/HeaderPublic.vue:6
 msgid "We aim for exceptional journalism"
 msgstr ""
@@ -20,27 +66,6 @@ msgstr ""
 
 #: components/layout/HeaderPublic.vue:11
 msgid "Sign In"
-msgstr ""
-
-#: components/layout/Header.vue:9
-msgid "Home"
-msgstr ""
-
-#: components/layout/Header.vue:15
-msgid "Subscriptions"
-msgstr ""
-
-#: components/layout/Header.vue:21
-#: pages/subscription.vue:5
-msgid "Newspapers"
-msgstr ""
-
-#: components/layout/Header.vue:27
-msgid "New post"
-msgstr ""
-
-#: components/layout/Header.vue:33
-msgid "Explore"
 msgstr ""
 
 #: components/layout/MyPosts.vue:6
@@ -116,14 +141,27 @@ msgstr ""
 msgid "Request to join"
 msgstr ""
 
-#: components/IssueWrapper.vue:26
-#: pages/explore/_tab.vue:25
-msgid "Show more"
-msgstr ""
-
 #: components/widgets/NewspaperSubscription.vue:16
 #: pages/_author/index.vue:33
 msgid "Subscription last till {to}"
+msgstr ""
+
+#: pages/index.vue:17
+#: pages/index.vue:51
+msgid "Previous day"
+msgstr ""
+
+#: pages/index.vue:24
+#: pages/index.vue:58
+msgid "Next day"
+msgstr ""
+
+#: pages/index.vue:40
+msgid "No articles or tweets."
+msgstr ""
+
+#: pages/index.vue:45
+msgid "That's it. You read the entire day."
 msgstr ""
 
 #: pages/join-and-read-with-kairly.vue:6
@@ -150,22 +188,12 @@ msgstr ""
 msgid "Sign Up"
 msgstr ""
 
-#: pages/index.vue:17
-#: pages/index.vue:51
-msgid "Previous day"
+#: pages/posts/create.vue:5
+msgid "Write an article"
 msgstr ""
 
-#: pages/index.vue:24
-#: pages/index.vue:58
-msgid "Next day"
-msgstr ""
-
-#: pages/index.vue:40
-msgid "No articles or tweets."
-msgstr ""
-
-#: pages/index.vue:45
-msgid "That's it. You read the entire day."
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
 msgstr ""
 
 #: pages/posts/index.vue:4
@@ -178,14 +206,6 @@ msgstr ""
 
 #: pages/posts/published.vue:20
 msgid "You didn't publish any post."
-msgstr ""
-
-#: pages/posts/create.vue:5
-msgid "Write an article"
-msgstr ""
-
-#: pages/posts/create.vue:6
-msgid "Write a tweet"
 msgstr ""
 
 #: pages/subscription/authors.vue:6
