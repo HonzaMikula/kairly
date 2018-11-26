@@ -143,7 +143,7 @@ msgstr ""
 
 #: pages/join-and-read-with-kairly.vue:6
 msgid "Sign up to help with resurrection of exceptional journalism."
-msgstr "Přidejte se a pomozte nám oživit výjimečnou žurnalistiku."
+msgstr ""
 
 #: pages/join-and-read-with-kairly.vue:13
 msgid "Username"

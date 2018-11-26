@@ -69,17 +69,17 @@ msgstr "Zajímá vás Kairly?"
 
 #: components/modals/JoinUs.vue:9
 msgid "Participate in user testing"
-msgstr "Zapojte se to uživatelského testování"
+msgstr "Zapojte se do uživatelského testování"
 
 #: components/modals/JoinUs.vue:11
 msgid "@joinus/usertesting"
 msgstr ""
-"Děláme 30 - 60 minutové uživatelské testování skze Skype (případně jiný "
+"Otestujte s námi Kairly během 30 - 60 minutového uživatelské testování přes Skype (případně jiný "
 "komunikační nástroj).\n"
-"Dostanete přístup do Kairly a budete s námi sdílet obrazovku. My budeme "
-"sledovat jak Kairly\n"
-"používáte. Společně budeme zjišťovat co se vám líbí, co ne a co by se dalo "
-"zlepšit."
+"Zaregistrujete se do Kairly. Nasdílíte s námi obrazovku. My pak budeme "
+"sledovat, jak Kairly\n"
+"používáte. Společně budeme zjišťovat, co se vám líbí a co by se dalo "
+"vylepšit."
 
 #: components/modals/JoinUs.vue:20
 msgid "Schedule user testing interview"
@@ -93,8 +93,7 @@ msgstr "Přidejte se do Facebookové skupiny"
 msgid "@joinus/joinfacebook"
 msgstr ""
 "V naší facebookové skupině pravidelně sdílíme, co je nového na Kairly, \n"
-"a co plánujeme pro příští týdny. Je to také místo, kde můžeme získat\n"
-"zpětnou vazbu a navrhovat nápady na zlepšení Kairly."
+"a co plánujeme pro příští týdny. Rádi zde uslyšíme i cennou zpětnou vazbu.\n"
 
 #: components/modals/JoinUs.vue:36
 msgid "Follow us on social media"
@@ -119,8 +118,8 @@ msgstr "Vyzkoušejte privátní beta verzi"
 #: components/modals/JoinUs.vue:59
 msgid "@joinus/joinprivatebeta"
 msgstr ""
-"Omezený počet uživatelů zveme k používání Kairly a získání zpětné vazby.\n"
-"Na základě toho týden co týden zlepšujeme aplikaci. I když občas budete "
+"Omezený počet uživatelů zveme do Kairly k získávání zpětné vazby.\n"
+"Díky tomu neustále zlepšujeme aplikaci. Zapojte se také "
 "narážet na chyby,\n"
 "můžete vyzkoušet naši představu jak zlepšit současný stav žurnalistiky."
 
