@@ -66,6 +66,10 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
+    },
+
+    extractCSS: {
+      allChunks: true
     }
   },
 
