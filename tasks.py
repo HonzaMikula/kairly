@@ -22,6 +22,8 @@ JS_PORT = 14930
 def compile_js(ctx):
     print("Deleting previous nuxt build...")
     ctx.run("cd client && rm -rf .nuxt")
+    print("Compiling messages...")
+    ctx.run("cd client && npm run compilemessages")
     print("Running nuxt build...")
     ctx.run("cd client && npm run build")
 
