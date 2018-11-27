@@ -108,21 +108,13 @@
   //-- quotes
   blockquote
     margin: $baseline 0
-    padding: $baseline / 4 0
+    padding-left: $baseline / 2
 
-    color: #777
+    border-left: 2px solid #555
+    color: #555
 
-    text-align: center
-
-    p
-      margin-bottom: 0
-      text-indent: 0
-
-      &::before
-        content: "„"
-
-      &::after
-        content: "“"
+    p + p
+      margin-top: $baseline
 
   //-- cite
   cite

@@ -341,7 +341,7 @@ msgstr ""
 "  my se stavíme za <strong>spravedlivou odměnu za kvalitní obsah</strong>.  \n"
 "</p>\n"
 "<p>\n"
-"  Stůjte s námi!</p>"
+"  Přidejte se k nám!</p>"
 
 #: components/Homepage.vue:103
 msgid "How you can help?"
