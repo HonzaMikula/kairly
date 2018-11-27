@@ -106,7 +106,9 @@
       font-size: $fs--1
 
   //-- quotes
-  blockquote
+  blockquote,
+  cite
+    display: block
     margin: $baseline 0
     padding-left: $baseline / 2
 
@@ -115,20 +117,3 @@
 
     p + p
       margin-top: $baseline
-
-  //-- cite
-  cite
-    display: block
-    margin: $baseline 0
-    padding: $baseline / 4 0
-
-    color: #777
-
-    text-align: center
-    text-indent: 0
-
-    &::before
-      content: "„"
-
-    &::after
-      content: "“"
