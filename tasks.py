@@ -91,7 +91,7 @@ def deploy_cron(ctx):
 
 
 @task()
-def dump_prod(ctx):
+def dbdump_prod(ctx):
     import os
     import sys
     server_root = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'kairly-server')
@@ -117,9 +117,20 @@ def dump_prod(ctx):
         'rm ' + tmp_file
     ]
     ctx.run("ssh -T -p {} {} '{}'".format(PY_PORT, PY_HOST, ' && '.join(remote_commands)))
+    # ctx.run("gunzip kairly.sql.gz")
     # to import
     # Drop schema and recreate database with utf8mb4
     # CREATE SCHEMA `kairly` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+
+
+@task()
+def dbdump_import(ctx):
+    print("Removing kairly schema...")
+    ctx.run('mysql -h 127.0.0.1 -u root -e "DROP SCHEMA IF EXISTS kairly"')
+    print("Recreating kairly schema...")
+    ctx.run('mysql -h 127.0.0.1 -u root -e "CREATE SCHEMA kairly DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"')
+    print("Importing db dump...")
+    ctx.run('zcat kairly.sql.gz | mysql -h 127.0.0.1 -u root --default-character-set=utf8mb4 kairly')
 
 
 @task()
@@ -134,7 +145,8 @@ deploy_ns.add_task(deploy_py, 'py')
 deploy_ns.add_task(deploy_cron, 'cron')
 
 dbdump_ns = Collection('dbdump')
-dbdump_ns.add_task(dump_prod, 'prod')
+dbdump_ns.add_task(dbdump_prod, 'prod')
+dbdump_ns.add_task(dbdump_import, 'import')
 
 ns = Collection()
 ns.add_collection(deploy_ns)
