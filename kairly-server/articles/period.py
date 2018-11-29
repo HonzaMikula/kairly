@@ -23,6 +23,15 @@ class PeriodMixin:
     X3_PER_DAY_HOURS = [6, 12, 18]
     X6_PER_DAY_HOURS = [6, 9, 12, 15, 18, 21]
 
+    def get_period_uid(self):
+        """Used as cache key"""
+        tokens = [self.period]
+        if self.period_time is not None:
+            tokens.append(self.period_time.strftime('%H%M'))
+        if self.period_dow is not None:
+            tokens.append(str(self.period_dow))
+        return ':'.join(tokens)
+
     def get_period_interval(self, dt, tzinfo):
         dt = dt.astimezone(tzinfo)
         interval = self._get_period_interval_notz(dt)

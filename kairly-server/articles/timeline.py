@@ -150,8 +150,9 @@ def get_author_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
 
 
 def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to):
-    cache_key = "author_issues_{}_{}-{}".format(
+    cache_key = "author_issues_{}_{}_{}-{}".format(
         sub.author,
+        sub.get_period_uid(),
         int(start_dt.timestamp()),
         int(end_dt.timestamp() if cache_valid_to is None else cache_valid_to)
     )
