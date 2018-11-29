@@ -46,6 +46,14 @@ class KairlyUsernameValidator(validators.RegexValidator):
 class User(AbstractBaseUser, PermissionsMixin):
     username_validator = KairlyUsernameValidator()
 
+    PERSONAL = 'personal'
+    MEDIUM = 'medium'
+
+    KIND_CHOICES = (
+        (PERSONAL, _('Personal')),
+        (MEDIUM, _('Medium')),
+    )
+
     username = models.CharField(
         _('username'),
         max_length=39,
@@ -72,6 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=PERSONAL)
 
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
     picture = models.ImageField(upload_to='users', null=True, blank=True)
@@ -125,6 +134,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'id': self.username,
             'name': self.name or self.username,
             'picture': self.picture_url,
+            'kind': self.kind,
             'medium': self.medium,
             'bio': self.bio,
         }

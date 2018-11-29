@@ -19,7 +19,7 @@ admin.site.unregister(Group)
 class UserAdmin(OriginalUserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('name', 'email', 'medium', 'picture', 'bio', 'timezone')}),
+        (_('Personal info'), {'fields': ('name', 'email', 'kind', 'medium', 'picture', 'bio', 'timezone')}),
         (_('Integrations'), {'fields': ('twitter_account',)}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
@@ -30,7 +30,8 @@ class UserAdmin(OriginalUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('username', 'email', 'img', 'name', 'medium', 'is_active', 'last_logged', 'activity')
+    list_display = ('username', 'email', 'img', 'name', 'kind', 'medium', 'is_active', 'last_logged', 'activity')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'kind')
     search_fields = ('username', 'name', 'email')
 
     def img(self, obj):
