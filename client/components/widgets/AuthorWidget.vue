@@ -126,9 +126,10 @@ author-widget-view
       position: relative
 
       grid-area: author-widget-subscription
-      justify-self: end
+      min-width: 120px
 
       font-size: $fs--1
+      text-align: right
 
       button
         +subscribe-button
@@ -141,7 +142,7 @@ author-widget-view
         line-height: $baseline
 
   //- bio
-  p
+  > p
     margin-bottom: $baseline / 2
 
     color: #777

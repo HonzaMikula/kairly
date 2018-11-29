@@ -74,9 +74,13 @@
         <p>
           You will be receiving <strong>{{ author.name }}</strong> every 3 hours.
         </p>
+
+        <p class="change-button" v-if="!editMode">
+          <a href="" @click.stop.prevent="editSubscription($event)">Change periodicity and timing</a>
+        </p>
       </section>
 
-      <section v-if="frequency == '3x_per_day'">
+      <section v-else-if="frequency == '3x_per_day'">
         <p>
           You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
         </p>
@@ -127,7 +131,8 @@ export default {
     return {
       show: false,
       showCanceling: true,
-      frequency: null,
+      editMode: false,
+      frequency: '6x_per_day',
       dow: null,
       time: null,
       DAYS_OF_WEEK
@@ -140,6 +145,10 @@ export default {
 
     openSubscribeWidget() {
       this.show = true
+
+      if(!this.subscription) {
+        this.submit()
+      }
     },
 
     closeSubscribeWidget() {
@@ -159,6 +168,7 @@ export default {
     },
 
     async submit() {
+      console.log([this.author, this.frequency, this.time, this.dow])
       try {
         await this.subscribeAuthor({
           author: this.author,
@@ -195,6 +205,8 @@ export default {
 
     editSubscription(ev) {
       document.activeElement.blur()
+      this.frequency = null
+      this.editMode = true
       this.showCanceling = false
     },
 
@@ -233,7 +245,10 @@ export default {
 
   //- steps
   section
+    color: #000
+
     p
+      margin: 0
       padding: $baseline / 2
 
       font-size: $fs--1
@@ -252,5 +267,36 @@ export default {
 
     li a::after
       content: $fa-var-arrow-right
+
+    //- change button
+    .change-button
+      margin-top: -($baseline/4)
+      margin-bottom: 0
+      padding-top: 0
+
+      a
+        position: relative
+
+        display: block
+
+        color: $c-base
+
+        &::after
+          +fa-icon()
+
+          content: $fa-var-long-arrow-right
+
+          margin-left: $baseline / 4
+
+          opacity: 0
+
+          transition: 0.15s opacity
+
+        &:hover
+          color: darken($c-base, 20%)
+
+        &:hover::after
+          opacity: 1
+
 
 </style>

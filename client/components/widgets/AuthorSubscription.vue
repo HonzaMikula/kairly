@@ -13,7 +13,7 @@
       </template>
 
       <template v-if="frequency == '6x_per_day'">
-        Daily every <strong>3 hours</strong>.
+        Daily every <strong>3 hours</strong>
       </template>
 
       <template v-if="frequency == 'daily'">
