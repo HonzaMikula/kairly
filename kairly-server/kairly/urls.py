@@ -49,7 +49,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path('sitemap.xml', cache_page(1800)(sitemap), {'sitemaps': sitemaps},
+    path('sitemap.xml', cache_page(900)(sitemap), {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt),
     path('admin', RedirectView.as_view(url='admin/')),

@@ -1,16 +1,39 @@
 from datetime import datetime, timezone
-from django.contrib.sitemaps import Sitemap
-from django.utils.timezone import now as timezone_now
+from collections import namedtuple
 
-from articles.models import Newspaper, Issue, Post
+from django.db import connection
+from django.contrib.sitemaps import Sitemap
+
 from articles.period import PeriodMixin
+
+
+def namedtuplefetchall(cursor):
+    "Return all rows from a cursor as a namedtuple"
+    desc = cursor.description
+    nt_result = namedtuple('Result', [col[0] for col in desc])
+    return [nt_result(*row) for row in cursor.fetchall()]
 
 
 class NewspaperSitemap(Sitemap):
     protocol = 'https'
 
     def items(self):
-        return Newspaper.objects.all().select_related('editor')
+        sql = """
+            SELECT n.period, CONCAT(u.username, '/', n.slug) full_name, j.published modified
+            FROM (
+              SELECT n.id, MAX(i.number) number
+              FROM articles_newspaper n
+              JOIN users_user u ON (n.editor_id = u.id)
+              LEFT OUTER JOIN articles_issue i ON (i.newspaper_id = n.id)
+              GROUP BY n.id
+            ) x
+            JOIN articles_newspaper n ON (x.id = n.id)
+            JOIN users_user u ON (n.editor_id = u.id)
+            LEFT OUTER JOIN articles_issue j ON (j.newspaper_id = n.id AND x.number = j.number)
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            return namedtuplefetchall(cursor)
 
     def location(self, obj):
         return '/' + obj.full_name
@@ -23,29 +46,31 @@ class NewspaperSitemap(Sitemap):
         return 'hourly'
 
     def lastmod(self, obj):
-        try:
-            issue = Issue.objects.filter(newspaper=obj).order_by('-number')[0]
-            return issue.published
-        except IndexError:
-            return None
+        return obj.modified
 
 
 class PostSitemap(Sitemap):
     protocol = 'https'
 
     def items(self):
-        return Post.objects.filter(
-            kind=Post.NEWSPAPER,
-            draft=False,
-            published__lt=timezone_now(),
-            published__gt=datetime(2018, 11, 1, 0, 0, 0, tzinfo=timezone.utc),
-            source__isnull=True
-        ).exclude(
-            author__username__in=['kairly-newuser']
-        ).select_related('author')
+        sql = """
+            SELECT p.published, CONCAT(u.username, '/', p.slug) full_name
+            FROM
+               articles_post p
+               JOIN users_user u ON (p.author_id = u.id)
+            WHERE
+               source IS NULL AND
+               draft = 0 AND
+               u.username != 'kairly-newuser' AND
+               published BETWEEN '2018-11-01 00:00:00' AND NOW()
+        """
+
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            return namedtuplefetchall(cursor)
 
     def location(self, obj):
-        return '/{}/{}'.format(obj.author.username, obj.slug)
+        return '/' + obj.full_name
 
     def changefreq(self, obj):
         return 'never'
