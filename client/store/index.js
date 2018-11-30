@@ -27,6 +27,17 @@ const createStore = () => {
     },
 
     mutations: {
+      resetState(state) {
+          state.subscriptions = null
+          state.backlog = null
+          state.newspapers = {}
+          state.authors = {}
+          state.today = null
+          state.timelineHasNoActiveSubscriptions = false
+          state.timelineExpandedIssues = {}
+          state.timeline = {}
+      },
+
       user(state, { user }) {
         state.profile.user = user
       },
