@@ -173,22 +173,26 @@ class ArticleParser:
             # if len(part) or part.text:
             #     yield part
 
-        def flatten_tree(htmltree):
+        def flatten_tree(htmltree, yield_self=True):
             children = list(htmltree)
             if children:
                 for el in children:
                     if el.tag in ('div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'):
-                        if el.text:
-                            # TODO cant'be el.text lost? write test for it
-                            result = list(flatten_tree(el))
-                            result[0].text = (el.text or '') + '\n' + (result[0].text or '')
-                            yield from result
+                        if el.text.strip():
+                            result = list(flatten_tree(el, yield_self=False))
+                            if result:
+                                result[0].text = (el.text or '') + '\n' + (result[0].text or '')
+                                yield from result
+                            else:
+                                # flatten_tree returns nothing, this is element with text only
+                                yield el
                         else:
                             yield from flatten_tree(el)
                     else:
                         yield el
             else:
-                yield htmltree
+                if yield_self:
+                    yield htmltree
 
         result = []
         for el in fragments:
