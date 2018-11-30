@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     'corsheaders',
     'articles',
     'sources',
@@ -84,6 +86,7 @@ ADMINS = (
     ('Kairly', 'info@kairly.com'),
 )
 
+SITE_ID = 1
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

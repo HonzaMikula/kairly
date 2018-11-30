@@ -119,7 +119,7 @@ export default {
   head() {
     const { title, perex }  = this.post.content
     const { author, id } = this.post
-    const description = perex.replace(ELEMENTS_REGEXP, ' ').substring(0,350)
+    const description = perex ? perex.replace(ELEMENTS_REGEXP, ' ').substring(0,350) : ''
 
     const meta = [
       { hid: 'description', name: 'description', content: description},

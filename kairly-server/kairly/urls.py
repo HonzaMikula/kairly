@@ -16,12 +16,16 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.http import FileResponse
+from django.contrib.sitemaps.views import sitemap
+from django.http import FileResponse, HttpResponse
 from django.urls import include, path
 from django.views.static import serve
 from django.views.generic.base import RedirectView
+from django.views.decorators.cache import cache_page
 
 from corsheaders.middleware import CorsMiddleware
+
+from .sitemaps import NewspaperSitemap, PostSitemap
 
 
 def serve_cors(request, *args, **kwargs):
@@ -32,17 +36,27 @@ def serve_cors(request, *args, **kwargs):
     return response
 
 
-def always_fail(request):
-    raise ValueError("Calm down the endpoint always raise exception.")
+def robots_txt(request):
+    return HttpResponse("""Sitemap: https://www.kairly.com/sitemap.xml""")
 
+
+# def always_fail(request):
+#     raise ValueError("Calm down the endpoint always raise exception.")
+
+sitemaps = {
+    'newspapers': NewspaperSitemap(),
+    'posts': PostSitemap(),
+}
 
 urlpatterns = [
-    # path('accounts/', include('django.contrib.auth.urls')),
+    path('sitemap.xml', cache_page(1800)(sitemap), {'sitemaps': sitemaps},
+         name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', robots_txt),
     path('admin', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('articles.urls')),
-    path('api/fail', always_fail),
+    # path('api/fail', always_fail),
 ]
 
 if settings.DEBUG:
