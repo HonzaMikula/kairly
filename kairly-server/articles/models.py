@@ -43,7 +43,7 @@ class Post(models.Model):
     draft = models.BooleanField(_('Draft'), default=False)
 
     guid = models.CharField(_('External ID'), max_length=255, null=True, unique=True)
-    source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True, db_index=True)
+    source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True)  # be aware that utf8mb fields ca have index only if length <= 191
     protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
 
     title = models.CharField(max_length=160)
