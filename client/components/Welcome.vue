@@ -3,89 +3,107 @@
     <div class="welcome-view">
       <h1>Welcome to Kairly!</h1>
 
-      <h2>How it works?</h2>
+      <section class="welcome--topics">
+        <h2>1) In which topic are you interested in?</h2>
 
-      <div class="welcome--roles">
+        <ul>
+          <li v-for="topic in topics" :key="topic">
+            <a href="" @click.stop.prevent="chooseTopic(topic)" :class="{'is-active': chosenTopic == topic}">{{ topic }}</a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="welcome--newspapers" v-if="chosenTopic != null">
+        <h2>2) Subscribe to newspapers</h2>
+        <div>
+          <NewspaperWidget
+            v-for="newspaper in newspapers"
+            :key="newspaper.fullName"
+            :newspaper="newspaper"
+          />
+
+          <NewspaperWidget
+            v-for="newspaper in newspapers2"
+            :key="newspaper.fullName"
+            :newspaper="newspaper"
+          />
+        </div>
+      </section>
+
+      <section class="welcome--roles" v-if="chosenTopic != null">
+        <h2>3) Start using Kairly</h2>
         <div>
           <section>
-            <h3>Authors</h3>
+            <h3>As a reader</h3>
             <p>
-              Authors focus on writing.
-              They are creating high quality articles &amp; tweets.
+              Are you interested in more newspapers and authors?
             </p>
+            <p><a href="">Explore more content</a></p>
           </section>
 
           <section>
-            <h3>Editors</h3>
+            <h3>As an editor</h3>
             <p>
-              Editors run their newspaper.
-              They are selecting the best articles &amp; tweets from authors.
+              Do you want to start a newspaper and pick the best content for others?
             </p>
+
+            <p><a href="">Start a newspaper</a></p>
           </section>
 
           <section>
-            <h3>Readers</h3>
+            <h3>As an author</h3>
             <p>
-              Readers choose what they want to read and when.
-              They subscribe either directly to authors or to newspapers.
+              Do you want to start writing articles and tweets?
             </p>
+
+            <p><a href="">Write a new post</a></p>
           </section>
         </div>
-      </div>
 
-      <h2>How to start?</h2>
+        <a href="">Go Home to start reading</a>
+      </section>
 
-      <div class="welcome--tutorial">
-        <ol>
-          <li><p>Go to <nuxt-link to="/explore">Explore</nuxt-link>.</p></li>
-          <li><p>Subscribe newspapers.</p></li>
-          <li><p>Or authors directly and choose when you want to read them.</p></li>
-          <li><p>Go <nuxt-link to="/"><span class="icon"></span></nuxt-link> <nuxt-link to="/">Home</nuxt-link> to check timeline.</p></li>
-        </ol>
-
-        <div class="welcome--tutorial--illustration">
-          <div>
-            <div class="picture"></div>
-            <div class="title"></div>
-            <p>Daily at 9:00</p>
-            <div class="description"></div>
-            <div class="subscribe">Subscribe</div>
-          </div>
-          <figcaption>Illustration of newspaper widget</figcaption>
-        </div>
-      </div>
-
-      <nuxt-link to="/explore">Start exploring authors &amp; newspapers</nuxt-link>
     </div>
   </timeline-welcome>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
+
+import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 
 export default {
   name: 'Welcome',
+
+  components: {
+    NewspaperWidget
+  },
+
+  data() {
+    return {
+      topics: ['News', 'Politics', 'Sport', 'Technology', 'Life'],
+      chosenTopic: null,
+      newspapers: [ { "name": "malostranskenoviny", "fullName": "janmikula/malostranskenoviny", "title": "Malostranské noviny", "picture": "https://cdn.kairly.com/media/editions/malostranskenoviny.jpg", "description": "Přehled toho nejzajímavějšího, co se událo v české politice.", "editor": { "id": "janmikula", "name": "Jan Mikula", "picture": "https://cdn.kairly.com/media/users/janmikula.jpg", "kind": "personal", "medium": "Kairly", "bio": "Přemýšlím, jak nastartovat kvalitní žurnalistiku. Proto se po večerech lopotím na Kairly. " }, "periodicity": { "frequency": "daily", "dow": null, "time": "09:00" }, "nextRelease": "2018-11-30T09:00:00+01:00", "issues": 126, "likes": 13 }, { "name": "domaci", "fullName": "aktualnecz/domaci", "title": "Deník Aktuálně – Domácí", "picture": "https://cdn.kairly.com/media/editions/aktualnecz_uQ4fenH.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "aktualnecz", "name": "Aktuálně.cz", "picture": "https://cdn.kairly.com/media/users/aktualnecz.png", "kind": "medium", "medium": "", "bio": "Aktuálně.cz - kompletní zpravodajství, zprávy z domova i ze světa." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 1151, "likes": 5 }, { "name": "technologicky-denik", "fullName": "janmikula/technologicky-denik", "title": "Technologický deník", "picture": "https://cdn.kairly.com/media/editions/janmikula-technologicky-denik.jpg", "description": "Přinášíme přehled technologických a vědeckých novinek. Zajímáme se o novinky v oblasti mobilních zařízení, chytré elektroniky, počítačů a dalšího hardwaru.", "editor": { "id": "janmikula", "name": "Jan Mikula", "picture": "https://cdn.kairly.com/media/users/janmikula.jpg", "kind": "personal", "medium": "Kairly", "bio": "Přemýšlím, jak nastartovat kvalitní žurnalistiku. Proto se po večerech lopotím na Kairly. " }, "periodicity": { "frequency": "daily", "dow": null, "time": "09:00" }, "nextRelease": "2018-11-30T09:00:00+01:00", "issues": 102, "likes": 13 } ],
+      newspapers2: [ { "name": "sport", "fullName": "aktualnecz/sport", "title": "Deník Aktuálně – Sport", "picture": "https://cdn.kairly.com/media/editions/aktualnecz_ivSYA8r.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "aktualnecz", "name": "Aktuálně.cz", "picture": "https://cdn.kairly.com/media/users/aktualnecz.png", "kind": "medium", "medium": "", "bio": "Aktuálně.cz - kompletní zpravodajství, zprávy z domova i ze světa." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 657, "likes": 0 }, { "name": "sport", "fullName": "rozhlas/sport", "title": "iRozhlas – Sport", "picture": "https://cdn.kairly.com/media/editions/irozhlas_N9P7Ryw.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "rozhlas", "name": "Rozhlas.cz", "picture": "https://cdn.kairly.com/media/users/rozhlas.jpg", "kind": "medium", "medium": "", "bio": "Spolehlivé zprávy Českého rozhlasu na internetu." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 367, "likes": 0 }, { "name": "sport", "fullName": "idnescz/sport", "title": "MF Dnes – Sport", "picture": "https://cdn.kairly.com/media/editions/mfdnes_Sjkjs4p.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "idnescz", "name": "iDnes.cz", "picture": "https://cdn.kairly.com/media/users/idnescz.jpg", "kind": "medium", "medium": "", "bio": "Nejnovější zprávy z vašeho kraje, České republiky a celého světa." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 391, "likes": 0 } ]
+    }
+  },
+
+  methods: {
+    chooseTopic(topic) {
+      this.chosenTopic = topic
+
+      console.log(this.newspapers)
+    }
+  },
 }
 </script>
 
 <style lang="sass">
-//- Welcome Newspaper
-timeline-welcome
-  > a
-    +subscribed-button
-
-    display: table
-    margin: 0 auto
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
-
-
-//- Welcome box
+//- Welcome view
 .welcome-view
   display: block
 
+  //- Welcome heading
   > h1
     margin-bottom: $baseline
 
@@ -95,36 +113,70 @@ timeline-welcome
     line-height: $baseline * 2
     text-align: center
 
-  > h2
-    margin-bottom: $baseline / 2
+  //- Sections
+  > section
+    margin-bottom: $baseline * 2
 
-    font-family: $ff-serif
-    font-size: $fs-2
-    font-weight: 600
-    text-align: center
+    > h2
+      margin-bottom: $baseline
 
-  > a
-    +subscribed-button
+      font-family: $ff-serif
+      font-size: $fs-2
+      font-weight: 600
+      text-align: center
 
-    display: table
-    margin: 0 auto
 
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
+//- Topics
+.welcome--topics
+
+  ul
+    display: flex
+    justify-content: center
+    margin-bottom: $baseline * 2
+
+  li
+    margin-right: $baseline / 2
+
+  a
+    display: block
+    border-radius: 5px
+    padding: 0 $baseline/2
+
+    background: #eee
+    color: #000
+
     line-height: $baseline * 1.5
+
+    &:hover,
+    &:focus
+      background: #ddd
+
+    &.is-active
+      background: #d5d5d5
+
+//- Newspapers
+.welcome--newspapers
+
+  > div
+    display: grid
+    grid-row-gap: $baseline
+    grid-template-columns: 1fr 1fr 1fr
+    grid-column-gap: $baseline / 2
+
+    @media (max-width: $mobile)
+      grid-column-gap: $baseline / 4
+      overflow-x: auto
+
+      newspaper-widget-view
+        min-width: 200px
+
 
 //- Roles
 .welcome--roles
-  max-width: 900px
-  margin: 0 auto $baseline auto
-  padding: $baseline
-
-  background: #fff
-
-  font-family: $ff-serif
 
   > div
     display: flex
+    margin-bottom: $baseline * 2
 
     @media (max-width: $mobile)
       flex-direction: column
@@ -133,7 +185,7 @@ timeline-welcome
     position: relative
 
     flex: 1
-    margin-right: $baseline*2
+    margin-right: $baseline * 1.5
 
     @media (max-width: $mobile)
       margin: 0 0 $baseline 0
@@ -146,146 +198,41 @@ timeline-welcome
     font-size: $fs-1
     font-weight: 600
 
-//- How to start
-.welcome--tutorial
-  display: flex
-  align-items: center
-
-  padding: $baseline
-  margin-bottom: $baseline
-
-  background: #fff
-
-  font-family: $ff-serif
-
-  counter-reset: step
-
-  @media (max-width: $mobile)
-    flex-direction: column
-
-  ol
-    flex: 1
-
-  ol li
-    display: flex
-    align-items: center
-    margin-bottom: $baseline / 2
-
-    &::before
-      display: inline-block
-      flex: 0 0 $baseline * 1.5
-      border-radius: 100%
-      height: $baseline * 1.5
-      margin-right: $baseline / 2
-      width: $baseline * 1.5
-
-      background: #eee
-
-      line-height: $baseline * 1.5
-      text-align: center
-
-      counter-increment: step
-      content: counter(step)
+  p + p
+    margin-top: $baseline / 2
 
     a
-      color: #000
+      color: $c-base
 
-      text-decoration: underline
+      font-weight: 600
 
-    .icon
-      display: inline-block
-      border-radius: 100%
-      margin-left: $baseline / 4
-      height: $baseline * 1.25
-      width: $baseline*1.25
+      transition: .15s all
 
-      background: #f5f5f5
+      &:hover
+        color: darken($c-base, 10%)
 
-      line-height: $baseline * 1.25
-      text-align: center
-      vertical-align: middle
-
-      &::before
+      &::after
         +fa-icon()
 
-        font-size: 21px
+        margin-left: $baseline / 2
 
-        content: $fa-var-home
+        opacity: 0.5
 
-
-//- Illustration on newspaper widget
-.welcome--tutorial--illustration
-  text-align: center
-
-  figcaption
-    padding: $baseline/4 0
-
-    color: #999
-
-    font-family: $ff-sans
-    font-size: $fs--1
-    line-height: $baseline
+        content: $fa-var-arrow-right
 
 
-  //- frame
-  > div
-    border-radius: 5px
-    padding: $baseline / 4
-    width: 200px
+      &:hover::after
+        opacity: 1
 
-    background: #fff
-    border: 1px solid #eee
+  //- start reading Kairly button
+  > a
+    +subscribed-button
 
-  //- picture
-  .picture
-    height: $baseline * 3
-    margin-bottom: $baseline / 2
-
-    background: #eee
-
-  //- title
-  .title
-    height: $baseline / 2
-    margin-bottom: $baseline / 4
-    width: 75%
-
-    background: #eee
-
-  p
-    margin-bottom: $baseline / 2
-
-    color: #999
-
-    font-family: $ff-sans
-    font-size: $fs--1
-    font-weight: 600
-    line-height: $baseline * 0.8
-    text-align: left
-
-  //- description
-  .description
-    &::after,
-    &::before
-      display: block
-      height: $baseline / 4
-      margin-bottom: $baseline / 4
-
-      border-bottom: $baseline / 4 solid #eee
-      border-top: $baseline / 4 solid #eee
-
-      content: ''
-
-  //- subscribe
-  .subscribe
-    display: inline-block
-    border-radius: $baseline
+    display: table
     margin: 0 auto
-    padding: 0 $baseline/2
 
-    border: 1px solid #eee
-    color: #999
-
-    font-family: $ff-sans
-    font-size: $fs--1
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    line-height: $baseline * 1.5
 
 </style>
