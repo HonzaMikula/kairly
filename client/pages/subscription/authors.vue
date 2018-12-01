@@ -9,7 +9,7 @@
       </my-authors--empty>
 
       <template v-if="authors['6x_per_day'].length">
-        <h2>{{ $t('Continously') }}</h2>
+        <h2>{{ $t('Every 3 hours') }}</h2>
         <AuthorWidget
           v-for="author in authors['6x_per_day']"
           :key="author.slug"
@@ -129,8 +129,11 @@ export default {
     margin: $baseline 0 $baseline / 2
 
     font-family: $ff-sans
-    font-size: $fs-2
+    font-size: $fs-1
     font-weight: 600
+
+    &:first-of-type
+      margin-top: 0
 
 my-newspapers-view author-widget-view
   width: 576px

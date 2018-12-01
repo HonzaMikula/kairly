@@ -16,7 +16,7 @@
             </nuxt-link>
           </li>
 
-          <li class="newspapers">
+          <!-- <li class="newspapers">
             <nuxt-link :to="{name: 'newspapers'}" title="Newspapers">
               <span>{{ $t('Newspapers') }}</span>
             </nuxt-link>
@@ -26,7 +26,7 @@
             <nuxt-link :to="{name: 'posts'}" title="New post">
               <span>{{ $t('New post') }}</span>
             </nuxt-link>
-          </li>
+          </li> -->
 
           <li class="explore">
             <nuxt-link :to="{name: 'explore-tab'}" title="Explore">
@@ -54,8 +54,8 @@
           <li><nuxt-link :to="{name: 'user-settings'}"><span>{{ $t('Settings') }}</span></nuxt-link></li>
           <li class="divider"></li>
           <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>{{ $t('Subscriptions') }}</span></nuxt-link></li>
-          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>{{ $t('Newspapers') }}</span></nuxt-link></li>
-          <li><nuxt-link to="/posts">{{ $t('New post') }}</nuxt-link></li>
+          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>{{ $t('Mange newspapers') }}</span></nuxt-link></li>
+          <li><nuxt-link to="/posts">{{ $t('Write a post') }}</nuxt-link></li>
           <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>{{ $t('Explore') }}</span></nuxt-link></li>
           <li class="divider"></li>
           <li class="language">
@@ -148,16 +148,21 @@ export default {
 
 //- Main Navigation
 .app-header--navigation
-  margin-right: auto
+  margin-left: auto
 
   ul
     display: flex
 
   a
     display: block
+    border-radius: 5px
     padding: 0 $baseline/2
+    margin-top: $baseline / 4
+    margin-right: $baseline / 4
 
     color: #555
+
+    line-height: $baseline * 1.5
 
     &:focus,
     &:hover
@@ -334,7 +339,7 @@ export default {
 
   //- divider
   .divider
-    border-top: 1px solid #eee
+    border-top: 1px solid rgba(#ddd, 0.5)
 
   //- language
   .language
@@ -343,6 +348,7 @@ export default {
     a
       display: inline-block
       padding: 0 $baseline / 4
+      border-radius: 3px
 
       &.is-active
         font-weight: 600

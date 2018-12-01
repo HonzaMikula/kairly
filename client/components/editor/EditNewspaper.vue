@@ -27,7 +27,7 @@
             </template>
 
             <template v-else-if="periodicity.frequency == '6x_per_day'">
-              Continously every 3 hours.
+              Every 3 hours.
             </template>
 
             <template v-else>

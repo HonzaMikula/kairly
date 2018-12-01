@@ -4,7 +4,7 @@
       <h1>Welcome to Kairly!</h1>
 
       <section class="welcome--topics">
-        <h2>1) In which topic are you interested in?</h2>
+        <h2>Start with subscribing to newspapers</h2>
 
         <ul>
           <li v-for="topic in topics" :key="topic">
@@ -14,7 +14,6 @@
       </section>
 
       <section class="welcome--newspapers" v-if="chosenTopic != null">
-        <h2>2) Subscribe to newspapers</h2>
         <div>
           <NewspaperWidget
             v-for="newspaper in newspapers"
@@ -31,7 +30,7 @@
       </section>
 
       <section class="welcome--roles" v-if="chosenTopic != null">
-        <h2>3) Start using Kairly</h2>
+        <h2>Start using Kairly</h2>
         <div>
           <section>
             <h3>As a reader</h3>
@@ -81,8 +80,8 @@ export default {
 
   data() {
     return {
-      topics: ['News', 'Politics', 'Sport', 'Technology', 'Life'],
-      chosenTopic: null,
+      topics: ['All topics', 'News', 'Politics', 'Sport', 'Technology', 'Life'],
+      chosenTopic: 'All topics',
       newspapers: [ { "name": "malostranskenoviny", "fullName": "janmikula/malostranskenoviny", "title": "Malostranské noviny", "picture": "https://cdn.kairly.com/media/editions/malostranskenoviny.jpg", "description": "Přehled toho nejzajímavějšího, co se událo v české politice.", "editor": { "id": "janmikula", "name": "Jan Mikula", "picture": "https://cdn.kairly.com/media/users/janmikula.jpg", "kind": "personal", "medium": "Kairly", "bio": "Přemýšlím, jak nastartovat kvalitní žurnalistiku. Proto se po večerech lopotím na Kairly. " }, "periodicity": { "frequency": "daily", "dow": null, "time": "09:00" }, "nextRelease": "2018-11-30T09:00:00+01:00", "issues": 126, "likes": 13 }, { "name": "domaci", "fullName": "aktualnecz/domaci", "title": "Deník Aktuálně – Domácí", "picture": "https://cdn.kairly.com/media/editions/aktualnecz_uQ4fenH.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "aktualnecz", "name": "Aktuálně.cz", "picture": "https://cdn.kairly.com/media/users/aktualnecz.png", "kind": "medium", "medium": "", "bio": "Aktuálně.cz - kompletní zpravodajství, zprávy z domova i ze světa." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 1151, "likes": 5 }, { "name": "technologicky-denik", "fullName": "janmikula/technologicky-denik", "title": "Technologický deník", "picture": "https://cdn.kairly.com/media/editions/janmikula-technologicky-denik.jpg", "description": "Přinášíme přehled technologických a vědeckých novinek. Zajímáme se o novinky v oblasti mobilních zařízení, chytré elektroniky, počítačů a dalšího hardwaru.", "editor": { "id": "janmikula", "name": "Jan Mikula", "picture": "https://cdn.kairly.com/media/users/janmikula.jpg", "kind": "personal", "medium": "Kairly", "bio": "Přemýšlím, jak nastartovat kvalitní žurnalistiku. Proto se po večerech lopotím na Kairly. " }, "periodicity": { "frequency": "daily", "dow": null, "time": "09:00" }, "nextRelease": "2018-11-30T09:00:00+01:00", "issues": 102, "likes": 13 } ],
       newspapers2: [ { "name": "sport", "fullName": "aktualnecz/sport", "title": "Deník Aktuálně – Sport", "picture": "https://cdn.kairly.com/media/editions/aktualnecz_ivSYA8r.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "aktualnecz", "name": "Aktuálně.cz", "picture": "https://cdn.kairly.com/media/users/aktualnecz.png", "kind": "medium", "medium": "", "bio": "Aktuálně.cz - kompletní zpravodajství, zprávy z domova i ze světa." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 657, "likes": 0 }, { "name": "sport", "fullName": "rozhlas/sport", "title": "iRozhlas – Sport", "picture": "https://cdn.kairly.com/media/editions/irozhlas_N9P7Ryw.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "rozhlas", "name": "Rozhlas.cz", "picture": "https://cdn.kairly.com/media/users/rozhlas.jpg", "kind": "medium", "medium": "", "bio": "Spolehlivé zprávy Českého rozhlasu na internetu." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 367, "likes": 0 }, { "name": "sport", "fullName": "idnescz/sport", "title": "MF Dnes – Sport", "picture": "https://cdn.kairly.com/media/editions/mfdnes_Sjkjs4p.jpg", "description": "(automaticky generované noviny)", "editor": { "id": "idnescz", "name": "iDnes.cz", "picture": "https://cdn.kairly.com/media/users/idnescz.jpg", "kind": "medium", "medium": "", "bio": "Nejnovější zprávy z vašeho kraje, České republiky a celého světa." }, "periodicity": { "frequency": "3x_per_day", "dow": null, "time": null }, "nextRelease": "2018-11-30T12:00:00+01:00", "issues": 391, "likes": 0 } ]
     }
@@ -114,10 +113,7 @@ export default {
     text-align: center
 
   //- Sections
-  > section
-    margin-bottom: $baseline * 2
-
-    > h2
+  > section > h2
       margin-bottom: $baseline
 
       font-family: $ff-serif
@@ -128,11 +124,12 @@ export default {
 
 //- Topics
 .welcome--topics
+  margin-bottom: 0
 
   ul
     display: flex
     justify-content: center
-    margin-bottom: $baseline * 2
+    margin-bottom: $baseline / 2
 
   li
     margin-right: $baseline / 2
@@ -140,26 +137,26 @@ export default {
   a
     display: block
     border-radius: 5px
-    padding: 0 $baseline/2
 
-    background: #eee
-    color: #000
+    color: $c-base
 
-    line-height: $baseline * 1.5
+    font-weight: 600
+    font-size: $fs-1
 
     &:hover,
     &:focus
-      background: #ddd
+      color: darken($c-base, 10%)
 
     &.is-active
-      background: #d5d5d5
+      color: #000
 
 //- Newspapers
 .welcome--newspapers
+  margin-bottom: $baseline * 2
 
   > div
     display: grid
-    grid-row-gap: $baseline
+    grid-row-gap: $baseline / 2
     grid-template-columns: 1fr 1fr 1fr
     grid-column-gap: $baseline / 2
 

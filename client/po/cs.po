@@ -227,7 +227,7 @@ msgstr "Procházet autory"
 
 #: pages/subscription/authors.vue:12
 msgid "Continously"
-msgstr "Průběžně"
+msgstr "Každé 3 hodiny"
 
 #: pages/subscription/authors.vue:21
 msgid "3x per day"

@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-navigation">
+  <div class="timeline-time-slot">
     <button
       @click="isMenuOpen = !isMenuOpen"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
@@ -94,10 +94,12 @@ export default {
 </script>
 
 <style lang="sass">
-.timeline-navigation
+.timeline-time-slot
   position: relative
+  z-index: 2
 
-  margin: $baseline * 2 0 (-$baseline)
+  display: table
+  margin: $baseline*2 auto (-$baseline) auto
 
   text-align: center
 

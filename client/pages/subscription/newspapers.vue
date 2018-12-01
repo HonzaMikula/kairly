@@ -47,7 +47,7 @@ export default {
 my-newspapers-view
   display: grid
   grid-row-gap: $baseline
-  grid-template-columns: 1fr 1fr 1fr
+  grid-template-columns: 1fr 1fr
   grid-column-gap: $baseline / 2
   grid-row-gap: $baseline / 2
 
