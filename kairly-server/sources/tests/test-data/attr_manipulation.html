@@ -1,0 +1,49 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <p>
+      Máme na Kopanině hektar sadu. Když tam vypustíš děti, tak o nich nevíš
+      celej den. Lezou po stromech, honěj se s ovcema, sbíraj jabka a ořechy,
+      na včelách louděj med. Hektar je dost, byť zrovna většina tohohle je
+      v prudkým svahu, což prakticky vylučuje polní plodiny. Když tam
+      přijdou pomocníci sbírat úrodu, žasnou, jak je tam krásně. Jsme v Praze,
+      byť kolem dokola je jen hradba zeleně. Zdánlivá divočina je to ovšem
+      jenom přes den. V noci je tam slyšet každý tudum tudum, jak kamiony
+      po okruhu najížděj na most přes Slavičí údolí. A motorky, samozřejmě.
+    </p>
+    <p>
+      <img src="http://winepunk.cz/wp-content/uploads/DSC04935.jpg"
+           alt="DSC04935"
+           srcset="http://winepunk.cz/wp-content/uploads/DSC04935.jpg 500w, http://winepunk.cz/wp-content/uploads/DSC04935-150x85.jpg 150w"
+           sizes="(max-width: 500px) 100vw, 500px"/>
+    </p>
+  </body>
+<html>
+
+<parser-rules>
+p
+
+img
+  [src]: force-https
+  [srcset]: none
+  [sizes]: none
+</parser-rules>
+
+<expected-perex>
+  <p>
+    Máme na Kopanině hektar sadu. Když tam vypustíš děti, tak o nich nevíš
+    celej den. Lezou po stromech, honěj se s ovcema, sbíraj jabka a ořechy,
+    na včelách louděj med. Hektar je dost, byť zrovna většina tohohle je
+    v prudkým svahu, což prakticky vylučuje polní plodiny. Když tam
+    přijdou pomocníci sbírat úrodu, žasnou, jak je tam krásně. Jsme v Praze,
+    byť kolem dokola je jen hradba zeleně. Zdánlivá divočina je to ovšem
+    jenom přes den. V noci je tam slyšet každý tudum tudum, jak kamiony
+    po okruhu najížděj na most přes Slavičí údolí. A motorky, samozřejmě.
+  </p>
+</expected-perex>
+
+<expected-content>
+  <img src="https://winepunk.cz/wp-content/uploads/DSC04935.jpg"
+       alt="DSC04935"/>
+</expected-content>

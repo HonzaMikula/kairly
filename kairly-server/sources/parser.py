@@ -48,9 +48,10 @@ def split_article_to_perex_and_content(fragments, perex_size):
 
 class ArticleParser:
 
-    REGEX_MULTI = re.compile("/\*.*?\*/", re.DOTALL)
+    REGEX_MULTI = re.compile(r"/\*.*?\*/", re.DOTALL)
     REGEX_ONLINE = re.compile("//.*?\n")
-    REGEX_SPACE = re.compile("\s*")
+    REGEX_SPACE = re.compile(r"\s*")
+    REGEX_ATTR_PROP = re.compile(r"\[(\w+)\]")
 
     DANGEROUS_ELEMENTS = ', '.join((
         'script', 'noscript',
@@ -323,6 +324,12 @@ class ArticleParser:
     def _getprop(self, el, name):
         return self.props[el].get(name)
 
+    def _getattrprops(self, el):
+        for prop, value in self.props[el].items():
+            m = self.REGEX_ATTR_PROP.match(prop)
+            if m:
+                yield (m.group(1), value)
+
     def _strip_attibutes(self, el):
         if el.tag == 'img':
             preserve = {'title', 'src', 'alt', 'srcset', 'sizes'}
@@ -350,6 +357,16 @@ class ArticleParser:
             el.tag = 'div'
 
         self._strip_attibutes(el)
+        for attr, value in self._getattrprops(el):
+            try:
+                if value == 'none':
+                    del el.attrib[attr]
+                elif value == 'force-https':
+                    el.attrib[attr] = re.sub('http://', 'https://', el.attrib[attr])
+            except KeyError:
+                pass
+
+            #print(attr, value)
 
         for child in list(el):
             tag = self._getprop(child, 'tag')
