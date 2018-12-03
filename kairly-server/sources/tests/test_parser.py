@@ -52,6 +52,9 @@ class ArticleParsersTest(unittest.TestCase):
         self.assertHtmlEqual(perex, expected_perex)
         self.assertHtmlEqual(content, expected_content)
 
+    def test_brbr(self):
+        self.verify_testcase_file('test-data/brbr.html')
+
     def test_dangerous(self):
         self.verify_testcase_file('test-data/dangerous.html')
 
