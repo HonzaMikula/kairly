@@ -120,6 +120,14 @@ div#main-content
     tag: h2
 ```
 
+### Attribute manipulations
+```
+img
+  [src]: force-https
+  [srcset]: none
+  [sizes]: none
+```
+
 ## Users before migration
 
 (Emails should be filled)
