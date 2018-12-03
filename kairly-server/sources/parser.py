@@ -187,13 +187,24 @@ class ArticleParser:
                             if result:
                                 result[0].text = (el.text or '') + '\n' + (result[0].text or '')
                                 yield from result
+                                continue
                             else:
                                 # flatten_tree returns nothing, this is element with text only
                                 yield el
+                                continue
                         else:
                             yield from flatten_tree(el)
-                    else:
-                        yield el
+                            continue
+                    if el.tag in ('p', 'h2', 'h3', 'h4', 'h5', 'h6'):
+                        children = list(el)
+                        if len(children) == 1 and children[0].tag == 'span':
+                            if not el.text or not el.text.strip():
+                                # yield child <span> as <p> instead, this effectively means
+                                # <p><span>foo</span></p> --> <p>foo</p>
+                                children[0].tag = el.tag
+                                yield children[0]
+                                continue
+                    yield el
             else:
                 if yield_self:
                     yield htmltree

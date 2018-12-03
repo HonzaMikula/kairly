@@ -52,20 +52,23 @@ class ArticleParsersTest(unittest.TestCase):
         self.assertHtmlEqual(perex, expected_perex)
         self.assertHtmlEqual(content, expected_content)
 
-    # def test_brbr(self):
-    #     self.verify_testcase_file('test-data/brbr.html')
-    #
-    # def test_dangerous(self):
-    #     self.verify_testcase_file('test-data/dangerous.html')
-    #
-    # def test_flatten(self):
-    #     self.verify_testcase_file('test-data/flatten.html')
-    #
-    # def test_h1(self):
-    #     self.verify_testcase_file('test-data/h1.html')
-    #
-    # def test_split(self):
-    #     self.verify_testcase_file('test-data/split.html')
+    def test_brbr(self):
+        self.verify_testcase_file('test-data/brbr.html')
+
+    def test_dangerous(self):
+        self.verify_testcase_file('test-data/dangerous.html')
+
+    def test_flatten(self):
+        self.verify_testcase_file('test-data/flatten.html')
+
+    def test_flatten_p(self):
+        self.verify_testcase_file('test-data/flatten_p.html')
+
+    def test_h1(self):
+        self.verify_testcase_file('test-data/h1.html')
+
+    def test_split(self):
+        self.verify_testcase_file('test-data/split.html')
 
     def test_empty_p(self):
         self.verify_testcase_file('test-data/empty_p.html')
