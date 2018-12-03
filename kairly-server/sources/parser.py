@@ -83,6 +83,10 @@ class ArticleParser:
             if not list(el):  # if not child elements exists
                 el.getparent().remove(el)
 
+        for el in htmltree.xpath('//p'):
+            if not list(el) and not el.text.strip():
+                el.getparent().remove(el)
+
         for rule in self.flatten_rules():
             if rule.selector == '*':
                 elements = [htmltree]
