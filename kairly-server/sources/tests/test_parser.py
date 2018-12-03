@@ -31,14 +31,13 @@ def split_test_file(name):
 class ArticleParsersTest(unittest.TestCase):
 
     maxDiff = None
-    SPACE_REGEXP = re.compile(r'\s\s+')
+    SPACE_REGEXP = re.compile(r'(\s)\s+')
 
     def assertHtmlEqual(self, a, b):
-        a = self.SPACE_REGEXP.sub('', a)
-        b = self.SPACE_REGEXP.sub('', b)
-        # a = re.sub(r'(</?[-\w]*>)', '\\1\n', a)
-        # b = re.sub(r'(</?[-\w]*>)', '\\1\n', b)
-        self.assertEqual(a, b)
+        def normalize(s):
+            return self.SPACE_REGEXP.sub(r'\1', s).strip()\
+                .replace('\n', ' ').replace('> ', '>').replace(' <', '<')
+        self.assertEqual(normalize(a), normalize(b))
 
     def verify_testcase_file(self, path, perex_size=100):
         source, rules, expected_perex, expected_content = split_test_file(path)
@@ -55,6 +54,9 @@ class ArticleParsersTest(unittest.TestCase):
 
     def test_dangerous(self):
         self.verify_testcase_file('test-data/dangerous.html')
+
+    def test_flatten(self):
+        self.verify_testcase_file('test-data/flatten.html')
 
     def test_h1(self):
         self.verify_testcase_file('test-data/h1.html')
