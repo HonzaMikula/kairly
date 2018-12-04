@@ -48,8 +48,8 @@ def split_article_to_perex_and_content(fragments, perex_size):
 
 class ArticleParser:
 
-    REGEX_MULTI = re.compile(r"/\*.*?\*/", re.DOTALL)
-    REGEX_ONLINE = re.compile("//.*?\n")
+    REGEX_COMMENT_MULTILINE = re.compile(r"/\*.*?\*/", re.DOTALL)
+    REGEX_COMMENT_ONELINE = re.compile(r"([\^ ])//.*")  # do not match // inside eg attr selectors
     REGEX_SPACE = re.compile(r"\s*")
     REGEX_ATTR_PROP = re.compile(r"\[(\w+)\]")
 
@@ -219,12 +219,18 @@ class ArticleParser:
                     result.append(block)
         return result
 
-    def remove_comments(self, s):
+    def get_effetive_lines(self, s):
+        """Remove comments and split to lines"""
         # remove all occurance streamed comments (/*COMMENT */) from string
-        s = self.REGEX_MULTI.sub("", s)
+        s = self.REGEX_COMMENT_MULTILINE.sub("", s)
         # remove all occurance singleline comments (//COMMENT\n ) from string
-        s = self.REGEX_ONLINE.sub("", s)
-        return s
+        for line in s.split('\n'):
+            if line.startswith('//'):
+                continue
+            # line = self.REGEX_COMMENT_ONELINE.sub(r"\1", s)
+            line = line.rstrip()
+            if line:
+                yield line
 
     def flatten_rules(self):
         rules = []
@@ -233,7 +239,7 @@ class ArticleParser:
         prev_indent = 0
 
         def parse_property(line):
-            if ':' in line:
+            if ': ' in line:
                 prop, value = line.split(':', maxsplit=1)
                 d = {}
                 d[prop.strip()] = value.strip()
@@ -253,11 +259,7 @@ class ArticleParser:
         def create_rule(props, context):
             return Rule(props, ', '.join(flatten_context(context)))
 
-        for line in self.remove_comments(self.rules).split('\n'):
-            line = line.rstrip()
-            if not line:
-                continue
-
+        for line in self.get_effetive_lines(self.rules):
             m = self.REGEX_SPACE.match(line)
             indent = m.end()
 
