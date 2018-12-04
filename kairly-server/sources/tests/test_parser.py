@@ -70,6 +70,9 @@ class ArticleParsersTest(unittest.TestCase):
     def test_empty_p(self):
         self.verify_testcase_file('test-data/empty_p.html')
 
+    def test_fffilm(self):
+        self.verify_testcase_file('test-data/fffilm.html', perex_size=950)
+
     def test_flatten(self):
         self.verify_testcase_file('test-data/flatten.html')
 
@@ -87,3 +90,6 @@ class ArticleParsersTest(unittest.TestCase):
 
     def test_tag_manipulation(self):
         self.verify_testcase_file('test-data/tag_manipulation.html')
+
+    def test_wrapped_br(self):
+        self.verify_testcase_file('test-data/wrapped_br.html')
