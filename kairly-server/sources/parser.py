@@ -84,7 +84,7 @@ class ArticleParser:
             if not list(el):  # if not child elements exists
                 el.getparent().remove(el)
 
-        for el in htmltree.xpath('//p'):
+        for el in htmltree.cssselect('p,div,article,section'):
             if not list(el) and (not el.text or not el.text.strip()):
                 el.getparent().remove(el)
 
@@ -183,7 +183,7 @@ class ArticleParser:
             if children:
                 for el in children:
                     if el.tag in ('div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'):
-                        if el.text.strip():
+                        if el.text and el.text.strip():
                             result = list(flatten_tree(el, yield_self=False))
                             if result:
                                 result[0].text = (el.text or '') + '\n' + (result[0].text or '')
