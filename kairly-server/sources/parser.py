@@ -85,7 +85,7 @@ class ArticleParser:
                 el.getparent().remove(el)
 
         for el in htmltree.xpath('//p'):
-            if not list(el) and not el.text.strip():
+            if not list(el) and (not el.text or not el.text.strip()):
                 el.getparent().remove(el)
 
         for rule in self.flatten_rules():
@@ -365,8 +365,6 @@ class ArticleParser:
                     el.attrib[attr] = re.sub('http://', 'https://', el.attrib[attr])
             except KeyError:
                 pass
-
-            #print(attr, value)
 
         for child in list(el):
             tag = self._getprop(child, 'tag')
