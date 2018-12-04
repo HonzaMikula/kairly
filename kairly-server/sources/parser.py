@@ -178,11 +178,25 @@ class ArticleParser:
             # if len(part) or part.text:
             #     yield part
 
+        LEAF_BLOCK_TAGS = ('p', 'h2', 'h3', 'h4', 'h5', 'h6')
+        PARENT_BLOCK_TAGS = ('body', 'div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav')
+
+        def flatten_endtag(el):
+            if el.tag in LEAF_BLOCK_TAGS:
+                children = list(el)
+                if len(children) == 1 and children[0].tag == 'span':
+                    if not el.text or not el.text.strip():
+                        # yield child <span> as <p> instead, this effectively means
+                        # <p><span>foo</span></p> --> <p>foo</p>
+                        children[0].tag = el.tag
+                        return children[0]
+            return el
+
         def flatten_tree(htmltree, yield_self=True):
             children = list(htmltree)
-            if children:
+            if children and htmltree.tag in PARENT_BLOCK_TAGS:
                 for el in children:
-                    if el.tag in ('div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'):
+                    if el.tag in PARENT_BLOCK_TAGS:
                         if el.text and el.text.strip():
                             result = list(flatten_tree(el, yield_self=False))
                             if result:
@@ -196,19 +210,10 @@ class ArticleParser:
                         else:
                             yield from flatten_tree(el)
                             continue
-                    if el.tag in ('p', 'h2', 'h3', 'h4', 'h5', 'h6'):
-                        children = list(el)
-                        if len(children) == 1 and children[0].tag == 'span':
-                            if not el.text or not el.text.strip():
-                                # yield child <span> as <p> instead, this effectively means
-                                # <p><span>foo</span></p> --> <p>foo</p>
-                                children[0].tag = el.tag
-                                yield children[0]
-                                continue
-                    yield el
+                    yield flatten_endtag(el)
             else:
                 if yield_self:
-                    yield htmltree
+                    yield flatten_endtag(htmltree)
 
         result = []
         for el in fragments:
