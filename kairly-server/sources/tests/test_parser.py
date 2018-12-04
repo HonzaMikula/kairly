@@ -52,6 +52,9 @@ class ArticleParsersTest(unittest.TestCase):
         self.assertHtmlEqual(perex, expected_perex)
         self.assertHtmlEqual(content, expected_content)
 
+    def test_attr_manipulation(self):
+        self.verify_testcase_file('test-data/attr_manipulation.html')
+
     def test_brbr(self):
         self.verify_testcase_file('test-data/brbr.html')
 
@@ -70,11 +73,11 @@ class ArticleParsersTest(unittest.TestCase):
     def test_h1(self):
         self.verify_testcase_file('test-data/h1.html')
 
+    def test_rules_merge(self):
+        self.verify_testcase_file('test-data/rules_merge.html')
+
     def test_split(self):
         self.verify_testcase_file('test-data/split.html')
 
     def test_tag_manipulation(self):
         self.verify_testcase_file('test-data/tag_manipulation.html')
-
-    def test_attr_manipulation(self):
-        self.verify_testcase_file('test-data/attr_manipulation.html')

@@ -1,0 +1,33 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <img src="http://winepunk.cz/wp-content/uploads/DSC04935.jpg"
+         alt="DSC04935"
+         srcset="http://winepunk.cz/wp-content/uploads/DSC04935.jpg 500w, http://winepunk.cz/wp-content/uploads/DSC04935-150x85.jpg 150w"
+         sizes="(max-width: 500px) 100vw, 500px"/>
+    <img src="http://foo.cz/a.jpg"
+         alt="a.jpg"
+         srcset="http://foo.cz/a.jpg 500w foo.cz/a1.jpg 150w"
+         sizes="(max-width: 500px) 100vw, 500px"/>
+  </body>
+<html>
+
+<parser-rules>
+img[src^="http://winepunk.cz"]
+  [src]: force-https
+
+img
+  [srcset]: none
+  [sizes]: none
+</parser-rules>
+
+<expected-perex>
+  <img src="https://winepunk.cz/wp-content/uploads/DSC04935.jpg"
+       alt="DSC04935"/>
+</expected-perex>
+
+<expected-content>
+  <img src="http://foo.cz/a.jpg"
+       alt="a.jpg"/>
+</expected-content>
