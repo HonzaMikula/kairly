@@ -184,7 +184,7 @@ class ArticleParser:
                 blocks.append(curr_block)
 
                 if is_br:
-                    curr_block.text = tail
+                    curr_block.text = tail + ' '
                     continue
 
             if prev_br:
