@@ -70,11 +70,17 @@ class ArticleParser:
         'style',
         'iframe', 'applet', 'object', 'canvas',
         'audio', 'input', 'textarea', 'button', 'select', 'datalist', 'meter',
-        'output'
+        'output', 'progress'
     ))
 
-    LEAF_BLOCK_TAGS = ('p', 'h2', 'h3', 'h4', 'h5', 'h6')
-    PARENT_BLOCK_TAGS = ('body', 'div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav')
+    LEAF_BLOCK_TAGS = set(['p', 'h2', 'h3', 'h4', 'h5', 'h6'])
+    PARENT_BLOCK_TAGS = set(['body', 'div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'])
+    PRHASING_CONTEXT_TAGS = set([
+        'a', 'abbr', 'b', 'bdo', 'br', 'cite', 'code',
+        'data', 'datalist', 'dfn', 'em', 'i', 'img', 'kbd', 'mark', 'math',
+        'meter', 'output', 'q', 'ruby', 'samp', 'small', 'span',
+        'strong', 'sub', 'sup', 'svg', 'time', 'var', 'video', 'wbr'
+    ])
 
     def __init__(self, rules):
         self.rules = rules
@@ -300,16 +306,48 @@ class ArticleParser:
             br.tail = el.tail
             return br
 
-    def _top_level_cleanup(self, el):
-        if el.tag == 'br':
-            tail = el.tail and el.tail.strip()
-            if tail:
-                p = lxml.html.HtmlElement()
-                p.tag = 'p'
-                p.text = tail
-                return p
-            return None
-        return el
+    def _top_level_cleanup(self, blocks):
+        result = []
+        phrasing_wrapper = None
+
+        for block in blocks:
+            tail = block.tail and block.tail.strip()
+            is_phrasing = block.tag in self.PRHASING_CONTEXT_TAGS
+
+            if block.tag == 'img' and phrasing_wrapper is None:
+                # image can remain standalone at top level (if open phrasing
+                # wrapped is before)
+                is_phrasing = False
+
+            if is_phrasing:
+                if block.tag == 'br' and not tail:
+                    continue  # ignore <br> without tail on top level
+
+                if phrasing_wrapper is None:
+                    phrasing_wrapper = lxml.html.HtmlElement()
+                    phrasing_wrapper.tag = 'p'
+                    result.append(phrasing_wrapper)
+
+                if block.tag == 'br':
+                    # append just tail
+                    if phrasing_wrapper.text:
+                        phrasing_wrapper.text += ' ' + tail + ' '
+                    else:
+                        phrasing_wrapper.text = tail + ' '
+                else:
+                    phrasing_wrapper.append(block)
+            else:
+                block.tail = None
+                result.append(block)
+                phrasing_wrapper = None  # prev phrasing_wrapper can't be extended
+
+                if tail:
+                    phrasing_wrapper = lxml.html.HtmlElement()
+                    phrasing_wrapper.tag = 'p'
+                    phrasing_wrapper.text = tail
+                    result.append(phrasing_wrapper)
+
+        return result
 
     def normalize(self, fragments):
         for el in fragments:
@@ -320,10 +358,9 @@ class ArticleParser:
 
         result = []
         for fragment in fragments:
-            for block in self._flatten(fragment):
-                block = self._top_level_cleanup(block)
-                if block is not None:
-                    result.append(block)
+            result.extend(self._flatten(fragment))
+
+        result = self._top_level_cleanup(result)
 
         # for el in result:
         #     print("---- RESULT BLOCK ---")
