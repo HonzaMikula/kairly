@@ -4,7 +4,6 @@ import codecs
 
 import feedparser
 import requests
-import yaml
 import lxml.html
 from bs4 import UnicodeDammit
 
@@ -12,7 +11,8 @@ from django.db import models
 from django.core.cache import cache
 from django.conf import settings
 
-from .parser import ArticleParser, split_article_to_perex_and_content
+from sources.parser import ArticleParser, split_article_to_perex_and_content
+from sources.directives import validate_directives, parse as parse_directives
 
 
 class Channel(models.Model):
@@ -22,7 +22,7 @@ class Channel(models.Model):
     parse_content_from_rss = models.BooleanField(default=False)
     user_agent = models.CharField(help_text="Force User-Agent header when fetching RSS or post", max_length=250, null=True, blank=True)
     parser = models.TextField(help_text="Parse rules to get content from webpage/rss.", blank=False)
-    skip_rules = models.TextField(help_text="YAML", blank=True)
+    directives = models.TextField(blank=True, validators=[validate_directives])
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
     newspaper = models.CharField(help_text="Automatically add to newspaper's backlog", max_length=160, null=True, blank=True, db_index=True)
     enabled = models.BooleanField(default=True)
@@ -35,9 +35,8 @@ class Channel(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        # validate skip rules
-        if self.skip_rules:
-            yaml.load(self.skip_rules)
+        # validate directives
+        parse_directives(self.directives)
 
         if self.newspaper is not None and not self.newspaper.strip():
             self.newspaper = None
@@ -128,13 +127,12 @@ class Channel(models.Model):
                 pass
 
     def is_url_valid(self, url):
-        if not self.skip_rules:
-            return True
-        skip_rules = yaml.load(self.skip_rules)
-        domain = skip_rules.get('domain')
-        if domain:
+        directives = parse_directives(self.directives)
+        domains = [d.value for d in directives if d.name == 'skip' and d.target == 'domain']
+
+        if domains:
             url = url.split('#', maxsplit=1)[0]
-            return urlsplit(url).hostname != domain
+            return urlsplit(url).hostname not in domains
         return True
 
     def fix_relative_links(self, htmltree, parsed_url):
