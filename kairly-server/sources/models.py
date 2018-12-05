@@ -34,6 +34,15 @@ class Channel(models.Model):
     def __str__(self):
         return self.name
 
+    def get_directives(self, name, target=None):
+        if not hasattr(self, '_directives'):
+            self._directives = parse_directives(self.directives)
+
+        directives = [d for d in self._directives if d.name == name]
+        if target is not None:
+            directives = [d for d in directives if d.target == target]
+        return directives
+
     def save(self, *args, **kwargs):
         # validate directives
         parse_directives(self.directives)
@@ -127,8 +136,7 @@ class Channel(models.Model):
                 pass
 
     def is_url_valid(self, url):
-        directives = parse_directives(self.directives)
-        domains = [d.value for d in directives if d.name == 'skip' and d.target == 'domain']
+        domains = [d.value for d in self.get_directives('skip', 'domain')]
 
         if domains:
             url = url.split('#', maxsplit=1)[0]

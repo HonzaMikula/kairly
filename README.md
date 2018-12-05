@@ -128,7 +128,25 @@ img
   [sizes]: none
 ```
 
-## Users before migration
+## Channel directives
+
+#### skip domain
+
+Don't import posts hosted on given domain.
+```
+skip domain video.aktualne.cz
+```
+
+#### replace title
+
+Use regular expression to modify post's title.
+```
+replace title '^\[článek\]\s*' ''
+replace title '^\[aktualita\]\s*' ''
+```
+
+
+## Users existing before migration
 
 (Emails should be filled)
 

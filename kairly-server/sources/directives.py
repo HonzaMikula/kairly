@@ -1,23 +1,44 @@
 import shlex
+import re
 
 from django.core.exceptions import ValidationError
 
 
 class SkipDirective:
-    """Usage: skip domain [domain_name]"""
+    """Usage: skip domain <domain_name>"""
     name = 'skip'
 
     def __init__(self, target=None, value=None):
         if target != 'domain':
             raise ValueError("Target must be 'domain'. " + self.__doc__)
         if value is None:
-            raise ValueError("Domain name is missing." + self.__doc__)
+            raise ValueError("Domain must be set." + self.__doc__)
         self.target = target
         self.value = value
 
 
+class ReplaceDirective:
+    """Usage: replace title <pattern> <replacement>"""
+    name = 'replace'
+
+    def __init__(self, target=None, pattern=None, replacement=None):
+        if target != 'title':
+            raise ValueError("Target must be 'title'. " + self.__doc__)
+        if pattern is None:
+            raise ValueError("Pattern must be set." + self.__doc__)
+        if replacement is None:
+            raise ValueError("Replacement must be set." + self.__doc__)
+        self.target = target
+        self.pattern = re.compile(pattern)
+        self.replacement = replacement
+
+    def replace(self, title):
+        return self.pattern.sub(self.replacement, title)
+
+
 DIRECTIVES = {
-    SkipDirective.name: SkipDirective
+    SkipDirective.name: SkipDirective,
+    ReplaceDirective.name: ReplaceDirective,
 }
 
 
