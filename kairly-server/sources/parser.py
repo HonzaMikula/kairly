@@ -239,7 +239,7 @@ class ArticleParser:
                     tail_el.text = tail_content
                     blocks.append(tail_el)
             else:
-                if text_el and before_first_block:
+                if text_el is not None and before_first_block:
                     text_el.append(c)
                 else:
                     blocks.append(c)
@@ -300,6 +300,17 @@ class ArticleParser:
             br.tail = el.tail
             return br
 
+    def _top_level_cleanup(self, el):
+        if el.tag == 'br':
+            tail = el.tail and el.tail.strip()
+            if tail:
+                p = lxml.html.HtmlElement()
+                p.tag = 'p'
+                p.text = tail
+                return p
+            return None
+        return el
+
     def normalize(self, fragments):
         for el in fragments:
             for c in el.cssselect('label,legend'):
@@ -308,8 +319,11 @@ class ArticleParser:
         fragments = [self._fix_wrapped_br(el) for el in fragments]
 
         result = []
-        for el in fragments:
-            result.extend(self._flatten(el))
+        for fragment in fragments:
+            for block in self._flatten(fragment):
+                block = self._top_level_cleanup(block)
+                if block is not None:
+                    result.append(block)
 
         # for el in result:
         #     print("---- RESULT BLOCK ---")
