@@ -156,6 +156,8 @@ APPEND_SLASH = False
 LOGIN_REDIRECT_URL = '/'
 CORS_ORIGIN_ALLOW_ALL = True
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20_480_000
+
 try:
     from corsheaders.defaults import default_headers
 
