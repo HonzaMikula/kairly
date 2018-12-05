@@ -75,12 +75,13 @@ class ArticleParser:
 
     LEAF_BLOCK_TAGS = set(['p', 'h2', 'h3', 'h4', 'h5', 'h6'])
     PARENT_BLOCK_TAGS = set(['body', 'div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'])
-    PRHASING_CONTEXT_TAGS = set([
+    PHRASING_CONTEXT_TAGS = set([
         'a', 'abbr', 'b', 'bdo', 'br', 'cite', 'code',
         'data', 'datalist', 'dfn', 'em', 'i', 'img', 'kbd', 'mark', 'math',
         'meter', 'output', 'q', 'ruby', 'samp', 'small', 'span',
         'strong', 'sub', 'sup', 'svg', 'time', 'var', 'video', 'wbr'
     ])
+    PARAGRAPH_REPLACEMENTS = set(['div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'])
 
     def __init__(self, rules):
         self.rules = rules
@@ -317,7 +318,7 @@ class ArticleParser:
 
         for block in blocks:
             tail = block.tail and block.tail.strip()
-            is_phrasing = block.tag in self.PRHASING_CONTEXT_TAGS
+            is_phrasing = block.tag in self.PHRASING_CONTEXT_TAGS
 
             if block.tag == 'img' and phrasing_wrapper is None:
                 # image can remain standalone at top level (if open phrasing
@@ -343,7 +344,8 @@ class ArticleParser:
                     phrasing_wrapper.append(block)
             else:
                 # ignore empty blocks
-                if block.tag in ('div', 'p') and not list(block) and not (block.text and block.text.strip()):
+                is_p_like = block.tag == 'p' or block.tag in self.PARAGRAPH_REPLACEMENTS
+                if is_p_like and not list(block) and not (block.text and block.text.strip()):
                     continue
 
                 block.tail = None
@@ -355,6 +357,13 @@ class ArticleParser:
                     phrasing_wrapper.tag = 'p'
                     phrasing_wrapper.text = tail
                     result.append(phrasing_wrapper)
+
+        # replace top elements with <p> if replacement is safe
+        for block in result:
+            if block.tag not in self.PARAGRAPH_REPLACEMENTS:
+                continue
+            if all(c.tag in self.PHRASING_CONTEXT_TAGS for c in block):
+                block.tag = 'p'
 
         return result
 
