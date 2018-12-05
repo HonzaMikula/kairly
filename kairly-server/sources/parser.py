@@ -141,7 +141,12 @@ class ArticleParser:
     def _contains_brbr(self, el):
         prev = None
         for node in el.xpath("child::node()"):
-            curr = getattr(node, 'tag', None)
+            _curr = getattr(node, 'tag', None)
+            if _curr is None and not str(node).strip():
+                # text node exists but it is empty
+                # (including nodes containg only eg only &#13; like Kitchenette)
+                continue
+            curr = _curr
             if prev == 'br' and curr == 'br':
                 return True
             prev = curr
@@ -337,6 +342,10 @@ class ArticleParser:
                 else:
                     phrasing_wrapper.append(block)
             else:
+                # ignore empty blocks
+                if block.tag in ('div', 'p') and not list(block) and not (block.text and block.text.strip()):
+                    continue
+
                 block.tail = None
                 result.append(block)
                 phrasing_wrapper = None  # prev phrasing_wrapper can't be extended
