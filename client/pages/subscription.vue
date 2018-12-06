@@ -100,6 +100,7 @@ my-subscription-view
       font-weight: 600
 
     h3
+      margin-bottom: $baseline / 2
       font-size: $fs-1
       font-weight: 600
 

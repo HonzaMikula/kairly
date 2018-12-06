@@ -54,9 +54,10 @@
           <li><nuxt-link :to="{name: 'user-settings'}"><span>{{ $t('Settings') }}</span></nuxt-link></li>
           <li class="divider"></li>
           <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>{{ $t('Subscriptions') }}</span></nuxt-link></li>
+          <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>{{ $t('Explore') }}</span></nuxt-link></li>
+          <li class="divider"></li>
           <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>{{ $t('Mange newspapers') }}</span></nuxt-link></li>
           <li><nuxt-link to="/posts">{{ $t('Write a post') }}</nuxt-link></li>
-          <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>{{ $t('Explore') }}</span></nuxt-link></li>
           <li class="divider"></li>
           <li class="language">
             {{ $t('Language') }}
@@ -148,7 +149,7 @@ export default {
 
 //- Main Navigation
 .app-header--navigation
-  margin-left: auto
+  margin-right: auto
 
   ul
     display: flex
@@ -165,9 +166,7 @@ export default {
     line-height: $baseline * 1.5
 
     &:focus,
-    &:hover
-      background: #eee
-
+    &:hover,
     &.nuxt-link-active
       background: #eee
 

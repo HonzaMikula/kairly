@@ -1,8 +1,6 @@
 <template>
   <main>
     <explore--top-newspapers>
-      <h2>{{this.tab.newspapersTitle}}</h2>
-
       <div>
         <NewspaperWidget
           v-for="newspaper in newspapers"

@@ -29,7 +29,7 @@ msgstr "Domů"
 
 #: components/layout/Header.vue:15 components/layout/Header.vue:56
 msgid "Subscriptions"
-msgstr "Odběr"
+msgstr "Odbírané"
 
 #: components/layout/Header.vue:21 components/layout/Header.vue:57
 #: pages/subscription.vue:5

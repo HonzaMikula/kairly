@@ -12,7 +12,7 @@
       v-on-clickaway="hideJumpMenu"
       class="timeline-navigation--menu">
       <header>
-        <h3>Jump to</h3>
+        <h3>Jump to different time</h3>
       </header>
 
       <section>
@@ -20,6 +20,7 @@
           <li v-for="anchor in anchors" :key="anchor.link">
             <a :href="anchor.link" @click="hideJumpMenu">{{ anchor.title }}</a>
           </li>
+          <li><a href="#start">Beggining of the day</a></li>
         </ul>
       </section>
     </div>
@@ -138,6 +139,13 @@ export default {
     cursor: pointer
     font-family: $ff-sans
     font-size: $fs-0
+
+    &::before
+      +fa-icon()
+
+      margin-right: $baseline / 4
+
+      content: $fa-var-calendar
 
 
     &:focus,

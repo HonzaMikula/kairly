@@ -24,14 +24,6 @@
             >{{ $t('Next day') }}</nuxt-link>
           </div>
 
-          <nav v-else class="timeline--nav">
-            <a href="" class="jump-in-time">Jump in time</a>
-
-            <a href="" class="manage-newspapers">Editor</a>
-
-            <a href="" class="write-post">Writer</a>
-          </nav>
-
           <template v-for="timeSlot in timeSlots" >
             <jump-menu :datetime="timeSlot.time" :key="timeSlot.time" :timeSlots="timeSlots" />
 
@@ -49,7 +41,7 @@
           </div>
         </template>
 
-        <div class="timeline--pagination" v-if="!loading">
+        <div class="timeline--pagination" id="start" v-if="!loading">
           <p>{{ $t("That's it. You read the entire day.") }}</p>
 
           <nuxt-link
@@ -189,7 +181,7 @@ export default {
 <style lang="sass">
 timeline-view
   display: block
-  padding: $baseline/2 $baseline $baseline $baseline
+  padding: $baseline
   margin: 0 auto
   max-width: 900px
 
@@ -206,56 +198,6 @@ timeline-view
   border: 1px dashed #ccc
 
   text-align: center
-
-//- Timeline navigation
-.timeline--nav
-  position: relative
-  z-index: 1
-
-  display: flex
-  margin-bottom: -($baseline)
-
-  @media (max-width: 800px)
-    margin-bottom: $baseline
-    padding: 0 $baseline/4
-
-  a
-    display: inline-block
-    border-radius: 5px
-    padding: 0 $baseline/2 0 $baseline/4
-
-    background: #fff
-    border: 1px solid #eee
-    color: #555
-
-    font-size: $fs--1
-    line-height: $baseline * 1.25
-
-    &:focus,
-    &:hover
-      border: 1px solid #aaa
-
-    &:first-of-type
-      margin-right: auto
-
-    &:nth-of-type(2)
-      margin-right: $baseline / 4
-
-    &::before
-      +fa-icon()
-
-      margin-right: $baseline / 4
-
-      vertical-align: middle
-
-    &.jump-in-time::before
-      content: $fa-var-calendar
-
-    &.manage-newspapers::before
-      content: $fa-var-newspaper-o
-
-    &.write-post::before
-      content: $fa-var-pencil-square-o
 
 
 //- Pagination
