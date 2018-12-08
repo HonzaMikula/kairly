@@ -87,13 +87,18 @@ class Command(BaseCommand):
             # some fields has no published time in feed, eg kitchenette
             published = timezone.now()
 
+        replacements = [d for d in channel.get_directives('replace', 'title')]
+        title = entry.title
+        for replacement in replacements:
+            title = replacement.replace(title)
+
         args = dict(
             kind=Post.NEWSPAPER,
             published=published,
             draft=options.get('draft'),
             guid=guid,
             source=url,
-            title=entry.title,
+            title=title,
             perex=perex,
             content=content,
             author=channel.author

@@ -38,12 +38,12 @@ class Post(models.Model):
         ordering = ('-published',)
 
     slug = models.SlugField(_('Slug'), max_length=190, null=True)
-    kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER)
+    kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=NEWSPAPER, db_index=True)
     published = models.DateTimeField(_('Published'), default=timezone_now, db_index=True)
     draft = models.BooleanField(_('Draft'), default=False)
 
     guid = models.CharField(_('External ID'), max_length=255, null=True, unique=True)
-    source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True)
+    source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True)  # be aware that utf8mb fields ca have index only if length <= 191
     protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
 
     title = models.CharField(max_length=160)
@@ -172,10 +172,14 @@ class Newspaper(models.Model, PeriodMixin):
         editor_tz = pytz.timezone(self.editor.timezone)
         return self.get_period_interval(timezone_now(), editor_tz).end
 
+    @property
+    def full_name(self):
+        return "{}/{}".format(self.editor.username, self.slug)
+
     def to_json(self, tzinfo):
         return {
             "name": self.slug,
-            "fullName": "{}/{}".format(self.editor.username, self.slug),
+            "fullName": self.full_name,
             "title": self.title,
             "picture": settings.MEDIA_SITE + self.image.url if self.image else None,
             "description": self.description,

@@ -126,8 +126,12 @@ export default {
   },
 
   watch: {
-    loggedIn() {
-      this.loadTimeline()
+    loggedIn(value) {
+      if (value) {
+        this.loadTimeline()
+      } else {
+        this.date = null
+      }
     }
   },
 

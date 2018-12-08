@@ -30,6 +30,21 @@ div#content
             }, 'div#content p, div#content h3')
         ])
 
+    def test_comments_removal(self):
+        rules = """
+.perex
+
+img[src="http://winepunk.cz"]
+
+// div
+// div
+"""
+        parser = ArticleParser(rules)
+        self.assertEqual(parser.flatten_rules(), [
+            Rule({}, '.perex'),
+            Rule({}, 'img[src="http://winepunk.cz"]'),
+        ])
+
     def test_flatten_slicing(self):
         rules = """
 a, b[0]

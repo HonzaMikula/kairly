@@ -85,7 +85,7 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import store from '@/store'
 
 export default {
@@ -109,8 +109,11 @@ export default {
   }),
 
   methods: {
+    ...mapActions(['afterLogout']),
+
     async logout() {
       await this.$auth.logout()
+      this.afterLogout()
     },
 
     setLang(locale) {

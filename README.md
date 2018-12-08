@@ -120,7 +120,33 @@ div#main-content
     tag: h2
 ```
 
-## Users before migration
+### Attribute manipulations
+```
+img
+  [src]: force-https
+  [srcset]: none
+  [sizes]: none
+```
+
+## Channel directives
+
+#### skip domain
+
+Don't import posts hosted on given domain.
+```
+skip domain video.aktualne.cz
+```
+
+#### replace title
+
+Use regular expression to modify post's title.
+```
+replace title '^\[článek\]\s*' ''
+replace title '^\[aktualita\]\s*' ''
+```
+
+
+## Users existing before migration
 
 (Emails should be filled)
 

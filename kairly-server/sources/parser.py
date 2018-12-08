@@ -13,6 +13,21 @@ def fragments_to_string(fragments):
     return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in fragments)
 
 
+def get_element_size(el):
+    # for each image inside add 200 chars comensation
+    # nice to have, calculated image height and add exact compensation
+    if el.tag == 'img':
+        return 200
+
+    size = len(el.text.strip()) if el.text else 0
+    size += len(el.tail.strip()) if el.tail else 0
+    for child in el:
+        child_size = get_element_size(child)
+        if child_size:
+            size += child_size + 1
+    return size
+
+
 def split_article_to_perex_and_content(fragments, perex_size):
     chars = 0
     perex_fragments = []
@@ -27,10 +42,7 @@ def split_article_to_perex_and_content(fragments, perex_size):
         if not perex_fragments and is_hx(el.tag):
             continue
 
-        element_size = len(el.text_content())
-        # for each image inside add 200 chars comensation
-        # nice to have, calculated image height and add exact compensation
-        element_size += len(el.cssselect('img')) * 200
+        element_size = get_element_size(el)
 
         if perex_fragments and chars + element_size > perex_size:
             content_fragments = fragments[i:]
@@ -48,17 +60,28 @@ def split_article_to_perex_and_content(fragments, perex_size):
 
 class ArticleParser:
 
-    REGEX_MULTI = re.compile("/\*.*?\*/", re.DOTALL)
-    REGEX_ONLINE = re.compile("//.*?\n")
-    REGEX_SPACE = re.compile("\s*")
+    REGEX_COMMENT_MULTILINE = re.compile(r"/\*.*?\*/", re.DOTALL)
+    REGEX_COMMENT_ONELINE = re.compile(r"([\^ ])//.*")  # do not match // inside eg attr selectors
+    REGEX_SPACE = re.compile(r"\s*")
+    REGEX_ATTR_PROP = re.compile(r"\[(\w+)\]")
 
     DANGEROUS_ELEMENTS = ', '.join((
         'script', 'noscript',
         'style',
         'iframe', 'applet', 'object', 'canvas',
         'audio', 'input', 'textarea', 'button', 'select', 'datalist', 'meter',
-        'output'
+        'output', 'progress'
     ))
+
+    LEAF_BLOCK_TAGS = set(['p', 'h2', 'h3', 'h4', 'h5', 'h6'])
+    PARENT_BLOCK_TAGS = set(['body', 'div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'])
+    PHRASING_CONTEXT_TAGS = set([
+        'a', 'abbr', 'b', 'bdo', 'br', 'cite', 'code',
+        'data', 'datalist', 'dfn', 'em', 'i', 'img', 'kbd', 'mark', 'math',
+        'meter', 'output', 'q', 'ruby', 'samp', 'small', 'span',
+        'strong', 'sub', 'sup', 'svg', 'time', 'var', 'video', 'wbr'
+    ])
+    PARAGRAPH_REPLACEMENTS = set(['div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'])
 
     def __init__(self, rules):
         self.rules = rules
@@ -81,6 +104,10 @@ class ArticleParser:
         # fix self closing A tags
         for el in htmltree.xpath('//a[not(text())]'):
             if not list(el):  # if not child elements exists
+                el.getparent().remove(el)
+
+        for el in htmltree.cssselect('p,div,article,section'):
+            if not list(el) and (not el.text or not el.text.strip()):
                 el.getparent().remove(el)
 
         for rule in self.flatten_rules():
@@ -112,99 +139,265 @@ class ArticleParser:
         self.props = None
         return elements
 
-    def normalize(self, fragments):
-        def fix_brbr(p):
-            """If paragraph contains <br><br>, split parts into paragraphs
-            Fixes eg. larryarnhart source.
-            """
-            needs_fix = False
-            prev = None
-            for node in p.xpath("child::node()"):
-                curr = getattr(node, 'tag', None)
-                if prev == 'br' and curr == 'br':
-                    needs_fix = True
-                    break
-                prev = curr
+    def _contains_brbr(self, el):
+        prev = None
+        for node in el.xpath("child::node()"):
+            _curr = getattr(node, 'tag', None)
+            if _curr is None and not str(node).strip():
+                # text node exists but it is empty
+                # (including nodes containg only eg only &#13; like Kitchenette)
+                continue
+            curr = _curr
+            if prev == 'br' and curr == 'br':
+                return True
+            prev = curr
+        return False
 
-            if not needs_fix:
-                yield p
-                return
+    def _fix_brbr(self, el):
+        """If element contains <br><br>, split parts into multiple elements"""
+        if not self._contains_brbr(el):
+            return [el]
 
-            fixed = re.sub(r'<br\s*/?>\s*<br\s*/?>', '</p><p>', fragments_to_string([p]))
-            yield from iter(lxml.html.fromstring(fixed))
+        def new_block():
+            b = lxml.html.HtmlElement()
+            b.tag = 'div' if el.tag == 'body' else el.tag
+            return b
 
-            # version without parsing but too complicated
+        curr_block = new_block()
+        curr_block.text = el.text
+        blocks = [curr_block]
 
-            # part = lxml.html.HtmlElement()
-            # part.tag = 'p'
-            # last = None
-            # prev_br = None
-            # for node in p.xpath("child::node()"):
-            #     tag = getattr(node, 'tag', None)
-            #     if tag == 'br':
-            #         if prev_br is None:
-            #             prev_br = node
-            #             continue
-            #
-            #         yield part
-            #         part = lxml.html.HtmlElement('p')
-            #         part.tag = 'p'
-            #         last = None
-            #         prev_br = None
-            #         continue
-            #
-            #     if prev_br is not None:
-            #         # only single br
-            #         part.append(prev_br)
-            #         last = prev_br
-            #
-            #     prev_br = None
-            #
-            #     if isinstance(node, str):
-            #         if last is None:
-            #             part.text = str(node)
-            #         else:
-            #             last.tail = str(node)
-            #
-            #     else:
-            #         part.append(node)
-            #         last = node
-            #
-            # if len(part) or part.text:
-            #     yield part
+        children = list(el)
+        prev_br = []
+        for c in children:
+            is_br = c.tag == 'br'
+            tail = c.tail and c.tail.strip()
 
-        def flatten_tree(htmltree):
-            children = list(htmltree)
-            if children:
-                for el in children:
-                    if el.tag in ('div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'):
-                        if el.text:
-                            # TODO cant'be el.text lost? write test for it
-                            result = list(flatten_tree(el))
-                            result[0].text = (el.text or '') + '\n' + (result[0].text or '')
-                            yield from result
-                        else:
-                            yield from flatten_tree(el)
-                    else:
-                        yield el
+            if is_br and not tail:
+                prev_br.append(c)
+                continue
+
+            if len(prev_br) >= 2 or (is_br and len(prev_br) >= 1):
+                # close br group
+                prev_br = []
+                curr_block = new_block()
+                blocks.append(curr_block)
+
+                if is_br:
+                    curr_block.text = tail + ' '
+                    continue
+
+            if prev_br:
+                # single br is there
+                curr_block.extend(prev_br)
+                prev_br = []
+
+            curr_block.append(c)
+
+        blocks[-1].tail = el.tail
+        return blocks
+
+    def _is_block(self, el):
+        return el.tag in self.LEAF_BLOCK_TAGS or el.tag in self.PARENT_BLOCK_TAGS
+
+    def _flatten_leaf(self, el):
+        # print("--- FLATTEN_LEAF ---")
+        # print(fragments_to_string([el]))
+
+        children = list(el)
+        single_child = children[0] if len(children) == 1 else None
+        has_text = el.text and el.text.strip()
+
+        if single_child is None or has_text or (single_child.tail and single_child.tail.strip()):
+            return el
+
+        if single_child.tag == 'span':
+            # yield child <span> as <p> instead, this effectively means
+            # <p><span>foo</span></p> --> <p>foo</p>
+            children[0].tag = el.tag
+            children[0].tail = el.tail
+            return children[0]
+
+        if single_child.tag == 'br':
+            return single_child
+
+        return el
+
+    def _flatten_parent(self, el):
+        blocks = []
+        children = list(el)
+        text_content = el.text and el.text.strip()
+        text_el = None
+        if text_content:
+            text_el = lxml.html.HtmlElement()
+            text_el.tag = 'div' if el.tag == 'body' else el.tag
+            text_el.text = text_content
+            blocks.append(text_el)
+
+        before_first_block = True
+        for c in children:
+            # print("--- CHILDREN ---")
+            # print(fragments_to_string([c]))
+
+            if self._is_block(c):
+                before_first_block = False
+                tail_content = c.tail and c.tail.strip()
+                if tail_content:
+                    c.tail = None
+                blocks.extend(self._flatten(c))
+                if tail_content:
+                    tail_el = lxml.html.HtmlElement()
+                    tail_el.tag = c.tag
+                    tail_el.text = tail_content
+                    blocks.append(tail_el)
             else:
-                yield htmltree
-
-        result = []
-        for el in fragments:
-            for block in flatten_tree(el):
-                if block.tag == 'p':
-                    result.extend(fix_brbr(block))
+                if text_el is not None and before_first_block:
+                    text_el.append(c)
                 else:
-                    result.append(block)
+                    blocks.append(c)
+
+        tail_content = el.tail and el.tail.strip()
+        if tail_content:
+            if blocks[-1].tail:
+                tail_el = lxml.html.HtmlElement()
+                tail_el.tag = 'div' if el.tag == 'body' else el.tag
+                tail_el.text = tail_content
+                blocks.append(tail_el)
+            else:
+                blocks[-1].tail = tail_content
+        return blocks
+
+    def _flatten(self, el):
+        for block in self._fix_brbr(el):
+            # print("--- BLOCK ---")
+            # print(fragments_to_string([block]))
+
+            if block.tag in self.LEAF_BLOCK_TAGS:
+                yield self._flatten_leaf(block)
+                continue
+
+            if block.tag in self.PARENT_BLOCK_TAGS:
+                children = list(block)
+                if any(self._is_block(c) for c in children):
+                    yield from self._flatten_parent(block)
+                else:
+                    yield self._flatten_leaf(block)
+                continue
+
+            yield block
+
+    def _fix_wrapped_br(self, el):
+        def wrapped_br(div):
+            children = list(el)
+            single_child = children[0] if len(children) == 1 else None
+            has_text = el.text and el.text.strip()
+
+            is_wrapped_br = (
+                single_child is not None and
+                single_child.tag == 'br' and
+                not has_text and
+                not (single_child.tail and single_child.tail.strip())
+            )
+            return single_child if is_wrapped_br else None
+
+        # first map chilren
+        mapped = [self._fix_wrapped_br(c) for c in el]
+        el[:] = mapped
+
+        # self test must be after chilren because of nested <br>
+        br = wrapped_br(el)
+        if br is None:
+            return el
+        else:
+            br.tail = el.tail
+            return br
+
+    def _top_level_cleanup(self, blocks):
+        result = []
+        phrasing_wrapper = None
+
+        for block in blocks:
+            tail = block.tail and block.tail.strip()
+            is_phrasing = block.tag in self.PHRASING_CONTEXT_TAGS
+
+            if block.tag == 'img' and phrasing_wrapper is None:
+                # image can remain standalone at top level (if open phrasing
+                # wrapped is before)
+                is_phrasing = False
+
+            if is_phrasing:
+                if block.tag == 'br' and not tail:
+                    continue  # ignore <br> without tail on top level
+
+                if phrasing_wrapper is None:
+                    phrasing_wrapper = lxml.html.HtmlElement()
+                    phrasing_wrapper.tag = 'p'
+                    result.append(phrasing_wrapper)
+
+                if block.tag == 'br':
+                    # append just tail
+                    if phrasing_wrapper.text:
+                        phrasing_wrapper.text += ' ' + tail + ' '
+                    else:
+                        phrasing_wrapper.text = tail + ' '
+                else:
+                    phrasing_wrapper.append(block)
+            else:
+                # ignore empty blocks
+                is_p_like = block.tag == 'p' or block.tag in self.PARAGRAPH_REPLACEMENTS
+                if is_p_like and not list(block) and not (block.text and block.text.strip()):
+                    continue
+
+                block.tail = None
+                result.append(block)
+                phrasing_wrapper = None  # prev phrasing_wrapper can't be extended
+
+                if tail:
+                    phrasing_wrapper = lxml.html.HtmlElement()
+                    phrasing_wrapper.tag = 'p'
+                    phrasing_wrapper.text = tail
+                    result.append(phrasing_wrapper)
+
+        # replace top elements with <p> if replacement is safe
+        for block in result:
+            if block.tag not in self.PARAGRAPH_REPLACEMENTS:
+                continue
+            if all(c.tag in self.PHRASING_CONTEXT_TAGS for c in block):
+                block.tag = 'p'
+
         return result
 
-    def remove_comments(self, s):
+    def normalize(self, fragments):
+        for el in fragments:
+            for c in el.cssselect('label,legend'):
+                c.tag = 'span'
+
+        fragments = [self._fix_wrapped_br(el) for el in fragments]
+
+        result = []
+        for fragment in fragments:
+            result.extend(self._flatten(fragment))
+
+        result = self._top_level_cleanup(result)
+
+        # for el in result:
+        #     print("---- RESULT BLOCK ---")
+        #     print(fragments_to_string([el]))
+
+        return result
+
+    def get_effetive_lines(self, s):
+        """Remove comments and split to lines"""
         # remove all occurance streamed comments (/*COMMENT */) from string
-        s = self.REGEX_MULTI.sub("", s)
+        s = self.REGEX_COMMENT_MULTILINE.sub("", s)
         # remove all occurance singleline comments (//COMMENT\n ) from string
-        s = self.REGEX_ONLINE.sub("", s)
-        return s
+        for line in s.split('\n'):
+            if line.startswith('//'):
+                continue
+            # line = self.REGEX_COMMENT_ONELINE.sub(r"\1", s)
+            line = line.rstrip()
+            if line:
+                yield line
 
     def flatten_rules(self):
         rules = []
@@ -213,7 +406,7 @@ class ArticleParser:
         prev_indent = 0
 
         def parse_property(line):
-            if ':' in line:
+            if ': ' in line:
                 prop, value = line.split(':', maxsplit=1)
                 d = {}
                 d[prop.strip()] = value.strip()
@@ -233,11 +426,7 @@ class ArticleParser:
         def create_rule(props, context):
             return Rule(props, ', '.join(flatten_context(context)))
 
-        for line in self.remove_comments(self.rules).split('\n'):
-            line = line.rstrip()
-            if not line:
-                continue
-
+        for line in self.get_effetive_lines(self.rules):
             m = self.REGEX_SPACE.match(line)
             indent = m.end()
 
@@ -304,6 +493,12 @@ class ArticleParser:
     def _getprop(self, el, name):
         return self.props[el].get(name)
 
+    def _getattrprops(self, el):
+        for prop, value in self.props[el].items():
+            m = self.REGEX_ATTR_PROP.match(prop)
+            if m:
+                yield (m.group(1), value)
+
     def _strip_attibutes(self, el):
         if el.tag == 'img':
             preserve = {'title', 'src', 'alt', 'srcset', 'sizes'}
@@ -331,6 +526,14 @@ class ArticleParser:
             el.tag = 'div'
 
         self._strip_attibutes(el)
+        for attr, value in self._getattrprops(el):
+            try:
+                if value == 'none':
+                    del el.attrib[attr]
+                elif value == 'force-https':
+                    el.attrib[attr] = re.sub('http://', 'https://', el.attrib[attr])
+            except KeyError:
+                pass
 
         for child in list(el):
             tag = self._getprop(child, 'tag')

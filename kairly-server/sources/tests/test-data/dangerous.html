@@ -1,0 +1,31 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <iframe src="https://www.seznam.cz"></iframe>
+    <p style="color: red">Hello boy</p>
+    <p>the final block shows a simple way to run the tests.</p>
+    <div>
+      <script>alert('x')</script>
+      <div>Hello girl</div>
+    </div>
+    <form>
+      <label>Look at this:</label>
+      <textarea rows="60" cols="60">
+    </form>
+  </body>
+<html>
+
+<parser-rules>
+*
+</parser-rules>
+
+<expected-perex>
+  <p>Hello boy</p>
+  <p>the final block shows a simple way to run the tests.</p>
+  <p>Hello girl</p>
+  <p>Look at this:</p>
+</expected-perex>
+
+<expected-content>
+</expected-content>

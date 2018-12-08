@@ -259,3 +259,7 @@ export const expandIssue = ({ commit }, issueId) => {
     }
   })
 }
+
+export const afterLogout = ({ commit }) => {
+  commit('resetState')
+}

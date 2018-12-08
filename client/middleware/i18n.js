@@ -26,10 +26,15 @@ export default function ({ isHMR, app, store, req, route, params, error, redirec
   }
 
   if (!locale && req) {
-    locale = req.headers['accept-language']
-      .split(',')
-      .map(lang => lang.trim().toLocaleLowerCase().substring(0, 2))
-      .find(lang => locales.indexOf(lang) !== -1)
+    try {
+      locale = req.headers['accept-language']
+        .split(',')
+        .map(lang => lang.trim().toLocaleLowerCase().substring(0, 2))
+        .find(lang => locales.indexOf(lang) !== -1)
+    } catch {
+      // no header is present or header is invalid
+      locale  = 'en'
+    }
   }
 
   if (locale && locale !== store.state.locale) {

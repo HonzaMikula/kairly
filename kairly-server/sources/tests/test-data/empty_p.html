@@ -1,0 +1,27 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <p>Festival</p>
+    <h2>Top Festivals in Asia</h2>
+    <p>&nbsp;</p>
+    <h3>Songkran Festival, Thailand</h3>
+    <p>&nbsp;</p>
+    <p><img src="foo.jpg" alt="Songkran Festival Thailand"/></p>
+    <p/>
+  </body>
+<html>
+
+<parser-rules>
+*
+</parser-rules>
+
+<expected-perex>
+  <p>Festival</p>
+  <h2>Top Festivals in Asia</h2>
+  <h3>Songkran Festival, Thailand</h3>
+</expected-perex>
+
+<expected-content>
+  <p><img src="foo.jpg" alt="Songkran Festival Thailand"/></p>
+</expected-content>
