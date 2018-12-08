@@ -1,10 +1,10 @@
 <template>
   <timeline-welcome>
     <div class="welcome-view">
-      <h1>Welcome to Kairly!</h1>
+      <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
       <section class="welcome--topics">
-        <h2>Start with subscribing to newspapers</h2>
+        <h2>{{ $t('Start with subscribing to newspapers') }}</h2>
 
         <ul>
           <li v-for="topic in topics" :key="topic">
@@ -30,36 +30,36 @@
       </section>
 
       <section class="welcome--roles" v-if="chosenTopic != null">
-        <h2>Start using Kairly</h2>
+        <h2>{{ $t('Start using Kairly') }}</h2>
         <div>
           <section>
-            <h3>As a reader</h3>
+            <h3>{{ $t('As a reader') }}</h3>
             <p>
-              Are you interested in more newspapers and authors?
+              {{ $t('Are you interested in more newspapers and authors?') }}
             </p>
-            <p><a href="">Explore more content</a></p>
+            <p><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
           </section>
 
           <section>
-            <h3>As an editor</h3>
+            <h3>{{ $t('As an editor') }}</h3>
             <p>
-              Do you want to start a newspaper and pick the best content for others?
+              {{ $t('Do you want to start a newspaper and pick the best content for others?') }}
             </p>
 
-            <p><a href="">Start a newspaper</a></p>
+            <p><nuxt-link to="/newspapers">{{ $t('Start a newspaper') }}</nuxt-link></p>
           </section>
 
           <section>
-            <h3>As an author</h3>
+            <h3>{{ $t('As an author') }}</h3>
             <p>
-              Do you want to start writing articles and tweets?
+              {{ $t('Do you want to start writing articles and tweets?') }}
             </p>
 
-            <p><a href="">Write a new post</a></p>
+            <p><nuxt-link to="/posts">{{ $t('Write a new post') }}</nuxt-link></p>
           </section>
         </div>
 
-        <a href="">Go Home to start reading</a>
+        <a href="">{{ $t('Go Home to start reading') }}</a>
       </section>
 
     </div>

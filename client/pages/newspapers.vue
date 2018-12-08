@@ -147,7 +147,7 @@ import NewspaperBacklog from '@/components/editor/NewspaperBacklog'
 export default {
   name: 'Newspapers',
 
-  metaInfo() {
+  head() {
     return {
       title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newspapers – Kairly'
     }

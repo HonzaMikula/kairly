@@ -1,6 +1,6 @@
 <template>
   <div>
-    <edit-article buttonTitle="Save a draft" @submit="createPost" />
+    <edit-article :buttonTitle="$t('Save a draft')" @submit="createPost" />
   </div>
 </template>
 
@@ -13,9 +13,9 @@ import EditArticle from '@/components/editor/EditArticle'
 export default {
   name: 'CreateArticle',
 
-  metaInfo() {
+  head() {
     return {
-      title: 'My Posts – Kairly'
+      title: this.$t('My Posts – Kairly')
     }
   },
 

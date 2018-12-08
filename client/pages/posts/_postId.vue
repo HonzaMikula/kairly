@@ -18,9 +18,9 @@ import EditTweet from '@/components/editor/EditTweet'
 export default {
   name: 'Posts',
 
-  metaInfo() {
+  head() {
     return {
-      title: 'My Posts – Kairly'
+      title: this.$t('My Posts – Kairly')
     }
   },
 

@@ -3,7 +3,7 @@
     <my-newspapers--empty
       v-if="newspapers.length === 0">
       <h1>{{ $t('No newspapers') }}</h1>
-      <p>{{ $t("You haven't subscribe to any newspapers yet. On Explore page you can find newspapers you might like.") }}</p>
+      <p>{{ $t('You haven\'t subscribe to any newspapers yet. On Explore page you can find newspapers you might like.') }}</p>
       <nuxt-link to="/explore">{{ $t('Explore newspapers') }}</nuxt-link>
     </my-newspapers--empty>
 
@@ -24,8 +24,10 @@ import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 export default {
   name: 'MyNewspapers',
 
-  head: {
-    title: 'Newspapers – My Subscription – Kairly'
+  head() {
+    return {
+      title: this.$t('Newspapers – My Subscription – Kairly')
+    }
   },
 
   components: {

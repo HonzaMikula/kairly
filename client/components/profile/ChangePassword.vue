@@ -2,30 +2,30 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" class="change-password" @click.stop>
       <header>
-        <h1>Change Password</h1>
+        <h1>{{ $t('Change Password') }}</h1>
 
         <button-close tabindex="0" role="button" @click="closeModal"></button-close>
       </header>
 
       <change-password-view role="dialog" @click.stop>
         <div>
-          <label for="oldPassword">Old password</label>
+          <label for="oldPassword">{{ $t('Old password') }}</label>
           <input id="oldPassword" type="password" v-model="oldPassword">
         </div>
 
         <div>
-          <label for="newPassword">New password</label>
+          <label for="newPassword">{{ $t('New password') }}</label>
           <input id="newPassword" type="password" v-model="newPassword1">
         </div>
 
         <div>
-          <label for="newPassword2">New password again</label>
+          <label for="newPassword2">{{ $t('New password again') }}</label>
           <input id="newPassword2" type="password" v-model="newPassword2">
         </div>
       </change-password-view>
 
       <footer>
-        <button @click="submit">Change password</button>
+        <button @click="submit">{{ $t('Change password') }}</button>
       </footer>
     </modal-dialog>
   </dialog-window>
@@ -44,8 +44,10 @@ export default {
     closeModal: Function
   },
 
-  head: {
-    title: 'Change password - Kairly'
+  head() {
+    return {
+      title: this.$t('Change password - Kairly')
+    }
   },
 
   components: {
@@ -65,7 +67,7 @@ export default {
 
     async submit() {
       if (this.newPassword1 != this.newPassword2) {
-        this.showError("Password doesn't match")
+        this.showError(this.$t("Password doesn't match"))
         return
       }
 
@@ -75,7 +77,7 @@ export default {
           oldPassword: this.oldPassword,
           newPassword: this.newPassword1
         })
-        this.showSuccess("Password has been updated.")
+        this.showSuccess(this.$t("Password has been updated."))
         this.closeModal()
       } catch (err) {
         if (err.response.status === 400) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="edit-tweet--content">
-      <textarea v-model="content" cols="80" rows="4" maxlength="320" placeholder="Tweet Content" />
+      <textarea v-model="content" cols="80" rows="4" maxlength="320" :placeholder="$t('Tweet Content')" />
     </div>
 
     <div class="edit-tweet--footer">

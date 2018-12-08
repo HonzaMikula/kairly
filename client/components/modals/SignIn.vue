@@ -2,25 +2,25 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="sign-in">
       <header>
-        <h1>Sign in</h1>
+        <h1>{{ $t('Sign In') }}</h1>
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
       <main>
         <form @submit.prevent="login">
           <div>
-            <label for="username">Username</label>
+            <label for="username">{{ $t('Username') }}</label>
             <input name="username" id="username" v-model="username" />
           </div>
 
           <div>
-            <label for="password">Password</label>
+            <label for="password">{{ $t('Password') }}</label>
             <input name="password" id="password" type="password" v-model="password" />
           </div>
 
-          <button type="submit">Sign In</button>
+          <button type="submit">{{ $t('Sign in') }}</button>
 
           <div class="login--error-message" v-if="invalidCredentials">
-            Wrong login or password
+            {{ $t('Wrong username or password') }}
           </div>
         </form>
       </main>

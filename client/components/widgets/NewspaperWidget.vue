@@ -28,7 +28,7 @@
       <p>
         #{{ newspaper.issues }}
         •
-        {{ newspaper.likes }} subscribers
+        {{ newspaper.likes }} {{ $t('subscribers') }}
       </p>
     </newspaper-widget--subscribe>
 

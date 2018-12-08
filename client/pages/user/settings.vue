@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <settings-view>
-      <h1>Account Settings</h1>
+      <h1>{{ $t('Account Settings') }}</h1>
 
       <div>
         <settings--profile-picture>
@@ -15,22 +15,22 @@
             buttonClass="btn"
             :prefill="this.user.picture"
             :customStrings="{
-              drag: 'Drag or upload image'
+              drag: $t('Drag or upload image')
             }">
           </picture-input>
         </settings--profile-picture>
 
         <settings--form>
-          <h2>Personal</h2>
+          <h2>{{ $t('Personal') }}</h2>
           <div>
-            <label for="name">Name</label>
+            <label for="name">{{ $t('Name') }}</label>
             <input id="name" v-model="name">
           </div>
 
           <div>
-            <label for="medium">Medium</label>
+            <label for="medium">{{ $t('Medium') }}</label>
             <input id="medium" v-model="medium">
-            <p>Are you writing articles or editing for some medium?</p>
+            <p>{{ $t('Are you writing articles or editing for some medium?') }}</p>
           </div>
 
           <div>
@@ -39,31 +39,31 @@
           </div>
 
           <div>
-            <label for="timezone">Timezone</label>
+            <label for="timezone">{{ $t('Timezone') }}</label>
             <select id="timezone" v-model="timezone">
               <option value="GMT">GMT</option>
               <option value="Europe/Prague">Europe/Prague</option>
             </select>
-            <p>Tell us in which timezone are you living in, so we can deliver news at the right time.</p>
+            <p>{{ $t('Tell us in which timezone are you living in, so we can deliver news at the right time.') }}</p>
           </div>
 
           <div>
-            <h3>Password</h3>
+            <h3>{{ $t('Password') }}</h3>
             <p>
-              Do you want to have different password?
-              <a href="" @click.prevent="isChangePasswordOpen=true">Change password</a>.</p>
+              {{ $t('Do you want to have different password?') }}
+              <a href="" @click.prevent="isChangePasswordOpen=true">{{ $t('Change password') }}</a>.</p>
           </div>
 
-          <h2>Integrations</h2>
+          <h2>{{ $t('Integrations') }}</h2>
 
           <div>
-            <label for="twitter">Twitter Username</label>
+            <label for="twitter">{{ $t('Twitter username') }}</label>
             @ <input id="twitter" v-model="twitter">
-            <p>Provide us with your Twitter username and we will automatically publish your tweets on Kairly.</p>
+            <p>{{ $t('Provide us with your Twitter username and we will automatically publish your tweets on Kairly.') }}</p>
           </div>
 
 
-          <button @click="submit">Save profile</button>
+          <button @click="submit">{{ $t('Save profile') }}</button>
         </settings--form>
       </div>
 
@@ -85,8 +85,10 @@ import InfoMessage from '@/components/InfoMessage'
 export default {
   name: 'Settings',
 
-  head: {
-    title: 'Account Settings – Kairly'
+  head() {
+    return {
+      title: this.$t('Account Settings – Kairly')
+    }
   },
 
   components: {

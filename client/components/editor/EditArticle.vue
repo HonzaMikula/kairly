@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="edit-article--title">
-      <input v-model="title" placeholder="Title" />
+      <input v-model="title" :placeholder="$t('Title')" />
     </div>
 
     <div class="edit-article--perex" :class="{'column-view': !normalPerexView}">
@@ -12,7 +12,7 @@
           @click="normalPerexView = true"
           tabindex="0"
           role="button">
-          Normal view
+          {{ $t('Normal view') }}
         </button-icon>
 
         <button-icon
@@ -21,7 +21,7 @@
           @click="normalPerexView = false"
           tabindex="0"
           role="button">
-          Column view
+          {{ $t('Column view') }}
         </button-icon>
       </div>
 

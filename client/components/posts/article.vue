@@ -10,17 +10,19 @@
         <div v-html="post.content.perex"></div>
         <timeline-post--continue-reading v-if="post.timeRead && !post.draft">
           <template v-if="post.content.protected">
-            <a :href="post.source" target="_blank">Read the article</a>
-            ({{ post.timeRead }} read)
+            <a :href="post.source" target="_blank">{{ $t('Read the article') }}</a>
+            ({{ post.timeRead }} {{ $t('read') }})
           </template>
           <template v-else>
             <div v-if="isSubscribed">
-              <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }, hash: '#continue'}">Continue reading</nuxt-link>
+              <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }, hash: '#continue'}">
+                {{ $t('Continue reading') }}
+              </nuxt-link>
             </div>
             <div v-else>
-              Subscribe newspaper to continue reading
+              {{ $t('Subscribe newspaper to continue reading') }}
             </div>
-            ({{ post.timeRead }} read)
+            ({{ post.timeRead }} {{ $t('read') }})
           </template>
         </timeline-post--continue-reading>
       </timeline-post--article--content>
@@ -28,7 +30,12 @@
 
     <template slot="extendedControls">
       <slot v-if="post.source" name="extendedControls">
-        <a :href="post.source" class="external-link" v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}" title="Original article"></a>
+        <a
+          :href="post.source"
+          class="external-link"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          :title="$t('Original article')">
+        </a>
       </slot>
     </template>
 

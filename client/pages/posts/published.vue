@@ -10,7 +10,7 @@
         <button-icon
           class="edit"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-          title="Edit post"
+          :title="$t('Edit post')"
           @click.prevent="$router.push(`/posts/${post.id}`)">
         </button-icon>
       </template>

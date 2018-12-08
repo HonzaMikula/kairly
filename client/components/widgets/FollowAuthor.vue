@@ -4,76 +4,75 @@
     v-on-clickaway="() => closeSubscribeWidget()">
 
     <div v-if="showCanceling === true && cancelingSubscription === true">
-      <header>What to do?</header>
+      <header>{{ $t('What to do?') }}</header>
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="editSubscription($event)">Edit</a></li>
+          <li><a href="" @click.stop.prevent="editSubscription($event)">{{ $t('Edit') }}</a></li>
           <li>
-              <a v-if="subscription && subscription.renewal" href="" @click.stop.prevent="cancelSubscription($event)">Cancel subscription</a>
-              <a v-else href="" @click.stop.prevent="renewSubscription($event)">Renew subscription</a>
+              <a v-if="subscription && subscription.renewal" href="" @click.stop.prevent="cancelSubscription($event)">{{ $t('Cancel subscription') }}</a>
+              <a v-else href="" @click.stop.prevent="renewSubscription($event)">{{ $t('Renew subscription') }}</a>
           </li>
         </ul>
       </section>
     </div>
 
     <div v-else-if="frequency === null">
-      <header>How often do you want to read it?</header>
+      <header>{{ $t('How often do you want to read it?') }}</header>
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="selectHowOften('6x_per_day', $event)">Immediately</a></li>
-          <li><a href="" @click.stop.prevent="selectHowOften('3x_per_day', $event)">3× per day</a></li>
-          <li><a href="" @click.stop.prevent="selectHowOften('daily', $event)">Daily</a></li>
-          <li><a href="" @click.stop.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Immediately') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('3x_per_day', $event)">{{ $t('3× per day') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('daily', $event)">{{ $t('Daily') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('weekly', $event)">{{ $t('Weekly') }}</a></li>
         </ul>
       </section>
     </div>
 
     <div v-else-if="frequency === 'weekly' && dow === null">
       <header>
-        Which day?
+        {{ $t('Which day?') }}
         <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
       </header>
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="selectWhatDay('1', $event)">Monday</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('4', $event)">Thursday</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('5', $event)">Friday</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('6', $event)">Saturday</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('7', $event)">Sunday</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('1', $event)">{{ $t('Monday') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('2', $event)">{{ $t('Tuesday') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('3', $event)">{{ $t('Wednesday') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('4', $event)">{{ $t('Thursday') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('5', $event)">{{ $t('Friday') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('6', $event)">{{ $t('Saturday') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatDay('7', $event)">{{ $t('Sunday') }}</a></li>
         </ul>
       </section>
     </div>
 
     <div v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
-        What time?
+        {{ $t('What time?') }}
         <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
       </header>
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('9:00', $event)">Morning (9:00)</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('12:00', $event)">Noon (12:00)</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('15:00', $event)">After noon (15:00)</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('18:00', $event)">Evening (18:00)</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('6:00', $event)">{{ $t('Early morning (6:00)') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('9:00', $event)">{{ $t('Morning (9:00)') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('12:00', $event)">{{ $t('Noon (12:00)') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('15:00', $event)">{{ $t('After noon (15:00)') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('18:00', $event)">{{ $t('Evening (18:00)') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectWhatTime('21:00', $event)">{{ $t('Night (21:00)') }}</a></li>
         </ul>
       </section>
     </div>
 
     <div v-else>
-      <header>You're subscribed!</header>
+      <header>{{ $t('You are subscribed!') }}</header>
 
       <section v-if="frequency == '6x_per_day'">
         <p>
-          You will be receiving <strong>{{ author.name }}</strong> every 3 hours.
-        </p>
+          {{ $t('You will be receiving <strong>{authorName}</strong> every 3 hours.', {authorName: author.name}) }}        </p>
 
         <p class="change-button" v-if="!editMode">
           <a href="" @click.stop.prevent="editSubscription($event)">Change periodicity and timing</a>

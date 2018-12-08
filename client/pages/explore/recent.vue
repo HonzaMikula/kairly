@@ -1,7 +1,7 @@
 <template>
   <main>
     <explore--top-newspapers>
-      <h2>Recent Issues</h2>
+      <h2>{{ $t('Recent Issues') }}</h2>
 
       <div>
         <IssueWidget
@@ -14,7 +14,7 @@
     </explore--top-newspapers>
 
     <section class="explore-recent">
-      <h2>Recent Posts</h2>
+      <h2>{{ $t('Recent Posts') }}</h2>
 
       <PostWrapper
         v-for="post in posts"
@@ -24,7 +24,7 @@
       />
     </section>
 
-    <portal to="explore-header">Most Recent</portal>
+    <portal to="explore-header">{{ $t('Most Recent') }}</portal>
 
   </main>
 </template>
@@ -45,7 +45,7 @@ export default {
 
   head() {
     return {
-      title: 'Most Recent – Explore – Kairly',
+      title: this.$t('Most Recent – Explore – Kairly')
     }
   },
 

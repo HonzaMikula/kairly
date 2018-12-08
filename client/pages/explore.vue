@@ -8,7 +8,7 @@
               <nuxt-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</nuxt-link>
             </li>
             <li>
-              <nuxt-link to="/explore/recent" exact>Most Recent</nuxt-link>
+              <nuxt-link to="/explore/recent" exact>{{ $t('Most Recent') }}</nuxt-link>
             </li>
           </ul>
         </nav>

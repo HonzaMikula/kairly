@@ -56,8 +56,10 @@ import AuthorWidget from '@/components/widgets/AuthorWidget'
 export default {
   name: 'MyAuthors',
 
-  head: {
-    title: 'My Subscription – Authors – Kairly'
+  head() {
+    return {
+      title: this.$t('Authors – My Subscription – Kairly')
+    }
   },
 
   components: {

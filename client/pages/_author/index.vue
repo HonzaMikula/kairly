@@ -7,8 +7,8 @@
     >
       <author-detail--header>
         <picture>
-          <img v-if="author.picture" :src="author.picture" :alt="author.name" />
-          <img v-else src="~assets/user.png" :alt="author.name"/>
+          <img v-if="author.picture" :src="author.picture" :alt="author.name">
+          <img v-else src="~assets/user.png" :alt="author.name">
         </picture>
 
         <section>
@@ -20,7 +20,8 @@
           <button
             v-if="subscription"
             :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
-            @click="subscription.renewal ? unsubscribe() : renewSubscription()">
+            @click="subscription.renewal ? unsubscribe() : renewSubscription()"
+          >
             <span class="default">
               <template v-if="subscription.renewal">{{ $t('Subscribed') }}</template>
               <template v-else>{{ $t('Canceled') }}</template>
@@ -30,29 +31,20 @@
               v-else
               class="on-hover"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="$t('Subscription last till {to}', { to: subscription.to })">
-              {{ $t('Renew') }}
-            </span>
+              :title="$t('Subscription last till {to}', { to: subscription.to })"
+            >{{ $t('Renew') }}</span>
           </button>
-
+          
           <button
             class="to-subscribe"
             v-else
-            @click="$refs.followWidget.openSubscribeWidget()">
-            {{ $t('Subscribe') }}
-          </button>
+            @click="$refs.followWidget.openSubscribeWidget()"
+          >{{ $t('Subscribe') }}</button>
 
-          <follow-author
-            ref="followWidget"
-            :author="author"
-            :subscription="subscription"
-          />
+          <follow-author ref="followWidget" :author="author" :subscription="subscription"/>
 
-          <AuthorSubscription if="subscription"
-            :author="author" :subscription="subscription"
-          />
+          <AuthorSubscription if="subscription" :author="author" :subscription="subscription"/>
         </author-detail--subscribe>
-
       </author-detail--header>
 
       <author-detail--newspapers v-if="newspapers.length">
@@ -66,20 +58,16 @@
           />
         </div>
 
-        <button v-if="newspapers.length > 3" @click="toggleNewspapers()">{{ !showAllNewspapers ? 'Show all newspapers' : 'Hide newspapers' }}</button>
-
+        <button
+          v-if="newspapers.length > 3"
+          @click="toggleNewspapers()"
+        >{{ !showAllNewspapers ? this.$t('Show all newspapers') : this.$t('Hide newspapers') }}</button>
       </author-detail--newspapers>
-
 
       <author-detail--posts v-if="posts.length">
         <h2>{{ author.name }}'s Posts</h2>
 
-        <PostWrapper
-          v-for="post in posts"
-          :post="post"
-          :isSubscribed="true"
-          :key="post.id"
-        />
+        <PostWrapper v-for="post in posts" :post="post" :isSubscribed="true" :key="post.id"/>
       </author-detail--posts>
 
       <div class="author-detail--empty" v-if="!newspapers.length && !posts.length && !loadingPosts">
@@ -92,49 +80,63 @@
 
           <nuxt-link :to="{name: 'newspapers'}">{{ $t('Start a newspaper') }}</nuxt-link>
         </template>
-
       </div>
 
       <loading-spinner v-if="loadingPosts"></loading-spinner>
-
     </author-detail-view>
   </app-layout>
 </template>
 
 
 <script>
-import { mapMutations, mapState } from 'vuex'
-import { errorToParams } from '@/utils/errors'
+import { mapMutations, mapState } from "vuex";
+import { errorToParams } from "@/utils/errors";
 
-import AppLayout from '@/components/layout/AppLayout'
-import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import PostWrapper from '@/components/PostWrapper'
-import FollowAuthor from '@/components/widgets/FollowAuthor'
-import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+import AppLayout from "@/components/layout/AppLayout";
+import NewspaperWidget from "@/components/widgets/NewspaperWidget";
+import PostWrapper from "@/components/PostWrapper";
+import FollowAuthor from "@/components/widgets/FollowAuthor";
+import AuthorSubscription from "@/components/widgets/AuthorSubscription";
 
 export default {
-  name: 'AuthorDetail',
+  name: "AuthorDetail",
   auth: false,
 
   head() {
-    const { id, name, bio, picture } = this.author
+    const { id, name, bio, picture } = this.author;
     return {
       title: `${name} – Kairly`,
       meta: [
-        { hid: 'description', name: 'description', content: bio},
-        { hid: `og:title`, property: 'og:title', content: `${name} – Kairly`},
-        { hid: `og:description`, property: 'og:description', content: bio},
-        { hid: `og:image`, property: 'og:image', content: picture},
-        { hid: `og:image:alt`, property: 'og:image:alt', content: name},
-        { hid: `og:type`, property: 'og:type', content: 'profile'},
-        { hid: `og:url`, property: 'og:url', content: `https://www.kairly.com/${id}`},
-        { hid: `twitter:card`, property: 'twitter:card', content: 'summary'},
-        { hid: `twitter:site`, property: 'twitter:site', content: '@kairlyapp'},
-        { hid: `twitter:title`, property: 'twitter:title', content: `${name} – Kairly`},
-        { hid: `twitter:description`, property: 'twitter:description', content: bio},
-        { hid: `twitter:image`, property: 'twitter:image', content: picture},
+        { hid: "description", name: "description", content: bio },
+        { hid: `og:title`, property: "og:title", content: `${name} – Kairly` },
+        { hid: `og:description`, property: "og:description", content: bio },
+        { hid: `og:image`, property: "og:image", content: picture },
+        { hid: `og:image:alt`, property: "og:image:alt", content: name },
+        { hid: `og:type`, property: "og:type", content: "profile" },
+        {
+          hid: `og:url`,
+          property: "og:url",
+          content: `https://www.kairly.com/${id}`
+        },
+        { hid: `twitter:card`, property: "twitter:card", content: "summary" },
+        {
+          hid: `twitter:site`,
+          property: "twitter:site",
+          content: "@kairlyapp"
+        },
+        {
+          hid: `twitter:title`,
+          property: "twitter:title",
+          content: `${name} – Kairly`
+        },
+        {
+          hid: `twitter:description`,
+          property: "twitter:description",
+          content: bio
+        },
+        { hid: `twitter:image`, property: "twitter:image", content: picture }
       ]
-    }
+    };
   },
 
   components: {
@@ -148,7 +150,7 @@ export default {
   data() {
     return {
       showAllNewspapers: false
-    }
+    };
   },
 
   computed: {
@@ -158,88 +160,97 @@ export default {
     }),
 
     visibleNewspapers() {
-      return this.showAllNewspapers ? this.newspapers : this.newspapers.slice(0, 3)
+      return this.showAllNewspapers
+        ? this.newspapers
+        : this.newspapers.slice(0, 3);
     },
 
     subscription() {
-      return this.$store.getters.getAuthorSubscription(this.author)
+      return this.$store.getters.getAuthorSubscription(this.author);
     }
   },
 
   methods: {
     unsubscribe() {
-      this.$store.dispatch('unsubscribeAuthor', {
-        author: this.author,
-      })
-      document.activeElement.blur()
+      this.$store.dispatch("unsubscribeAuthor", {
+        author: this.author
+      });
+      document.activeElement.blur();
     },
 
     renewSubscription() {
-      this.$store.dispatch('subscribeAuthor', {
+      this.$store.dispatch("subscribeAuthor", {
         author: this.author
-      })
-      document.activeElement.blur()
+      });
+      document.activeElement.blur();
     },
 
     toggleNewspapers() {
-      this.showAllNewspapers = !this.showAllNewspapers
+      this.showAllNewspapers = !this.showAllNewspapers;
     },
 
     async loadPosts() {
       if (this.cursor === null) {
-        return
+        return;
       }
-      const { author: authorId } = this.$route.params
+      const { author: authorId } = this.$route.params;
 
-      this.loadingPosts = true
+      this.loadingPosts = true;
 
       const { posts, cursor } = await this.$axios.$get(
-        `/authors/${authorId}/posts`, {params: {cursor: this.cursor}})
+        `/authors/${authorId}/posts`,
+        { params: { cursor: this.cursor } }
+      );
 
-      posts.forEach(post => this.posts.push(post))
-      this.cursor = cursor
-      this.loadingPosts = false
+      posts.forEach(post => this.posts.push(post));
+      this.cursor = cursor;
+      this.loadingPosts = false;
     }
   },
 
-  async asyncData({ app, store, params: { author: authorId }, error}) {
+  async asyncData({ app, store, params: { author: authorId }, error }) {
     if (store.state.auth.loggedIn) {
-      await store.dispatch('getSubscriptions')
+      await store.dispatch("getSubscriptions");
     }
 
     try {
-      const { author, newspapers } = await store.dispatch('getAuthor', authorId)
+      const { author, newspapers } = await store.dispatch(
+        "getAuthor",
+        authorId
+      );
 
       const data = {
         author,
         newspapers
-      }
+      };
 
       if (process.server) {
         const { posts, cursor } = await app.$axios.$get(
-          `/authors/${authorId}/posts`, {params: {cursor: 0}})
-        data.posts = posts
-        data.cursor = cursor
-        data.loadingPosts = false
+          `/authors/${authorId}/posts`,
+          { params: { cursor: 0 } }
+        );
+        data.posts = posts;
+        data.cursor = cursor;
+        data.loadingPosts = false;
       } else {
         // load all in created function to make transition faster
-        data.posts = []
-        data.cursor = 0
-        data.loadingPosts = true
+        data.posts = [];
+        data.cursor = 0;
+        data.loadingPosts = true;
       }
 
-      return data
+      return data;
     } catch (err) {
-      error(errorToParams(err))
+      error(errorToParams(err));
     }
   },
 
   created() {
     if (process.client && this.cursor === 0) {
-      this.loadPosts()
+      this.loadPosts();
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="sass">

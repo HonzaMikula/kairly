@@ -4,43 +4,43 @@
     v-on-clickaway="() => closeSubscribeWidget()">
 
     <section v-if="frequency === null">
-      <header>How often do you want to publish new issue?</header>
+      <header>{{ $t('How often do you want to publish new issue?') }}</header>
       <ul>
-        <li><a href="" @click.prevent="selectHowOften('6x_per_day', $event)">Every 3 hours</a></li>
-        <li><a href="" @click.prevent="selectHowOften('3x_per_day', $event)">3x per day</a></li>
-        <li><a href="" @click.prevent="selectHowOften('daily', $event)">Daily</a></li>
-        <li><a href="" @click.prevent="selectHowOften('weekly', $event)">Weekly</a></li>
+        <li><a href="" @click.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Every 3 hours') }}</a></li>
+        <li><a href="" @click.prevent="selectHowOften('3x_per_day', $event)">{{ $t('3x per day') }}</a></li>
+        <li><a href="" @click.prevent="selectHowOften('daily', $event)">{{ $t('Daily') }}</a></li>
+        <li><a href="" @click.prevent="selectHowOften('weekly', $event)">{{ $t('Weekly') }}</a></li>
       </ul>
     </section>
 
     <section v-else-if="frequency === 'weekly' && dow === null">
       <header>
-        Which day?
+        {{ $t('Which day?') }}
         <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
       </header>
       <ul>
-        <li><a href="" @click.prevent="selectWhatDay('1', $event)">Monday</a></li>
-        <li><a href="" @click.prevent="selectWhatDay('2', $event)">Tuesday</a></li>
-        <li><a href="" @click.prevent="selectWhatDay('3', $event)">Wednesday</a></li>
-        <li><a href="" @click.prevent="selectWhatDay('4', $event)">Thursday</a></li>
-        <li><a href="" @click.prevent="selectWhatDay('5', $event)">Friday</a></li>
-        <li><a href="" @click.prevent="selectWhatDay('6', $event)">Saturday</a></li>
-        <li><a href="" @click.prevent="selectWhatDay('7', $event)">Sunday</a></li>
+        <li><a href="" @click.prevent="selectWhatDay('1', $event)">{{ $t('Monday') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatDay('2', $event)">{{ $t('Tuesday') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatDay('3', $event)">{{ $t('Wednesday') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatDay('4', $event)">{{ $t('Thursday') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatDay('5', $event)">{{ $t('Friday') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatDay('6', $event)">{{ $t('Saturday') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatDay('7', $event)">{{ $t('Sunday') }}</a></li>
       </ul>
     </section>
 
     <section v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
-        What time?
+        {{ $t('What time?') }}
         <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
       </header>
       <ul>
-        <li><a href="" @click.prevent="selectWhatTime('6:00', $event)">Early morning (6:00)</a></li>
-        <li><a href="" @click.prevent="selectWhatTime('9:00', $event)">Morning (9:00)</a></li>
-        <li><a href="" @click.prevent="selectWhatTime('12:00', $event)">Noon (12:00)</a></li>
-        <li><a href="" @click.prevent="selectWhatTime('15:00', $event)">After noon (15:00)</a></li>
-        <li><a href="" @click.prevent="selectWhatTime('18:00', $event)">Evening (18:00)</a></li>
-        <li><a href="" @click.prevent="selectWhatTime('21:00', $event)">Night (21:00)</a></li>
+        <li><a href="" @click.prevent="selectWhatTime('6:00', $event)">{{ $t('Early morning (6:00)') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatTime('9:00', $event)">{{ $t('Morning (9:00)') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatTime('12:00', $event)">{{ $t('Noon (12:00)') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatTime('15:00', $event)">{{ $t('After noon (15:00)') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatTime('18:00', $event)">{{ $t('Evening (18:00)') }}</a></li>
+        <li><a href="" @click.prevent="selectWhatTime('21:00', $event)">{{ $t('Night (21:00)') }}</a></li>
       </ul>
     </section>
   </div>

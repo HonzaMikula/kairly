@@ -11,9 +11,9 @@
       </main>
 
       <aside>
-        <h2>Explore</h2>
+        <h2>{{ $t('Explore') }}</h2>
 
-        <h3>Recent newspaper issue</h3>
+        <h3>{{ $t('Recent newspaper issue') }}</h3>
         <ul>
           <li><a href="">Malostranské noviny</a></li>
           <li><a href="">Deník Aktuálně - Domací</a></li>
@@ -22,7 +22,7 @@
           <li><a href="">iRozhlas - zprávy z domova</a></li>
         </ul>
 
-        <h3>New authors on Kairly</h3>
+        <h3>{{ $t('New authors on Kairly') }}</h3>
         <ul>
           <li><a href="">ČTK</a></li>
           <li><a href="">Deník N</a></li>
@@ -31,9 +31,9 @@
           <li><a href="">Janův blog</a></li>
         </ul>
 
-        <p>You can find more newspapers and authors on Explore page.</p>
+        <p>{{ $t('You can find more newspapers and authors on Explore page.') }}</p>
 
-        <p><a href="">Explore more content</a></p>
+        <p><a href="">{{ $t('Explore more content') }}</a></p>
       </aside>
 
     </my-subscription-view>

@@ -34,10 +34,10 @@ export default {
 
     frequencyLabel() {
       const { frequency } = this.newspaper.periodicity
-      if (frequency == '6x_per_day') return '6× per day'
-      if (frequency == '3x_per_day') return '3× per day'
-      if (frequency == 'weekly') return 'Weekly'
-      if (frequency == 'daily') return 'Daily'
+      if (frequency == '6x_per_day') return this.$t('6× per day')
+      if (frequency == '3x_per_day') return this.$t('3× per day')
+      if (frequency == 'weekly') return this.$t('Weekly')
+      if (frequency == 'daily') return this.$t('Daily')
       return ''
     }
   }

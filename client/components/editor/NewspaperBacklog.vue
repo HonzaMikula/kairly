@@ -3,21 +3,20 @@
 
     <newspaper-backlog--info>
       <div>
-        Issue <strong>#{{newspaper.issues + 1}}</strong> will be automatically
-        published in <strong :title="newspaper.nextRelease">{{ timeFrom(newspaper.nextRelease) }}</strong>
+
       </div>
 
       <div>
-        <strong>{{backlog.length}} posts</strong> are considered
+        {{ $t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length}) }}
       </div>
     </newspaper-backlog--info>
 
     <div>
       <newspaper-backlog--next-issue>
         <div v-if="published.length == 0" class="no-post">
-          <h2>No posts for the upcoming issue!</h2>
+          <h2>{{ $t('No posts for the upcoming issue!') }}</h2>
 
-          <p>Drag articles and tweets from the right panel that you want to publish in next issue of the newspaper.</p>
+          <p>{{ $t('Drag articles and tweets from the right panel that you want to publish in next issue of the newspaper.') }}</p>
         </div>
 
         <PostWrapper
@@ -36,7 +35,7 @@
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               tabindex="0"
               role="button"
-              title="Move post up"
+              :title="$t('Move post up')"
               v-show="idx !== 0"
               @click="moveUp(idx)">
             </button-icon>
@@ -46,7 +45,7 @@
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               tabindex="0"
               role="button"
-              title="Move post down"
+              :title="$t('Move post down')"
               v-show="idx !== published.length - 1"
               @click="moveDown(idx)">
             </button-icon>
@@ -56,7 +55,7 @@
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               tabindex="0"
               role="button"
-              title="Remove from issue"
+              :title="$t('Remove from issue')"
               @click.prevent="undoPublish(post)">
             </button-icon>
           </template>
@@ -65,9 +64,9 @@
 
       <newspaper-backlog--backlog>
         <div v-if="backlog.length == 0" class="no-post">
-          <h2>No considered posts!</h2>
+          <h2>{{ $t('No considered posts!') }}</h2>
 
-          <p>Go on your timeline and start adding interesting articles and tweets for considaration.</p>
+          <p>{{ $t('Go on your timeline and start adding interesting articles and tweets for considaration.') }}</p>
         </div>
 
         <div v-for="post in backlog" class="backlog-post" :key="post.id">
@@ -87,20 +86,20 @@
             <time>
               {{ post.time | moment('calendar') }}
               •
-              {{ post.timeRead }} read
+              {{ post.timeRead }} {{ $t('read') }}
             </time>
 
             <section>
               <button-icon
                 class="remove"
                 role="button"
-                title="Remove post from considaration"
+                :title="$t('Remove post from considaration')"
                 v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
                 tabindex="0"
                 @click.prevent="removePost(post)">
               </button-icon>
 
-              <a href="#" @click.prevent="publish(post)">Publish</a>
+              <a href="#" @click.prevent="publish(post)">{{ $t('Publish') }}</a>
             </section>
 
           </header>

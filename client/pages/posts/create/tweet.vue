@@ -1,6 +1,6 @@
 <template>
   <div>
-    <edit-tweet buttonTitle="Save a draft" @submit="createPost" />
+    <edit-tweet :buttonTitle="$t('Save a draft')" @submit="createPost" />
   </div>
 </template>
 
@@ -12,9 +12,9 @@ import EditTweet from '@/components/editor/EditTweet'
 export default {
   name: 'CreateTweet',
 
-  metaInfo() {
+  head() {
     return {
-      title: 'My Posts – Kairly'
+      title: this.$t('My Posts – Kairly')
     }
   },
 

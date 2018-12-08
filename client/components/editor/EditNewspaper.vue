@@ -2,50 +2,44 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop>
       <header>
-        <h1>{{ newspaper ? 'Modify newspaper' : 'Create new newspaper' }}</h1>
+        <h1>{{ newspaper ? $t('Modify the newspaper') : $t('Start a new newspaper') }}</h1>
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
 
       <edit-newspaper-view>
         <div class="title">
-          <input placeholder="What's the newspaper name?" v-model="title">
+          <input :placeholder="$t('What\'s the newspaper name?')" v-model="title">
         </div>
 
         <div class="periodicity">
           <button
             v-if="!periodicity"
-            @click="$refs.periodWidget.openSubscribeWidget()">
-            Select period
-          </button>
+            @click="$refs.periodWidget.openSubscribeWidget()"
+          >{{ $t('Select periodicity') }}</button>
 
-          <span
-            v-if="periodicity"
-            @click="$refs.periodWidget.openSubscribeWidget()">
+          <span v-if="periodicity" @click="$refs.periodWidget.openSubscribeWidget()">
+            <template v-if="periodicity.frequency == '3x_per_day'">{{ $t('At 6:00, 12:00 and 18:00') }}</template>
 
-            <template v-if="periodicity.frequency == '3x_per_day'">
-              At 6:00, 12:00 and 18:00
-            </template>
+            <template v-else-if="periodicity.frequency == '6x_per_day'">{{ $t('Every 3 hours') }}</template>
 
-            <template v-else-if="periodicity.frequency == '6x_per_day'">
-              Every 3 hours.
-            </template>
-
-            <template v-else>
-              {{ periodicity.frequency }} {{ DAYS_OF_WEEK[periodicity.dow - 1] }} {{ periodicity.time }}
-            </template>
+            <template
+              v-else
+            >{{ periodicity.frequency }} {{ DAYS_OF_WEEK[periodicity.dow - 1] }} {{ periodicity.time }}</template>
           </span>
 
           <div class="period-wrapper">
-            <period-widget
-              ref="periodWidget"
-              :onSelect="selectPeriodicity" />
+            <period-widget ref="periodWidget" :onSelect="selectPeriodicity"/>
           </div>
         </div>
 
         <div class="description">
           <section>
-            <label for="editorial">Editorial</label>
-            <textarea id="editorial" v-model="description" placeholder="What this newspaper is about?"></textarea>
+            <label for="editorial">{{ $t('Editorial') }}</label>
+            <textarea
+              id="editorial"
+              v-model="description"
+              :placeholder="$t('What this newspaper is about?')"
+            ></textarea>
           </section>
 
           <picture>
@@ -54,16 +48,15 @@
               @change="onPictureChange"
               width="580"
               height="250"
-              accept="image/jpeg,image/png"
+              accept="image/jpeg, image/png"
               size="10"
               buttonClass="btn"
               :prefill="this.newspaper && this.newspaper.picture"
               :customStrings="{
-                drag: 'Drag or upload image'
-              }">
-            </picture-input>
+                drag: $t('Drag or upload image')
+              }"
+            ></picture-input>
           </picture>
-
         </div>
       </edit-newspaper-view>
 
@@ -75,15 +68,15 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from "vuex";
 
-import PictureInput from '@/lib/vue-picture-input/PictureInput'
-import { DAYS_OF_WEEK } from '@/utils/period'
-import DialogWindow from '@/components/modals/Dialog'
-import PeriodWidget from '@/components/widgets/PeriodWidget'
+import PictureInput from "@/lib/vue-picture-input/PictureInput";
+import { DAYS_OF_WEEK } from "@/utils/period";
+import DialogWindow from "@/components/modals/Dialog";
+import PeriodWidget from "@/components/widgets/PeriodWidget";
 
 export default {
-  name: 'EditNewspaperModal',
+  name: "EditNewspaperModal",
 
   props: {
     newspaper: Object,
@@ -99,12 +92,12 @@ export default {
 
   data() {
     return {
-      title: this.newspaper ? this.newspaper.title : '',
-      description: this.newspaper ? this.newspaper.description : '',
+      title: this.newspaper ? this.newspaper.title : "",
+      description: this.newspaper ? this.newspaper.description : "",
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
       image: null,
       DAYS_OF_WEEK
-    }
+    };
   },
 
   computed: mapState({
@@ -113,52 +106,53 @@ export default {
 
   methods: {
     onPictureChange(image) {
-      this.image = image
+      this.image = image;
     },
 
     selectPeriodicity(periodicity) {
-      this.periodicity = periodicity
+      this.periodicity = periodicity;
     },
 
     async submit() {
-      const errors = []
+      const errors = [];
 
-      if (this.title.trim() === '') {
-        errors.push("Title is empty")
+      if (this.title.trim() === "") {
+        errors.push("Title is empty");
       }
 
-      if (this.description.trim() === '') {
-        errors.push("Editorial is empty")
+      if (this.description.trim() === "") {
+        errors.push("Editorial is empty");
       }
 
       if (this.periodicity === null) {
-        errors.push("Periodicity is not selected")
+        errors.push("Periodicity is not selected");
       }
 
       if (errors.length) {
         // TODO show validation in form
-        alert(errors.join("\n"))
-        return
+        alert(errors.join("\n"));
+        return;
       }
 
       if (this.newspaper) {
-        const fields = {}
+        const fields = {};
         if (this.title !== this.newspaper.title) {
-          fields.title = this.title
+          fields.title = this.title;
         }
         if (this.description !== this.newspaper.description) {
-          fields.description = this.description
+          fields.description = this.description;
         }
-        if (this.periodicity) { //TODO compare periodicity
-          fields.periodicity = this.periodicity
+        if (this.periodicity) {
+          //TODO compare periodicity
+          fields.periodicity = this.periodicity;
         }
         if (this.image) {
-          fields.image = this.image
+          fields.image = this.image;
         }
         await this.updateNewspaper({
           fullName: this.newspaper.fullName,
           fields
-        })
+        });
       } else {
         const createdNewspaper = await this.startNewspaper({
           authorId: this.user.id,
@@ -168,16 +162,16 @@ export default {
             periodicity: this.periodicity,
             image: this.image
           }
-        })
-        this.onCreated(createdNewspaper)
+        });
+        this.onCreated(createdNewspaper);
       }
 
-      this.closeModal()
+      this.closeModal();
     },
 
-    ...mapActions(['startNewspaper', 'updateNewspaper'])
+    ...mapActions(["startNewspaper", "updateNewspaper"])
   }
-}
+};
 </script>
 
 <style lang="sass">

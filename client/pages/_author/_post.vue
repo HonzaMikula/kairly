@@ -2,7 +2,7 @@
   <app-layout>
     <post-detail role="article">
       <post-detail--back-button
-        title="Back"
+        :title="$t('Back')"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
         @click="$router.go(-1)">
       </post-detail--back-button>
@@ -14,7 +14,7 @@
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
 
-          <a v-if="post.source" :href="post.source" class="external-link"><span>Original article</span></a>
+          <a v-if="post.source" :href="post.source" class="external-link"><span>{{ $t('Original article') }}</span></a>
         </post-detail--header>
 
         <post-detail--title id="start">
@@ -24,12 +24,12 @@
         <post-detail--content v-html="post.content.perex" />
 
         <post-detail--continue-reading id="continue" v-if="post.content.content && showContinueReading">
-          continue reading
+          {{ $t('continue reading') }}
         </post-detail--continue-reading>
 
         <div v-if="post.content.protected && post.source">
           <post-detail--footer>
-            <a :href="post.source" class="read-full-article">Read full article</a>
+            <a :href="post.source" class="read-full-article">{{ $t('Read full article') }}</a>
           </post-detail--footer>
         </div>
 
@@ -44,7 +44,7 @@
               target="_blank"
               class="share-fb"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              title="Share on Facebook">
+              :title="$t('Share on Facebook')">
             </a>
 
             <a
@@ -52,7 +52,7 @@
               target="_blank"
               class="share-twitter"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              title="Share on Twitter">
+              :title="$t('Share on Twitter')">
             </a>
           </post-detail--footer>
         </div>
@@ -81,7 +81,7 @@
             <button
               v-else
               @click="$refs.followWidget.openSubscribeWidget()">
-              Subscribe author
+              {{ $t('Subscribe author') }}
             </button>
 
             <follow-author

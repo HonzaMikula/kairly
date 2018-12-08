@@ -16,7 +16,13 @@
 
     <template slot="extendedControls">
       <slot name="extendedControls">
-        <a v-if="post.source" :href="post.source" class="tweet" v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}" title="Original tweet"></a>
+        <a
+          v-if="post.source"
+          :href="post.source"
+          class="tweet"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          :title="$t('Original tweet')">
+        </a>
       </slot>
     </template>
 

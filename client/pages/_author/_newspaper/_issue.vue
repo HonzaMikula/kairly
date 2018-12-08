@@ -31,7 +31,7 @@
 
           <li>#{{ newspaper.issues }}</li>
 
-          <li>{{ newspaper.likes }} readers</li>
+          <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
 
           <li>49 CZK / month</li>
         </ul>

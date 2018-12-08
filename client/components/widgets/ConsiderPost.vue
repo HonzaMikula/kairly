@@ -6,7 +6,7 @@
       tabindex="0"
       aria-label="Consider for newspaper"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-      title="Consider for newspaper"
+      :title="$t('Consider for newspaper')"
       @click.prevent="showNewspapers = true">
     </button-icon>
 
@@ -15,13 +15,13 @@
       role="button"
       tabindex="0"
       @click.prevent="showNewspapers = true">
-      Consider for newspaper
+      {{ $t('Consider for newspaper') }}
     </button-icon>
 
     <backlog-add--dropdown
       v-if="showNewspapers"
       v-on-clickaway="() => showNewspapers = false">
-      <header>For which newspaper?</header>
+      <header>{{ $t('For which newspaper?') }}</header>
 
       <section>
         <ul>

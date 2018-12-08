@@ -5,16 +5,16 @@
       :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
       @click="toggle()">
       <span class="default">
-        <span v-if="subscription.renewal">Subscribed</span>
-        <span v-else>Canceled</span>
+        <span v-if="subscription.renewal">{{ $t('Subscribed') }}</span>
+        <span v-else>{{ $t('Canceled') }}</span>
       </span>
-      <span class="on-hover" v-if="subscription.renewal">Unsubscribe</span>
+      <span class="on-hover" v-if="subscription.renewal">{{ $t('Unsubscribe') }}</span>
       <span
         v-else
         class="on-hover"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
         :title="$t('Subscription last till {to}', {to: subscription.to})">
-        Renew
+        {{ $t('Renew') }}
       </span>
     </button>
 
@@ -22,7 +22,7 @@
       v-else
       class="to-subscribe"
       @click="toggle()">
-      Subscribe
+      {{ $t('Subscribe') }}
     </button>
   </div>
 </template>

@@ -36,7 +36,7 @@ export default {
 
   head() {
     return {
-      title: this.category ? this.category.name : 'Explore'
+      title: this.category ? this.category.name : this.$t('Explore')
     }
   },
 

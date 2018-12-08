@@ -3,7 +3,7 @@
     <button
       @click="isMenuOpen = !isMenuOpen"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-      title="Jump to different time"
+      :title="$t('Jump to different time')"
       :id="currentAnchor"
     >{{ dayTitle }} – {{ timeTitle }}</button>
 
@@ -12,7 +12,7 @@
       v-on-clickaway="hideJumpMenu"
       class="timeline-navigation--menu">
       <header>
-        <h3>Jump to different time</h3>
+        <h3>{{ $t('Jump to different time') }}</h3>
       </header>
 
       <section>
@@ -20,7 +20,7 @@
           <li v-for="anchor in anchors" :key="anchor.link">
             <a :href="anchor.link" @click="hideJumpMenu">{{ anchor.title }}</a>
           </li>
-          <li><a href="#start">Beggining of the day</a></li>
+          <li><a href="#start">{{ $t('Beginning of the day') }}</a></li>
         </ul>
       </section>
     </div>
@@ -54,7 +54,7 @@ export default {
       const dt = moment(this.datetime)
       const today = moment().format("M/D");
       const day = dt.format("M/D")
-      const wod =  day === today ? 'Today' : dt.format("dddd")
+      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
       return `${wod} ${day}`
     },
 
@@ -72,12 +72,12 @@ export default {
         const h = ~~dt.format("H")
         let title = ''
         // be aware of timezone, in reality time be technically any time
-        if (h >= 21) { title = 'Night' }
-        else if (h >= 18) { title = 'Evening' }
-        else if (h > 12) { title = 'Afternoon' }
-        else if (h == 12) { title = 'Noon' }
-        else if (h >= 9) { title = 'Morning' }
-        else { title = 'Early morning' }
+        if (h >= 21) { title = this.$t('Night') }
+        else if (h >= 18) { title = this.$t('Evening') }
+        else if (h > 12) { title = this.$t('Afternoon') }
+        else if (h == 12) { title = this.$t('Noon') }
+        else if (h >= 9) { title = this.$t('Morning') }
+        else { title = this.$t('Early morning') }
         return {
           link: '#time_' + dt.format("H:mm"),
           title: title + ' (' + dt.format("H:mm") + ')'

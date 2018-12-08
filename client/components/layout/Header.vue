@@ -16,18 +16,6 @@
             </nuxt-link>
           </li>
 
-          <!-- <li class="newspapers">
-            <nuxt-link :to="{name: 'newspapers'}" title="Newspapers">
-              <span>{{ $t('Newspapers') }}</span>
-            </nuxt-link>
-          </li>
-
-          <li class="new-post">
-            <nuxt-link :to="{name: 'posts'}" title="New post">
-              <span>{{ $t('New post') }}</span>
-            </nuxt-link>
-          </li> -->
-
           <li class="explore">
             <nuxt-link :to="{name: 'explore-tab'}" title="Explore">
               <span>{{ $t('Explore') }}</span>

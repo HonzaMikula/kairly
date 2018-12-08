@@ -18,7 +18,7 @@
 
             <li>#{{ newspaper.issues }}</li>
 
-            <li>{{ newspaper.likes }} readers</li>
+            <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
 
             <li>10 CZK / month</li>
           </ul>
@@ -52,10 +52,10 @@
       </newspaper-detail--last-newspaper>
 
       <newspaper-detail--empty-newspaper v-if="issues.length === 0">
-        <h2>No issue yet</h2>
+        <h2>{{ $t('No issue yet') }}</h2>
 
         <p>
-          Subscribe the newspaper and once it's published, we will show you on your timeline.
+          {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
         </p>
       </newspaper-detail--empty-newspaper>
     </newspaper-detail-view>
