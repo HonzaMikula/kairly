@@ -10,13 +10,13 @@
           {{ $t("Are you interested in specific topic? Found a newspaper and start providing selection of best articles and tweets to others.") }}
         </p>
 
-        <a href="" @click.prevent="isCreateNewspaperOpen = true">Start a newspaper</a>
+        <a href="" @click.prevent="isCreateNewspaperOpen = true">{{ $t('Start a newspaper') }}</a>
       </editor-newspapers--empty>
 
       <template v-else>
         <editor-newspapers--header>
           <div class="create-newspaper">
-            <a href="" @click.prevent="isCreateNewspaperOpen = true">Start a newspaper</a>
+            <a href="" @click.prevent="isCreateNewspaperOpen = true">{{ $t('Start a newspaper') }}</a>
           </div>
 
           <div class="title">
