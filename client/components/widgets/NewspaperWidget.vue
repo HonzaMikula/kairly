@@ -39,7 +39,7 @@
 
 import { mapState } from 'vuex'
 
-import { getPeriodicityLabel } from '@/utils/period'
+import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
 export default {
@@ -53,13 +53,15 @@ export default {
     NewspaperSubscription
   },
 
+  mixins: [PeriodicityMixin],
+
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn
     }),
 
     periodicity() {
-      return getPeriodicityLabel(this.newspaper.periodicity)
+      return this.getPeriodicityLabel(this.newspaper.periodicity)
     }
   }
 }

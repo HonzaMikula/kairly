@@ -31,7 +31,7 @@
             </template>
 
             <template v-else>
-              {{ periodicity.frequency }} {{ DAYS_OF_WEEK[periodicity.dow - 1] }} {{ periodicity.time }}
+              {{ periodicity.frequency }} {{ getDayOfWeekLabel(periodicity.dow) }} {{ periodicity.time }}
             </template>
           </span>
 
@@ -77,8 +77,8 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 
+import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
-import { DAYS_OF_WEEK } from '@/utils/period'
 import DialogWindow from '@/components/modals/Dialog'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
@@ -97,13 +97,14 @@ export default {
     DialogWindow
   },
 
+  mixins: [PeriodicityMixin],
+
   data() {
     return {
       title: this.newspaper ? this.newspaper.title : '',
       description: this.newspaper ? this.newspaper.description : '',
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
       image: null,
-      DAYS_OF_WEEK
     }
   },
 

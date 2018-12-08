@@ -21,7 +21,7 @@
       </template>
 
       <template v-if="frequency == 'weekly'">
-        Weekly on <strong>{{ DAYS_OF_WEEK[dow - 1] }}</strong> at <strong>{{ time }}</strong>
+        Weekly on <strong>{{ getDayOfWeekLabel(dow) }}</strong> at <strong>{{ time }}</strong>
       </template>
     </a>
 
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { DAYS_OF_WEEK } from '@/utils/period'
+import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
 
 export default {
@@ -50,11 +50,7 @@ export default {
     FollowAuthor
   },
 
-  data() {
-    return {
-      DAYS_OF_WEEK
-    }
-  },
+  mixins: [PeriodicityMixin],
 
   computed: {
     canceled() { return this.subscription && !this.subscription.renewal},
