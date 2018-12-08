@@ -100,7 +100,7 @@
       <section v-else-if="frequency == 'weekly'">
         <p>
           You will be receiving <strong>{{ author.name }}</strong> weekly on
-          <strong>{{ DAYS_OF_WEEK[dow - 1] }}</strong> at <strong>{{ time }}</strong>.
+          <strong>{{ getDayOfWeekLabel(dow) }}</strong> at <strong>{{ time }}</strong>.
         </p>
       </section>
     </div>
@@ -111,7 +111,8 @@
 import { mapActions, mapMutations } from 'vuex'
 
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { DAYS_OF_WEEK } from '@/utils/period'
+import PeriodicityMixin from '@/mixins/PeriodicityMixin'
+
 
 export default {
   name: 'FollowAuthor',
@@ -126,6 +127,8 @@ export default {
     onClickaway
   },
 
+  mixins: [PeriodicityMixin],
+
   data() {
     return {
       show: false,
@@ -134,7 +137,6 @@ export default {
       frequency: '6x_per_day',
       dow: null,
       time: null,
-      DAYS_OF_WEEK
     }
   },
 
