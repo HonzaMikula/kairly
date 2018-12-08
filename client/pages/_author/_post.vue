@@ -27,12 +27,9 @@
           continue reading
         </post-detail--continue-reading>
 
-        <div v-if="post.content.protected">
+        <div v-if="post.content.protected && post.source">
           <post-detail--footer>
-            Rest of the article is protected. Read the orginal article here.
-            <span v-if="post.source">
-              Read <a :href="post.source" class="external-link">Original article</a>
-            </span>
+            <a :href="post.source" class="read-full-article">Read full article</a>
           </post-detail--footer>
         </div>
 
@@ -465,6 +462,15 @@ post-detail--footer
       font-size: $fs-1
 
       content: $fa-var-twitter
+
+  a.read-full-article
+    +subscribed-button
+
+    display: table
+    border-radius: 0.75 * $baseline
+    height: $baseline * 1.5
+    margin: 0 auto $baseline auto
+    line-height: $baseline * 1.5
 
   //- Tweaks adding to backlog widget
   backlog-add--dropdown
