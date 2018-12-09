@@ -40,9 +40,9 @@
                 <img :src="newspaper.picture" :alt="newspaper.title"/>
                 <h3>{{ newspaper.title }}</h3>
                 <p>
-                  <strong>#{{ newspaper.issues + 1 }}</strong> is releasing in
-                  <strong>{{ timeFrom(newspaper.nextRelease) }}</strong> with
-                  <strong>{{ publishedPostCount(newspaper) }} posts</strong>.
+                  <strong>#{{ newspaper.issues + 1 }}</strong> {{ $t('is releasing in') }}
+                  <strong>{{ timeFrom(newspaper.nextRelease) }}</strong> {{ $t('with') }}
+                  <strong>{{ publishedPostCount(newspaper) }} {{ $t('posts') }}</strong>.
                 </p>
               </div>
             </editor-newspapers--header--dropdown>
@@ -53,7 +53,7 @@
               class="edit"
               role="button"
               tabindex="0"
-              title="Edit newspaper"
+              :title="$t('Edit newspaper')"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               @click="newspaperToEdit = selectedNewspaper">
             </button-icon>
@@ -62,7 +62,7 @@
               class="delete"
               role="button"
               tabindex="0"
-              title="Delete newspaper"
+              :title="$t('Delete newspaper')"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               @click.prevent="confirmDeleteNewspaper">
             </button-icon>
@@ -469,8 +469,8 @@ editor-newspapers--header--dropdown
   z-index: 1
 
   display: block
-  margin-left: -190px
-  width: 380px
+  margin-left: -200px
+  width: 400px
 
   +blur(10px)
   +box-shadow
@@ -484,6 +484,7 @@ editor-newspapers--header--dropdown
     border-bottom: 1px solid #eee
 
     cursor: pointer
+    text-align: left
 
     &:focus,
     &:hover

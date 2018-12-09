@@ -5,24 +5,27 @@
       @click.prevent="$refs.followWidget.openSubscribeWidget()"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :class="{'is-canceled': canceled}"
-      :title="'Change the subscriptions'+ (canceled ? ' (is canceled)': '')">
+      :title="$t('Change the subscriptions')+ (canceled ? $t(' (is canceled)'): '')">
 
-      <template v-if="frequency == '3x_per_day'">
-        Daily at <strong>6:00</strong>,
-        <strong>12:00</strong> and <strong>18:00</strong>
-      </template>
+      <p
+        v-if="frequency == '6x_per_day'"
+        v-html="$t('Daily every <strong>3 hours</strong>')">
+      </p>
 
-      <template v-if="frequency == '6x_per_day'">
-        Daily every <strong>3 hours</strong>
-      </template>
+      <p
+        v-if="frequency == '3x_per_day'"
+        v-html="$t('Daily at <strong>6:00</strong>, <strong>12:00</strong> and <strong>18:00</strong>')">
+      </p>
 
-      <template v-if="frequency == 'daily'">
-        Daily at <strong>{{ time }}</strong>
-      </template>
+      <p
+        v-if="frequency == 'daily'"
+        v-html="$t('Daily at <strong>{xTime}</strong>', {xTime: time})">
+      </p>
 
-      <template v-if="frequency == 'weekly'">
-        Weekly on <strong>{{ getDayOfWeekLabel(dow) }}</strong> at <strong>{{ time }}</strong>
-      </template>
+      <p
+        v-if="frequency == 'weekly'"
+        v-html="$t('Weekly on <strong>{xDay}</strong> at <strong>{xTime}</strong>', { xDay: getDayOfWeekLabel(dow), xTime: time })">
+      </p>
     </a>
 
     <follow-author

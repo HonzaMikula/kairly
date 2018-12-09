@@ -59,14 +59,14 @@ pipenv run ./manage.py runserver
 
 ``` bash
 # refresh .po files
-npm run compilemessages
+npm run makemessages
 
 # edit translation strings
 poedit locales/cs.po
 # or use poedit windows port
 
 # compile .po files to JSONs used by app
-npm run makemessages
+npm run compilemessages
 ```
 
 ## Rosti

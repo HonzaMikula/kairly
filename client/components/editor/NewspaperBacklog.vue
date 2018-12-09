@@ -3,7 +3,8 @@
 
     <newspaper-backlog--info>
       <div>
-        Issue <strong>#{{newspaper.issues + 1}}</strong> will be automatically published in <strong :title="newspaper.nextRelease">{{timeFrom(time)}}</strong>
+        {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
+        {{ $t('will be automatically published in') }} <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
       </div>
 
       <div v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})">

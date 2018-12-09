@@ -71,36 +71,33 @@
       <header>{{ $t('You are subscribed!') }}</header>
 
       <section v-if="frequency == '6x_per_day'">
-        <p>
-          {{ $t('You will be receiving <strong>{authorName}</strong> every 3 hours.', {authorName: author.name}) }}        </p>
+        <p v-html="$t('You will be receiving <strong>{authorName}</strong> every 3 hours.', {authorName: author.name})">
+        </p>
 
         <p class="change-button" v-if="!editMode">
-          <a href="" @click.stop.prevent="editSubscription($event)">Change periodicity and timing</a>
+          <a href="" @click.stop.prevent="editSubscription($event)">
+            {{ $t('Change periodicity and timing') }}
+          </a>
         </p>
       </section>
 
       <section v-else-if="frequency == '3x_per_day'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> 3x time per day:
+        <p v-html="$t('You will be receiving <strong>{authorName}</strong> 3x time per day:', {authorName: author.name})">
         </p>
         <ul class="text">
-          <li>Early morning (6:00)</li>
-          <li>Noon (12:00)</li>
-          <li>Evening (18:00)</li>
+          <li>{{ $t('Early morning (6:00)') }}</li>
+          <li>{{ $t('Noon (12:00)') }}</li>
+          <li>{{ $t('Evening (18:00)') }}</li>
         </ul>
       </section>
 
       <section v-else-if="frequency == 'daily'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> daily at
-          <strong>{{ time }}</strong>.
+        <p v-html="$t('You will be receiving <strong>{authorName}</strong> daily at <strong>{time}</strong>.', {authorName: author.name, time: time})">
         </p>
       </section>
 
       <section v-else-if="frequency == 'weekly'">
-        <p>
-          You will be receiving <strong>{{ author.name }}</strong> weekly on
-          <strong>{{ getDayOfWeekLabel(dow) }}</strong> at <strong>{{ time }}</strong>.
+        <p v-html="$t('You will be receiving <strong>{authorName}</strong> weekly on <strong>{day}</strong> at <strong>{time}</strong>.', {authorName: author.name, day: getDayOfWeekLabel(dow), time: time})">
         </p>
       </section>
     </div>
