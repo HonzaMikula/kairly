@@ -77,7 +77,7 @@ export default {
   async asyncData({ app, store, params }) {
     const tab = TABS.find(t => t.slug === params.tab)
     const [newspapers, { categories }] = await Promise.all([
-      store.dispatch('getNewspapers', tab.newspapers),
+      store.dispatch('getNewspapers', tab.newspapers.slice(0, 3)),
       app.$axios.$get(`/explore/${tab.name}`)
     ])
     return {

@@ -1,7 +1,7 @@
 <template>
   <app-layout>
     <timeline-view v-if="loggedIn">
-      <Welcome v-if="noSubscriptions"/>
+      <Welcome v-if="showWelcome"/>
       <template v-else>
         <template v-if="timeSlots.length">
           <div
@@ -92,12 +92,11 @@ export default {
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn,
-      noSubscriptions: state => state.timelineHasNoActiveSubscriptions,
       expandedIssues: state => state.timelineExpandedIssues
     }),
 
     loading() {
-      return !this.noSubscriptions && !this.date
+      return !this.showWelcome && !this.date
     },
 
     timeSlots() {
@@ -131,18 +130,22 @@ export default {
         this.loadTimeline()
       } else {
         this.date = null
+        this.showWelcome = false
       }
     }
   },
 
   methods: {
     async loadTimeline() {
-      if (this.loggedIn && !this.noSubscriptions) {
+      if (this.loggedIn && !this.$store.state.timelineHasNoActiveSubscriptions) {
         // TODO load timeline and backlog in parallel
 
         const { date } = this.$route.params
 
         this.date = await this.$store.dispatch('loadTimeline', { date })
+        if (this.date === null) {
+          this.showWelcome = true
+        }
 
         this.$store.dispatch('getUserBacklog')
       }
@@ -154,9 +157,16 @@ export default {
     const { date } = params
 
     // data.date keeps date returned from timeline request
-
-    if (!state.auth.loggedIn || state.timelineHasNoActiveSubscriptions) {
+    if (!state.auth.loggedIn) {
       return {
+        showWelcome: false,
+        date: null
+      }
+    }
+
+    if (state.timelineHasNoActiveSubscriptions) {
+      return {
+        showWelcome: true, // don't change this when user subscribe on Welcome page
         date: null
       }
     }
@@ -170,6 +180,7 @@ export default {
       as possible and keep loading wheel dispayed inside page
     */
     return {
+      showWelcome: false,
       date: await store.dispatch('loadTimeline', { date, cachedOnly: true })
     }
   },
