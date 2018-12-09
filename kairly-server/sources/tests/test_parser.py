@@ -64,6 +64,9 @@ class ArticleParsersTest(unittest.TestCase):
     def test_brbr(self):
         self.verify_testcase_file('test-data/brbr.html')
 
+    def test_brbr_in_span(self):
+        self.verify_testcase_file('test-data/brbr_in_span.html')
+
     def test_dangerous(self):
         self.verify_testcase_file('test-data/dangerous.html')
 
