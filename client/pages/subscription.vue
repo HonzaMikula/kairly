@@ -15,20 +15,23 @@
 
         <h3>{{ $t('Recent newspaper issue') }}</h3>
         <ul>
-          <li><a href="">Malostranské noviny</a></li>
-          <li><a href="">Deník Aktuálně - Domací</a></li>
-          <li><a href="">Hospodářské noviny</a></li>
-          <li><a href="">Technologický deník</a></li>
-          <li><a href="">iRozhlas - zprávy z domova</a></li>
+          <li
+            v-for="issue in issues"
+            :key="`${issue.newspaper.fullName}#${issue.number}`"
+          >
+            <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
+              {{ issue.newspaper.title }}
+            </nuxt-link>
+          </li>
         </ul>
 
         <h3>{{ $t('New authors on Kairly') }}</h3>
         <ul>
-          <li><a href="">ČTK</a></li>
-          <li><a href="">Deník N</a></li>
-          <li><a href="">Neovlivni.cz</a></li>
-          <li><a href="">Investigace.cz</a></li>
-          <li><a href="">Janův blog</a></li>
+          <li v-for="author in authors" :key="author.id">
+            <nuxt-link :to="{name: 'author', params: {author: author.id}}">
+              {{ author.name }}
+            </nuxt-link>
+          </li>
         </ul>
 
         <p>{{ $t('You can find more newspapers and authors on Explore page.') }}</p>
@@ -49,6 +52,15 @@ export default {
   components: {
     AppLayout
   },
+
+  async asyncData({ app }) {
+    const [issues, best_of] = await Promise.all([
+      app.$axios.$get('/recent/issues?count=5'),
+      app.$axios.$get('/explore/Best of Kairly')  // hack using best of tab, whicj contains new authors
+    ])
+    const authors = best_of.categories[1].authors.slice(0, 5)
+    return { issues, authors }
+  }
 }
 </script>
 

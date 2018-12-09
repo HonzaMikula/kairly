@@ -51,7 +51,7 @@ export default {
 
   async asyncData({ app }) {
     const [issues, posts] = await Promise.all([
-      app.$axios.$get('/recent/issues'),
+      app.$axios.$get('/recent/issues?count=3'),
       app.$axios.$get('/recent/posts')
     ])
     return { issues, posts }

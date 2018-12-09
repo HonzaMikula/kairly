@@ -73,8 +73,12 @@ def user_backlog(request):
 
 @ajax_login_required
 def recent_issues(request):
+    count = int(request.GET.get('count', 3))
+    if count < 1 or count > 10:
+        return HttpResponse('Invalid count.', status=400)
+
     tzinfo = request.user.tzinfo
-    issues = list(Issue.objects.all().order_by('-published')[:3])
+    issues = list(Issue.objects.all().order_by('-published')[:count])
     newspaper_ids = [issue.newspaper_id for issue in issues]
     newspapers = {
         newspaper.id: newspaper for newspaper in
