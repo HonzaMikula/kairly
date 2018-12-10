@@ -36,7 +36,7 @@
 
         <p>{{ $t('You can find more newspapers and authors on Explore page.') }}</p>
 
-        <p><a href="">{{ $t('Explore more content') }}</a></p>
+        <p><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
       </aside>
 
     </my-subscription-view>
