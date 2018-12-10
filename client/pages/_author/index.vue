@@ -8,8 +8,8 @@
       itemscope
     >
       <author-detail--header>
-        <picture itemprop="image">
-          <img v-if="author.picture" :src="author.picture" :alt="author.name">
+        <picture>
+          <img v-if="author.picture" itemprop="image" :src="author.picture" :alt="author.name">
           <img v-else src="~assets/user.png" :alt="author.name">
         </picture>
 

@@ -55,13 +55,13 @@
               :title="$t('Share on Twitter')">
             </a>
 
-            <time :title="post.time" itemprop="datePublished dateModified">
+            <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">
               {{ post.time | moment('DD. MM. YYYY') }}
             </time>
           </post-detail--footer>
         </div>
 
-        <post-detail--author itemprop="author" itemscope itemtype="https://schema.org/Publisher">
+        <post-detail--author itemprop="author publisher" itemscope itemtype="https://schema.org/Person">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
               <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>
