@@ -7,9 +7,9 @@
         @click="$router.go(-1)">
       </post-detail--back-button>
 
-      <main>
+      <main itemscope itemtype="https://schema.org/NewsArticle">
         <post-detail--header>
-          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
             <img :src="post.author.picture" :alt="post.author.name"/>
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
@@ -18,10 +18,10 @@
         </post-detail--header>
 
         <post-detail--title id="start">
-          <h1>{{post.content.title}}</h1>
+          <h1 itemprop="name">{{post.content.title}}</h1>
         </post-detail--title>
 
-        <post-detail--content v-html="post.content.perex" />
+        <post-detail--content v-html="post.content.perex" itemprop="articleBody" />
 
         <post-detail--continue-reading id="continue" v-if="post.content.content && showContinueReading">
           {{ $t('continue reading') }}
@@ -34,7 +34,7 @@
         </div>
 
         <div v-else>
-          <post-detail--content v-html="post.content.content" />
+          <post-detail--content v-html="post.content.content" itemprop="articleBody" />
 
           <post-detail--footer>
             <consider-post :post="post" :showText="true" />
@@ -57,20 +57,20 @@
           </post-detail--footer>
         </div>
 
-        <post-detail--author>
+        <post-detail--author itemprop="author" itemtype="https://schema.org/Person">
           <picture>
-            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-              <img :src="post.author.picture" :alt="post.author.name"/>
+            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
+              <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>
             </nuxt-link>
           </picture>
 
           <h3>
-            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-              {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
+              <span itemprop="name">{{post.author.name}}</span><span v-if="post.author.medium" itemprop="affiliation">, {{post.author.medium}}</span>
             </nuxt-link>
           </h3>
 
-          <p>{{post.author.bio}}</p>
+          <p itemprop="description">{{post.author.bio}}</p>
 
           <post-detail--author--subscription v-if="loggedIn">
             <AuthorSubscription

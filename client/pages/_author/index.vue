@@ -4,16 +4,18 @@
       v-infinite-scroll="loadPosts"
       infinite-scroll-disabled="loadingPosts"
       infinite-scroll-distance="100"
+      itemtype="https://schema.org/Person"
+      itemscope
     >
       <author-detail--header>
-        <picture>
+        <picture itemprop="image">
           <img v-if="author.picture" :src="author.picture" :alt="author.name">
           <img v-else src="~assets/user.png" :alt="author.name">
         </picture>
 
         <section>
-          <h1>{{ author.name }}</h1>
-          <p>{{ author.bio }}</p>
+          <h1 itemprop="name">{{ author.name }}</h1>
+          <p itemprop="description">{{ author.bio }}</p>
         </section>
 
         <author-detail--subscribe v-if="loggedIn">
@@ -34,7 +36,7 @@
               :title="$t('Subscription last till {to}', { to: subscription.to })"
             >{{ $t('Renew') }}</span>
           </button>
-          
+
           <button
             class="to-subscribe"
             v-else

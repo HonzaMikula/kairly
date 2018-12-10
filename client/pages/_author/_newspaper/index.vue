@@ -1,8 +1,8 @@
 <template>
   <app-layout>
-    <newspaper-detail-view>
+    <newspaper-detail-view itemtype="https://bib.schema.org/Newspaper" itemscope>
       <newspaper-detail--header>
-        <h1>{{ newspaper.title }}</h1>
+        <h1 itemprop="name">{{ newspaper.title }}</h1>
 
         <newspaper-detail--subscribe v-if="loggedIn">
           <newspaper-subscription :newspaper="newspaper" />
@@ -26,19 +26,19 @@
 
         <newspaper-detail--description>
           <section>
-            <p>
+            <p itemprop="description">
               {{ newspaper.description }}
             </p>
 
-            <footer>
-              <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
-                <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
-                {{ newspaper.editor.name }}
+            <footer itemprop="author" itemscope itemtype="https://schema.org/Person">
+              <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}" rel="author">
+                <img :src="newspaper.editor.picture" :alt="newspaper.editor.name" itemprop="image"/>
+                <span itemprop="name">{{ newspaper.editor.name }}</span>
               </nuxt-link>
             </footer>
           </section>
 
-          <picture>
+          <picture itemprop="image">
             <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
             <div v-else class="image-placeholder"></div>
           </picture>
