@@ -18,7 +18,7 @@
         </post-detail--header>
 
         <post-detail--title id="start">
-          <h1 itemprop="name">{{post.content.title}}</h1>
+          <h1 itemprop="name headline">{{post.content.title}}</h1>
         </post-detail--title>
 
         <post-detail--content v-html="post.content.perex" itemprop="articleBody" />
@@ -54,10 +54,14 @@
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="$t('Share on Twitter')">
             </a>
+
+            <time :title="post.time" itemprop="datePublished dateModified">
+              {{ post.time | moment('DD. MM. YYYY') }}
+            </time>
           </post-detail--footer>
         </div>
 
-        <post-detail--author itemprop="author" itemtype="https://schema.org/Person">
+        <post-detail--author itemprop="author" itemscope itemtype="https://schema.org/Publisher">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
               <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>
@@ -66,7 +70,7 @@
 
           <h3>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
-              <span itemprop="name">{{post.author.name}}</span><span v-if="post.author.medium" itemprop="affiliation">, {{post.author.medium}}</span>
+              <span itemprop="name">{{post.author.name}}</span><span v-if="post.author.medium">, {{post.author.medium}}</span>
             </nuxt-link>
           </h3>
 
@@ -471,6 +475,9 @@ post-detail--footer
     height: $baseline * 1.5
     margin: 0 auto $baseline auto
     line-height: $baseline * 1.5
+
+  time
+    float: right
 
   //- Tweaks adding to backlog widget
   backlog-add--dropdown
