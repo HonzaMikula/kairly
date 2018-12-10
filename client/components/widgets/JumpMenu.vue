@@ -51,9 +51,10 @@ export default {
 
   computed: {
     dayTitle() {
+      const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
       const dt = moment(this.datetime)
-      const today = moment().format("M/D");
-      const day = dt.format("M/D")
+      const today = moment().format(format);
+      const day = dt.format(format)
       const wod =  day === today ? this.$t('Today') : dt.format("dddd")
       return `${wod} ${day}`
     },

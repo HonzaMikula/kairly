@@ -8,7 +8,7 @@
             v-if="links.next"
             class="timeline--top-pagination"
           >
-            <p>{{date | moment('dddd, MMMM Do YYYY')}}</p>
+            <p>{{date | moment($i18n.locale === 'cs' ? 'dddd, D. MMMM YYYY' : 'dddd, MMMM Do YYYY')}}</p>
 
             <nuxt-link
               :to="{name: 'timeline-date', params: {date: links.prev}}"
