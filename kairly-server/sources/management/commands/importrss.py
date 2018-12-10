@@ -1,6 +1,7 @@
 import re
 import time
 import traceback
+import lxml.html
 from datetime import timedelta
 
 import dateutil.parser
@@ -88,7 +89,7 @@ class Command(BaseCommand):
             published = timezone.now()
 
         replacements = [d for d in channel.get_directives('replace', 'title')]
-        title = entry.title
+        title = self.get_title_from_entry(entry)
         for replacement in replacements:
             title = replacement.replace(title)
 
@@ -113,6 +114,12 @@ class Command(BaseCommand):
             updated = True
 
         return post, updated
+
+    def get_title_from_entry(self, entry):
+        detail = entry.title_detail
+        if detail['type'] == 'text/html':
+            return lxml.html.fromstring(detail['value']).text_content()
+        return detail['value']
 
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
