@@ -200,29 +200,6 @@ class ArticleParser:
     def _is_block(self, el):
         return el.tag in self.LEAF_BLOCK_TAGS or el.tag in self.PARENT_BLOCK_TAGS
 
-    def _flatten_leaf(self, el):
-        # print("--- FLATTEN_LEAF ---")
-        # print(fragments_to_string([el]))
-
-        children = list(el)
-        single_child = children[0] if len(children) == 1 else None
-        has_text = el.text and el.text.strip()
-
-        if single_child is None or has_text or (single_child.tail and single_child.tail.strip()):
-            return el
-
-        if single_child.tag == 'span':
-            # yield child <span> as <p> instead, this effectively means
-            # <p><span>foo</span></p> --> <p>foo</p>
-            children[0].tag = el.tag
-            children[0].tail = el.tail
-            return children[0]
-
-        if single_child.tag == 'br':
-            return single_child
-
-        return el
-
     def _flatten_parent(self, el):
         blocks = []
         children = list(el)
@@ -236,9 +213,6 @@ class ArticleParser:
 
         before_first_block = True
         for c in children:
-            # print("--- CHILDREN ---")
-            # print(fragments_to_string([c]))
-
             if self._is_block(c):
                 before_first_block = False
                 tail_content = c.tail and c.tail.strip()
@@ -273,7 +247,7 @@ class ArticleParser:
             # print(fragments_to_string([block]))
 
             if block.tag in self.LEAF_BLOCK_TAGS:
-                yield self._flatten_leaf(block)
+                yield block
                 continue
 
             if block.tag in self.PARENT_BLOCK_TAGS:
@@ -281,12 +255,41 @@ class ArticleParser:
                 if any(self._is_block(c) for c in children):
                     yield from self._flatten_parent(block)
                 else:
-                    yield self._flatten_leaf(block)
+                    yield block
                 continue
 
             yield block
 
-    def _fix_wrapped_br(self, el):
+    def _unfold_span(self, el):
+        mapped = []
+
+        def append_text(text):
+            nonlocal mapped
+            if mapped:
+                mapped[-1].tail = (mapped[-1].tail or ' ') + ' ' + text
+            else:
+                el.text = (el.text or ' ') + ' ' + text
+
+        for child in el:
+            if child.tag == 'span':
+                child = self._unfold_span(child)
+                text = child.text and child.text.strip()
+                if text:
+                    append_text(text)
+                mapped.extend(list(child))
+                tail = child.tail and child.tail.strip()
+                if tail:
+                    append_text(tail)
+                continue
+
+            if child.tag not in self.PHRASING_CONTEXT_TAGS:
+                child = self._unfold_span(child)
+            mapped.append(child)
+
+        el[:] = mapped
+        return el
+
+    def _unfold_wrapped_br(self, el):
         def wrapped_br(div):
             children = list(el)
             single_child = children[0] if len(children) == 1 else None
@@ -301,7 +304,7 @@ class ArticleParser:
             return single_child if is_wrapped_br else None
 
         # first map chilren
-        mapped = [self._fix_wrapped_br(c) for c in el]
+        mapped = [self._unfold_wrapped_br(c) for c in el]
         el[:] = mapped
 
         # self test must be after chilren because of nested <br>
@@ -372,7 +375,8 @@ class ArticleParser:
             for c in el.cssselect('label,legend'):
                 c.tag = 'span'
 
-        fragments = [self._fix_wrapped_br(el) for el in fragments]
+        fragments = [self._unfold_span(el) for el in fragments]
+        fragments = [self._unfold_wrapped_br(el) for el in fragments]
 
         result = []
         for fragment in fragments:
