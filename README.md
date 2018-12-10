@@ -157,6 +157,10 @@ replace title '^\[článek\]\s*' ''
 replace title '^\[aktualita\]\s*' ''
 ```
 
+Use regular expression to modify perex/content.
+```
+replace document 'koleje' 'poleje'
+```
 
 ## Users existing before migration
 

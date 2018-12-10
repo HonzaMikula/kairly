@@ -93,6 +93,11 @@ class Command(BaseCommand):
         for replacement in replacements:
             title = replacement.replace(title)
 
+        replacements = [d for d in channel.get_directives('replace', 'document')]
+        for replacement in replacements:
+            perex = replacement.replace(perex)
+            content = replacement.replace(content)
+
         args = dict(
             kind=Post.NEWSPAPER,
             published=published,

@@ -22,8 +22,8 @@ class ReplaceDirective:
     name = 'replace'
 
     def __init__(self, target=None, pattern=None, replacement=None):
-        if target != 'title':
-            raise ValueError("Target must be 'title'. " + self.__doc__)
+        if target not in ['title', 'document']:
+            raise ValueError("Target must be 'title' or 'document'. " + self.__doc__)
         if pattern is None:
             raise ValueError("Pattern must be set." + self.__doc__)
         if replacement is None:
