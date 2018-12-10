@@ -56,7 +56,7 @@ export default {
   async asyncData({ app }) {
     const [issues, best_of] = await Promise.all([
       app.$axios.$get('/recent/issues?count=5'),
-      app.$axios.$get('/explore/Best of Kairly')  // hack using best of tab, whicj contains new authors
+      app.$axios.$get('/explore/Best of Kairly')  // hack using best of tab, which contains new authors
     ])
     const authors = best_of.categories[1].authors.slice(0, 5)
     return { issues, authors }
@@ -73,8 +73,13 @@ my-subscription-view
   grid-template-areas: "subscription-nav subscription-explore" "subscription-main subscription-explore"
 
   box-sizing: border-box
+  padding: 0 $baseline
   max-width: 900px
   margin: $baseline auto
+
+  @media (max-width: 800px)
+    grid-template-columns: 2fr
+    grid-template-areas: "subscription-nav" "subscription-main" "subscription-explore"
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4
@@ -104,6 +109,9 @@ my-subscription-view
   //- Explore promotion
   > aside
     grid-area: subscription-explore
+
+    @media (max-width: 800px)
+      display: none
 
     h2
       margin-bottom: $baseline

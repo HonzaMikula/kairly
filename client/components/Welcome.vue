@@ -14,9 +14,18 @@
       </section>
 
       <section class="welcome--newspapers">
-        <loading-spinner v-if="loading"></loading-spinner>
-        <div v-else>
+        <div>
+          <template v-if="loading">
+            <div class="welcome--newspapers--loading" v-for="x in [1,2,3]" :key="x">
+              <div class="picture"></div>
+              <div class="title"></div>
+              <p>Daily at 9:00</p>
+              <div class="description"></div>
+              <div class="subscribe">Subscribe</div>
+            </div>
+          </template>
           <NewspaperWidget
+            v-else
             v-for="newspaper in newspapers"
             :key="newspaper.fullName"
             :newspaper="newspaper"
@@ -138,8 +147,16 @@ export default {
     display: flex
     justify-content: center
     margin-bottom: $baseline / 2
+    padding: 0 $baseline/4
+
+    @media (max-width: $mobile)
+      display: block
+
+      white-space: nowrap
+      overflow-x: auto
 
   li
+    display: inline-block
     margin-right: $baseline / 2
 
   a
@@ -161,6 +178,10 @@ export default {
 //- Newspapers
 .welcome--newspapers
   margin-bottom: $baseline * 2
+  padding: 0 $baseline/4
+
+  @media (max-width: $mobile)
+    margin-bottom: $baseline
 
   > div
     display: grid
@@ -175,6 +196,59 @@ export default {
       newspaper-widget-view
         min-width: 200px
 
+//- Illustration on newspaper widget
+.welcome--newspapers--loading
+  border-radius: 5px
+  padding: $baseline / 4
+
+  background: #fff
+  border: 1px solid #eee
+
+  text-align: center
+
+  //- picture
+  .picture
+    height: 120px
+    margin-bottom: $baseline / 2
+    background: #eee
+
+  //- title
+  .title
+    height: $baseline / 2
+    margin-bottom: $baseline / 4
+    width: 75%
+    background: #eee
+
+  p
+    margin-bottom: $baseline / 2
+    color: #999
+    font-family: $ff-sans
+    font-size: $fs--1
+    font-weight: 600
+    line-height: $baseline * 0.8
+    text-align: left
+
+  //- description
+  .description
+    &::after,
+    &::before
+      display: block
+      height: $baseline / 4
+      margin-bottom: $baseline / 4
+      border-bottom: $baseline / 4 solid #eee
+      border-top: $baseline / 4 solid #eee
+      content: ''
+
+  //- subscribe
+  .subscribe
+    display: inline-block
+    border-radius: $baseline
+    margin: 0 auto
+    padding: 0 $baseline/2
+    border: 1px solid #eee
+    color: #999
+    font-family: $ff-sans
+    font-size: $fs--1
 
 //- Roles
 .welcome--roles
@@ -185,6 +259,8 @@ export default {
 
     @media (max-width: $mobile)
       flex-direction: column
+      padding: 0 $baseline/4
+      margin-bottom: 0
 
   section
     position: relative
@@ -203,8 +279,14 @@ export default {
     font-size: $fs-1
     font-weight: 600
 
+    @media (max-width: $mobile)
+      margin-bottom: 0
+
   p + p
     margin-top: $baseline / 2
+
+    @media (max-width: $mobile)
+      margin-top: $baseline / 4
 
     a
       color: $c-base
