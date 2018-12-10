@@ -77,9 +77,28 @@ msgstr "Vytvořit noviny"
 msgid "Explore"
 msgstr "Objevujte"
 
-#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:23
-msgid "Show more"
-msgstr "Zobrazit další"
+#: components/issues/newspaper.vue:37 components/issues/author.vue:49
+msgid "6× per day"
+msgstr "6x denně"
+
+#: components/issues/newspaper.vue:38 components/issues/author.vue:50
+#: components/widgets/FollowAuthor.vue:26
+msgid "3× per day"
+msgstr "3x denně"
+
+#: components/issues/newspaper.vue:39 components/widgets/PeriodWidget.vue:12
+#: pages/subscription/authors.vue:39 components/widgets/FollowAuthor.vue:28
+msgid "Weekly"
+msgstr "Týdně"
+
+#: components/issues/newspaper.vue:40 components/widgets/PeriodWidget.vue:11
+#: pages/subscription/authors.vue:30 components/widgets/FollowAuthor.vue:27
+msgid "Daily"
+msgstr "denně"
+
+#: components/editor/EditTweet.vue:4
+msgid "Tweet Content"
+msgstr "Tweet"
 
 #: components/layout/Header.vue:9
 msgid "Home"
@@ -125,6 +144,90 @@ msgstr "Zapojte se"
 msgid "Sign In"
 msgstr "Přihlásit se"
 
+#: components/modals/JoinUs.vue:5
+msgid "Are you interested in Kairly?"
+msgstr "Zajímá vás Kairly?"
+
+#: components/modals/JoinUs.vue:9
+msgid "Participate in user testing"
+msgstr "Zapojte se do uživatelského testování"
+
+#: components/modals/JoinUs.vue:11
+msgid "@joinus/usertesting"
+msgstr ""
+"Otestujte s námi Kairly během 30 - 60 minutového uživatelské testování přes "
+"Skype (případně jiný komunikační nástroj)."
+
+#: components/modals/JoinUs.vue:20
+msgid "Schedule user testing interview"
+msgstr "Naplánovat uživatelské testování"
+
+#: components/modals/JoinUs.vue:23 components/modals/JoinUs.vue:33
+msgid "Join Facebook group"
+msgstr "Přidejte se do Facebookové skupiny"
+
+#: components/modals/JoinUs.vue:25
+msgid "@joinus/joinfacebook"
+msgstr ""
+"V naší facebookové skupině pravidelně sdílíme, co je nového na Kairly, \n"
+"a co plánujeme pro příští týdny. Rádi zde uslyšíme i cennou zpětnou vazbu."
+
+#: components/modals/JoinUs.vue:36
+msgid "Follow us on social media"
+msgstr "Sledujte nás na sociálních sítích"
+
+#: components/modals/JoinUs.vue:41 components/Homepage.vue:142
+msgid "Follow us Facebook"
+msgstr "Sledujte nás Facebooku"
+
+#: components/modals/JoinUs.vue:47 components/Homepage.vue:149
+msgid "Follow us Twitter"
+msgstr "Sledujte nás na Twitteru"
+
+#: components/modals/JoinUs.vue:53 components/Homepage.vue:156
+msgid "Follow us LinkedIn"
+msgstr "Sledujte nás na LinkedInu"
+
+#: components/modals/JoinUs.vue:57
+msgid "Join private beta"
+msgstr "Vyzkoušejte privátní beta verzi"
+
+#: components/modals/JoinUs.vue:59
+msgid "@joinus/joinprivatebeta"
+msgstr ""
+"Omezený počet uživatelů zveme do Kairly k získání zpětné vazby.\n"
+"Díky tomu neustále zlepšujeme aplikaci. Zapojte se také a \n"
+"můžete pomoci zlepšit současný stav žurnalistiky."
+
+#: components/modals/JoinUs.vue:70
+msgid "email address"
+msgstr "emailová adresa"
+
+#: components/modals/JoinUs.vue:73 components/Homepage.vue:14
+msgid "Request to join"
+msgstr "Zažádat o pozvánku"
+
+#: components/modals/SignIn.vue:11 pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: components/modals/SignIn.vue:16 pages/join-and-read-with-kairly.vue:21
+#: pages/user/settings.vue:51
+msgid "Password"
+msgstr "Heslo"
+
+#: components/modals/SignIn.vue:20
+msgid "Sign in"
+msgstr "Přihlásit se"
+
+#: components/modals/SignIn.vue:23
+msgid "Wrong username or password"
+msgstr "Špatné uživatelské jméno nebo heslo"
+
+#: components/IssueWrapper.vue:26 pages/explore/_tab.vue:23
+msgid "Show more"
+msgstr "Zobrazit další"
+
 #: components/posts/article.vue:13
 msgid "Read the article"
 msgstr "Číst článek"
@@ -149,23 +252,6 @@ msgstr "Originální článek"
 #: components/posts/tweet.vue:24
 msgid "Original tweet"
 msgstr "Originální tweet"
-
-#: components/modals/SignIn.vue:11 pages/join-and-read-with-kairly.vue:13
-msgid "Username"
-msgstr "Uživatelské jméno"
-
-#: components/modals/SignIn.vue:16 pages/join-and-read-with-kairly.vue:21
-#: pages/user/settings.vue:51
-msgid "Password"
-msgstr "Heslo"
-
-#: components/modals/SignIn.vue:20
-msgid "Sign in"
-msgstr "Přihlásit se"
-
-#: components/modals/SignIn.vue:23
-msgid "Wrong username or password"
-msgstr "Špatné uživatelské jméno nebo heslo"
 
 #: components/profile/ChangePassword.vue:5
 msgid "Change Password"
@@ -232,7 +318,7 @@ msgid "Do you want to start a newspaper and pick the best content for others?"
 msgstr "Chcete založit noviny a vybírat ten nejlepší obsah pro ostatní?"
 
 #: components/Welcome.vue:53 pages/newspapers.vue:13 pages/newspapers.vue:19
-#: pages/_author/index.vue:81
+#: pages/_author/index.vue:83
 msgid "Start a newspaper"
 msgstr "Vytvořte noviny"
 
@@ -251,69 +337,6 @@ msgstr "Napište první příspěvek"
 #: components/Welcome.vue:66
 msgid "Go Home to start reading"
 msgstr "Jděte na Hlavní stránku a začněte číst"
-
-#: components/modals/JoinUs.vue:5
-msgid "Are you interested in Kairly?"
-msgstr "Zajímá vás Kairly?"
-
-#: components/modals/JoinUs.vue:9
-msgid "Participate in user testing"
-msgstr "Zapojte se do uživatelského testování"
-
-#: components/modals/JoinUs.vue:11
-msgid "@joinus/usertesting"
-msgstr ""
-"Otestujte s námi Kairly během 30 - 60 minutového uživatelské testování přes "
-"Skype (případně jiný komunikační nástroj)."
-
-#: components/modals/JoinUs.vue:20
-msgid "Schedule user testing interview"
-msgstr "Naplánovat uživatelské testování"
-
-#: components/modals/JoinUs.vue:23 components/modals/JoinUs.vue:33
-msgid "Join Facebook group"
-msgstr "Přidejte se do Facebookové skupiny"
-
-#: components/modals/JoinUs.vue:25
-msgid "@joinus/joinfacebook"
-msgstr ""
-"V naší facebookové skupině pravidelně sdílíme, co je nového na Kairly, \n"
-"a co plánujeme pro příští týdny. Rádi zde uslyšíme i cennou zpětnou vazbu."
-
-#: components/modals/JoinUs.vue:36
-msgid "Follow us on social media"
-msgstr "Sledujte nás na sociálních sítích"
-
-#: components/modals/JoinUs.vue:41 components/Homepage.vue:142
-msgid "Follow us Facebook"
-msgstr "Sledujte nás Facebooku"
-
-#: components/modals/JoinUs.vue:47 components/Homepage.vue:149
-msgid "Follow us Twitter"
-msgstr "Sledujte nás na Twitteru"
-
-#: components/modals/JoinUs.vue:53 components/Homepage.vue:156
-msgid "Follow us LinkedIn"
-msgstr "Sledujte nás na LinkedInu"
-
-#: components/modals/JoinUs.vue:57
-msgid "Join private beta"
-msgstr "Vyzkoušejte privátní beta verzi"
-
-#: components/modals/JoinUs.vue:59
-msgid "@joinus/joinprivatebeta"
-msgstr ""
-"Omezený počet uživatelů zveme do Kairly k získání zpětné vazby.\n"
-"Díky tomu neustále zlepšujeme aplikaci. Zapojte se také a \n"
-"můžete pomoci zlepšit současný stav žurnalistiky."
-
-#: components/modals/JoinUs.vue:70
-msgid "email address"
-msgstr "emailová adresa"
-
-#: components/modals/JoinUs.vue:73 components/Homepage.vue:14
-msgid "Request to join"
-msgstr "Zažádat o pozvánku"
 
 #: components/widgets/AuthorSubscription.vue:8
 msgid "Change the subscriptions"
@@ -364,55 +387,55 @@ msgstr "Přejít na jiný čas"
 msgid "Beginning of the day"
 msgstr "Začátek dne"
 
-#: components/widgets/JumpMenu.vue:57
+#: components/widgets/JumpMenu.vue:58
 msgid "Today"
 msgstr "Dnes"
 
-#: components/widgets/JumpMenu.vue:75
+#: components/widgets/JumpMenu.vue:76
 msgid "Night"
 msgstr "Noc"
 
-#: components/widgets/JumpMenu.vue:76
+#: components/widgets/JumpMenu.vue:77
 msgid "Evening"
 msgstr "Večer"
 
-#: components/widgets/JumpMenu.vue:77
+#: components/widgets/JumpMenu.vue:78
 msgid "Afternoon"
 msgstr "Odpoledne"
 
-#: components/widgets/JumpMenu.vue:78
+#: components/widgets/JumpMenu.vue:79
 msgid "Noon"
 msgstr "Poledne"
 
-#: components/widgets/JumpMenu.vue:79
+#: components/widgets/JumpMenu.vue:80
 msgid "Morning"
 msgstr "Ráno"
 
-#: components/widgets/JumpMenu.vue:80
+#: components/widgets/JumpMenu.vue:81
 msgid "Early morning"
 msgstr "Brzo ráno"
 
-#: components/widgets/NewspaperSubscription.vue:8 pages/_author/index.vue:26
+#: components/widgets/NewspaperSubscription.vue:8 pages/_author/index.vue:28
 msgid "Subscribed"
 msgstr "Odebíráno"
 
-#: components/widgets/NewspaperSubscription.vue:9 pages/_author/index.vue:27
+#: components/widgets/NewspaperSubscription.vue:9 pages/_author/index.vue:29
 msgid "Canceled"
 msgstr "Zrušený"
 
-#: components/widgets/NewspaperSubscription.vue:11 pages/_author/index.vue:29
+#: components/widgets/NewspaperSubscription.vue:11 pages/_author/index.vue:31
 msgid "Unsubscribe"
 msgstr "Zrušit"
 
-#: components/widgets/NewspaperSubscription.vue:16 pages/_author/index.vue:34
+#: components/widgets/NewspaperSubscription.vue:16 pages/_author/index.vue:36
 msgid "Subscription last till {to}"
 msgstr "Odebíráno do {to}"
 
-#: components/widgets/NewspaperSubscription.vue:17 pages/_author/index.vue:35
+#: components/widgets/NewspaperSubscription.vue:17 pages/_author/index.vue:37
 msgid "Renew"
 msgstr "Obnovit"
 
-#: components/widgets/NewspaperSubscription.vue:25 pages/_author/index.vue:42
+#: components/widgets/NewspaperSubscription.vue:25 pages/_author/index.vue:44
 msgid "Subscribe"
 msgstr "Odebírat"
 
@@ -423,16 +446,6 @@ msgstr "Jak často chcete noviny publikovat?"
 #: components/widgets/PeriodWidget.vue:10 pages/subscription/authors.vue:21
 msgid "3x per day"
 msgstr "3x za den"
-
-#: components/widgets/PeriodWidget.vue:11 components/issues/newspaper.vue:40
-#: pages/subscription/authors.vue:30 components/widgets/FollowAuthor.vue:27
-msgid "Daily"
-msgstr "denně"
-
-#: components/widgets/PeriodWidget.vue:12 components/issues/newspaper.vue:39
-#: pages/subscription/authors.vue:39 components/widgets/FollowAuthor.vue:28
-msgid "Weekly"
-msgstr "Týdně"
 
 #: components/widgets/PeriodWidget.vue:18
 #: components/widgets/FollowAuthor.vue:35
@@ -544,18 +557,6 @@ msgstr "Žádné články ani ani tweety."
 msgid "That's it. You read the entire day."
 msgstr "Hotovo. Máte přečtený celý den."
 
-#: components/editor/EditTweet.vue:4
-msgid "Tweet Content"
-msgstr "Tweet"
-
-#: components/issues/newspaper.vue:37
-msgid "6× per day"
-msgstr "6x denně"
-
-#: components/issues/newspaper.vue:38 components/widgets/FollowAuthor.vue:26
-msgid "3× per day"
-msgstr "3x denně"
-
 #: pages/join-and-read-with-kairly.vue:6
 msgid "Sign up to help with resurrection of exceptional journalism."
 msgstr "Zapojte se a pomozte nám tvořit vyjímečnou žurnalistiku."
@@ -572,6 +573,23 @@ msgstr "Alespoň 8 znaků"
 msgid "Sign Up"
 msgstr "Zaregistrovat se"
 
+#: components/issues/author.vue:51
+msgid "Daily summary"
+msgstr "Denní přehled"
+
+#: components/issues/author.vue:52
+msgid "Weekly summary"
+msgstr "Týdenní přehled"
+
+#: pages/posts/create/tweet.vue:3 pages/posts/create/article.vue:3
+msgid "Save a draft"
+msgstr "Uložit koncept"
+
+#: pages/posts/create/tweet.vue:17 pages/posts/create/article.vue:18
+#: pages/posts/_postId.vue:23 components/layout/MyPosts.vue:33
+msgid "My Posts – Kairly"
+msgstr "Moje příspěvky – Kairly"
+
 #: pages/posts/create.vue:5
 msgid "Write an article"
 msgstr "Napsat článek"
@@ -579,15 +597,6 @@ msgstr "Napsat článek"
 #: pages/posts/create.vue:6
 msgid "Write a tweet"
 msgstr "Napsat tweet"
-
-#: pages/posts/create/article.vue:3 pages/posts/create/tweet.vue:3
-msgid "Save a draft"
-msgstr "Uložit koncept"
-
-#: pages/posts/create/article.vue:18 pages/posts/create/tweet.vue:17
-#: pages/posts/_postId.vue:23 components/layout/MyPosts.vue:33
-msgid "My Posts – Kairly"
-msgstr "Moje příspěvky – Kairly"
 
 #: pages/posts/index.vue:4
 msgid "No drafts"
@@ -624,10 +633,6 @@ msgstr "Objevujte autory"
 #: pages/subscription/authors.vue:61
 msgid "Authors – My Subscription – Kairly"
 msgstr "Autoři – Moje odběry – Kairly"
-
-#: pages/posts/published.vue:20
-msgid "You didn't publish any post."
-msgstr "Nepublikoval jste zatím žádný článek."
 
 #: pages/subscription/newspapers.vue:5
 msgid "No newspapers"
@@ -744,6 +749,10 @@ msgstr ""
 "Přihlašte se k odběru novin a jakmile bude k dispozici nové číslozobrazíme "
 "vám ho na hlavní stránce."
 
+#: pages/posts/published.vue:20
+msgid "You didn't publish any post."
+msgstr "Nepublikoval jste zatím žádný článek."
+
 #: mixins/PeriodicityMixin.js:19
 msgid "Daily at 6:00, 12:00 and 18:00"
 msgstr "Denně v 6:00, 12:00 a 18:00"
@@ -759,18 +768,6 @@ msgstr "Denně v {at}"
 #: mixins/PeriodicityMixin.js:28
 msgid "Every {dow} at {at}"
 msgstr "Každé {dow} v {at}"
-
-#: components/layout/MyPosts.vue:6
-msgid "Drafts"
-msgstr "Koncepty"
-
-#: components/layout/MyPosts.vue:7
-msgid "Published posts"
-msgstr "Publikované články"
-
-#: components/layout/MyPosts.vue:11
-msgid "Create a post"
-msgstr "Vytvořit článek"
 
 #: components/editor/NewspaperBacklog.vue:6
 msgid "Issue"
@@ -1030,21 +1027,33 @@ msgstr "Nadcházející vydání"
 msgid "Considered posts"
 msgstr "Vybrané články"
 
-#: pages/_author/index.vue:64
+#: pages/_author/index.vue:66
 msgid "Show all newspapers"
 msgstr "Zobrazit všechny noviny"
 
-#: pages/_author/index.vue:64
+#: pages/_author/index.vue:66
 msgid "Hide newspapers"
 msgstr "Schovat noviny"
 
-#: pages/_author/index.vue:75
+#: pages/_author/index.vue:77
 msgid "User didn't write any posts and didn't start any newspaper."
 msgstr "Uživatel nenapsal žádný článek ani nevytvořil žádné noviny."
 
-#: pages/_author/index.vue:79
+#: pages/_author/index.vue:81
 msgid "You didn't write any post and didn't start any newspaper."
 msgstr "Nenapsal jste žádný článek ani nevytvořil žádné noviny."
+
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
+msgstr "Koncepty"
+
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
+msgstr "Publikované články"
+
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
+msgstr "Vytvořit článek"
 
 #: pages/_author/_post.vue:5
 msgid "Back"
@@ -1069,6 +1078,12 @@ msgstr "Sdílejte na Twitter"
 #: pages/_author/_post.vue:84
 msgid "Subscribe author"
 msgstr "Odebírejte autora"
+
+#~ msgid "Daily Summary"
+#~ msgstr "Denní přehled"
+
+#~ msgid "Weekly Summary"
+#~ msgstr "Týdenní přehled"
 
 #~ msgid "My Subscription – Authors – Kairly"
 #~ msgstr "Moje odběry – Autoři – Kairly"

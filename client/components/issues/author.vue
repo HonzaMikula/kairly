@@ -9,7 +9,7 @@
       </h1>
 
       <p>
-        {{ issue.title }}
+        {{ localizedTitle() }}
         •
         {{ issue.time | moment('calendar') }}
       </p>
@@ -41,5 +41,17 @@ export default {
   components: {
     PostIssue
   },
+
+  methods: {
+    localizedTitle() {
+      // each constant must be wrapped to $t
+      const { title } = this.issue
+      if (title === '6× per day') return this.$t('6× per day')
+      if (title === '3× per day') return this.$t('3× per day')
+      if (title === 'Daily summary') return this.$t('Daily summary')
+      if (title === 'Weekly summary') return this.$t('Weekly summary')
+      return title // should never happen
+    }
+  }
 }
 </script>
