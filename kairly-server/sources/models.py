@@ -11,7 +11,7 @@ from django.db import models
 from django.core.cache import cache
 from django.conf import settings
 
-from sources.parser import ArticleParser, split_article_to_perex_and_content
+from sources.parser import ArticleParser, split_article_to_perex_and_content, validate_rules
 from sources.directives import validate_directives, parse as parse_directives
 
 
@@ -21,7 +21,7 @@ class Channel(models.Model):
     rss = models.CharField(max_length=250)
     parse_content_from_rss = models.BooleanField(default=False)
     user_agent = models.CharField(help_text="Force User-Agent header when fetching RSS or post", max_length=250, null=True, blank=True)
-    parser = models.TextField(help_text="Parse rules to get content from webpage/rss.", blank=False)
+    parser = models.TextField(help_text="Parse rules to get content from webpage/rss.", blank=False, validators=[validate_rules])
     directives = models.TextField(blank=True, validators=[validate_directives])
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, blank=True, null=True)
     newspaper = models.CharField(help_text="Automatically add to newspaper's backlog", max_length=160, null=True, blank=True, db_index=True)

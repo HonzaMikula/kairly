@@ -128,6 +128,18 @@ img
   [sizes]: none
 ```
 
+## Selection with XPath
+
+Sometimes elements can't be selected by CSS. XPath is more strong
+and may be helpful. Eg. selection by text content
+
+XPath rules can't be nested.
+```
+@xpath //*[contains(text(), "twitter-follow")]
+  tag: none
+```
+
+
 ## Channel directives
 
 #### skip domain

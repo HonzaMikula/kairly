@@ -1,12 +1,13 @@
 import re
+from django.core.exceptions import ValidationError
 from collections import namedtuple, defaultdict
 from itertools import product
 
 import lxml
 from lxml import etree
 
-Rule = namedtuple('Rule', ['props', 'selector'])
-NestingLevel = namedtuple('NestingLevel', ['indent', 'parts'])
+Rule = namedtuple('Rule', ['engine', 'props', 'selector'])
+NestingLevel = namedtuple('NestingLevel', ['engine', 'indent', 'parts'])
 
 
 def fragments_to_string(fragments):
@@ -60,8 +61,7 @@ def split_article_to_perex_and_content(fragments, perex_size):
 
 class ArticleParser:
 
-    REGEX_COMMENT_MULTILINE = re.compile(r"/\*.*?\*/", re.DOTALL)
-    REGEX_COMMENT_ONELINE = re.compile(r"([\^ ])//.*")  # do not match // inside eg attr selectors
+    # REGEX_COMMENT_MULTILINE = re.compile(r"/\*.*?\*/", re.DOTALL)
     REGEX_SPACE = re.compile(r"\s*")
     REGEX_ATTR_PROP = re.compile(r"\[(\w+)\]")
 
@@ -113,6 +113,8 @@ class ArticleParser:
         for rule in self.flatten_rules():
             if rule.selector == '*':
                 elements = [htmltree]
+            elif rule.engine == 'xpath':
+                elements = list(htmltree.xpath(rule.selector))
             else:
                 elements = self.cssselect_with_slice(htmltree, rule.selector)
 
@@ -130,11 +132,16 @@ class ArticleParser:
                 props.update(rule.props)
 
                 if move_after is not None:
+                    # TODO fix case when moved element has tail
                     el.getparent().remove(el)
                     parent = move_after.getparent()
                     parent.insert(parent.index(move_after) + 1, el)
 
         elements = self._find_elements(htmltree)
+
+        # Do not select text outside root elements
+        for el in elements:
+            el.tail = None
 
         self.props = None
         return elements
@@ -393,12 +400,13 @@ class ArticleParser:
     def get_effetive_lines(self, s):
         """Remove comments and split to lines"""
         # remove all occurance streamed comments (/*COMMENT */) from string
-        s = self.REGEX_COMMENT_MULTILINE.sub("", s)
-        # remove all occurance singleline comments (//COMMENT\n ) from string
+        # there is problem with XPath rules which may contains rule //*[foo]
+        # rather don't use /* comments at all */
+        # s = self.REGEX_COMMENT_MULTILINE.sub("", s)
+
         for line in s.split('\n'):
             if line.startswith('//'):
                 continue
-            # line = self.REGEX_COMMENT_ONELINE.sub(r"\1", s)
             line = line.rstrip()
             if line:
                 yield line
@@ -428,7 +436,12 @@ class ArticleParser:
             return part.strip()
 
         def create_rule(props, context):
-            return Rule(props, ', '.join(flatten_context(context)))
+            if context[0].engine == 'xpath':
+                assert len(context) == 1
+                assert len(context[0].parts) == 1
+                return Rule('xpath', props, context[0].parts[0])
+            else:
+                return Rule('css', props, ', '.join(flatten_context(context)))
 
         for line in self.get_effetive_lines(self.rules):
             m = self.REGEX_SPACE.match(line)
@@ -438,7 +451,17 @@ class ArticleParser:
                 raise ValueError("Wrong indent. Line: {}".format(line))
 
             selector = line[indent:]
-            prop = parse_property(line)
+
+            if selector.startswith('@xpath '):
+                prop = None
+                if indent:
+                    raise ValueError("XPath selector is allowed only on top level")
+                selector = selector[len('@xpath '):]
+                engine = 'xpath'
+                # context.append(NestingLevel('xpath', indent, parts=[selector]))
+            else:
+                engine = 'css'
+                prop = parse_property(line)
 
             if prop:
                 if props:
@@ -449,6 +472,9 @@ class ArticleParser:
                         raise ValueError("Wrong indent. Line: {}".format(line))
                 props.update(prop)
             else:
+                if indent and context[0].engine != 'css':
+                    raise ValueError("Only CSS can be nested")
+
                 if context and prev_indent >= indent:
                     rules.append(create_rule(props, context))
 
@@ -456,8 +482,11 @@ class ArticleParser:
                     while context and context[-1].indent >= indent:
                         context.pop()
 
-                parts = selector.split(',')
-                context.append(NestingLevel(indent, map(normalize_part, parts)))
+                if engine == 'css':
+                    parts = selector.split(',')
+                    context.append(NestingLevel(engine, indent, map(normalize_part, parts)))
+                else:
+                    context.append(NestingLevel(engine, indent, [selector]))
 
             prev_indent = indent
 
@@ -583,3 +612,10 @@ class ArticleParser:
         print(htmltree.tag)
         for child in htmltree:
             self._print_tree(child, indent + '  ')
+
+
+def validate_rules(value):
+    try:
+        ArticleParser(value).flatten_rules()
+    except Exception as e:
+        raise ValidationError(str(e)) from e

@@ -10,7 +10,7 @@ class ArticleParserRulesTest(unittest.TestCase):
         rules = """
 .perex
 
-/* some comment */
+// some comment
 aside
   p, img
     blabla: xyz
@@ -22,9 +22,9 @@ div#content
 """
         parser = ArticleParser(rules)
         self.assertEqual(parser.flatten_rules(), [
-            Rule({}, '.perex'),
-            Rule({'blabla': 'xyz'}, 'aside p, aside img'),
-            Rule({
+            Rule('css', {}, '.perex'),
+            Rule('css', {'blabla': 'xyz'}, 'aside p, aside img'),
+            Rule('css', {
                 'tag': 'p',
                 'foo': 'bar'
             }, 'div#content p, div#content h3')
@@ -41,8 +41,8 @@ img[src="http://winepunk.cz"]
 """
         parser = ArticleParser(rules)
         self.assertEqual(parser.flatten_rules(), [
-            Rule({}, '.perex'),
-            Rule({}, 'img[src="http://winepunk.cz"]'),
+            Rule('css', {}, '.perex'),
+            Rule('css', {}, 'img[src="http://winepunk.cz"]'),
         ])
 
     def test_flatten_slicing(self):
@@ -52,8 +52,35 @@ a, b[0]
 """
         parser = ArticleParser(rules)
         self.assertEqual(parser.flatten_rules(), [
-            Rule({'tag': 'p'}, 'a, b[0]'),
+            Rule('css', {'tag': 'p'}, 'a, b[0]'),
         ])
+
+    def test_flatten_xpath(self):
+        rules = """
+@xpath //*[contains(text(), "twitter-follow")]
+  tag: none
+
+// last paragraph: Příspěvek XYZ pochází z ...
+@xpath //p[last() and contains(text(), "Příspěvek")]
+  tag: none
+"""
+        parser = ArticleParser(rules)
+        self.assertEqual(parser.flatten_rules(), [
+            Rule('xpath', {'tag': 'none'}, '//*[contains(text(), "twitter-follow")]'),
+            Rule('xpath', {'tag': 'none'}, '//p[last() and contains(text(), "Příspěvek")]'),
+        ])
+
+    def test_xpath_select(self):
+        doc = "<div><p>Hello <em>World</em>!</p><p>Bye</p></div>"
+        rules = """
+@xpath //*[contains(text(), "World")]
+"""
+        expected = "<em>World</em>"
+
+        parser = ArticleParser(rules)
+        fragments = parser.parse(lxml.html.fromstring(doc))
+        article = fragments_to_string(fragments)
+        self.assertEqual(article, expected)
 
     def test_parse_strip_element(self):
         doc = "<div><p>Hello <em>World</em>!</p><p>Bye</p></div>"
