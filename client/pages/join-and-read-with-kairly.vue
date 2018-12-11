@@ -37,7 +37,10 @@ export default {
 
   head() {
     return {
-      title: 'Sign Up – Kairly'
+      title: 'Sign Up – Kairly',
+      meta: [
+        { hid: 'description', name: 'description', content: 'Kairly is platform which aims to improve environment for journalism. Sign up for beta version.' },
+      ]
     }
   },
 

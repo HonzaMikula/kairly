@@ -23,9 +23,11 @@
 
         <post-detail--content v-html="post.content.perex" itemprop="articleBody" />
 
-        <post-detail--continue-reading id="continue" v-if="post.content.content && showContinueReading">
-          {{ $t('continue reading') }}
-        </post-detail--continue-reading>
+        <no-ssr>
+          <post-detail--continue-reading id="continue" v-if="post.content.content && showContinueReading">
+            {{ $t('continue reading') }}
+          </post-detail--continue-reading>
+        </no-ssr>
 
         <div v-if="post.content.protected && post.source">
           <post-detail--footer>
