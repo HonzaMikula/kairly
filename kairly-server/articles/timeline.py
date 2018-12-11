@@ -177,6 +177,7 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
 
     posts_query = Post.objects.filter(
         author=sub.author,
+        draft=False,
         published__gte=intervals[0].start,
         published__lt=intervals[-1].end,
     )
