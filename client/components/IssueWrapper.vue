@@ -27,6 +27,11 @@
       </button>
     </footer>
 
+    <!--
+    <div class="issue-footer">
+      <button>Thanks</button>
+    </div>
+    -->
   </component>
 </template>
 
@@ -155,4 +160,31 @@ timeline-newspaper
       &:hover,
       &:focus
         background: darken($c-base, 10%)
+
+//- Issue
+.issue-footer
+  text-align: center
+
+  button
+    display: inline-block
+    border-radius: $baseline * 0.7
+    height: $baseline * 1.25
+    padding: 0 $baseline/2
+
+    background: transparent
+    border: 1px solid #ddd
+    color: #555
+
+    font-size: $fs-0
+    font-family: $ff-sans
+    line-height: $baseline * 1.25
+
+    cursor: pointer
+
+    &:hover,
+    &:focus
+      border: 1px solid $c-base
+      color: $c-base
+
+
 </style>

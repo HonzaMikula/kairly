@@ -67,12 +67,21 @@ export default {
   head() {
     const { title, name, description, editor, picture } = this.newspaper
     const { number } = this.issue
+
+    var titlesArray = this.issue.posts.reduce((ids, post) => {
+      if (post.content.title !== undefined) {
+        ids.push(post.content.title);
+      }
+      return ids;
+    }, []);
+    const issueDescription = titlesArray.join(' • ')
+
     return {
       title: `${title} #${number} – Kairly`,
       meta: [
-        { hid: 'description', name: 'description', content: description },
+        { hid: 'description', name: 'description', content: issueDescription },
         { hid: 'og:title', property: 'og:title', content: `${title} #${number} – Kairly` },
-        { hid: 'og:description', property: 'og:description', content: description },
+        { hid: 'og:description', property: 'og:description', content: issueDescription },
         { hid: 'og:image', property: 'og:image', content: picture },
         { hid: 'og:image:alt', property: 'og:image:alt', content: title },
         { hid: 'og:type', property: 'og:type', content: 'product' },
@@ -80,7 +89,7 @@ export default {
         { hid: 'twitter:card', property: 'twitter:card', content: 'summary'},
         { hid: 'twitter:site', property: 'twitter:site', content: '@kairlyapp'},
         { hid: `twitter:title`, property: 'twitter:title', content: `${title} #${number} – Kairly` },
-        { hid: `twitter:description`, property: 'twitter:description', content: description },
+        { hid: `twitter:description`, property: 'twitter:description', content: issueDescription },
         { hid: `twitter:image`, property: 'twitter:image', content: picture },
       ]
     }
