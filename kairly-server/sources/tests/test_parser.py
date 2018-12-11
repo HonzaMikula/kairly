@@ -39,7 +39,7 @@ class ArticleParsersTest(unittest.TestCase):
                 .replace('\n', ' ').replace('> ', '>').replace(' <', '<')
         self.assertEqual(normalize(a), normalize(b))
 
-    def verify_testcase_file(self, path, perex_size=100):
+    def verify_testcase_file(self, path, perex_size=[1, 100]):
         source, rules, expected_perex, expected_content = split_test_file(path)
 
         parser = ArticleParser(rules)
@@ -59,7 +59,7 @@ class ArticleParsersTest(unittest.TestCase):
         self.verify_testcase_file('test-data/asterisk2.html')
 
     def test_attr_manipulation(self):
-        self.verify_testcase_file('test-data/attr_manipulation.html')
+        self.verify_testcase_file('test-data/attr_manipulation.html', perex_size=[1, 600])
 
     def test_brbr(self):
         self.verify_testcase_file('test-data/brbr.html')
@@ -74,16 +74,16 @@ class ArticleParsersTest(unittest.TestCase):
         self.verify_testcase_file('test-data/empty_p.html')
 
     def test_fffilm(self):
-        self.verify_testcase_file('test-data/fffilm.html', perex_size=950)
+        self.verify_testcase_file('test-data/fffilm.html', perex_size=[1, 950])
 
     def test_flatten(self):
         self.verify_testcase_file('test-data/flatten.html')
 
     def test_flatten_p(self):
-        self.verify_testcase_file('test-data/flatten_p.html')
+        self.verify_testcase_file('test-data/flatten_p.html', perex_size=[1, 450])
 
     def test_h1(self):
-        self.verify_testcase_file('test-data/h1.html')
+        self.verify_testcase_file('test-data/h1.html', perex_size=[1, 950])
 
     def test_rules_merge(self):
         self.verify_testcase_file('test-data/rules_merge.html')
@@ -92,7 +92,7 @@ class ArticleParsersTest(unittest.TestCase):
         self.verify_testcase_file('test-data/split.html')
 
     def test_tag_manipulation(self):
-        self.verify_testcase_file('test-data/tag_manipulation.html')
+        self.verify_testcase_file('test-data/tag_manipulation.html', perex_size=[1, 450])
 
     def test_wrapped_br(self):
         self.verify_testcase_file('test-data/wrapped_br.html')

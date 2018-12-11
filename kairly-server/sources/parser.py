@@ -1,4 +1,7 @@
 import re
+
+import nltk
+from nltk import tokenize
 from django.core.exceptions import ValidationError
 from collections import namedtuple, defaultdict
 from itertools import product
@@ -10,8 +13,16 @@ Rule = namedtuple('Rule', ['engine', 'props', 'selector'])
 NestingLevel = namedtuple('NestingLevel', ['engine', 'indent', 'parts'])
 
 
+class SplitNotPossible(Exception):
+    pass
+
+
 def fragments_to_string(fragments):
     return ''.join(etree.tostring(el, encoding='utf-8').decode('utf-8') for el in fragments)
+
+
+def is_hx(tag):
+    return tag[0] == 'h' and len(tag) == 2
 
 
 def get_element_size(el):
@@ -25,18 +36,107 @@ def get_element_size(el):
     for child in el:
         child_size = get_element_size(child)
         if child_size:
-            size += child_size + 1
+            if size:
+                size += 1
+            size += child_size
     return size
 
 
+def split_text_to_sentences(text):
+    try:
+        return tokenize.sent_tokenize(text)
+    except LookupError:
+        nltk.download('punkt')
+        return tokenize.sent_tokenize(text)
+
+
+def split_element(parent, perex_size):
+    perex_size_min, perex_size_max = perex_size
+    p1 = lxml.html.HtmlElement()
+    p1.tag = parent.tag
+    p1.text = parent.text
+    size = len(p1.text or '')
+    p2 = lxml.html.HtmlElement()
+    p2.tag = parent.tag
+    p2.tail = parent.tail
+
+    if size > perex_size_max:
+        # wee need to split text
+        text_size = 0
+        sentences = split_text_to_sentences(p1.text)
+        for i, sentence in enumerate(sentences):
+            sentence_size = len(sentence)
+            if i > 0 and text_size + sentence_size > perex_size_max:
+                p1.text = ' '.join(sentences[:i])
+                p2.text = ' '.join(sentences[i:])
+                p2[:] = list(parent)
+                return p1, p2
+
+            text_size += sentence_size
+
+        raise SplitNotPossible()
+
+    # copy elements, because etree modifying parent as elements are assigned to another element
+    elements = list(parent)
+    p1_elements = []
+    p2_elements = []
+
+    def build():
+        # do not leave HX tags at the end of perex
+        while p1_elements and is_hx(p1_elements[-1].tag):
+            p2_elements.insert(0, p1_elements[-1])
+            p1_elements.pop()
+
+        p1.extend(p1_elements)
+        p2.extend(p2_elements)
+        return p1, p2
+
+    for i, el in enumerate(elements):
+        element_size = get_element_size(el)
+
+        if size + element_size > perex_size_max:
+            if size >= perex_size_min:
+                p2_elements = elements[i:]
+                return build()
+
+            try:
+                # another split needed
+                split_size = [min(1, perex_size_min - size), perex_size_max - size]
+                part1, part2 = split_element(el, split_size)
+                p1_elements.append(part1)
+                p2_elements.append(part2)
+            except SplitNotPossible as ex:
+                if len(elements) == 1:
+                    raise ex
+
+                # at least one element is alredy in perex
+                if i > 0:
+                    p2_elements = elements[i:]
+                    return build()
+
+                # no element in perex, add this
+                p1_elements.append(el)
+
+            p2.extend(elements[i + 1:])
+            return build()
+
+        size += element_size
+        p1_elements.append(el)
+
+    raise SplitNotPossible()
+
+
 def split_article_to_perex_and_content(fragments, perex_size):
-    chars = 0
+    """Split document (represented as list of etree fragments to perex and content.
+    perex_size is interval [min_size, max_size]
+    Function tries to find as big as possbile perex in given intrval without
+    splitting fragments. If not possible, one fragment is splitted.
+    """
+    perex_size_min, perex_size_max = perex_size
+    size = 0
     perex_fragments = []
     content_fragments = []
     nocontent = False
-
-    def is_hx(tag):
-        return tag[0] == 'h' and len(tag) == 2
 
     for i, el in enumerate(fragments):
         # skip all headers at the beginning of article
@@ -45,11 +145,25 @@ def split_article_to_perex_and_content(fragments, perex_size):
 
         element_size = get_element_size(el)
 
-        if perex_fragments and chars + element_size > perex_size:
-            content_fragments = fragments[i:]
-            break
+        if size + element_size > perex_size_max:
+            if perex_fragments and size >= perex_size_min:
+                content_fragments = fragments[i:]
+                break
 
-        chars += element_size
+            # element is too big, split is needed
+            try:
+                split_size = [max(0, perex_size_min - size), perex_size_max - size]
+                part1, part2 = split_element(el, split_size)
+                perex_fragments.append(part1)
+                content_fragments = [part2]
+                content_fragments.extend(fragments[i + 1:])
+                break
+            except SplitNotPossible:
+                perex_fragments.append(el)
+                content_fragments = fragments[i + 1:]
+                break
+
+        size += element_size
         perex_fragments.append(el)
     else:
         nocontent = True
