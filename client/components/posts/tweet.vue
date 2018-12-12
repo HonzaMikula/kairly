@@ -19,6 +19,7 @@
         <a
           v-if="post.source"
           :href="post.source"
+          target="_blank"
           class="tweet"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
           :title="$t('Original tweet')">

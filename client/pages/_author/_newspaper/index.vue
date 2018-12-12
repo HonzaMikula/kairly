@@ -290,7 +290,6 @@ newspaper-detail--description
     font-weight: 600
 
   p
-    text-align: justify
     text-indent: $baseline
 
   footer
