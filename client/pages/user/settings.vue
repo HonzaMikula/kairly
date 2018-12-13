@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Account Settings')">
     <settings-view>
       <h1>{{ $t('Account Settings') }}</h1>
 

@@ -1,7 +1,8 @@
 <template>
   <header class="app-header">
     <div>
-      <h1 class="app-header--logo"><nuxt-link :to="{name: 'index'}" exact>Kairly</nuxt-link></h1>
+      <h1 class="app-header--logo" :class="{'show': pageTitle == null}"><nuxt-link :to="{name: 'index'}" exact>Kairly</nuxt-link></h1>
+
       <nav class="app-header--navigation">
         <ul v-if="user">
           <li class="home">
@@ -24,6 +25,11 @@
         </ul>
       </nav>
 
+      <nav class="app-header--mobile-navigation" v-if="pageTitle">
+        <button-icon class="back" @click="$router.go(-1)"></button-icon>
+        <h1>{{pageTitle}}</h1>
+      </nav>
+
       <nav class="app-header--user-profile" v-if="user">
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
@@ -37,14 +43,14 @@
         v-if="user && isDropDownMenuOpen"
         v-on-clickaway="() => isDropDownMenuOpen = false">
         <ul>
-          <li class="user-name">{{user.name}}</li>
+          <li class="home"><nuxt-link :to="{name: 'index'}">{{ $t('Home') }}</nuxt-link></li>
           <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ $t('Profile') }}</nuxt-link></li>
           <li><nuxt-link :to="{name: 'user-settings'}"><span>{{ $t('Settings') }}</span></nuxt-link></li>
           <li class="divider"></li>
           <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>{{ $t('Subscriptions') }}</span></nuxt-link></li>
           <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>{{ $t('Explore') }}</span></nuxt-link></li>
           <li class="divider"></li>
-          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>{{ $t('Mange newspapers') }}</span></nuxt-link></li>
+          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>{{ $t('Manage newspapers') }}</span></nuxt-link></li>
           <li><nuxt-link to="/posts">{{ $t('Write a post') }}</nuxt-link></li>
           <li class="divider"></li>
           <li class="language">
@@ -81,6 +87,10 @@ export default {
 
   directives: {
     onClickaway
+  },
+
+  props: {
+    pageTitle: String
   },
 
   data: function() {
@@ -142,6 +152,9 @@ export default {
 .app-header--navigation
   margin-right: auto
 
+  @media (max-width: $mobile)
+    display: none
+
   ul
     display: flex
 
@@ -164,14 +177,6 @@ export default {
     @media (max-width: 850px)
       span
         display: none
-
-  @media (max-width: $mobile)
-    .home,
-    .subscription,
-    .newspapers,
-    .new-post,
-    .explore
-      display: none
 
 
   li a::before
@@ -234,11 +239,33 @@ export default {
   text-align: center
 
   @media (max-width: $mobile)
+    display: none
     font-size: $fs-2
     padding-left: $baseline / 4
 
+    &.show
+      display: block
+
   a
     color: #000
+
+
+//- Header mobile navigation
+.app-header--mobile-navigation
+  display: none
+
+  @media (max-width: $mobile)
+    display: flex
+
+  button-icon
+    padding: 0 $baseline/2
+
+    &::before
+      content: $fa-var-arrow-left
+
+  h1
+    font-size: $fs-1
+    font-weight: 600
 
 
 //- User Profile
@@ -343,5 +370,12 @@ export default {
       &.is-active
         font-weight: 600
         color: #000
+
+  //- home link
+  .home
+    display: none
+
+    @media (max-width: $mobile)
+      display: block
 
 </style>

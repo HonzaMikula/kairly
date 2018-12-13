@@ -1,6 +1,6 @@
 <template>
   <app-main>
-    <AppHeader v-if="loggedIn" />
+    <AppHeader :pageTitle="name" v-if="loggedIn" />
     <AppHeaderPublic v-else />
     <slot></slot>
   </app-main>
@@ -18,6 +18,10 @@ export default {
   components: {
     AppHeader,
     AppHeaderPublic
+  },
+
+  props: {
+    name: String
   },
 
   computed: mapState({

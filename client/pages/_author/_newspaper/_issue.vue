@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Newspaper issue')">
     <issue-detail-view>
       <Issue :issue="issue" :subscription="newspaper.subscription">
         <template slot="newspaperTitle">{{ newspaper.title }} #{{issue.number}}</template>

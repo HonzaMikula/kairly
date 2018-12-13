@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Author\'s profile')">
     <author-detail-view
       v-infinite-scroll="loadPosts"
       infinite-scroll-disabled="loadingPosts"

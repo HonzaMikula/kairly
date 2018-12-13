@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Newspaper detail')">
     <newspaper-detail-view itemtype="https://bib.schema.org/Newspaper" itemscope>
       <newspaper-detail--header>
         <h1 itemprop="name">{{ newspaper.title }}</h1>

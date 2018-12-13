@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Manage newspapers')">
     <editor-newspapers-view>
       <editor-newspapers--empty
         v-if="newspapers.length === 0">
@@ -328,6 +328,9 @@ editor-newspapers-view
 
     @media (max-width: 800px)
       grid-template-columns: 1fr auto
+      padding: $baseline/2 0
+
+      text-align: left
 
 
     //- Newspaper Title
@@ -346,7 +349,9 @@ editor-newspapers-view
         text-shadow: 0 0 5px #fafafa
 
         @media (max-width: $mobile)
+          margin-right: 0
           font-size: $fs-3
+
 
       > button-icon
         display: inline-block
@@ -440,7 +445,7 @@ editor-newspapers-view
       .mobile-menu--dropdown
         position: absolute
         right: 0
-        top: $baseline * 3
+        top: $baseline * 2.5
         z-index: 100
 
         display: block
@@ -465,7 +470,7 @@ editor-newspapers-view
 editor-newspapers--header--dropdown
   position: absolute
   left: 50%
-  top: $baseline * 3.5
+  top: $baseline * 3
   z-index: 1
 
   display: block
@@ -477,8 +482,20 @@ editor-newspapers--header--dropdown
 
   font-size: $fs--1
 
+  @media (max-width: $mobile)
+    left: $baseline / 2
+    right: $baseline / 2
+    top: $baseline * 2.5
+
+    margin-left: 0
+    width: auto
+
   //- item
   > div
+    display: grid
+    grid-template-areas: "newspaper-dd-picture newspaper-dd-title" "newspaper-dd-picture newspaper-dd-info"
+    grid-template-columns: $baseline*3 auto
+    grid-column-gap: $baseline / 2
     padding: $baseline / 2
 
     border-bottom: 1px solid #eee
@@ -497,17 +514,21 @@ editor-newspapers--header--dropdown
 
   //- newspaper cover
   img
-    float: left
-    margin-right: $baseline / 2
+    grid-area: newspaper-dd-picture
     height: $baseline * 2
-    width: $baseline * 3
+    width: 100%
+
+    object-fit: cover
+
 
   //- newspaper title
   h3
+    grid-area: newspaper-dd-title
     font-weight: 600
 
   //- information about next issue
   p
+    grid-area: newspaper-dd-info
     color: #777
 
     font-size: $fs--1
@@ -521,8 +542,7 @@ editor-newspapers--mobile-switcher
     display: block
 
   nav
-    display: table
-    margin: 0 auto $baseline auto
+    margin-bottom: $baseline / 2
 
     font-size: $fs-2
 

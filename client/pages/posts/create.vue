@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Write a post')">
     <div class="edit-post-view">
       <nav class="create-post">
         <nuxt-link to="/posts/create/article">{{ $t('Write an article') }}</nuxt-link>
@@ -40,8 +40,6 @@ export default {
   nav
     margin-bottom: $baseline
 
-    font-size: $fs-3
-
     a
       display: inline-block
       margin-right: $baseline
@@ -49,6 +47,11 @@ export default {
       color: $c-base
 
       font-weight: 600
+      font-size: $fs-3
+
+      @media (max-width: $mobile)
+        font-size: $fs-2
+        margin-right: $baseline / 2
 
       &.nuxt-link-active
         color: #000

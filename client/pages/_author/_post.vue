@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Article')">
     <post-detail role="article">
       <post-detail--back-button
         :title="$t('Back')"

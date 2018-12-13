@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('Explore')">
     <explore-view :class="$route.name === 'explore-recent' ? 'recent' : $route.params.tab">
       <header>
         <nav>
@@ -50,11 +50,19 @@ explore-view
 
   //- Header
   > header
-    background: #eee
+    position: relative
+    top: -1px
+
+    background: #fff
+    border-bottom: 1px solid #eee
 
     nav
       margin: 0 auto
       max-width: 900px
+      padding: 0 $baseline
+
+      @media (max-width: $mobile)
+        padding: 0 $baseline/4
 
       ul
         @media (max-width: $mobile)
@@ -65,20 +73,26 @@ explore-view
 
       li
         display: inline-block
+        margin-right: $baseline
+
+        @media (max-width: $mobile)
+          margin-right: $baseline / 2
 
       a
         display: block
-        padding: 0 $baseline/2
 
-        color: #555
+        color: #777
 
-        font-size: $fs-1
-        line-height: $baseline * 2
+        line-height: $baseline * 1.5
 
         &:hover,
         &:focus,
+          color: #000
+
         &.nuxt-link-active
-          background: #ddd
+          color: #000
+
+          font-weight: 600
 
 
   //- Sections

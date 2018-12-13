@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <app-layout :name="$t('My posts')">
     <div class="my-posts">
       <header>
         <nav>
@@ -61,11 +61,16 @@ export default {
     display: flex
     margin-bottom: $baseline / 2
 
+    @media (max-width: $mobile)
+      display: block
+
     nav
       flex: 1
       margin-bottom: $baseline
 
-      font-size: $fs-3
+      @media (max-width: $mobile)
+        margin-bottom: $baseline / 2
+
 
       a
         display: inline-block
@@ -73,26 +78,38 @@ export default {
 
         color: $c-base
 
+        font-size: $fs-3
         font-weight: 600
+
+        @media (max-width: $mobile)
+          font-size: $fs-2
+          margin-right: $baseline / 2
 
         &.nuxt-link-active
           color: #000
 
-    .my-posts--create-post a
-      +subscribe-button
+//- Create Post button
+.my-posts--create-post
+  @media (max-width: $mobile)
+    display: block
 
-      display: inline-block
-      height: $baseline * 1.25
+    text-align: center
 
-      border-radius: $baseline*0.75
-      background: $c-base
-      color: #fff
+  a
+    +subscribe-button
 
-      font-family: $ff-sans
-      font-size: $fs-0
-      line-height: $baseline * 1.25
+    display: inline-block
+    height: $baseline * 1.25
 
-      &:focus,
-      &:hover
-        background: darken($c-base, 10%)
+    border-radius: $baseline*0.75
+    background: $c-base
+    color: #fff
+
+    font-family: $ff-sans
+    font-size: $fs-0
+    line-height: $baseline * 1.25
+
+    &:focus,
+    &:hover
+      background: darken($c-base, 10%)
 </style>
