@@ -1,0 +1,36 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <i>AAAAAAAAAAAAAAAA</i>
+    <div>
+      <i>ZZZZZZZZZZZZZZZZZ</i>
+      <h2>BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</h2>
+      <i>CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC</i>
+      <i>DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD</i>
+      <i>EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE</i>
+      <i>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</i>
+    </div>
+  </body>
+<html>
+
+<parser-rules>
+*
+</parser-rules>
+
+<expected-perex>
+  <i>AAAAAAAAAAAAAAAA</i>
+  <p>
+    <i>ZZZZZZZZZZZZZZZZZ</i>
+  </p>
+</expected-perex>
+
+<expected-content>
+  <div>
+    <h2>BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</h2>
+    <i>CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC</i>
+    <i>DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD</i>
+    <i>EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE</i>
+    <i>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</i>
+  </div>
+</expected-content>

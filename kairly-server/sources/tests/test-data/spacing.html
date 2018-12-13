@@ -1,0 +1,32 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div>
+      Hello <b>World</b>!
+      <br/><br/>
+      Hello my <b>dear</b> friends.
+      <br/><br/>
+      <i>Bye Bye</i>
+    </div>
+  </body>
+</html>
+
+<parser-rules>
+*
+</parser-rules>
+
+<expected-perex>
+  <p>
+    Hello <b>World</b>!
+  </p>
+  <p>
+    Hello my <b>dear</b> friends.
+  </p>
+  <p>
+    <i>Bye Bye</i>
+  </p>
+</expected-perex>
+
+<expected-content>
+</expected-content>

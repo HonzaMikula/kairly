@@ -1,7 +1,8 @@
 import unittest
 import lxml.html
 
-from sources.parser import ArticleParser, Rule, fragments_to_string
+from sources.parser import ArticleParser, fragments_to_string
+from sources.parser.rules import Rule, parse_rules
 
 
 class ArticleParserRulesTest(unittest.TestCase):
@@ -20,8 +21,7 @@ div#content
     tag: p
     foo: bar
 """
-        parser = ArticleParser(rules)
-        self.assertEqual(parser.flatten_rules(), [
+        self.assertEqual(parse_rules(rules), [
             Rule('css', {}, '.perex'),
             Rule('css', {'blabla': 'xyz'}, 'aside p, aside img'),
             Rule('css', {
@@ -39,8 +39,7 @@ img[src="http://winepunk.cz"]
 // div
 // div
 """
-        parser = ArticleParser(rules)
-        self.assertEqual(parser.flatten_rules(), [
+        self.assertEqual(parse_rules(rules), [
             Rule('css', {}, '.perex'),
             Rule('css', {}, 'img[src="http://winepunk.cz"]'),
         ])
@@ -50,8 +49,7 @@ img[src="http://winepunk.cz"]
 a, b[0]
   tag: p
 """
-        parser = ArticleParser(rules)
-        self.assertEqual(parser.flatten_rules(), [
+        self.assertEqual(parse_rules(rules), [
             Rule('css', {'tag': 'p'}, 'a, b[0]'),
         ])
 
@@ -64,8 +62,7 @@ a, b[0]
 @xpath //p[last() and contains(text(), "Příspěvek")]
   tag: none
 """
-        parser = ArticleParser(rules)
-        self.assertEqual(parser.flatten_rules(), [
+        self.assertEqual(parse_rules(rules), [
             Rule('xpath', {'tag': 'none'}, '//*[contains(text(), "twitter-follow")]'),
             Rule('xpath', {'tag': 'none'}, '//p[last() and contains(text(), "Příspěvek")]'),
         ])
@@ -112,7 +109,7 @@ em
         article = fragments_to_string(fragments)
         self.assertEqual(article, expected)
 
-    def test_parse_strip_attrubutes(self):
+    def test_parse_strip_attributes(self):
         doc = '<p id="root">Hello <em class="ex">!</em> <a href="#">Go</a></p>'
         rules = """
 p

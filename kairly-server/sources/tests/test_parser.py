@@ -28,15 +28,22 @@ def split_test_file(name):
     return source, rules, perex, content
 
 
-class ArticleParsersTest(unittest.TestCase):
+class ArticleParserTest(unittest.TestCase):
 
     maxDiff = None
     SPACE_REGEXP = re.compile(r'(\s)\s+')
 
     def assertHtmlEqual(self, a, b):
+        """Merge unimportant spaces"""
         def normalize(s):
-            return self.SPACE_REGEXP.sub(r'\1', s).strip()\
-                .replace('\n', ' ').replace('> ', '>').replace(' <', '<')
+            s = self.SPACE_REGEXP.sub(r'\1', s).strip().replace('\n', ' ')
+            for tag in ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'div']:
+                s = s.replace(f'<{tag}> ', f'<{tag}>')
+                s = s.replace(f' <{tag}>', f'<{tag}>')
+                s = s.replace(f' </{tag}>', f'</{tag}>')
+            s = s.replace(' <br/>', f'<br/>')
+            s = s.replace('<br/> ', f'<br/>')
+            return s
         self.assertEqual(normalize(a), normalize(b))
 
     def verify_testcase_file(self, path, perex_size=[1, 100]):
@@ -64,11 +71,23 @@ class ArticleParsersTest(unittest.TestCase):
     def test_brbr(self):
         self.verify_testcase_file('test-data/brbr.html')
 
+    def test_brbr_in_a(self):
+        self.verify_testcase_file('test-data/brbr_in_a.html')
+
     def test_brbr_in_span(self):
         self.verify_testcase_file('test-data/brbr_in_span.html')
 
+    def test_brbr_spaced(self):
+        self.verify_testcase_file('test-data/brbr_spaced.html')
+
+    def test_brbr_triple(self):
+        self.verify_testcase_file('test-data/brbr_triple.html')
+
     def test_dangerous(self):
         self.verify_testcase_file('test-data/dangerous.html')
+
+    def test_dangerous_tail(self):
+        self.verify_testcase_file('test-data/dangerous_tail.html')
 
     def test_empty_p(self):
         self.verify_testcase_file('test-data/empty_p.html')
@@ -80,7 +99,7 @@ class ArticleParsersTest(unittest.TestCase):
         self.verify_testcase_file('test-data/flatten.html')
 
     def test_flatten_p(self):
-        self.verify_testcase_file('test-data/flatten_p.html', perex_size=[1, 450])
+        self.verify_testcase_file('test-data/flatten_p.html', perex_size=[1, 400])
 
     def test_h1(self):
         self.verify_testcase_file('test-data/h1.html', perex_size=[1, 950])
@@ -88,11 +107,17 @@ class ArticleParsersTest(unittest.TestCase):
     def test_rules_merge(self):
         self.verify_testcase_file('test-data/rules_merge.html')
 
+    def test_spacing(self):
+        self.verify_testcase_file('test-data/spacing.html')
+
     def test_split(self):
         self.verify_testcase_file('test-data/split.html')
 
+    # def test_split_h2(self):
+    #     self.verify_testcase_file('test-data/split_h2.html')
+
     def test_tag_manipulation(self):
-        self.verify_testcase_file('test-data/tag_manipulation.html', perex_size=[1, 450])
+        self.verify_testcase_file('test-data/tag_manipulation.html', perex_size=[1, 400])
 
     def test_wrapped_br(self):
         self.verify_testcase_file('test-data/wrapped_br.html')
