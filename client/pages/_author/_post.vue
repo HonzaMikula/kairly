@@ -225,7 +225,7 @@ post-detail
   background: #fff
 
   @media (max-width: $mobile)
-    padding: $baseline/4 $baseline/2 $baseline *5 $baseline/2
+    padding: $mBaseline/2 $mBaseline $mBaseline *5 $mBaseline
 
   main
     margin: 0 auto
@@ -382,6 +382,9 @@ post-detail--continue-reading
 
     content: ''
 
+    @media (max-width: $mobile)
+      width: 50px
+
   &::before
     left: 0
 
@@ -397,10 +400,6 @@ post-detail--perex
   font-family: $ff-serif
   font-size: $fs-1
   line-height: 1.7
-
-  @media (max-width: $mobile)
-    font-size: $fs-0
-    line-height: 1.58
 
   //- title
   h1
