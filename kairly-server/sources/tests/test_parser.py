@@ -37,7 +37,7 @@ class ArticleParserTest(unittest.TestCase):
         """Merge unimportant spaces"""
         def normalize(s):
             s = self.SPACE_REGEXP.sub(r'\1', s).strip().replace('\n', ' ')
-            for tag in ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'div']:
+            for tag in ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'blockquote']:
                 s = s.replace(f'<{tag}> ', f'<{tag}>')
                 s = s.replace(f' <{tag}>', f'<{tag}>')
                 s = s.replace(f' </{tag}>', f'</{tag}>')
@@ -67,6 +67,9 @@ class ArticleParserTest(unittest.TestCase):
 
     def test_attr_manipulation(self):
         self.verify_testcase_file('test-data/attr_manipulation.html', perex_size=[1, 600])
+
+    def test_blockquote(self):
+        self.verify_testcase_file('test-data/blockquote.html')
 
     def test_brbr(self):
         self.verify_testcase_file('test-data/brbr.html')

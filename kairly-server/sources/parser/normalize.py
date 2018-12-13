@@ -76,7 +76,9 @@ class BrBrSplitter:
         self.open_block[-2:] = []
 
     def split(self):
-        if self.parent.tag not in TAG_OMIT_ALLOWED:
+        omit_allowed = self.parent.tag in TAG_OMIT_ALLOWED
+
+        if not omit_allowed:
             self.open_block = copy_element(self.parent)
 
         if self.parent.text:  # text is already stripped
@@ -125,10 +127,13 @@ class BrBrSplitter:
                         brbr_triggered = True
                 continue
 
-            if self.open_block is not None:
-                yield self.open_block
-                self.open_block = None
-            yield c
+            if omit_allowed:
+                if self.open_block is not None:
+                    yield self.open_block
+                    self.open_block = None
+                yield c
+            else:
+                self.append_to_open_block(c)
 
         if self.open_block is not None:
             yield self.open_block

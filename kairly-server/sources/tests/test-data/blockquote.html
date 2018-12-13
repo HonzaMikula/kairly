@@ -1,0 +1,26 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <p>abc</p>
+    <blockquote>
+      <p>cde</p>
+    </blockquote>
+    <p>edf</p>
+  </body>
+<html>
+
+<parser-rules>
+*
+</parser-rules>
+
+<expected-perex>
+  <p>abc</p>
+  <blockquote>
+    <p>cde</p>
+  </blockquote>
+  <p>edf</p>
+</expected-perex>
+
+<expected-content>
+</expected-content>s
