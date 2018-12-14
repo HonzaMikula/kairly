@@ -33,6 +33,8 @@ class KairlyUsernameValidator(validators.RegexValidator):
         'explore', 'dashboard', 'recent',
         'subscription', 'subscriptions',
         'join-and-read-with-kairly',
+        'credits', 'transactions', 'orders', 'reports', 'terms',
+        'kairly',
     }
 
     def __call__(self, value):
