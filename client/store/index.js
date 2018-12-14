@@ -38,8 +38,8 @@ const createStore = () => {
           state.timeline = {}
       },
 
-      user(state, { user }) {
-        state.profile.user = user
+      updateCredits(state, credits) {
+        state.auth.user.credits = credits
       },
       backlog(state, backlog) {
         state.backlog = backlog

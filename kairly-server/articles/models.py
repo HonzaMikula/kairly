@@ -1,6 +1,7 @@
 import rapidjson as json
 import math
 from datetime import datetime, timezone
+from decimal import Decimal
 import re
 import hashlib
 
@@ -9,6 +10,7 @@ import pytz
 
 from django.conf import settings
 from django.core.cache import cache
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -139,6 +141,9 @@ class Newspaper(models.Model, PeriodMixin):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True, blank=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
+    price = models.DecimalField(_('Price'), max_digits=5, decimal_places=2,
+                                default=Decimal(0),
+                                validators=[MinValueValidator(Decimal(0))])
 
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
     period_time = models.TimeField(null=True, blank=True)  # time for daily and weekly period
@@ -187,7 +192,8 @@ class Newspaper(models.Model, PeriodMixin):
             "periodicity": periodicity_to_json(self),
             "nextRelease": datetime_isoformat_ecma262(self.next_release.astimezone(tzinfo)),
             "issues": self.issues,
-            "likes": self.likes
+            "likes": self.likes,
+            "price": int(self.price),
         }
 
 
@@ -245,14 +251,14 @@ class Subscription(models.Model):
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
+    donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
-        return "Subscription to {}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
+        return "Subscription to {}}".format(self.newspaper.full_name)
 
     def to_json(self):
-        full_name = "{}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
         data = {}
-        data[full_name] = {
+        data[self.newspaper.full_name] = {
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
             'renewal': self.renewal
@@ -270,6 +276,7 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
+    donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
         title = self.author.username

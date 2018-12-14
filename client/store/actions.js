@@ -86,7 +86,9 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
 export async function subscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 
-  const subscription = await this.$axios.$post(`/newspapers/${fullName}/subscription`)
+  const body = {}
+  // TODO donation can be in body
+  const { subscription } = await this.$axios.$post(`/newspapers/${fullName}/subscription`, body)
   //commit('newspaper', { newspaper })
   commit('newspaperSubscription', {
     subscription,
@@ -105,7 +107,7 @@ export async function subscribeNewspaper({ commit }, fullName) {
 export async function unsubscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 
-  const subscription = await this.$axios.$delete(`/newspapers/${fullName}/subscription`)
+  const { subscription } = await this.$axios.$delete(`/newspapers/${fullName}/subscription`)
   //commit('newspaper', { newspaper })
   commit('newspaperSubscription', {
     subscription,
@@ -124,7 +126,8 @@ export async function unsubscribeNewspaper({ commit }, fullName) {
 export async function subscribeAuthor({ commit }, { author, periodicity }) {
   commit('invalidateTimeline')
   const body = periodicity ? { periodicity } : { renewal: true }
-  const subscription = await this.$axios.$post(`/authors/${author.id}/subscription`, body)
+  const { subscription, credits } = await this.$axios.$post(`/authors/${author.id}/subscription`, body)
+  commit('updateCredits', credits)
   commit('authorSubscription', {
     subscription,
     meta: {
@@ -143,7 +146,7 @@ export async function subscribeAuthor({ commit }, { author, periodicity }) {
 export async function unsubscribeAuthor({ commit }, { author }) {
   commit('invalidateTimeline')
 
-  const subscription = await this.$axios.$delete(`/authors/${author.id}/subscription`)
+  const { subscription } = await this.$axios.$delete(`/authors/${author.id}/subscription`)
   commit('authorSubscription', {
     subscription,
     meta: {

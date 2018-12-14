@@ -3,6 +3,7 @@ import html
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
+from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
 
@@ -20,6 +21,7 @@ from utils.html import sanitize, convert_data_uris
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
+from credits.models import Transaction
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor)
 from .period import parse_periodicity
@@ -276,22 +278,60 @@ class NewspaperSubscriptionView(View):
         author = get_object_or_404(User, username=username)
         newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
+        payload = json.loads(request.body.decode('utf-8'))
+        donation = payload.get('donation')
+        if donation:
+            donation = Decimal(donation)
+            if donation < 0:
+                return HttpResponseBadRequest("Invalid donation")
+
+        credits = Transaction.get_balance(request.user)
+
         try:
             # just reactivate renewal if current cancelled subscription exists
             subscription = Subscription.objects.get(
                 user=request.user, newspaper=newspaper,
                 valid_from__lte=now, valid_to__gt=now)
             subscription.renewal = True
+            if donation is not None:
+                subscription.donation = donation
             subscription.save()
         except Subscription.DoesNotExist:
+            donation = donation or Decimal(0)
+            payment = newspaper.price + donation
+            if payment > 0:
+                if credits < payment:
+                    return HttpResponse("Insufficient credit.", status=402)
+
+                if author.price > 0:
+                    Transaction.objects.create(
+                        from_user=request.user,
+                        to_newspaper=newspaper,
+                        credits=author.price,
+                        kind=Transaction.NEWSPAPER_SUBSCRIPTION
+                    )
+                if donation > 0:
+                    Transaction.objects.create(
+                        from_user=request.user,
+                        to_newspaper=newspaper,
+                        credits=donation,
+                        kind=Transaction.DONATION
+                    )
+                credits -= payment
+                Transaction.on_credits_change(request.user)
+
             subscription = Subscription.objects.create(
                 user=request.user,
                 newspaper=newspaper,
                 valid_from=now,
-                valid_to=now + relativedelta(months=1)
+                valid_to=now + relativedelta(months=1),
+                donation=donation
             )
 
-        return JsonResponse(subscription.to_json())
+        return JsonResponse({
+            'credits': str(credits),
+            'subscription': subscription.to_json()
+        })
 
     @ajax_login_required
     def delete(self, request, username, newspapeper_slug):
@@ -305,7 +345,9 @@ class NewspaperSubscriptionView(View):
                 valid_from__lte=now, valid_to__gt=now)
             subscription.renewal = False
             subscription.save()
-            return JsonResponse(subscription.to_json())
+            return JsonResponse({
+                'subscription': subscription.to_json()
+            })
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()
 
@@ -326,16 +368,19 @@ class AuthorSubscriptionView(View):
             periodicity = None
 
         renewal = payload.get('renewal')
+        donation = payload.get('donation')
+        if donation:
+            donation = Decimal(donation)
+            if donation < 0:
+                return HttpResponseBadRequest("Invalid donation")
+
+        credits = Transaction.get_balance(request.user)
 
         try:
             # Handle unique together manually, because
             # mysql ignores key when one of values is NULL (usually topic)
             # TODO when topic removed, is it still needed?
-            #
-            # There is still place for race condition
-            # it could be solved by adding topic slug on this table
-            # (with empty string value when there is no topic) and
-            # make unique together on that
+            # There is still place for race condition!
             subscription = SubscriptionToAuthor.objects.get(
                 user=request.user, author=author,
                 valid_from__lte=now, valid_to__gt=now
@@ -347,6 +392,8 @@ class AuthorSubscriptionView(View):
                     subscription.period_dow = periodicity.dow
                 if renewal:
                     subscription.renewal = True
+                if donation is not None:
+                    subscription.donation = donation
                 subscription.save()
             else:
                 return HttpResponseBadRequest("Nothing to change.")
@@ -354,7 +401,30 @@ class AuthorSubscriptionView(View):
             if not periodicity:
                 return HttpResponseBadRequest("Periodicity is required.")
             if renewal:
-                return HttpResponseBadRequest("Nothong to renew")
+                return HttpResponseBadRequest("Nothing to renew")
+
+            donation = donation or Decimal(0)
+            payment = author.price + donation
+            if payment > 0:
+                if credits < payment:
+                    return HttpResponse("Insufficient credit.", status=402)
+
+                if author.price > 0:
+                    Transaction.objects.create(
+                        from_user=request.user,
+                        to_author=author,
+                        credits=author.price,
+                        kind=Transaction.AUTHOR_SUBSCRIPTION
+                    )
+                if donation > 0:
+                    Transaction.objects.create(
+                        from_user=request.user,
+                        to_author=author,
+                        credits=donation,
+                        kind=Transaction.DONATION
+                    )
+                credits -= payment
+                Transaction.on_credits_change(request.user)
 
             subscription = SubscriptionToAuthor.objects.create(
                 user=request.user,
@@ -363,10 +433,14 @@ class AuthorSubscriptionView(View):
                 period_time=periodicity.time,
                 period_dow=periodicity.dow,
                 valid_from=now,
-                valid_to=now + relativedelta(months=1)
+                valid_to=now + relativedelta(months=1),
+                donation=donation
             )
 
-        return JsonResponse(subscription.to_json())
+        return JsonResponse({
+            'credits': str(credits),
+            'subscription': subscription.to_json()
+        })
 
     @ajax_login_required
     def delete(self, request, username):
@@ -379,7 +453,9 @@ class AuthorSubscriptionView(View):
                 valid_from__lte=now, valid_to__gt=now)
             subscription.renewal = False
             subscription.save()
-            return JsonResponse(subscription.to_json())
+            return JsonResponse({
+                'subscription': subscription.to_json()
+            })
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()
 

@@ -1,11 +1,11 @@
-import jwt
-import rapidjson as json
 import time
 import urllib.request
 import urllib.error
 
-from pytz import timezone, UnknownTimeZoneError
+import jwt
 from libgravatar import Gravatar
+from pytz import timezone, UnknownTimeZoneError
+import rapidjson as json
 
 from django.db.utils import IntegrityError
 from django.db.models import Count
@@ -27,6 +27,7 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from articles.models import Newspaper
+from credits.models import Transaction
 from .models import User, Category, CategoryUser
 
 
@@ -88,6 +89,7 @@ class ProfileView(View):
 
         user = request.user.to_json(owner=True)
         user['newspapers'] = newspapers
+        user['credits'] = str(Transaction.get_balance(request.user))
 
         return JsonResponse({
             "user": user

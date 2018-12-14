@@ -14,7 +14,12 @@ from .models import Newspaper
 
 @admin.register(Newspaper)
 class NewspaperAdmin(admin.ModelAdmin):
-    list_display = ('title', 'editor', 'slug', 'period', 'period_time', 'period_dow', 'description')
+    list_display = ('title', 'editor', 'slug', 'price_int', 'period', 'period_time', 'period_dow', 'description')
+
+    def price_int(self, obj):
+        return int(obj.price)
+    price_int.short_description = 'Price'
+    price_int.admin_order_field = 'price'
 
     def get_field_queryset(self, db, db_field, request):
         """

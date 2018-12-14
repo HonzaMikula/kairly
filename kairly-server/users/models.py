@@ -1,9 +1,11 @@
 import re
 import pytz
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core import validators
+from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -89,6 +91,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
 
+    price = models.DecimalField(_('Subscription price'), max_digits=5, decimal_places=2,
+                                default=Decimal(0),
+                                validators=[MinValueValidator(Decimal(0))])
+
     twitter_account = models.CharField(max_length=160, null=True, blank=True)
 
     activity_history = models.BigIntegerField(default=0)  # bit mask for days, starting from activity_history_start
@@ -139,6 +145,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'kind': self.kind,
             'medium': self.medium,
             'bio': self.bio,
+            "price": int(self.price),
         }
 
         if owner:

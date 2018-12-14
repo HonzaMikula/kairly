@@ -21,6 +21,7 @@ class UserAdmin(OriginalUserAdmin):
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('name', 'email', 'kind', 'medium', 'picture', 'bio', 'timezone')}),
         (_('Integrations'), {'fields': ('twitter_account',)}),
+        (_('Pricing'), {'fields': ('price',)}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
@@ -30,9 +31,14 @@ class UserAdmin(OriginalUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('username', 'email', 'img', 'name', 'kind', 'medium', 'is_active', 'last_logged', 'activity')
+    list_display = ('username', 'email', 'img', 'name', 'kind', 'medium', 'price_int', 'is_active', 'last_logged', 'activity')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'kind')
     search_fields = ('username', 'name', 'email')
+
+    def price_int(self, obj):
+        return int(obj.price)
+    price_int.short_description = 'Price'
+    price_int.admin_order_field = 'price'
 
     def img(self, obj):
         if obj.picture:

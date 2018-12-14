@@ -31,6 +31,7 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
+        <nuxt-link to="/user/transactions">{{ user.credits.split('.')[0] }} Ⓚ</nuxt-link>
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon
