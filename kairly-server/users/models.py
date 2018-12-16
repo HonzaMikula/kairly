@@ -145,7 +145,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'kind': self.kind,
             'medium': self.medium,
             'bio': self.bio,
-            "price": int(self.price),
+            "price": str(self.price),
         }
 
         if owner:

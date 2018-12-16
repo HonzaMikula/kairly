@@ -193,7 +193,7 @@ class Newspaper(models.Model, PeriodMixin):
             "nextRelease": datetime_isoformat_ecma262(self.next_release.astimezone(tzinfo)),
             "issues": self.issues,
             "likes": self.likes,
-            "price": int(self.price),
+            "price": str(self.price),
         }
 
 
