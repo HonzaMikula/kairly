@@ -22,6 +22,7 @@ from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
 from credits.models import Transaction
+from credits.utils import get_user_credits, on_credits_change
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor)
 from .period import parse_periodicity
@@ -285,7 +286,7 @@ class NewspaperSubscriptionView(View):
             if donation < 0:
                 return HttpResponseBadRequest("Invalid donation")
 
-        credits = Transaction.get_balance(request.user)
+        credits = get_user_credits(request.user)
 
         try:
             # just reactivate renewal if current cancelled subscription exists
@@ -318,7 +319,7 @@ class NewspaperSubscriptionView(View):
                         kind=Transaction.DONATION
                     )
                 credits -= payment
-                Transaction.on_credits_change(request.user)
+                on_credits_change(request.user)
 
             subscription = Subscription.objects.create(
                 user=request.user,
@@ -374,7 +375,7 @@ class AuthorSubscriptionView(View):
             if donation < 0:
                 return HttpResponseBadRequest("Invalid donation")
 
-        credits = Transaction.get_balance(request.user)
+        credits = get_user_credits(request.user)
 
         try:
             # Handle unique together manually, because
@@ -424,7 +425,7 @@ class AuthorSubscriptionView(View):
                         kind=Transaction.DONATION
                     )
                 credits -= payment
-                Transaction.on_credits_change(request.user)
+                on_credits_change(request.user)
 
             subscription = SubscriptionToAuthor.objects.create(
                 user=request.user,

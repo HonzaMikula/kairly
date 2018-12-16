@@ -27,7 +27,7 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from articles.models import Newspaper
-from credits.models import Transaction
+from credits.utils import get_user_credits
 from .models import User, Category, CategoryUser
 
 
@@ -89,7 +89,7 @@ class ProfileView(View):
 
         user = request.user.to_json(owner=True)
         user['newspapers'] = newspapers
-        user['credits'] = str(Transaction.get_balance(request.user))
+        user['credits'] = str(get_user_credits(request.user))
 
         return JsonResponse({
             "user": user

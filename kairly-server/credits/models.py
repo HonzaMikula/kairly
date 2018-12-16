@@ -1,9 +1,6 @@
-from decimal import Decimal
-
-from django.db import models, transaction
-from django.db.models import Sum
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.core.cache import cache
+
 
 from utils.json import datetime_isoformat_ecma262
 from users.models import User
@@ -36,25 +33,6 @@ class Transaction(models.Model):
     kind = models.CharField(max_length=2, choices=KIND_CHOICES, db_index=True)
     credits = models.DecimalField(_('Credits'), max_digits=7, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
-
-    @classmethod
-    def get_balance(cls, user):
-        cache_key = f'balance_{user.id}'
-        balance = cache.get(cache_key)
-        if balance is None:
-            expenses = cls.objects.filter(from_user=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-            income = cls.objects.filter(to_user=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-            balance = income - expenses
-            cache.set(cache_key, str(balance))
-        else:
-            balance = Decimal(balance)
-        return balance
-
-    @classmethod
-    def on_credits_change(cls, user):
-        def clear_cache():
-            cache.delete(f'balance_{user.id}')
-        transaction.on_commit(clear_cache)
 
     def __str__(self):
         return '{} {}'.format(self.user.username, self.credits)
