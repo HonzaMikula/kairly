@@ -43,6 +43,8 @@
             @click="$refs.followWidget.openSubscribeWidget()"
           >{{ $t('Subscribe') }}</button>
 
+          {{ author.price }} Ⓚ
+
           <follow-author ref="followWidget" :author="author" :subscription="subscription"/>
 
           <AuthorSubscription if="subscription" :author="author" :subscription="subscription"/>

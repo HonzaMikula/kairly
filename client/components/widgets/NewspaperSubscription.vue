@@ -24,6 +24,8 @@
       @click="toggle()">
       {{ $t('Subscribe') }}
     </button>
+
+    {{ newspaper.price }} Ⓚ
   </div>
 </template>
 
