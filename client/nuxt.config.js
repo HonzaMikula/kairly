@@ -11,7 +11,7 @@ module.exports = {
       { charset: 'utf-8' },
       { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
-      { hid: 'description', name: 'description', content: 'New way how we consume and produce news' }
+      { hid: 'description', name: 'description', content: 'Kairly is new platform that wants to create better environment for journalist and readers.' }
     ],
     link: [
       { rel: 'icon', sizes: '192x192', href: '/favicon.png' },

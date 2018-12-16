@@ -192,6 +192,15 @@ export default {
     JoinUsModal
   },
 
+  head() {
+    return {
+      title: this.$t('Kairly – We aim for exceptional journalism'),
+      meta: [
+        { hid: 'description', name: 'description', content: this.$t('Kairly is new platform that wants to create better environment for journalist and readers.') },
+      ]
+    }
+  },
+
   data() {
     return {
       invalidCredentials: false,

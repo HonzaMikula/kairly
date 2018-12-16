@@ -81,6 +81,15 @@ export default {
   // Homepage component is displayed when user is not logged
   auth: false,
 
+  head() {
+    return {
+      title: 'Kairly',
+      meta: [
+        { hid: 'description', name: 'description', content: 'Timeline showing you latest issues of newspapers you subscribed to.' },
+      ]
+    }
+  },
+
   components: {
     AppLayout,
     Homepage,

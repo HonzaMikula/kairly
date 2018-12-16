@@ -552,7 +552,7 @@ editor-newspapers--mobile-switcher
 
       color: $c-base
 
-      font-weight: 500
+      font-weight: 600
 
       &:last-of-type
         margin-right: 0
