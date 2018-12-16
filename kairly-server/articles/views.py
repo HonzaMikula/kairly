@@ -7,6 +7,7 @@ from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
 
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.http import (HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
@@ -21,8 +22,7 @@ from utils.html import sanitize, convert_data_uris
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
-from credits.models import Transaction
-from credits.utils import get_user_credits, on_credits_change
+from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor)
 from .period import parse_periodicity
@@ -131,6 +131,7 @@ class NewspaperView(View):
         })
 
     @ajax_login_required
+    @transaction.atomic
     def patch(self, request, username, newspapeper_slug):
         tzinfo = request.user.tzinfo
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
@@ -166,6 +167,7 @@ class NewspaperView(View):
         })
 
     @ajax_login_required
+    @transaction.atomic
     def delete(self, request, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
@@ -206,6 +208,7 @@ def author_posts(request, username):
 
 
 @ajax_login_required
+@transaction.atomic
 def newspaper_backlog(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
@@ -250,6 +253,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
 
 @ajax_login_required
 @require_POST
+@transaction.atomic
 def backlog_publish(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
@@ -274,6 +278,7 @@ def backlog_publish(request, username, newspapeper_slug):
 class NewspaperSubscriptionView(View):
 
     @ajax_login_required
+    @transaction.atomic
     def post(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
@@ -299,27 +304,8 @@ class NewspaperSubscriptionView(View):
             subscription.save()
         except Subscription.DoesNotExist:
             donation = donation or Decimal(0)
-            payment = newspaper.price + donation
-            if payment > 0:
-                if credits < payment:
-                    return HttpResponse("Insufficient credit.", status=402)
-
-                if author.price > 0:
-                    Transaction.objects.create(
-                        from_user=request.user,
-                        to_newspaper=newspaper,
-                        credits=author.price,
-                        kind=Transaction.NEWSPAPER_SUBSCRIPTION
-                    )
-                if donation > 0:
-                    Transaction.objects.create(
-                        from_user=request.user,
-                        to_newspaper=newspaper,
-                        credits=donation,
-                        kind=Transaction.DONATION
-                    )
-                credits -= payment
-                on_credits_change(request.user)
+            if credits < newspaper.price + donation:
+                return HttpResponse("Insufficient credit.", status=402)
 
             subscription = Subscription.objects.create(
                 user=request.user,
@@ -328,6 +314,8 @@ class NewspaperSubscriptionView(View):
                 valid_to=now + relativedelta(months=1),
                 donation=donation
             )
+            credits -= newspaper.price + donation
+            pay_newspaper_subscription(subscription)
 
         return JsonResponse({
             'credits': str(credits),
@@ -335,6 +323,7 @@ class NewspaperSubscriptionView(View):
         })
 
     @ajax_login_required
+    @transaction.atomic
     def delete(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
@@ -354,7 +343,9 @@ class NewspaperSubscriptionView(View):
 
 
 class AuthorSubscriptionView(View):
+
     @ajax_login_required
+    @transaction.atomic
     def post(self, request, username):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
@@ -405,27 +396,8 @@ class AuthorSubscriptionView(View):
                 return HttpResponseBadRequest("Nothing to renew")
 
             donation = donation or Decimal(0)
-            payment = author.price + donation
-            if payment > 0:
-                if credits < payment:
-                    return HttpResponse("Insufficient credit.", status=402)
-
-                if author.price > 0:
-                    Transaction.objects.create(
-                        from_user=request.user,
-                        to_author=author,
-                        credits=author.price,
-                        kind=Transaction.AUTHOR_SUBSCRIPTION
-                    )
-                if donation > 0:
-                    Transaction.objects.create(
-                        from_user=request.user,
-                        to_author=author,
-                        credits=donation,
-                        kind=Transaction.DONATION
-                    )
-                credits -= payment
-                on_credits_change(request.user)
+            if credits < author.price + donation:
+                return HttpResponse("Insufficient credit.", status=402)
 
             subscription = SubscriptionToAuthor.objects.create(
                 user=request.user,
@@ -438,12 +410,16 @@ class AuthorSubscriptionView(View):
                 donation=donation
             )
 
+            pay_author_subscription(subscription)
+            credits -= author.price + donation
+
         return JsonResponse({
             'credits': str(credits),
             'subscription': subscription.to_json()
         })
 
     @ajax_login_required
+    @transaction.atomic
     def delete(self, request, username):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
@@ -597,6 +573,7 @@ def get_type_from_data_uri(data):
 
 @ajax_login_required
 @require_POST
+@transaction.atomic
 def start_newspaper(request, username):
     tzinfo = request.user.tzinfo
     author = get_object_or_404(User, username=username)

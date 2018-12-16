@@ -5,7 +5,7 @@ from django.db import migrations
 
 def forwards_func(apps, schema_editor):
     Newspaper = apps.get_model("articles", "Newspaper")
-    Newspaper.objects.all().update(price=Decimal(1))
+    Newspaper.objects.all().update(price=Decimal(25))
     Newspaper.objects.filter(editor__username='idnescz').update(price=Decimal(0))
 
 
