@@ -41,7 +41,7 @@ class KairlyUsernameValidator(validators.RegexValidator):
         if len(value) < self.min_length:
             raise ValidationError('Min length is {}'.format(self.min_length))
         if value in self.reserved_names:
-            raise ValidationError('Username {} is reserved'.format(self.value))
+            raise ValidationError('Username {} is reserved'.format(value))
         return super().__call__(value)
 
 
