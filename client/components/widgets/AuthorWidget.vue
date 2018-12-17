@@ -15,22 +15,24 @@
 
       <section>
         <AuthorSubscription
-          v-if="subscription"
+          v-if="subscription && subscription.renewal"
           :subscription="subscription" :author="author"
         />
 
         <button
           v-else
-          @click="$refs.followWidget.openSubscribeWidget()">
-          Subscribe
+          @click="$refs.followWidget.openSubscribeWidget()"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          :title="canceled ? $t('You can renew subscription') : ''">
+          {{ $t('Subscribe') }}
         </button>
 
         <follow-author
           ref="followWidget"
           :author="author"
           :subscription="subscription"
+          :cancelingSubscription="canceled"
         />
-
       </section>
     </header>
 
@@ -59,7 +61,8 @@ export default {
   computed: {
     subscription() {
       return this.$store.getters.getAuthorSubscription(this.author)
-    }
+    },
+    canceled() { return this.subscription && !this.subscription.renewal}
   }
 }
 </script>

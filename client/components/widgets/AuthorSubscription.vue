@@ -4,8 +4,7 @@
       href=""
       @click.prevent="$refs.followWidget.openSubscribeWidget()"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-      :class="{'is-canceled': canceled}"
-      :title="$t('Change the subscriptions')+ (canceled ? $t(' (is canceled)'): '')">
+      :title="$t('Change the subscriptions')">
 
       <p
         v-if="frequency == '6x_per_day'"
@@ -72,12 +71,6 @@ author-subscription-view
 
   a
     color: #555
-
-    &.is-canceled::before
-      +fa-icon()
-
-      content: $fa-var-times-circle-o
-
 
     &:focus,
     &:hover
