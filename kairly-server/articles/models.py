@@ -246,9 +246,6 @@ class Subscription(models.Model):
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
 
-    class Meta:
-        unique_together = (("user", "newspaper"),)
-
     def __str__(self):
         return "Subscription to {}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
 
@@ -273,9 +270,6 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
-
-    class Meta:
-        unique_together = (("user", "author"),)
 
     def __str__(self):
         title = self.author.username
