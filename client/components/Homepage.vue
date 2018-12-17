@@ -211,7 +211,7 @@ export default {
   },
 
   computed: mapState({
-    currentLocale: state => state.auth.locale || 'en'
+    currentLocale: state => state.locale || 'en'
   }),
 
   methods: {

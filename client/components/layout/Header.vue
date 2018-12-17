@@ -103,7 +103,7 @@ export default {
 
   computed: mapState({
     user: state => state.auth.user,
-    currentLocale: state => state.auth.locale || 'en'
+    currentLocale: state => state.locale || 'en'
   }),
 
   methods: {
