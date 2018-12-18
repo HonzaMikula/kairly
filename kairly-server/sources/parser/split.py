@@ -48,8 +48,7 @@ def split_element(parent, perex_size):
     def build():
         # do not leave HX tags at the end of perex
         while p1_elements and is_header(p1_elements[-1]):
-            p2_elements.insert(0, p1_elements[-1])
-            p1_elements.pop()
+            p2_elements.insert(0, p1_elements.pop())
 
         if not p1_elements:
             raise SplitNotPossible()
@@ -139,6 +138,10 @@ def split_article_to_perex_and_content(fragments, perex_size):
         perex_fragments.append(el)
     else:
         nocontent = True
+
+    # do not leave HX tags at the end of perex
+    while perex_fragments and is_header(perex_fragments[-1]):
+        content_fragments.insert(0, perex_fragments.pop())
 
     perex = fragments_to_string(perex_fragments)
     content = '' if nocontent else fragments_to_string(content_fragments)
