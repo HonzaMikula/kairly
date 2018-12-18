@@ -117,11 +117,14 @@ class ArticleParser:
         else:
             preserve = {'title'}
 
-        for attr in el.attrib.keys():
+        attrib = el.attrib
+        for attr in attrib.keys():
+            if el.tag == 'img' and attr == 'data-src' and not attrib.get('src'):
+                attrib['src'] = attrib['data-src']
             if attr not in preserve:
-                del el.attrib[attr]
-            elif attr == 'href' and el.attrib[attr].startswith('javascript'):
-                del el.attrib[attr]
+                del attrib[attr]
+            elif attr == 'href' and attrib[attr].startswith('javascript'):
+                del attrib[attr]
 
     def _prune(self, el):
         def reverse_enumerate(arr):
