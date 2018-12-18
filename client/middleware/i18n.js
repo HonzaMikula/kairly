@@ -7,7 +7,7 @@ export default function ({ isHMR, app, store, req, route, params, error, redirec
   }
 
   if (store.state.locale) {
-    // store already hydrated on server side
+    // local already set, this is just page transition
     return
   }
 

@@ -24,6 +24,11 @@ export default ({ req, app, store }) => {
 
   Vue.prototype.setLocale = app.setLocale
 
+  // set local according to state current state value
+  // this is especially important for client side where store
+  // contains actual local
+  moment.locale(store.state.locale)
+
   // const $t = Vue.prototype.$t
   // Vue.prototype.$t = function(key, ...args) {
   //   key = key.replace(/[{}]/g, '/')
