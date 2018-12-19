@@ -3,6 +3,7 @@
     <newspaper-detail-view itemtype="https://bib.schema.org/Newspaper" itemscope>
       <newspaper-detail--header>
         <h1 itemprop="name">{{ newspaper.title }}</h1>
+        <p>{{ newspaper.description }}</p>
 
         <newspaper-detail--subscribe v-if="loggedIn">
           <newspaper-subscription :newspaper="newspaper" />
@@ -23,31 +24,11 @@
             <li>10 CZK / month</li>
           </ul>
         </newspaper-detail--info>
-
-        <newspaper-detail--description>
-          <section>
-            <p itemprop="description">
-              {{ newspaper.description }}
-            </p>
-
-            <footer itemprop="author" itemscope itemtype="https://schema.org/Person">
-              <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}" rel="author">
-                <img :src="newspaper.editor.picture" :alt="newspaper.editor.name" itemprop="image"/>
-                <span itemprop="name">{{ newspaper.editor.name }}</span>
-              </nuxt-link>
-            </footer>
-          </section>
-
-          <picture itemprop="image">
-            <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
-            <div v-else class="image-placeholder"></div>
-          </picture>
-        </newspaper-detail--description>
       </div>
 
-      <newspaper-detail--last-newspaper v-for="issue in issues" :key="issue.number">
-        <Issue :issue="issue" :subscription="newspaper.subscription" :hideDate="true">
-          <template slot="newspaperTitle">{{ issue.time | moment('calendar')}}</template>
+      <newspaper-detail--last-newspaper>
+        <Issue :issue="issues[0]" :subscription="newspaper.subscription" :hideDate="true">
+          <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issues[0].time | moment('D. M. YYYY')}}</template>
         </Issue>
       </newspaper-detail--last-newspaper>
 
@@ -58,6 +39,13 @@
           {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
         </p>
       </newspaper-detail--empty-newspaper>
+
+      <div class="newspaper-detail--footer">
+        <picture itemprop="image">
+          <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
+          <div v-else class="image-placeholder"></div>
+        </picture>
+      </div>
     </newspaper-detail-view>
   </app-layout>
 </template>
@@ -157,6 +145,17 @@ newspaper-detail-view
   padding-bottom: $baseline
 
 //- Header
+.newspaper-detail--footer
+  padding-top: $baseline / 2
+
+  border-top: 1px solid #ddd
+  img
+    width: 100%
+    max-height: 400px
+
+    object-fit: cover
+
+//- Header
 newspaper-detail--header
   position: sticky
   top: -1px
@@ -189,6 +188,10 @@ newspaper-detail--header
 
     @media (max-width: $mobile)
       font-size: $fs-3
+
+  //- Description
+  p
+    text-align: center
 
 //- Subscribe
 newspaper-detail--subscribe
@@ -327,6 +330,9 @@ newspaper-detail--description
 
 newspaper-detail--last-newspaper
   display: block
+
+  timeline-newspaper
+    margin-top: $baseline
 
 newspaper-detail--empty-newspaper
   display: block
