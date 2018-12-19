@@ -270,6 +270,7 @@ class Subscription(models.Model):
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
             'state': state,
+            'donation': str(self.donation) if self.donation != 0 else None,
         }
         return data
 
@@ -307,6 +308,7 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
             'state': state,
+            'donation': str(self.donation) if self.donation != 0 else None,
         }
         return data
 
