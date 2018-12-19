@@ -29,11 +29,11 @@
     <button
       v-else
       class="to-subscribe"
+      v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+      :title="newspaper.price"
       @click="subscribe()">
       {{ $t('Subscribe') }}
     </button>
-
-    {{ newspaper.price }} Ⓚ
   </div>
 </template>
 

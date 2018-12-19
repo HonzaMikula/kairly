@@ -22,9 +22,8 @@
         <button
           v-else
           @click="$refs.followWidget.openSubscribeWidget()"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-          :title="canceled ? $t('You can renew subscription') : ''">
-          {{ $t('Subscribe') }}
+        >
+          {{ canceled ? $t('Renew') : $t('Subscribe') }}
         </button>
 
         <follow-author

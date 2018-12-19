@@ -1,17 +1,27 @@
 <template>
   <app-layout :name="$t('Transactions')">
-    <div style="width: 600px; margin: 0 auto">
-      <table class="transactions-table">
-        <tr>
-          <th>Datetime</th>
-          <th>Credits</th>
-          <th>From ... To</th>
-        </tr>
-        <tr v-for="t in transactions">
-          <td>{{ t.created | moment('calendar') }}</td>
-          <td>{{ t.credits > 0 ? '+' : ''}}{{ t.credits }}</td>
-          <td>{{ t.source }} ... {{ t.target }}</td>
-        </tr>
+    <div class="transactions">
+      <header>
+        <h1>Transaction history</h1>
+
+        <button>Add credit</button>
+      </header>
+
+      <table class="transactions--table">
+        <thead>
+          <tr>
+            <th>Datetime</th>
+            <th>Credits</th>
+            <th>From ... To</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="t in transactions" :key="t.created">
+            <td>{{ t.created | moment('calendar') }}</td>
+            <td>{{ t.credits > 0 ? '+' : ''}}{{ t.credits }}</td>
+            <td>{{ t.source }} ... {{ t.target }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </app-layout>
@@ -50,13 +60,48 @@ export default {
 </script>
 
 <style lang="sass">
-.transactions-table
-  margin-top: 20px
+
+.transactions
+  margin: $baseline auto
+  max-width: 900px
+
+  header
+    display: flex
+    margin-bottom: $baseline / 2
+
+    //- heading
+    > h1
+      flex: 1
+
+      font-size: $fs-3
+      font-weight: 600
+
+    //- add credit button
+    > button
+      +subscribed-button
+
+      border-radius: $baseline * 0.625
+
+      height: $baseline * 1.25
+
+      line-height: $baseline * 1.25
+
+
+.transactions--table
   width: 100%
 
-  th
-    background-color: #eee
-  td
-    padding: 3px 6px
+  thead th
+    padding: $baseline/4
+
+    background: #eee
+
+    font-weight: 600
+    text-align: left
+
+  tbody th,
+  tbody td
+    padding: $baseline/4
+
+    border-bottom: 1px solid #eee
 
 </style>

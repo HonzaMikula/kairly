@@ -31,7 +31,7 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
-        <nuxt-link to="/user/transactions">{{ user.credits.split('.')[0] }} Ⓚ</nuxt-link>
+        <nuxt-link to="/user/transactions" class="credits">{{ user.credits.split('.')[0] }}</nuxt-link>
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon
@@ -201,20 +201,6 @@ export default {
     @media (max-width: 850px)
       display: inline-block
 
-  li.newspapers a::before
-    content: $fa-var-newspaper-o
-    display: none
-
-    @media (max-width: 850px)
-      display: inline-block
-
-  li.new-post a::before
-    content: $fa-var-pencil-square-o
-    display: none
-
-    @media (max-width: 850px)
-      display: inline-block
-
   li.explore a::before
     content: $fa-var-hashtag
     display: none
@@ -291,6 +277,23 @@ export default {
     @media (max-width: 850px)
       span
         display: none
+
+    &.credits
+      border-radius: 5px
+      padding: 0 $baseline/2
+      margin-top: $baseline / 4
+
+      color: #555
+
+      font-weight: 600
+      line-height: $baseline * 1.5
+
+      &::before
+        +fa-icon()
+
+        margin-right: $baseline / 4
+
+        content: $fa-var-money
 
   //- profile picture
   img
