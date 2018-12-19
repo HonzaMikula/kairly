@@ -2,15 +2,23 @@
   <div class="newspaper-subscription">
     <button
       v-if="subscription"
-      :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
-      @click="toggle()">
+      :class="{
+        'is-subscribed': subscription.state === 'active',
+        'is-canceled': subscription.state === 'canceled',
+        'is-suspended': subscription.state === 'suspended',
+      }"
+      @click="subscription.state == 'canceled' ? subscribe() : unsubscribe()">
       <span class="default">
-        <span v-if="subscription.renewal">{{ $t('Subscribed') }}</span>
-        <span v-else>{{ $t('Canceled') }}</span>
+        <span v-if="subscription.state == 'active'">{{ $t('Subscribed') }}</span>
+        <span v-if="subscription.state == 'suspended'">{{ $t('Suspended') }}</span>
+        <span v-if="subscription.state == 'canceled'">{{ $t('Canceled') }}</span>
       </span>
-      <span class="on-hover" v-if="subscription.renewal">{{ $t('Unsubscribe') }}</span>
       <span
-        v-else
+        v-if="subscription.state == 'active' || subscription.state == 'suspended'"
+        class="on-hover"
+      >{{ $t('Unsubscribe') }}</span>
+      <span
+        v-if="subscription.state == 'canceled'"
         class="on-hover"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
         :title="$t('Subscription last till {to}', {to: subscription.to})">
@@ -21,7 +29,7 @@
     <button
       v-else
       class="to-subscribe"
-      @click="toggle()">
+      @click="subscribe()">
       {{ $t('Subscribe') }}
     </button>
 
@@ -46,12 +54,13 @@ export default {
   },
 
   methods: {
-    toggle() {
-      if (this.subscription && this.subscription.renewal) {
-          this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
-      } else {
-          this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
-      }
+    subscribe() {
+      this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
+      document.activeElement.blur()
+    },
+
+    unsubscribe() {
+      this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
       document.activeElement.blur()
     }
   }

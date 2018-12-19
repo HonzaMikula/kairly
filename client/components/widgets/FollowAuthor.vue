@@ -10,7 +10,7 @@
         <ul>
           <li><a href="" @click.stop.prevent="editSubscription($event)">{{ $t('Edit') }}</a></li>
           <li>
-              <a v-if="subscription && subscription.renewal" href="" @click.stop.prevent="cancelSubscription($event)">{{ $t('Cancel subscription') }}</a>
+              <a v-if="subscription && subscription.state !== 'canceled'" href="" @click.stop.prevent="cancelSubscription($event)">{{ $t('Cancel subscription') }}</a>
               <a v-else href="" @click.stop.prevent="renewSubscription($event)">{{ $t('Renew subscription') }}</a>
           </li>
         </ul>

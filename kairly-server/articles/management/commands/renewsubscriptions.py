@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.db import transaction
 
 from articles.models import Subscription, SubscriptionToAuthor
+from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 
 
 class Command(BaseCommand):
@@ -31,21 +32,37 @@ class Command(BaseCommand):
 
         now = timezone.now() + timedelta(minutes=10)
 
-        for sub in Subscription.objects.filter(valid_to__lt=now, renewal=True).select_related('user', 'newspaper'):
-            if verbosity > 0:
-                self.stdout.write('Extending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
+        for sub in Subscription.objects.filter(valid_to__lt=now, renewal=True, suspended=False).select_related('user', 'newspaper').order_by('valid_from'):
+            with transaction.atomic():
+                credits = get_user_credits(sub.user)
+                if credits < sub.newspaper.price + sub.donation:
+                    if verbosity > 0:
+                        self.stdout.write('Suspending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
+                    sub.suspended = True
+                    sub.save()
+                else:
+                    if verbosity > 0:
+                        self.stdout.write('Extending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
+                    pay_newspaper_subscription(sub)
+                    counter_newspaper += 1
+                    self.extend_subscriptions(sub)
 
-            counter_newspaper += 1
-            self.extend_subscriptions(sub)
-
-        for sub in SubscriptionToAuthor.objects.filter(valid_to__lt=now, renewal=True).select_related('user', 'author'):
+        for sub in SubscriptionToAuthor.objects.filter(valid_to__lt=now, renewal=True, suspended=False).select_related('user', 'author').order_by('valid_from'):
             author_id = sub.author.username
 
-            if verbosity > 1:
-                self.stdout.write('Extending author subscription: {} -> {}'.format(sub.user, author_id))
-
-            counter_author += 1
-            self.extend_subscriptions(sub)
+            with transaction.atomic():
+                credits = get_user_credits(sub.user)
+                if credits < sub.author.price + sub.donation:
+                    if verbosity > 1:
+                        self.stdout.write('Suspending author subscription: {} -> {}'.format(sub.user, author_id))
+                    sub.suspended = True
+                    sub.save()
+                else:
+                    if verbosity > 1:
+                        self.stdout.write('Extending author subscription: {} -> {}'.format(sub.user, author_id))
+                    pay_author_subscription(sub)
+                    counter_author += 1
+                    self.extend_subscriptions(sub)
 
         counter_end = time.perf_counter()
         self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: renewsubscriptions finished in {} / extended subscriptions: {} author / {} newspaper".format(

@@ -9,6 +9,7 @@ from more_itertools import peekable
 
 from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.db.models import Q
 
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 from utils.decorators import ajax_login_required
@@ -81,10 +82,9 @@ def timeline(request):
 
 def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = Subscription.objects.filter(
+        Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user,
-        renewal=True,
-        valid_from__lte=now,
-        valid_to__gt=now
+        suspended=False,
     ).select_related('newspaper', 'newspaper__editor')
 
     issues = []
@@ -131,10 +131,9 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
 
 def get_author_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = SubscriptionToAuthor.objects.filter(
+        Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user,
-        renewal=True,
-        valid_from__lte=now,
-        valid_to__gt=now
+        suspended=False,
     ).select_related('author')
 
     issues = []

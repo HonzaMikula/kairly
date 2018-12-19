@@ -21,16 +21,24 @@
         <author-detail--subscribe v-if="loggedIn">
           <button
             v-if="subscription"
-            :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
-            @click="subscription.renewal ? unsubscribe() : renewSubscription()"
+            :class="{
+              'is-subscribed': subscription.state === 'active',
+              'is-canceled': subscription.state === 'canceled',
+              'is-suspended': subscription.state === 'suspended',
+            }"
+            @click="subscription.state === 'canceled' ? renewSubscription() : unsubscribe()"
           >
             <span class="default">
-              <template v-if="subscription.renewal">{{ $t('Subscribed') }}</template>
-              <template v-else>{{ $t('Canceled') }}</template>
+              <template v-if="subscription.state === 'active'">{{ $t('Subscribed') }}</template>
+              <template v-if="subscription.state === 'canceled'">{{ $t('Canceled') }}</template>
+              <template v-if="subscription.state === 'suspended'">{{ $t('Suspended') }}</template>
             </span>
-            <span class="on-hover" v-if="subscription.renewal">{{ $t('Unsubscribe') }}</span>
             <span
-              v-else
+              v-if="subscription.state == 'active' || subscription.state == 'suspended'"
+              class="on-hover"
+            >{{ $t('Unsubscribe') }}</span>
+            <span
+              v-if="subscription.state == 'canceled'"
               class="on-hover"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="$t('Subscription last till {to}', { to: subscription.to })"
@@ -38,8 +46,8 @@
           </button>
 
           <button
-            class="to-subscribe"
             v-else
+            class="to-subscribe"
             @click="$refs.followWidget.openSubscribeWidget()"
           >{{ $t('Subscribe') }}</button>
 

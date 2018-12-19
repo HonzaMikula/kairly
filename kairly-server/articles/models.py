@@ -251,17 +251,25 @@ class Subscription(models.Model):
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
+    suspended = models.BooleanField(default=False)
     donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
         return "Subscription to {}}".format(self.newspaper.full_name)
 
     def to_json(self):
+        if self.suspended:
+            state = 'suspended'
+        elif self.renewal:
+            state = 'active'
+        else:
+            state = 'canceled'
+
         data = {}
         data[self.newspaper.full_name] = {
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
-            'renewal': self.renewal
+            'state': state,
         }
         return data
 
@@ -276,6 +284,7 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
+    suspended = models.BooleanField(default=False)
     donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
@@ -283,6 +292,13 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         return "SubscriptionToAuthor to {}".format(title)
 
     def to_json(self):
+        if self.suspended:
+            state = 'suspended'
+        elif self.renewal:
+            state = 'active'
+        else:
+            state = 'canceled'
+
         author_json = self.author.to_json()
         data = {}
         data[author_json['id']] = {
@@ -290,7 +306,7 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
             'periodicity': periodicity_to_json(self),
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
-            'renewal': self.renewal
+            'state': state,
         }
         return data
 

@@ -7,6 +7,7 @@ def forwards_func(apps, schema_editor):
     Newspaper = apps.get_model("articles", "Newspaper")
     Newspaper.objects.all().update(price=Decimal(25))
     Newspaper.objects.filter(editor__username='idnescz').update(price=Decimal(0))
+    Newspaper.objects.filter(slug='kairly').update(price=Decimal(0))
 
 
 def reverse_func(apps, schema_editor):

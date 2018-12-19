@@ -8,6 +8,7 @@ from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.http import (HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
@@ -36,9 +37,8 @@ def subscriptions(request):
     now = datetime.now(request.user.tzinfo)
     subscribed_authors = {}
     query = SubscriptionToAuthor.objects.filter(
-        user=request.user,
-        valid_from__lte=now,
-        valid_to__gt=now
+        Q(valid_to__gt=now) | Q(renewal=True),
+        user=request.user
     ).select_related('author')
 
     for s in query:
@@ -46,9 +46,8 @@ def subscriptions(request):
 
     subscribed_newspapers = {}
     query = Subscription.objects.filter(
-        user=request.user,
-        valid_from__lte=now,
-        valid_to__gt=now
+        Q(valid_to__gt=now) | Q(renewal=True),
+        user=request.user
     ).select_related('newspaper', 'newspaper__editor')
 
     for s in query:
@@ -296,8 +295,8 @@ class NewspaperSubscriptionView(View):
         try:
             # just reactivate renewal if current cancelled subscription exists
             subscription = Subscription.objects.get(
-                user=request.user, newspaper=newspaper,
-                valid_from__lte=now, valid_to__gt=now)
+                Q(valid_to__gt=now) | Q(renewal=True),
+                user=request.user, newspaper=newspaper)
             subscription.renewal = True
             if donation is not None:
                 subscription.donation = donation
@@ -331,12 +330,14 @@ class NewspaperSubscriptionView(View):
 
         try:
             subscription = Subscription.objects.get(
-                user=request.user, newspaper=newspaper,
-                valid_from__lte=now, valid_to__gt=now)
+                Q(renewal=True) | Q(suspended=True),
+                user=request.user, newspaper=newspaper
+            )
             subscription.renewal = False
+            subscription.suspended = False
             subscription.save()
             return JsonResponse({
-                'subscription': subscription.to_json()
+                'subscription': subscription.to_json() if subscription.valid_to > now else None
             })
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()
@@ -374,8 +375,8 @@ class AuthorSubscriptionView(View):
             # TODO when topic removed, is it still needed?
             # There is still place for race condition!
             subscription = SubscriptionToAuthor.objects.get(
+                Q(valid_to__gt=now) | Q(renewal=True),
                 user=request.user, author=author,
-                valid_from__lte=now, valid_to__gt=now
             )
             if periodicity or renewal:
                 if periodicity:
@@ -421,17 +422,20 @@ class AuthorSubscriptionView(View):
     @ajax_login_required
     @transaction.atomic
     def delete(self, request, username):
-        now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
+        now = datetime.now(request.user.tzinfo)
 
         try:
             subscription = SubscriptionToAuthor.objects.get(
+                Q(renewal=True) | Q(suspended=True),
                 user=request.user, author=author,
-                valid_from__lte=now, valid_to__gt=now)
+            )
             subscription.renewal = False
+            subscription.suspended = False
             subscription.save()
+
             return JsonResponse({
-                'subscription': subscription.to_json()
+                'subscription': subscription.to_json() if subscription.valid_to > now else None
             })
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()

@@ -75,19 +75,27 @@ const createStore = () => {
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
       },
-      newspaperSubscription(state, {subscription}) {
+      newspaperSubscription(state, {subscription, fullName}) {
         if (state.subscriptions) {
-          state.subscriptions = {
-            ...state.subscriptions,
-            newspapers: {...state.subscriptions.newspapers, ...subscription}
+          if (subscription) {
+            state.subscriptions = {
+              ...state.subscriptions,
+              newspapers: {...state.subscriptions.newspapers, ...subscription}
+            }
+          } else {
+              Vue.delete(state.subscriptions.newspapers, fullName)
           }
         }
       },
-      authorSubscription(state, { subscription }) {
+      authorSubscription(state, { subscription, authorId}) {
         if (state.subscriptions) {
-          state.subscriptions = {
-            ...state.subscriptions,
-            authors: {...state.subscriptions.authors, ...subscription}
+          if (subscription) {
+            state.subscriptions = {
+              ...state.subscriptions,
+              authors: {...state.subscriptions.authors, ...subscription}
+            }
+          } else {
+              Vue.delete(state.subscriptions.authors, authorId)
           }
         }
       },

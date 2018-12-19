@@ -91,6 +91,7 @@ export async function subscribeNewspaper({ commit }, fullName) {
   const { subscription } = await this.$axios.$post(`/newspapers/${fullName}/subscription`, body)
   //commit('newspaper', { newspaper })
   commit('newspaperSubscription', {
+    fullName,
     subscription,
     meta: {
       analytics: [
@@ -108,8 +109,8 @@ export async function unsubscribeNewspaper({ commit }, fullName) {
   commit('invalidateTimeline')
 
   const { subscription } = await this.$axios.$delete(`/newspapers/${fullName}/subscription`)
-  //commit('newspaper', { newspaper })
   commit('newspaperSubscription', {
+    fullName,
     subscription,
     meta: {
       analytics: [
@@ -129,6 +130,7 @@ export async function subscribeAuthor({ commit }, { author, periodicity }) {
   const { subscription, credits } = await this.$axios.$post(`/authors/${author.id}/subscription`, body)
   commit('updateCredits', credits)
   commit('authorSubscription', {
+    authorId: author.id,
     subscription,
     meta: {
       analytics: [
@@ -148,6 +150,7 @@ export async function unsubscribeAuthor({ commit }, { author }) {
 
   const { subscription } = await this.$axios.$delete(`/authors/${author.id}/subscription`)
   commit('authorSubscription', {
+    authorId: author.id,
     subscription,
     meta: {
       analytics: [

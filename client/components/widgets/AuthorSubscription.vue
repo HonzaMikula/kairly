@@ -55,7 +55,6 @@ export default {
   mixins: [PeriodicityMixin],
 
   computed: {
-    canceled() { return this.subscription && !this.subscription.renewal},
     frequency() { return this.subscription && this.subscription.periodicity.frequency },
     dow() { return this.subscription && this.subscription.periodicity.dow },
     time() { return this.subscription && this.subscription.periodicity.time }

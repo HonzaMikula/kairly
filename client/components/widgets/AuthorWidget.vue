@@ -15,7 +15,7 @@
 
       <section>
         <AuthorSubscription
-          v-if="subscription && subscription.renewal"
+          v-if="subscription && subscription.state === 'active'"
           :subscription="subscription" :author="author"
         />
 
@@ -62,7 +62,7 @@ export default {
     subscription() {
       return this.$store.getters.getAuthorSubscription(this.author)
     },
-    canceled() { return this.subscription && !this.subscription.renewal}
+    canceled() { return this.subscription && this.subscription.state == 'canceled'}
   }
 }
 </script>
