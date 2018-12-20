@@ -34,11 +34,17 @@
       @click="subscribe()">
       {{ $t('Subscribe') }}
     </button>
+
+    <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
+      <SubscriptionConfirmation :closeModal="closeModal"></SubscriptionConfirmation>
+    </portal>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+
+import SubscriptionConfirmation from '@/components/modals/SubscriptionConfirmation'
 
 export default {
   name: 'NewspaperSubscription',
@@ -47,21 +53,40 @@ export default {
     newspaper: Object
   },
 
+  components: {
+    SubscriptionConfirmation
+  },
+
   computed: {
     subscription() {
       return this.$store.getters.getNewspaperSubscription(this.newspaper)
     }
   },
 
+  data() {
+    return {
+      isSubscriptionConfirmationModalOpen: null
+    }
+  },
+
   methods: {
     subscribe() {
       this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
+      this.openModal()
       document.activeElement.blur()
     },
 
     unsubscribe() {
       this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
       document.activeElement.blur()
+    },
+
+    openModal() {
+      this.isSubscriptionConfirmationModalOpen = true
+    },
+
+    closeModal() {
+      this.isSubscriptionConfirmationModalOpen = null
     }
   }
 }
