@@ -76,7 +76,7 @@ class Command(BaseCommand):
         if verbosity > 0:
             self.stdout.write('Importing {}'.format(url))
 
-        perex, content = channel.parse_entry(entry, nocache=force)
+        perex, content, resolved_url = channel.parse_entry(entry, nocache=force)
 
         for attr in ['published', 'date']:
             try:
@@ -103,7 +103,7 @@ class Command(BaseCommand):
             published=published,
             draft=options.get('draft'),
             guid=guid,
-            source=url,
+            source=resolved_url,
             title=title,
             perex=perex,
             content=content,

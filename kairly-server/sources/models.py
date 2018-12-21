@@ -59,9 +59,9 @@ class Channel(models.Model):
         return feedparser.parse(self.rss, **kwargs)
 
     def parse_entry(self, entry, *, nocache=False):
-        fragments = self.parse_article_from_entry(entry, nocache=nocache)
+        fragments, resolved_url = self.parse_article_from_entry(entry, nocache=nocache)
         perex, content = split_article_to_perex_and_content(fragments, [500, 950])
-        return perex, content
+        return perex, content, resolved_url
 
     def parse_article_from_entry(self, entry, *, nocache=False):
         parsed_url = urlsplit(entry.link)
@@ -85,8 +85,11 @@ class Channel(models.Model):
                         break
             if html is None:
                 html = entry.description
+
+            # hit document to get real url
+            resolved_url = requests.get(entry.link.split('#', maxsplit=1)[0]).url
         else:
-            html = self.fetch_url(url, nocache=nocache)
+            html, resolved_url = self.fetch_url(url, nocache=nocache)
 
         htmltree = lxml.html.fromstring(html)
         try:
@@ -99,11 +102,14 @@ class Channel(models.Model):
         parser = ArticleParser(self.parser)
         fragments = parser.parse(htmltree)
         fragments = parser.normalize(fragments)
-        return fragments
+        return fragments, resolved_url
 
     def fetch_url(self, url, *, nocache=False):
-        cache_key = 'url-' + url
-        html = None if nocache else cache.get(cache_key)
+        cache_key_document = 'fetchurl:doc:' + url
+        cache_key_resolved_url = 'fetchurl:resolved_url:' + url
+
+        html = None if nocache else cache.get(cache_key_document)
+        resolved_url = None if nocache else cache.get(cache_key_resolved_url)
         if html is None:
             headers = {}
             if self.user_agent:
@@ -123,8 +129,14 @@ class Channel(models.Model):
 
             if html is None:
                 html = resp.content.decode(resp.encoding)
-            cache.set(cache_key, html, 3600)
-        return html
+
+            resolved_url = resp.url
+
+            cache.set(cache_key_document, html, 3600)
+            cache.set(cache_key_resolved_url, resolved_url, 3610)
+
+        assert resolved_url is not None, "Inconsistent cache"
+        return html, resolved_url
 
     def get_encoding_From_meta(self, content):
         for meta in lxml.html.fromstring(content).cssselect('meta'):

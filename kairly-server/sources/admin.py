@@ -95,7 +95,7 @@ class ChannelAdmin(admin.ModelAdmin):
                 return HttpResponse('Entry not found in RSS')
         else:
             entry = FakeEntry(url)
-        perex, content = fake_channel.parse_entry(entry)
+        perex, content, _ = fake_channel.parse_entry(entry)
 
         document = ''.join([
             perex,
