@@ -100,7 +100,7 @@ backlog-add--dropdown
   left: 50%
 
   top: 40px
-  z-index: 1
+  z-index: 10
 
   @media (max-width: 1120px)
     left: inherit
