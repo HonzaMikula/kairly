@@ -87,7 +87,8 @@ class Channel(models.Model):
                 html = entry.description
 
             # hit document to get real url
-            resolved_url = requests.get(entry.link.split('#', maxsplit=1)[0]).url
+            entry_url = entry.link.split('#', maxsplit=1)[0]
+            resolved_url = requests.head(entry_url, allow_redirects=True).url
         else:
             html, resolved_url = self.fetch_url(url, nocache=nocache)
 
