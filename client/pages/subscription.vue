@@ -11,40 +11,52 @@
       </main>
 
       <aside>
-        <h2>{{ $t('Explore') }}</h2>
+        <section class="subscription--credits">
+          <h2><nuxt-link to="/user/transactions">{{ $t('Credits') }}</nuxt-link></h2>
+          <p>Your current balance</p>
+          <p class="credits">{{user.credits.split('.')[0]}}</p>
 
-        <h3>{{ $t('Recent newspaper issue') }}</h3>
-        <ul>
-          <li
-            v-for="issue in issues"
-            :key="`${issue.newspaper.fullName}#${issue.number}`"
-          >
-            <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
-              {{ issue.newspaper.title }}
-            </nuxt-link>
-          </li>
-        </ul>
+          <p>Last month you spent</p>
+          <p class="credits">450</p>
+          <button>Add credits</button>
+        </section>
 
-        <h3>{{ $t('New authors on Kairly') }}</h3>
-        <ul>
-          <li v-for="author in authors" :key="author.id">
-            <nuxt-link :to="{name: 'author', params: {author: author.id}}">
-              {{ author.name }}
-            </nuxt-link>
-          </li>
-        </ul>
+        <section>
+          <h2>{{ $t('Explore') }}</h2>
 
-        <p>{{ $t('You can find more newspapers and authors on Explore page.') }}</p>
+          <h3>{{ $t('Recent newspaper issue') }}</h3>
+          <ul>
+            <li
+              v-for="issue in issues"
+              :key="`${issue.newspaper.fullName}#${issue.number}`"
+            >
+              <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
+                {{ issue.newspaper.title }}
+              </nuxt-link>
+            </li>
+          </ul>
 
-        <p><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
+          <h3>{{ $t('New authors on Kairly') }}</h3>
+          <ul>
+            <li v-for="author in authors" :key="author.id">
+              <nuxt-link :to="{name: 'author', params: {author: author.id}}">
+                {{ author.name }}
+              </nuxt-link>
+            </li>
+          </ul>
+
+          <p>{{ $t('You can find more newspapers and authors on Explore page.') }}</p>
+
+          <p class="explore-more-content"><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
+        </section>
       </aside>
-
     </my-subscription-view>
   </app-layout>
 </template>
 
 <script>
 import AppLayout from '@/components/layout/AppLayout'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'MySubscription',
@@ -52,6 +64,10 @@ export default {
   components: {
     AppLayout
   },
+
+  computed: mapState({
+    user: state => state.auth.user
+  }),
 
   async asyncData({ app }) {
     const [issues, best_of] = await Promise.all([
@@ -121,11 +137,52 @@ my-subscription-view
     @media (max-width: 800px)
       display: none
 
+
+    section
+      margin-bottom: $baseline * 2
+
+    .subscription--credits
+      //- info about credits
+      .credits
+        margin-bottom: $baseline / 2
+        font-size: $fs-1
+        font-weight: 600
+
+      //- add credits
+      > button
+        padding: 0
+
+        background: transparent
+        border: 0
+        color: $c-base
+
+        font-size: $fs-0
+        font-weight: 600
+
+        cursor: pointer
+        transition: .15s all
+
+        &:hover
+          color: darken($c-base, 10%)
+
+        &::after
+          +fa-icon()
+          @extend .fas
+
+          margin-left: $baseline / 2
+
+          opacity: 0.5
+
+          content: fa-content($fa-var-arrow-right)
+
     h2
       margin-bottom: $baseline
 
       font-size: $fs-3
       font-weight: 600
+
+      a
+        color: #000
 
     h3
       margin-bottom: $baseline / 2
@@ -147,7 +204,7 @@ my-subscription-view
           color: #000
 
     //- promotion for Explore page
-    p + p
+    .explore-more-content
       margin-top: $baseline / 2
 
       a

@@ -1,12 +1,11 @@
 //- BUTTON -//
 
-
 //- Subscribe Button
 =subscribed-button
   display: inline-block
-  border-radius: $baseline / 2
+  border-radius: 5px
   height: $baseline
-  padding: 0 $baseline
+  padding: 0 $baseline/4
 
   background: $c-base
   border: 1px solid $c-base
@@ -14,7 +13,7 @@
 
   cursor: pointer
   font-family: $ff-sans
-  font-size: $fs-0
+  font-size: $fs--1
   line-height: $baseline
 
   &:hover,
@@ -43,9 +42,9 @@
 //- To Subscribe Button
 =subscribe-button
   display: inline-block
-  border-radius: $baseline / 2
+  border-radius: 5px
   height: $baseline
-  padding: 0 $baseline
+  padding: 0 $baseline/2
 
   background: #fff
   border: 1px solid $c-base
@@ -88,7 +87,8 @@ button-icon
   &.consider-for-edition::before
     content: fa-content($fa-var-newspaper)
 
-  &.remove::before
+  &.remove::before,
+  &.close::before
     content: fa-content($fa-var-times)
 
   &.edit::before

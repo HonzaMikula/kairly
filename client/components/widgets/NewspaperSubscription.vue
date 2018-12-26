@@ -9,14 +9,15 @@
       }"
       @click="subscription.state == 'canceled' ? subscribe() : unsubscribe()">
       <span class="default">
-        <span v-if="subscription.state == 'active'">{{ $t('Subscribed') }}</span>
+        <span v-if="subscription.state == 'active'">{{ $t('Subscribed for') }} {{ newspaper.price.split('.')[0] }} Kč</span>
         <span v-if="subscription.state == 'suspended'">{{ $t('Suspended') }}</span>
         <span v-if="subscription.state == 'canceled'">{{ $t('Canceled') }}</span>
       </span>
       <span
         v-if="subscription.state == 'active' || subscription.state == 'suspended'"
-        class="on-hover"
-      >{{ $t('Unsubscribe') }}</span>
+        class="on-hover">
+        {{ $t('Unsubscribe') }}
+      </span>
       <span
         v-if="subscription.state == 'canceled'"
         class="on-hover"
@@ -32,7 +33,8 @@
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :title="newspaper.price"
       @click="subscribe()">
-      {{ $t('Subscribe') }}
+      {{ $t('Subscribe for') }}
+      {{ newspaper.price.split('.')[0] }} Kč
     </button>
 
     <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">

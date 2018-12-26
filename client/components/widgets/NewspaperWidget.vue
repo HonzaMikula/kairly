@@ -26,8 +26,6 @@
       <newspaper-subscription :newspaper="newspaper" />
 
       <p>
-        <span class="price">{{ newspaper.price }}</span>
-        •
         {{ newspaper.likes }} {{ $t('subscribers') }}
       </p>
     </newspaper-widget--subscribe>
@@ -176,12 +174,4 @@ newspaper-widget--subscribe
 
     @media (max-width: $mobile)
       display: none
-
-    .price::before
-      +fa-icon()
-      @extend .fas
-
-      margin-right: $baseline / 8
-
-      content: fa-content($fa-var-coins)
 </style>
