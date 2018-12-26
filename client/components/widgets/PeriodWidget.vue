@@ -185,7 +185,7 @@ export default {
         color: #000
 
       &::before
-        content: $fa-var-arrow-left
+        content: fa-content($fa-var-arrow-left)
 
 
 
@@ -225,6 +225,7 @@ export default {
 
       &::after
         +fa-icon()
+        @extend .fas
 
         position: absolute
         right: $baseline / 2
@@ -235,7 +236,7 @@ export default {
 
         font-size: $fs--1
 
-        content: $fa-var-arrow-right
+        content: fa-content($fa-var-arrow-right)
 
         transition: 0.15s all
 

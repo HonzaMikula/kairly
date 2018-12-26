@@ -264,7 +264,7 @@ export default {
         font-size: $fs--1
 
     li a::after
-      content: $fa-var-arrow-right
+      content: fa-content($fa-var-arrow-right)
 
     //- change button
     .change-button
@@ -281,8 +281,9 @@ export default {
 
         &::after
           +fa-icon()
+          @extend .fas
 
-          content: $fa-var-long-arrow-right
+          content: fa-content($fa-var-arrow-right)
 
           margin-left: $baseline / 4
 

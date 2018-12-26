@@ -109,10 +109,11 @@ change-password-view
 
     &::before
       +fa-icon()
+      @extend .fas
 
       margin-right: $baseline / 4
 
-      content: $fa-var-times
+      content: fa-content($fa-var-times)
 
   > div
     dispay: table

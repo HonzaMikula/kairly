@@ -171,12 +171,13 @@ post-component > header
 
       &::before
         +fa-icon()
+        @extend .fas
 
       &.tweet::before
-        content: $fa-var-twitter
+        content: fa-content($fa-var-twitter)
 
       &.external-link::before
-        content: $fa-var-external-link-square
+        content: fa-content($fa-var-external-link-square-alt)
 
     > button
       +subscribed-button

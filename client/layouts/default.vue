@@ -45,7 +45,7 @@ export default {
 <style lang="sass">
 //- Libraries
 @import '../node_modules/node-reset-scss/scss/_reset'
-@import '../node_modules/font-awesome/scss/font-awesome'
+@import '../node_modules/@fortawesome/fontawesome-free/scss/fontawesome'
 @import '../node_modules/bootstrap/scss/_tooltip'
 
 //- Scaffolding

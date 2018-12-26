@@ -368,7 +368,7 @@ editor-newspapers-view
           background: #eee
 
         &::before
-          content: $fa-var-chevron-down
+          content: fa-content($fa-var-chevron-down)
 
     .create-newspaper
       align-self: center
@@ -414,10 +414,10 @@ editor-newspapers-view
           background: #eee
 
         &.edit::before
-          content: $fa-var-pencil
+          content: fa-content($fa-var-pencil-alt)
 
         &.delete::before
-          content: $fa-var-trash
+          content: fa-content($fa-var-trash)
 
     .mobile-menu
       display: none

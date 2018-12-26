@@ -62,7 +62,7 @@
         color: #000
 
       &::before
-        content: $fa-var-arrow-left
+        content: fa-content($fa-var-arrow-left)
 
 
   //- section
@@ -89,6 +89,7 @@
 
         &::after
           +fa-icon()
+          @extend .fas
 
           position: absolute
           right: $baseline / 2

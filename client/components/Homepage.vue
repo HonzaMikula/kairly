@@ -563,15 +563,16 @@ homepage--help-us--contact-us
 
       &::before
         +fa-icon()
+        @extend .fas
 
     a.facebook::before
-      content: $fa-var-facebook
+      content: fa-content($fa-var-facebook)
 
     a.twitter::before
-      content: $fa-var-twitter
+      content: fa-content($fa-var-twitter)
 
     a.linkedin::before
-      content: $fa-var-linkedin
+      content: fa-content($fa-var-linkedin)
 
   p:last-of-type
     a

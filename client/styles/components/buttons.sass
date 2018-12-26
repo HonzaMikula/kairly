@@ -77,35 +77,36 @@ button-icon
 
   &::before
     +fa-icon()
+    @extend .fas
 
   &.recommend::before
-    content: $fa-var-star
+    content: fa-content($fa-var-star)
 
   &.share::before
-    content: $fa-var-retweet
+    content: fa-content($fa-var-retweet)
 
   &.consider-for-edition::before
-    content: $fa-var-newspaper-o
+    content: fa-content($fa-var-newspaper)
 
   &.remove::before
-    content: $fa-var-times
+    content: fa-content($fa-var-times)
 
   &.edit::before
-    content: $fa-var-pencil
+    content: fa-content($fa-var-pencil-alt)
 
   &.up::before
-    content: $fa-var-arrow-up
+    content: fa-content($fa-var-arrow-up)
 
   &.down::before
-    content: $fa-var-arrow-down
+    content: fa-content($fa-var-arrow-down)
 
   &.menu::before
-    content: $fa-var-ellipsis-v
+    content: fa-content($fa-var-ellipsis-v)
 
   &.normal-view::before
-    content: $fa-var-align-justify
+    content: fa-content($fa-var-align-justify)
 
   &.column-view::before
-    content: $fa-var-align-justify
+    content: fa-content($fa-var-align-justify)
 
     transform: rotate(90deg)

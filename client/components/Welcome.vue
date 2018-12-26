@@ -300,12 +300,13 @@ export default {
 
       &::after
         +fa-icon()
+        @extend .fas
 
         margin-left: $baseline / 2
 
         opacity: 0.5
 
-        content: $fa-var-arrow-right
+        content: fa-content($fa-var-arrow-right)
 
 
       &:hover::after

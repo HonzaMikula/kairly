@@ -197,6 +197,7 @@ settings--profile-picture
   .preview-container
     &::before
       +fa-icon()
+      @extend .fas
 
       position: absolute
       z-index: 100000
@@ -212,7 +213,7 @@ settings--profile-picture
       line-height: $baseline * 4
       text-align: center
 
-      content: $fa-var-camera
+      content: fa-content($fa-var-camera)
       pointer-events: none
       transition: 0.15s opacity
 

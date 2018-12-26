@@ -90,8 +90,10 @@ backlog-add-view
   position: relative
 
   button-icon
+    color: #555
+
     &::before
-      content: $fa-var-newspaper-o
+      content: fa-content($fa-var-newspaper)
 
 backlog-add--dropdown
   +context-menu
@@ -112,14 +114,14 @@ backlog-add--dropdown
 
   li
     a::after
-      content: $fa-var-check
+      content: fa-content($fa-var-check)
       transition: 0.15s opacity
 
     &.is-selected a::after
       opacity: 1 !important
 
       font-size: $fs-0
-      content: $fa-var-check-circle
+      content: fa-content($fa-var-check-circle)
       transition: 0.15s opacity
 
 </style>

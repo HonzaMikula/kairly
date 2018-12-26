@@ -179,8 +179,9 @@ newspaper-widget--subscribe
 
     .price::before
       +fa-icon()
+      @extend .fas
 
       margin-right: $baseline / 8
 
-      content: $fa-var-money
+      content: fa-content($fa-var-coins)
 </style>

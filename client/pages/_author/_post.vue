@@ -260,8 +260,9 @@ post-detail--back-button
 
   &::before
     +fa-icon()
+    @extend .fas
 
-    content: $fa-var-arrow-left
+    content: fa-content($fa-var-arrow-left)
 
   @media (max-width: $mobile)
     position: static
@@ -312,6 +313,7 @@ post-detail--header
 
     &::before
       +fa-icon()
+      @extend .fas
 
       position: relative
       top: -1px
@@ -321,7 +323,7 @@ post-detail--header
       font-size: $fs-1
       vertical-align: middle
 
-      content: $fa-var-external-link-square
+      content: fa-content($fa-var-external-link-square-alt)
 
       @media (max-width: $mobile)
         margin-right: 0
@@ -452,21 +454,23 @@ post-detail--footer
 
     &.share-fb::before
       +fa-icon()
+      @extend .fas
 
       margin-right: 0
 
       font-size: $fs-1
 
-      content: $fa-var-facebook-square
+      content: fa-content($fa-var-facebook-square)
 
     &.share-twitter::before
       +fa-icon()
+      @extend .fas
 
       margin-right: 0
 
       font-size: $fs-1
 
-      content: $fa-var-twitter
+      content: fa-content($fa-var-twitter)
 
   a.read-full-article
     +subscribed-button

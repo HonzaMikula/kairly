@@ -143,10 +143,11 @@ export default {
 
     &::before
       +fa-icon()
+      @extend .fas
 
       margin-right: $baseline / 4
 
-      content: $fa-var-calendar
+      content: fa-content($fa-var-calendar)
 
 
     &:focus,

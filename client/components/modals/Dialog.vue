@@ -85,8 +85,9 @@ modal-dialog
 
       &::before
         +fa-icon()
+        @extend .fas
 
-        content: $fa-var-times
+        content: fa-content($fa-var-times)
 
   //- Footer
   > footer

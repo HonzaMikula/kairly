@@ -227,13 +227,14 @@ newspaper-backlog--next-issue
 
     &::before
       +fa-icon()
+      @extend .fas
 
       display: block
       margin-bottom: $baseline
 
       font-size: $fs-4
 
-      content: $fa-var-clock-o
+      content: fa-content($fa-var-clock)
 
     h2
       margin-bottom: $baseline / 2
@@ -256,13 +257,14 @@ newspaper-backlog--backlog
 
     &::before
       +fa-icon()
+      @extend .fas
 
       display: block
       margin-bottom: $baseline
 
       font-size: $fs-4
 
-      content: $fa-var-newspaper-o
+      content: fa-content($fa-var-newspaper)
 
     h2
       margin-bottom: $baseline / 2
