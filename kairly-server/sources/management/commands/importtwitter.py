@@ -72,12 +72,24 @@ class Command(BaseCommand):
                 try:
                     resp = requests.get(u.expanded_url, timeout=10)
                     page_title = bs4.BeautifulSoup(resp.content, "lxml").title.text
-                    external_urls.append({
+                    parsed_url = urlsplit(resp.url)  # take final url adter redirects
+                    attachment = {
                         'type': 'url',
-                        'href': u.expanded_url,
                         'title': page_title,
-                        'host': pu.netloc
-                    })
+                        'host': parsed_url.netloc
+                    }
+
+                    local_post = Post.find_by_source_url(resp.url)
+                    if local_post:
+                        attachment['source_href'] = resp.url
+                        attachment['href'] = '/{}/{}'.format(
+                            local_post.author.username, local_post.slug)
+                        attachment['title'] = local_post.title
+                    else:
+                        attachment['href'] = resp.url
+                        attachment['title'] = page_title
+
+                    external_urls.append(attachment)
                 except IOError:
                     page_title = u.expanded_url
 

@@ -13,6 +13,7 @@ from django.conf import settings
 
 from sources.parser import ArticleParser, split_article_to_perex_and_content, validate_rules
 from sources.directives import validate_directives, parse as parse_directives
+from utils.url import clean_url
 
 
 class Channel(models.Model):
@@ -103,7 +104,7 @@ class Channel(models.Model):
         parser = ArticleParser(self.parser)
         fragments = parser.parse(htmltree)
         fragments = parser.normalize(fragments)
-        return fragments, resolved_url
+        return fragments, clean_url(resolved_url)
 
     def fetch_url(self, url, *, nocache=False):
         cache_key_document = 'fetchurl:doc:' + url

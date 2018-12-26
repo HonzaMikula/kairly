@@ -17,6 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 
 from utils.json import datetime_isoformat_ecma262
+from utils.url import clean_url
 from .period import PeriodMixin, periodicity_to_json
 
 
@@ -44,6 +45,7 @@ class Post(models.Model):
 
     guid = models.CharField(_('External ID'), max_length=255, null=True, unique=True)
     source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True)  # be aware that utf8mb fields ca have index only if length <= 191
+    source_md5 = models.CharField('Source MD5', max_length=32, blank=True, null=True, db_index=True)
     protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
 
     title = models.CharField(max_length=160)
@@ -52,6 +54,14 @@ class Post(models.Model):
     content = models.TextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
     attachments = models.TextField(null=True)
+
+    @classmethod
+    def find_by_source_url(cls, url):
+        url = clean_url(url)
+        md5 = hashlib.md5(url.encode()).hexdigest()
+        for p in cls.objects.filter(source_md5=md5).order_by('-published'):
+            if p.source == url:
+                return p
 
     def __str__(self):
         return self.title
@@ -71,6 +81,9 @@ class Post(models.Model):
             slug += '--' + h.hexdigest()[:9]
 
             self.slug = slug
+
+        if self.source and not self.source_md5:
+            self.source_md5 = hashlib.md5(self.source.encode()).hexdigest()
         return super().save(*args, **kwargs)
 
     @property
