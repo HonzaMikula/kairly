@@ -73,7 +73,7 @@ class Command(BaseCommand):
                     credits=fee,
                     kind=Transaction.AUTHOR_SUBSCRIPTION
                 )
-                clear_credits_cache(user_id=author_id, author_id=author_id)
+                clear_credits_cache(user_id=author_id, author_id=author_id, platform=True)
 
         counter_end = time.perf_counter()
         self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: transfer author credits finished in {} / {} credits transfered".format(

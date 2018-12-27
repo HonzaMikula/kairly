@@ -8,6 +8,7 @@ from .models import Transaction
 
 AUTHOR_CREDITS_CACHE_KEY = 'balance:author:{}'
 NEWSPAPER_CREDITS_CACHE_KEY = 'balance:newspaper:{}'
+PLATFORM_CREDITS_CACHE_KEY = 'balance:platform'
 USER_CREDITS_CACHE_KEY = 'balance:user:{}'
 
 
@@ -53,6 +54,19 @@ def get_newspaper_retained_credits(id, snapshot=None):
     return balance
 
 
+def get_platform_credits():
+    cache_key = PLATFORM_CREDITS_CACHE_KEY
+    balance = cache.get(cache_key)
+    if balance is None:
+        expenses = Transaction.objects.filter(from_platform=True).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        income = Transaction.objects.filter(to_platform=True).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        balance = income - expenses
+        cache.set(cache_key, str(balance))
+    else:
+        balance = Decimal(balance)
+    return balance
+
+
 def get_user_credits(id):
     cache_key = USER_CREDITS_CACHE_KEY.format(id)
     balance = cache.get(cache_key)
@@ -66,7 +80,7 @@ def get_user_credits(id):
     return balance
 
 
-def clear_credits_cache(*, author_id=None, user_id=None, newspaper_id=None):
+def clear_credits_cache(*, author_id=None, user_id=None, newspaper_id=None, platform=None):
     def clear_cache():
         keys = []
         if author_id is not None:
@@ -75,6 +89,8 @@ def clear_credits_cache(*, author_id=None, user_id=None, newspaper_id=None):
             keys.append(NEWSPAPER_CREDITS_CACHE_KEY.format(newspaper_id))
         if user_id is not None:
             keys.append(USER_CREDITS_CACHE_KEY.format(user_id))
+        if platform:
+            keys.append(PLATFORM_CREDITS_CACHE_KEY)
         cache.delete_many(keys)
     transaction.on_commit(clear_cache)
 

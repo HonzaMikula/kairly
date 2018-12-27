@@ -37,7 +37,7 @@ class Transaction(models.Model):
     def __str__(self):
         return '{} {}'.format(self.user.username, self.credits)
 
-    def to_json(self):
+    def to_json(self, reversed=False):
         source = None
         if self.from_user:
             source = self.from_user.username
@@ -56,6 +56,6 @@ class Transaction(models.Model):
             'source': source,
             'target': target,
             'kind': self.kind,
-            'credits': str(self.credits),
+            'credits': str(self.credits * -1 if reversed else self.credits),
             'created': datetime_isoformat_ecma262(self.created),
         }

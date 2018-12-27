@@ -35,7 +35,8 @@ class KairlyUsernameValidator(validators.RegexValidator):
         'explore', 'dashboard', 'recent',
         'subscription', 'subscriptions',
         'join-and-read-with-kairly',
-        'credits', 'transactions', 'orders', 'reports', 'terms',
+        'credits', 'transactions', 'orders', 'reports', 'reporting', 'terms',
+        'platform', 'system', 'sys',
         'kairly',
     }
 
@@ -155,6 +156,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                     'twitter': self.twitter_account
                 }
             })
+            if self.is_superuser:
+                result['isAdmin'] = True
 
         return result
 
