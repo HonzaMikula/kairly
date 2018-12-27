@@ -19,3 +19,4 @@ pytest==3.5.1
 bleach==3.0.2
 python-rapidjson==0.6.3
 nltk==3.4
+sqlparse==0.2.4
