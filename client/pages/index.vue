@@ -2,29 +2,31 @@
   <app-layout>
     <timeline-view v-if="loggedIn">
       <Welcome v-if="showWelcome"/>
+
       <template v-else>
-        <template v-if="timeSlots.length">
-          <div
-            v-if="links.next"
-            class="timeline--top-pagination"
-          >
-            <p>{{date | moment($i18n.locale === 'cs' ? 'dddd, D. MMMM YYYY' : 'dddd, MMMM Do YYYY')}}</p>
+        <header
+          class="timeline--header"
+          v-if="!loading"
+        >
+          <p>{{ dayTitle(date) }}</p>
 
-            <nuxt-link
-              :to="{name: 'timeline-date', params: {date: links.prev}}"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="links.prev"
-            >{{ $t('Previous day') }}</nuxt-link>
+          <nuxt-link
+            :to="{name: 'timeline-date', params: {date: links.prev}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="'Previous day ('+ links.prev +')'"
+            class="previous"
+          ></nuxt-link>
 
-            <nuxt-link
-              v-if="links.next"
-              :to="{name: 'timeline-date', params: {date: links.next}}"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="links.next"
-            >{{ $t('Next day') }}</nuxt-link>
-          </div>
+          <nuxt-link
+            :to="{name: 'timeline-date', params: {date: links.next}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="'Next day ('+ links.next +')'"
+            :class="['next', {'is-disabled': !links.next}]"
+          ></nuxt-link>
+        </header>
 
-          <template v-for="timeSlot in timeSlots" >
+        <template v-if="timeSlots.length > 0">
+          <template v-for="timeSlot in timeSlots">
             <jump-menu :datetime="timeSlot.time" :key="timeSlot.time" :timeSlots="timeSlots" />
 
             <IssueWrapper v-for="issue in timeSlot.issues"
@@ -35,39 +37,39 @@
           </template>
         </template>
 
-        <template v-else-if="!loading">
-          <div class="timeline--empty">
-            {{ $t('No articles or tweets.') }}
-          </div>
-        </template>
+        <div class="timeline--empty" v-else-if="!loading">
+          {{ $t('No articles or tweets.') }}
+        </div>
 
-        <div class="timeline--pagination" id="start" v-if="!loading">
+        <footer class="timeline--footer" id="start" v-if="!loading">
           <p>{{ $t("That's it. You read the entire day.") }}</p>
 
           <nuxt-link
             :to="{name: 'timeline-date', params: {date: links.prev}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="links.prev"
-          >{{ $t('Previous day') }}</nuxt-link>
+            :title="'Previous day ('+ links.prev +')'"
+            class="previous"
+          ></nuxt-link>
 
           <nuxt-link
-            v-if="links.next"
             :to="{name: 'timeline-date', params: {date: links.next}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="links.next"
-          >{{ $t('Next day') }}</nuxt-link>
-
-        </div>
+            :title="'Next day ('+ links.next +')'"
+            :class="['next', {'is-disabled': !links.next}]"
+          ></nuxt-link>
+        </footer>
       </template>
 
       <loading-spinner v-if="loading"></loading-spinner>
     </timeline-view>
+
     <Homepage v-else/>
   </app-layout>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import moment from 'moment'
 
 import Homepage from '@/components/Homepage'
 import Welcome from '@/components/Welcome'
@@ -145,6 +147,15 @@ export default {
   },
 
   methods: {
+    dayTitle(datetime) {
+      const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
+      const dt = moment(datetime)
+      const today = moment().format(format);
+      const day = dt.format(format)
+      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
+      return `${wod} ${day}`
+    },
+
     async loadTimeline() {
       if (this.loggedIn && !this.$store.state.timelineHasNoActiveSubscriptions) {
         // TODO load timeline and backlog in parallel
@@ -205,7 +216,7 @@ export default {
 <style lang="sass">
 timeline-view
   display: block
-  padding: $baseline
+  padding: $baseline $baseline 0 $baseline
   margin: 0 auto
   max-width: 900px
 
@@ -224,8 +235,10 @@ timeline-view
   text-align: center
 
 
-//- Pagination
-.timeline--pagination
+//- Footer
+.timeline--header,
+.timeline--footer
+  display: flex
   padding-top: $baseline
 
   border-top: 3px solid #ddd
@@ -234,29 +247,28 @@ timeline-view
 
   //- you read the entire day title
   p
+    flex: 1
+    order: 2
     margin-bottom: $baseline
 
     font-family: $ff-serif
-    font-size: $fs-2
+    font-size: $fs-3
+    font-weight: 600
+    line-height: $baseline * 1.5
 
 
   //- buttons
   a
-    display: inline-block
-    border-radius: $baseline
+    display: block
+    border-radius: 100%
     height: $baseline * 1.5
-    margin: 0 $baseline/2
-    width: 140px
+    width: $baseline * 1.5
 
-    background: $c-base
-    color: #fff
+    background: #fff
+    color: #000
 
     line-height: $baseline * 1.5
     text-align: center
-
-    &:hover,
-    &:focus
-      background: darken($c-base, 10%)
 
     @media (max-width: $mobile)
       margin: 0 $baseline/4
@@ -264,52 +276,41 @@ timeline-view
 
       font-size: $fs--1
 
-.timeline--top-pagination
-  display: flex
-  justify-content: center
-  padding-bottom: $baseline
-
-  border-bottom: 3px solid #ddd
-
-  text-align: center
-
-  p
-    margin: 0 $baseline
-    order: 2
-
-    font-family: $ff-serif
-    font-size: $fs-2
-    line-height: $baseline * 1.5
-
-  //- buttons
-  a
-    display: inline-block
-    border-radius: $baseline
-    height: $baseline * 1.5
-    margin: 0 $baseline/2
-    width: 140px
-
-    background: $c-base
-    color: #fff
-
-    line-height: $baseline * 1.5
-    text-align: center
-
     &:hover,
     &:focus
-      background: darken($c-base, 10%)
+      background: $c-base
+      color: #fff
 
-    &:first-of-type
+    &.is-disabled
+      opacity: 0.5
+
+      cursor: default
+
+      &:hover,
+      &:focus
+        background: #fff
+        color: #000
+
+    &::before
+      +fa-icon()
+      @extend .fas
+
+    &.previous
       order: 1
 
-    &:last-of-type
+      &::before
+        content: fa-content($fa-var-arrow-left)
+
+    &.next
       order: 3
 
-    @media (max-width: $mobile)
-      margin: 0 $baseline/4
-      width: 120px
+      &::before
+        content: fa-content($fa-var-arrow-right)
 
-      font-size: $fs--1
+.timeline--header
+  margin-top: 0
+  padding-top: 0
 
+  border-top: 0
 
 </style>
