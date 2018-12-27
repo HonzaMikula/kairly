@@ -11,6 +11,7 @@ from django.utils.timezone import localdate
 from dal import autocomplete
 
 from .models import User, Category, CategoryUser
+from credits.utils import get_author_retained_credits, get_user_credits
 
 admin.site.unregister(Group)
 
@@ -75,6 +76,17 @@ class UserAdmin(OriginalUserAdmin):
             '<svg version="1.1" width="180" height="25" xmlns="http://www.w3.org/2000/svg">' +
             ''.join(content) +
             '</svg>'
+        )
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        if object_id:
+            user = User.objects.get(id=object_id)
+            extra_context['user_credits'] = get_user_credits(user)
+            extra_context['author_credits'] = get_author_retained_credits(user)
+
+        return super().change_view(
+            request, object_id, form_url, extra_context=extra_context,
         )
 
 

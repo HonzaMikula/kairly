@@ -1,0 +1,27 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block field_sets %}
+<style>
+.credits-info {
+  background: #eee;
+  padding: 10px;
+}
+
+.credits-info h2 {
+  margin: 0;
+  margin-bottom: 5px;
+}
+</style>
+
+
+<div class="credits-info">
+  <h2>Credits</h2>
+
+  Available credits: {{ user_credits }}<br>
+  Author's retained credits: {{ author_credits }}
+</div>
+
+{{ block.super }}
+
+{% endblock %}

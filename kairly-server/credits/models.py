@@ -15,11 +15,11 @@ class Transaction(models.Model):
     PLATFORM_FEE = 'PF'
 
     KIND_CHOICES = (
-      (AUTHOR_SUBSCRIPTION, 'Author Subscription'),
-      (NEWSPAPER_SUBSCRIPTION, 'Newspaper Subscription'),
-      (DONATION, 'Donation'),
-      (FREE_CREDIT, 'Free Credit'),
-      (PLATFORM_FEE, 'Platform fee'),
+        (AUTHOR_SUBSCRIPTION, 'Author Subscription'),
+        (NEWSPAPER_SUBSCRIPTION, 'Newspaper Subscription'),
+        (DONATION, 'Donation'),
+        (FREE_CREDIT, 'Free Credit'),
+        (PLATFORM_FEE, 'Platform fee'),
     )
 
     from_platform = models.BooleanField(db_index=True, default=False)

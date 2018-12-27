@@ -6,7 +6,35 @@ from django.core.cache import cache
 from .models import Transaction
 
 
-USER_CREDITS_CACHE_KEY = 'balance_{}'
+AUTHOR_CREDITS_CACHE_KEY = 'balance:author:{}'
+NEWSPAPER_CREDITS_CACHE_KEY = 'balance:newspaper:{}'
+USER_CREDITS_CACHE_KEY = 'balance:user:{}'
+
+
+def get_author_retained_credits(user):
+    cache_key = AUTHOR_CREDITS_CACHE_KEY.format(user.id)
+    balance = cache.get(cache_key)
+    if balance is None:
+        expenses = Transaction.objects.filter(from_author=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        income = Transaction.objects.filter(to_author=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        balance = income - expenses
+        cache.set(cache_key, str(balance))
+    else:
+        balance = Decimal(balance)
+    return balance
+
+
+def get_newspaper_retained_credits(newspaper):
+    cache_key = NEWSPAPER_CREDITS_CACHE_KEY.format(newspaper.id)
+    balance = cache.get(cache_key)
+    if balance is None:
+        expenses = Transaction.objects.filter(from_newspaper=newspaper).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        income = Transaction.objects.filter(to_newspapers=newspaper).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        balance = income - expenses
+        cache.set(cache_key, str(balance))
+    else:
+        balance = Decimal(balance)
+    return balance
 
 
 def get_user_credits(user):
@@ -22,9 +50,16 @@ def get_user_credits(user):
     return balance
 
 
-def on_credits_change(user):
+def clear_credits_cache(*, author=None, user=None, newspaper=None):
     def clear_cache():
-        cache.delete(USER_CREDITS_CACHE_KEY.format(user.id))
+        keys = []
+        if author is not None:
+            keys.append(AUTHOR_CREDITS_CACHE_KEY.format(author.id))
+        if newspaper is not None:
+            keys.append(NEWSPAPER_CREDITS_CACHE_KEY.format(newspaper.id))
+        if user is not None:
+            keys.append(USER_CREDITS_CACHE_KEY.format(user.id))
+        cache.delete_many(keys)
     transaction.on_commit(clear_cache)
 
 
@@ -45,7 +80,7 @@ def pay_author_subscription(subscription):
             credits=subscription.donation,
             kind=Transaction.DONATION
         )
-    on_credits_change(user)
+    clear_credits_cache(user=user, author=subscription.author)
 
 
 def pay_newspaper_subscription(subscription):
@@ -65,4 +100,4 @@ def pay_newspaper_subscription(subscription):
             credits=subscription.donation,
             kind=Transaction.DONATION
         )
-    on_credits_change(user)
+    clear_credits_cache(user=user, newspaper=subscription.newspaper)
