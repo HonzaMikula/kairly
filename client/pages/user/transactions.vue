@@ -1,12 +1,16 @@
 <template>
   <app-layout :name="$t('Transactions')">
     <div class="transactions">
-      <header>
-        <h1>Transaction history</h1>
+      <section>
+        <header>
+          <h1>Credit balance</h1>
 
-        <button>Add credit</button>
-      </header>
+          <button>Add credit</button>
+        </header>
 
+      </section>
+
+      <h2>Transaction history</h2>
       <table class="transactions--table">
         <thead>
           <tr>
@@ -39,7 +43,7 @@ export default {
 
   head() {
     return {
-      title: this.$t('Account Settings – Kairly')
+      title: this.$t('Credit balance – Kairly')
     }
   },
 
@@ -86,6 +90,11 @@ export default {
 
       line-height: $baseline * 1.25
 
+  h2
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-3
+    font-weight: 600
 
 .transactions--table
   width: 100%
