@@ -5,7 +5,9 @@
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :title="$t('Jump to different time')"
       :id="currentAnchor"
-    >{{ dayTitle }} – {{ timeTitle }}</button>
+    ></button>
+
+    <h1>{{ dayTitle }} – {{ timeTitle }}</h1>
 
     <div
       v-if="isMenuOpen"
@@ -106,34 +108,27 @@ export default {
   text-align: center
 
   &:first-of-type
-    margin-top: 0
+    margin-top: -($baseline * 1.5)
 
-  &::before,
-  &::after
-    position: absolute
+  //- Heading
+  > h1
+    font-family: $ff-serif
+    font-size: $fs-3
+    font-weight: 600
+    line-height: $baseline * 1.5
+    text-transform: capitalize
 
-    height: 3px
-    width: 50px
-
-    background: #ddd
-
-    content: ''
-
-  &::before
-    margin: 11px 0 0 -70px
-
-  &::after
-    margin: 11px 0 0 20px
-
-
+  //- Calendar
   button
-    display: inline-block
-    border-radius: $baseline/2
-    height: $baseline
-    padding: 0 $baseline/2
-    margin-bottom: $baseline /4
+    position: absolute
+    right: -($baseline * 2)
 
-    background: #eee
+    display: inline-block
+    border-radius: 100%
+    height: $baseline * 1.5
+    width: $baseline * 1.5
+
+    background: #fafafa
     border: 0
     color: #333
 
@@ -145,8 +140,6 @@ export default {
       +fa-icon()
       @extend .fas
 
-      margin-right: $baseline / 4
-
       content: fa-content($fa-var-calendar)
 
 
@@ -157,6 +150,10 @@ export default {
 
 .timeline-navigation--menu
   +context-menu
+
+  left: auto
+  right: -($baseline * 2 + 105.5px)
+  top: $baseline * 2
 
   li a span
     border-radius: 100%

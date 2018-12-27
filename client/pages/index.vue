@@ -8,8 +8,6 @@
           class="timeline--header"
           v-if="!loading"
         >
-          <p>{{ dayTitle(date) }}</p>
-
           <nuxt-link
             :to="{name: 'timeline-date', params: {date: links.prev}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
@@ -147,15 +145,6 @@ export default {
   },
 
   methods: {
-    dayTitle(datetime) {
-      const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
-      const dt = moment(datetime)
-      const today = moment().format(format);
-      const day = dt.format(format)
-      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
-      return `${wod} ${day}`
-    },
-
     async loadTimeline() {
       if (this.loggedIn && !this.$store.state.timelineHasNoActiveSubscriptions) {
         // TODO load timeline and backlog in parallel
@@ -234,9 +223,12 @@ timeline-view
 
   text-align: center
 
+//- Header
+.timeline--header
+  display: flex
+  justify-content: space-between
 
 //- Footer
-.timeline--header,
 .timeline--footer
   display: flex
   padding-top: $baseline
@@ -256,8 +248,9 @@ timeline-view
     font-weight: 600
     line-height: $baseline * 1.5
 
-
-  //- buttons
+//- buttons for switching days
+.timeline--footer,
+.timeline--header
   a
     display: block
     border-radius: 100%
@@ -269,12 +262,6 @@ timeline-view
 
     line-height: $baseline * 1.5
     text-align: center
-
-    @media (max-width: $mobile)
-      margin: 0 $baseline/4
-      width: 120px
-
-      font-size: $fs--1
 
     &:hover,
     &:focus

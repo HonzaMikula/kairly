@@ -104,7 +104,7 @@ timeline-newspaper
     h1
       margin-bottom: $baseline / 4
 
-      font-size: $fs-3
+      font-size: $fs-2
       line-height: $baseline * 1.25
 
       img
