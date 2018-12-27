@@ -290,7 +290,7 @@ class NewspaperSubscriptionView(View):
             if donation < 0:
                 return HttpResponseBadRequest("Invalid donation")
 
-        credits = get_user_credits(request.user)
+        credits = get_user_credits(request.user.id)
 
         try:
             # just reactivate renewal if current cancelled subscription exists
@@ -367,7 +367,7 @@ class AuthorSubscriptionView(View):
             if donation < 0:
                 return HttpResponseBadRequest("Invalid donation")
 
-        credits = get_user_credits(request.user)
+        credits = get_user_credits(request.user.id)
 
         try:
             # Handle unique together manually, because

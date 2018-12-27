@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
         for sub in Subscription.objects.filter(valid_to__lt=now, renewal=True, suspended=False).select_related('user', 'newspaper').order_by('valid_from'):
             with transaction.atomic():
-                credits = get_user_credits(sub.user)
+                credits = get_user_credits(sub.user.id)
                 if credits < sub.newspaper.price + sub.donation:
                     if verbosity > 0:
                         self.stdout.write('Suspending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
@@ -51,7 +51,7 @@ class Command(BaseCommand):
             author_id = sub.author.username
 
             with transaction.atomic():
-                credits = get_user_credits(sub.user)
+                credits = get_user_credits(sub.user.id)
                 if credits < sub.author.price + sub.donation:
                     if verbosity > 1:
                         self.stdout.write('Suspending author subscription: {} -> {}'.format(sub.user, author_id))

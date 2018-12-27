@@ -81,9 +81,8 @@ class UserAdmin(OriginalUserAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         if object_id:
-            user = User.objects.get(id=object_id)
-            extra_context['user_credits'] = get_user_credits(user)
-            extra_context['author_credits'] = get_author_retained_credits(user)
+            extra_context['user_credits'] = get_user_credits(object_id)
+            extra_context['author_credits'] = get_author_retained_credits(object_id)
 
         return super().change_view(
             request, object_id, form_url, extra_context=extra_context,

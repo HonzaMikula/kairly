@@ -12,6 +12,6 @@ def get_transactions(request):
                         .order_by('-created'))
 
     return JsonResponse({
-        "credits": str(get_user_credits(request.user)),
+        "credits": str(get_user_credits(request.user.id)),
         "transactions": [t.to_json() for t in transactions]
     })

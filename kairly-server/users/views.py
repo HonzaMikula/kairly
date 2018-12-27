@@ -89,7 +89,7 @@ class ProfileView(View):
 
         user = request.user.to_json(owner=True)
         user['newspapers'] = newspapers
-        user['credits'] = str(get_user_credits(request.user))
+        user['credits'] = str(get_user_credits(request.user.id))
 
         return JsonResponse({
             "user": user

@@ -11,12 +11,54 @@ NEWSPAPER_CREDITS_CACHE_KEY = 'balance:newspaper:{}'
 USER_CREDITS_CACHE_KEY = 'balance:user:{}'
 
 
-def get_author_retained_credits(user):
-    cache_key = AUTHOR_CREDITS_CACHE_KEY.format(user.id)
+def get_author_retained_credits(id, snapshot=None):
+    if snapshot:
+        args = dict(created__lt=snapshot)
+        cache_key = None
+        balance = None
+    else:
+        args = {}
+        cache_key = AUTHOR_CREDITS_CACHE_KEY.format(id)
+        balance = cache.get(cache_key)
+
+    if balance is None:
+        expenses = Transaction.objects.filter(from_author_id=id, **args).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        income = Transaction.objects.filter(to_author_id=id, **args).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        balance = income - expenses
+        if cache_key:
+            cache.set(cache_key, str(balance))
+    else:
+        balance = Decimal(balance)
+    return balance
+
+
+def get_newspaper_retained_credits(id, snapshot=None):
+    if snapshot:
+        args = dict(created__lt=snapshot)
+        cache_key = None
+        balance = None
+    else:
+        args = {}
+        cache_key = NEWSPAPER_CREDITS_CACHE_KEY.format(id)
+        balance = cache.get(cache_key)
+
+    if balance is None:
+        expenses = Transaction.objects.filter(from_newspaper_id=id, **args).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        income = Transaction.objects.filter(to_newspapers_id=id, **args).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        balance = income - expenses
+        if cache_key:
+            cache.set(cache_key, str(balance))
+    else:
+        balance = Decimal(balance)
+    return balance
+
+
+def get_user_credits(id):
+    cache_key = USER_CREDITS_CACHE_KEY.format(id)
     balance = cache.get(cache_key)
     if balance is None:
-        expenses = Transaction.objects.filter(from_author=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-        income = Transaction.objects.filter(to_author=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        expenses = Transaction.objects.filter(from_user_id=id).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        income = Transaction.objects.filter(to_user_id=id).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
         balance = income - expenses
         cache.set(cache_key, str(balance))
     else:
@@ -24,41 +66,15 @@ def get_author_retained_credits(user):
     return balance
 
 
-def get_newspaper_retained_credits(newspaper):
-    cache_key = NEWSPAPER_CREDITS_CACHE_KEY.format(newspaper.id)
-    balance = cache.get(cache_key)
-    if balance is None:
-        expenses = Transaction.objects.filter(from_newspaper=newspaper).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-        income = Transaction.objects.filter(to_newspapers=newspaper).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-        balance = income - expenses
-        cache.set(cache_key, str(balance))
-    else:
-        balance = Decimal(balance)
-    return balance
-
-
-def get_user_credits(user):
-    cache_key = USER_CREDITS_CACHE_KEY.format(user.id)
-    balance = cache.get(cache_key)
-    if balance is None:
-        expenses = Transaction.objects.filter(from_user=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-        income = Transaction.objects.filter(to_user=user).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-        balance = income - expenses
-        cache.set(cache_key, str(balance))
-    else:
-        balance = Decimal(balance)
-    return balance
-
-
-def clear_credits_cache(*, author=None, user=None, newspaper=None):
+def clear_credits_cache(*, author_id=None, user_id=None, newspaper_id=None):
     def clear_cache():
         keys = []
-        if author is not None:
-            keys.append(AUTHOR_CREDITS_CACHE_KEY.format(author.id))
-        if newspaper is not None:
-            keys.append(NEWSPAPER_CREDITS_CACHE_KEY.format(newspaper.id))
-        if user is not None:
-            keys.append(USER_CREDITS_CACHE_KEY.format(user.id))
+        if author_id is not None:
+            keys.append(AUTHOR_CREDITS_CACHE_KEY.format(author_id))
+        if newspaper_id is not None:
+            keys.append(NEWSPAPER_CREDITS_CACHE_KEY.format(newspaper_id))
+        if user_id is not None:
+            keys.append(USER_CREDITS_CACHE_KEY.format(user_id))
         cache.delete_many(keys)
     transaction.on_commit(clear_cache)
 
@@ -80,7 +96,7 @@ def pay_author_subscription(subscription):
             credits=subscription.donation,
             kind=Transaction.DONATION
         )
-    clear_credits_cache(user=user, author=subscription.author)
+    clear_credits_cache(user_id=user.id, author_id=subscription.author_id)
 
 
 def pay_newspaper_subscription(subscription):
@@ -100,4 +116,4 @@ def pay_newspaper_subscription(subscription):
             credits=subscription.donation,
             kind=Transaction.DONATION
         )
-    clear_credits_cache(user=user, newspaper=subscription.newspaper)
+    clear_credits_cache(user_id=user.id, newspaper_id=subscription.newspaper_id)
