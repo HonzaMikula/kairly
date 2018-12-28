@@ -291,8 +291,6 @@ newspaper-backlog--backlog
     //- tweet
     p
       font-family: $ff-serif
-      font-size: $fs-1
-
 
     > header
       position: relative

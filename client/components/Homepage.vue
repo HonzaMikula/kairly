@@ -248,7 +248,7 @@ homepage--cover
   justify-content: center
   box-sizing: border-box
   height: 400px
-  padding: $baseline * 1
+  padding: $baseline
 
   background: url("~assets/homepage/hero-new.jpg") bottom center no-repeat
   background-size: cover

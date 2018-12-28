@@ -59,6 +59,8 @@
         </p>
       </newspaper-detail--empty-newspaper>
     </newspaper-detail-view>
+
+    <kairly-promo v-if="!loggedIn" />
   </app-layout>
 </template>
 
@@ -72,6 +74,7 @@ import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import KairlyPromo from '@/components/KairlyPromo'
 
 export default {
   name: 'NewspaperDetail',
@@ -102,7 +105,8 @@ export default {
   components: {
     AppLayout,
     Issue,
-    NewspaperSubscription
+    NewspaperSubscription,
+    KairlyPromo
   },
 
   mixins: [PeriodicityMixin],

@@ -229,7 +229,6 @@ export default {
       this.isBacklogLoaded = false
       const { backlog, publish } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
       this.postsBacklog = backlog.reverse()
-      console.log(backlog)
       this.postsPublished = publish
       this.isBacklogLoaded = true
     },

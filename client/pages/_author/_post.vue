@@ -99,6 +99,8 @@
         </post-detail--author>
       </main>
     </post-detail>
+
+    <kairly-promo v-if="!loggedIn" />
   </app-layout>
 </template>
 
@@ -110,6 +112,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 import FollowAuthor from '@/components/widgets/FollowAuthor'
+import KairlyPromo from '@/components/KairlyPromo'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
@@ -156,7 +159,8 @@ export default {
     AppLayout,
     ConsiderPost,
     FollowAuthor,
-    AuthorSubscription
+    AuthorSubscription,
+    KairlyPromo
   },
 
   data() {
@@ -219,7 +223,7 @@ post-detail
   position: relative
 
   display: block
-  padding: $baseline $baseline/2 $baseline*10 $baseline/2
+  padding: $baseline $baseline/2 $baseline $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
 
   background: #fff
@@ -454,7 +458,7 @@ post-detail--footer
 
     &.share-fb::before
       +fa-icon()
-      @extend .fas
+      @extend .fab
 
       margin-right: 0
 
@@ -464,7 +468,7 @@ post-detail--footer
 
     &.share-twitter::before
       +fa-icon()
-      @extend .fas
+      @extend .fab
 
       margin-right: 0
 

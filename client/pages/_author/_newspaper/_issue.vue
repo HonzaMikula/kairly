@@ -33,7 +33,7 @@
 
           <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
 
-          <li>49 CZK / month</li>
+          <li>{{ newspaper.price.split('.')[0] }} Kč</li>
         </ul>
 
         <p>{{ newspaper.description }}</p>
@@ -45,6 +45,8 @@
         <p>{{ periodicity }}</p>
       </div>
     </div>
+
+    <kairly-promo v-if="!loggedIn" />
   </app-layout>
 </template>
 
@@ -58,6 +60,7 @@ import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import KairlyPromo from '@/components/KairlyPromo'
 
 export default {
   name: 'IssueDetail',
@@ -95,7 +98,8 @@ export default {
   components: {
     AppLayout,
     Issue,
-    NewspaperSubscription
+    NewspaperSubscription,
+    KairlyPromo
   },
 
   mixins: [PeriodicityMixin],
