@@ -70,6 +70,7 @@ explore-view
 
           white-space: nowrap
           overflow-x: auto
+          -webkit-overflow-scrolling: touch
 
       li
         display: inline-block
@@ -157,6 +158,7 @@ explore--top-newspapers
     @media (max-width: $mobile)
       grid-column-gap: $baseline / 4
       overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
       newspaper-widget-view,
       issue-widget-view

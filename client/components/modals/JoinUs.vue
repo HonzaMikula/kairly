@@ -108,6 +108,7 @@ modal-dialog.join-us
   main
     padding: $baseline
     overflow: auto
+    -webkit-overflow-scrolling: touch
 
     background: #fff
 

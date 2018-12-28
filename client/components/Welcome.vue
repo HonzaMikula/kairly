@@ -154,6 +154,7 @@ export default {
 
       white-space: nowrap
       overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
   li
     display: inline-block
@@ -192,6 +193,7 @@ export default {
     @media (max-width: $mobile)
       grid-column-gap: $baseline / 4
       overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
       newspaper-widget-view
         min-width: 200px
