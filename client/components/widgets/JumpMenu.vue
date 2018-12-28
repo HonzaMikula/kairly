@@ -57,7 +57,7 @@ export default {
       const dt = moment(this.datetime)
       const today = moment().format(format);
       const day = dt.format(format)
-      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
+      const wod = day === today ? this.$t('Today') : dt.format("dddd")
       return `${wod} ${day}`
     },
 

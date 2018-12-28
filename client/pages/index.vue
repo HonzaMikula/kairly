@@ -16,6 +16,7 @@
           ></nuxt-link>
 
           <nuxt-link
+            v-if="links.next"
             :to="{name: 'timeline-date', params: {date: links.next}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Next day ('+ links.next +')'"
@@ -50,6 +51,7 @@
           ></nuxt-link>
 
           <nuxt-link
+            v-if="links.next"
             :to="{name: 'timeline-date', params: {date: links.next}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Next day ('+ links.next +')'"
