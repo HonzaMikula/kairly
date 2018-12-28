@@ -5,6 +5,11 @@
         <h1 itemprop="name">{{ newspaper.title }}</h1>
         <p>{{ newspaper.description }}</p>
 
+        <picture itemprop="image">
+          <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
+          <div v-else class="image-placeholder"></div>
+        </picture>
+
         <newspaper-detail--subscribe v-if="loggedIn">
           <newspaper-subscription :newspaper="newspaper" />
 
@@ -20,8 +25,6 @@
             <li>#{{ newspaper.issues }}</li>
 
             <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
-
-            <li>10 CZK / month</li>
           </ul>
         </newspaper-detail--info>
       </div>
@@ -39,19 +42,11 @@
           {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
         </p>
       </newspaper-detail--empty-newspaper>
-
-      <div class="newspaper-detail--footer">
-        <picture itemprop="image">
-          <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
-          <div v-else class="image-placeholder"></div>
-        </picture>
-      </div>
     </newspaper-detail-view>
 
     <kairly-promo v-if="!loggedIn" />
   </app-layout>
 </template>
-
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
@@ -148,16 +143,6 @@ newspaper-detail-view
   max-width: 900px
   padding-bottom: $baseline
 
-//- Header
-.newspaper-detail--footer
-  padding-top: $baseline / 2
-
-  border-top: 1px solid #ddd
-  img
-    width: 100%
-    max-height: 400px
-
-    object-fit: cover
 
 //- Header
 newspaper-detail--header
@@ -165,8 +150,12 @@ newspaper-detail--header
   top: -1px
   z-index: 1
 
-  display: block
-  padding: $baseline/4 $baseline
+  display: grid
+  grid-column-gap: $baseline / 2
+  grid-template-areas: "issue-header-image issue-header-title issue-header-subscription" "issue-header-image issue-header-description issue-header-subscription"
+  grid-template-columns: $baseline*7 auto $baseline*7
+  grid-template-rows: $baseline*2 $baseline
+  padding: $baseline/4 0
   margin: $baseline*0.75 0
   overflow: hidden
 
@@ -184,6 +173,8 @@ newspaper-detail--header
 
   //- Title
   h1
+    grid-area: issue-header-title
+
     font-size: $fs-4
     font-weight: 600
     line-height: $baseline * 2
@@ -195,16 +186,26 @@ newspaper-detail--header
 
   //- Description
   p
+    grid-area: issue-header-description
+
     text-align: center
+
+
+  //- Picture
+  > picture
+    grid-area: issue-header-image
+
+    img
+      height: 100%
+      width: 100%
+
+      object-fit: cover
+
 
 //- Subscribe
 newspaper-detail--subscribe
-  position: absolute
-  right: 0
-  top: 0
-
-  display: block
-  padding: $baseline / 4
+  grid-area: issue-header-subscription
+  padding: $baseline/4 0
 
   backdrop-filter: blur(10px)
 
