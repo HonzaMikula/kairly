@@ -36,9 +36,22 @@
           </template>
         </template>
 
-        <div class="timeline--empty" v-else-if="!loading">
-          {{ $t('No articles or tweets.') }}
-        </div>
+        <template v-else-if="!loading">
+          <div class="timeline-time-slot">
+            <h1>{{ dayTitle }}</h1>
+          </div>
+
+          <div class="timeline--empty">
+            <h2>{{ $t('No articles or tweets yet') }}</h2>
+            <p>
+              {{ $t('Nothing was published for you yet. Check your subscriptions or explore more newspapers and authors.') }}
+            </p>
+
+            <nuxt-link to="/subscriptions">{{ $t('Subscriptions') }}</nuxt-link>
+            <nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link>
+
+          </div>
+        </template>
 
         <footer class="timeline--footer" id="start" v-if="!loading">
           <p>{{ $t("That's it. You read the entire day.") }}</p>
@@ -132,7 +145,16 @@ export default {
       if (this.loading) { return {} }
 
       return this.$store.state.timeline[this.date].links
-    }
+    },
+
+    dayTitle() {
+      const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
+      const dt = moment(this.date)
+      const today = moment().format(format);
+      const day = dt.format(format)
+      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
+      return `${wod} ${day}`
+    },
   },
 
   watch: {
@@ -212,7 +234,7 @@ timeline-view
   max-width: 900px
 
   @media (max-width: $mobile)
-    padding: $baseline/2 0
+    padding: $baseline/2 0 0 0
 
 //- Empty timeline
 .timeline--empty
@@ -220,15 +242,43 @@ timeline-view
   margin: $baseline*2 auto
   padding: $baseline $baseline*2
 
-  background: #eee
-  border: 1px dashed #ccc
+  background: #fff
+  border: 1px solid #ddd
 
   text-align: center
+
+  @media (max-width: $mobile)
+    display: block
+    margin: $baseline*2 $baseline
+    padding: $baseline
+
+  h2
+    margin-bottom: $baseline
+
+    font-weight: 600
+    font-size: $fs-1
+
+  p
+    margin-bottom: $baseline
+
+  //- links
+  > a
+    +subscribed-button
+
+    height: $baseline * 1.25
+    padding: 0 $baseline/2
+    margin: 0 $baseline/4
+
+    font-size: $fs-0
+    line-height: $baseline * 1.25
 
 //- Header
 .timeline--header
   display: flex
   justify-content: space-between
+
+  @media (max-width: $mobile)
+    padding: 0 $baseline/4
 
 //- Footer
 .timeline--footer
@@ -239,11 +289,13 @@ timeline-view
 
   text-align: center
 
+  @media (max-width: $mobile)
+    padding: $baseline $baseline/4
+
   //- you read the entire day title
   p
     flex: 1
     order: 2
-    margin-bottom: $baseline
 
     font-family: $ff-serif
     font-size: $fs-3
@@ -254,6 +306,9 @@ timeline-view
 .timeline--footer,
 .timeline--header
   a
+    position: relative
+    z-index: 3
+
     display: block
     border-radius: 100%
     height: $baseline * 1.5
@@ -274,6 +329,7 @@ timeline-view
       opacity: 0.5
 
       cursor: default
+      pointer-events: none
 
       &:hover,
       &:focus

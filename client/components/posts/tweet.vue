@@ -87,7 +87,7 @@ timeline-post--tweet
   line-height: 1.58
 
   @media (max-width: $mobile)
-    font-size: $fs--1
+    font-size: 15px
 
   > .tweet-content a
     color: $c-base

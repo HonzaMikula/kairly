@@ -92,7 +92,7 @@ timeline-post--article--content
     column-count: 2
     column-gap: $baseline / 2
 
-    font-size: $fs--1
+    font-size: 15px
     line-height: 1.58
 
 

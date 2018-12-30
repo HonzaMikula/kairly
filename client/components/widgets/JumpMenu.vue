@@ -7,7 +7,7 @@
       :id="currentAnchor"
     ></button>
 
-    <h1>{{ dayTitle }} – {{ timeTitle }}</h1>
+    <h1 @click="isMenuOpen = !isMenuOpen">{{ dayTitle }} – {{ timeTitle }}</h1>
 
     <div
       v-if="isMenuOpen"
@@ -118,6 +118,9 @@ export default {
     line-height: $baseline * 1.5
     text-transform: capitalize
 
+    @media (max-width: $mobile)
+      font-size: $fs-2
+
   //- Calendar
   button
     position: absolute
@@ -135,6 +138,9 @@ export default {
     cursor: pointer
     font-family: $ff-sans
     font-size: $fs-0
+
+    @media (max-width: $mobile)
+      display: none
 
     &::before
       +fa-icon()
@@ -154,6 +160,10 @@ export default {
   left: auto
   right: -($baseline * 2 + 105.5px)
   top: $baseline * 2
+
+  @media (max-width: $mobile)
+    right: auto
+    left: 50%
 
   li a span
     border-radius: 100%
