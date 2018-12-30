@@ -31,7 +31,7 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
-        <nuxt-link to="/user/transactions" class="credits">{{ user.credits.split('.')[0] }}</nuxt-link>
+        <nuxt-link to="/user/transactions" class="credits">{{ user.credits.split('.')[0] }} Kč</nuxt-link>
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon
@@ -284,18 +284,10 @@ export default {
       padding: 0 $baseline/2
       margin-top: $baseline / 4
 
-      color: #555
+      color: $c-base
 
       font-weight: 600
       line-height: $baseline * 1.5
-
-      &::before
-        +fa-icon()
-        @extend .fas
-
-        margin-right: $baseline / 4
-
-        content: fa-content($fa-var-coins)
 
   //- profile picture
   img

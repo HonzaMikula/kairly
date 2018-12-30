@@ -29,7 +29,7 @@
             @click="subscription.state === 'canceled' ? renewSubscription() : unsubscribe()"
           >
             <span class="default">
-              <template v-if="subscription.state === 'active'">{{ $t('Subscribed') }}</template>
+              <template v-if="subscription.state === 'active'">{{ $t('Subscribed for') }} {{ author.price.split('.')[0] }} Kč</template>
               <template v-if="subscription.state === 'canceled'">{{ $t('Canceled') }}</template>
               <template v-if="subscription.state === 'suspended'">{{ $t('Suspended') }}</template>
             </span>
@@ -49,9 +49,7 @@
             v-else
             class="to-subscribe"
             @click="$refs.followWidget.openSubscribeWidget()"
-          >{{ $t('Subscribe') }}</button>
-
-          {{ author.price }} Ⓚ
+          >{{ $t('Subscribe for') }} {{ author.price.split('.')[0] }} Kč</button>
 
           <follow-author ref="followWidget" :author="author" :subscription="subscription"/>
 

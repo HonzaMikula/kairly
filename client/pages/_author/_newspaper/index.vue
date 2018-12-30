@@ -1,7 +1,7 @@
 <template>
   <app-layout :name="$t('Newspaper detail')">
-    <newspaper-detail-view itemtype="https://bib.schema.org/Newspaper" itemscope>
-      <newspaper-detail--header>
+    <div class="newspaper-detail" itemtype="https://bib.schema.org/Newspaper" itemscope>
+      <header class="newspaper-detail--header">
         <h1 itemprop="name">{{ newspaper.title }}</h1>
         <p>{{ newspaper.description }}</p>
 
@@ -10,39 +10,71 @@
           <div v-else class="image-placeholder"></div>
         </picture>
 
-        <newspaper-detail--subscribe v-if="loggedIn">
+        <div class="newspaper-detail--subscribe" v-if="loggedIn">
           <newspaper-subscription :newspaper="newspaper" />
 
           <p>{{ periodicity }}</p>
-        </newspaper-detail--subscribe>
-      </newspaper-detail--header>
+        </div>
+      </header>
 
-      <div>
-        <newspaper-detail--info>
-          <ul>
-            <li>{{ periodicity }}</li>
-
-            <li>#{{ newspaper.issues }}</li>
-
-            <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
-          </ul>
-        </newspaper-detail--info>
+      <div class="newspaper-detail--info">
+        <ul>
+          <li>{{ periodicity }}</li>
+          <li>#{{ newspaper.issues }}</li>
+          <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
+          <li>{{ newspaper.editor.name }}</li>
+          <li>{{ newspaper.price.split('.')[0] }} Kč měsíčně</li>
+        </ul>
       </div>
 
-      <newspaper-detail--last-newspaper>
-        <Issue :issue="issues[0]" :subscription="newspaper.subscription" :hideDate="true">
-          <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issues[0].time | moment('D. M. YYYY')}}</template>
-        </Issue>
-      </newspaper-detail--last-newspaper>
+      <template v-if="issues.length !== 0">
+        <nav class="newspaper-detail--navigation">
+          <nuxt-link
+            to=""
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="'Previous issue'"
+            class="previous"
+          ></nuxt-link>
 
-      <newspaper-detail--empty-newspaper v-if="issues.length === 0">
+          <nuxt-link
+            to=""
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="'Next issue'"
+            class="next"
+          ></nuxt-link>
+        </nav>
+
+        <div class="newspaper-detail--issue">
+          <Issue :issue="issues[0]" :subscription="newspaper.subscription" :hideDate="true">
+            <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issues[0].time | moment('D. M. YYYY')}}</template>
+          </Issue>
+        </div>
+
+        <footer class="newspaper-detail--footer">
+          <a
+            :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${newspaper.editor.id}/${newspaper.name}`"
+            target="_blank"
+            class="share-fb">
+            {{ $t('Share on Facebook') }}
+          </a>
+
+          <a
+            :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${newspaper.editor.id}/${newspaper.name}&text=${newspaper.title}`"
+            target="_blank"
+            class="share-twitter"
+          >
+            {{ $t('Share on Twitter') }}
+          </a>
+        </footer>
+      </template>
+
+      <div class="newspaper-detail--empty-newspaper" v-else>
         <h2>{{ $t('No issue yet') }}</h2>
-
         <p>
           {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
         </p>
-      </newspaper-detail--empty-newspaper>
-    </newspaper-detail-view>
+      </div>
+    </div>
 
     <kairly-promo v-if="!loggedIn" />
   </app-layout>
@@ -135,17 +167,16 @@ export default {
 </script>
 
 <style lang="sass">
-newspaper-detail-view
+.newspaper-detail
   position: relative
 
-  display: block
   margin: 0 auto
   max-width: 900px
   padding-bottom: $baseline
 
 
 //- Header
-newspaper-detail--header
+.newspaper-detail--header
   position: sticky
   top: -1px
   z-index: 1
@@ -190,7 +221,6 @@ newspaper-detail--header
 
     text-align: center
 
-
   //- Picture
   > picture
     grid-area: issue-header-image
@@ -203,7 +233,7 @@ newspaper-detail--header
 
 
 //- Subscribe
-newspaper-detail--subscribe
+.newspaper-detail--subscribe
   grid-area: issue-header-subscription
   padding: $baseline/4 0
 
@@ -231,8 +261,8 @@ newspaper-detail--subscribe
     line-height: 1.42
     text-align: center
 
-
-newspaper-detail--info
+//- Info row about newspaper
+.newspaper-detail--info
   display: block
   padding: $baseline/4 0
 
@@ -265,81 +295,124 @@ newspaper-detail--info
     &:last-of-type::after
       display: none
 
-  //- Editor
+//- Navigation between issues
+.newspaper-detail--navigation
+  display: flex
+  justify-content: space-between
+  padding-top: $baseline / 2
+  margin-bottom: -($baseline * 2.375)
+
   a
+    position: relative
+    z-index: 3
+
+    display: block
+    border-radius: 100%
+    height: $baseline * 1.5
+    width: $baseline * 1.5
+
+    background: #fff
     color: #000
 
-    img
-      border-radius: 100%
-      height: $baseline
-      width: $baseline
+    line-height: $baseline * 1.5
+    text-align: center
 
-      object-fit: cover
-      vertical-align: middle
+    &:hover,
+    &:focus
+      background: $c-base
+      color: #fff
 
+    &.is-disabled
+      opacity: 0.5
 
-//- Editorial Intro
-newspaper-detail--description
-  display: grid
-  grid-template-columns: 1fr 2fr
-  grid-column-gap: $baseline
-  grid-template-rows: auto
-  margin-top: $baseline
+      cursor: default
+      pointer-events: none
 
-  font-family: $ff-serif
+      &:hover,
+      &:focus
+        background: #fff
+        color: #000
 
-  @media (max-width: $mobile)
-    grid-template-columns: 1fr
-    grid-row-gap: $baseline / 2
-    padding: $baseline / 4
-    margin-top: 0
+    &::before
+      +fa-icon()
+      @extend .fas
 
-  h3
-    font-weight: 600
+    &.previous
+      order: 1
 
-  p
-    text-indent: $baseline
+      &::before
+        content: fa-content($fa-var-arrow-left)
 
-  footer
-    margin-top: $baseline / 2
+    &.next
+      order: 3
 
-    font-weight: 600
-    text-align: right
-
-    a
-      color: #000
-
-    img
-      border-radius: 100%
-      height: $baseline
-      width: $baseline
-
-      object-fit: cover
-      vertical-align: middle
-
-  picture
-    height: 100%
-
-    img
-      height: 100%
-      min-height: 250px
-      max-height: 100%
-      width: 100%
-      object-fit: cover
-
-    .image-placeholder
-      min-height: 250px
-      height: 100%
-      background-image: radial-gradient(#fafafa, #aaa)
+      &::before
+        content: fa-content($fa-var-arrow-right)
 
 
-newspaper-detail--last-newspaper
+//- Issue
+.newspaper-detail--issue
   display: block
 
   timeline-newspaper
     margin-top: $baseline
 
-newspaper-detail--empty-newspaper
+
+//- Footer with social buttons
+.newspaper-detail--footer
+  text-align: center
+
+  > a
+    border-radius: 5px
+    display: inline-block
+    height: $baseline * 1.25
+    margin-right: $baseline / 4
+    margin-bottom: $baseline / 4
+    padding: 0 $baseline/4
+
+    background: #eee
+    color: #000
+
+    cursor: pointer
+    font-size: $fs--1
+    line-height: $baseline * 1.25
+    vertical-align: middle
+
+    &::before
+      position: relative
+      top: -1px
+
+      margin-right: $baseline / 4
+      vertical-align: middle
+
+      font-size: $fs-1
+
+    &:focus,
+    &:hover
+      background: #bbb
+      color: #000
+
+    &.share-fb::before
+      +fa-icon()
+      @extend .fab
+
+      margin-right: 0
+
+      font-size: $fs-1
+
+      content: fa-content($fa-var-facebook-square)
+
+    &.share-twitter::before
+      +fa-icon()
+      @extend .fab
+
+      margin-right: 0
+
+      font-size: $fs-1
+
+      content: fa-content($fa-var-twitter)
+
+.newspaper-detail--empty-newspaper
   display: block
   margin-top: $baseline * 2
   padding: $baseline
