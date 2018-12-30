@@ -519,7 +519,8 @@ class DraftDetailView(View):
 
     @ajax_login_required
     def patch(self, request, post_id):
-        # user can patch also published posts
+        """User can patch published posts and such use case is handled
+        also by this view despite its name."""
         post = get_object_or_404(Post, author=request.user, id=post_id)
         payload = json.loads(request.body.decode('utf-8'))
 
@@ -529,7 +530,7 @@ class DraftDetailView(View):
             return HttpResponseBadRequest(str(e))
 
         post.__dict__.update(attrs)
-        post.save()
+        post.save(recalculate_weight=True)
 
         return JsonResponse({
             'post': post.to_json()

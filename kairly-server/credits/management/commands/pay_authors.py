@@ -15,7 +15,7 @@ from users.models import User
 
 
 class Command(BaseCommand):
-    help = 'Import posts from RSS channels'
+    help = 'Divide accumulated credits to user'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -24,13 +24,20 @@ class Command(BaseCommand):
             dest='month',
             help='Force month to assign (eg 12/2018)',
         )
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            dest='dry-run',
+            help='do not create anything',
+        )
 
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
+        dry_run = options.get('dry-run', False)
 
         counter_start = time.perf_counter()
         counter_total = Decimal(0)
-        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: transfer author credits started".format(timezone.now()))
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: pay authors started".format(timezone.now()))
 
         month = options.get('month')
         t = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
@@ -38,8 +45,9 @@ class Command(BaseCommand):
         if month:
             m, y = map(int, month.split('/'))
             t = t.replace(year=y, month=m)
-
-        interval = (t, t + relativedelta(months=1))
+            interval = (t, t + relativedelta(months=1))
+        else:
+            interval = (t - relativedelta(months=1), t)
 
         authors = Transaction.objects.filter(
             to_author__isnull=False,
@@ -54,27 +62,28 @@ class Command(BaseCommand):
 
             if verbosity > 0:
                 username = User.objects.get(id=author_id).username
-                self.stdout.write('Distributing {} credits from  {}'.format(credits, username))
+                self.stdout.write('Pay {} credits to author {}'.format(credits, username))
 
             counter_total += credits
             fee = (settings.CREDITS_FEE * credits).quantize(Decimal('.01'))
             user_credits = credits - fee
 
             with transaction.atomic():
-                Transaction.objects.create(
-                    from_author_id=author_id,
-                    to_user_id=author_id,
-                    credits=user_credits,
-                    kind=Transaction.AUTHOR_SUBSCRIPTION
-                )
-                Transaction.objects.create(
-                    from_author_id=author_id,
-                    to_platform=True,
-                    credits=fee,
-                    kind=Transaction.AUTHOR_SUBSCRIPTION
-                )
+                if not dry_run:
+                    Transaction.objects.create(
+                        from_author_id=author_id,
+                        to_user_id=author_id,
+                        credits=user_credits,
+                        kind=Transaction.AUTHOR_SUBSCRIPTION
+                    )
+                    Transaction.objects.create(
+                        from_author_id=author_id,
+                        to_platform=True,
+                        credits=fee,
+                        kind=Transaction.AUTHOR_SUBSCRIPTION
+                    )
                 clear_credits_cache(user_id=author_id, author_id=author_id, platform=True)
 
         counter_end = time.perf_counter()
-        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: transfer author credits finished in {} / {} credits transfered".format(
+        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: pay authors finished in {} / {} credits transfered".format(
             timezone.now(), timedelta(seconds=counter_end - counter_start), counter_total))

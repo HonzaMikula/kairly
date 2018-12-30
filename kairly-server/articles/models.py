@@ -21,6 +21,7 @@ from django.utils.text import slugify
 from utils.json import datetime_isoformat_ecma262
 from utils.url import clean_url
 from .period import PeriodMixin, periodicity_to_json
+from .weight import calculate_post_weight
 
 
 class Post(models.Model):
@@ -57,6 +58,12 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
     attachments = models.TextField(null=True)
 
+    # pricing helpers
+    author_price = models.DecimalField(
+        _('Frozen author price at publish time'), max_digits=5, decimal_places=2,
+        null=True, validators=[MinValueValidator(Decimal(0))])
+    weight = models.PositiveIntegerField(null=True)
+
     @classmethod
     def find_by_source_url(cls, url):
         url = clean_url(url)
@@ -69,6 +76,8 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        recalculate_weight = kwargs.pop('recalculate_weight', False)
+
         if not self.slug and not self.draft:
             slug_words = []
             for part in re.split(r'[\?\.|\-]', self.title):
@@ -83,6 +92,12 @@ class Post(models.Model):
             slug += '--' + h.hexdigest()[:9]
 
             self.slug = slug
+
+        if self.author_price is None and not self.draft:
+            self.author_price = self.author.price
+
+        if not self.draft and (recalculate_weight or self.weight is None):
+            self.weight = calculate_post_weight(self)
 
         if self.source and not self.source_md5:
             self.source_md5 = hashlib.md5(self.source.encode()).hexdigest()

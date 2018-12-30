@@ -45,7 +45,7 @@ def get_newspaper_retained_credits(id, snapshot=None):
 
     if balance is None:
         expenses = Transaction.objects.filter(from_newspaper_id=id, **args).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
-        income = Transaction.objects.filter(to_newspapers_id=id, **args).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
+        income = Transaction.objects.filter(to_newspaper_id=id, **args).aggregate(Sum('credits'))['credits__sum'] or Decimal(0)
         balance = income - expenses
         if cache_key:
             cache.set(cache_key, str(balance))
