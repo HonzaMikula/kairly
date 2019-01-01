@@ -1,15 +1,24 @@
 <template>
   <app-layout :name="$t('Transactions')">
     <div class="transactions">
-      <section>
-        <header>
-          <h1>Credit balance</h1>
+      <header>
+        <h1>Credit balance</h1>
 
-          <nuxt-link to="/user/add-credits">
-            <button>Add credit</button>
-          </nuxt-link>
-        </header>
+        <nuxt-link to="/user/add-credits">
+          <button>Buy credits</button>
+        </nuxt-link>
+      </header>
 
+      <section class="transactions--info">
+        <div>
+          <h3>Current balance</h3>
+          <p>xxxx Kč</p>
+        </div>
+
+        <div>
+          <h3>Last month spending</h3>
+          <p>xxxx Kč</p>
+        </div>
       </section>
 
       <h2>Transaction history</h2>
@@ -92,11 +101,25 @@ export default {
 
       line-height: $baseline * 1.25
 
-  h2
+  > h2
     margin-bottom: $baseline / 2
 
     font-size: $fs-3
     font-weight: 600
+
+//- Info about balance
+.transactions--info
+  display: flex
+  margin-bottom: $baseline
+
+  div
+    margin-right: $baseline
+
+  h3
+    font-weight: 600
+    font-size: $fs-0
+
+
 
 .transactions--table
   width: 100%

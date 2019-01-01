@@ -179,7 +179,7 @@ export default {
 .newspaper-detail--header
   position: sticky
   top: -1px
-  z-index: 1
+  z-index: 5
 
   display: grid
   grid-column-gap: $baseline / 2
