@@ -83,11 +83,12 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
   return data
 }
 
-export async function subscribeNewspaper({ commit }, fullName) {
+export async function subscribeNewspaper({ commit }, { fullName, donation }) {
   commit('invalidateTimeline')
 
-  const body = {}
-  // TODO donation can be in body
+  const body = {
+    donation
+  }
   const { subscription } = await this.$axios.$post(`/newspapers/${fullName}/subscription`, body)
   //commit('newspaper', { newspaper })
   commit('newspaperSubscription', {
@@ -105,7 +106,7 @@ export async function subscribeNewspaper({ commit }, fullName) {
   return subscription
 }
 
-export async function unsubscribeNewspaper({ commit }, fullName) {
+export async function unsubscribeNewspaper({ commit }, { fullName }) {
   commit('invalidateTimeline')
 
   const { subscription } = await this.$axios.$delete(`/newspapers/${fullName}/subscription`)

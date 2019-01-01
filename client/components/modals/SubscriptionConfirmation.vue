@@ -2,7 +2,7 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="subscription-confirmation">
       <main>
-        <button-icon class="close" @click="closeModal()"></button-icon>
+        <button-icon class="close" @click="closeModal"></button-icon>
         <section>
           <h2>You want to subscribe to</h2>
           <p>Malostranské noviny</p>
@@ -14,14 +14,14 @@
         <section class="donate-more">
           <h2>To support exceptional journalist, donate more</h2>
           <div>
-            <input type="number" placeholder="Number of credits" />
+            <input v-model="donation" type="number" placeholder="Number of credits" />
             <br />
             credits per month
           </div>
         </section>
       </main>
       <footer class="subscription-confirmation--footer">
-        <button class="confirm" @click="closeModal()">Confirm subscription</button>
+        <button class="confirm" @click="subscribe">Confirm subscription</button>
         <p>* You can cancel subscription any time</p>
       </footer>
     </modal-dialog>
@@ -35,6 +35,7 @@ export default {
   name: 'SubscriptionConfirmationDialog',
 
   props: {
+    newspaper: Object,
     closeModal: Function
   },
 
@@ -44,14 +45,18 @@ export default {
 
   data() {
     return {
-      invalidCredentials: false,
-      username: null,
-      password: null
+      donation: null
     }
   },
 
   methods: {
-
+    subscribe() {
+      this.$store.dispatch('subscribeNewspaper', {
+        fullName: this.newspaper.fullName,
+        donation: this.donation ? this.donation : null
+      })
+      this.closeModal()
+    },
   }
 }
 </script>

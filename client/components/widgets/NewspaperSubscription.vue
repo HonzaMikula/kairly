@@ -32,13 +32,17 @@
       class="to-subscribe"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :title="newspaper.price"
-      @click="subscribe()">
+      @click="openModal">
       {{ $t('Subscribe for') }}
       {{ newspaper.price.split('.')[0] }} Kč
     </button>
 
     <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
-      <SubscriptionConfirmation :closeModal="closeModal"></SubscriptionConfirmation>
+      <SubscriptionConfirmation
+        :newspaper="newspaper"
+        :closeModal="closeModal"
+      >
+      </SubscriptionConfirmation>
     </portal>
   </div>
 </template>
@@ -72,19 +76,16 @@ export default {
   },
 
   methods: {
-    subscribe() {
-      this.$store.dispatch('subscribeNewspaper', this.newspaper.fullName)
-      this.openModal()
-      document.activeElement.blur()
-    },
-
     unsubscribe() {
-      this.$store.dispatch('unsubscribeNewspaper', this.newspaper.fullName)
+      this.$store.dispatch('unsubscribeNewspaper', {
+        fullName: this.newspaper.fullName
+      })
       document.activeElement.blur()
     },
 
     openModal() {
       this.isSubscriptionConfirmationModalOpen = true
+      document.activeElement.blur()
     },
 
     closeModal() {
