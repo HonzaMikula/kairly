@@ -18,7 +18,9 @@
 
           <p>Last month you spent</p>
           <p class="credits">450</p>
-          <button>Add credits</button>
+          <nuxt-link to="/user/add-credits">
+            <button>Add credits</button>
+          </nuxt-link>
         </section>
 
         <section>
@@ -149,7 +151,7 @@ my-subscription-view
         font-weight: 600
 
       //- add credits
-      > button
+      button
         padding: 0
 
         background: transparent

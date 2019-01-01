@@ -5,7 +5,9 @@
         <header>
           <h1>Credit balance</h1>
 
-          <button>Add credit</button>
+          <nuxt-link to="/user/add-credits">
+            <button>Add credit</button>
+          </nuxt-link>
         </header>
 
       </section>
@@ -81,7 +83,7 @@ export default {
       font-weight: 600
 
     //- add credit button
-    > button
+    button
       +subscribed-button
 
       border-radius: $baseline * 0.625
