@@ -1,6 +1,7 @@
 import time
 import urllib.request
 import urllib.error
+from decimal import Decimal
 
 import jwt
 from libgravatar import Gravatar
@@ -103,6 +104,12 @@ class ProfileView(View):
         for field in fields:
             if field in payload:
                 setattr(user, field, payload[field])
+
+        if 'price' in payload:
+            price = Decimal(payload['price'])
+            if price not in settings.ALLOWED_PRICE_LEVELS:
+                return JsonResponse({'error': 'invalid price'}, status=400)
+            user.price = price
 
         integrations = payload.get('integrations')
         if 'twitter' in integrations:

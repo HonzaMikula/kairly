@@ -162,6 +162,12 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 20_480_000
 
 CREDITS_FEE = Decimal('0.15')
 
+ALLOWED_PRICE_LEVELS = [
+    Decimal(0),
+    Decimal(25),
+    Decimal(75),
+    Decimal(175)
+]
 
 try:
     from corsheaders.defaults import default_headers
