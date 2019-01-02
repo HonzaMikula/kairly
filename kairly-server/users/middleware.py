@@ -8,11 +8,13 @@ from pytz import timezone, UnknownTimeZoneError
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 
 
 def JwtAuthenticationMiddleware(get_response):
     def middleware(request):
-        if 'HTTP_AUTHORIZATION' in request.META and request.user.is_anonymous:
+        user = None
+        if 'HTTP_AUTHORIZATION' in request.META:
             bearer, token = request.META['HTTP_AUTHORIZATION'].split(' ', maxsplit=1)
             User = get_user_model()
             try:
@@ -28,9 +30,16 @@ def JwtAuthenticationMiddleware(get_response):
 
             if payload:
                 try:
-                    request.user = User.objects.get(id=payload.get('uid'))
+                    user = User.objects.get(id=payload.get('uid'))
                 except User.DoesNotExist as e:
                     logging.error(str(e))
+
+        if request.is_ajax() or user:
+            if user:
+                request.user = user
+            else:
+                if not request.user.is_anonymous:
+                    request.user = AnonymousUser()
 
         return get_response(request)
 
