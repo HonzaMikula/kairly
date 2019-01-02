@@ -1,14 +1,22 @@
 <template>
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="subscription-confirmation">
+      <header>
+        <h1 v-if="!subscription.state">Subscribe newspaper</h1>
+        <h1 v-else-if="subscription.state === 'active'">Change or cancel subscription</h1>
+        <h1 v-else-if="subscription.state === 'canceled'">Renew subscription</h1>
+        <h1 v-else-if="subscription.state === 'suspended'">Resolve suspended subscription</h1>
+
+        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
+      </header>
       <main>
-        <button-icon class="close" @click="closeModal"></button-icon>
         <section>
           <h2>You want to subscribe to</h2>
-          <p>Malostranské noviny</p>
+          <p>{{ newspaper.title }}</p>
 
           <h2>It will cost you</h2>
           <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+          <p>* You can cancel subscription any time</p>
         </section>
 
         <section class="donate-more">
@@ -21,8 +29,27 @@
         </section>
       </main>
       <footer class="subscription-confirmation--footer">
-        <button class="confirm" @click="subscribe">Confirm subscription</button>
-        <p>* You can cancel subscription any time</p>
+        <template v-if="!subscription.state">
+          <button>Subscribe newspaper</button>
+        </template>
+
+        <template v-else-if="subscription.state === 'active'">
+          <button>Change subscription</button>
+
+          <button class="cancel">Cancel subscription</button>
+        </template>
+
+        <template v-else-if="subscription.state === 'canceled'">
+          <button>
+            Renew subscription
+          </button>
+        </template>
+
+        <template v-else-if="subscription.state === 'suspended'">
+          <button>
+            Cancel subscription
+          </button>
+        </template>
       </footer>
     </modal-dialog>
   </dialog-window>
@@ -36,6 +63,7 @@ export default {
 
   props: {
     newspaper: Object,
+    subscription: Object,
     closeModal: Function
   },
 
@@ -93,6 +121,11 @@ modal-dialog.subscription-confirmation
       font-size: $fs-3
       font-weight: 600
 
+    h2 + p + p
+      font-size: $fs--1
+      margin-top: -($baseline)
+      margin-bottom: $baseline
+
     > section
       padding: $baseline $baseline 0 $baseline
 
@@ -135,6 +168,9 @@ modal-dialog.subscription-confirmation
 
       font-size: $fs-0
       line-height: $baseline * 1.25
+
+    button.cancel
+      background: $c-red
 
     //- foot note
     button + p

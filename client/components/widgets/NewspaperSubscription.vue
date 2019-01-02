@@ -1,6 +1,34 @@
 <template>
   <div class="newspaper-subscription">
     <button
+      :class="{
+        'to-subscribe': subscription === false,
+        'is-subscribed': subscription.state === 'active',
+        'is-canceled': subscription.state === 'canceled',
+        'is-suspended': subscription.state === 'suspended',
+      }"
+      v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+      :title="buttonTitle"
+      @click="openModal"
+    >
+      <template v-if="subscription === false">
+        {{ $t('Subscribe for') }} {{ newspaper.price.split('.')[0] }} Kč
+      </template>
+
+      <template v-else-if="subscription.state === 'active'">
+        {{ $t('Subscribed for') }} {{ newspaper.price.split('.')[0] }} Kč
+      </template>
+
+      <template v-else-if="subscription.state === 'canceled'">
+        {{ $t('Subscribe for') }} {{ newspaper.price.split('.')[0] }} Kč*
+      </template>
+
+      <template v-else-if="subscription.state === 'suspended'">
+        {{ $t('Suspended') }}
+      </template>
+    </button>
+
+    <!-- <button
       v-if="subscription"
       :class="{
         'is-subscribed': subscription.state === 'active',
@@ -35,11 +63,12 @@
       @click="openModal">
       {{ $t('Subscribe for') }}
       {{ newspaper.price.split('.')[0] }} Kč
-    </button>
+    </button> -->
 
     <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
       <SubscriptionConfirmation
         :newspaper="newspaper"
+        :subscription="subscription"
         :closeModal="closeModal"
       >
       </SubscriptionConfirmation>
@@ -65,7 +94,23 @@ export default {
 
   computed: {
     subscription() {
-      return this.$store.getters.getNewspaperSubscription(this.newspaper)
+      const subscription = this.$store.getters.getNewspaperSubscription(this.newspaper)
+      return subscription ? subscription : false
+    },
+
+    buttonTitle() {
+      if (this.subscription.state === 'active') {
+        return 'Change subscription'
+      }
+      else if (this.subscription.state === 'canceled') {
+        return 'Renew subscription'
+      }
+      else if (this.subscription.state === 'suspended') {
+        return 'Not enough credits, resolve it'
+      }
+      else {
+        return false
+      }
     }
   },
 
@@ -113,23 +158,14 @@ export default {
       .default
         display: none
 
-  //- when newspeper is canceled
-  button.is-canceled
+  //- when newspeper is suspended
+  button.is-suspended
     +subscribed-button
 
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
   //- when newspaper is ready to be subsribed
-  button.to-subscribe
+  //- when newspeper is canceled
+  button.to-subscribe,
+  button.is-canceled
     +subscribe-button
 
 </style>
