@@ -36,6 +36,16 @@
           </div>
         </div>
 
+        <div class="pricing">
+          <label for="price">{{ $t('Subscription price') }}</label>
+          <select id="price" v-model="price">
+            <option value="0">Free</option>
+            <option value="25">25 Kč</option>
+            <option value="75">75 Kč</option>
+            <option value="175">175 Kč</option>
+          </select>
+        </div>
+
         <div class="description">
           <section>
             <label for="editorial">{{ $t('Editorial') }}</label>
@@ -101,6 +111,7 @@ export default {
       title: this.newspaper ? this.newspaper.title : "",
       description: this.newspaper ? this.newspaper.description : "",
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
+      price: this.newspaper ? ~~this.newspaper.price : 25,
       image: null,
     }
   },
@@ -147,10 +158,14 @@ export default {
         if (this.description !== this.newspaper.description) {
           fields.description = this.description;
         }
+        if (this.price != this.newspaper.price) {
+          fields.price = this.price;
+        }
         if (this.periodicity) {
           //TODO compare periodicity
           fields.periodicity = this.periodicity;
         }
+
         if (this.image) {
           fields.image = this.image;
         }
@@ -165,6 +180,7 @@ export default {
             title: this.title,
             description: this.description,
             periodicity: this.periodicity,
+            price: this.price,
             image: this.image
           }
         });
@@ -220,6 +236,13 @@ edit-newspaper-view
 
     > button
       +subscribed-button
+
+  .pricing
+    padding: $baseline/4 0
+
+    border-bottom: 1px solid #ddd
+
+    text-align: center
 
   .description
     display: grid

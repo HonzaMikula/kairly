@@ -7,6 +7,7 @@ from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
 
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -156,6 +157,12 @@ class NewspaperView(View):
             newspaper.period = periodicity.frequency
             newspaper.period_time = periodicity.time
             newspaper.period_dow = periodicity.dow
+
+        if 'price' in payload:
+            price = Decimal(payload['price'])
+            if price not in settings.ALLOWED_PRICE_LEVELS:
+                return HttpResponseBadRequest('invalid price')
+            newspaper.price = price
 
         image = payload.get('image')
         if image:
@@ -609,11 +616,16 @@ def start_newspaper(request, username):
     if image:
         image = file_from_data_uri(image, "{}-{}".format(author.username, base_slug))
 
+    price = Decimal(payload['price'])
+    if price not in settings.ALLOWED_PRICE_LEVELS:
+        return JsonResponse({'error': 'invalid price'}, status=400)
+
     newspaper = Newspaper.objects.create(
         title=title,
         slug=slug,
         description=description,
         image=image,
+        price=price,
         period=periodicity.frequency,
         period_time=periodicity.time,
         period_dow=periodicity.dow,

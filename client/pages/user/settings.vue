@@ -65,12 +65,12 @@
           <h2>{{ $t('Publishing') }}</h2>
 
           <div>
-            <label for="bio">{{ $t('Subscription price') }}</label>
+            <label for="price">{{ $t('Subscription price') }}</label>
             <select id="price" v-model="price">
               <option value="0">Free</option>
               <option value="25">25 Kč</option>
               <option value="75">75 Kč</option>
-              <option value="75">175 Kč</option>
+              <option value="175">175 Kč</option>
             </select>
             <p>{{ $t('Montly subscription price for my posts.') }}</p>
           </div>

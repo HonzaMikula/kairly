@@ -8,15 +8,15 @@
           <p>Malostranské noviny</p>
 
           <h2>It will cost you</h2>
-          <p>25 credits per month</p>
+          <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
         </section>
 
         <section class="donate-more">
           <h2>To support exceptional journalist, donate more</h2>
           <div>
-            <input v-model="donation" type="number" placeholder="Number of credits" />
+            <input v-model="donation" type="number" placeholder="Your donation" /> Kč
             <br />
-            credits per month
+            per month
           </div>
         </section>
       </main>
