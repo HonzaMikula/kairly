@@ -89,6 +89,10 @@ modal-dialog
 
         content: fa-content($fa-var-times)
 
+  //- Main
+  > main
+    overflow: auto
+
   //- Footer
   > footer
     padding: $baseline/2 $baseline
@@ -107,6 +111,7 @@ modal-dialog
       background: $c-base
       color: #fff
 
+      font-size: $fs-0
       line-height: $baseline * 1.25
 
       &:focus,

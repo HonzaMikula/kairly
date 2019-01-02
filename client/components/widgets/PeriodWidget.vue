@@ -4,7 +4,7 @@
     v-on-clickaway="() => closeSubscribeWidget()">
 
     <section v-if="frequency === null">
-      <header>{{ $t('How often do you want to publish new issue?') }}</header>
+      <header>{{ $t('How often do you want to publish?') }}</header>
       <ul>
         <li><a href="" @click.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Every 3 hours') }}</a></li>
         <li><a href="" @click.prevent="selectHowOften('3x_per_day', $event)">{{ $t('3x per day') }}</a></li>
