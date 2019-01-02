@@ -20,7 +20,8 @@ export async function getSubscriptions({ commit, state }) {
   if (state.subscriptions) {
     return state.subscriptions
   }
-  const { subscriptions } = await this.$axios.$get('/subscriptions')
+  const { newspapers, subscriptions } = await this.$axios.$get('/subscriptions')
+  newspapers.forEach(newspaper => commit('newspaper', { newspaper }))
   commit('subscriptions', subscriptions)
   return subscriptions
 }

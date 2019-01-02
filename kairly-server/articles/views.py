@@ -45,15 +45,18 @@ def subscriptions(request):
         subscribed_authors.update(s.to_json())
 
     subscribed_newspapers = {}
+    newspapers = []
     query = Subscription.objects.filter(
         Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user
     ).select_related('newspaper', 'newspaper__editor')
 
     for s in query:
+        newspapers.append(s.newspaper.to_json(request.user.tzinfo))
         subscribed_newspapers.update(s.to_json())
 
     return JsonResponse({
+        "newspapers": newspapers,
         "subscriptions": {
             "authors": subscribed_authors,
             "newspapers": subscribed_newspapers,

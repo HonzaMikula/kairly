@@ -12,12 +12,12 @@
       <section class="transactions--info">
         <div>
           <h3>Current balance</h3>
-          <p>xxxx Kč</p>
+          <p>{{ user.credits }} Kč</p>
         </div>
 
         <div>
-          <h3>Last month spending</h3>
-          <p>xxxx Kč</p>
+          <h3>Monthly spending</h3>
+          <p>{{ monthSpending }} Kč</p>
         </div>
       </section>
 
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 
 import AppLayout from '@/components/layout/AppLayout'
@@ -60,6 +60,19 @@ export default {
 
   components: {
     AppLayout,
+  },
+
+  computed: {
+    ...mapState({
+      user: state => state.auth.user,
+    }),
+    ...mapGetters(['monthSpending']),
+  },
+
+  async fetch({ store }) {
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
+    }
   },
 
   async asyncData({ app, store, params }) {

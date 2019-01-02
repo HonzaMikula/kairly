@@ -158,6 +158,25 @@ const createStore = () => {
           return null
         }
         return state.subscriptions.authors[author.id]
+      },
+      monthSpending: state => {
+        if (!state.subscriptions) return null
+        let cents = 0
+        Object.entries(state.subscriptions.newspapers).forEach(([fullName, s]) => {
+          const newspaper = state.newspapers[fullName]
+          cents += Math.round(parseFloat(newspaper.price) * 100)
+          if (s.donation) {
+            cents += Math.round(parseFloat(s.donation) * 100)
+          }
+        })
+        Object.values(state.subscriptions.authors).forEach(s => {
+          cents += Math.round(parseFloat(s.author.price) * 100)
+          if (s.donation) {
+            cents += Math.round(parseFloat(s.donation) * 100)
+          }
+        })
+        const mod = cents % 100
+        return ~~(cents / 100) + "." + (mod < 10 ? "0" : "") + mod
       }
     },
 
