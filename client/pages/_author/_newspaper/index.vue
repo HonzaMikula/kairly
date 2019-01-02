@@ -197,10 +197,21 @@ export default {
   @supports not (backdrop-filter: blur(10px))
     background: rgba(250, 250, 250, 0.97)
 
+  @media (max-width: 850px)
+    grid-template-areas: "issue-header-title issue-header-subscription" "issue-header-description issue-header-subscription"
+    grid-template-columns: auto $baseline*7
+    padding-left: $baseline / 2
+
   @media (max-width: $mobile)
     position: static
+
+    grid-template-areas: "issue-header-title" "issue-header-description" "issue-header-subscription"
+    grid-template-columns: 100%
+
     padding-bottom: 0
     margin: 0
+
+    backdrop-filter: none
 
   //- Title
   h1
@@ -212,6 +223,9 @@ export default {
     text-align: center
     text-shadow: 0 0 5px #fafafa
 
+    @media (max-width: 850px)
+      text-align: left
+
     @media (max-width: $mobile)
       font-size: $fs-3
 
@@ -221,9 +235,15 @@ export default {
 
     text-align: center
 
+    @media (max-width: 850px)
+      text-align: left
+
   //- Picture
   > picture
     grid-area: issue-header-image
+
+    @media (max-width: 850px)
+      display: none
 
     img
       height: 100%
@@ -236,8 +256,6 @@ export default {
 .newspaper-detail--subscribe
   grid-area: issue-header-subscription
   padding: $baseline/4 0
-
-  backdrop-filter: blur(10px)
 
   text-align: center
 
@@ -260,6 +278,9 @@ export default {
     font-size: $fs--1
     line-height: 1.42
     text-align: center
+
+    @media (max-width: $mobile)
+      display: none
 
 //- Info row about newspaper
 .newspaper-detail--info
