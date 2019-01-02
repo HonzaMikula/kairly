@@ -14,10 +14,10 @@
         <section class="subscription--credits">
           <h2><nuxt-link to="/user/transactions">{{ $t('Credits') }}</nuxt-link></h2>
           <p>Your current balance</p>
-          <p class="credits">{{user.credits.split('.')[0]}}</p>
+          <p class="credits">{{ user.credits.split('.')[0] }} Kč</p>
 
-          <p>Last month you spent</p>
-          <p class="credits">450</p>
+          <p>Monthly spending</p>
+          <p class="credits">{{ monthSpending.split('.')[0] }} Kč</p>
           <nuxt-link to="/user/add-credits">
             <button>Add credits</button>
           </nuxt-link>
@@ -58,7 +58,7 @@
 
 <script>
 import AppLayout from '@/components/layout/AppLayout'
-import { mapState, mapActions } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 
 export default {
   name: 'MySubscription',
@@ -67,9 +67,12 @@ export default {
     AppLayout
   },
 
-  computed: mapState({
-    user: state => state.auth.user
-  }),
+  computed: {
+    ...mapState({
+      user: state => state.auth.user
+    }),
+    ...mapGetters(['monthSpending']),
+  },
 
   async asyncData({ app }) {
     const [issues, best_of] = await Promise.all([
