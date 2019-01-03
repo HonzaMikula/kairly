@@ -10,13 +10,38 @@
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
       <main>
-        <section>
+        <section v-if="!subscription.state">
           <h2>You want to subscribe to</h2>
           <p>{{ newspaper.title }}</p>
 
           <h2>It will cost you</h2>
           <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
           <p>* You can cancel subscription any time</p>
+        </section>
+
+        <section v-else-if="subscription.state === 'active'">
+          <h2>You are subscribe to</h2>
+          <p>{{ newspaper.title }}</p>
+
+          <h2>It costs you</h2>
+          <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+          <p>* You can cancel subscription any time</p>
+        </section>
+
+        <section v-else-if="subscription.state === 'canceled'">
+          <h2>You canceled subscription to</h2>
+          <p>{{ newspaper.title }}</p>
+
+          <h2>You were paying</h2>
+          <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+        </section>
+
+        <section v-else-if="subscription.state === 'suspended'">
+          <h2>Your subscription were suspended due to not having enough credits.</h2>
+          <p>{{ newspaper.title }}</p>
+
+          <h2>You were paying</h2>
+          <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
         </section>
 
         <section class="donate-more">
