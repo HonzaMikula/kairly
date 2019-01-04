@@ -49,6 +49,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('articles', '0030_merge_20181227_0935'),
+        ('users', '0024_user_price'),
     ]
 
     operations = [
