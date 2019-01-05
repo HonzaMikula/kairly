@@ -26,7 +26,7 @@
 
         <section v-else-if="subscription.state === 'active'">
           <div>
-            <h2>You are subscribe to</h2>
+            <h2>You are subscribed to</h2>
             <p>{{ newspaper.title }}</p>
             <time>{{ periodicity }}</time>
           </div>
@@ -120,7 +120,7 @@ export default {
 
   data() {
     return {
-      donation: null
+      donation: this.subscription.donation
     }
   },
 

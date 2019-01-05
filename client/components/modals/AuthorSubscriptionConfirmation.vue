@@ -27,7 +27,7 @@
 
         <section v-else-if="subscription.state === 'active'">
           <div>
-            <h2>You are subscribe to</h2>
+            <h2>You are subscribed to</h2>
             <p>{{ author.name }}</p>
             <time>{{ periodicity }} (<a href="">change it</a>)</time>
           </div>
