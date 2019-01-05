@@ -15,7 +15,7 @@
             <h2>You want to subscribe to</h2>
             <p>{{ author.name }}</p>
 
-            <time>{{ periodicity }} (<a href="">change it</a>)</time>
+            <time>{{ getPeriodicityLabel(periodicity) }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
@@ -29,7 +29,7 @@
           <div>
             <h2>You are subscribed to</h2>
             <p>{{ author.name }}</p>
-            <time>{{ periodicity }} (<a href="">change it</a>)</time>
+            <time>{{ periodicityLabel }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
@@ -43,7 +43,7 @@
           <div>
             <h2>You canceled subscription to</h2>
             <p>{{ author.name }}</p>
-            <time>{{ periodicity }} (<a href="">change it</a>)</time>
+            <time>{{ periodicityLabel }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
@@ -56,7 +56,7 @@
           <div>
             <h2>Your subscription were suspended due to not having enough credits.</h2>
             <p>{{ author.name }}</p>
-            <time>{{ periodicity }}</time> (<a href="">Change it</a>)
+            <time>{{ periodicityLabel }}</time> (<a href="">Change it</a>)
           </div>
 
           <div>
@@ -68,7 +68,7 @@
         <section class="donate-more">
           <h2>To support exceptional journalist, donate more</h2>
           <div>
-            <input v-model="donation" type="number" placeholder="Your donation" />
+            <input v-model="donation" type="number" placeholder="Your donation" min="0"/>
             Kč per month
           </div>
         </section>
@@ -121,35 +121,30 @@ export default {
 
   data() {
     return {
-      donation: null
+      donation: this.subscription.donation,
+      periodicity: this.subscription.periodicity || {frequency: '6x_per_day'}
     }
   },
 
   computed: {
-    periodicity() {
-      if (this.subscription.periodicity) {
-        return this.getPeriodicityLabel(this.subscription.periodicity)
-      }
-      else {
-        const defaultPeriodicity = {frequency: '6x_per_day'}
-        return this.getPeriodicityLabel(defaultPeriodicity)
-      }
-
+    periodicityLabel() {
+      return this.getPeriodicityLabel(this.periodicity)
     }
   },
 
   methods: {
     subscribe() {
-      this.$store.dispatch('subscribeNewspaper', {
-        fullName: this.newspaper.fullName,
+      this.$store.dispatch('subscribeAuthor', {
+        author: this.author,
+        periodicity: this.periodicity,
         donation: this.donation ? this.donation : null
       })
       this.closeModal()
     },
 
     unsubscribe() {
-      this.$store.dispatch('unsubscribeNewspaper', {
-        fullName: this.newspaper.fullName
+      this.$store.dispatch('unsubscribeAuthor', {
+        author: this.author,
       })
       this.closeModal()
     }

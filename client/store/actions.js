@@ -126,9 +126,13 @@ export async function unsubscribeNewspaper({ commit }, { fullName }) {
   return subscription
 }
 
-export async function subscribeAuthor({ commit }, { author, periodicity }) {
+export async function subscribeAuthor({ commit }, { author, donation, periodicity, keepStatus=false }) {
   commit('invalidateTimeline')
-  const body = periodicity ? { periodicity } : { renewal: true }
+  const body = { periodicity, donation }
+  if (keepStatus) {
+    // use when wanted to keep subscption in canceled status but edit just periodicity
+    body.keepStatus = true
+  }
   const { subscription, credits } = await this.$axios.$post(`/authors/${author.id}/subscription`, body)
   commit('updateCredits', credits)
   commit('authorSubscription', {

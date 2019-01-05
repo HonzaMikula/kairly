@@ -308,8 +308,7 @@ class NewspaperSubscriptionView(View):
                 Q(valid_to__gt=now) | Q(renewal=True),
                 user=request.user, newspaper=newspaper)
             subscription.renewal = True
-            if donation is not None:
-                subscription.donation = donation
+            subscription.donation = donation or Decimal(0)
             subscription.save()
         except Subscription.DoesNotExist:
             donation = donation or Decimal(0)
@@ -370,7 +369,7 @@ class AuthorSubscriptionView(View):
         else:
             periodicity = None
 
-        renewal = payload.get('renewal')
+        keep_status = payload.get('keepStatus')
         donation = payload.get('donation')
         if donation:
             donation = Decimal(donation)
@@ -388,23 +387,18 @@ class AuthorSubscriptionView(View):
                 Q(valid_to__gt=now) | Q(renewal=True),
                 user=request.user, author=author,
             )
-            if periodicity or renewal:
-                if periodicity:
-                    subscription.period = periodicity.frequency
-                    subscription.period_time = periodicity.time
-                    subscription.period_dow = periodicity.dow
-                if renewal:
-                    subscription.renewal = True
-                if donation is not None:
-                    subscription.donation = donation
-                subscription.save()
-            else:
-                return HttpResponseBadRequest("Nothing to change.")
+            if periodicity:
+                subscription.period = periodicity.frequency
+                subscription.period_time = periodicity.time
+                subscription.period_dow = periodicity.dow
+            if not keep_status and not subscription.renewal:
+                subscription.renewal = True
+            if donation is not None:
+                subscription.donation = donation
+            subscription.save()
         except SubscriptionToAuthor.DoesNotExist:
             if not periodicity:
                 return HttpResponseBadRequest("Periodicity is required.")
-            if renewal:
-                return HttpResponseBadRequest("Nothing to renew")
 
             donation = donation or Decimal(0)
             if credits < author.price + donation:

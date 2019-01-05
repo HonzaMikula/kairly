@@ -67,7 +67,7 @@
         <section class="donate-more">
           <h2>To support exceptional journalist, donate more</h2>
           <div>
-            <input v-model="donation" type="number" placeholder="Your donation" />
+            <input v-model="donation" type="number" placeholder="Your donation" min="0"/>
             Kč per month
           </div>
         </section>
