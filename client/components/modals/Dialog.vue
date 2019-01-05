@@ -11,7 +11,22 @@ export default {
 
   props: {
     closeModal: Function
-  }
+  },
+
+  methods: {
+    onEscapeKeyUp (event) {
+      if (event.which === 27) {
+        this.closeModal()
+      }
+    },
+  },
+
+  beforeMount() {
+    window.addEventListener('keyup', this.onEscapeKeyUp);
+  },
+  beforeDestroy () {
+    window.removeEventListener('keyup', this.onEscapeKeyUp)
+  },
 }
 </script>
 

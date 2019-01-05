@@ -1,55 +1,57 @@
 <template>
-  <author-subscription-view>
-    <a
-      href=""
-      @click.prevent="$refs.followWidget.openSubscribeWidget()"
+  <div class="author-subscription-view">
+    <button
+      :class="{
+        'to-subscribe': subscription === false,
+        'is-subscribed': subscription.state === 'active',
+        'is-canceled': subscription.state === 'canceled',
+        'is-suspended': subscription.state === 'suspended',
+      }"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-      :title="$t('Change the subscriptions')">
+      :title="buttonTitle"
+      @click="openModal"
+    >
+      <template v-if="subscription === false">
+        {{ $t('Subscribe for') }} {{ authorPrice }}
+      </template>
 
-      <p
-        v-if="frequency == '6x_per_day'"
-        v-html="$t('Daily every <strong>3 hours</strong>')">
-      </p>
+      <template v-else-if="subscription.state === 'active'">
+        {{ $t('Subscribed for') }} {{ authorPrice }}
+      </template>
 
-      <p
-        v-if="frequency == '3x_per_day'"
-        v-html="$t('Daily at <strong>6:00</strong>, <strong>12:00</strong> and <strong>18:00</strong>')">
-      </p>
+      <template v-else-if="subscription.state === 'canceled'">
+        {{ $t('Subscribe for') }} {{ authorPrice }}*
+      </template>
 
-      <p
-        v-if="frequency == 'daily'"
-        v-html="$t('Daily at <strong>{xTime}</strong>', {xTime: time})">
-      </p>
+      <template v-else-if="subscription.state === 'suspended'">
+        {{ $t('Suspended') }}
+      </template>
+    </button>
 
-      <p
-        v-if="frequency == 'weekly'"
-        v-html="$t('Weekly on <strong>{xDay}</strong> at <strong>{xTime}</strong>', { xDay: getDayOfWeekLabel(dow), xTime: time })">
-      </p>
-    </a>
-
-    <follow-author
-      ref="followWidget"
-      :author="author"
-      :subscription="subscription"
-      :cancelingSubscription="true"
-    />
-  </author-subscription-view>
+    <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
+      <AuthorSubscriptionConfirmation
+        :author="author"
+        :subscription="subscription"
+        :closeModal="closeModal"
+      >
+      </AuthorSubscriptionConfirmation>
+    </portal>
+  </div>
 </template>
 
 <script>
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
-import FollowAuthor from '@/components/widgets/FollowAuthor'
+import AuthorSubscriptionConfirmation from '@/components/modals/AuthorSubscriptionConfirmation'
 
 export default {
   name: 'AuthorSubscription',
 
   props: {
-    author: Object,
-    subscription: Object
+    author: Object
   },
 
   components: {
-    FollowAuthor
+    AuthorSubscriptionConfirmation
   },
 
   mixins: [PeriodicityMixin],
@@ -57,21 +59,74 @@ export default {
   computed: {
     frequency() { return this.subscription && this.subscription.periodicity.frequency },
     dow() { return this.subscription && this.subscription.periodicity.dow },
-    time() { return this.subscription && this.subscription.periodicity.time }
+    time() { return this.subscription && this.subscription.periodicity.time },
+
+    subscription() {
+      const subscription = this.$store.getters.getAuthorSubscription(this.author)
+      return subscription ? subscription : false
+    },
+
+    buttonTitle() {
+      if (this.subscription.state === 'active') {
+        return 'Change subscription'
+      }
+      else if (this.subscription.state === 'canceled') {
+        return 'Renew subscription'
+      }
+      else if (this.subscription.state === 'suspended') {
+        return 'Not enough credits, resolve it'
+      }
+      else {
+        return false
+      }
+    },
+
+    authorPrice() {
+      if (this.author.price.split('.')[0] == 0)
+        return 'free'
+      else
+        return this.author.price.split('.')[0] + ' Kč'
+    }
+  },
+
+  data() {
+    return {
+      isSubscriptionConfirmationModalOpen: null
+    }
+  },
+
+  methods: {
+    openModal() {
+      this.isSubscriptionConfirmationModalOpen = true
+      document.activeElement.blur()
+    },
+
+    closeModal() {
+      this.isSubscriptionConfirmationModalOpen = null
+    }
   }
 }
 </script>
 
 <style lang="sass">
-author-subscription-view
-  display: block
+.author-subscription-view
+  //- when newspaper is subscribed
+  button.is-subscribed
+    +subscribed-button
 
-  font-size: $fs--1
+  //- when newspeper is suspended
+  button.is-suspended
+    +subscribed-button
 
-  a
-    color: #555
+    background: lighten($c-base, 10%)
+    background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
 
-    &:focus,
-    &:hover
-      color: #000
+  //- when newspaper is ready to be subsribed
+  //- when newspeper is canceled
+  button.to-subscribe,
+  button.is-canceled
+    +subscribe-button
+
+
+
 </style>

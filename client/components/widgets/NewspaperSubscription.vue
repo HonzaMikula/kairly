@@ -12,58 +12,21 @@
       @click="openModal"
     >
       <template v-if="subscription === false">
-        {{ $t('Subscribe for') }} {{ newspaper.price.split('.')[0] }} Kč
+        {{ $t('Subscribe for') }} {{ newspaperPrice }}
       </template>
 
       <template v-else-if="subscription.state === 'active'">
-        {{ $t('Subscribed for') }} {{ newspaper.price.split('.')[0] }} Kč
+        {{ $t('Subscribed for') }} {{ newspaperPrice }}
       </template>
 
       <template v-else-if="subscription.state === 'canceled'">
-        {{ $t('Subscribe for') }} {{ newspaper.price.split('.')[0] }} Kč*
+        {{ $t('Subscribe for') }} {{ newspaperPrice }}*
       </template>
 
       <template v-else-if="subscription.state === 'suspended'">
         {{ $t('Suspended') }}
       </template>
     </button>
-
-    <!-- <button
-      v-if="subscription"
-      :class="{
-        'is-subscribed': subscription.state === 'active',
-        'is-canceled': subscription.state === 'canceled',
-        'is-suspended': subscription.state === 'suspended',
-      }"
-      @click="subscription.state == 'canceled' ? subscribe() : unsubscribe()">
-      <span class="default">
-        <span v-if="subscription.state == 'active'">{{ $t('Subscribed for') }} {{ newspaper.price.split('.')[0] }} Kč</span>
-        <span v-if="subscription.state == 'suspended'">{{ $t('Suspended') }}</span>
-        <span v-if="subscription.state == 'canceled'">{{ $t('Canceled') }}</span>
-      </span>
-      <span
-        v-if="subscription.state == 'active' || subscription.state == 'suspended'"
-        class="on-hover">
-        {{ $t('Unsubscribe') }}
-      </span>
-      <span
-        v-if="subscription.state == 'canceled'"
-        class="on-hover"
-        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-        :title="$t('Subscription last till {to}', {to: subscription.to})">
-        {{ $t('Renew') }}
-      </span>
-    </button>
-
-    <button
-      v-else
-      class="to-subscribe"
-      v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-      :title="newspaper.price"
-      @click="openModal">
-      {{ $t('Subscribe for') }}
-      {{ newspaper.price.split('.')[0] }} Kč
-    </button> -->
 
     <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
       <SubscriptionConfirmation
@@ -111,6 +74,13 @@ export default {
       else {
         return false
       }
+    },
+
+    newspaperPrice() {
+      if (this.newspaper.price.split('.')[0] == 0)
+        return 'free'
+      else
+        return this.newspaper.price.split('.')[0] + ' Kč'
     }
   },
 
@@ -121,13 +91,6 @@ export default {
   },
 
   methods: {
-    unsubscribe() {
-      this.$store.dispatch('unsubscribeNewspaper', {
-        fullName: this.newspaper.fullName
-      })
-      document.activeElement.blur()
-    },
-
     openModal() {
       this.isSubscriptionConfirmationModalOpen = true
       document.activeElement.blur()
@@ -147,20 +110,12 @@ export default {
   button.is-subscribed
     +subscribed-button
 
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
   //- when newspeper is suspended
   button.is-suspended
     +subscribed-button
+
+    background: lighten($c-base, 10%)
+    background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
 
   //- when newspaper is ready to be subsribed
   //- when newspeper is canceled

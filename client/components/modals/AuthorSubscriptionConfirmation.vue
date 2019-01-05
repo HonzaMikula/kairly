@@ -2,24 +2,25 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="subscription-confirmation">
       <header>
-        <h1 v-if="!subscription.state">Subscribe newspaper</h1>
+        <h1 v-if="!subscription.state">Subscribe author</h1>
         <h1 v-else-if="subscription.state === 'active'">Change or cancel subscription</h1>
         <h1 v-else-if="subscription.state === 'canceled'">Renew subscription</h1>
         <h1 v-else-if="subscription.state === 'suspended'">Resolve suspended subscription</h1>
 
-        <button-close tabindex="0" role="button" @keydown.esc="closeModal()" @click="closeModal()"></button-close>
+        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
       <main>
         <section v-if="!subscription.state">
           <div>
             <h2>You want to subscribe to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+
+            <time>{{ periodicity }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
             <h2>It will cost you</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
             <p>* You can cancel subscription any time</p>
           </div>
         </section>
@@ -27,13 +28,13 @@
         <section v-else-if="subscription.state === 'active'">
           <div>
             <h2>You are subscribe to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+            <time>{{ periodicity }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
             <h2>It costs you</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
             <p>* You can cancel subscription any time</p>
           </div>
         </section>
@@ -41,26 +42,26 @@
         <section v-else-if="subscription.state === 'canceled'">
           <div>
             <h2>You canceled subscription to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+            <time>{{ periodicity }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
             <h2>You were paying</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
           </div>
         </section>
 
         <section v-else-if="subscription.state === 'suspended'">
           <div>
             <h2>Your subscription were suspended due to not having enough credits.</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+            <time>{{ periodicity }}</time> (<a href="">Change it</a>)
           </div>
 
           <div>
             <h2>You were paying</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
           </div>
         </section>
 
@@ -74,7 +75,7 @@
       </main>
       <footer class="subscription-confirmation--footer">
         <template v-if="!subscription.state">
-          <button @click="subscribe()">Subscribe newspaper</button>
+          <button @click="subscribe()">Subscribe</button>
         </template>
 
         <template v-else-if="subscription.state === 'active'">
@@ -104,10 +105,10 @@ import DialogWindow from '@/components/modals/Dialog'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
 export default {
-  name: 'SubscriptionConfirmationDialog',
+  name: 'AuthorSubscriptionConfirmationDialog',
 
   props: {
-    newspaper: Object,
+    author: Object,
     subscription: Object,
     closeModal: Function
   },
@@ -126,7 +127,14 @@ export default {
 
   computed: {
     periodicity() {
-      return this.getPeriodicityLabel(this.newspaper.periodicity)
+      if (this.subscription.periodicity) {
+        return this.getPeriodicityLabel(this.subscription.periodicity)
+      }
+      else {
+        const defaultPeriodicity = {frequency: '6x_per_day'}
+        return this.getPeriodicityLabel(defaultPeriodicity)
+      }
+
     }
   },
 
@@ -178,6 +186,9 @@ modal-dialog.subscription-confirmation
         font-size: $fs--1
         font-weight: 600
         line-height: $baseline * 0.8
+
+        a
+          color: $c-base
 
       //- note
       h2 + p + p

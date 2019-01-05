@@ -14,12 +14,10 @@
       </h3>
 
       <section>
-        <AuthorSubscription
-          v-if="subscription && subscription.state === 'active'"
-          :subscription="subscription" :author="author"
-        />
 
-        <button
+        <AuthorSubscription :author="author" />
+
+        <!-- <button
           v-else
           @click="$refs.followWidget.openSubscribeWidget()"
         >
@@ -31,7 +29,7 @@
           :author="author"
           :subscription="subscription"
           :cancelingSubscription="canceled"
-        />
+        /> -->
       </section>
     </header>
 
