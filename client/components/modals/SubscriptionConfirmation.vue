@@ -90,9 +90,14 @@
         </template>
 
         <template v-else-if="subscription.state === 'suspended'">
-          <button @click="unsubscribe()">
-            Cancel subscription
+          <button v-if="canPay" @click="subscribe()">
+            Renew subscription
           </button>
+          <nuxt-link v-else to="/user/add-credits">
+            Buy credits to renew a subscption.
+          </nuxt-link>
+
+          <button class="cancel" @click="unsubscribe()">Cancel subscription</button>
         </template>
       </footer>
     </modal-dialog>
@@ -100,6 +105,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import DialogWindow from '@/components/modals/Dialog'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
@@ -125,8 +132,21 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      user: state => state.auth.user
+    }),
+
     periodicity() {
       return this.getPeriodicityLabel(this.newspaper.periodicity)
+    },
+
+    canPay() {
+      if (this.user) {
+        const price = this.newspaper.price.split('.').map(v => ~~v)
+        const credits = this.user.credits.split('.').map(v => ~~v)
+        return credits[0] > price[0] || (credits[0] == price[0] && credits[1] >= price[1])
+      }
+      return false
     }
   },
 
