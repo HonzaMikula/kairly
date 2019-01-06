@@ -17,19 +17,6 @@
 
         <AuthorSubscription :author="author" />
 
-        <!-- <button
-          v-else
-          @click="$refs.followWidget.openSubscribeWidget()"
-        >
-          {{ canceled ? $t('Renew') : $t('Subscribe') }}
-        </button>
-
-        <follow-author
-          ref="followWidget"
-          :author="author"
-          :subscription="subscription"
-          :cancelingSubscription="canceled"
-        /> -->
       </section>
     </header>
 
@@ -41,7 +28,6 @@
 
 
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
-import FollowAuthor from '@/components/widgets/FollowAuthor'
 
 export default {
   name: 'AuthorWidget',
@@ -51,7 +37,6 @@ export default {
   },
 
   components: {
-    FollowAuthor,
     AuthorSubscription
   },
 
@@ -108,17 +93,6 @@ author-widget-view
     author-subscription-view
       font-family: $ff-sans !important
       text-align: right
-
-    //- subscription menu adjustment for mobile
-    @media (max-width: $mobile)
-      .follow-author
-        margin-left: 0
-        left: auto
-        right: 0
-
-        &::after
-          left: auto
-          right: $baseline
 
 
     //- subscribe button

@@ -35,7 +35,7 @@ modal-window
   position: fixed
   top: 0
   left: 0
-  z-index: 100000000
+  z-index: 1000
 
   box-sizing: border-box
   display: flex
@@ -118,20 +118,12 @@ modal-dialog
 
     //- action button
     button
-      +subscribe-button
+      +subscribed-button
 
       border-radius: $baseline * 1.25/2
       height: $baseline * 1.25
 
-      background: $c-base
-      color: #fff
-
       font-size: $fs-0
       line-height: $baseline * 1.25
-
-      &:focus,
-      &:hover
-        background: darken($c-base, 10%)
-
 
 </style>

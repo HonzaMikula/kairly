@@ -29,19 +29,19 @@
     </button>
 
     <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
-      <AuthorSubscriptionConfirmation
+      <AuthorSubscriptionDialog
         :author="author"
         :subscription="subscription"
         :closeModal="closeModal"
       >
-      </AuthorSubscriptionConfirmation>
+      </AuthorSubscriptionDialog>
     </portal>
   </div>
 </template>
 
 <script>
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
-import AuthorSubscriptionConfirmation from '@/components/modals/AuthorSubscriptionConfirmation'
+import AuthorSubscriptionDialog from '@/components/modals/AuthorSubscription'
 
 export default {
   name: 'AuthorSubscription',
@@ -51,7 +51,7 @@ export default {
   },
 
   components: {
-    AuthorSubscriptionConfirmation
+    AuthorSubscriptionDialog
   },
 
   mixins: [PeriodicityMixin],

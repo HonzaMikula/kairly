@@ -31,7 +31,13 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
-        <nuxt-link to="/user/transactions" class="credits">{{ user.credits.split('.')[0] }} Kč</nuxt-link>
+        <nuxt-link
+          to="/user/transactions"
+          class="credits"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          :title="$t('Available credits')">
+          {{ user.credits.split('.')[0] }} Kč
+        </nuxt-link>
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon

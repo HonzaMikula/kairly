@@ -19,7 +19,15 @@
   &:hover,
   &:focus
     background: darken($c-base, 10%)
-    color: #fff
+
+  &:disabled
+    opacity: 0.5
+
+    cursor: default
+
+    &:hover,
+    &:focus
+      background: $c-base
 
   &.is-canceled
     background: lighten($c-base, 10%)

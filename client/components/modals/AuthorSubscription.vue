@@ -2,24 +2,26 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="subscription-confirmation">
       <header>
-        <h1 v-if="!subscription.state">Subscribe newspaper</h1>
+        <h1 v-if="!subscription.state">Subscribe author</h1>
         <h1 v-else-if="subscription.state === 'active'">Change or cancel subscription</h1>
         <h1 v-else-if="subscription.state === 'canceled'">Renew subscription</h1>
         <h1 v-else-if="subscription.state === 'suspended'">Resolve suspended subscription</h1>
 
-        <button-close tabindex="0" role="button" @keydown.esc="closeModal()" @click="closeModal()"></button-close>
+        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
       <main>
         <section v-if="!subscription.state">
           <div>
             <h2>You want to subscribe to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+
+            <time>{{ getPeriodicityLabel(periodicity) }} (<a href="" @click.prevent="showChangePeriodicity = true">change it</a>)</time>
+            <ChangePeriodicity v-if="showChangePeriodicity" :author="author" :subscription="subscription" />
           </div>
 
           <div>
             <h2>It will cost you</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
             <p>* You can cancel subscription any time</p>
           </div>
         </section>
@@ -27,13 +29,13 @@
         <section v-else-if="subscription.state === 'active'">
           <div>
             <h2>You are subscribed to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+            <time>{{ periodicityLabel }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
             <h2>It costs you</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
             <p>* You can cancel subscription any time</p>
           </div>
         </section>
@@ -41,26 +43,26 @@
         <section v-else-if="subscription.state === 'canceled'">
           <div>
             <h2>You canceled subscription to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+            <time>{{ periodicityLabel }} (<a href="">change it</a>)</time>
           </div>
 
           <div>
             <h2>You were paying</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
           </div>
         </section>
 
         <section v-else-if="subscription.state === 'suspended'">
           <div>
             <h2>Your subscription were suspended due to not having enough credits.</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
+            <p>{{ author.name }}</p>
+            <time>{{ periodicityLabel }}</time> (<a href="">Change it</a>)
           </div>
 
           <div>
             <h2>You were paying</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
+            <p>{{ author.price.split('.')[0] }} Kč per month</p>
           </div>
         </section>
 
@@ -74,7 +76,16 @@
       </main>
       <footer class="subscription-confirmation--footer">
         <template v-if="!subscription.state">
-          <button @click="subscribe()">Subscribe newspaper</button>
+          <div
+            :title="!canPay && 'You don\'t have enough credit'"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            <button
+              @click="subscribe()"
+              :disabled="!canPay"
+            >
+              Subscribe
+            </button>
+          </div>
         </template>
 
         <template v-else-if="subscription.state === 'active'">
@@ -93,8 +104,9 @@
           <button v-if="canPay" @click="subscribe()">
             Renew subscription
           </button>
+
           <nuxt-link v-else to="/user/add-credits">
-            Buy credits to renew a subscption.
+            Buy credits to renew a subscption
           </nuxt-link>
 
           <button class="cancel" @click="unsubscribe()">Cancel subscription</button>
@@ -108,26 +120,30 @@
 import { mapState } from 'vuex'
 
 import DialogWindow from '@/components/modals/Dialog'
+import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
 export default {
-  name: 'SubscriptionConfirmationDialog',
+  name: 'AuthorSubscriptionConfirmationDialog',
 
   props: {
-    newspaper: Object,
+    author: Object,
     subscription: Object,
     closeModal: Function
   },
 
   components: {
-    DialogWindow
+    DialogWindow,
+    ChangePeriodicity
   },
 
   mixins: [PeriodicityMixin],
 
   data() {
     return {
-      donation: this.subscription.donation
+      donation: this.subscription.donation,
+      periodicity: this.subscription.periodicity || {frequency: '6x_per_day'},
+      showChangePeriodicity: false
     }
   },
 
@@ -136,13 +152,13 @@ export default {
       user: state => state.auth.user
     }),
 
-    periodicity() {
-      return this.getPeriodicityLabel(this.newspaper.periodicity)
+    periodicityLabel() {
+      return this.getPeriodicityLabel(this.periodicity)
     },
 
     canPay() {
       if (this.user) {
-        const price = this.newspaper.price.split('.').map(v => ~~v)
+        const price = this.author.price.split('.').map(v => ~~v)
         const credits = this.user.credits.split('.').map(v => ~~v)
         return credits[0] > price[0] || (credits[0] == price[0] && credits[1] >= price[1])
       }
@@ -152,16 +168,17 @@ export default {
 
   methods: {
     subscribe() {
-      this.$store.dispatch('subscribeNewspaper', {
-        fullName: this.newspaper.fullName,
+      this.$store.dispatch('subscribeAuthor', {
+        author: this.author,
+        periodicity: this.periodicity,
         donation: this.donation ? this.donation : null
       })
       this.closeModal()
     },
 
     unsubscribe() {
-      this.$store.dispatch('unsubscribeNewspaper', {
-        fullName: this.newspaper.fullName
+      this.$store.dispatch('unsubscribeAuthor', {
+        author: this.author,
       })
       this.closeModal()
     }
@@ -198,6 +215,9 @@ modal-dialog.subscription-confirmation
         font-size: $fs--1
         font-weight: 600
         line-height: $baseline * 0.8
+
+        a
+          color: $c-base
 
       //- note
       h2 + p + p
@@ -270,4 +290,7 @@ modal-dialog.subscription-confirmation
     //- foot note
     button + p
       font-size: $fs--1
+
+    a
+      color: $c-base
 </style>

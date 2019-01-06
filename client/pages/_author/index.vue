@@ -19,40 +19,6 @@
         </section>
 
         <author-detail--subscribe v-if="loggedIn">
-          <button
-            v-if="subscription"
-            :class="{
-              'is-subscribed': subscription.state === 'active',
-              'is-canceled': subscription.state === 'canceled',
-              'is-suspended': subscription.state === 'suspended',
-            }"
-            @click="subscription.state === 'canceled' ? renewSubscription() : unsubscribe()"
-          >
-            <span class="default">
-              <template v-if="subscription.state === 'active'">{{ $t('Subscribed for') }} {{ author.price.split('.')[0] }} Kč</template>
-              <template v-if="subscription.state === 'canceled'">{{ $t('Canceled') }}</template>
-              <template v-if="subscription.state === 'suspended'">{{ $t('Suspended') }}</template>
-            </span>
-            <span
-              v-if="subscription.state == 'active' || subscription.state == 'suspended'"
-              class="on-hover"
-            >{{ $t('Unsubscribe') }}</span>
-            <span
-              v-if="subscription.state == 'canceled'"
-              class="on-hover"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="$t('Subscription last till {to}', { to: subscription.to })"
-            >{{ $t('Renew') }}</span>
-          </button>
-
-          <button
-            v-else
-            class="to-subscribe"
-            @click="$refs.followWidget.openSubscribeWidget()"
-          >{{ $t('Subscribe for') }} {{ author.price.split('.')[0] }} Kč</button>
-
-          <follow-author ref="followWidget" :author="author" :subscription="subscription"/>
-
           <AuthorSubscription if="subscription" :author="author" :subscription="subscription"/>
         </author-detail--subscribe>
       </author-detail--header>
@@ -99,14 +65,13 @@
 
 
 <script>
-import { mapMutations, mapState } from "vuex";
-import { errorToParams } from "@/utils/errors";
+import { mapMutations, mapState } from "vuex"
+import { errorToParams } from "@/utils/errors"
 
-import AppLayout from "@/components/layout/AppLayout";
-import NewspaperWidget from "@/components/widgets/NewspaperWidget";
-import PostWrapper from "@/components/PostWrapper";
-import FollowAuthor from "@/components/widgets/FollowAuthor";
-import AuthorSubscription from "@/components/widgets/AuthorSubscription";
+import AppLayout from "@/components/layout/AppLayout"
+import NewspaperWidget from "@/components/widgets/NewspaperWidget"
+import PostWrapper from "@/components/PostWrapper"
+import AuthorSubscription from "@/components/widgets/AuthorSubscription"
 
 export default {
   name: "AuthorDetail",
@@ -153,7 +118,6 @@ export default {
     AppLayout,
     NewspaperWidget,
     PostWrapper,
-    FollowAuthor,
     AuthorSubscription
   },
 

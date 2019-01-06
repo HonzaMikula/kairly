@@ -83,18 +83,6 @@
               v-if="subscription"
               :subscription="subscription" :author="post.author"
             />
-
-            <button
-              v-else
-              @click="$refs.followWidget.openSubscribeWidget()">
-              {{ $t('Subscribe author') }}
-            </button>
-
-            <follow-author
-              ref="followWidget"
-              :author="post.author"
-              :subscription="subscription"
-            />
           </post-detail--author--subscription>
         </post-detail--author>
       </main>
@@ -111,7 +99,6 @@ import { mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
-import FollowAuthor from '@/components/widgets/FollowAuthor'
 import KairlyPromo from '@/components/KairlyPromo'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
@@ -158,7 +145,6 @@ export default {
   components: {
     AppLayout,
     ConsiderPost,
-    FollowAuthor,
     AuthorSubscription,
     KairlyPromo
   },
@@ -555,9 +541,5 @@ post-detail--author--subscription
     font-family: $ff-sans
     font-size: $fs--1
     line-height: $baseline
-
-  @media (max-width: $mobile)
-    .follow-author
-      left: $baseline * 2
 
 </style>

@@ -1,23 +1,8 @@
 <template>
-  <div class="follow-author"
-    v-if="show"
+  <div class="change-periodicity-view"
     v-on-clickaway="() => closeSubscribeWidget()">
 
-    <div v-if="showCanceling === true && cancelingSubscription === true">
-      <header>{{ $t('What to do?') }}</header>
-
-      <section>
-        <ul>
-          <li><a href="" @click.stop.prevent="editSubscription($event)">{{ $t('Edit') }}</a></li>
-          <li>
-              <a v-if="subscription && subscription.state !== 'canceled'" href="" @click.stop.prevent="cancelSubscription($event)">{{ $t('Cancel subscription') }}</a>
-              <a v-else href="" @click.stop.prevent="renewSubscription($event)">{{ $t('Renew subscription') }}</a>
-          </li>
-        </ul>
-      </section>
-    </div>
-
-    <div v-else-if="frequency === null">
+    <div v-if="frequency === null">
       <header>{{ $t('How often do you want to read it?') }}</header>
 
       <section>
@@ -66,41 +51,6 @@
         </ul>
       </section>
     </div>
-
-    <div v-else>
-      <header>{{ $t('You are subscribed!') }}</header>
-
-      <section v-if="frequency == '6x_per_day'">
-        <p v-html="$t('You will be receiving <strong>{authorName}</strong> every 3 hours.', {authorName: author.name})">
-        </p>
-
-        <p class="change-button" v-if="!editMode">
-          <a href="" @click.stop.prevent="editSubscription($event)">
-            {{ $t('Change periodicity and timing') }}
-          </a>
-        </p>
-      </section>
-
-      <section v-else-if="frequency == '3x_per_day'">
-        <p v-html="$t('You will be receiving <strong>{authorName}</strong> 3x time per day:', {authorName: author.name})">
-        </p>
-        <ul class="text">
-          <li>{{ $t('Early morning (6:00)') }}</li>
-          <li>{{ $t('Noon (12:00)') }}</li>
-          <li>{{ $t('Evening (18:00)') }}</li>
-        </ul>
-      </section>
-
-      <section v-else-if="frequency == 'daily'">
-        <p v-html="$t('You will be receiving <strong>{authorName}</strong> daily at <strong>{time}</strong>.', {authorName: author.name, time: time})">
-        </p>
-      </section>
-
-      <section v-else-if="frequency == 'weekly'">
-        <p v-html="$t('You will be receiving <strong>{authorName}</strong> weekly on <strong>{day}</strong> at <strong>{time}</strong>.', {authorName: author.name, day: getDayOfWeekLabel(dow), time: time})">
-        </p>
-      </section>
-    </div>
   </div>
 </template>
 
@@ -112,7 +62,7 @@ import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
 
 export default {
-  name: 'FollowAuthor',
+  name: 'ChangePeriodicity',
 
   props: {
     author: Object,
@@ -128,10 +78,7 @@ export default {
 
   data() {
     return {
-      show: false,
-      showCanceling: true,
-      editMode: false,
-      frequency: '6x_per_day',
+      frequency: null,
       dow: null,
       time: null,
     }
@@ -150,11 +97,9 @@ export default {
     },
 
     closeSubscribeWidget() {
-      this.show = false
       this.frequency = null
       this.time = null
       this.dow = null
-      this.showCanceling = true
     },
 
     goOneStepBack() {
@@ -162,22 +107,6 @@ export default {
         this.dow = null
       } else {
         this.frequency = null
-      }
-    },
-
-    async submit() {
-      console.log([this.author, this.frequency, this.time, this.dow])
-      try {
-        await this.subscribeAuthor({
-          author: this.author,
-          periodicity: {
-            frequency: this.frequency,
-            time: this.time,
-            dow: this.dow
-          }
-        })
-      } catch (err) {
-        this.showError((err + '') || 'Request failed')
       }
     },
 
@@ -204,24 +133,6 @@ export default {
     editSubscription(ev) {
       document.activeElement.blur()
       this.frequency = null
-      this.editMode = true
-      this.showCanceling = false
-    },
-
-    cancelSubscription() {
-      this.showCanceling = false
-      this.$store.dispatch('unsubscribeAuthor', {
-        author: this.author
-      })
-      this.closeSubscribeWidget()
-    },
-
-    renewSubscription() {
-      this.showCanceling = false
-      this.$store.dispatch('subscribeAuthor', {
-        author: this.author
-      })
-      this.closeSubscribeWidget()
     }
   }
 }
@@ -229,15 +140,10 @@ export default {
 
 <style lang="sass">
 
-.follow-author
-  +context-menu
+.change-periodicity-view
+  padding: $baseline/4
 
-  left: 50%
-  top: 50px
-  z-index: 10000
-
-  margin-left: -135px
-  width: 270px
+  background: #eee
 
   font-family: $ff-sans
 

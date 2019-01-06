@@ -29,12 +29,12 @@
     </button>
 
     <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
-      <SubscriptionConfirmation
+      <NewspaperSubscriptionDialog
         :newspaper="newspaper"
         :subscription="subscription"
         :closeModal="closeModal"
       >
-      </SubscriptionConfirmation>
+      </NewspaperSubscriptionDialog>
     </portal>
   </div>
 </template>
@@ -42,7 +42,7 @@
 <script>
 import { mapState } from 'vuex'
 
-import SubscriptionConfirmation from '@/components/modals/SubscriptionConfirmation'
+import NewspaperSubscriptionDialog from '@/components/modals/NewspaperSubscription'
 
 export default {
   name: 'NewspaperSubscription',
@@ -52,7 +52,7 @@ export default {
   },
 
   components: {
-    SubscriptionConfirmation
+    NewspaperSubscriptionDialog
   },
 
   computed: {
