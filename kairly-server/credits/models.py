@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 from utils.json import datetime_isoformat_ecma262
@@ -59,3 +61,14 @@ class Transaction(models.Model):
             'credits': str(self.credits * -1 if reversed else self.credits),
             'created': datetime_isoformat_ecma262(self.created),
         }
+
+
+@receiver(post_save, sender=User)
+def update_stock(sender, instance, created, **kwargs):
+    if created:
+        Transaction.objects.create(
+            from_platform=True,
+            to_user=instance,
+            kind=Transaction.FREE_CREDIT,
+            credits=350,
+        )
