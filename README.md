@@ -162,6 +162,32 @@ Use regular expression to modify perex/content.
 replace document 'koleje' 'poleje'
 ```
 
+## Management commands
+
+### addfreecredits
+
+Add free credits to user(s)
+
+`./manage.py addfreecredits farin janmikuka --amount 100`
+
+Remove credits from users
+
+`./manage.py addfreecredits badboy --amount="-250"`
+
+### payauthors
+
+Divide accumulated credits from author Subscriptions to user.
+Invoked by cron at the end of each month.
+
+### payeditors
+
+Divide accumulated credits from newspaper Subscriptions to editor and authors.
+Invoked by cron at the end of each month.
+
+Can by run manually to see how will be credits distributed for current month.
+`./manage.py payeditors --month 01/2019 --dry-run`
+
+
 ## Users existing before migration
 
 (Emails should be filled)
