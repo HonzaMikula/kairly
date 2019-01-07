@@ -181,7 +181,7 @@ class Command(BaseCommand):
                             self.stdout.write('Skipping {}. Already imported'.format(source))
                         continue
 
-                    title = "{}: {}...".format(twitter_account, status.full_text[:60])
+                    title = "{}: {}...".format(twitter_account, status.full_text[:60].replace('\n', ' '))
                     content, attachments = self.get_attachements(status)
 
                     args = dict(

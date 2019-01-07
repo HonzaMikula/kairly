@@ -174,6 +174,12 @@ Remove credits from users
 
 `./manage.py addfreecredits badboy --amount="-250"`
 
+### costs
+
+Show articles costs for author(s) and month
+
+`./manage.py costs --month 12/2018 a2larm mariankechlibar`
+
 ### payauthors
 
 Divide accumulated credits from author Subscriptions to user.
