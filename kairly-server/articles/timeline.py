@@ -110,6 +110,14 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
     if cached_issues:
         return json.loads(cached_issues)
 
+    expected_issues = set()
+    dt = start_dt
+    while dt < end_dt:
+        period = sub.newspaper.get_period_interval(dt, tzinfo)
+        if start_dt <= period.end < end_dt:
+            expected_issues.add(period.end)
+        dt = period.end
+
     query = Issue.objects.filter(
         published__gte=start_dt, published__lt=end_dt,
         newspaper=sub.newspaper
@@ -120,6 +128,19 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
         issues.append(issue.to_json(
             newspaper=sub.newspaper,
             tzinfo=tzinfo))
+        try:
+            expected_issues.remove(issue.published)
+        except KeyError:
+            pass
+
+    for missing in expected_issues:
+        issues.append({
+            "type": 'unreleased-newspaper',
+            "newspaper": sub.newspaper.to_json(tzinfo),  # TODO return newspapers separately, as done alredy for subscriptions
+            "time": datetime_isoformat_ecma262(missing.astimezone(tzinfo)),
+            "id": '{}/{}'.format(sub.newspaper.full_name, int(missing.timestamp())),
+            "posts": []
+        })
 
     if cache_valid_to is None:
         timeout = None
