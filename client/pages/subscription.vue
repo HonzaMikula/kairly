@@ -13,10 +13,10 @@
       <aside>
         <section class="subscription--credits">
           <h2><nuxt-link to="/user/transactions">{{ $t('Credits') }}</nuxt-link></h2>
-          <p>Your current balance</p>
+          <p>{{ $t('Current balance') }}</p>
           <p class="credits">{{ user.credits.split('.')[0] }} Kč</p>
 
-          <p>Monthly spending</p>
+          <p>{{ $t('Monthly spending') }}</p>
           <p class="credits">{{ monthSpending.split('.')[0] }} Kč</p>
           <nuxt-link to="/user/add-credits">
             <button>{{ $t('Buy credits') }}</button>
