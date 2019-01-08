@@ -79,7 +79,7 @@ modal-dialog
 
     //- Dialog title
     h1
-      padding: 0 $baseline
+      padding: 0 $baseline/2
 
     //- Close button
     button-close
@@ -110,7 +110,7 @@ modal-dialog
 
   //- Footer
   > footer
-    padding: $baseline/2 $baseline
+    padding: $baseline/2
 
     background: #eee
 

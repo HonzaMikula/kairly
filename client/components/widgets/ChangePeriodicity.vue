@@ -2,8 +2,10 @@
   <div class="change-periodicity-view"
     v-on-clickaway="() => closeSubscribeWidget()">
 
-    <div v-if="frequency === null">
-      <header>{{ $t('How often do you want to read it?') }}</header>
+    <template v-if="frequency === null">
+      <header>
+        {{ $t('How often do you want to read it?') }}
+      </header>
 
       <section>
         <ul>
@@ -13,9 +15,9 @@
           <li><a href="" @click.stop.prevent="selectHowOften('weekly', $event)">{{ $t('Weekly') }}</a></li>
         </ul>
       </section>
-    </div>
+    </template>
 
-    <div v-else-if="frequency === 'weekly' && dow === null">
+    <template v-else-if="frequency === 'weekly' && dow === null">
       <header>
         {{ $t('Which day?') }}
         <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
@@ -32,9 +34,9 @@
           <li><a href="" @click.stop.prevent="selectWhatDay('7', $event)">{{ $t('Sunday') }}</a></li>
         </ul>
       </section>
-    </div>
+    </template>
 
-    <div v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
+    <template v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
         {{ $t('What time?') }}
         <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
@@ -50,7 +52,7 @@
           <li><a href="" @click.stop.prevent="selectWhatTime('21:00', $event)">{{ $t('Night (21:00)') }}</a></li>
         </ul>
       </section>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -88,18 +90,11 @@ export default {
     ...mapActions(['subscribeAuthor']),
     ...mapMutations(['showError']),
 
-    openSubscribeWidget() {
-      this.show = true
-
-      if(!this.subscription) {
-        this.submit()
-      }
-    },
-
-    closeSubscribeWidget() {
-      this.frequency = null
-      this.time = null
-      this.dow = null
+    changePeriodicity() {
+      console.log(this.frequency)
+      console.log(this.dow)
+      console.log(this.time)
+      this.$emit('changePeriodicity', this.frequency, this.dow, this.time)
     },
 
     goOneStepBack() {
@@ -115,14 +110,14 @@ export default {
       this.frequency = frequency
 
       if (frequency == '3x_per_day' || frequency == '6x_per_day') {
-        this.submit()
+        this.changePeriodicity()
       }
     },
 
     selectWhatTime(time, ev) {
       document.activeElement.blur()
       this.time = time
-      this.submit()
+      this.changePeriodicity()
     },
 
     selectWhatDay(dow, ev) {
@@ -141,67 +136,88 @@ export default {
 <style lang="sass">
 
 .change-periodicity-view
-  padding: $baseline/4
+  border-radius: 5px
+  margin-bottom: $baseline / 2
 
-  background: #eee
+  background: #fff
+  border: 1px solid lighten($c-base, 30%)
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15)
 
   font-family: $ff-sans
 
-  //- steps
-  section
+  //- header
+  header
+    position: relative
+
+    padding: 0 $baseline/2
+
+    background: lighten($c-base, 30%)
     color: #000
 
-    p
-      margin: 0
-      padding: $baseline / 2
+    font-weight: 600
+    font-size: $fs-0
+    line-height: $baseline * 1.25
+    text-align: center
 
+    //-- arrow back
+    button-icon
+      position: absolute
+      left: 0
+
+      width: $baseline * 1.25
+
+      color: darken($c-base, 20%)
+
+      cursor: pointer
       font-size: $fs--1
-      line-height: $baseline * 0.75
 
-      strong
-        font-weight: 600
+      &:focus,
+      &:hover
+        background: lighten($c-base, 15%)
+        color: #000
 
-    ul.text
-      padding: 0 $baseline/2 $baseline/2 $baseline
-      line-height: $baseline * 0.75
+      &::before
+        content: fa-content($fa-var-arrow-left)
 
-      li
-        list-style: disc
-        font-size: $fs--1
-
-    li a::after
-      content: fa-content($fa-var-arrow-right)
-
-    //- change button
-    .change-button
-      margin-top: -($baseline/4)
-      margin-bottom: 0
-      padding-top: 0
+  //- steps
+  section
+    //- menu item
+    li
+      font-size: $fs-0
 
       a
         position: relative
 
         display: block
+        padding: 0 $baseline*1.5 0 $baseline/2
 
-        color: $c-base
+        color: #000
+
+        line-height: $baseline * 1.25
+
+        transition: 0.15s all
 
         &::after
           +fa-icon()
           @extend .fas
-
           content: fa-content($fa-var-arrow-right)
 
-          margin-left: $baseline / 4
+          position: absolute
+          right: $baseline / 2
+          top: 8px
 
+          color: darken($c-base, 20%)
           opacity: 0
 
-          transition: 0.15s opacity
+          font-size: $fs--1
+
+          transition: 0.15s all
 
         &:hover
-          color: darken($c-base, 20%)
+          background: lighten($c-base, 45%)
 
-        &:hover::after
-          opacity: 1
+          &::after
+            opacity: 0.5
 
 
 </style>

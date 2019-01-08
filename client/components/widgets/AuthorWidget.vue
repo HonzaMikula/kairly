@@ -14,9 +14,7 @@
       </h3>
 
       <section>
-
         <AuthorSubscription :author="author" />
-
       </section>
     </header>
 

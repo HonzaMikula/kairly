@@ -1,6 +1,6 @@
 <template>
   <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" @click.stop class="subscription-confirmation">
+    <modal-dialog role="dialog" @click.stop class="newspaper-subscription-dialog">
       <header>
         <h1 v-if="!subscription.state">Subscribe newspaper</h1>
         <h1 v-else-if="subscription.state === 'active'">Change or cancel subscription</h1>
@@ -10,61 +10,24 @@
         <button-close tabindex="0" role="button" @keydown.esc="closeModal()" @click="closeModal()"></button-close>
       </header>
       <main>
-        <section v-if="!subscription.state">
-          <div>
-            <h2>You want to subscribe to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
-          </div>
-
-          <div>
-            <h2>It will cost you</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
-            <p>* You can cancel subscription any time</p>
-          </div>
+        <section class="newspaper-subscription--newspaper">
+          <h3>{{ newspaper.title }}</h3>
+          <picture>
+            <img :src="newspaper.picture" :alt="newspaper.title" />
+          </picture>
+          <time>{{ getPeriodicityLabel(newspaper.periodicity) }}</time>
         </section>
 
-        <section v-else-if="subscription.state === 'active'">
-          <div>
-            <h2>You are subscribed to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
-          </div>
+        <section class="newspaper-subscription--price">
+          <h2 v-if="!subscription.state">It will cost you</h2>
+          <h2 v-else-if="subscription.state === 'active'">It costs you</h2>
+          <h2 v-else-if="subscription.state === 'canceled'">You were paying</h2>
+          <h2 v-else-if="subscription.state === 'suspended'">You should be paying</h2>
 
-          <div>
-            <h2>It costs you</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
-            <p>* You can cancel subscription any time</p>
-          </div>
+          <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
         </section>
 
-        <section v-else-if="subscription.state === 'canceled'">
-          <div>
-            <h2>You canceled subscription to</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
-          </div>
-
-          <div>
-            <h2>You were paying</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
-          </div>
-        </section>
-
-        <section v-else-if="subscription.state === 'suspended'">
-          <div>
-            <h2>Your subscription were suspended due to not having enough credits.</h2>
-            <p>{{ newspaper.title }}</p>
-            <time>{{ periodicity }}</time>
-          </div>
-
-          <div>
-            <h2>You were paying</h2>
-            <p>{{ newspaper.price.split('.')[0] }} Kč per month</p>
-          </div>
-        </section>
-
-        <section class="donate-more">
+        <section class="newspaper-subscription--donations">
           <h2>To support exceptional journalist, donate more</h2>
           <div>
             <input v-model="donation" type="number" placeholder="Your donation" min="0"/>
@@ -72,7 +35,7 @@
           </div>
         </section>
       </main>
-      <footer class="subscription-confirmation--footer">
+      <footer class="newspaper-subscription--footer">
         <template v-if="!subscription.state">
           <div
             :title="!canPay && 'You don\'t have enough credit'"
@@ -80,26 +43,28 @@
             <button
               @click="subscribe()"
               :disabled="!canPay"
+              class="confirm"
             >
               Subscribe newspaper
             </button>
+            <p>* You can cancel subscription any time</p>
           </div>
         </template>
 
         <template v-else-if="subscription.state === 'active'">
-          <button @click="subscribe()">Update donation</button>
+          <button @click="subscribe()" class="confirm">Update donation</button>
 
           <button class="cancel" @click="unsubscribe()">Cancel subscription</button>
         </template>
 
         <template v-else-if="subscription.state === 'canceled'">
-          <button @click="subscribe()">
+          <button class="confirm" @click="subscribe()">
             Renew subscription
           </button>
         </template>
 
         <template v-else-if="subscription.state === 'suspended'">
-          <button v-if="canPay" @click="subscribe()">
+          <button class="confirm" v-if="canPay" @click="subscribe()">
             Renew subscription
           </button>
           <nuxt-link v-else to="/user/add-credits">
@@ -145,10 +110,6 @@ export default {
       user: state => state.auth.user
     }),
 
-    periodicity() {
-      return this.getPeriodicityLabel(this.newspaper.periodicity)
-    },
-
     canPay() {
       if (this.user) {
         const price = this.newspaper.price.split('.').map(v => ~~v)
@@ -179,93 +140,105 @@ export default {
 </script>
 
 <style lang="sass">
-modal-dialog.subscription-confirmation
+modal-dialog.newspaper-subscription-dialog
   display: block
 
   main
-    padding: $baseline/2 $baseline 0 $baseline
-    text-align: left
+    padding: $baseline/2 $baseline/2 0 $baseline/2
 
-    > section
+  //- Author
+  .newspaper-subscription--newspaper
+    display: grid
+    grid-column-gap: $baseline / 2
+    grid-template-columns: $baseline*3.5 1fr
+    grid-template-rows: $baseline*1.2 $baseline*0.8
+    grid-template-areas: "newspaper-image newspaper-name" "newspaper-image newspaper-periodicity"
 
-      > div
-        margin-bottom: $baseline
+    picture
+      grid-area: newspaper-image
 
-      //- what is it about
-      h2
-      margin-bottom: $baseline / 4
-
-      //- bold text
-      h2 + p
-        font-size: $fs-1
-        font-weight: 600
-
-      //- periodicity
-      time
-        color: #777
-
-        font-size: $fs--1
-        font-weight: 600
-        line-height: $baseline * 0.8
-
-      //- note
-      h2 + p + p
-        font-size: $fs--1
-        margin-bottom: $baseline / 2
+      img
+        height: 100%
+        width: 100%
+        object-fit: cover
 
 
-    //- Donate More
-    .donate-more
-      padding: $baseline/2 $baseline $baseline*3/4 $baseline
-      margin: 0 (-$baseline)
+    h3
+      grid-area: newspaper-name
+      font-size: $fs-1
+      font-weight: 600
+      line-height: $baseline * 1.2
 
-      background: #fafafa
-      border-top: 1px solid #eee
+    time
+      grid-area: newspaper-periodicity
 
-      > div
-        margin-bottom: 0
+      color: #777
 
-      //- input field
-      input
-        border-radius: 5px
-        box-sizing: border-box
-        height: $baseline * 1.25
-        padding: 0 $baseline/4
-        width: 160px
+      font-size: $fs--1
+      font-weight: 600
+      line-height: $baseline * 0.8
 
-        border: 1px solid #eee
 
-        font-family: $ff-sans
-        font-size: $fs-0
-        font-weight: 600
+  //- Price
+  .newspaper-subscription--price
+    margin: $baseline/2 0
 
-        &::placeholder
-          font-weight: 400
+    text-align: center
 
-      //- currency
-      span
-        position: absolute
+    p
+      font-size: $fs-1
+      font-weight: 600
 
-        line-height: $baseline * 1.25
 
-      > div
-        font-size: $fs--1
+  //- Donate More
+  .newspaper-subscription--donations
+    padding: $baseline/2 $baseline $baseline*3/4 $baseline
+    margin: 0 (-$baseline/2)
+
+    background: #fafafa
+    border-top: 1px solid #eee
+
+    > div
+      margin-bottom: 0
+
+    //- input field
+    input
+      border-radius: 5px
+      box-sizing: border-box
+      height: $baseline * 1.25
+      padding: 0 $baseline/4
+      width: 160px
+
+      border: 1px solid #eee
+
+      font-family: $ff-sans
+      font-size: $fs-0
+      font-weight: 600
+
+      &::placeholder
+        font-weight: 400
+
+    > div
+      font-size: $fs--1
 
   //- Footer with buttons
-  > footer
+  .newspaper-subscription--footer
 
     //- confirm button
     button.confirm
       +subscribed-button
 
       height: $baseline * 1.25
+      padding: 0 $baseline
 
       font-size: $fs-0
       line-height: $baseline * 1.25
 
     button.cancel
       display: table
+      border-radius: 5px
       margin: $baseline/2 auto 0 auto
+      padding: 0 $baseline
 
       background: transparent
       border: 0
