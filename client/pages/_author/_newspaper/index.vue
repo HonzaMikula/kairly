@@ -27,17 +27,19 @@
         </ul>
       </div>
 
-      <template v-if="issues.length !== 0">
+      <template v-if="issue">
         <nav class="newspaper-detail--navigation">
           <nuxt-link
-            to=""
+            v-if="links.prev"
+            :to="links.prev"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Previous issue'"
             class="previous"
           ></nuxt-link>
 
           <nuxt-link
-            to=""
+            v-if="links.next"
+            :to="links.next"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Next issue'"
             class="next"
@@ -45,8 +47,8 @@
         </nav>
 
         <div class="newspaper-detail--issue">
-          <Issue :issue="issues[0]" :subscription="newspaper.subscription" :hideDate="true">
-            <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issues[0].time | moment('D. M. YYYY')}}</template>
+          <Issue :issue="issue" :subscription="newspaper.subscription" :hideDate="true">
+            <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issue.time | moment('D. M. YYYY')}}</template>
           </Issue>
         </div>
 
@@ -81,6 +83,11 @@
 </template>
 
 <script>
+/*
+  Don't remember that
+  /:author/:newspaper/:issue is also routed to this page
+*/
+
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import { errorToParams } from '@/utils/errors'
@@ -157,8 +164,11 @@ export default {
     }
 
     try {
-      const { newspaper, issues } = await store.dispatch('getNewspaperDetail', { newspaperId: fullName })
-      return { newspaper, issues }
+      const { newspaper, issue, links } = await store.dispatch('getNewspaperDetail', {
+        newspaperId: fullName,
+        issue: params.issue
+      })
+      return { newspaper, issue, links }
     } catch (err) {
       error(errorToParams(err))
     }
