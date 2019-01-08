@@ -251,7 +251,7 @@ class Issue(models.Model):
         result = {
             "number": self.number,
             "type": 'newspaper',
-            "newspaper": newspaper.to_json(tzinfo),
+            "newspaper": newspaper.to_json(tzinfo),  # TODO return newspapers separately, as done alredy for subscriptions
             "time": datetime_isoformat_ecma262(self.published.astimezone(tzinfo))
         }
         result['id'] = '{}/{}'.format(result['newspaper']['fullName'], self.number)
