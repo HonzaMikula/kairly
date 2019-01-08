@@ -11,17 +11,14 @@
       :title="buttonTitle"
       @click="openModal"
     >
-      <template v-if="subscription === false">
-        {{ $t('Subscribe for') }} {{ newspaperPrice }}
+      <template v-if="subscription === false || subscription.state === 'canceled'">
+        {{ price === 0 ? $t('Subscribe for free') : $t('Subscribe for {price}', { price: priceWithCurrency }) }}
       </template>
 
       <template v-else-if="subscription.state === 'active'">
-        {{ $t('Subscribed for') }} {{ newspaperPrice }}
+        {{ price === 0 ? $t('Subscribed for free') : $t('Subscribed for {price}', { price: priceWithCurrency }) }}
       </template>
 
-      <template v-else-if="subscription.state === 'canceled'">
-        {{ $t('Subscribe for') }} {{ newspaperPrice }}*
-      </template>
 
       <template v-else-if="subscription.state === 'suspended'">
         {{ $t('Suspended') }}
@@ -76,11 +73,12 @@ export default {
       }
     },
 
-    newspaperPrice() {
-      if (this.newspaper.price.split('.')[0] == 0)
-        return 'free'
-      else
-        return this.newspaper.price.split('.')[0] + ' Kč'
+    price() {
+      return ~~this.newspaper.price.split('.')[0]
+    },
+
+    priceWithCurrency() {
+      return `${this.price} Kč`
     }
   },
 

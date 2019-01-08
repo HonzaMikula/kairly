@@ -19,7 +19,7 @@
           <p>Monthly spending</p>
           <p class="credits">{{ monthSpending.split('.')[0] }} Kč</p>
           <nuxt-link to="/user/add-credits">
-            <button>Buy credits</button>
+            <button>{{ $('Buy credits') }}</button>
           </nuxt-link>
         </section>
 
