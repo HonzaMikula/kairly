@@ -124,13 +124,30 @@ class NewspaperView(View):
                 issueNo = int(issueNo)
             except ValueError:
                 return HttpResponse('Invalid issue number.', status=400)
-            issues = [get_object_or_404(Issue, newspaper=newspaper, number=issueNo)]
+            issue = get_object_or_404(Issue, newspaper=newspaper, number=issueNo)
         else:
-            issues = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[:3]
+            try:
+                issue = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[0]
+            except IndexError:
+                issue = None
+
+        links = {}
+        if issue:
+            try:
+                prev_num = Issue.objects.filter(newspaper=newspaper, number__lt=issue.number).order_by('-number').values_list('number', flat=True)[0]
+                links['prev'] = '/{}/{}'.format(newspaper.full_name, prev_num)
+            except IndexError:
+                pass
+            try:
+                next_num = Issue.objects.filter(newspaper=newspaper, number__gt=issue.number).order_by('number').values_list('number', flat=True)[0]
+                links['next'] = '/{}/{}'.format(newspaper.full_name, next_num)
+            except IndexError:
+                pass
 
         return JsonResponse({
             'newspaper': newspaper.to_json(tzinfo),
-            'issues': [issue.to_json(anonymous=request.user.is_anonymous) for issue in issues]
+            'issue': issue.to_json(anonymous=request.user.is_anonymous) if issue else None,
+            'links': links
         })
 
     @ajax_login_required

@@ -114,6 +114,13 @@ module.exports = {
         component: resolve(__dirname, 'pages/index.vue'),
         chunkName: 'pages/index'
       })
+
+      routes.push({
+        name: 'author-newspaper-issue',
+        path: '/:author/:newspaper/:issue',
+        component: resolve(__dirname, 'pages/_author/_newspaper/index.vue'),
+        chunkName: 'pages/_author/_newspaper/index'
+      })
     }
   }
 }
