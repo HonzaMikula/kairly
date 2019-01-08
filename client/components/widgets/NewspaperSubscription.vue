@@ -104,15 +104,18 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 .newspaper-subscription
 
   //- when newspaper is subscribed
   button.is-subscribed
-    +subscribed-button
+    +button(primary, small)
 
   //- when newspeper is suspended
   button.is-suspended
-    +subscribed-button
+    +button(primary, small)
 
     background: lighten($c-base, 10%)
     background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
@@ -121,6 +124,6 @@ export default {
   //- when newspeper is canceled
   button.to-subscribe,
   button.is-canceled
-    +subscribe-button
+    +button(secondary, small)
 
 </style>

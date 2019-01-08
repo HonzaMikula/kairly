@@ -169,6 +169,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- AUTHOR SUBSCRIPTION DIALOG -//
 modal-dialog.author-subscription-dialog
   display: block
 
@@ -266,19 +270,13 @@ modal-dialog.author-subscription-dialog
 
     //- confirm button
     button.confirm
-      +subscribed-button
+      +button
 
-      height: $baseline * 1.25
-      padding: 0 $baseline
-
-      font-size: $fs-0
-      line-height: $baseline * 1.25
-
+    //- cancel button
     button.cancel
+      +button
       display: table
-      border-radius: 5px
       margin: $baseline/2 auto 0 auto
-      padding: 0 $baseline
 
       background: transparent
       border: 0

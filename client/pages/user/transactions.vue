@@ -88,6 +88,8 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
 
 .transactions
   margin: $baseline auto
@@ -106,13 +108,7 @@ export default {
 
     //- add credit button
     button
-      +subscribed-button
-
-      border-radius: $baseline * 0.625
-
-      height: $baseline * 1.25
-
-      line-height: $baseline * 1.25
+      +button
 
   > h2
     margin-bottom: $baseline / 2

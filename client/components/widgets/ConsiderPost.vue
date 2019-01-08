@@ -86,6 +86,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/context-menu'
+
 backlog-add-view
   position: relative
 

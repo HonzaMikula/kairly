@@ -1,6 +1,6 @@
 <template>
   <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" class="change-password" @click.stop>
+    <modal-dialog role="dialog" class="change-password-dialog" @click.stop>
       <header>
         <h1>{{ $t('Change Password') }}</h1>
 
@@ -92,28 +92,21 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- CHANGE PASSWORD VIEW -//
+.change-password-dialog
+  header
+    h1
+      padding: 0 $baseline
+
+
 change-password-view
   position: relative
 
   padding: $baseline
   background: #fff
-
-  //- close button
-  button-close
-    position: absolute
-    top: -$baseline
-    right: 0
-
-    text-transform: lowercase
-    cursor: pointer
-
-    &::before
-      +fa-icon()
-      @extend .fas
-
-      margin-right: $baseline / 4
-
-      content: fa-content($fa-var-times)
 
   > div
     dispay: table
@@ -140,21 +133,4 @@ change-password-view
 
       font-family: $ff-sans
       font-size: $fs--1
-
-  //- submit button
-  button
-    +subscribe-button
-
-    height: $baseline * 1.25
-
-    border-radius: $baseline*0.75
-    background: $c-base
-    color: #fff
-
-    font-family: $ff-sans
-    font-size: $fs-0
-
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
 </style>

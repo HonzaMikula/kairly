@@ -86,6 +86,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- SIGN UP PAGE -//
 sign-up-page
   display: flex
   align-items: center
@@ -165,22 +169,8 @@ sign-up-page
 
     //- Button
     button
-      +subscribe-button
-
-      border-radius: 5px
-      height: $baseline * 1.5
+      +button(primary, large)
       width: 100%
-
-      background: $c-base
-      color: #fff
-
-      font-family: $ff-sans
-      font-size: $fs-0
-
-      &:focus,
-      &:hover
-        background: darken($c-base, 10%)
-        border: 1px solid darken($c-base, 10%)
 
 
     div

@@ -203,6 +203,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+@import './styles/components/article-content'
+
 //- POST DETAIL -//
 
 post-detail
@@ -463,13 +467,10 @@ post-detail--footer
       content: fa-content($fa-var-twitter)
 
   a.read-full-article
-    +subscribed-button
+    +button(primary, large)
 
     display: table
-    border-radius: 0.75 * $baseline
-    height: $baseline * 1.5
     margin: 0 auto $baseline auto
-    line-height: $baseline * 1.5
 
   time
     float: right
@@ -531,15 +532,5 @@ post-detail--author
 //- Author subscription
 post-detail--author--subscription
   position: relative
-
-  > button
-    +subscribe-button
-
-    height: $baseline
-    padding: 0 $baseline/2
-
-    font-family: $ff-sans
-    font-size: $fs--1
-    line-height: $baseline
 
 </style>

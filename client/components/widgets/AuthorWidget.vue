@@ -48,6 +48,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 author-widget-view
   position: relative
 
@@ -102,16 +105,6 @@ author-widget-view
 
       font-size: $fs--1
       text-align: right
-
-      button
-        +subscribe-button
-
-        height: $baseline
-        padding: 0 $baseline/2
-
-        font-family: $ff-sans
-        font-size: $fs--1
-        line-height: $baseline
 
   //- bio
   > p

@@ -115,7 +115,10 @@ export default {
 </script>
 
 <style lang="sass">
-//- Welcome view
+//- Imports
+@import './styles/components/buttons'
+
+//- WELCOME VIEW -//
 .welcome-view
   display: block
 
@@ -316,13 +319,9 @@ export default {
 
   //- start reading Kairly button
   > a
-    +subscribed-button
+    +button(primary, large)
 
     display: table
     margin: 0 auto
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
 
 </style>

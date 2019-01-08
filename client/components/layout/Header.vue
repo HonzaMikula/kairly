@@ -130,6 +130,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/mixins'
+
 //- HEADER -//
 .app-header
   display: block

@@ -227,6 +227,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- TIMELINE VIEW -//
 timeline-view
   display: block
   padding: $baseline $baseline 0 $baseline
@@ -263,14 +267,8 @@ timeline-view
 
   //- links
   > a
-    +subscribed-button
-
-    height: $baseline * 1.25
-    padding: 0 $baseline/2
+    +button
     margin: 0 $baseline/4
-
-    font-size: $fs-0
-    line-height: $baseline * 1.25
 
 //- Header
 .timeline--header

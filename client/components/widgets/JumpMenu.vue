@@ -98,6 +98,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/context-menu'
+
 .timeline-time-slot
   position: relative
   z-index: 2

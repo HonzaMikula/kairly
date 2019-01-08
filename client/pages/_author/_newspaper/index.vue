@@ -167,6 +167,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 .newspaper-detail
   position: relative
 
@@ -263,13 +266,15 @@ export default {
     position: static
 
   .newspaper-subscription button.to-subscribe,
-  .newspaper-subscription button.is-subscribed,
-  .newspaper-subscription button.is-canceled,
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
+  .newspaper-subscription button.is-canceled
+    +button(secondary, medium)
+    padding: 0
+    width: 100%
 
-    line-height: $baseline * 1.5
+  .newspaper-subscription button.is-subscribed
+    +button(primary, medium)
+    padding: 0
+    width: 100%
 
   > p
     color: #555

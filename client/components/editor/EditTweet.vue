@@ -49,6 +49,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 //- Content
 .edit-tweet--content
   margin-bottom: $baseline / 2
@@ -65,11 +68,7 @@ export default {
 //- Footer
 .edit-tweet--footer
   button
-    +subscribed-button
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
+    +button(primary, large)
 
 
 </style>

@@ -31,6 +31,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+@import './styles/components/mixins'
+
 modal-window
   position: fixed
   top: 0
@@ -118,12 +122,6 @@ modal-dialog
 
     //- action button
     button
-      +subscribed-button
-
-      border-radius: $baseline * 1.25/2
-      height: $baseline * 1.25
-
-      font-size: $fs-0
-      line-height: $baseline * 1.25
+      +button(primary, medium)
 
 </style>

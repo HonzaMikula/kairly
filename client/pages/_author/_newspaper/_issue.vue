@@ -139,6 +139,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 issue-detail-view
   display: block
   margin: $baseline auto 0 auto
@@ -236,5 +239,15 @@ issue-detail-view
     grid-area: issue-footer-subscription
 
     text-align: center
+
+    button.to-subscribe,
+    button.is-canceled
+      +button(secondary, medium)
+
+    button.is-subscribed
+      +button(primary, medium)
+
+    p
+      font-size: $fs--1
 
 </style>

@@ -200,6 +200,7 @@ export default {
 </script>
 
 <style lang="sass">
+//- EDIT NEWSPAPER -//
 .edit-newspaper-view
   display: block
   padding: $baseline
@@ -276,24 +277,6 @@ export default {
         &:hover,
         &:focus
           text-decoration: none
-
-
-    //- buttons
-    button
-      +subscribe-button
-
-      height: $baseline * 1.25
-
-      border-radius: $baseline*0.75
-      background: $c-base
-      color: #fff
-
-      font-family: $ff-sans
-      font-size: $fs--1
-
-      &:focus,
-      &:hover
-        background: darken($c-base, 10%)
 
 
   //- periodicity

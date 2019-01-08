@@ -83,6 +83,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 //- Post -//
 post-component
   display: block
@@ -153,18 +156,22 @@ post-component > header
     > button-icon,
     > a
       display: inline-block
+      border-radius: 100%
       margin-left: $baseline / 4
+      width: $baseline * 1.25
 
+      background: #eee
       color: #000
-      opacity: 0.5
 
       cursor: pointer
+      line-height: $baseline * 1.25
+      text-align: center
 
-      transition: 0.15s opacity
+      transition: 0.15s background
 
       &:focus,
       &:hover
-        opacity:
+        background: #ddd
 
     > a
       margin-right: $baseline / 2
@@ -180,11 +187,7 @@ post-component > header
         content: fa-content($fa-var-external-link-square-alt)
 
     > button
-      +subscribed-button
-
-      border-radius: 3px
-
-      padding: 0 $baseline/2
+      +button(primary, medium)
       margin-left: $baseline / 4
 
 

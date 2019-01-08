@@ -170,6 +170,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+
 settings-view
   position: relative
 
@@ -209,6 +213,7 @@ settings--profile-picture
 
   //- picture wrapper
   .preview-container
+    text-align: center
     &::before
       +fa-icon()
       @extend .fas
@@ -326,19 +331,6 @@ settings--form
 
   //- submit button
   button
-    +subscribe-button
-
-    height: $baseline * 1.25
-
-    border-radius: $baseline*0.75
-    background: $c-base
-    color: #fff
-
-    font-family: $ff-sans
-    font-size: $fs-0
-
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
+    +button
 
 </style>

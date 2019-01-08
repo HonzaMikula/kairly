@@ -67,7 +67,6 @@ export default {
 </script>
 
 <style lang="sass">
-
 .transactions
   margin: $baseline auto
   max-width: 900px
@@ -82,16 +81,6 @@ export default {
 
       font-size: $fs-3
       font-weight: 600
-
-    //- add credit button
-    > button
-      +subscribed-button
-
-      border-radius: $baseline * 0.625
-
-      height: $baseline * 1.25
-
-      line-height: $baseline * 1.25
 
 
 .transactions--table

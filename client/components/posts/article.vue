@@ -55,6 +55,9 @@ export default {
 
 
 <style lang="sass">
+@import './styles/components/article-perex'
+
+
 timeline-post--article
   font-family: $ff-serif
 
