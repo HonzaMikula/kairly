@@ -2,32 +2,32 @@
   <app-layout :name="$t('Transactions')">
     <div class="transactions">
       <header>
-        <h1>Credit balance</h1>
+        <h1>{{ $t('Credit balance') }}</h1>
 
         <nuxt-link to="/user/add-credits">
-          <button>Buy credits</button>
+          <button>{{ $t('Buy credits') }}</button>
         </nuxt-link>
       </header>
 
       <section class="transactions--info">
         <div>
-          <h3>Current balance</h3>
+          <h3>{{ $t('Current balance') }}</h3>
           <p>{{ user.credits }} Kč</p>
         </div>
 
         <div>
-          <h3>Monthly spending</h3>
+          <h3>{{ $t('Monthly spending') }}</h3>
           <p>{{ monthSpending }} Kč</p>
         </div>
       </section>
 
-      <h2>Transaction history</h2>
+      <h2>{{ $t('Transaction history') }}</h2>
       <table class="transactions--table">
         <thead>
           <tr>
-            <th>Datetime</th>
-            <th>Credits</th>
-            <th>From ... To</th>
+            <th>{{ $t('Datetime') }}</th>
+            <th>{{ $t('Credits') }}</th>
+            <th>{{ $t('From ... To') }}</th>
           </tr>
         </thead>
         <tbody>

@@ -1,13 +1,15 @@
 <template>
   <app-layout :name="$t('Add Credit')">
     <div class="buy-credits-view">
-      <h1>Buy Credits</h1>
+      <h1>{{ $t('Buy Credits') }}</h1>
 
       <p>
-        Kairly is currently in beta. You will receive free credit automatically every month.
+        {{ $t('Kairly is currently in beta. You will receive free credit automatically every month.') }}
       </p>
 
-      <p>In future you will have to buy credit. But we will also start paying authors and editors for their good work.</p>
+      <p>
+        {{ $t('In future you will have to buy credit. But we will also start paying authors and editors for their good work.') }}
+      </p>
     </div>
   </app-layout>
 </template>

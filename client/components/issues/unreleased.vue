@@ -1,5 +1,5 @@
 <template>
-  <timeline-newspaper>
+  <timeline-newspaper class="issue-unreleased">
     <header>
       <h1>
         <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
@@ -19,7 +19,9 @@
       </p>
     </header>
 
-    Issue not released.
+    <article>
+      {{ $t('We are very sorry, but {editor} didn\'t prepare a new release for you.', {editor: newspaper.editor.name}) }}
+    </article>
 
   </timeline-newspaper>
 </template>
@@ -46,3 +48,10 @@ export default {
 
 }
 </script>
+
+<style lang="sass">
+.issue-unreleased article
+  font-family: $ff-serif
+  font-size: $fs-1
+  text-align: center
+</style>

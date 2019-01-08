@@ -92,10 +92,25 @@ backlog-add-view
   position: relative
 
   button-icon
+    border-radius: 100%
+    display: inline-block
+    height: $baseline * 1.25
+    width: $baseline * 1.25
+
+    background: #eee
     color: #555
+
+    line-height: $baseline * 1.25
+    text-align: center
+
+    transition: 0.15s background
 
     &::before
       content: fa-content($fa-var-newspaper)
+
+    &:focus,
+    &:hover
+      background: #ddd
 
 backlog-add--dropdown
   +context-menu
@@ -103,7 +118,7 @@ backlog-add--dropdown
   position: absolute
   left: 50%
 
-  top: 40px
+  top: 50px
   z-index: 10
 
   @media (max-width: 1120px)

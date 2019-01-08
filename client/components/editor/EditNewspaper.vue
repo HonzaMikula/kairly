@@ -8,12 +8,12 @@
 
       <main class="edit-newspaper-view">
         <div>
-          <label for="name">Newspaper name</label>
+          <label for="name">{{ $t('Newspaper name') }}</label>
           <input id="name" v-model="title" />
         </div>
 
         <div>
-          <label for="description">Short description</label>
+          <label for="description">{{ $t('Short description') }}</label>
           <textarea
             id="description"
             v-model="description"
@@ -23,7 +23,7 @@
         </div>
 
         <div class="periodicity">
-          <label>Periodicity</label>
+          <label>{{ $t('Periodicity') }}</label>
           <button
             v-if="!periodicity"
             @click="$refs.periodWidget.openSubscribeWidget()"

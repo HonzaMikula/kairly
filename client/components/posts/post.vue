@@ -153,11 +153,14 @@ post-component > header
 
   //-- controls
   section
+    display: flex
+
     > button-icon,
     > a
       display: inline-block
       border-radius: 100%
       margin-left: $baseline / 4
+      height: $baseline * 1.25
       width: $baseline * 1.25
 
       background: #eee
@@ -174,16 +177,15 @@ post-component > header
         background: #ddd
 
     > a
-      margin-right: $baseline / 2
-
       &::before
         +fa-icon()
-        @extend .fas
 
       &.tweet::before
+        @extend .fab
         content: fa-content($fa-var-twitter)
 
       &.external-link::before
+        @extend .fas
         content: fa-content($fa-var-external-link-square-alt)
 
     > button

@@ -2,10 +2,10 @@
   <dialog-window :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="author-subscription-dialog">
       <header>
-        <h1 v-if="!subscription.state">Subscribe to author</h1>
-        <h1 v-else-if="subscription.state === 'active'">Change or cancel subscription</h1>
-        <h1 v-else-if="subscription.state === 'canceled'">Renew subscription</h1>
-        <h1 v-else-if="subscription.state === 'suspended'">Resolve suspended subscription</h1>
+        <h1 v-if="!subscription.state">{{ $t('Subscribe to author') }}</h1>
+        <h1 v-else-if="subscription.state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
+        <h1 v-else-if="subscription.state === 'canceled'">{{ $t('Renew subscription') }}</h1>
+        <h1 v-else-if="subscription.state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
 
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
@@ -14,7 +14,7 @@
           <h3>{{ author.name }}</h3>
           <img :src="author.picture" />
           <time>{{ getPeriodicityLabel(periodicity) }}</time>
-          <a href="" @click.prevent="showChangePeriodicityDialog = !showChangePeriodicityDialog">change periodicity</a>
+          <a href="" @click.prevent="showChangePeriodicityDialog = !showChangePeriodicityDialog">{{ $t('change periodicity') }}</a>
         </section>
 
         <transition name="change-periodicity-animation">
@@ -27,61 +27,61 @@
         </transition>
 
         <section class="author-subscription--price">
-          <h2 v-if="!subscription.state">It will cost you</h2>
-          <h2 v-else-if="subscription.state === 'active'">It costs you</h2>
-          <h2 v-else-if="subscription.state === 'canceled'">You were paying</h2>
-          <h2 v-else-if="subscription.state === 'suspended'">You should be paying</h2>
+          <h2 v-if="!subscription.state">{{ $t('It will cost you') }}</h2>
+          <h2 v-else-if="subscription.state === 'active'">{{ $t('It costs you') }}</h2>
+          <h2 v-else-if="subscription.state === 'canceled'">{{ $t('You were paying') }}</h2>
+          <h2 v-else-if="subscription.state === 'suspended'">{{ $t('You should be paying') }}</h2>
 
-          <p>{{ author.price.split('.')[0] }} Kč per month</p>
+          <p>{{ author.price.split('.')[0] }} {{ $t('Kč per month') }}</p>
         </section>
 
         <section class="author-subscription--donations">
-          <h2>To support exceptional journalist, donate more</h2>
+          <h2>{{ $t('To support exceptional journalist, donate more') }}</h2>
           <div>
-            <input v-model="donation" type="number" placeholder="Your donation" min="0"/>
-            Kč per month
+            <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0"/>
+            {{ $t('Kč per month') }}
           </div>
         </section>
       </main>
       <footer class="author-subscription--footer">
         <template v-if="!subscription.state">
           <div
-            :title="!canPay && 'You don\'t have enough credit'"
+            :title="!canPay && $t('You don\'t have enough credit')"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
             <button
               class="confirm"
               @click="subscribe()"
               :disabled="!canPay"
             >
-              Subscribe
+              {{ $t('Subscribe') }}
             </button>
 
-            <p>* You can cancel subscription any time</p>
+            <p>{{ $t('* You can cancel subscription any time') }}</p>
           </div>
         </template>
 
         <template v-else-if="subscription.state === 'active'">
-          <button class="confirm" @click="subscribe()">Update donation</button>
+          <button class="confirm" @click="subscribe()">{{ $t('Update donation') }}</button>
 
-          <button class="cancel" @click="unsubscribe()">Cancel subscription</button>
+          <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
         </template>
 
         <template v-else-if="subscription.state === 'canceled'">
           <button class="confirm" @click="subscribe()">
-            Renew subscription
+            {{ $t('Renew subscription') }}
           </button>
         </template>
 
         <template v-else-if="subscription.state === 'suspended'">
           <button class="confirm" v-if="canPay" @click="subscribe()">
-            Renew subscription
+            {{ $t('Renew subscription') }}
           </button>
 
           <nuxt-link v-else to="/user/add-credits">
-            Buy credits to renew a subscption
+            {{ $t('Buy credits to renew a subscption') }}
           </nuxt-link>
 
-          <button class="cancel" @click="unsubscribe()">Cancel subscription</button>
+          <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
         </template>
       </footer>
     </modal-dialog>

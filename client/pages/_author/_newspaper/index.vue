@@ -2,7 +2,7 @@
   <app-layout :name="$t('Newspaper detail')">
     <div class="newspaper-detail" itemtype="https://bib.schema.org/Newspaper" itemscope>
       <header class="newspaper-detail--header">
-        <h1 itemprop="name">{{ newspaper.title }}</h1>
+        <h1 itemprop="name"><nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</nuxt-link></h1>
         <p>{{ newspaper.description }}</p>
 
         <picture itemprop="image">
@@ -33,7 +33,7 @@
             v-if="links.prev"
             :to="links.prev"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="'Previous issue'"
+            :title="$t('Previous issue')"
             class="previous"
           ></nuxt-link>
 
@@ -41,7 +41,7 @@
             v-if="links.next"
             :to="links.next"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="'Next issue'"
+            :title="$t('Next issue')"
             class="next"
           ></nuxt-link>
         </nav>
@@ -54,14 +54,14 @@
 
         <footer class="newspaper-detail--footer">
           <a
-            :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${newspaper.editor.id}/${newspaper.name}`"
+            :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${issue.id}`"
             target="_blank"
             class="share-fb">
             {{ $t('Share on Facebook') }}
           </a>
 
           <a
-            :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${newspaper.editor.id}/${newspaper.name}&text=${newspaper.title}`"
+            :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${issue.id}&text=${newspaper.title}`"
             target="_blank"
             class="share-twitter"
           >
@@ -84,7 +84,7 @@
 
 <script>
 /*
-  Don't remember that
+  Don't forget that
   /:author/:newspaper/:issue is also routed to this page
 */
 
@@ -333,8 +333,9 @@ export default {
 
 //- Navigation between issues
 .newspaper-detail--navigation
-  display: flex
-  justify-content: space-between
+  display: grid
+  grid-template-columns: auto 1fr auto
+  grid-template-areas: "prev-link . next-link"
   padding-top: $baseline / 2
   margin-bottom: -($baseline * 2.375)
 
@@ -374,13 +375,13 @@ export default {
       @extend .fas
 
     &.previous
-      order: 1
+      grid-area: prev-link
 
       &::before
         content: fa-content($fa-var-arrow-left)
 
     &.next
-      order: 3
+      grid-area: next-link
 
       &::before
         content: fa-content($fa-var-arrow-right)
