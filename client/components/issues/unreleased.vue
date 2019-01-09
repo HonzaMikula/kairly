@@ -2,7 +2,7 @@
   <timeline-newspaper class="issue-unreleased">
     <header>
       <h1>
-        <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
+        <nuxt-link :to="`/${newspaper.editor.id}/${newspaper.name}`">
           <slot name="newspaperTitle">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
