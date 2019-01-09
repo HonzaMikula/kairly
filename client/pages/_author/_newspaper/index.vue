@@ -20,10 +20,10 @@
       <div class="newspaper-detail--info">
         <ul>
           <li>{{ periodicity }}</li>
-          <li>#{{ newspaper.issues }}</li>
+          <li class="issues">#{{ newspaper.issues }}</li>
           <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
           <li>{{ newspaper.editor.name }}</li>
-          <li>{{ newspaper.price.split('.')[0] }} Kč měsíčně</li>
+          <li class="price">{{ newspaper.price.split('.')[0] }} Kč měsíčně</li>
         </ul>
       </div>
 
@@ -198,7 +198,7 @@ export default {
   grid-column-gap: $baseline / 2
   grid-template-areas: "issue-header-image issue-header-title issue-header-subscription" "issue-header-image issue-header-description issue-header-subscription"
   grid-template-columns: $baseline*7 auto $baseline*7
-  grid-template-rows: $baseline*2 $baseline
+  grid-template-rows: $baseline*2 auto
   padding: $baseline/4 0
   margin: $baseline*0.75 0
   overflow: hidden
@@ -242,6 +242,9 @@ export default {
     @media (max-width: $mobile)
       font-size: $fs-3
 
+    a
+      color: #000
+
   //- Description
   p
     grid-area: issue-header-description
@@ -281,10 +284,18 @@ export default {
     padding: 0
     width: 100%
 
+    @media (max-width: $mobile)
+      padding: 0 $baseline/2
+      width: auto
+
   .newspaper-subscription button.is-subscribed
     +button(primary, medium)
     padding: 0
     width: 100%
+
+    @media (max-width: $mobile)
+      padding: 0 $baseline/2
+      width: auto
 
   > p
     color: #555
@@ -330,6 +341,14 @@ export default {
 
     &:last-of-type::after
       display: none
+
+    @media (max-width: $mobile)
+      &.issues,
+      &.price
+        display: none
+
+      &:nth-of-type(4)::after
+        display: none
 
 //- Navigation between issues
 .newspaper-detail--navigation

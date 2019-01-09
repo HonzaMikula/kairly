@@ -93,6 +93,7 @@ export default {
 
 .transactions
   margin: $baseline auto
+  padding: 0 $baseline/2
   max-width: 900px
 
   header

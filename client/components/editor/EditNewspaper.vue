@@ -51,7 +51,7 @@
         <div>
           <label for="price">{{ $t('Subscription price') }}</label>
           <select id="price" v-model="price">
-            <option value="0">Free</option>
+            <option value="0">{{ $t('Free') }}</option>
             <option value="25">25 Kč</option>
             <option value="75">75 Kč</option>
             <option value="175">175 Kč</option>

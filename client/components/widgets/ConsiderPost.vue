@@ -95,6 +95,7 @@ backlog-add-view
     border-radius: 100%
     display: inline-block
     height: $baseline * 1.25
+    margin-left: $baseline / 4
     width: $baseline * 1.25
 
     background: #eee

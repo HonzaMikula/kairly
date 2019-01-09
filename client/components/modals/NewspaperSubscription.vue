@@ -28,7 +28,7 @@
         </section>
 
         <section class="newspaper-subscription--donations">
-          <h2>{{ $t('To support exceptional journalist, donate more') }}</h2>
+          <h2>{{ $t('Support the newspaper and donate more') }}</h2>
           <div>
             <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0"/>
             {{ $t('Kč per month') }}
@@ -196,7 +196,7 @@ modal-dialog.newspaper-subscription-dialog
 
   //- Donate More
   .newspaper-subscription--donations
-    padding: $baseline/2 $baseline $baseline*3/4 $baseline
+    padding: $baseline/2 $baseline/2 $baseline*3/4 $baseline/2
     margin: 0 (-$baseline/2)
 
     background: #fafafa
