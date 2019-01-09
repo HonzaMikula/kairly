@@ -47,6 +47,7 @@ def promote_js(ctx):
         'mv /tmp/.nuxt /srv/kairly/client/.nuxt',
         'cd /srv/app',
         'npm install --package-lock-only',  # npm ci doesn't work because of Node 5.x in container
+        'git reset --hard',  # reset package-lock.json back, workaround to unsupported npm ci
         "supervisorctl restart app",
     ]
     ctx.run("ssh -T -p {} {} '{}'".format(JS_PORT, JS_HOST, ' && '.join(remote_commands)))
