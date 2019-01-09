@@ -11,16 +11,35 @@ export default {
 
   props: {
     closeModal: Function
-  }
+  },
+
+  methods: {
+    onEscapeKeyUp (event) {
+      if (event.which === 27) {
+        this.closeModal()
+      }
+    },
+  },
+
+  beforeMount() {
+    window.addEventListener('keyup', this.onEscapeKeyUp);
+  },
+  beforeDestroy () {
+    window.removeEventListener('keyup', this.onEscapeKeyUp)
+  },
 }
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+@import './styles/components/mixins'
+
 modal-window
   position: fixed
   top: 0
   left: 0
-  z-index: 100000000
+  z-index: 1000
 
   box-sizing: border-box
   display: flex
@@ -64,7 +83,7 @@ modal-dialog
 
     //- Dialog title
     h1
-      padding: 0 $baseline
+      padding: 0 $baseline/2
 
     //- Close button
     button-close
@@ -85,12 +104,17 @@ modal-dialog
 
       &::before
         +fa-icon()
+        @extend .fas
 
-        content: $fa-var-times
+        content: fa-content($fa-var-times)
+
+  //- Main
+  > main
+    overflow: auto
 
   //- Footer
   > footer
-    padding: $baseline/2 $baseline
+    padding: $baseline/2
 
     background: #eee
 
@@ -98,19 +122,6 @@ modal-dialog
 
     //- action button
     button
-      +subscribe-button
-
-      border-radius: $baseline * 1.25/2
-      height: $baseline * 1.25
-
-      background: $c-base
-      color: #fff
-
-      line-height: $baseline * 1.25
-
-      &:focus,
-      &:hover
-        background: darken($c-base, 10%)
-
+      +button(primary, medium)
 
 </style>

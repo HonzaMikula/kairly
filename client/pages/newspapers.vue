@@ -228,7 +228,7 @@ export default {
 
       this.isBacklogLoaded = false
       const { backlog, publish } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
-      this.postsBacklog = backlog
+      this.postsBacklog = backlog.reverse()
       this.postsPublished = publish
       this.isBacklogLoaded = true
     },
@@ -276,6 +276,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+@import './styles/components/mixins'
+
 editor-newspapers--empty
   display: block
   max-width: 600px
@@ -297,13 +301,7 @@ editor-newspapers--empty
     margin-bottom: $baseline
 
   > a
-    +subscribed-button
-
-    display: inline-block
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
+    +button(primary, large)
 
 editor-newspapers-view
   position: relative
@@ -368,7 +366,7 @@ editor-newspapers-view
           background: #eee
 
         &::before
-          content: $fa-var-chevron-down
+          content: fa-content($fa-var-chevron-down)
 
     .create-newspaper
       align-self: center
@@ -378,16 +376,9 @@ editor-newspapers-view
         display: none
 
       a
-        +subscribe-button
+        +button(secondary, medium)
 
-        display: inline-block
-        height: $baseline * 1.5
-        border-radius: $baseline * 0.75
-        padding: 0 $baseline/2
         margin-left: $baseline / 4
-
-        font-family: $ff-sans
-        line-height: $baseline * 1.5
 
     .newspaper-controls
       align-self: center
@@ -414,10 +405,10 @@ editor-newspapers-view
           background: #eee
 
         &.edit::before
-          content: $fa-var-pencil
+          content: fa-content($fa-var-pencil-alt)
 
         &.delete::before
-          content: $fa-var-trash
+          content: fa-content($fa-var-trash)
 
     .mobile-menu
       display: none

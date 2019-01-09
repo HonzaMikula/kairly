@@ -31,6 +31,13 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
+        <nuxt-link
+          to="/user/transactions"
+          class="credits"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          :title="$t('Available credits')">
+          {{ user.credits.split('.')[0] }} Kč
+        </nuxt-link>
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon
@@ -123,6 +130,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/mixins'
+
 //- HEADER -//
 .app-header
   display: block
@@ -181,12 +190,13 @@ export default {
 
   li a::before
     +fa-icon()
+    @extend .fas
 
     font-size: $fs-1
     text-align: center
 
   li.home a::before
-    content: $fa-var-home
+    content: fa-content($fa-var-home)
     display: none
 
     @media (max-width: 850px)
@@ -194,28 +204,14 @@ export default {
 
 
   li.subscription a::before
-    content: $fa-var-calendar
-    display: none
-
-    @media (max-width: 850px)
-      display: inline-block
-
-  li.newspapers a::before
-    content: $fa-var-newspaper-o
-    display: none
-
-    @media (max-width: 850px)
-      display: inline-block
-
-  li.new-post a::before
-    content: $fa-var-pencil-square-o
+    content: fa-content($fa-var-calendar)
     display: none
 
     @media (max-width: 850px)
       display: inline-block
 
   li.explore a::before
-    content: $fa-var-hashtag
+    content: fa-content($fa-var-hashtag)
     display: none
 
     @media (max-width: 850px)
@@ -261,7 +257,7 @@ export default {
     padding: 0 $baseline/2
 
     &::before
-      content: $fa-var-arrow-left
+      content: fa-content($fa-var-arrow-left)
 
   h1
     font-size: $fs-1
@@ -290,6 +286,16 @@ export default {
     @media (max-width: 850px)
       span
         display: none
+
+    &.credits
+      border-radius: 5px
+      padding: 0 $baseline/2
+      margin-top: $baseline / 4
+
+      color: $c-base
+
+      font-weight: 600
+      line-height: $baseline * 1.5
 
   //- profile picture
   img
@@ -321,7 +327,7 @@ export default {
       background: #eee
 
     &::before
-      content: $fa-var-chevron-down
+      content: fa-content($fa-var-chevron-down)
 
 
 //- User Profile Menu

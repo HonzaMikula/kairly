@@ -56,6 +56,7 @@ explore-modal-view
 
   padding: $baseline $baseline * 3/4
   overflow: auto
+  -webkit-overflow-scrolling: touch
 
   @media (max-width: $mobile)
     padding: $baseline / 2 0

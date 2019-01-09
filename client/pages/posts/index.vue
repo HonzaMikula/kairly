@@ -10,14 +10,7 @@
         :isSubscribed="true"
       >
         <template slot="controls" v-if="post.draft">
-          <button-icon
-            class="remove"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="$t('Delete post')"
-            tabindex="0"
-            role="button"
-            @click.prevent="deletePost(post)">
-          </button-icon>
+          <button @click="publishPost(post)">{{ $t('Publish') }}</button>
 
           <button-icon
             class="edit"
@@ -28,7 +21,15 @@
             @click.prevent="$router.push(`/posts/${post.id}`)">
           </button-icon>
 
-          <button @click="publishPost(post)">{{ $t('Publish') }}</button>
+          <button-icon
+            class="remove"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="$t('Delete post')"
+            tabindex="0"
+            role="button"
+            @click.prevent="deletePost(post)">
+          </button-icon>
+
         </template>
       </PostWrapper>
     </div>

@@ -25,6 +25,7 @@ python-twitter = "*"
 django-autocomplete-light = "*"
 bleach = "*"
 python-rapidjson = "*"
+sqlparse = "*"
 
 [requires]
 python_version = "3.6"

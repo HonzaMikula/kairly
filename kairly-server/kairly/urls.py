@@ -56,6 +56,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('articles.urls')),
+    path('api/', include('credits.urls')),
     # path('api/fail', always_fail),
 ]
 

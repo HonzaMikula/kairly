@@ -81,6 +81,11 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/article-perex'
+@import './styles/components/article-content'
+@import './styles/components/buttons'
+
 //- Title
 .edit-article--title
   margin-bottom: $baseline / 2
@@ -150,10 +155,6 @@ export default {
 //- Footer
 .edit-article--footer
   button
-    +subscribed-button
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
+    +button(primary, large)
 
 </style>

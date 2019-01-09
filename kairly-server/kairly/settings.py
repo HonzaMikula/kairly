@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from decimal import Decimal
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'corsheaders',
     'articles',
+    'credits',
     'sources',
     'users',
 ]
@@ -157,6 +159,15 @@ LOGIN_REDIRECT_URL = '/'
 CORS_ORIGIN_ALLOW_ALL = True
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 20_480_000
+
+CREDITS_FEE = Decimal('0.15')
+
+ALLOWED_PRICE_LEVELS = [
+    Decimal(0),
+    Decimal(25),
+    Decimal(75),
+    Decimal(175)
+]
 
 try:
     from corsheaders.defaults import default_headers

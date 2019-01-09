@@ -20,7 +20,8 @@ export async function getSubscriptions({ commit, state }) {
   if (state.subscriptions) {
     return state.subscriptions
   }
-  const { subscriptions } = await this.$axios.$get('/subscriptions')
+  const { newspapers, subscriptions } = await this.$axios.$get('/subscriptions')
+  newspapers.forEach(newspaper => commit('newspaper', { newspaper }))
   commit('subscriptions', subscriptions)
   return subscriptions
 }
@@ -83,12 +84,16 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
   return data
 }
 
-export async function subscribeNewspaper({ commit }, fullName) {
+export async function subscribeNewspaper({ commit }, { fullName, donation }) {
   commit('invalidateTimeline')
 
-  const subscription = await this.$axios.$post(`/newspapers/${fullName}/subscription`)
+  const body = {
+    donation
+  }
+  const { subscription } = await this.$axios.$post(`/newspapers/${fullName}/subscription`, body)
   //commit('newspaper', { newspaper })
   commit('newspaperSubscription', {
+    fullName,
     subscription,
     meta: {
       analytics: [
@@ -102,12 +107,12 @@ export async function subscribeNewspaper({ commit }, fullName) {
   return subscription
 }
 
-export async function unsubscribeNewspaper({ commit }, fullName) {
+export async function unsubscribeNewspaper({ commit }, { fullName }) {
   commit('invalidateTimeline')
 
-  const subscription = await this.$axios.$delete(`/newspapers/${fullName}/subscription`)
-  //commit('newspaper', { newspaper })
+  const { subscription } = await this.$axios.$delete(`/newspapers/${fullName}/subscription`)
   commit('newspaperSubscription', {
+    fullName,
     subscription,
     meta: {
       analytics: [
@@ -121,11 +126,17 @@ export async function unsubscribeNewspaper({ commit }, fullName) {
   return subscription
 }
 
-export async function subscribeAuthor({ commit }, { author, periodicity }) {
+export async function subscribeAuthor({ commit }, { author, donation, periodicity, keepStatus=false }) {
   commit('invalidateTimeline')
-  const body = periodicity ? { periodicity } : { renewal: true }
-  const subscription = await this.$axios.$post(`/authors/${author.id}/subscription`, body)
+  const body = { periodicity, donation }
+  if (keepStatus) {
+    // use when wanted to keep subscption in canceled status but edit just periodicity
+    body.keepStatus = true
+  }
+  const { subscription, credits } = await this.$axios.$post(`/authors/${author.id}/subscription`, body)
+  commit('updateCredits', credits)
   commit('authorSubscription', {
+    authorId: author.id,
     subscription,
     meta: {
       analytics: [
@@ -143,8 +154,9 @@ export async function subscribeAuthor({ commit }, { author, periodicity }) {
 export async function unsubscribeAuthor({ commit }, { author }) {
   commit('invalidateTimeline')
 
-  const subscription = await this.$axios.$delete(`/authors/${author.id}/subscription`)
+  const { subscription } = await this.$axios.$delete(`/authors/${author.id}/subscription`)
   commit('authorSubscription', {
+    authorId: author.id,
     subscription,
     meta: {
       analytics: [

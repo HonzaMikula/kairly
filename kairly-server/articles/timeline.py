@@ -9,6 +9,7 @@ from more_itertools import peekable
 
 from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.db.models import Q
 
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 from utils.decorators import ajax_login_required
@@ -81,10 +82,9 @@ def timeline(request):
 
 def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = Subscription.objects.filter(
+        Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user,
-        renewal=True,
-        valid_from__lte=now,
-        valid_to__gt=now
+        suspended=False,
     ).select_related('newspaper', 'newspaper__editor')
 
     issues = []
@@ -110,6 +110,14 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
     if cached_issues:
         return json.loads(cached_issues)
 
+    expected_issues = set()
+    dt = start_dt
+    while dt < end_dt:
+        period = sub.newspaper.get_period_interval(dt, tzinfo)
+        if start_dt <= period.end < end_dt:
+            expected_issues.add(period.end)
+        dt = period.end
+
     query = Issue.objects.filter(
         published__gte=start_dt, published__lt=end_dt,
         newspaper=sub.newspaper
@@ -120,6 +128,19 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
         issues.append(issue.to_json(
             newspaper=sub.newspaper,
             tzinfo=tzinfo))
+        try:
+            expected_issues.remove(issue.published)
+        except KeyError:
+            pass
+
+    for missing in expected_issues:
+        issues.append({
+            "type": 'unreleased-newspaper',
+            "newspaper": sub.newspaper.to_json(tzinfo),  # TODO return newspapers separately, as done alredy for subscriptions
+            "time": datetime_isoformat_ecma262(missing.astimezone(tzinfo)),
+            "id": '{}/{}'.format(sub.newspaper.full_name, int(missing.timestamp())),
+            "posts": []
+        })
 
     if cache_valid_to is None:
         timeout = None
@@ -131,10 +152,9 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
 
 def get_author_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = SubscriptionToAuthor.objects.filter(
+        Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user,
-        renewal=True,
-        valid_from__lte=now,
-        valid_to__gt=now
+        suspended=False,
     ).select_related('author')
 
     issues = []

@@ -47,6 +47,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- MY POSTS -//
 .my-posts
   display: block
   box-sizing: border-box
@@ -96,20 +100,5 @@ export default {
     text-align: center
 
   a
-    +subscribe-button
-
-    display: inline-block
-    height: $baseline * 1.25
-
-    border-radius: $baseline*0.75
-    background: $c-base
-    color: #fff
-
-    font-family: $ff-sans
-    font-size: $fs-0
-    line-height: $baseline * 1.25
-
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
+    +button
 </style>

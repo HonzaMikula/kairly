@@ -6,16 +6,30 @@
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
       </header>
 
-      <edit-newspaper-view>
-        <div class="title">
-          <input :placeholder="$t('What\'s the newspaper name?')" v-model="title">
+      <main class="edit-newspaper-view">
+        <div>
+          <label for="name">{{ $t('Newspaper name') }}</label>
+          <input id="name" v-model="title" />
+        </div>
+
+        <div>
+          <label for="description">{{ $t('Short description') }}</label>
+          <textarea
+            id="description"
+            v-model="description"
+            :placeholder="$t('What this newspaper is about?')"
+          ></textarea>
+          <p>Maximum 160 characters.</p>
         </div>
 
         <div class="periodicity">
+          <label>{{ $t('Periodicity') }}</label>
           <button
             v-if="!periodicity"
             @click="$refs.periodWidget.openSubscribeWidget()"
-          >{{ $t('Select periodicity') }}</button>
+          >
+            {{ $t('Select periodicity') }}
+          </button>
 
           <span v-if="periodicity" @click="$refs.periodWidget.openSubscribeWidget()">
             <template v-if="periodicity.frequency == '3x_per_day'">{{ $t('At 6:00, 12:00 and 18:00') }}</template>
@@ -31,27 +45,27 @@
             </template>
           </span>
 
-          <div class="period-wrapper">
-            <period-widget ref="periodWidget" :onSelect="selectPeriodicity"/>
-          </div>
+          <period-widget ref="periodWidget" :onSelect="selectPeriodicity"/>
         </div>
 
-        <div class="description">
-          <section>
-            <label for="editorial">{{ $t('Editorial') }}</label>
-            <textarea
-              id="editorial"
-              v-model="description"
-              :placeholder="$t('What this newspaper is about?')"
-            ></textarea>
-          </section>
+        <div>
+          <label for="price">{{ $t('Subscription price') }}</label>
+          <select id="price" v-model="price">
+            <option value="0">{{ $t('Free') }}</option>
+            <option value="25">25 Kč</option>
+            <option value="75">75 Kč</option>
+            <option value="175">175 Kč</option>
+          </select>
+        </div>
 
+        <div class="picture">
+          <label>Picture</label>
           <picture>
             <picture-input
               ref="pictureInput"
               @change="onPictureChange"
-              width="580"
-              height="250"
+              width="182"
+              height="78"
               accept="image/jpeg, image/png"
               size="10"
               buttonClass="btn"
@@ -62,7 +76,7 @@
             ></picture-input>
           </picture>
         </div>
-      </edit-newspaper-view>
+      </main>
 
       <footer>
         <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
@@ -101,6 +115,7 @@ export default {
       title: this.newspaper ? this.newspaper.title : "",
       description: this.newspaper ? this.newspaper.description : "",
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
+      price: this.newspaper ? ~~this.newspaper.price : 25,
       image: null,
     }
   },
@@ -147,10 +162,14 @@ export default {
         if (this.description !== this.newspaper.description) {
           fields.description = this.description;
         }
+        if (this.price != this.newspaper.price) {
+          fields.price = this.price;
+        }
         if (this.periodicity) {
           //TODO compare periodicity
           fields.periodicity = this.periodicity;
         }
+
         if (this.image) {
           fields.image = this.image;
         }
@@ -165,6 +184,7 @@ export default {
             title: this.title,
             description: this.description,
             periodicity: this.periodicity,
+            price: this.price,
             image: this.image
           }
         });
@@ -180,68 +200,107 @@ export default {
 </script>
 
 <style lang="sass">
-edit-newspaper-view
+//- EDIT NEWSPAPER -//
+.edit-newspaper-view
   display: block
   padding: $baseline
 
-  .title
-    padding-bottom: $baseline
+  //- form fields
+  > div
+    display: table
+    width: $baseline * 14
+    margin-bottom: $baseline
 
-    input
-      display: block
-      box-sizing: border-box
-      width: 100%
 
-      border: 0
+    //- label
+    label, h3
+      display: table
 
-      font-family: $ff-serif
-      font-size: $fs-4
+      font-size: $fs--1
       font-weight: 600
-      line-height: $baseline * 2
-      text-align: center
+
+    //- input fields
+    input
+      box-sizing: border-box
+      height: $baseline * 1.25
+      padding: 0 $baseline/4
+      width: $baseline * 8
+
+      border: 1px solid #ddd
+
+      font-family: $ff-sans
+      font-size: $fs--1
+
+
+    //- textarea
+    textarea
+      box-sizing: border-box
+      height: $baseline * 2.5
+      padding: $baseline/4
+      width: $baseline * 14
+
+      border: 1px solid #ddd
+
+      font-family: $ff-sans
+      font-size: $fs--1
 
       @media (max-width: $mobile)
-        font-size: $fs-3
+        width: 100%
 
+
+    //- select
+    select
+      box-sizing: border-box
+      height: $baseline * 1.25
+      padding: 0 $baseline/4
+      width: $baseline * 8
+
+      border: 1px solid #ddd
+
+      font-family: $ff-sans
+      font-size: $fs--1
+
+
+    //- help
+    p
+      color: #555
+
+      font-size: $fs--1
+      line-height: 1.42
+
+      a
+        color: darken($c-base, 20%)
+
+        font-weight: 600
+        text-decoration: underline
+
+        &:hover,
+        &:focus
+          text-decoration: none
+
+
+  //- periodicity
   .periodicity
     position: relative
 
-    padding: $baseline/4 0
+    .period-widget
+      left: 0
+      top: 80px
 
-    border-bottom: 1px solid #ddd
-    border-top: 1px solid #ddd
+      margin-left: 0
 
-    text-align: center
+      &::after
+        left: 70px
 
-    > span
-      font-family: $ff-serif
 
-      cursor: pointer
+  //- picture
+  .picture
+    picture
+      display: block
+      height: $baseline * 2
+      padding-bottom: $baseline
 
-    > button
-      +subscribed-button
+    button
+      margin-top: $baseline / 4
 
-  .description
-    display: grid
-    grid-template-columns: 1fr 2fr
-    grid-column-gap: $baseline
-    grid-template-rows: auto
-    margin-top: $baseline
-
-    @media (max-width: $mobile)
-      grid-template-columns: 1fr
-
-    label
-      display: table
-
-      font-weight: 600
-
-    textarea
-      height: 200px
-      width: 100%
-
-      border: 0
-
-      font-family: $ff-serif
-      font-size: $fs-0
 </style>

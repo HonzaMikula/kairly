@@ -577,55 +577,48 @@ export default {
 }
 </script>
 
-<style scoped>
-.picture-input {
-  width: 100%;
-  margin: 0 auto;
-  text-align: center;
-}
-.preview-container {
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0 auto;
-  cursor: pointer;
-  overflow: hidden;
-}
-.picture-preview {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  z-index: 10001;
-  box-sizing: border-box;
-  background-color: rgba(200,200,200,.25);
-}
-.picture-preview.dragging-over {
-  filter: brightness(0.5);
-}
-.picture-inner {
-  position: relative;
-  z-index: 10002;
-  pointer-events: none;
-  box-sizing: border-box;
-  margin: 1em auto;
-  padding: 0.5em;
-  border: .3em dashed rgba(66,66,66,.15);
-  border-radius: 8px;
-  width: calc(100% - 2.5em);
-  height: calc(100% - 2.5em);
-  display: table;
-}
-.picture-inner .picture-inner-text {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-  font-size: 2em;
-  line-height: 1.5;
-}
-button {
-  margin: 1em .25em;
-  cursor: pointer;
-}
-input[type=file] {
-  display: none;
-}
+<style lang="sass" scoped>
+.picture-input
+  width: 100%
+  height: 100%
+
+.preview-container
+  width: 100%
+  cursor: pointer
+  overflow: hidden
+
+.picture-preview
+  position: relative
+  z-index: 10001
+
+  display: block
+  width: 100%
+  height: 100%
+
+  background-color: rgba(200,200,200,.25)
+
+.picture-preview.dragging-over
+  filter: brightness(0.5)
+
+.picture-inner
+  position: relative
+  display: flex
+  align-items: center
+  justify-content: center
+
+  height: 100%
+  width: 100%
+
+  pointer-events: none
+
+  &:hover
+    background: #ddd
+
+
+.picture-inner .picture-inner-text
+  font-size: $fs-0
+
+input[type=file]
+  display: none
+
 </style>

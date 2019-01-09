@@ -62,6 +62,18 @@
             <p>{{ $t('Provide us with your Twitter username and we will automatically publish your tweets on Kairly.') }}</p>
           </div>
 
+          <h2>{{ $t('Publishing') }}</h2>
+
+          <div>
+            <label for="price">{{ $t('Subscription price') }}</label>
+            <select id="price" v-model="price">
+              <option value="0">Free</option>
+              <option value="25">25 Kč</option>
+              <option value="75">75 Kč</option>
+              <option value="175">175 Kč</option>
+            </select>
+            <p>{{ $t('Montly subscription price for my posts.') }}</p>
+          </div>
 
           <button @click="submit">{{ $t('Save profile') }}</button>
         </settings--form>
@@ -105,6 +117,7 @@ export default {
       bio: null,
       timezone: null,
       twitter: null,
+      price: null,
       isChangePasswordOpen: false
     }
   },
@@ -114,11 +127,12 @@ export default {
   }),
 
   methods: {
-    updateComponentData({ name, medium, bio, timezone, integrations: { twitter }}) {
+    updateComponentData({ name, medium, bio, timezone, price, integrations: { twitter }}) {
       this.name = name
       this.medium = medium
       this.bio = bio
       this.timezone = timezone
+      this.price = ~~price
       this.twitter = twitter
     },
 
@@ -137,8 +151,8 @@ export default {
     },
 
     submit() {
-      const { name, medium, bio, timezone, twitter } = this
-      this.updateProfile({ name, medium, bio, timezone, integrations: { twitter }})
+      const { name, medium, bio, timezone, price, twitter } = this
+      this.updateProfile({ name, medium, bio, timezone, price, integrations: { twitter }})
     },
 
     ...mapMutations({ showSuccess: 'showSuccess'}),
@@ -156,6 +170,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+
 settings-view
   position: relative
 
@@ -195,8 +213,10 @@ settings--profile-picture
 
   //- picture wrapper
   .preview-container
+    text-align: center
     &::before
       +fa-icon()
+      @extend .fas
 
       position: absolute
       z-index: 100000
@@ -212,7 +232,7 @@ settings--profile-picture
       line-height: $baseline * 4
       text-align: center
 
-      content: $fa-var-camera
+      content: fa-content($fa-var-camera)
       pointer-events: none
       transition: 0.15s opacity
 
@@ -311,19 +331,6 @@ settings--form
 
   //- submit button
   button
-    +subscribe-button
-
-    height: $baseline * 1.25
-
-    border-radius: $baseline*0.75
-    background: $c-base
-    color: #fff
-
-    font-family: $ff-sans
-    font-size: $fs-0
-
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
+    +button
 
 </style>

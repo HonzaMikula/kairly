@@ -83,22 +83,12 @@
               v-if="subscription"
               :subscription="subscription" :author="post.author"
             />
-
-            <button
-              v-else
-              @click="$refs.followWidget.openSubscribeWidget()">
-              {{ $t('Subscribe author') }}
-            </button>
-
-            <follow-author
-              ref="followWidget"
-              :author="post.author"
-              :subscription="subscription"
-            />
           </post-detail--author--subscription>
         </post-detail--author>
       </main>
     </post-detail>
+
+    <kairly-promo v-if="!loggedIn" />
   </app-layout>
 </template>
 
@@ -109,7 +99,7 @@ import { mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
-import FollowAuthor from '@/components/widgets/FollowAuthor'
+import KairlyPromo from '@/components/KairlyPromo'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
@@ -155,8 +145,8 @@ export default {
   components: {
     AppLayout,
     ConsiderPost,
-    FollowAuthor,
-    AuthorSubscription
+    AuthorSubscription,
+    KairlyPromo
   },
 
   data() {
@@ -213,13 +203,17 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+@import './styles/components/article-content'
+
 //- POST DETAIL -//
 
 post-detail
   position: relative
 
   display: block
-  padding: $baseline $baseline/2 $baseline*10 $baseline/2
+  padding: $baseline $baseline/2 $baseline $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
 
   background: #fff
@@ -260,8 +254,9 @@ post-detail--back-button
 
   &::before
     +fa-icon()
+    @extend .fas
 
-    content: $fa-var-arrow-left
+    content: fa-content($fa-var-arrow-left)
 
   @media (max-width: $mobile)
     position: static
@@ -312,6 +307,7 @@ post-detail--header
 
     &::before
       +fa-icon()
+      @extend .fas
 
       position: relative
       top: -1px
@@ -321,7 +317,7 @@ post-detail--header
       font-size: $fs-1
       vertical-align: middle
 
-      content: $fa-var-external-link-square
+      content: fa-content($fa-var-external-link-square-alt)
 
       @media (max-width: $mobile)
         margin-right: 0
@@ -452,30 +448,29 @@ post-detail--footer
 
     &.share-fb::before
       +fa-icon()
+      @extend .fab
 
       margin-right: 0
 
       font-size: $fs-1
 
-      content: $fa-var-facebook-square
+      content: fa-content($fa-var-facebook-square)
 
     &.share-twitter::before
       +fa-icon()
+      @extend .fab
 
       margin-right: 0
 
       font-size: $fs-1
 
-      content: $fa-var-twitter
+      content: fa-content($fa-var-twitter)
 
   a.read-full-article
-    +subscribed-button
+    +button(primary, large)
 
     display: table
-    border-radius: 0.75 * $baseline
-    height: $baseline * 1.5
     margin: 0 auto $baseline auto
-    line-height: $baseline * 1.5
 
   time
     float: right
@@ -537,19 +532,5 @@ post-detail--author
 //- Author subscription
 post-detail--author--subscription
   position: relative
-
-  > button
-    +subscribe-button
-
-    height: $baseline
-    padding: 0 $baseline/2
-
-    font-family: $ff-sans
-    font-size: $fs--1
-    line-height: $baseline
-
-  @media (max-width: $mobile)
-    .follow-author
-      left: $baseline * 2
 
 </style>

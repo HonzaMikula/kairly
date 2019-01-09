@@ -126,6 +126,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 .myauthors-view
   h2
     margin: $baseline 0 $baseline / 2
@@ -159,12 +162,6 @@ my-authors--empty
     margin-bottom: $baseline
 
   a
-    +subscribed-button
-
-    display: inline-block
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
+    +button(primary, large)
 
 </style>

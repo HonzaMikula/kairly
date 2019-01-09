@@ -26,8 +26,6 @@
       <newspaper-subscription :newspaper="newspaper" />
 
       <p>
-        #{{ newspaper.issues }}
-        •
         {{ newspaper.likes }} {{ $t('subscribers') }}
       </p>
     </newspaper-widget--subscribe>

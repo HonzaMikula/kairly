@@ -83,6 +83,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 //- Post -//
 post-component
   display: block
@@ -150,40 +153,43 @@ post-component > header
 
   //-- controls
   section
+    display: flex
+
     > button-icon,
     > a
       display: inline-block
+      border-radius: 100%
       margin-left: $baseline / 4
+      height: $baseline * 1.25
+      width: $baseline * 1.25
 
+      background: #eee
       color: #000
-      opacity: 0.5
 
       cursor: pointer
+      line-height: $baseline * 1.25
+      text-align: center
 
-      transition: 0.15s opacity
+      transition: 0.15s background
 
       &:focus,
       &:hover
-        opacity:
+        background: #ddd
 
     > a
-      margin-right: $baseline / 2
-
       &::before
         +fa-icon()
 
       &.tweet::before
-        content: $fa-var-twitter
+        @extend .fab
+        content: fa-content($fa-var-twitter)
 
       &.external-link::before
-        content: $fa-var-external-link-square
+        @extend .fas
+        content: fa-content($fa-var-external-link-square-alt)
 
     > button
-      +subscribed-button
-
-      border-radius: 3px
-
-      padding: 0 $baseline/2
+      +button(primary, medium)
       margin-left: $baseline / 4
 
 

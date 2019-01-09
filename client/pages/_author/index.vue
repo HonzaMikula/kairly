@@ -19,32 +19,6 @@
         </section>
 
         <author-detail--subscribe v-if="loggedIn">
-          <button
-            v-if="subscription"
-            :class="{'is-subscribed': subscription.renewal, 'is-canceled': !subscription.renewal}"
-            @click="subscription.renewal ? unsubscribe() : renewSubscription()"
-          >
-            <span class="default">
-              <template v-if="subscription.renewal">{{ $t('Subscribed') }}</template>
-              <template v-else>{{ $t('Canceled') }}</template>
-            </span>
-            <span class="on-hover" v-if="subscription.renewal">{{ $t('Unsubscribe') }}</span>
-            <span
-              v-else
-              class="on-hover"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="$t('Subscription last till {to}', { to: subscription.to })"
-            >{{ $t('Renew') }}</span>
-          </button>
-
-          <button
-            class="to-subscribe"
-            v-else
-            @click="$refs.followWidget.openSubscribeWidget()"
-          >{{ $t('Subscribe') }}</button>
-
-          <follow-author ref="followWidget" :author="author" :subscription="subscription"/>
-
           <AuthorSubscription if="subscription" :author="author" :subscription="subscription"/>
         </author-detail--subscribe>
       </author-detail--header>
@@ -91,14 +65,13 @@
 
 
 <script>
-import { mapMutations, mapState } from "vuex";
-import { errorToParams } from "@/utils/errors";
+import { mapMutations, mapState } from "vuex"
+import { errorToParams } from "@/utils/errors"
 
-import AppLayout from "@/components/layout/AppLayout";
-import NewspaperWidget from "@/components/widgets/NewspaperWidget";
-import PostWrapper from "@/components/PostWrapper";
-import FollowAuthor from "@/components/widgets/FollowAuthor";
-import AuthorSubscription from "@/components/widgets/AuthorSubscription";
+import AppLayout from "@/components/layout/AppLayout"
+import NewspaperWidget from "@/components/widgets/NewspaperWidget"
+import PostWrapper from "@/components/PostWrapper"
+import AuthorSubscription from "@/components/widgets/AuthorSubscription"
 
 export default {
   name: "AuthorDetail",
@@ -145,7 +118,6 @@ export default {
     AppLayout,
     NewspaperWidget,
     PostWrapper,
-    FollowAuthor,
     AuthorSubscription
   },
 
@@ -256,6 +228,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+
 //- AUTHOR DETAIL -//
 
 author-detail-view
@@ -332,57 +308,17 @@ author-detail--subscribe
     grid-column: 1 / span 2
     margin-bottom: 0
 
-  //- when author is subscribed
-  button.is-subscribed
-    +subscribed-button
+  .author-subscription-view
+    //- when author is subscribed
+    button.is-subscribed
+      +button(primary, medium)
 
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
+    //- when author is ready to be subsribed
+    //- when author is canceled
+    button.to-subscribe,
+    button.is-canceled
+      +button(secondary, medium)
 
-    line-height: $baseline * 1.5
-
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
-  //- when author is canceled
-  button.is-canceled
-    +subscribed-button
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
-
-    line-height: $baseline * 1.5
-
-    .on-hover
-      display: none
-
-    &:hover,
-    &:focus
-      .on-hover
-        display: block
-
-      .default
-        display: none
-
-  //- when author is ready to be subsribed
-  button.to-subscribe
-    +subscribe-button
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    width: 150px
-
-    line-height: $baseline * 1.5
 
 //- Newspapers
 author-detail--newspapers
@@ -467,13 +403,6 @@ author-detail--posts
   text-align: center
 
   a
-    +subscribed-button
-
-    display: inline-block
-    margin-top: $baseline
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
+    +button(primary, large)
 
 </style>

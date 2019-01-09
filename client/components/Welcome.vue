@@ -115,7 +115,10 @@ export default {
 </script>
 
 <style lang="sass">
-//- Welcome view
+//- Imports
+@import './styles/components/buttons'
+
+//- WELCOME VIEW -//
 .welcome-view
   display: block
 
@@ -154,6 +157,7 @@ export default {
 
       white-space: nowrap
       overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
   li
     display: inline-block
@@ -192,6 +196,7 @@ export default {
     @media (max-width: $mobile)
       grid-column-gap: $baseline / 4
       overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
       newspaper-widget-view
         min-width: 200px
@@ -300,12 +305,13 @@ export default {
 
       &::after
         +fa-icon()
+        @extend .fas
 
         margin-left: $baseline / 2
 
         opacity: 0.5
 
-        content: $fa-var-arrow-right
+        content: fa-content($fa-var-arrow-right)
 
 
       &:hover::after
@@ -313,13 +319,9 @@ export default {
 
   //- start reading Kairly button
   > a
-    +subscribed-button
+    +button(primary, large)
 
     display: table
     margin: 0 auto
-
-    border-radius: $baseline * 0.75
-    height: $baseline * 1.5
-    line-height: $baseline * 1.5
 
 </style>

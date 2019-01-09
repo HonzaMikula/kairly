@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import issueUnreleasedNewspaper from '@/components/issues/unreleased'
 import issueNewspaper from '@/components/issues/newspaper'
 import issueAuthor from '@/components/issues/author'
 import PostWrapper from '@/components/PostWrapper'
@@ -53,6 +54,7 @@ export default {
   components: {
     issueNewspaper,
     issueAuthor,
+    issueUnreleasedNewspaper,
     PostWrapper,
   },
 
@@ -104,7 +106,7 @@ timeline-newspaper
     h1
       margin-bottom: $baseline / 4
 
-      font-size: $fs-3
+      font-size: $fs-2
       line-height: $baseline * 1.25
 
       img

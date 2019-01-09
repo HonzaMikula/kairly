@@ -38,8 +38,8 @@ const createStore = () => {
           state.timeline = {}
       },
 
-      user(state, { user }) {
-        state.profile.user = user
+      updateCredits(state, credits) {
+        state.auth.user.credits = credits
       },
       backlog(state, backlog) {
         state.backlog = backlog
@@ -75,19 +75,27 @@ const createStore = () => {
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
       },
-      newspaperSubscription(state, {subscription}) {
+      newspaperSubscription(state, {subscription, fullName}) {
         if (state.subscriptions) {
-          state.subscriptions = {
-            ...state.subscriptions,
-            newspapers: {...state.subscriptions.newspapers, ...subscription}
+          if (subscription) {
+            state.subscriptions = {
+              ...state.subscriptions,
+              newspapers: {...state.subscriptions.newspapers, ...subscription}
+            }
+          } else {
+              Vue.delete(state.subscriptions.newspapers, fullName)
           }
         }
       },
-      authorSubscription(state, { subscription }) {
+      authorSubscription(state, { subscription, authorId}) {
         if (state.subscriptions) {
-          state.subscriptions = {
-            ...state.subscriptions,
-            authors: {...state.subscriptions.authors, ...subscription}
+          if (subscription) {
+            state.subscriptions = {
+              ...state.subscriptions,
+              authors: {...state.subscriptions.authors, ...subscription}
+            }
+          } else {
+              Vue.delete(state.subscriptions.authors, authorId)
           }
         }
       },
@@ -150,6 +158,25 @@ const createStore = () => {
           return null
         }
         return state.subscriptions.authors[author.id]
+      },
+      monthSpending: state => {
+        if (!state.subscriptions) return null
+        let cents = 0
+        Object.entries(state.subscriptions.newspapers).forEach(([fullName, s]) => {
+          const newspaper = state.newspapers[fullName]
+          cents += Math.round(parseFloat(newspaper.price) * 100)
+          if (s.donation) {
+            cents += Math.round(parseFloat(s.donation) * 100)
+          }
+        })
+        Object.values(state.subscriptions.authors).forEach(s => {
+          cents += Math.round(parseFloat(s.author.price) * 100)
+          if (s.donation) {
+            cents += Math.round(parseFloat(s.donation) * 100)
+          }
+        })
+        const mod = cents % 100
+        return ~~(cents / 100) + "." + (mod < 10 ? "0" : "") + mod
       }
     },
 

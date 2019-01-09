@@ -91,6 +91,8 @@
             </time>
 
             <section>
+              <button @click="publish(post)">{{ $t('Publish') }}</button>
+
               <button-icon
                 class="remove"
                 role="button"
@@ -99,8 +101,6 @@
                 tabindex="0"
                 @click.prevent="removePost(post)">
               </button-icon>
-
-              <a href="#" @click.prevent="publish(post)">{{ $t('Publish') }}</a>
             </section>
 
           </header>
@@ -189,6 +189,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/buttons'
+
 newspaper-backlog-view
   > div
     display: grid
@@ -227,13 +229,14 @@ newspaper-backlog--next-issue
 
     &::before
       +fa-icon()
+      @extend .fas
 
       display: block
       margin-bottom: $baseline
 
       font-size: $fs-4
 
-      content: $fa-var-clock-o
+      content: fa-content($fa-var-clock)
 
     h2
       margin-bottom: $baseline / 2
@@ -256,13 +259,14 @@ newspaper-backlog--backlog
 
     &::before
       +fa-icon()
+      @extend .fas
 
       display: block
       margin-bottom: $baseline
 
       font-size: $fs-4
 
-      content: $fa-var-newspaper-o
+      content: fa-content($fa-var-newspaper)
 
     h2
       margin-bottom: $baseline / 2
@@ -289,8 +293,6 @@ newspaper-backlog--backlog
     //- tweet
     p
       font-family: $ff-serif
-      font-size: $fs-1
-
 
     > header
       position: relative
@@ -342,26 +344,22 @@ newspaper-backlog--backlog
 
       //-- controls
       section
-        > a
-          display: inline-block
-          border-radius: 3px
-          padding: 0 $baseline/2
-          margin-left: $baseline / 4
-
-          background: $c-base
-          color: #fff
-
-          font-size: $fs--1
-
-          &:focus,
-          &:hover
-            background: darken($c-base, 10%)
+        > button
+          +button(primary, small)
 
         button-icon
-          opacity: 0.2
+          display: inline-block
+          border-radius: 100%
+          width: $baseline
+
+          background: #eee
+
+          text-align: center
+
+          transition: 0.15s background
 
           &:focus,
           &:hover
-            opacity: 1
+            background: #ddd
 
 </style>

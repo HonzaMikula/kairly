@@ -1,11 +1,12 @@
-import jwt
-import rapidjson as json
 import time
 import urllib.request
 import urllib.error
+from decimal import Decimal
 
-from pytz import timezone, UnknownTimeZoneError
+import jwt
 from libgravatar import Gravatar
+from pytz import timezone, UnknownTimeZoneError
+import rapidjson as json
 
 from django.db.utils import IntegrityError
 from django.db.models import Count
@@ -27,6 +28,7 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from articles.models import Newspaper
+from credits.utils import get_user_credits
 from .models import User, Category, CategoryUser
 
 
@@ -88,6 +90,7 @@ class ProfileView(View):
 
         user = request.user.to_json(owner=True)
         user['newspapers'] = newspapers
+        user['credits'] = str(get_user_credits(request.user.id))
 
         return JsonResponse({
             "user": user
@@ -101,6 +104,12 @@ class ProfileView(View):
         for field in fields:
             if field in payload:
                 setattr(user, field, payload[field])
+
+        if 'price' in payload:
+            price = Decimal(payload['price'])
+            if price not in settings.ALLOWED_PRICE_LEVELS:
+                return JsonResponse({'error': 'invalid price'}, status=400)
+            user.price = price
 
         integrations = payload.get('integrations')
         if 'twitter' in integrations:

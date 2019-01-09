@@ -136,6 +136,7 @@ read-later-widget--close-button
 
   &::after
     +fa-icon()
+    @extend .fas
 
-    content: $fa-var-times
+    content: fa-content($fa-var-times)
 </style>

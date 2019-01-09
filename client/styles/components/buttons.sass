@@ -1,74 +1,71 @@
 //- BUTTON -//
 
-
-//- Subscribe Button
-=subscribed-button
+//- Button Mixin
+=button($type: primary, $size: medium)
+  box-sizing: border-box
   display: inline-block
-  border-radius: $baseline / 2
-  height: $baseline
-  padding: 0 $baseline
-
-  background: $c-base
-  border: 1px solid $c-base
-  color: #fff
+  border: 0
 
   cursor: pointer
   font-family: $ff-sans
-  font-size: $fs-0
-  line-height: $baseline
 
-  &:hover,
-  &:focus
-    background: darken($c-base, 10%)
-    color: #fff
-
-  &.is-subscribed
+  //- primary button
+  @if $type == primary
     background: $c-base
     color: #fff
 
     &:hover,
     &:focus
-      background: $c-red
+      background: darken($c-base, 10%)
 
-  &.is-canceled
-    background: lighten($c-base, 10%)
-    background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
-    text-shadow: 0px 0px 10px $c-base
+  //- secondary button
+  @else if $type == secondary
+    background: #fff
+    border: 1px solid $c-base
+    color: #000
 
     &:hover,
     &:focus
       background: $c-base
+      color: #fff
 
 
-//- To Subscribe Button
-=subscribe-button
-  display: inline-block
-  border-radius: $baseline / 2
-  height: $baseline
-  padding: 0 $baseline
+  //- large button
+  @if $size == large
+    border-radius: $baseline * 0.75
+    height: $baseline * 1.5
+    padding: 0 $baseline*1.5
 
-  background: #fff
-  border: 1px solid $c-base
-  color: #000
+    font-size: $fs-1
+    line-height: $baseline * 1.5
 
-  cursor: pointer
-  font-family: $ff-sans
-  font-size: $fs--1
-  line-height: $baseline
+  //- medium button
+  @else if $size == medium
+    border-radius: $baseline * 1.25/2
+    height: $baseline * 1.25
+    padding: 0 $baseline
 
-  &:hover,
-  &:focus
-    background: $c-base
-    color: #fff
+    font-size: $fs-0
+    line-height: $baseline * 1.25
 
-  &.is-subscribed
-    background: $c-base
-    color: #fff
+  //- small medium
+  @else if $size == small
+    border-radius: $baseline / 2
+    height: $baseline
+    padding: 0 $baseline/2
+
+    font-size: $fs--1
+    line-height: $baseline
+
+  //- disabled state
+  &:disabled
+    opacity: 0.5
+
+    cursor: default
 
     &:hover,
     &:focus
-      background: $c-red
-
+      background: $c-base
 
 
 //- Buttons with Icons
@@ -77,35 +74,37 @@ button-icon
 
   &::before
     +fa-icon()
+    @extend .fas
 
   &.recommend::before
-    content: $fa-var-star
+    content: fa-content($fa-var-star)
 
   &.share::before
-    content: $fa-var-retweet
+    content: fa-content($fa-var-retweet)
 
   &.consider-for-edition::before
-    content: $fa-var-newspaper-o
+    content: fa-content($fa-var-newspaper)
 
-  &.remove::before
-    content: $fa-var-times
+  &.remove::before,
+  &.close::before
+    content: fa-content($fa-var-times)
 
   &.edit::before
-    content: $fa-var-pencil
+    content: fa-content($fa-var-pencil-alt)
 
   &.up::before
-    content: $fa-var-arrow-up
+    content: fa-content($fa-var-arrow-up)
 
   &.down::before
-    content: $fa-var-arrow-down
+    content: fa-content($fa-var-arrow-down)
 
   &.menu::before
-    content: $fa-var-ellipsis-v
+    content: fa-content($fa-var-ellipsis-v)
 
   &.normal-view::before
-    content: $fa-var-align-justify
+    content: fa-content($fa-var-align-justify)
 
   &.column-view::before
-    content: $fa-var-align-justify
+    content: fa-content($fa-var-align-justify)
 
     transform: rotate(90deg)

@@ -4,7 +4,7 @@
     v-on-clickaway="() => closeSubscribeWidget()">
 
     <section v-if="frequency === null">
-      <header>{{ $t('How often do you want to publish new issue?') }}</header>
+      <header>{{ $t('How often do you want to publish?') }}</header>
       <ul>
         <li><a href="" @click.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Every 3 hours') }}</a></li>
         <li><a href="" @click.prevent="selectHowOften('3x_per_day', $event)">{{ $t('3x per day') }}</a></li>
@@ -185,7 +185,7 @@ export default {
         color: #000
 
       &::before
-        content: $fa-var-arrow-left
+        content: fa-content($fa-var-arrow-left)
 
 
 
@@ -225,6 +225,7 @@ export default {
 
       &::after
         +fa-icon()
+        @extend .fas
 
         position: absolute
         right: $baseline / 2
@@ -235,7 +236,7 @@ export default {
 
         font-size: $fs--1
 
-        content: $fa-var-arrow-right
+        content: fa-content($fa-var-arrow-right)
 
         transition: 0.15s all
 

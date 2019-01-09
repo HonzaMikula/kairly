@@ -49,7 +49,7 @@ def is_br(el):
 
 
 def get_textual_length(el):
-    # for each image inside add 200 chars comensation
+    # for each image inside add 200 chars compensation
     # nice to have, calculated image height and add exact compensation
     if el.tag == 'img':
         return 200

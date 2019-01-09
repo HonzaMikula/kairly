@@ -11,6 +11,7 @@ from django.utils.timezone import localdate
 from dal import autocomplete
 
 from .models import User, Category, CategoryUser
+from credits.utils import get_author_retained_credits, get_user_credits
 
 admin.site.unregister(Group)
 
@@ -21,6 +22,7 @@ class UserAdmin(OriginalUserAdmin):
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('name', 'email', 'kind', 'medium', 'picture', 'bio', 'timezone')}),
         (_('Integrations'), {'fields': ('twitter_account',)}),
+        (_('Pricing'), {'fields': ('price',)}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
@@ -30,9 +32,14 @@ class UserAdmin(OriginalUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('username', 'email', 'img', 'name', 'kind', 'medium', 'is_active', 'last_logged', 'activity')
+    list_display = ('username', 'email', 'img', 'name', 'kind', 'medium', 'price_int', 'is_active', 'last_logged', 'activity')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'kind')
     search_fields = ('username', 'name', 'email')
+
+    def price_int(self, obj):
+        return int(obj.price)
+    price_int.short_description = 'Price'
+    price_int.admin_order_field = 'price'
 
     def img(self, obj):
         if obj.picture:
@@ -69,6 +76,16 @@ class UserAdmin(OriginalUserAdmin):
             '<svg version="1.1" width="180" height="25" xmlns="http://www.w3.org/2000/svg">' +
             ''.join(content) +
             '</svg>'
+        )
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        if object_id:
+            extra_context['user_credits'] = get_user_credits(object_id)
+            extra_context['author_credits'] = get_author_retained_credits(object_id)
+
+        return super().change_view(
+            request, object_id, form_url, extra_context=extra_context,
         )
 
 

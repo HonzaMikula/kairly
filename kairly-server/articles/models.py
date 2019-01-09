@@ -1,6 +1,7 @@
 import rapidjson as json
 import math
 from datetime import datetime, timezone
+from decimal import Decimal
 import re
 import hashlib
 
@@ -9,6 +10,7 @@ import pytz
 
 from django.conf import settings
 from django.core.cache import cache
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -19,6 +21,7 @@ from django.utils.text import slugify
 from utils.json import datetime_isoformat_ecma262
 from utils.url import clean_url
 from .period import PeriodMixin, periodicity_to_json
+from .weight import calculate_post_weight
 
 
 class Post(models.Model):
@@ -55,6 +58,12 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
     attachments = models.TextField(null=True)
 
+    # pricing helpers
+    author_price = models.DecimalField(
+        _('Frozen author price at publish time'), max_digits=5, decimal_places=2,
+        null=True, validators=[MinValueValidator(Decimal(0))])
+    weight = models.PositiveIntegerField(null=True)
+
     @classmethod
     def find_by_source_url(cls, url):
         url = clean_url(url)
@@ -67,6 +76,8 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        recalculate_weight = kwargs.pop('recalculate_weight', False)
+
         if not self.slug and not self.draft:
             slug_words = []
             for part in re.split(r'[\?\.|\-]', self.title):
@@ -81,6 +92,12 @@ class Post(models.Model):
             slug += '--' + h.hexdigest()[:9]
 
             self.slug = slug
+
+        if self.author_price is None and not self.draft:
+            self.author_price = self.author.price
+
+        if not self.draft and (recalculate_weight or self.weight is None):
+            self.weight = calculate_post_weight(self)
 
         if self.source and not self.source_md5:
             self.source_md5 = hashlib.md5(self.source.encode()).hexdigest()
@@ -152,6 +169,9 @@ class Newspaper(models.Model, PeriodMixin):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True, blank=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
+    price = models.DecimalField(_('Price'), max_digits=5, decimal_places=2,
+                                default=Decimal(0),
+                                validators=[MinValueValidator(Decimal(0))])
 
     period = models.CharField(max_length=32, choices=PeriodMixin.PERIOD_CHOICES, default=PeriodMixin.DAILY)
     period_time = models.TimeField(null=True, blank=True)  # time for daily and weekly period
@@ -200,7 +220,8 @@ class Newspaper(models.Model, PeriodMixin):
             "periodicity": periodicity_to_json(self),
             "nextRelease": datetime_isoformat_ecma262(self.next_release.astimezone(tzinfo)),
             "issues": self.issues,
-            "likes": self.likes
+            "likes": self.likes,
+            "price": str(self.price),
         }
 
 
@@ -230,7 +251,7 @@ class Issue(models.Model):
         result = {
             "number": self.number,
             "type": 'newspaper',
-            "newspaper": newspaper.to_json(tzinfo),
+            "newspaper": newspaper.to_json(tzinfo),  # TODO return newspapers separately, as done alredy for subscriptions
             "time": datetime_isoformat_ecma262(self.published.astimezone(tzinfo))
         }
         result['id'] = '{}/{}'.format(result['newspaper']['fullName'], self.number)
@@ -258,17 +279,26 @@ class Subscription(models.Model):
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
+    suspended = models.BooleanField(default=False)
+    donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
-        return "Subscription to {}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
+        return "Subscription to {}}".format(self.newspaper.full_name)
 
     def to_json(self):
-        full_name = "{}/{}".format(self.newspaper.editor.username, self.newspaper.slug)
+        if self.suspended:
+            state = 'suspended'
+        elif self.renewal:
+            state = 'active'
+        else:
+            state = 'canceled'
+
         data = {}
-        data[full_name] = {
+        data[self.newspaper.full_name] = {
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
-            'renewal': self.renewal
+            'state': state,
+            'donation': str(self.donation) if self.donation != 0 else None,
         }
         return data
 
@@ -283,12 +313,21 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
     valid_from = models.DateTimeField()
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
+    suspended = models.BooleanField(default=False)
+    donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
         title = self.author.username
         return "SubscriptionToAuthor to {}".format(title)
 
     def to_json(self):
+        if self.suspended:
+            state = 'suspended'
+        elif self.renewal:
+            state = 'active'
+        else:
+            state = 'canceled'
+
         author_json = self.author.to_json()
         data = {}
         data[author_json['id']] = {
@@ -296,7 +335,8 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
             'periodicity': periodicity_to_json(self),
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
-            'renewal': self.renewal
+            'state': state,
+            'donation': str(self.donation) if self.donation != 0 else None,
         }
         return data
 

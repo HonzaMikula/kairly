@@ -5,7 +5,9 @@
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :title="$t('Jump to different time')"
       :id="currentAnchor"
-    >{{ dayTitle }} – {{ timeTitle }}</button>
+    ></button>
+
+    <h1 @click="isMenuOpen = !isMenuOpen">{{ dayTitle }} – {{ timeTitle }}</h1>
 
     <div
       v-if="isMenuOpen"
@@ -55,7 +57,7 @@ export default {
       const dt = moment(this.datetime)
       const today = moment().format(format);
       const day = dt.format(format)
-      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
+      const wod = day === today ? this.$t('Today') : dt.format("dddd")
       return `${wod} ${day}`
     },
 
@@ -96,6 +98,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/context-menu'
+
 .timeline-time-slot
   position: relative
   z-index: 2
@@ -106,34 +110,30 @@ export default {
   text-align: center
 
   &:first-of-type
-    margin-top: 0
+    margin-top: -($baseline * 1.5)
 
-  &::before,
-  &::after
-    position: absolute
+  //- Heading
+  > h1
+    font-family: $ff-serif
+    font-size: $fs-3
+    font-weight: 600
+    line-height: $baseline * 1.5
+    text-transform: capitalize
 
-    height: 3px
-    width: 50px
+    @media (max-width: $mobile)
+      font-size: $fs-2
 
-    background: #ddd
-
-    content: ''
-
-  &::before
-    margin: 11px 0 0 -70px
-
-  &::after
-    margin: 11px 0 0 20px
-
-
+  //- Calendar
   button
-    display: inline-block
-    border-radius: $baseline/2
-    height: $baseline
-    padding: 0 $baseline/2
-    margin-bottom: $baseline /4
+    position: absolute
+    right: -($baseline * 2)
 
-    background: #eee
+    display: inline-block
+    border-radius: 100%
+    height: $baseline * 1.5
+    width: $baseline * 1.5
+
+    background: #fafafa
     border: 0
     color: #333
 
@@ -141,12 +141,14 @@ export default {
     font-family: $ff-sans
     font-size: $fs-0
 
+    @media (max-width: $mobile)
+      display: none
+
     &::before
       +fa-icon()
+      @extend .fas
 
-      margin-right: $baseline / 4
-
-      content: $fa-var-calendar
+      content: fa-content($fa-var-calendar)
 
 
     &:focus,
@@ -156,6 +158,14 @@ export default {
 
 .timeline-navigation--menu
   +context-menu
+
+  left: auto
+  right: -($baseline * 2 + 105.5px)
+  top: $baseline * 2
+
+  @media (max-width: $mobile)
+    right: auto
+    left: 50%
 
   li a span
     border-radius: 100%

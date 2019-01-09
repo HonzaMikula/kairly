@@ -86,12 +86,32 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/context-menu'
+
 backlog-add-view
   position: relative
 
   button-icon
+    border-radius: 100%
+    display: inline-block
+    height: $baseline * 1.25
+    margin-left: $baseline / 4
+    width: $baseline * 1.25
+
+    background: #eee
+    color: #555
+
+    line-height: $baseline * 1.25
+    text-align: center
+
+    transition: 0.15s background
+
     &::before
-      content: $fa-var-newspaper-o
+      content: fa-content($fa-var-newspaper)
+
+    &:focus,
+    &:hover
+      background: #ddd
 
 backlog-add--dropdown
   +context-menu
@@ -99,8 +119,8 @@ backlog-add--dropdown
   position: absolute
   left: 50%
 
-  top: 40px
-  z-index: 1
+  top: 50px
+  z-index: 10
 
   @media (max-width: 1120px)
     left: inherit
@@ -112,14 +132,14 @@ backlog-add--dropdown
 
   li
     a::after
-      content: $fa-var-check
+      content: fa-content($fa-var-check)
       transition: 0.15s opacity
 
     &.is-selected a::after
       opacity: 1 !important
 
       font-size: $fs-0
-      content: $fa-var-check-circle
+      content: fa-content($fa-var-check-circle)
       transition: 0.15s opacity
 
 </style>

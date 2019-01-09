@@ -14,25 +14,7 @@
       </h3>
 
       <section>
-        <AuthorSubscription
-          v-if="subscription && subscription.renewal"
-          :subscription="subscription" :author="author"
-        />
-
-        <button
-          v-else
-          @click="$refs.followWidget.openSubscribeWidget()"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-          :title="canceled ? $t('You can renew subscription') : ''">
-          {{ $t('Subscribe') }}
-        </button>
-
-        <follow-author
-          ref="followWidget"
-          :author="author"
-          :subscription="subscription"
-          :cancelingSubscription="canceled"
-        />
+        <AuthorSubscription :author="author" />
       </section>
     </header>
 
@@ -44,7 +26,6 @@
 
 
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
-import FollowAuthor from '@/components/widgets/FollowAuthor'
 
 export default {
   name: 'AuthorWidget',
@@ -54,7 +35,6 @@ export default {
   },
 
   components: {
-    FollowAuthor,
     AuthorSubscription
   },
 
@@ -62,12 +42,15 @@ export default {
     subscription() {
       return this.$store.getters.getAuthorSubscription(this.author)
     },
-    canceled() { return this.subscription && !this.subscription.renewal}
+    canceled() { return this.subscription && this.subscription.state == 'canceled'}
   }
 }
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 author-widget-view
   position: relative
 
@@ -112,17 +95,6 @@ author-widget-view
       font-family: $ff-sans !important
       text-align: right
 
-    //- subscription menu adjustment for mobile
-    @media (max-width: $mobile)
-      .follow-author
-        margin-left: 0
-        left: auto
-        right: 0
-
-        &::after
-          left: auto
-          right: $baseline
-
 
     //- subscribe button
     section
@@ -133,16 +105,6 @@ author-widget-view
 
       font-size: $fs--1
       text-align: right
-
-      button
-        +subscribe-button
-
-        height: $baseline
-        padding: 0 $baseline/2
-
-        font-family: $ff-sans
-        font-size: $fs--1
-        line-height: $baseline
 
   //- bio
   > p

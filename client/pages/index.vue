@@ -2,29 +2,30 @@
   <app-layout>
     <timeline-view v-if="loggedIn">
       <Welcome v-if="showWelcome"/>
+
       <template v-else>
-        <template v-if="timeSlots.length">
-          <div
+        <header
+          class="timeline--header"
+          v-if="!loading"
+        >
+          <nuxt-link
+            :to="{name: 'timeline-date', params: {date: links.prev}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="'Previous day ('+ links.prev +')'"
+            class="previous"
+          ></nuxt-link>
+
+          <nuxt-link
             v-if="links.next"
-            class="timeline--top-pagination"
-          >
-            <p>{{date | moment($i18n.locale === 'cs' ? 'dddd, D. MMMM YYYY' : 'dddd, MMMM Do YYYY')}}</p>
+            :to="{name: 'timeline-date', params: {date: links.next}}"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="'Next day ('+ links.next +')'"
+            :class="['next', {'is-disabled': !links.next}]"
+          ></nuxt-link>
+        </header>
 
-            <nuxt-link
-              :to="{name: 'timeline-date', params: {date: links.prev}}"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="links.prev"
-            >{{ $t('Previous day') }}</nuxt-link>
-
-            <nuxt-link
-              v-if="links.next"
-              :to="{name: 'timeline-date', params: {date: links.next}}"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-              :title="links.next"
-            >{{ $t('Next day') }}</nuxt-link>
-          </div>
-
-          <template v-for="timeSlot in timeSlots" >
+        <template v-if="timeSlots.length > 0">
+          <template v-for="timeSlot in timeSlots">
             <jump-menu :datetime="timeSlot.time" :key="timeSlot.time" :timeSlots="timeSlots" />
 
             <IssueWrapper v-for="issue in timeSlot.issues"
@@ -36,38 +37,52 @@
         </template>
 
         <template v-else-if="!loading">
+          <div class="timeline-time-slot">
+            <h1>{{ dayTitle }}</h1>
+          </div>
+
           <div class="timeline--empty">
-            {{ $t('No articles or tweets.') }}
+            <h2>{{ $t('No articles or tweets yet') }}</h2>
+            <p>
+              {{ $t('Nothing was published for you yet. Check your subscriptions or explore more newspapers and authors.') }}
+            </p>
+
+            <nuxt-link to="/subscriptions">{{ $t('Subscriptions') }}</nuxt-link>
+            <nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link>
+
           </div>
         </template>
 
-        <div class="timeline--pagination" id="start" v-if="!loading">
+        <footer class="timeline--footer" id="start" v-if="!loading">
           <p>{{ $t("That's it. You read the entire day.") }}</p>
 
           <nuxt-link
             :to="{name: 'timeline-date', params: {date: links.prev}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="links.prev"
-          >{{ $t('Previous day') }}</nuxt-link>
+            :title="'Previous day ('+ links.prev +')'"
+            class="previous"
+          ></nuxt-link>
 
           <nuxt-link
             v-if="links.next"
             :to="{name: 'timeline-date', params: {date: links.next}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="links.next"
-          >{{ $t('Next day') }}</nuxt-link>
-
-        </div>
+            :title="'Next day ('+ links.next +')'"
+            :class="['next', {'is-disabled': !links.next}]"
+          ></nuxt-link>
+        </footer>
       </template>
 
       <loading-spinner v-if="loading"></loading-spinner>
     </timeline-view>
+
     <Homepage v-else/>
   </app-layout>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import moment from 'moment'
 
 import Homepage from '@/components/Homepage'
 import Welcome from '@/components/Welcome'
@@ -130,7 +145,16 @@ export default {
       if (this.loading) { return {} }
 
       return this.$store.state.timeline[this.date].links
-    }
+    },
+
+    dayTitle() {
+      const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
+      const dt = moment(this.date)
+      const today = moment().format(format);
+      const day = dt.format(format)
+      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
+      return `${wod} ${day}`
+    },
   },
 
   watch: {
@@ -203,14 +227,18 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- TIMELINE VIEW -//
 timeline-view
   display: block
-  padding: $baseline
+  padding: $baseline $baseline 0 $baseline
   margin: 0 auto
   max-width: 900px
 
   @media (max-width: $mobile)
-    padding: $baseline/2 0
+    padding: $baseline/2 0 0 0
 
 //- Empty timeline
 .timeline--empty
@@ -218,98 +246,114 @@ timeline-view
   margin: $baseline*2 auto
   padding: $baseline $baseline*2
 
-  background: #eee
-  border: 1px dashed #ccc
+  background: #fff
+  border: 1px solid #ddd
 
   text-align: center
 
+  @media (max-width: $mobile)
+    display: block
+    margin: $baseline*2 $baseline
+    padding: $baseline
 
-//- Pagination
-.timeline--pagination
+  h2
+    margin-bottom: $baseline
+
+    font-weight: 600
+    font-size: $fs-1
+
+  p
+    margin-bottom: $baseline
+
+  //- links
+  > a
+    +button
+    margin: 0 $baseline/4
+
+//- Header
+.timeline--header
+  display: flex
+  justify-content: space-between
+
+  @media (max-width: $mobile)
+    padding: 0 $baseline/4
+
+//- Footer
+.timeline--footer
+  display: flex
   padding-top: $baseline
 
   border-top: 3px solid #ddd
 
   text-align: center
 
+  @media (max-width: $mobile)
+    padding: $baseline $baseline/4
+
   //- you read the entire day title
   p
-    margin-bottom: $baseline
-
-    font-family: $ff-serif
-    font-size: $fs-2
-
-
-  //- buttons
-  a
-    display: inline-block
-    border-radius: $baseline
-    height: $baseline * 1.5
-    margin: 0 $baseline/2
-    width: 140px
-
-    background: $c-base
-    color: #fff
-
-    line-height: $baseline * 1.5
-    text-align: center
-
-    &:hover,
-    &:focus
-      background: darken($c-base, 10%)
-
-    @media (max-width: $mobile)
-      margin: 0 $baseline/4
-      width: 120px
-
-      font-size: $fs--1
-
-.timeline--top-pagination
-  display: flex
-  justify-content: center
-  padding-bottom: $baseline
-
-  border-bottom: 3px solid #ddd
-
-  text-align: center
-
-  p
-    margin: 0 $baseline
+    flex: 1
     order: 2
 
     font-family: $ff-serif
-    font-size: $fs-2
+    font-size: $fs-3
+    font-weight: 600
     line-height: $baseline * 1.5
 
-  //- buttons
+//- buttons for switching days
+.timeline--footer,
+.timeline--header
   a
-    display: inline-block
-    border-radius: $baseline
-    height: $baseline * 1.5
-    margin: 0 $baseline/2
-    width: 140px
+    position: relative
+    z-index: 3
 
-    background: $c-base
-    color: #fff
+    display: block
+    border-radius: 100%
+    height: $baseline * 1.5
+    width: $baseline * 1.5
+
+    background: #fff
+    color: #000
 
     line-height: $baseline * 1.5
     text-align: center
 
     &:hover,
     &:focus
-      background: darken($c-base, 10%)
+      background: $c-base
+      color: #fff
 
-    &:first-of-type
+    &.is-disabled
+      opacity: 0.5
+
+      cursor: default
+      pointer-events: none
+
+      &:hover,
+      &:focus
+        background: #fff
+        color: #000
+
+    &::before
+      +fa-icon()
+      @extend .fas
+
+    &.previous
       order: 1
 
-    &:last-of-type
+      &::before
+        content: fa-content($fa-var-arrow-left)
+
+    &.next
       order: 3
 
-    @media (max-width: $mobile)
-      margin: 0 $baseline/4
-      width: 120px
+      &::before
+        content: fa-content($fa-var-arrow-right)
 
-      font-size: $fs--1
+.timeline--header
+  margin-top: 0
+  padding-top: 0
 
+  border-top: 0
 
 </style>

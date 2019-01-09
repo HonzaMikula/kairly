@@ -3,9 +3,13 @@ import html
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
+from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
 
+from django.conf import settings
+from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.http import (HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
@@ -20,6 +24,7 @@ from utils.html import sanitize, convert_data_uris
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
+from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor)
 from .period import parse_periodicity
@@ -33,25 +38,26 @@ def subscriptions(request):
     now = datetime.now(request.user.tzinfo)
     subscribed_authors = {}
     query = SubscriptionToAuthor.objects.filter(
-        user=request.user,
-        valid_from__lte=now,
-        valid_to__gt=now
+        Q(valid_to__gt=now) | Q(renewal=True),
+        user=request.user
     ).select_related('author')
 
     for s in query:
         subscribed_authors.update(s.to_json())
 
     subscribed_newspapers = {}
+    newspapers = []
     query = Subscription.objects.filter(
-        user=request.user,
-        valid_from__lte=now,
-        valid_to__gt=now
+        Q(valid_to__gt=now) | Q(renewal=True),
+        user=request.user
     ).select_related('newspaper', 'newspaper__editor')
 
     for s in query:
+        newspapers.append(s.newspaper.to_json(request.user.tzinfo))
         subscribed_newspapers.update(s.to_json())
 
     return JsonResponse({
+        "newspapers": newspapers,
         "subscriptions": {
             "authors": subscribed_authors,
             "newspapers": subscribed_newspapers,
@@ -118,16 +124,34 @@ class NewspaperView(View):
                 issueNo = int(issueNo)
             except ValueError:
                 return HttpResponse('Invalid issue number.', status=400)
-            issues = [get_object_or_404(Issue, newspaper=newspaper, number=issueNo)]
+            issue = get_object_or_404(Issue, newspaper=newspaper, number=issueNo)
         else:
-            issues = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[:3]
+            try:
+                issue = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[0]
+            except IndexError:
+                issue = None
+
+        links = {}
+        if issue:
+            try:
+                prev_num = Issue.objects.filter(newspaper=newspaper, number__lt=issue.number).order_by('-number').values_list('number', flat=True)[0]
+                links['prev'] = '/{}/{}'.format(newspaper.full_name, prev_num)
+            except IndexError:
+                pass
+            try:
+                next_num = Issue.objects.filter(newspaper=newspaper, number__gt=issue.number).order_by('number').values_list('number', flat=True)[0]
+                links['next'] = '/{}/{}'.format(newspaper.full_name, next_num)
+            except IndexError:
+                pass
 
         return JsonResponse({
             'newspaper': newspaper.to_json(tzinfo),
-            'issues': [issue.to_json(anonymous=request.user.is_anonymous) for issue in issues]
+            'issue': issue.to_json(anonymous=request.user.is_anonymous) if issue else None,
+            'links': links
         })
 
     @ajax_login_required
+    @transaction.atomic
     def patch(self, request, username, newspapeper_slug):
         tzinfo = request.user.tzinfo
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
@@ -151,6 +175,12 @@ class NewspaperView(View):
             newspaper.period_time = periodicity.time
             newspaper.period_dow = periodicity.dow
 
+        if 'price' in payload:
+            price = Decimal(payload['price'])
+            if price not in settings.ALLOWED_PRICE_LEVELS:
+                return HttpResponseBadRequest('invalid price')
+            newspaper.price = price
+
         image = payload.get('image')
         if image:
             image = file_from_data_uri(image, "{}-{}".format(request.user.username, newspaper.slug))
@@ -163,6 +193,7 @@ class NewspaperView(View):
         })
 
     @ajax_login_required
+    @transaction.atomic
     def delete(self, request, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
@@ -203,6 +234,7 @@ def author_posts(request, username):
 
 
 @ajax_login_required
+@transaction.atomic
 def newspaper_backlog(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
@@ -247,6 +279,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
 
 @ajax_login_required
 @require_POST
+@transaction.atomic
 def backlog_publish(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
@@ -271,29 +304,51 @@ def backlog_publish(request, username, newspapeper_slug):
 class NewspaperSubscriptionView(View):
 
     @ajax_login_required
+    @transaction.atomic
     def post(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
         newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
+        payload = json.loads(request.body.decode('utf-8'))
+        donation = payload.get('donation')
+        if donation:
+            donation = Decimal(donation)
+            if donation < 0:
+                return HttpResponseBadRequest("Invalid donation")
+
+        credits = get_user_credits(request.user.id)
+
         try:
             # just reactivate renewal if current cancelled subscription exists
             subscription = Subscription.objects.get(
-                user=request.user, newspaper=newspaper,
-                valid_from__lte=now, valid_to__gt=now)
+                Q(valid_to__gt=now) | Q(renewal=True),
+                user=request.user, newspaper=newspaper)
             subscription.renewal = True
+            subscription.donation = donation or Decimal(0)
             subscription.save()
         except Subscription.DoesNotExist:
+            donation = donation or Decimal(0)
+            if credits < newspaper.price + donation:
+                return HttpResponse("Insufficient credit.", status=402)
+
             subscription = Subscription.objects.create(
                 user=request.user,
                 newspaper=newspaper,
                 valid_from=now,
-                valid_to=now + relativedelta(months=1)
+                valid_to=now + relativedelta(months=1),
+                donation=donation
             )
+            credits -= newspaper.price + donation
+            pay_newspaper_subscription(subscription)
 
-        return JsonResponse(subscription.to_json())
+        return JsonResponse({
+            'credits': str(credits),
+            'subscription': subscription.to_json()
+        })
 
     @ajax_login_required
+    @transaction.atomic
     def delete(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
@@ -301,17 +356,23 @@ class NewspaperSubscriptionView(View):
 
         try:
             subscription = Subscription.objects.get(
-                user=request.user, newspaper=newspaper,
-                valid_from__lte=now, valid_to__gt=now)
+                Q(renewal=True) | Q(suspended=True),
+                user=request.user, newspaper=newspaper
+            )
             subscription.renewal = False
+            subscription.suspended = False
             subscription.save()
-            return JsonResponse(subscription.to_json())
+            return JsonResponse({
+                'subscription': subscription.to_json() if subscription.valid_to > now else None
+            })
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()
 
 
 class AuthorSubscriptionView(View):
+
     @ajax_login_required
+    @transaction.atomic
     def post(self, request, username):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
@@ -325,36 +386,40 @@ class AuthorSubscriptionView(View):
         else:
             periodicity = None
 
-        renewal = payload.get('renewal')
+        keep_status = payload.get('keepStatus')
+        donation = payload.get('donation')
+        if donation:
+            donation = Decimal(donation)
+            if donation < 0:
+                return HttpResponseBadRequest("Invalid donation")
+
+        credits = get_user_credits(request.user.id)
 
         try:
             # Handle unique together manually, because
             # mysql ignores key when one of values is NULL (usually topic)
             # TODO when topic removed, is it still needed?
-            #
-            # There is still place for race condition
-            # it could be solved by adding topic slug on this table
-            # (with empty string value when there is no topic) and
-            # make unique together on that
+            # There is still place for race condition!
             subscription = SubscriptionToAuthor.objects.get(
+                Q(valid_to__gt=now) | Q(renewal=True),
                 user=request.user, author=author,
-                valid_from__lte=now, valid_to__gt=now
             )
-            if periodicity or renewal:
-                if periodicity:
-                    subscription.period = periodicity.frequency
-                    subscription.period_time = periodicity.time
-                    subscription.period_dow = periodicity.dow
-                if renewal:
-                    subscription.renewal = True
-                subscription.save()
-            else:
-                return HttpResponseBadRequest("Nothing to change.")
+            if periodicity:
+                subscription.period = periodicity.frequency
+                subscription.period_time = periodicity.time
+                subscription.period_dow = periodicity.dow
+            if not keep_status and not subscription.renewal:
+                subscription.renewal = True
+            if donation is not None:
+                subscription.donation = donation
+            subscription.save()
         except SubscriptionToAuthor.DoesNotExist:
             if not periodicity:
                 return HttpResponseBadRequest("Periodicity is required.")
-            if renewal:
-                return HttpResponseBadRequest("Nothong to renew")
+
+            donation = donation or Decimal(0)
+            if credits < author.price + donation:
+                return HttpResponse("Insufficient credit.", status=402)
 
             subscription = SubscriptionToAuthor.objects.create(
                 user=request.user,
@@ -363,23 +428,36 @@ class AuthorSubscriptionView(View):
                 period_time=periodicity.time,
                 period_dow=periodicity.dow,
                 valid_from=now,
-                valid_to=now + relativedelta(months=1)
+                valid_to=now + relativedelta(months=1),
+                donation=donation
             )
 
-        return JsonResponse(subscription.to_json())
+            pay_author_subscription(subscription)
+            credits -= author.price + donation
+
+        return JsonResponse({
+            'credits': str(credits),
+            'subscription': subscription.to_json()
+        })
 
     @ajax_login_required
+    @transaction.atomic
     def delete(self, request, username):
-        now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
+        now = datetime.now(request.user.tzinfo)
 
         try:
             subscription = SubscriptionToAuthor.objects.get(
+                Q(renewal=True) | Q(suspended=True),
                 user=request.user, author=author,
-                valid_from__lte=now, valid_to__gt=now)
+            )
             subscription.renewal = False
+            subscription.suspended = False
             subscription.save()
-            return JsonResponse(subscription.to_json())
+
+            return JsonResponse({
+                'subscription': subscription.to_json() if subscription.valid_to > now else None
+            })
         except Subscription.DoesNotExist:
             return HttpResponseNotFound()
 
@@ -462,7 +540,8 @@ class DraftDetailView(View):
 
     @ajax_login_required
     def patch(self, request, post_id):
-        # user can patch also published posts
+        """User can patch published posts and such use case is handled
+        also by this view despite its name."""
         post = get_object_or_404(Post, author=request.user, id=post_id)
         payload = json.loads(request.body.decode('utf-8'))
 
@@ -472,7 +551,7 @@ class DraftDetailView(View):
             return HttpResponseBadRequest(str(e))
 
         post.__dict__.update(attrs)
-        post.save()
+        post.save(recalculate_weight=True)
 
         return JsonResponse({
             'post': post.to_json()
@@ -520,6 +599,7 @@ def get_type_from_data_uri(data):
 
 @ajax_login_required
 @require_POST
+@transaction.atomic
 def start_newspaper(request, username):
     tzinfo = request.user.tzinfo
     author = get_object_or_404(User, username=username)
@@ -547,11 +627,16 @@ def start_newspaper(request, username):
     if image:
         image = file_from_data_uri(image, "{}-{}".format(author.username, base_slug))
 
+    price = Decimal(payload['price'])
+    if price not in settings.ALLOWED_PRICE_LEVELS:
+        return JsonResponse({'error': 'invalid price'}, status=400)
+
     newspaper = Newspaper.objects.create(
         title=title,
         slug=slug,
         description=description,
         image=image,
+        price=price,
         period=periodicity.frequency,
         period_time=periodicity.time,
         period_dow=periodicity.dow,
