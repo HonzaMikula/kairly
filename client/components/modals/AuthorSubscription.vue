@@ -61,7 +61,7 @@
         </template>
 
         <template v-else-if="subscription.state === 'active'">
-          <button class="confirm" @click="subscribe()">{{ $t('Update donation') }}</button>
+          <button class="confirm" @click="subscribe()">{{ $t('Update subscption') }}</button>
 
           <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
         </template>

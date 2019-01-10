@@ -359,6 +359,11 @@ class NewspaperSubscriptionView(View):
                 Q(renewal=True) | Q(suspended=True),
                 user=request.user, newspaper=newspaper
             )
+
+            if newspaper.price == 0:
+                subscription.delete()
+                return JsonResponse({'subscription': None})
+
             subscription.renewal = False
             subscription.suspended = False
             subscription.save()
@@ -451,6 +456,11 @@ class AuthorSubscriptionView(View):
                 Q(renewal=True) | Q(suspended=True),
                 user=request.user, author=author,
             )
+
+            if author.price == 0:
+                subscription.delete()
+                return JsonResponse({'subscription': None})
+
             subscription.renewal = False
             subscription.suspended = False
             subscription.save()
