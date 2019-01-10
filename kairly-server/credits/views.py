@@ -50,5 +50,5 @@ def buy_credits(request):
     clear_credits_cache(user_id=request.user.id, platform=True)
 
     return JsonResponse({
-        "credits": str(balance+amount),
+        "credits": str(balance + amount),
     })

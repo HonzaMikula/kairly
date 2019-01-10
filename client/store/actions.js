@@ -90,8 +90,8 @@ export async function subscribeNewspaper({ commit }, { fullName, donation }) {
   const body = {
     donation
   }
-  const { subscription } = await this.$axios.$post(`/newspapers/${fullName}/subscription`, body)
-  //commit('newspaper', { newspaper })
+  const { subscription, credits } = await this.$axios.$post(`/newspapers/${fullName}/subscription`, body)
+  commit('updateCredits', credits)
   commit('newspaperSubscription', {
     fullName,
     subscription,
@@ -128,6 +128,7 @@ export async function unsubscribeNewspaper({ commit }, { fullName }) {
 
 export async function subscribeAuthor({ commit }, { author, donation, periodicity, keepStatus=false }) {
   commit('invalidateTimeline')
+
   const body = { periodicity, donation }
   if (keepStatus) {
     // use when wanted to keep subscption in canceled status but edit just periodicity
