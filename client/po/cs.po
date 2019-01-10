@@ -633,7 +633,7 @@ msgstr "3x za den"
 
 #: pages/explore/recent.vue:4
 msgid "Recent Issues"
-msgstr "Nedávné vydání"
+msgstr "Nedávná vydání"
 
 #: pages/explore/recent.vue:17
 msgid "Recent Posts"
