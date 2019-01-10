@@ -12,7 +12,7 @@
       </p>
 
       <p style="margin-top: 20px">
-        {{ $t('Do you have need more credits?') }}
+        {{ $t('Do you need more credits?') }}
         <br>
 
         <button :disabled="btnDisabled" @click="requestCredits">{{ $t('Please, give me more') }}</button>

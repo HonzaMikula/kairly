@@ -1,20 +1,11 @@
-import time
-from datetime import timedelta
-from decimal import Decimal, ROUND_DOWN
-from collections import defaultdict
-from functools import lru_cache
+from decimal import Decimal
 
 from dateutil.relativedelta import relativedelta
 
-from django.db import transaction
-from django.db.models import Sum
-from django.conf import settings
 from django.utils import timezone
 from django.core.management.base import BaseCommand
 
-from articles.models import Issue, Newspaper, Post
-from credits.models import Transaction
-from credits.utils import get_newspaper_retained_credits, clear_credits_cache
+from articles.models import Post
 from users.models import User
 
 
