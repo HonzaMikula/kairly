@@ -68,6 +68,67 @@
       background: $c-base
 
 
+//- Button icon mixin
+=button-icon($icon, $type: icon, $collection: solid)
+  display: inline-flex
+  border-radius: $baseline * 1.25/2
+  height: $baseline * 1.25
+  padding: 0 $baseline 0 $baseline/4
+
+  background: #eee
+  border: 0
+  color: #000
+
+  font-size: $fs-0
+  line-height: $baseline * 1.25
+  text-align: center
+
+  cursor: pointer
+  transition: 0.15s background
+
+  @media (max-width: $mobile)
+    padding: 0
+
+  //- only icon
+  @if $type == icon
+    padding: 0
+
+  //- icon with text
+  @else if $type == icon-text
+    width: auto
+
+  &:hover,
+  &:focus
+    background: #ddd
+
+  &::before
+    +fa-icon()
+
+    //- solid collection
+    @if $collection == solid
+      @extend .fas
+
+    //- brand collection
+    @else if $collection == brand
+      @extend .fab
+
+    height: $baseline * 1.25
+    width: $baseline * 1.25
+
+    line-height: $baseline * 1.25
+
+    content: fa-content($icon)
+
+  &::after
+    height: $baseline * 1.25
+
+    line-height: $baseline * 1.25
+
+    content: attr(aria-label)
+
+    @media (max-width: $mobile)
+      display: none
+
 //- Buttons with Icons
 button-icon
   cursor: pointer
