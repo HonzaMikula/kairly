@@ -281,7 +281,7 @@ timeline-view
 //- Footer
 .timeline--footer
   display: flex
-  padding-top: $baseline
+  padding: $baseline 0
 
   border-top: 3px solid #ddd
 

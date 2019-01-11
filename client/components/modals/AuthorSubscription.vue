@@ -1,6 +1,6 @@
 <template>
   <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" @click.stop class="author-subscription-dialog">
+    <modal-dialog role="dialog" @click.stop="closeChangePeriodicityDialog()" class="author-subscription-dialog">
       <header>
         <h1 v-if="!subscription.state">{{ $t('Subscribe to author') }}</h1>
         <h1 v-else-if="subscription.state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
@@ -14,7 +14,7 @@
           <h3>{{ author.name }}</h3>
           <img :src="author.picture" />
           <time>{{ getPeriodicityLabel(periodicity) }}</time>
-          <a href="" @click.prevent="showChangePeriodicityDialog = !showChangePeriodicityDialog">{{ $t('change periodicity') }}</a>
+          <a href="" @click.prevent.stop="showChangePeriodicityDialog = !showChangePeriodicityDialog">{{ $t('change periodicity') }}</a>
         </section>
 
         <transition name="change-periodicity-animation">
@@ -23,6 +23,7 @@
             :author="author"
             :subscription="subscription"
             @changePeriodicity="changePeriodicity"
+            @closeDialog="closeChangePeriodicityDialog"
           />
         </transition>
 
@@ -61,7 +62,7 @@
         </template>
 
         <template v-else-if="subscription.state === 'active'">
-          <button class="confirm" @click="subscribe()">{{ $t('Update subscption') }}</button>
+          <button class="confirm" @click="subscribe()">{{ $t('Update subscription') }}</button>
 
           <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
         </template>
@@ -147,6 +148,10 @@ export default {
         "dow": dow,
         "time": time
       }
+    },
+
+    closeChangePeriodicityDialog()  {
+      this.showChangePeriodicityDialog = false
     },
 
     subscribe() {

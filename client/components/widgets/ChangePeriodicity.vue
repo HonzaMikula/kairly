@@ -1,7 +1,5 @@
 <template>
-  <div class="change-periodicity-view"
-    v-on-clickaway="() => closeSubscribeWidget()">
-
+  <div class="change-periodicity-view">
     <template v-if="frequency === null">
       <header>
         {{ $t('How often do you want to read it?') }}
@@ -9,7 +7,7 @@
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Immediately') }}</a></li>
+          <li><a href="" @click.stop.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Every 3 hours') }}</a></li>
           <li><a href="" @click.stop.prevent="selectHowOften('3x_per_day', $event)">{{ $t('3× per day') }}</a></li>
           <li><a href="" @click.stop.prevent="selectHowOften('daily', $event)">{{ $t('Daily') }}</a></li>
           <li><a href="" @click.stop.prevent="selectHowOften('weekly', $event)">{{ $t('Weekly') }}</a></li>
@@ -58,8 +56,6 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex'
-
-import { directive as onClickaway } from '@/lib/vue-clickaway'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
 
@@ -70,10 +66,6 @@ export default {
     author: Object,
     subscription: Object,
     cancelingSubscription: Boolean, // TODO maybe this will be deleted
-  },
-
-  directives: {
-    onClickaway
   },
 
   mixins: [PeriodicityMixin],
@@ -91,9 +83,6 @@ export default {
     ...mapMutations(['showError']),
 
     changePeriodicity() {
-      console.log(this.frequency)
-      console.log(this.dow)
-      console.log(this.time)
       this.$emit('changePeriodicity', this.frequency, this.dow, this.time)
     },
 
@@ -194,6 +183,9 @@ export default {
         color: #000
 
         line-height: $baseline * 1.25
+
+        &:first-letter
+          text-transform: capitalize
 
         transition: 0.15s all
 

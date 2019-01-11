@@ -39,7 +39,17 @@
           <post-detail--content v-html="post.content.content" itemprop="articleBody" />
 
           <post-detail--footer>
-            <consider-post :post="post" :showText="true" />
+            <span v-if="userNewspapers.length">
+              <button-test
+                role="button"
+                tabindex="0"
+                class="consider-post"
+                @click.prevent="showConsiderPost = true"
+                :aria-label="$t('Consider for newspaper')">
+              </button-test>
+
+              <consider-post v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
+            </span>
 
             <a
               :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${post.author.id}/${post.slug}`"
@@ -94,7 +104,7 @@
 
 <script>
 import { errorToParams } from '@/utils/errors'
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
@@ -151,7 +161,14 @@ export default {
 
   data() {
     return {
-      showContinueReading: false
+      showContinueReading: false,
+      showConsiderPost: false
+    }
+  },
+
+  methods: {
+    closeConsiderPost() {
+      this.showConsiderPost = false
     }
   },
 
@@ -159,6 +176,8 @@ export default {
     ...mapState({
       loggedIn: state => state.auth.loggedIn
     }),
+
+    ...mapGetters(['userNewspapers']),
 
     subscription() {
       return this.$store.getters.getAuthorSubscription(this.post.author)
@@ -291,48 +310,9 @@ post-detail--header
       object-fit: cover
 
   a.external-link
-    border-radius: 5px
-    height: $baseline * 1.25
-    margin-bottom: $baseline / 4
+    +button-icon($fa-var-external-link-square-alt, icon-text)
+
     margin-left: auto
-    padding: 0 $baseline/4
-
-    background: #eee
-    color: #000
-
-    cursor: pointer
-    font-size: $fs--1
-    line-height: $baseline * 1.25
-    vertical-align: middle
-
-    &::before
-      +fa-icon()
-      @extend .fas
-
-      position: relative
-      top: -1px
-
-      margin-right: $baseline / 4
-
-      font-size: $fs-1
-      vertical-align: middle
-
-      content: fa-content($fa-var-external-link-square-alt)
-
-      @media (max-width: $mobile)
-        margin-right: 0
-
-        padding: 0 $baseline/4
-
-    &:focus,
-    &:hover
-      background: #bbb
-      color: #000
-
-    span
-      @media (max-width: $mobile)
-        display: none
-
 
 //- Title
 post-detail--title
@@ -408,63 +388,31 @@ post-detail--perex
 
 //- Post Footer
 post-detail--footer
-  display: block
+  display: flex
   padding-bottom: $baseline / 4
   margin-bottom: $baseline / 2
   margin-top: $baseline
 
   border-bottom: 1px solid #eee
 
-  button-icon,
-  > a
-    border-radius: 5px
-    display: inline-block
-    height: $baseline * 1.25
-    margin-right: $baseline / 4
-    margin-bottom: $baseline / 4
-    padding: 0 $baseline/4
+  > *
+    margin-right: $baseline / 2
 
-    background: #eee
-    color: #000
+  //- consider button
+  > span
+    position: relative
 
-    cursor: pointer
-    font-size: $fs--1
-    line-height: $baseline * 1.25
-    vertical-align: middle
+  .consider-post
+    +button-icon($fa-var-newspaper, icon-text)
 
-    &::before
-      position: relative
-      top: -1px
+  //- share FB button
+  .share-fb
+    +button-icon($fa-var-facebook, icon, brand)
 
-      margin-right: $baseline / 4
-      vertical-align: middle
+  //- share Twitter button
+  .share-twitter
+    +button-icon($fa-var-twitter, icon, brand)
 
-      font-size: $fs-1
-
-    &:focus,
-    &:hover
-      background: #bbb
-      color: #000
-
-    &.share-fb::before
-      +fa-icon()
-      @extend .fab
-
-      margin-right: 0
-
-      font-size: $fs-1
-
-      content: fa-content($fa-var-facebook-square)
-
-    &.share-twitter::before
-      +fa-icon()
-      @extend .fab
-
-      margin-right: 0
-
-      font-size: $fs-1
-
-      content: fa-content($fa-var-twitter)
 
   a.read-full-article
     +button(primary, large)
@@ -473,7 +421,7 @@ post-detail--footer
     margin: 0 auto $baseline auto
 
   time
-    float: right
+    margin-left: auto
 
   //- Tweaks adding to backlog widget
   backlog-add--dropdown
@@ -495,6 +443,7 @@ post-detail--author
   grid-template-columns: $baseline*3 1fr auto
   grid-template-rows: $baseline auto
   grid-gap: $baseline/4 $baseline/2
+  padding-bottom: $baseline * 5
 
   @media (max-width: $mobile)
     grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-subscription" "post-detail-author-image post-detail-author-bio"
@@ -532,5 +481,23 @@ post-detail--author
 //- Author subscription
 post-detail--author--subscription
   position: relative
+
+  .author-subscription-view
+    //- when newspaper is subscribed
+    button.is-subscribed
+      +button(primary, medium)
+
+    //- when newspeper is suspended
+    button.is-suspended
+      +button(secondary, medium)
+
+      background: lighten($c-base, 10%)
+      background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
+
+    //- when newspaper is ready to be subsribed
+    //- when newspeper is canceled
+    button.to-subscribe,
+    button.is-canceled
+      +button(secondary, medium)
 
 </style>

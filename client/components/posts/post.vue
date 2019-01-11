@@ -152,7 +152,7 @@ post-component > header
     line-height: $baseline * 0.75
 
   //-- controls
-  section
+  > section
     display: flex
 
     > button-icon,
