@@ -124,7 +124,8 @@
 
     line-height: $baseline * 1.25
 
-    content: attr(aria-label)
+    @if $type == icon-text
+      content: attr(aria-label)
 
     @media (max-width: $mobile)
       display: none

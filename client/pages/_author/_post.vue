@@ -39,14 +39,14 @@
           <post-detail--content v-html="post.content.content" itemprop="articleBody" />
 
           <post-detail--footer>
-            <span v-if="userNewspapers.length">
-              <button-test
+            <span v-if="userNewspapers.length" @click.stop>
+              <button
                 role="button"
                 tabindex="0"
                 class="consider-post"
-                @click.prevent="showConsiderPost = true"
+                @click.stop.prevent="openConsiderPost()"
                 :aria-label="$t('Consider for newspaper')">
-              </button-test>
+              </button>
 
               <consider-post v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
             </span>
@@ -162,13 +162,18 @@ export default {
   data() {
     return {
       showContinueReading: false,
-      showConsiderPost: false
+      showConsiderPost: false,
+      scrollCounter: 0
     }
   },
 
   methods: {
     closeConsiderPost() {
       this.showConsiderPost = false
+    },
+
+    openConsiderPost() {
+      this.showConsiderPost = true
     }
   },
 
@@ -211,10 +216,11 @@ export default {
   updated() {
     // TODO dangerous if more component properties exists and updated called more
     // then once
-    if (process.client && this.$route.hash) {
+    if (process.client && this.$route.hash && this.scrollCounter == 0) {
       const anchor = document.querySelector(this.$route.hash)
       if (anchor) {
         anchor.scrollIntoView(true)
+        this.scrollCounter++
       }
     }
   }

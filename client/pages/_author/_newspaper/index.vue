@@ -78,6 +78,8 @@
       </div>
     </div>
 
+    {{issue}}
+
     <kairly-promo v-if="!loggedIn" />
   </app-layout>
 </template>
@@ -105,20 +107,41 @@ export default {
 
   head() {
     const { title, name, description, picture, editor} = this.newspaper
+
+    let metaTitle
+    let metaDescription
+    let metaUrl
+
+    //- act as an issue detail
+    if (this.$route.params.issue) {
+      metaTitle = `${title} #${this.issue.number} – Kairly`
+      metaDescription = this.issue.posts
+        .map(post => post.content.title)
+        .filter(title => title)
+        .join(' • ')
+      metaUrl = `https://kairly.com/${editor.id}/${name}/${this.issue.number}`
+    }
+    //- act as a newspaper detail
+    else {
+      metaTitle = `${title} – Kairly`
+      metaDescription = description
+      metaUrl = `https://kairly.com/${editor.id}/${name}`
+    }
+
     return {
-      title: `${title} – Kairly`,
+      title: metaTitle,
       meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:title', property: 'og:title', content: `${title} – Kairly` },
-        { hid: 'og:description', property: 'og:description', content: description },
+        { hid: 'description', name: 'description', content: metaDescription },
+        { hid: 'og:title', property: 'og:title', content: metaTitle },
+        { hid: 'og:description', property: 'og:description', content: metaDescription },
         { hid: 'og:image', property: 'og:image', content: picture },
         { hid: 'og:image:alt', property: 'og:image:alt', content: title },
         { hid: 'og:type', property: 'og:type', content: 'product' },
-        { hid: 'og:url', property: 'og:url', content: `https://www.kairly.com/${editor.id}/${name}` },
+        { hid: 'og:url', property: 'og:url', content: metaUrl },
         { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
         { hid: 'twitter:site', property: 'twitter:site', content: '@kairlyapp' },
-        { hid: 'twitter:title', property: 'twitter:title', content: `${title} – Kairly` },
-        { hid: 'twitter:description', property: 'twitter:description', content: description },
+        { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
+        { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: picture },
       ]
     }

@@ -26,7 +26,16 @@
       <section>
         <slot name="extendedControls"></slot>
         <slot name="controls">
-          <consider-post :post="post" />
+          <span>
+            <button
+              role="button"
+              tabindex="0"
+              class="consider-post"
+              @click.stop.prevent="showConsiderPost = true"
+              :aria-label="$t('Consider for newspaper')">
+            </button>
+            <consider-post v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
+          </span>
         </slot>
       </section>
 
@@ -59,7 +68,8 @@ export default {
   data: function () {
     return {
       isAuthorWidgetOpen: false,
-      timer: null
+      timer: null,
+      showConsiderPost: false
     }
   },
 
@@ -77,6 +87,10 @@ export default {
         this.isAuthorWidgetOpen = false
         this.$forceUpdate()
       }
+    },
+
+    closeConsiderPost() {
+      this.showConsiderPost = false
     }
   }
 }
@@ -155,11 +169,13 @@ post-component > header
   > section
     display: flex
 
+    > *
+      margin-left: $baseline / 4
+
     > button-icon,
     > a
       display: inline-block
       border-radius: 100%
-      margin-left: $baseline / 4
       height: $baseline * 1.25
       width: $baseline * 1.25
 
@@ -191,6 +207,14 @@ post-component > header
     > button
       +button(primary, medium)
       margin-left: $baseline / 4
+
+    //- consider post
+    > span
+      position: relative
+
+    .consider-post
+      +button-icon($fa-var-newspaper)
+
 
 
 </style>
