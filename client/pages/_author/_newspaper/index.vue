@@ -78,8 +78,6 @@
       </div>
     </div>
 
-    {{issue}}
-
     <kairly-promo v-if="!loggedIn" />
   </app-layout>
 </template>
