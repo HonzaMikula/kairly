@@ -12,7 +12,7 @@
 
       <aside>
         <section class="subscription--credits">
-          <h2><nuxt-link to="/user/transactions">{{ $t('Credits') }}</nuxt-link></h2>
+          <h2><nuxt-link to="/user/transactions/history">{{ $t('Credits') }}</nuxt-link></h2>
           <p>{{ $t('Current balance') }}</p>
           <p class="credits">{{ user.credits.split('.')[0] }} Kč</p>
 

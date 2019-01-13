@@ -23,8 +23,6 @@
 </template>
 
 <script>
-
-
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 
 export default {
