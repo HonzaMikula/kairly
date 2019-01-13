@@ -587,13 +587,16 @@ export default {
   cursor: pointer
   overflow: hidden
 
+  &::before
+    left: 0
+
 .picture-preview
   position: relative
   z-index: 10001
 
   display: block
-  width: 100%
   height: 100%
+  width: 100%
 
   background-color: rgba(200,200,200,.25)
 
@@ -606,7 +609,9 @@ export default {
   align-items: center
   justify-content: center
 
+  box-sizing: border-box
   height: 100%
+  padding: $baseline / 2
   width: 100%
 
   pointer-events: none

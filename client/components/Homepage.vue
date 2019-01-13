@@ -402,7 +402,7 @@ homepage--values
       margin-top: $baseline * 2
       font-size: $fs-3
 
-
+//- How it works
 homepage--how-it-works
   display: block
   padding: $baseline*2 $baseline $baseline $baseline
@@ -428,7 +428,7 @@ homepage--how-it-works
     max-width: 900px
     margin: 0 auto $baseline auto
 
-    font-size: $fs-1
+    font-size: $fs-0
 
     @media (max-width: $mobile)
       font-size: $fs-0

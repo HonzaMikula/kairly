@@ -28,7 +28,7 @@
       </div>
 
       <template v-if="issue">
-        <nav class="newspaper-detail--navigation">
+        <nav class="newspaper-detail--navigation" v-if="links.prev || links.next">
           <nuxt-link
             v-if="links.prev"
             :to="links.prev"

@@ -41,7 +41,6 @@ export default {
   methods: {
     closeDialog() {
       this.$emit('closeConsiderPostDialog')
-      console.log('test 100')
     },
 
     toggle(newspaper, ev) {

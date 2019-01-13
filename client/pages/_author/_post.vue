@@ -14,7 +14,7 @@
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
 
-          <a v-if="post.source" :href="post.source" class="external-link"><span>{{ $t('Original article') }}</span></a>
+          <a v-if="post.source" :href="post.source" class="external-link" :aria-label="$t('Original article')"></a>
         </post-detail--header>
 
         <post-detail--title id="start">
@@ -430,7 +430,7 @@ post-detail--footer
     margin-left: auto
 
   //- Tweaks adding to backlog widget
-  backlog-add--dropdown
+  .consider-post-view
     @media (max-width: 1120px)
       left: 0
       right: inherit
@@ -438,7 +438,7 @@ post-detail--footer
       margin-left: auto
 
       &::after
-        left: $baseline
+        left: $baseline * 0.75
         right: inherit
 
 

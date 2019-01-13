@@ -1,6 +1,6 @@
 <template>
   <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" @click.stop>
+    <modal-dialog role="dialog" @click.stop="showPeriodicityWidget = false">
       <header>
         <h1>{{ newspaper ? $t('Modify the newspaper') : $t('Start a new newspaper') }}</h1>
         <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
@@ -26,12 +26,12 @@
           <label>{{ $t('Periodicity') }}</label>
           <button
             v-if="!periodicity"
-            @click="$refs.periodWidget.openSubscribeWidget()"
+            @click.stop="showPeriodicityWidget = true"
           >
             {{ $t('Select periodicity') }}
           </button>
 
-          <span v-if="periodicity" @click="$refs.periodWidget.openSubscribeWidget()">
+          <span v-if="periodicity" @click.stop="showPeriodicityWidget = true">
             <template v-if="periodicity.frequency == '3x_per_day'">{{ $t('At 6:00, 12:00 and 18:00') }}</template>
 
             <template v-else-if="periodicity.frequency == '6x_per_day'">{{ $t('Every 3 hours') }}</template>
@@ -45,7 +45,7 @@
             </template>
           </span>
 
-          <period-widget ref="periodWidget" :onSelect="selectPeriodicity"/>
+          <period-widget v-if="showPeriodicityWidget" @changePeriodicity="changePeriodicity"/>
         </div>
 
         <div>
@@ -71,7 +71,7 @@
               buttonClass="btn"
               :prefill="this.newspaper && this.newspaper.picture"
               :customStrings="{
-                drag: $t('Drag or upload image')
+                drag: $t('Upload image')
               }"
             ></picture-input>
           </picture>
@@ -117,6 +117,7 @@ export default {
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
       price: this.newspaper ? ~~this.newspaper.price : 25,
       image: null,
+      showPeriodicityWidget: false
     }
   },
 
@@ -129,8 +130,14 @@ export default {
       this.image = image;
     },
 
-    selectPeriodicity(periodicity) {
-      this.periodicity = periodicity;
+    changePeriodicity(frequency, dow, time) {
+      this.showPeriodicityWidget = false
+
+      this.periodicity = {
+        "frequency": frequency,
+        "dow": dow,
+        "time": time
+      }
     },
 
     async submit() {
@@ -200,6 +207,8 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/buttons'
+
 //- EDIT NEWSPAPER -//
 .edit-newspaper-view
   display: block
@@ -282,6 +291,12 @@ export default {
   //- periodicity
   .periodicity
     position: relative
+
+    button
+      +button(primary, small)
+
+    > span
+      cursor: pointer
 
     .period-widget
       left: 0

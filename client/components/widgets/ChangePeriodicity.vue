@@ -1,5 +1,5 @@
 <template>
-  <div class="change-periodicity-view">
+  <div class="change-periodicity-view" @click.stop>
     <template v-if="frequency === null">
       <header>
         {{ $t('How often do you want to read it?') }}
@@ -7,10 +7,10 @@
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Every 3 hours') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectHowOften('3x_per_day', $event)">{{ $t('3× per day') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectHowOften('daily', $event)">{{ $t('Daily') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectHowOften('weekly', $event)">{{ $t('Weekly') }}</a></li>
+          <li><a href="" @click.prevent="selectHowOften('6x_per_day', $event)">{{ $t('Every 3 hours') }}</a></li>
+          <li><a href="" @click.prevent="selectHowOften('3x_per_day', $event)">{{ $t('3× per day') }}</a></li>
+          <li><a href="" @click.prevent="selectHowOften('daily', $event)">{{ $t('Daily') }}</a></li>
+          <li><a href="" @click.prevent="selectHowOften('weekly', $event)">{{ $t('Weekly') }}</a></li>
         </ul>
       </section>
     </template>
@@ -23,13 +23,13 @@
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="selectWhatDay('1', $event)">{{ $t('Monday') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('2', $event)">{{ $t('Tuesday') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('3', $event)">{{ $t('Wednesday') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('4', $event)">{{ $t('Thursday') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('5', $event)">{{ $t('Friday') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('6', $event)">{{ $t('Saturday') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatDay('7', $event)">{{ $t('Sunday') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatDay('1', $event)">{{ $t('Monday') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatDay('2', $event)">{{ $t('Tuesday') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatDay('3', $event)">{{ $t('Wednesday') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatDay('4', $event)">{{ $t('Thursday') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatDay('5', $event)">{{ $t('Friday') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatDay('6', $event)">{{ $t('Saturday') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatDay('7', $event)">{{ $t('Sunday') }}</a></li>
         </ul>
       </section>
     </template>
@@ -42,12 +42,12 @@
 
       <section>
         <ul>
-          <li><a href="" @click.stop.prevent="selectWhatTime('6:00', $event)">{{ $t('Early morning (6:00)') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('9:00', $event)">{{ $t('Morning (9:00)') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('12:00', $event)">{{ $t('Noon (12:00)') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('15:00', $event)">{{ $t('After noon (15:00)') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('18:00', $event)">{{ $t('Evening (18:00)') }}</a></li>
-          <li><a href="" @click.stop.prevent="selectWhatTime('21:00', $event)">{{ $t('Night (21:00)') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatTime('6:00', $event)">{{ $t('Early morning (6:00)') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatTime('9:00', $event)">{{ $t('Morning (9:00)') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatTime('12:00', $event)">{{ $t('Noon (12:00)') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatTime('15:00', $event)">{{ $t('After noon (15:00)') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatTime('18:00', $event)">{{ $t('Evening (18:00)') }}</a></li>
+          <li><a href="" @click.prevent="selectWhatTime('21:00', $event)">{{ $t('Night (21:00)') }}</a></li>
         </ul>
       </section>
     </template>

@@ -1,8 +1,5 @@
 <template>
-  <div class="period-widget"
-    v-if="show"
-    v-on-clickaway="() => closeSubscribeWidget()">
-
+  <div class="period-widget" @click.stop>
     <section v-if="frequency === null">
       <header>{{ $t('How often do you want to publish?') }}</header>
       <ul>
@@ -47,8 +44,6 @@
 </template>
 
 <script>
-import { directive as onClickaway } from '@/lib/vue-clickaway'
-
 export default {
   name: 'PeriodWidget',
 
@@ -56,13 +51,8 @@ export default {
     onSelect: Function
   },
 
-  directives: {
-    onClickaway
-  },
-
   data() {
     return {
-      show: false,
       frequency: null,
       dow: null,
       time: null,
@@ -70,17 +60,6 @@ export default {
   },
 
   methods: {
-    openSubscribeWidget() {
-      this.show = true
-    },
-
-    closeSubscribeWidget() {
-      this.show = false
-      this.frequency = null
-      this.time = null
-      this.dow = null
-    },
-
     goOneStepBack() {
       if (this.dow !== null) {
         this.dow = null
@@ -90,12 +69,7 @@ export default {
     },
 
     submit() {
-      this.onSelect({
-        frequency: this.frequency,
-        time: this.time,
-        dow: this.dow
-      })
-      this.closeSubscribeWidget()
+      this.$emit('changePeriodicity', this.frequency, this.dow, this.time)
     },
 
     selectHowOften(frequency, ev) {
@@ -222,6 +196,9 @@ export default {
       line-height: $baseline * 1.25
 
       transition: 0.15s all
+
+      &:first-letter
+        text-transform: capitalize
 
       &::after
         +fa-icon()

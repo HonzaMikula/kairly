@@ -31,6 +31,7 @@
               role="button"
               tabindex="0"
               class="consider-post"
+              v-if="userNewspapers.length > 0"
               @click.stop.prevent="showConsiderPost = true"
               :aria-label="$t('Consider for newspaper')">
             </button>
@@ -49,6 +50,8 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
+import { mapGetters } from 'vuex'
+
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 
@@ -71,6 +74,10 @@ export default {
       timer: null,
       showConsiderPost: false
     }
+  },
+
+  computed: {
+    ...mapGetters(['userNewspapers']),
   },
 
   methods: {

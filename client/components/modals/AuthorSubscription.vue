@@ -17,15 +17,12 @@
           <a href="" @click.prevent.stop="showChangePeriodicityDialog = !showChangePeriodicityDialog">{{ $t('change periodicity') }}</a>
         </section>
 
-        <transition name="change-periodicity-animation">
-          <ChangePeriodicity
-            v-if="showChangePeriodicityDialog"
-            :author="author"
-            :subscription="subscription"
-            @changePeriodicity="changePeriodicity"
-            @closeDialog="closeChangePeriodicityDialog"
-          />
-        </transition>
+        <ChangePeriodicity
+          v-if="showChangePeriodicityDialog"
+          :author="author"
+          :subscription="subscription"
+          @changePeriodicity="changePeriodicity"
+        />
 
         <section class="author-subscription--price">
           <h2 v-if="!subscription.state">{{ $t('It will cost you') }}</h2>

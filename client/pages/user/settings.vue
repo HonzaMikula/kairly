@@ -1,10 +1,10 @@
 <template>
   <app-layout :name="$t('Account Settings')">
-    <settings-view>
+    <div class="settings-view">
       <h1>{{ $t('Account Settings') }}</h1>
 
       <div>
-        <settings--profile-picture>
+        <div class="settings--profile-picture">
           <picture-input
             ref="pictureInput"
             @change="onPictureChange"
@@ -15,12 +15,12 @@
             buttonClass="btn"
             :prefill="this.user.picture"
             :customStrings="{
-              drag: $t('Drag or upload image')
+              drag: $t('Upload image')
             }">
           </picture-input>
-        </settings--profile-picture>
+        </div>
 
-        <settings--form>
+        <div class="settings--form">
           <h2>{{ $t('Personal') }}</h2>
           <div>
             <label for="name">{{ $t('Name') }}</label>
@@ -76,13 +76,13 @@
           </div>
 
           <button @click="submit">{{ $t('Save profile') }}</button>
-        </settings--form>
+        </div>
       </div>
 
       <portal to="modal" v-if="isChangePasswordOpen">
         <change-password :closeModal="closeChangePassword"></change-password>
       </portal>
-    </settings-view>
+    </div>
   </app-layout>
 </template>
 
@@ -174,7 +174,7 @@ export default {
 @import './styles/components/buttons'
 
 
-settings-view
+.settings-view
   position: relative
 
   display: block
@@ -209,7 +209,7 @@ settings-view
 
 
 //- Profile Picture
-settings--profile-picture
+.settings--profile-picture
 
   //- picture wrapper
   .preview-container
@@ -254,7 +254,7 @@ settings--profile-picture
       color: #000
 
 //- Form Section
-settings--form
+.settings--form
 
   > div
     dispay: table
