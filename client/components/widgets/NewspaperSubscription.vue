@@ -12,7 +12,7 @@
       @click="openModal"
     >
       <template v-if="subscription === false || subscription.state === 'canceled'">
-        {{ price === 0 ? $t('Subscribe for free') : $t('Subscribe for {price}', { price: priceWithCurrency }) }}
+        {{ price === 0 ? $t('Subscribe for free') : $t('Subscribe for {price}', { price: priceWithCurrency }) }}<template v-if="subscription.state === 'canceled'">*</template>
       </template>
 
       <template v-else-if="subscription.state === 'active'">

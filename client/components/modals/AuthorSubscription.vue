@@ -59,15 +59,25 @@
         </template>
 
         <template v-else-if="subscription.state === 'active'">
-          <button class="confirm" @click="subscribe()">{{ $t('Update subscription') }}</button>
+          <button class="confirm" @click="subscribe()">
+            {{ $t('Update subscription') }}
+          </button>
 
-          <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
+          <button class="cancel" @click="unsubscribe()">
+            {{ $t('Cancel subscription') }}
+          </button>
         </template>
 
         <template v-else-if="subscription.state === 'canceled'">
           <button class="confirm" @click="subscribe()">
             {{ $t('Renew subscription') }}
           </button>
+
+          <p>
+            {{ $t('You cancled the subscription. It expires on') }}
+            <strong>{{ subscription.to|moment('calendar') }}</strong>.
+            {{ $t('Till then you will still see the author on the timeline.') }}
+          </p>
         </template>
 
         <template v-else-if="subscription.state === 'suspended'">
@@ -164,7 +174,6 @@ export default {
       this.$store.dispatch('unsubscribeAuthor', {
         author: this.author,
       })
-      this.closeModal()
     }
   }
 }
@@ -177,6 +186,7 @@ export default {
 //- AUTHOR SUBSCRIPTION DIALOG -//
 modal-dialog.author-subscription-dialog
   display: block
+  max-width: 360px
 
   main
     padding: $baseline/2 $baseline/2 0 $baseline/2
@@ -186,7 +196,7 @@ modal-dialog.author-subscription-dialog
     display: grid
     grid-column-gap: $baseline / 2
     grid-template-columns: $baseline*2 1fr auto
-    grid-template-rows: $baseline*1.2 $baseline*0.8
+    grid-template-rows: $baseline*1.2 auto
     grid-template-areas: "author-image author-name ." "author-image author-periodicity author-change"
 
     img
@@ -291,7 +301,10 @@ modal-dialog.author-subscription-dialog
 
     //- foot note
     button + p
+      margin-top: $baseline / 4
+
       font-size: $fs--1
+      line-height: $baseline * 0.8
 
     a
       color: $c-base
