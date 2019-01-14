@@ -40,20 +40,22 @@ class Transaction(models.Model):
         return '{} {}'.format(self.user.username, self.credits)
 
     def to_json(self, reversed=False):
-        source = None
+        source = {}
         if self.from_user:
-            source = self.from_user.username
+            source['user'] = self.from_user.to_json()
         elif self.from_author:
-            source = self.from_author.username
+            source['author'] = self.from_author.to_json()
         elif self.from_newspaper:
-            source = self.from_newspaper.full_name
-        target = None
+            source['newspaper'] = self.from_newspaper.full_name
+
+        target = {}
         if self.to_user:
-            target = self.to_user.username
+            target['user'] = self.to_user.to_json()
         elif self.to_author:
-            target = self.to_author.username
+            target['author'] = self.to_author.to_json()
         elif self.to_newspaper:
-            target = self.to_newspaper.full_name
+            target['newspaper'] = self.to_newspaper.full_name
+
         return {
             'source': source,
             'target': target,

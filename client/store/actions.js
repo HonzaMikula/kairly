@@ -26,6 +26,20 @@ export async function getSubscriptions({ commit, state }) {
   return subscriptions
 }
 
+export async function getTransactions({ commit, state }) {
+  const { credits, transactions, newspapers } = await this.$axios.$get(`/transactions`)
+
+  transactions.forEach(t => {
+    if (t.source.newspaper) t.source.newspaper = newspapers[t.source.newspaper]
+    if (t.target.newspaper) t.target.newspaper = newspapers[t.target.newspaper]
+  })
+
+  commit('updateCredits', credits)
+  Object.keys(newspapers).forEach(newspaper => commit('newspaper', { newspaper }))
+
+  return transactions
+}
+
 export async function loadTimeline({ commit, state }, { date, cachedOnly=false}) {
 
   let cacheKey = date

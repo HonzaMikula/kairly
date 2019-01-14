@@ -2,22 +2,52 @@
   <table class="transactions--table">
     <thead>
       <tr>
+        <th>{{ $t('From ... To') }}</th>
         <th>{{ $t('Datetime') }}</th>
         <th>{{ $t('Credits') }}</th>
-        <th>{{ $t('From ... To') }}</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="t in transactions" :key="t.created">
-        <td>{{ t.created | moment('calendar') }}</td>
+        <td>
+          <div v-if="t.target.newspaper">
+            <!-- Newspaper subscption -->
+
+            <!--img :src="t.target.newspaper.picture" :alt="t.target.newspaper.name" /-->
+            {{ t.target.newspaper.title}}
+          </div>
+          <div v-if="t.source.newspaper">
+            <!-- Monthly reward for newspaper editor -->
+
+            <!--img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name" /-->
+            {{ t.source.newspaper.title}}
+          </div>
+
+          <div v-else-if="t.target.author">
+            <!-- Author subscption -->
+
+            <!--img :src="t.target.author.picture" :alt="t.target.author.name" /-->
+            {{ t.target.author.name }}
+          </div>
+          <div v-else-if="t.source.author">
+            <!-- Monthly reward for author -->
+            Income from subscriptions
+          </div>
+
+          <div v-else-if="t.kind === 'FC'">
+            Free credits
+          </div>
+        </td>
+        <td>{{ fmtTime(t.created) }}</td>
         <td>{{ t.credits > 0 ? '+' : ''}}{{ t.credits }}</td>
-        <td>{{ t.source }} ... {{ t.target }}</td>
       </tr>
     </tbody>
   </table>
 </template>
 
 <script>
+import moment from 'moment'
+
 import { mapState, mapGetters } from 'vuex'
 
 export default {
@@ -29,6 +59,13 @@ export default {
     }
   },
 
+  methods: {
+    fmtTime(datetime) {
+      const format = this.$i18n.locale === 'cs' ? 'D.M.YYYY HH:mm' : 'M/D/YYYY HH:mm'
+      return moment(datetime).format(format)
+    }
+  },
+
   async fetch({ store }) {
     if (store.state.auth.loggedIn) {
       await store.dispatch('getSubscriptions')
@@ -36,9 +73,7 @@ export default {
   },
 
   async asyncData({ app, store, params }) {
-    const { credits, transactions } = await app.$axios.$get(`/transactions`)
-
-    store.commit('updateCredits', credits)
+    const transactions = await store.dispatch('getTransactions')
 
     return {
       transactions

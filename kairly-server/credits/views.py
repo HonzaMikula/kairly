@@ -12,7 +12,15 @@ def get_transactions(request):
     transactions = list(Transaction.objects.filter(Q(from_user=request.user) | Q(to_user=request.user))
                         .order_by('-created'))
 
+    newspapers = {}
+    for t in transactions:
+        if t.from_newspaper and t.from_newspaper.full_name not in newspapers:
+            newspapers[t.from_newspaper.full_name] = t.from_newspaper.to_json(request.user.tzinfo)
+        if t.to_newspaper and t.to_newspaper.full_name not in newspapers:
+            newspapers[t.to_newspaper.full_name] = t.to_newspaper.to_json(request.user.tzinfo)
+
     return JsonResponse({
+        "newspapers": newspapers,
         "credits": str(get_user_credits(request.user.id)),
         "transactions": [t.to_json(reversed=bool(t.from_user_id)) for t in transactions]
     })
