@@ -1,18 +1,33 @@
 <template>
-  <div>
-    <div v-for="t in transactions">
-      <div v-if="t.author" style="display: flex">
-        {{ t.author.name }} *
-        {{ fmtTime(t.to) }} *
-        <AuthorSubscription :author="t.author" />
-      </div>
-      <div v-if="t.newspaper" style="display: flex">
-        {{ t.newspaper.name}} *
-        {{ fmtTime(t.to) }} *
-        <NewspaperSubscription :newspaper="t.newspaper" />
-      </div>
-    </div>
-  </div>
+  <table class="transactions--upcoming">
+    <thead>
+      <tr>
+        <th>{{ $t('Newspaper / Author') }}</th>
+        <th>{{ $t('Date of upcoming payment') }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="t in transactions" :key="t">
+        <template v-if="t.author">
+          <td class="author">
+            <img :src="t.author.picture" :alt="t.author.name" />
+            {{ t.author.name }}
+          </td>
+          <td>{{ fmtTime(t.to) }}</td>
+          <td><AuthorSubscription :author="t.author" /></td>
+        </template>
+        <template v-if="t.newspaper">
+          <td class="newspaper">
+            <img :src="t.newspaper.picture" :alt="t.newspaper.name" />
+            {{ t.newspaper.title}}
+          </td>
+          <td>{{ fmtTime(t.to) }}</td>
+          <td><NewspaperSubscription :newspaper="t.newspaper" /></td>
+        </template>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
@@ -24,11 +39,11 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
 export default {
-  name: 'UpcommingTransactions',
+  name: 'UpcomingTransactions',
 
   head() {
     return {
-      title: this.$t('Upcoming transactions') + ' – Kairly'
+      title: this.$t('Upcoming payments') + ' – Kairly'
     }
   },
 
@@ -83,4 +98,38 @@ export default {
 </script>
 
 <style lang="sass">
+.transactions--upcoming
+  width: 100%
+
+  thead th
+    padding: $baseline/4
+
+    background: #eee
+
+    font-weight: 600
+    text-align: left
+
+  tbody th,
+  tbody td
+    padding: $baseline/4
+
+    border-bottom: 1px solid #eee
+
+  td.author,
+  td.newspaper
+    display: flex
+
+    line-height: $baseline * 1.25
+
+  td.author img
+    border-radius: 100%
+    height: $baseline * 1.25
+    margin-right: $baseline / 4
+    width: $baseline * 1.25
+
+  td.newspaper img
+    height: $baseline * 1.25
+    margin-right: $baseline / 4
+    width: $baseline * 1.25
+
 </style>
