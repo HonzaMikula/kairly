@@ -2,44 +2,44 @@
   <table class="transactions--table">
     <thead>
       <tr>
-        <th>{{ $t('From ... To') }}</th>
+        <th>{{ $t('Subject') }}</th>
         <th>{{ $t('Datetime') }}</th>
         <th>{{ $t('Credits') }}</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="t in transactions" :key="t.created">
-        <td>
-          <div v-if="t.target.newspaper">
-            <!-- Newspaper subscption -->
+        <td v-if="t.target.newspaper" class="newspaper">
+            <!-- Newspaper subscription -->
 
-            <!--img :src="t.target.newspaper.picture" :alt="t.target.newspaper.name" /-->
+            <img :src="t.target.newspaper.picture" :alt="t.target.newspaper.name" />
             {{ t.target.newspaper.title}}
-          </div>
-          <div v-if="t.source.newspaper">
-            <!-- Monthly reward for newspaper editor -->
+        </td>
 
-            <!--img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name" /-->
-            {{ t.source.newspaper.title}}
-          </div>
+        <td v-if="t.source.newspaper">
+          <!-- Monthly reward for newspaper editor -->
 
-          <div v-else-if="t.target.author">
-            <!-- Author subscption -->
+          <img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name" />
+          {{ t.source.newspaper.title}}
+        </td>
 
-            <!--img :src="t.target.author.picture" :alt="t.target.author.name" /-->
-            {{ t.target.author.name }}
-          </div>
-          <div v-else-if="t.source.author">
-            <!-- Monthly reward for author -->
-            Income from subscriptions
-          </div>
+        <td v-else-if="t.target.author" class="author">
+          <!-- Author subscription -->
 
-          <div v-else-if="t.kind === 'FC'">
-            Free credits
-          </div>
+          <img :src="t.target.author.picture" :alt="t.target.author.name" />
+          {{ t.target.author.name }}
+        </td>
+
+        <td v-else-if="t.source.author">
+          <!-- Monthly reward for author -->
+          Income from subscriptions
+        </td>
+
+        <td v-else-if="t.kind === 'FC'">
+          Free credits
         </td>
         <td>{{ fmtTime(t.created) }}</td>
-        <td>{{ t.credits > 0 ? '+' : ''}}{{ t.credits }}</td>
+        <td>{{ t.credits > 0 ? '+' : ''}}{{ t.credits }} Kč</td>
       </tr>
     </tbody>
   </table>
@@ -96,8 +96,22 @@ export default {
 
   tbody th,
   tbody td
-    padding: $baseline/4
+    padding: $baseline / 4
 
     border-bottom: 1px solid #eee
+
+    line-height: $baseline * 1.25
+
+    img
+      float: left
+      height: $baseline * 1.25
+      margin-right: $baseline / 4
+      width: $baseline * 1.25
+
+      object-fit: cover
+
+  td.author img
+    border-radius: 100%
+
 
 </style>

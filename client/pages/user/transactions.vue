@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Transactions')">
+  <app-layout :name="$t('Credits')">
     <div class="transactions">
       <header>
         <h1>{{ $t('Credit balance') }}</h1>
@@ -114,5 +114,7 @@ export default {
     font-weight: 600
 
     &.nuxt-link-active
+      border-bottom: 2px solid #000
       color: #000
+
 </style>

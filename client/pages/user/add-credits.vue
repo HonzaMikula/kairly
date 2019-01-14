@@ -1,7 +1,7 @@
 <template>
-  <app-layout :name="$t('Add Credit')">
+  <app-layout :name="$t('Buy credits')">
     <div class="buy-credits-view">
-      <h1>{{ $t('Buy Credits') }}</h1>
+      <h1>{{ $t('Buy credits') }}</h1>
 
       <p>
         {{ $t('Kairly is currently in beta. You will receive free credit automatically every month.') }}
@@ -11,12 +11,11 @@
         {{ $t('In future you will have to buy credit. But we will also start paying authors and editors for their good work.') }}
       </p>
 
-      <p style="margin-top: 20px">
+      <p>
         {{ $t('Do you need more credits?') }}
-        <br>
-
-        <button :disabled="btnDisabled" @click="requestCredits">{{ $t('Please, give me more') }}</button>
       </p>
+
+      <button :disabled="btnDisabled" @click="requestCredits">{{ $t('Please, give me more') }}</button>
     </div>
   </app-layout>
 </template>
@@ -32,7 +31,7 @@ export default {
 
   head() {
     return {
-      title: this.$t('Add Credit – Kairly')
+      title: this.$t('Buy credits') +' – Kairly'
     }
   },
 
@@ -82,7 +81,7 @@ export default {
 .buy-credits-view
   max-width: 900px
   margin: 0 auto
-  padding: $baseline 0
+  padding: $baseline
 
   //- Heading
   > h1
@@ -91,8 +90,10 @@ export default {
     font-weight: 600
     font-size: $fs-3
 
+  > p
+    margin-bottom: $baseline
+
   button
     +button
-    margin-top: 10px
 
 </style>

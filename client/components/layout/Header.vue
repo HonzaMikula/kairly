@@ -32,7 +32,7 @@
 
       <nav class="app-header--user-profile" v-if="user">
         <nuxt-link
-          to="/user/transactions/history"
+          to="/user/transactions/upcoming"
           class="credits"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
           :title="$t('Available credits')">

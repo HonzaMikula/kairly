@@ -84,7 +84,7 @@ export default {
 
   methods: {
     fmtTime(datetime) {
-      const format = this.$i18n.locale === 'cs' ? 'D.M.YYYY HH:mm' : 'M/D/YYYY HH:mm'
+      const format = this.$i18n.locale === 'cs' ? 'D.M.YYYY' : 'M/D/YYYY'
       return moment(datetime).format(format)
     }
   },
@@ -115,21 +115,17 @@ export default {
 
     border-bottom: 1px solid #eee
 
-  td.author,
-  td.newspaper
-    display: flex
-
     line-height: $baseline * 1.25
+
+    img
+      float: left
+      height: $baseline * 1.25
+      margin-right: $baseline / 4
+      width: $baseline * 1.25
+
+      object-fit: cover
 
   td.author img
     border-radius: 100%
-    height: $baseline * 1.25
-    margin-right: $baseline / 4
-    width: $baseline * 1.25
-
-  td.newspaper img
-    height: $baseline * 1.25
-    margin-right: $baseline / 4
-    width: $baseline * 1.25
 
 </style>

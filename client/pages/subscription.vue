@@ -129,6 +129,7 @@ my-subscription-view
         margin-right: $baseline / 2
 
       &.nuxt-link-active
+        border-bottom: 2px solid #000
         color: #000
 
   //- Main view
