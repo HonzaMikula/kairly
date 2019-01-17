@@ -16,7 +16,7 @@
       </template>
 
       <template v-else-if="subscription.state === 'active'">
-        {{ price === 0 ? $t('Subscribed for free') : $t('Subscribed for {price}', { price: priceWithCurrency }) }}
+        {{ price === 0 ? $t('Subscribed for free') : $t('Subscribed for {price}', { price: priceWithCurrency }) }}<template v-if="subscription.donation > 0">*</template>
       </template>
 
 
@@ -74,7 +74,7 @@ export default {
     },
 
     price() {
-      return ~~this.newspaper.price.split('.')[0]
+      return ~~(this.newspaper.price.split('.')[0]*1 + (this.subscription.donation * 1))
     },
 
     priceWithCurrency() {

@@ -401,7 +401,8 @@ post-detail--footer
 
   border-bottom: 1px solid #eee
 
-  > *
+  > span,
+  > a
     margin-right: $baseline / 2
 
   //- consider button
