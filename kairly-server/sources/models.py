@@ -10,10 +10,17 @@ from bs4 import UnicodeDammit
 from django.db import models
 from django.core.cache import cache
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
+from django.db.models import Q
+from django.dispatch import receiver
 
 from sources.parser import ArticleParser, split_article_to_perex_and_content, validate_rules
 from sources.directives import validate_directives, parse as parse_directives
 from utils.url import clean_url
+
+from articles.models import Backlog
+from articles.signals import post_publish
 
 
 class Channel(models.Model):
@@ -174,3 +181,44 @@ class Channel(models.Model):
 
         for el in htmltree.cssselect('a'):
             fix_attr(el, 'href')
+
+
+class Automation(models.Model):
+    newspaper = models.ForeignKey('articles.Newspaper', models.CASCADE)
+
+    def __str__(self):
+        return self.newspaper.full_name
+
+
+class AutomationItem(models.Model):
+    NEWSPAPER = 'newspaper'
+    TWEET = 'tweet'
+
+    KIND_CHOICES = (
+        (NEWSPAPER, _('Newspaper')),
+        (TWEET, _('Tweet')),
+    )
+
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE)
+    kind = models.CharField(max_length=60, choices=KIND_CHOICES, blank=True, null=True)
+    automation = models.ForeignKey(Automation, on_delete=models.CASCADE)
+
+    def __str__(self):
+        if self.kind:
+            return f"{self.author.username}/{self.kind}"
+        else:
+            return self.author.username
+
+
+@receiver(post_publish)
+def on_post_published(sender, post, **kwargs):
+    q = Automation.objects.filter(
+        Q(automationitem__kind__isnull=True) | Q(automationitem__kind=post.kind),
+        automationitem__author=post.author,
+    )
+    for automation in q:
+        Backlog.objects.create(
+            newspaper_id=automation.newspaper_id,
+            post=post,
+            publish_stamp=now()
+        )

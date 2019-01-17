@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.core.management.base import BaseCommand
 
 from articles.models import Post, Newspaper, Backlog
+from articles.signals import post_publish
 from sources.models import Channel
 
 
@@ -112,6 +113,7 @@ class Command(BaseCommand):
 
         if post is None:
             post = Post.objects.create(**args)
+            post_publish.send(sender=self.__class__, post=post)
             updated = False
         else:
             post.__dict__.update(args)

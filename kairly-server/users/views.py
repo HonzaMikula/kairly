@@ -219,7 +219,7 @@ def explore_tab(request, tab):
 
 class UserAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        if not self.request.user.is_staff:
+        if not self.request.user.is_staff and not self.request.user.is_superuser:
             return User.objects.none()
 
         qs = User.objects.all()

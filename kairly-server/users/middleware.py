@@ -34,7 +34,7 @@ def JwtAuthenticationMiddleware(get_response):
                 except User.DoesNotExist as e:
                     logging.error(str(e))
 
-        if request.is_ajax() or user:
+        if (request.is_ajax() and not request.path.startswith('/api/autocomplete/')) or user:
             if user:
                 request.user = user
             else:

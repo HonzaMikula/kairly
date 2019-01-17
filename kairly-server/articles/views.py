@@ -27,6 +27,7 @@ from users.models import User
 from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor)
+from .signals import post_publish
 from .period import parse_periodicity
 
 
@@ -584,6 +585,8 @@ def publish_draft(request, post_id):
     post.draft = False
     post.published = timezone_now()
     post.save()
+
+    post_publish.send(sender=publish_draft, post=post)
 
     return JsonResponse({
         'post': post.to_json()

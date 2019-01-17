@@ -5,13 +5,16 @@ import feedparser
 import requests
 
 
+from django import forms
 from django.contrib import admin
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.urls import path
+from dal import autocomplete
 
-from .models import Channel
+from users.models import User
+from .models import Channel, Automation, AutomationItem
 
 
 FakeEntry = namedtuple('FakeEntry', ['link'])
@@ -104,3 +107,31 @@ class ChannelAdmin(admin.ModelAdmin):
         ])
 
         return HttpResponse(document)
+
+
+class AutomationItemForm(forms.ModelForm):
+    author = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        widget=autocomplete.ModelSelect2(url='user-autocomplete')
+    )
+
+    class Meta:
+        model = AutomationItem
+        fields = ('author', 'kind')
+
+
+class AutomationItemInline(admin.TabularInline):
+    model = AutomationItem
+    form = AutomationItemForm
+    extra = 1
+
+
+# class AutomationItemInline(admin.TabularInline):
+#     model = AutomationItem
+#     fields = ('author', 'kind')
+#     extra = 1
+
+
+@admin.register(Automation)
+class AutomationAdmin(admin.ModelAdmin):
+    inlines = [AutomationItemInline]

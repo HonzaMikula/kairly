@@ -15,6 +15,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from articles.models import Post
+from articles.signals import post_publish
 from users.models import User
 
 
@@ -198,6 +199,7 @@ class Command(BaseCommand):
 
                     if post is None:
                         post = Post.objects.create(**args)
+                        post_publish.send(sender=self.__class__, post=post)
                     else:
                         post.__dict__.update(args)
                         post.save()
