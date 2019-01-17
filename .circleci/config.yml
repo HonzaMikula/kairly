@@ -37,7 +37,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:latest
+      - image: circleci/node:9.10.1
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -63,7 +63,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v3-dependencies-{{ checksum "client/package.json" }}
+          - v4-dependencies-{{ checksum "client/package.json" }}
 
       - run:
           command: |
@@ -73,7 +73,7 @@ jobs:
       - save_cache:
           paths:
             - client/node_modules
-          key: v3-dependencies-{{ checksum "client/package.json" }}
+          key: v4-dependencies-{{ checksum "client/package.json" }}
 
       - run: invoke deploy
       - run: invoke deploy.cron
