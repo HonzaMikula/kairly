@@ -16,6 +16,32 @@
         </form>
       </div>
       <!--End mc_embed_signup-->
+      <div class="kairly-promo--learn-more">
+        <nuxt-link to="/">{{ $t('Learn more about Kairly') }}</nuxt-link>
+      </div>
+
+      <div class="kairly-promo--social-media">
+        <a
+          href="https://www.facebook.com/kairlynews/"
+          class="facebook"
+          :title="$t('Follow us on Facebook')"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
+
+        <a
+          href="https://twitter.com/kairlynews"
+          class="twitter"
+          :title="$t('Follow us on Twitter')"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
+
+        <a
+          href="https://www.linkedin.com/company/kairly/"
+          class="linkedin"
+          :title="$t('Follow us on LinkedIn')"
+          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+        </a>
+      </div>
 
     </div>
   </div>
@@ -133,4 +159,58 @@ export default {
     border: none
     min-height: 0px
     padding-bottom: 0px
+
+//- Learn more links
+.kairly-promo--learn-more
+  a
+    color: #000
+    text-shadow: 0 0 3px #fff
+
+    font-family: $ff-sans
+    text-decoration: underline
+
+    &:hover,
+    &:focus
+      text-decoration: none
+
+
+//- Social media links
+.kairly-promo--social-media
+  padding-top: $baseline
+
+  a
+    border-radius: 100%
+    display: inline-block
+    height: $baseline * 1.5
+    margin: 0 $baseline/2
+    width: $baseline * 1.5
+
+    background: rgba(0, 0, 0, 0.1)
+    color: #fff
+
+    font-size: $fs-3
+    line-height: $baseline * 1.5
+    text-align: center
+
+    transition: 0.15s all
+
+    &:focus,
+    &:hover
+      background: #fff
+      color: #000
+
+    &::before
+      +fa-icon()
+      @extend .fab
+      line-height: $baseline * 1.5
+      vertical-align: top
+
+    &.facebook::before
+      content: fa-content($fa-var-facebook)
+
+    &.twitter::before
+      content: fa-content($fa-var-twitter)
+
+    &.linkedin::before
+      content: fa-content($fa-var-linkedin)
 </style>

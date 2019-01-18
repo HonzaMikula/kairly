@@ -139,21 +139,21 @@
         <a
           href="https://www.facebook.com/kairlynews/"
           class="facebook"
-          :title="$t('Follow us Facebook')"
+          :title="$t('Follow us on Facebook')"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
         </a>
 
         <a
           href="https://twitter.com/kairlynews"
           class="twitter"
-          :title="$t('Follow us Twitter')"
+          :title="$t('Follow us on Twitter')"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
         </a>
 
         <a
           href="https://www.linkedin.com/company/kairly/"
           class="linkedin"
-          :title="$t('Follow us LinkedIn')"
+          :title="$t('Follow us on LinkedIn')"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
         </a>
       </p>
@@ -563,7 +563,9 @@ homepage--help-us--contact-us
 
       &::before
         +fa-icon()
-        @extend .fas
+        @extend .fab
+        line-height: $baseline * 1.5
+        vertical-align: top
 
     a.facebook::before
       content: fa-content($fa-var-facebook)
