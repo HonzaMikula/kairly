@@ -47,7 +47,7 @@
         </nav>
 
         <div class="newspaper-detail--issue">
-          <Issue :issue="issue" :subscription="newspaper.subscription" :hideDate="true">
+          <Issue :issue="issue" :subscription="newspaper.subscription" hideDate="true" showTail="true">
             <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issue.time | moment('D. M. YYYY')}}</template>
           </Issue>
         </div>

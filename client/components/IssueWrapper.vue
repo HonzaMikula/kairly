@@ -21,8 +21,9 @@
       :key="post.id"
     />
 
+    {{abc}}
     <footer>
-      <button v-if="tailPostsCount > 0 && !expanded" @click.prevent="expandIssue">
+      <button v-if="(tailPostsCount > 0 && !expanded)" @click.prevent="expandIssue">
         {{ $t('Show more') }} ({{tailPostsCount}})
       </button>
     </footer>
@@ -49,6 +50,7 @@ export default {
     issue: Object,
     subscription: Boolean,
     hideDate: Boolean,
+    showTail: Boolean
   },
 
   components: {
@@ -66,7 +68,12 @@ export default {
 
   computed: {
     expanded() {
-      return !!this.$store.state.timelineExpandedIssues[this.issue.id]
+      if (this.showTail) {
+        return true
+      }
+      else {
+        return !!this.$store.state.timelineExpandedIssues[this.issue.id]
+      }
     },
 
     headPosts() {
