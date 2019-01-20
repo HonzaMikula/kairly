@@ -11,23 +11,26 @@
       <tr v-for="t in transactions" :key="t.created">
         <td v-if="t.target.newspaper" class="newspaper">
             <!-- Newspaper subscription -->
-
-            <img :src="t.target.newspaper.picture" :alt="t.target.newspaper.name" />
-            {{ t.target.newspaper.title}}
+            <nuxt-link :to="{name: 'author-newspaper', params: {author: t.target.newspaper.editor.id, newspaper: t.target.newspaper.name}}">
+              <img :src="t.target.newspaper.picture" :alt="t.target.newspaper.name" />
+              {{ t.target.newspaper.title}}
+            </nuxt-link>
         </td>
 
         <td v-if="t.source.newspaper">
           <!-- Monthly reward for newspaper editor -->
-
-          <img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name" />
-          {{ t.source.newspaper.title}}
+          <nuxt-link :to="{name: 'author-newspaper', params: {author: t.source.newspaper.editor.id, newspaper: t.source.newspaper.name}}">
+            <img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name" />
+            {{ t.source.newspaper.title}}
+          </nuxt-link>
         </td>
 
         <td v-else-if="t.target.author" class="author">
           <!-- Author subscription -->
-
-          <img :src="t.target.author.picture" :alt="t.target.author.name" />
-          {{ t.target.author.name }}
+          <nuxt-link :to="{name: 'author', params: {author: t.target.author.id}}">
+            <img :src="t.target.author.picture" :alt="t.target.author.name" />
+            {{ t.target.author.name }}
+          </nuxt-link>
         </td>
 
         <td v-else-if="t.source.author">
@@ -85,6 +88,9 @@ export default {
 <style lang="sass">
 .transactions--table
   width: 100%
+
+  a
+    color: #000
 
   thead th
     padding: $baseline/4

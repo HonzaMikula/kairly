@@ -11,16 +11,20 @@
       <tr v-for="t in transactions" :key="t">
         <template v-if="t.author">
           <td class="author">
-            <img :src="t.author.picture" :alt="t.author.name" />
-            {{ t.author.name }}
+            <nuxt-link :to="{name: 'author', params: {author: t.author.id}}">
+              <img :src="t.author.picture" :alt="t.author.name" />
+              {{ t.author.name }}
+            </nuxt-link>
           </td>
           <td>{{ fmtTime(t.to) }}</td>
           <td><AuthorSubscription :author="t.author" /></td>
         </template>
         <template v-if="t.newspaper">
           <td class="newspaper">
-            <img :src="t.newspaper.picture" :alt="t.newspaper.name" />
-            {{ t.newspaper.title}}
+            <nuxt-link :to="{name: 'author-newspaper', params: {author: t.newspaper.editor.id, newspaper: t.newspaper.name}}">
+              <img :src="t.newspaper.picture" :alt="t.newspaper.name" />
+              {{ t.newspaper.title}}
+            </nuxt-link>
           </td>
           <td>{{ fmtTime(t.to) }}</td>
           <td><NewspaperSubscription :newspaper="t.newspaper" /></td>
@@ -100,6 +104,9 @@ export default {
 <style lang="sass">
 .transactions--upcoming
   width: 100%
+
+  a
+    color: #000
 
   thead th
     padding: $baseline/4
