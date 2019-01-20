@@ -111,7 +111,7 @@ class ProfileView(View):
                 return JsonResponse({'error': 'invalid price'}, status=400)
             user.price = price
 
-        integrations = payload.get('integrations')
+        integrations = payload.get('integrations', {})
         if 'twitter' in integrations:
             value = integrations['twitter']
             user.twitter_account = value if value else None
