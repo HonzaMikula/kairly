@@ -38,19 +38,19 @@
           <a
             href="https://www.facebook.com/kairlynews/"
             class="facebook"
-            :title="$t('Follow us Facebook')">
+            aria-label="Facebook">
           </a>
 
           <a
             href="https://twitter.com/kairlynews"
             class="twitter"
-            :title="$t('Follow us Twitter')">
+            aria-label="Twitter">
           </a>
 
           <a
             href="https://www.linkedin.com/company/kairly/"
             class="linkedin"
-            :title="$t('Follow us LinkedIn')">
+            aria-label="LinkedIn">
           </a>
         </div>
 
@@ -98,6 +98,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 modal-dialog.join-us
   max-width: 600px
 
@@ -130,22 +133,7 @@ modal-dialog.join-us
 
 
   a
-    display: inline-block
-    border-radius: 5px
-    padding: 0 $baseline/2
-
-    background: $c-base
-    border: 1px solid $c-base
-    color: #fff
-
-    cursor: pointer
-    font-family: $ff-sans
-    font-size: $fs-0
-    line-height: $baseline
-
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
+    +button
 
   //- Mailchimp
   #mc_embed_signup
@@ -215,35 +203,13 @@ modal-dialog.join-us
 
 
   .social-media
-    a
-      border-radius: 5px
-      display: inline-block
-      height: $baseline * 1.5
-      margin-right: $baseline / 2
-      width: $baseline * 1.5
 
-      background: #eee
-      border: 0
-      color: #555
+    a.facebook
+      +button-icon($fa-var-facebook, icon-text, brand)
 
-      font-size: $fs-3
-      line-height: $baseline * 1.5
-      text-align: center
+    a.twitter
+      +button-icon($fa-var-twitter, icon-text, brand)
 
-      &:focus,
-      &:hover
-        background: #ddd
-
-      &::before
-        +fa-icon()
-        @extend .fas
-
-    a.facebook::before
-      content: fa-content($fa-var-facebook)
-
-    a.twitter::before
-      content: fa-content($fa-var-twitter)
-
-    a.linkedin::before
-      content: fa-content($fa-var-linkedin)
+    a.linkedin
+      +button-icon($fa-var-linkedin, icon-text, brand)
 </style>

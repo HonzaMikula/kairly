@@ -139,22 +139,19 @@
         <a
           href="https://www.facebook.com/kairlynews/"
           class="facebook"
-          :title="$t('Follow us on Facebook')"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+          :aria-label="$t('Follow us on Facebook')">
         </a>
 
         <a
           href="https://twitter.com/kairlynews"
           class="twitter"
-          :title="$t('Follow us on Twitter')"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+          :aria-label="$t('Follow us on Twitter')">
         </a>
 
         <a
           href="https://www.linkedin.com/company/kairly/"
           class="linkedin"
-          :title="$t('Follow us on LinkedIn')"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+          :aria-label="$t('Follow us on LinkedIn')">
         </a>
       </p>
       <p>
@@ -241,6 +238,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 //- Cover
 homepage--cover
   display: flex
@@ -301,22 +301,8 @@ homepage--cover
         opacity: 1
 
     input[type=submit]
-      border-radius: 5px
-      padding: $baseline/4 $baseline
-      margin-bottom: $baseline
-
-      background: $c-base
+      +button(primary, large)
       box-shadow: 0 0 5px #555
-      border: 0
-      color: #fff
-
-      cursor: pointer
-      font-size: $fs-1
-      font-family: $ff-sans
-
-      &:focus,
-      &:hover
-        background: darken($c-base, 10%)
 
 
   #mc-embedded-subscribe-form input[type=checkbox]
@@ -519,20 +505,7 @@ homepage--help-us--contact-us
   text-align: center
 
   a
-    display: inline-block
-    border-radius: $baseline / 4
-    padding: 0 $baseline
-
-    background: $c-base
-    color: #fff
-
-    font-family: $ff-sans
-    font-size: $fs-1
-    line-height: $baseline * 1.5
-
-    &:hover,
-    &:focus
-      background: darken($c-base, 10%)
+    +button(primary, large)
 
 
 .homepage--footer
@@ -541,40 +514,21 @@ homepage--help-us--contact-us
   text-align: center
 
   p:first-of-type
+    display: flex
+    justify-content: center
     margin-bottom: $baseline / 2
 
     a
-      border-radius: 5px
-      display: inline-block
-      height: $baseline * 1.5
-      margin: 0 $baseline/2
-      width: $baseline * 1.5
+      margin: 0 $baseline/4
 
-      background: #eee
-      color: #555
+    .facebook
+      +button-icon($fa-var-facebook, icon-text, brand)
 
-      font-size: $fs-3
-      line-height: $baseline * 1.5
-      text-align: center
+    .twitter
+      +button-icon($fa-var-twitter, icon-text, brand)
 
-      &:focus,
-      &:hover
-        background: #ddd
-
-      &::before
-        +fa-icon()
-        @extend .fab
-        line-height: $baseline * 1.5
-        vertical-align: top
-
-    a.facebook::before
-      content: fa-content($fa-var-facebook)
-
-    a.twitter::before
-      content: fa-content($fa-var-twitter)
-
-    a.linkedin::before
-      content: fa-content($fa-var-linkedin)
+    .linkedin
+      +button-icon($fa-var-linkedin, icon-text, brand)
 
   p:last-of-type
     a
