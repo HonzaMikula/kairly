@@ -104,13 +104,13 @@
       <blockquote>
         <p>
           "O placeném obsahu se mluví už roky, ale současné modely pay-wallů zatím úspěchy příliš nesklízejí.
-          Novináři jsou stále závislí na reklamním monopolu Googlu a Facebooku. Výsledkem je neustále snižování
+          Novináři jsou stále závislí na reklamním duopolu Googlu a Facebooku. Výsledkem je neustále snižování
           stavů redakcí a omezování nákladů. Čas na kvalitní novinářskou práci v podstatě není.
         </p>
 
         <p>
           Náš koncept placeného obsahu jde mnohem dál než obyčejný pay-wall. Využíváme principů absolutní otevřenosti
-          a síťového efektu, kterými si nás před lety získaly sociální sítě. Právě proto věříme, že právě Kairly přináší
+          a síťového efektu, kterými si nás před lety získaly sociální sítě. Právě proto věříme, že Kairly přináší
           vysněný fungující model placeného obsahu na internetu."
         </p>
 
