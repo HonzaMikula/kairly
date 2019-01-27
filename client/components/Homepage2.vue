@@ -7,6 +7,20 @@
           Sociální sítě máme na zábavu.<br />
           Na zpravodajství je tu Kairly.
         </h1>
+
+        <!-- Begin Mailchimp Signup Form -->
+        <div id="mc_embed_signup">
+          <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+            <div id="mc_embed_signup_scroll">
+              <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+              <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+              <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value=""></div>
+              <div class="clear"><input type="submit" :value="$t('Request to join')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+            </div>
+          </form>
+        </div>
+        <!--End mc_embed_signup-->
+        <p>Kairly se testuje v uzavřené beta verzi.</p>
       </div>
     </section>
 
@@ -67,7 +81,7 @@
       </picture>
 
       <div>
-        <h2>Jste novinář? Začnete vydělávat publikováním obsahu nebo jako editor novin</h2>
+        <h2>Jste novinář? Začnete vydělávat publikováním obsahu nebo jako editor novin.</h2>
 
         <p>
           Nás baví design a technologie. <strong>Vytváříme unikátní platformu pro vás novináře a vaše čtenáře.</strong>
@@ -108,7 +122,7 @@
     </section>
 
     <section class="homepage--newspapers">
-      <h2>Prohlédněte si poslední vydání novin.</h2>
+      <h2>Prohlédněte si poslední vydáné noviny.</h2>
 
       <img src="~assets/homepage/kairly-4.jpg" />
     </section>
@@ -126,7 +140,7 @@
 
         <p>
           Kairly comes up with an interesting concept of paid content on the internet, which is significantly
-          different from the current not very successful attempts. "
+          different from the current not very successful attempts."
         </p>
 
         <footer>
@@ -207,8 +221,6 @@ export default {
 @import './styles/components/buttons'
 
 .homepage-view
-  padding-top: $baseline
-
   background: #fff
 
   > *
@@ -222,21 +234,93 @@ export default {
   display: flex
   align-items: center
   justify-content: center
-  height: 300px
-  margin-bottom: $baseline * 2
+  height: 400px
+  margin-bottom: $baseline
+  max-width: none
 
   //background: url("~assets/homepage/hero-new.jpg") bottom center no-repeat
   background-size: cover
+  background: #fafafa
 
   h1
-
     padding: $baseline/2 $baseline
+    margin-bottom: $baseline * 2
 
     background: #fafafa
 
     font-size: 36px
     font-weight: 900
     line-height: $baseline * 2
+
+  p
+    font-size: $fs-0
+    text-align: center
+
+  //- Mailchimp
+  #mc_embed_signup
+    #mc_embed_signup_scroll
+      display: flex
+      justify-content: center
+
+      @media (max-width: $mobile)
+        display: block
+
+    input[type=email]
+      box-sizing: border-box
+      border-radius: 5px 0 0 5px
+      height: $baseline * 1.5
+      padding: 0 $baseline/2
+      margin-bottom: $baseline / 2
+      width: 250px
+
+      background: #fff
+      border: 1px solid #ddd
+      opacity: 0.9
+
+      font-family: $ff-sans
+      font-size: $fs-0
+      line-height: $baseline * 1.5
+
+      transition: 0.15s opacity
+
+      &:focus
+        opacity: 1
+
+    input[type=submit]
+      box-sizing: border-box
+      border-radius: 0 5px 5px 0
+      height: $baseline * 1.5
+      padding: 0 $baseline
+      margin-bottom: $baseline/2
+
+      background: $c-base
+      border: 0
+      color: #fff
+
+      cursor: pointer
+      font-size: $fs-1
+      font-family: $ff-sans
+      line-height: $baseline * 1.5
+
+      &:focus,
+      &:hover
+        background: darken($c-base, 10%)
+
+  #mc-embedded-subscribe-form input[type=checkbox]
+    display: inline
+    width: auto
+    margin-right: 10px
+
+  #mergeRow-gdpr
+    margin-top: 20px
+
+  #mergeRow-gdpr fieldset label
+    font-weight: normal
+
+  #mc-embedded-subscribe-form .mc_fieldset
+    border: none
+    min-height: 0px
+    padding-bottom: 0px
 
 //- Image
 .homepage--image
