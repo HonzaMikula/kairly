@@ -24,10 +24,6 @@
       </div>
     </section>
 
-    <section class="homepage--image">
-
-    </section>
-
     <section class="homepage--readers">
       <picture>
         <img src="~assets/homepage/kairly-1.jpg" />
@@ -57,7 +53,7 @@
     <section class="homepage--quote">
       <blockquote>
         <p>
-          "Sociální sítě se nás snaží přehltit zábavným či šokujícím obsahem, aby vydělali co nejvíce na reklamě.
+          Sociální sítě se nás snaží přehltit zábavným či šokujícím obsahem, aby vydělali co nejvíce na reklamě.
           To není místo pro zpravodajství, které má být věcné a pravdivé. Kairly děláme pro lidi,
           kteří chtějí být skutečně informovaní a chtějí stimulovat své kritické uvažování.
         </p>
@@ -65,7 +61,7 @@
         <p>
           Na Kairly neotravujeme žádnými notifikacemi, nesnažíme se vám neustále podstrčit nový
           rádoby zajímavý obsah. Pravidelně a vždy ve stejný čas zobrazujeme jen ten obsah,
-          který jste si objednal a to od lidí, kterým věříte a kteří vás skutečně intelektuálně obohacují."
+          který jste si objednal a to od lidí, kterým věříte a kteří vás skutečně intelektuálně obohacují.
         </p>
 
         <footer>
@@ -103,7 +99,7 @@
     <section class="homepage--quote">
       <blockquote>
         <p>
-          "O placeném obsahu se mluví už roky, ale současné modely pay-wallů zatím úspěchy příliš nesklízejí.
+          O placeném obsahu se mluví už roky, ale současné modely pay-wallů zatím úspěchy příliš nesklízejí.
           Novináři jsou stále závislí na reklamním duopolu Googlu a Facebooku. Výsledkem je neustále snižování
           stavů redakcí a omezování nákladů. Čas na kvalitní novinářskou práci v podstatě není.
         </p>
@@ -111,7 +107,7 @@
         <p>
           Náš koncept placeného obsahu jde mnohem dál než obyčejný pay-wall. Využíváme principů absolutní otevřenosti
           a síťového efektu, kterými si nás před lety získaly sociální sítě. Právě proto věříme, že Kairly přináší
-          vysněný fungující model placeného obsahu na internetu."
+          vysněný fungující model placeného obsahu na internetu.
         </p>
 
         <footer>
@@ -122,7 +118,7 @@
     </section>
 
     <section class="homepage--newspapers">
-      <h2>Prohlédněte si poslední vydáné noviny.</h2>
+      <h2>Prohlédněte si některé naše noviny.</h2>
 
       <img src="~assets/homepage/kairly-4.jpg" />
     </section>
@@ -132,7 +128,7 @@
 
       <blockquote>
         <p>
-          "Nowadays, when attacks on journalists, including physical ones, are increasing, we need to find a
+          Nowadays, when attacks on journalists, including physical ones, are increasing, we need to find a
           sustainable economic model for journalism. Only in this way can we keep independent journalism on
           politicians and large private corporations. And only in this way we can resist the phenomena of fake
           news and ensure that the complete freedom of speech is preserved.
@@ -140,7 +136,7 @@
 
         <p>
           Kairly comes up with an interesting concept of paid content on the internet, which is significantly
-          different from the current not very successful attempts."
+          different from the current not very successful attempts.
         </p>
 
         <footer>
@@ -148,6 +144,14 @@
           <strong>Marek Zouzalík</strong>, prezident Syndikátu novinářů Prahy a Středočeského kraje
         </footer>
       </blockquote>
+    </section>
+
+    <section class="homepage--howitworks">
+      <h2>Jak platforma funguje?</h2>
+
+      <picture>
+        <img src="~assets/homepage/kairly-howitworks.jpg" />
+      </picture>
     </section>
 
     <portal to="modal" v-if="isJoinUsModalOpen">
@@ -339,7 +343,6 @@ export default {
   grid-template-columns: 330px 540px
   grid-column-gap: $baseline
   padding: $baseline*2 0
-  margin-bottom: $baseline * 2
 
   > picture
     grid-area: hp-readers-picture
@@ -382,7 +385,7 @@ export default {
 
 .homepage--quote
   padding: $baseline*2
-  margin-bottom: $baseline * 2
+  margin-bottom: $baseline * 4
 
   background: #fafafa
 
@@ -394,11 +397,27 @@ export default {
     line-height: $baseline * 2
 
   blockquote
-
     p
       margin-bottom: $baseline
 
       font-size: $fs-2
+
+      &:first-of-type::before
+        position: absolute
+        margin-left: -11px
+
+        font-size: $fs-4
+
+        content: '"'
+
+      &:last-of-type::after
+        position: absolute
+        margin-right: -11px
+
+        font-size: $fs-4
+
+        content: '"'
+
 
     footer
       display: flex
@@ -412,6 +431,25 @@ export default {
         height: $baseline * 1.5
         width: $baseline * 1.5
 
+
+.homepage--howitworks
+  margin-bottom: $baseline * 2
+
+  h2
+    margin-bottom: $baseline
+
+    font-size: 36px
+    font-weight: 900
+    line-height: $baseline * 2
+
+  picture
+    display: block
+    margin: 0 (-$baseline*2)
+
+  img
+    width: 100%
+
+
 .homepage--newspapers
   margin-bottom: $baseline * 2
 
@@ -421,5 +459,8 @@ export default {
     font-size: 36px
     font-weight: 900
     line-height: $baseline * 2
+
+  img
+    width: 100%
 
 </style>
