@@ -78,7 +78,12 @@ export default {
     },
 
     price() {
-      return ~~(this.author.price.split('.')[0]*1 + (this.subscription.donation * 1))
+      // todo use decimal types
+      let price =  ~~this.author.price.split('.')[0]
+      if (this.subscription.donation) {
+        price += ~~this.subscription.donation.split('.')[0]
+      }
+      return price
     },
 
     priceWithCurrency() {
