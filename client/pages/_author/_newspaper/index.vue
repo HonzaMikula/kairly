@@ -219,7 +219,7 @@ export default {
   grid-column-gap: $baseline / 2
   grid-template-areas: "issue-header-image issue-header-title issue-header-subscription" "issue-header-image issue-header-description issue-header-subscription"
   grid-template-columns: $baseline*7 auto $baseline*7
-  grid-template-rows: $baseline*2 auto
+  grid-template-rows: auto auto
   padding: $baseline/4 0
   margin: $baseline*0.75 0
   overflow: hidden
@@ -253,7 +253,7 @@ export default {
 
     font-size: $fs-4
     font-weight: 600
-    line-height: $baseline * 2
+    line-height: $baseline * 1.5
     text-align: center
     text-shadow: 0 0 5px #fafafa
 
@@ -283,7 +283,8 @@ export default {
       display: none
 
     img
-      height: 100%
+      display: block
+      height: $baseline * 3
       width: 100%
 
       object-fit: cover
