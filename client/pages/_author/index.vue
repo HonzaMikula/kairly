@@ -314,11 +314,17 @@ author-detail--subscribe
       +button(primary, medium)
 
     //- when author is ready to be subsribed
-    //- when author is canceled
+    //- when author is canceled or suspended
     button.to-subscribe,
     button.is-canceled
       +button(secondary, medium)
 
+    //- when author is suspended
+    button.is-suspended
+      +button(secondary, medium)
+      background: lighten($c-base, 10%)
+      background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
+      color: #fff
 
 //- Newspapers
 author-detail--newspapers

@@ -300,7 +300,8 @@ export default {
     position: static
 
   .newspaper-subscription button.to-subscribe,
-  .newspaper-subscription button.is-canceled
+  .newspaper-subscription button.is-canceled,
+  .newspaper-subscription button.is-suspended
     +button(secondary, medium)
     padding: 0
     width: 100%
@@ -308,6 +309,11 @@ export default {
     @media (max-width: $mobile)
       padding: 0 $baseline/2
       width: auto
+
+  .newspaper-subscription button.is-suspended
+    background: lighten($c-base, 10%)
+    background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
+    color: #fff
 
   .newspaper-subscription button.is-subscribed
     +button(primary, medium)
