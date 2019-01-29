@@ -23,6 +23,11 @@ class PeriodMixin:
     X3_PER_DAY_HOURS = [6, 12, 18]
     X6_PER_DAY_HOURS = [6, 9, 12, 15, 18, 21]
 
+    def set_periodicity(self, periodicity):
+        self.period = periodicity.frequency
+        self.period_time = periodicity.time
+        self.period_dow = periodicity.dow
+
     def get_period_uid(self):
         """Used as cache key"""
         tokens = [self.period]

@@ -325,21 +325,30 @@ class NewspaperSubscriptionView(View):
             subscription = Subscription.objects.get(
                 Q(valid_to__gt=now) | Q(renewal=True),
                 user=request.user, newspaper=newspaper)
+        except Subscription.DoesNotExist:
+            subscription = None
+
+        if subscription and not subscription.suspended:
             subscription.renewal = True
             subscription.donation = donation or Decimal(0)
             subscription.save()
-        except Subscription.DoesNotExist:
+        else:
             donation = donation or Decimal(0)
             if credits < newspaper.price + donation:
                 return HttpResponse("Insufficient credit.", status=402)
 
-            subscription = Subscription.objects.create(
-                user=request.user,
-                newspaper=newspaper,
-                valid_from=now,
-                valid_to=now + relativedelta(months=1),
-                donation=donation
-            )
+            if not subscription:
+                Subscription(
+                    user=request.user,
+                    newspaper=newspaper
+                )
+
+            subscription.suspended = False
+            subscription.valid_from = now
+            subscription.valid_to = now + relativedelta(months=1)
+            subscription.donation = donation
+            subscription.save()
+
             credits -= newspaper.price + donation
             pay_newspaper_subscription(subscription)
 
@@ -355,24 +364,24 @@ class NewspaperSubscriptionView(View):
         author = get_object_or_404(User, username=username)
         newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
-        try:
-            subscription = Subscription.objects.get(
-                Q(renewal=True) | Q(suspended=True),
-                user=request.user, newspaper=newspaper
-            )
+        subscription = Subscription.objects.filter(
+            Q(renewal=True) | Q(suspended=True),
+            user=request.user, newspaper=newspaper
+        ).order_by('-valid_to').first()
 
-            if newspaper.price == 0:
-                subscription.delete()
-                return JsonResponse({'subscription': None})
-
-            subscription.renewal = False
-            subscription.suspended = False
-            subscription.save()
-            return JsonResponse({
-                'subscription': subscription.to_json() if subscription.valid_to > now else None
-            })
-        except Subscription.DoesNotExist:
+        if subscription is None:
             return HttpResponseNotFound()
+
+        if newspaper.price == 0:
+            subscription.delete()
+            return JsonResponse({'subscription': None})
+
+        subscription.renewal = False
+        subscription.suspended = False
+        subscription.save()
+        return JsonResponse({
+            'subscription': subscription.to_json() if subscription.valid_to > now else None
+        })
 
 
 class AuthorSubscriptionView(View):
@@ -410,22 +419,41 @@ class AuthorSubscriptionView(View):
                 Q(valid_to__gt=now) | Q(renewal=True),
                 user=request.user, author=author,
             )
-            if periodicity:
-                subscription.period = periodicity.frequency
-                subscription.period_time = periodicity.time
-                subscription.period_dow = periodicity.dow
-            if not keep_status and not subscription.renewal:
-                subscription.renewal = True
-            if donation is not None:
-                subscription.donation = donation
-            subscription.save()
         except SubscriptionToAuthor.DoesNotExist:
             if not periodicity:
                 return HttpResponseBadRequest("Periodicity is required.")
+            subscription = None
 
+        if subscription and not subscription.suspended:
+            if periodicity:
+                subscription.set_periodicity(periodicity)
+
+            if not keep_status and not subscription.renewal:
+                subscription.renewal = True
+
+            if donation is not None:
+                subscription.donation = donation
+
+            subscription.save()
+        else:
             donation = donation or Decimal(0)
             if credits < author.price + donation:
                 return HttpResponse("Insufficient credit.", status=402)
+
+            if not subscription:
+                subscription = SubscriptionToAuthor(
+                    user=request.user,
+                    author=author
+                )
+
+            if periodicity:
+                subscription.set_periodicity(periodicity)
+
+            subscription.suspended = False
+            subscription.valid_from = now
+            subscription.valid_to = now + relativedelta(months=1)
+            subscription.donation = donation
+            subscription.save()
 
             subscription = SubscriptionToAuthor.objects.create(
                 user=request.user,
@@ -452,25 +480,25 @@ class AuthorSubscriptionView(View):
         author = get_object_or_404(User, username=username)
         now = datetime.now(request.user.tzinfo)
 
-        try:
-            subscription = SubscriptionToAuthor.objects.get(
-                Q(renewal=True) | Q(suspended=True),
-                user=request.user, author=author,
-            )
+        subscription = SubscriptionToAuthor.objects.filter(
+            Q(renewal=True) | Q(suspended=True),
+            user=request.user, author=author,
+        ).order_by('-valid_to').first()
 
-            if author.price == 0:
-                subscription.delete()
-                return JsonResponse({'subscription': None})
-
-            subscription.renewal = False
-            subscription.suspended = False
-            subscription.save()
-
-            return JsonResponse({
-                'subscription': subscription.to_json() if subscription.valid_to > now else None
-            })
-        except Subscription.DoesNotExist:
+        if not subscription:
             return HttpResponseNotFound()
+
+        if author.price == 0:
+            subscription.delete()
+            return JsonResponse({'subscription': None})
+
+        subscription.renewal = False
+        subscription.suspended = False
+        subscription.save()
+
+        return JsonResponse({
+            'subscription': subscription.to_json() if subscription.valid_to > now else None
+        })
 
 
 def validate_post_attributes(request, payload, draft):
