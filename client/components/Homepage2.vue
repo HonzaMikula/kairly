@@ -4,8 +4,7 @@
     <section class="homepage--cover">
       <div>
         <h1>
-          Sociální sítě máme na zábavu.<br />
-          Na zpravodajství je tu Kairly.
+          Čtěte jen to, co vás zajímá.
         </h1>
 
         <!-- Begin Mailchimp Signup Form -->
@@ -20,7 +19,7 @@
           </form>
         </div>
         <!--End mc_embed_signup-->
-        <p>Kairly se testuje v uzavřené beta verzi.</p>
+        <p>Kairly nyní funguje v uzavřené beta verzi.</p>
       </div>
     </section>
 
@@ -59,7 +58,7 @@
         </p>
 
         <p>
-          Na Kairly neotravujeme žádnými notifikacemi, nesnažíme se vám neustále podstrčit nový
+          Na Kairly vás nerušíme žádnými notifikacemi, nesnažíme se vám neustále podstrčit nový
           rádoby zajímavý obsah. Pravidelně a vždy ve stejný čas zobrazujeme jen ten obsah,
           který jste si objednal a to od lidí, kterým věříte a kteří vás skutečně intelektuálně obohacují.
         </p>
@@ -120,7 +119,13 @@
     <section class="homepage--newspapers">
       <h2>Prohlédněte si některé naše noviny.</h2>
 
-      <img src="~assets/homepage/kairly-4.jpg" />
+      <div>
+        <NewspaperWidget
+          v-for="newspaper in newspapers"
+          :key="newspaper.fullName"
+          :newspaper="newspaper"
+        />
+      </div>
     </section>
 
     <section class="homepage--quote">
@@ -164,12 +169,14 @@
 import { mapState } from 'vuex'
 import store from '@/store'
 import JoinUsModal from '@/components/modals/JoinUs'
+import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 
 export default {
   name: 'Homepage',
 
   components: {
-    JoinUsModal
+    JoinUsModal,
+    NewspaperWidget
   },
 
   head() {
@@ -186,13 +193,25 @@ export default {
       invalidCredentials: false,
       username: null,
       password: null,
-      isJoinUsModalOpen: null
+      isJoinUsModalOpen: null,
+      newspapers: null
     }
   },
 
-  computed: mapState({
-    currentLocale: state => state.locale || 'en'
-  }),
+  computed: {
+    ...mapState({
+      currentLocale: state => state.locale || 'en'
+    }),
+  },
+
+  async created() {
+    const newspapersToShow = [
+        'janmikula/malostranskenoviny',
+        'farin/nej-novinari-na-twitteru',
+        'janmikula/technologicky-denik'
+      ]
+    this.newspapers = await this.$store.dispatch('getNewspapers', newspapersToShow)
+  },
 
   methods: {
     async login() {
@@ -216,7 +235,8 @@ export default {
       this.setLocale(locale)
       this.$auth.$storage.setUniversal('locale', locale)
     }
-  }
+  },
+
 }
 </script>
 
@@ -453,14 +473,29 @@ export default {
 .homepage--newspapers
   margin-bottom: $baseline * 2
 
-  h2
+  > h2
     margin-bottom: $baseline
 
     font-size: 36px
     font-weight: 900
     line-height: $baseline * 2
 
-  img
-    width: 100%
+  //- wrapper
+  > div
+    display: grid
+    grid-row-gap: $baseline
+    grid-template-columns: 1fr 1fr 1fr
+    grid-column-gap: $baseline / 2
+
+    @media (max-width: $mobile)
+      grid-column-gap: $baseline / 4
+      overflow-x: auto
+      -webkit-overflow-scrolling: touch
+
+      newspaper-widget-view,
+      issue-widget-view
+        min-width: 200px
+
+
 
 </style>
