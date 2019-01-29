@@ -12,7 +12,10 @@
       <main>
         <section class="author-subscription--author">
           <h3>{{ author.name }}</h3>
-          <img :src="author.picture" />
+          <picture>
+            <img :src="author.picture" :alt="author.name" />
+          </picture>
+
           <time>{{ getPeriodicityLabel(periodicity) }}</time>
           <a href="" @click.prevent.stop="showChangePeriodicityDialog = !showChangePeriodicityDialog">{{ $t('change periodicity') }}</a>
         </section>
@@ -196,11 +199,13 @@ modal-dialog.author-subscription-dialog
     display: grid
     grid-column-gap: $baseline / 2
     grid-template-columns: $baseline*2 1fr auto
-    grid-template-rows: $baseline*1.2 auto
-    grid-template-areas: "author-image author-name ." "author-image author-periodicity author-change"
+    grid-template-rows: auto auto
+    grid-template-areas: "author-image author-name author-name" "author-image author-periodicity author-change"
+
+    picture
+      grid-area: author-image
 
     img
-      grid-area: author-image
       border-radius: 100%
       height: $baseline * 2
       width: $baseline * 2
@@ -209,7 +214,7 @@ modal-dialog.author-subscription-dialog
       grid-area: author-name
       font-size: $fs-1
       font-weight: 600
-      line-height: $baseline * 1.2
+      line-height: $baseline * 0.9
 
     time
       grid-area: author-periodicity
