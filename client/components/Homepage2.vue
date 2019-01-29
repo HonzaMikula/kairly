@@ -30,7 +30,7 @@
       </picture>
 
       <div>
-        <h2>Odebírejte digitální noviny informující o tématech, které vás zajímají.</h2>
+        <h2>Odebírejte digitální noviny informující o tématech, která vás zajímají.</h2>
 
         <p>
           <strong>Editoři vybírají nejlepší články a tweety</strong> napříč všemi autory publikujícími na Kairly.
