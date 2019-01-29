@@ -165,23 +165,25 @@ modal-dialog.newspaper-subscription-dialog
     display: grid
     grid-column-gap: $baseline / 2
     grid-template-columns: $baseline*3.5 1fr
-    grid-template-rows: $baseline*1.2 auto
+    grid-template-rows: auto auto
     grid-template-areas: "newspaper-image newspaper-name" "newspaper-image newspaper-periodicity"
 
     picture
       grid-area: newspaper-image
 
       img
-        height: 100%
+        display: block
+        height: $baseline * 2
         width: 100%
         object-fit: cover
 
 
     h3
       grid-area: newspaper-name
+
       font-size: $fs-1
       font-weight: 600
-      line-height: $baseline * 1.2
+      line-height: $baseline * 0.9
 
     time
       grid-area: newspaper-periodicity

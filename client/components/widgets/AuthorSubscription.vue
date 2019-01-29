@@ -125,6 +125,7 @@ export default {
 
     background: lighten($c-base, 10%)
     background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
+    color: #fff
 
   //- when newspaper is ready to be subsribed
   //- when newspeper is canceled

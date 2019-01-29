@@ -219,7 +219,7 @@ export default {
   grid-column-gap: $baseline / 2
   grid-template-areas: "issue-header-image issue-header-title issue-header-subscription" "issue-header-image issue-header-description issue-header-subscription"
   grid-template-columns: $baseline*7 auto $baseline*7
-  grid-template-rows: $baseline*2 auto
+  grid-template-rows: auto auto
   padding: $baseline/4 0
   margin: $baseline*0.75 0
   overflow: hidden
@@ -253,7 +253,7 @@ export default {
 
     font-size: $fs-4
     font-weight: 600
-    line-height: $baseline * 2
+    line-height: $baseline * 1.5
     text-align: center
     text-shadow: 0 0 5px #fafafa
 
@@ -283,7 +283,8 @@ export default {
       display: none
 
     img
-      height: 100%
+      display: block
+      height: $baseline * 3
       width: 100%
 
       object-fit: cover
@@ -300,7 +301,8 @@ export default {
     position: static
 
   .newspaper-subscription button.to-subscribe,
-  .newspaper-subscription button.is-canceled
+  .newspaper-subscription button.is-canceled,
+  .newspaper-subscription button.is-suspended
     +button(secondary, medium)
     padding: 0
     width: 100%
@@ -308,6 +310,11 @@ export default {
     @media (max-width: $mobile)
       padding: 0 $baseline/2
       width: auto
+
+  .newspaper-subscription button.is-suspended
+    background: lighten($c-base, 10%)
+    background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
+    color: #fff
 
   .newspaper-subscription button.is-subscribed
     +button(primary, medium)
