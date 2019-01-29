@@ -45,10 +45,13 @@ module.exports = {
     ['@nuxtjs/google-analytics', {
       id: process.env.GA_ID
     }],
-    ['nuxt-sass-resources-loader', {
-      resources: '@/styles/base.sass'
-    }],
+    ['@nuxtjs/style-resources']
   ],
+
+  styleResources: {
+    sass: '@/styles/base.sass'
+  },
+
   /*
   ** Build configuration
   */
