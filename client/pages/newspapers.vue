@@ -37,7 +37,8 @@
                 :key="newspaper.fullName"
                 :class="{'is-selected': selectedNewspaper && selectedNewspaper.fullName == newspaper.fullName}"
                 @click="selectNewspaper(newspaper)">
-                <img :src="newspaper.picture" :alt="newspaper.title"/>
+                <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
+                <div v-else class="image-placeholder"></div>
                 <h3>{{ newspaper.title }}</h3>
                 <p>
                   <strong>#{{ newspaper.issues + 1 }}</strong> {{ $t('is releasing in') }}
@@ -511,6 +512,10 @@ editor-newspapers--header--dropdown
 
     object-fit: cover
 
+  .image-placeholder
+    grid-area: newspaper-dd-picture
+    height: $baseline * 2
+    background-image: radial-gradient(#fafafa, #aaa)
 
   //- newspaper title
   h3
