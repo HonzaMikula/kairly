@@ -244,6 +244,17 @@ export default {
 //- Imports
 @import './styles/components/buttons'
 
+//- Mixin
+=heading
+  font-size: $fs-5
+  font-weight: 900
+  line-height: $baseline * 2
+
+  @media (max-width: $mobile)
+    font-size: $fs-3
+    line-height: $baseline * 1.2
+
+//- Homepage -//
 .homepage-view
   background: #fff
 
@@ -266,15 +277,21 @@ export default {
   background-size: cover
   background: #fafafa
 
+  @media (max-width: $mobile)
+    height: auto
+    padding-bottom: $baseline / 2
+    margin-bottom: 0
+
   h1
-    padding: $baseline/2 $baseline
+    +heading
+    padding: $baseline/2
     margin-bottom: $baseline * 2
 
     background: #fafafa
 
-    font-size: 36px
-    font-weight: 900
-    line-height: $baseline * 2
+    @media (max-width: $mobile)
+      margin: $baseline 0
+
 
   p
     font-size: $fs-0
@@ -287,7 +304,8 @@ export default {
       justify-content: center
 
       @media (max-width: $mobile)
-        display: block
+        align-items: center
+        flex-direction: column
 
     input[type=email]
       box-sizing: border-box
@@ -295,7 +313,7 @@ export default {
       height: $baseline * 1.5
       padding: 0 $baseline/2
       margin-bottom: $baseline / 2
-      width: 250px
+      max-width: 250px
 
       background: #fff
       border: 1px solid #ddd
@@ -306,6 +324,10 @@ export default {
       line-height: $baseline * 1.5
 
       transition: 0.15s opacity
+
+      @media (max-width: $mobile)
+        border-radius: 5px
+
 
       &:focus
         opacity: 1
@@ -325,6 +347,9 @@ export default {
       font-size: $fs-1
       font-family: $ff-sans
       line-height: $baseline * 1.5
+
+      @media (max-width: $mobile)
+        border-radius: 5px
 
       &:focus,
       &:hover
@@ -364,6 +389,10 @@ export default {
   grid-column-gap: $baseline
   padding: $baseline*2 0
 
+  @media (max-width: $mobile)
+    grid-template-areas: "hp-readers-picture" "hp-readers-text"
+    padding: 0
+
   > picture
     grid-area: hp-readers-picture
 
@@ -376,11 +405,12 @@ export default {
   > div
     grid-area: hp-readers-text
 
+    @media (max-width: $mobile)
+      padding: $baseline / 2
+
     h2
+      +heading
       margin-bottom: $baseline
-      font-size: 36px
-      font-weight: 900
-      line-height: $baseline * 2
 
     p
       position: relative
@@ -389,7 +419,10 @@ export default {
       padding-left: $baseline
       max-width: 600px
 
-      font-size: 18px
+      font-size: $fs-1
+
+      @media (max-width: $mobile)
+        padding-left: 0
 
       &::before
         position: absolute
@@ -402,6 +435,9 @@ export default {
 
         content: '•'
 
+        @media (max-width: $mobile)
+          content: none
+
 
 .homepage--quote
   padding: $baseline*2
@@ -409,18 +445,22 @@ export default {
 
   background: #fafafa
 
-  h2
+  @media (max-width: $mobile)
+    padding: $baseline
     margin-bottom: $baseline
 
-    font-size: 36px
-    font-weight: 900
-    line-height: $baseline * 2
+  h2
+    +heading
+    margin-bottom: $baseline
 
   blockquote
     p
       margin-bottom: $baseline
 
       font-size: $fs-2
+
+      @media (max-width: $mobile)
+        font-size: $fs-1
 
       &:first-of-type::before
         position: absolute
@@ -441,6 +481,7 @@ export default {
 
     footer
       display: flex
+      flex-wrap: wrap
 
       font-size: $fs-1
       line-height: $baseline * 1.5
@@ -456,11 +497,9 @@ export default {
   margin-bottom: $baseline * 2
 
   h2
-    margin-bottom: $baseline
+    +heading
 
-    font-size: 36px
-    font-weight: 900
-    line-height: $baseline * 2
+    margin-bottom: $baseline
 
   picture
     display: block
@@ -474,11 +513,9 @@ export default {
   margin-bottom: $baseline * 2
 
   > h2
-    margin-bottom: $baseline
+    +heading
 
-    font-size: 36px
-    font-weight: 900
-    line-height: $baseline * 2
+    margin-bottom: $baseline
 
   //- wrapper
   > div
@@ -495,7 +532,5 @@ export default {
       newspaper-widget-view,
       issue-widget-view
         min-width: 200px
-
-
 
 </style>
