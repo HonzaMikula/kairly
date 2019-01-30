@@ -27,6 +27,8 @@ from corsheaders.middleware import CorsMiddleware
 
 from .sitemaps import NewspaperSitemap, PostSitemap
 
+from articles.feeds import NewspaperFeed
+
 
 def serve_cors(request, *args, **kwargs):
     response = serve(request, *args, **kwargs)
@@ -57,6 +59,7 @@ urlpatterns = [
     path('api/', include('users.urls')),
     path('api/', include('articles.urls')),
     path('api/', include('credits.urls')),
+    path('<username>/<slug:newspapeper_slug>/rss', NewspaperFeed())
     # path('api/fail', always_fail),
 ]
 
