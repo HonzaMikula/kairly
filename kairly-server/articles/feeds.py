@@ -1,14 +1,35 @@
+from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
+from django.utils.feedgenerator import DefaultFeed
 
 from .period import PeriodMixin
 from .models import Newspaper, Issue
 
 
+class ImageRssFeedGenerator(DefaultFeed):
+    def add_root_elements(self, handler):
+        super(ImageRssFeedGenerator, self).add_root_elements(handler)
+        if 'image_url' in self.feed:
+            handler.startElement(u'image', {})
+            handler.addQuickElement(u"url", self.feed['image_url'])
+            handler.addQuickElement(u"title", self.feed['title'])
+            handler.addQuickElement(u"link", self.feed['link'])
+            handler.endElement(u'image')
+
+
 class NewspaperFeed(Feed):
+    feed_type = ImageRssFeedGenerator
 
     def get_object(self, request, username, newspapeper_slug):
         return get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+
+    def feed_extra_kwargs(self, newspaper):
+        if newspaper.image:
+            return {
+                'image_url': f"https://cdn.kairly.com{settings.MEDIA_URL}{newspaper.image}"
+            }
+        return {}
 
     def title(self, newspaper):
         return newspaper.title
