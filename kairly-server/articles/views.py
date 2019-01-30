@@ -455,17 +455,6 @@ class AuthorSubscriptionView(View):
             subscription.donation = donation
             subscription.save()
 
-            subscription = SubscriptionToAuthor.objects.create(
-                user=request.user,
-                author=author,
-                period=periodicity.frequency,
-                period_time=periodicity.time,
-                period_dow=periodicity.dow,
-                valid_from=now,
-                valid_to=now + relativedelta(months=1),
-                donation=donation
-            )
-
             pay_author_subscription(subscription)
             credits -= author.price + donation
 
