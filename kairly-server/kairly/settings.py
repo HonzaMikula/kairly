@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'credits',
     'sources',
     'users',
+    'remotecache',
 ]
 
 MIDDLEWARE = [
@@ -178,3 +179,6 @@ try:
 except ImportError:
     # settings imported outside django, eg invode script
     pass
+
+
+REMOTE_CACHE_API_KEY = 'llV45alRPaHU'

@@ -13,7 +13,7 @@ class Command(BaseCommand):
     help = 'Show cost of author posts'
 
     def add_arguments(self, parser):
-        parser.add_argument('usernames', nargs='*', type=str, help='Users to assign credit')
+        parser.add_argument('usernames', nargs='*', type=str, help='Users to show')
 
         parser.add_argument(
             '--month',
