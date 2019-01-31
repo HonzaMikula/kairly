@@ -72,7 +72,14 @@ class Command(BaseCommand):
 
                 try:
                     resp = requests.get(u.expanded_url, timeout=10)
-                    page_title = bs4.BeautifulSoup(resp.content, "lxml").title.text
+                    content_type = resp.headers.get('Content-Type')
+                    if content_type in ['text/html', 'application/xhtml+xml']:
+                        page_title = bs4.BeautifulSoup(resp.content, "lxml").title.text
+                    else:
+                        page_title = resp.url[:25]
+                        if page_title != resp.url:
+                            page_title += '…'
+
                     parsed_url = urlsplit(resp.url)  # take final url adter redirects
                     attachment = {
                         'type': 'url',
