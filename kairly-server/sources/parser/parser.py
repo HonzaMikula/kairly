@@ -82,7 +82,7 @@ class ArticleParser:
             items = re.split(r"(\[\d[:\d]*\])", plain_selector)
             items = [x for x in items if x]
             if len(items) > 2:
-                raise ValueError(f"Only one slice is currently allowed ({plain_selector})")
+                raise ValueError("Only one slice is currently allowed ({})".format(plain_selector))
 
             elements = root.cssselect(items[0])
             if len(items) == 2:
