@@ -141,6 +141,10 @@ export default {
         { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: picture },
+      ],
+      link: [
+        { rel: 'alternate', type: 'application/rss+xml', title:`${title} - RSS feed`,
+          href: `https://kairly.com/${editor.id}/${name}/rss` }
       ]
     }
   },
