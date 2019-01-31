@@ -47,7 +47,7 @@
         </nav>
 
         <div class="newspaper-detail--issue">
-          <Issue :issue="issue" :subscription="newspaper.subscription" hideDate="true" showTail="true">
+          <Issue :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
             <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issue.time | moment('D. M. YYYY')}}</template>
           </Issue>
         </div>
@@ -56,16 +56,16 @@
           <a
             :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${issue.id}`"
             target="_blank"
-            class="share-fb">
-            {{ $t('Share on Facebook') }}
+            class="share-fb"
+            :aria-label="$t('Share on Facebook')">
           </a>
 
           <a
             :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${issue.id}&text=${newspaper.title}`"
             target="_blank"
             class="share-twitter"
+            :aria-label="$t('Share on Twitter')"
           >
-            {{ $t('Share on Twitter') }}
           </a>
         </footer>
       </template>
@@ -444,57 +444,17 @@ export default {
 
 //- Footer with social buttons
 .newspaper-detail--footer
-  text-align: center
+  display: flex
+  justify-content: center
 
   > a
-    border-radius: 5px
-    display: inline-block
-    height: $baseline * 1.25
-    margin-right: $baseline / 4
-    margin-bottom: $baseline / 4
-    padding: 0 $baseline/4
+    margin: 0 $baseline/4
 
-    background: #eee
-    color: #000
+  a.share-fb
+    +button-icon($fa-var-facebook, icon-text, brand)
 
-    cursor: pointer
-    font-size: $fs--1
-    line-height: $baseline * 1.25
-    vertical-align: middle
-
-    &::before
-      position: relative
-      top: -1px
-
-      margin-right: $baseline / 4
-      vertical-align: middle
-
-      font-size: $fs-1
-
-    &:focus,
-    &:hover
-      background: #bbb
-      color: #000
-
-    &.share-fb::before
-      +fa-icon()
-      @extend .fab
-
-      margin-right: 0
-
-      font-size: $fs-1
-
-      content: fa-content($fa-var-facebook-square)
-
-    &.share-twitter::before
-      +fa-icon()
-      @extend .fab
-
-      margin-right: 0
-
-      font-size: $fs-1
-
-      content: fa-content($fa-var-twitter)
+  a.share-twitter
+    +button-icon($fa-var-twitter, icon-text, brand)
 
 .newspaper-detail--empty-newspaper
   display: block

@@ -21,7 +21,6 @@
       :key="post.id"
     />
 
-    {{abc}}
     <footer>
       <button v-if="(tailPostsCount > 0 && !expanded)" @click.prevent="expandIssue">
         {{ $t('Show more') }} ({{tailPostsCount}})

@@ -84,7 +84,7 @@
 import { mapActions, mapState } from 'vuex'
 import moment from 'moment'
 
-import Homepage from '@/components/Homepage2'
+import Homepage from '@/components/Homepage'
 import Welcome from '@/components/Welcome'
 import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
