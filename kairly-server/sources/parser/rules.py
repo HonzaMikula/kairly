@@ -9,6 +9,7 @@ NestingLevel = namedtuple('NestingLevel', ['engine', 'indent', 'parts'])
 
 # REGEX_COMMENT_MULTILINE = re.compile(r"/\*.*?\*/", re.DOTALL)
 REGEX_SPACE = re.compile(r"\s*")
+REGEX_PROPERTY = re.compile(r"\s*([-\w]+):\s*(.*)")
 
 
 def parse_rules(source):
@@ -86,10 +87,11 @@ def get_effetive_lines(source):
 
 
 def parse_property(line):
-    if ': ' in line:
-        prop, value = line.split(':', maxsplit=1)
+    m = REGEX_PROPERTY.match(line)
+    if m:
+        prop, value = m.groups()
         d = {}
-        d[prop.strip()] = value.strip()
+        d[prop] = value.rstrip()
         return d
 
 

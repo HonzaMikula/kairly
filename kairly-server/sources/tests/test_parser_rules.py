@@ -30,6 +30,26 @@ div#content
             }, 'div#content p, div#content h3')
         ])
 
+    def test_slice_rules(self):
+        rules = """
+*
+
+h3[0]
+  tag: none
+
+p[0]
+  tag:none
+
+p[1]
+  tag:none
+ """
+        self.assertEqual(parse_rules(rules), [
+            Rule('css', {}, '*'),
+            Rule('css', {'tag': 'none'}, 'h3[0]'),
+            Rule('css', {'tag': 'none'}, 'p[0]'),
+            Rule('css', {'tag': 'none'}, 'p[1]'),
+        ])
+
     def test_comments_removal(self):
         rules = """
 .perex
