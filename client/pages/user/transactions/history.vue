@@ -14,6 +14,7 @@
             <nuxt-link :to="{name: 'author-newspaper', params: {author: t.target.newspaper.editor.id, newspaper: t.target.newspaper.name}}">
               <img :src="t.target.newspaper.picture" :alt="t.target.newspaper.name" />
               {{ t.target.newspaper.title}}
+              <template v-if="t.kind === 'DO'"> – donation</template>
             </nuxt-link>
         </td>
 
@@ -30,6 +31,7 @@
           <nuxt-link :to="{name: 'author', params: {author: t.target.author.id}}">
             <img :src="t.target.author.picture" :alt="t.target.author.name" />
             {{ t.target.author.name }}
+            <template v-if="t.kind === 'DO'"> – donation</template>
           </nuxt-link>
         </td>
 
