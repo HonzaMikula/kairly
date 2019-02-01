@@ -5,7 +5,7 @@
       <p>Čtěte jen to, co vás zajímá.</p>
 
       <div class="kairly-promo--learn-more">
-        <nuxt-link to="/">{{ $t('Learn more') }}</nuxt-link>
+        <nuxt-link to="/">{{ $t('Learn more about the platform') }}</nuxt-link>
       </div>
 
       <div class="kairly-promo--social-media">
