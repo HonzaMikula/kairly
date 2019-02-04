@@ -338,7 +338,7 @@ class NewspaperSubscriptionView(View):
                 return HttpResponse("Insufficient credit.", status=402)
 
             if not subscription:
-                Subscription(
+                subscription = Subscription(
                     user=request.user,
                     newspaper=newspaper
                 )
