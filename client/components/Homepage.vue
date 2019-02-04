@@ -161,7 +161,7 @@
 
         <footer>
           <img src="https://pbs.twimg.com/profile_images/762976177535475712/JfzxZ0RA_400x400.jpg" alt="Marek Zouzalík" />
-          <strong>Marek Zouzalík</strong> {{ $t('chairman of the Prague Syndicate of Journalists') }}
+          <strong>Marek Zouzalík</strong> <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
         </footer>
       </blockquote>
     </section>
@@ -556,6 +556,15 @@ export default {
 
       font-size: $fs-1
       line-height: $baseline * 1.5
+
+      a
+        color: #000
+
+        text-decoration: underline
+
+        &:hover,
+        &:focus
+          text-decoration: none
 
       @media (max-width: $mobile)
         flex-direction: column
