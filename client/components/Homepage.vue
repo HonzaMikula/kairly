@@ -535,20 +535,27 @@ export default {
         font-size: $fs-1
 
       &:first-of-type::before
+        +fa-icon()
+        @extend .fas
         position: absolute
-        margin-left: -11px
+        transform: translateX(-20px)
+        font-size: $fs--2
 
-        font-size: $fs-4
+        color: #555
 
-        content: '"'
+        content: fa-content($fa-var-quote-left)
 
       &:last-of-type::after
+        +fa-icon()
+        @extend .fas
+
         position: absolute
-        margin-right: -11px
+        font-size: $fs--2
+        transform: translateX(5px)
 
-        font-size: $fs-4
+        color: #555
 
-        content: '"'
+        content: fa-content($fa-var-quote-right)
 
 
     footer
