@@ -170,7 +170,7 @@
       <h2>{{ $t('How the platform works?') }}</h2>
 
       <picture>
-        <img src="~assets/homepage/kairly-howitworks.jpg" />
+        <img src="~assets/homepage/kairly-howitworks.jpg" width="1200" height="848" />
       </picture>
     </section>
 
