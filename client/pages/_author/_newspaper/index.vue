@@ -114,9 +114,10 @@ export default {
     if (this.$route.params.issue) {
       metaTitle = `${title} #${this.issue.number} – Kairly`
       metaDescription = this.issue.posts
-        .map(post => post.content.title)
+        .map(post => post.content.title || post.author.name)
         .filter(title => title)
         .join(' • ')
+        .slice(0, 280)
       metaUrl = `https://kairly.com/${editor.id}/${name}/${this.issue.number}`
     }
     //- act as a newspaper detail
