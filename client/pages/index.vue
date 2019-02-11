@@ -47,7 +47,7 @@
               {{ $t('Nothing was published for you yet. Check your subscriptions or explore more newspapers and authors.') }}
             </p>
 
-            <nuxt-link to="/subscriptions">{{ $t('Subscriptions') }}</nuxt-link>
+            <nuxt-link to="/subscription">{{ $t('Subscriptions') }}</nuxt-link>
             <nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link>
 
           </div>
