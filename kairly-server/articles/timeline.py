@@ -82,19 +82,23 @@ def timeline(request):
 
 def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = Subscription.objects.filter(
-        Q(valid_to__gt=now) | Q(renewal=True),
+        Q(valid_to__gt=now) | Q(renewal=True) | Q(suspended=True),
         user=request.user,
-        suspended=False,
     ).select_related('newspaper', 'newspaper__editor')
 
     issues = []
     subscription_exists = False
     for sub in subscriptions:
         subscription_exists = True
+        newspaper_issues = get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to)
 
-        issues.extend(
-            get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to)
-        )
+        if sub.suspended:
+            for issue in newspaper_issues:
+                issue['type'] = 'suspended-newspaper'
+                issue['posts'] = []
+
+        issues.extend(newspaper_issues)
+
     return issues, subscription_exists
 
 
