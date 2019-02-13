@@ -177,6 +177,8 @@ class Newspaper(models.Model, PeriodMixin):
     period_time = models.TimeField(null=True, blank=True)  # time for daily and weekly period
     period_dow = models.IntegerField(null=True, blank=True)  # ISO week day for weekly period
 
+    newsletter_subscription_url = models.CharField(_('Mailchimp subscribe form URL'), max_length=160, null=True, blank=True)
+
     class Meta:
         unique_together = (("slug", "editor"),)
 
