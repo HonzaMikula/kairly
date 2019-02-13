@@ -75,15 +75,18 @@
           </a>
         </footer>
 
-        <footer class="newspaper-detail--subscribe-newsletter">
+        <footer class="newspaper-detail--subscribe-newsletter" v-if="newspaper.newsletterSubscriptionUrl">
           <!-- Begin Mailchimp Signup Form -->
           <div id="mc_embed_signup">
             <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
               <div id="mc_embed_signup_scroll">
                 <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
                 <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value=""></div>
-                <div class="clear"><input type="submit" :value="$t('Subscribe newsletter')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                  <input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value="">
+                  <input type="checkbox" :value="newspaper.newsletterSubscriptionUrl" :name="`group[84705][${newspaper.newsletterSubscriptionUrl}]`" checked />
+                </div>
+                <div class="clear"><input type="submit" :value="$t('Send newspaper to email')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
               </div>
             </form>
           </div>
