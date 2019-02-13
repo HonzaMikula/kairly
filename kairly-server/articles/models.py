@@ -212,7 +212,7 @@ class Newspaper(models.Model, PeriodMixin):
         return "{}/{}".format(self.editor.username, self.slug)
 
     def to_json(self, tzinfo):
-        return {
+        data = {
             "name": self.slug,
             "fullName": self.full_name,
             "title": self.title,
@@ -225,6 +225,9 @@ class Newspaper(models.Model, PeriodMixin):
             "likes": self.likes,
             "price": str(self.price),
         }
+        if self.newsletter_subscription_url:
+            data['newsletterSubscriptionUrl'] = self.newsletter_subscription_url
+        return data
 
 
 class Backlog(models.Model):
