@@ -4,22 +4,35 @@ from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import DefaultFeed
 
 from .period import PeriodMixin
-from .models import Newspaper, Issue
+from .models import Newspaper, Issue, Post
 
 
-class ImageRssFeedGenerator(DefaultFeed):
+class RssFeedGenerator(DefaultFeed):
+    def rss_attributes(self):
+        attrs = super().rss_attributes()
+        attrs['xmlns:dc'] = "http://purl.org/dc/elements/1.1/"
+        return attrs
+
     def add_root_elements(self, handler):
-        super(ImageRssFeedGenerator, self).add_root_elements(handler)
+        self.feed['language'] = None
+
+        super().add_root_elements(handler)
         if 'image_url' in self.feed:
-            handler.startElement(u'image', {})
-            handler.addQuickElement(u"url", self.feed['image_url'])
-            handler.addQuickElement(u"title", self.feed['title'])
-            handler.addQuickElement(u"link", self.feed['link'])
-            handler.endElement(u'image')
+            handler.startElement('image', {})
+            handler.addQuickElement("url", self.feed['image_url'])
+            handler.addQuickElement("title", self.feed['title'])
+            handler.addQuickElement("link", self.feed['link'])
+            handler.endElement('image')
+
+        handler.addQuickElement("dc:creator", self.feed['author_name'])
+
+    def add_item_elements(self, handler, item):
+        super().add_item_elements(handler, item)
+        handler.addQuickElement("dc:creator", self.feed['author_name'])
 
 
 class NewspaperFeed(Feed):
-    feed_type = ImageRssFeedGenerator
+    feed_type = RssFeedGenerator
 
     def get_object(self, request, username, newspapeper_slug):
         return get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
@@ -40,6 +53,9 @@ class NewspaperFeed(Feed):
     def description(self, newspaper):
         return newspaper.description
 
+    def author_name(self, newspaper):
+        return newspaper.editor.name or newspaper.editor.username
+
     def items(self, newspaper):
         query = Issue.objects.filter(newspaper=newspaper).order_by('-number')[:10]
         return [(newspaper, issue) for issue in query]
@@ -58,3 +74,14 @@ class NewspaperFeed(Feed):
     def item_pubdate(self, newspaper_issue):
         newspaper, issue = newspaper_issue
         return issue.published
+
+    def item_description(self, newspaper_issue):
+        newspaper, issue = newspaper_issue
+        titles = []
+        for post in issue.posts.all():
+            if post.kind == Post.TWEET:
+                name = post.author.name or post.author.username
+                titles.append(name + "'s tweet")
+            else:
+                titles.append(post.title)
+        return ' • '.join(titles)
