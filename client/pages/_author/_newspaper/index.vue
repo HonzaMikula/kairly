@@ -506,7 +506,9 @@ export default {
       justify-content: center
 
       @media (max-width: $mobile)
-        display: block
+        align-items: center
+        flex-direction: column
+
 
     input[type=email]
       box-sizing: border-box
@@ -526,6 +528,9 @@ export default {
 
       transition: 0.15s opacity
 
+      @media (max-width: $mobile)
+        border-radius: 5px
+
       &:focus
         opacity: 1
 
@@ -544,6 +549,9 @@ export default {
       font-size: $fs-1
       font-family: $ff-sans
       line-height: $baseline * 1.5
+
+      @media (max-width: $mobile)
+        border-radius: 5px
 
       &:focus,
       &:hover
