@@ -57,12 +57,22 @@
             :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
             target="_blank"
             class="rss"
+            @click="$ga.event({
+              eventCategory: 'Subscribe RSS newspaper',
+              eventAction: newspaper.name,
+              eventLabel: newspaper.editor.id
+            })"
             :aria-label="$t('Subscribe RSS')">
           </a>
 
           <a
             :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${issue.id}`"
             target="_blank"
+            @click="$ga.event({
+              eventCategory: 'Share newspaper FB',
+              eventAction: newspaper.name,
+              eventLabel: newspaper.editor.id
+            })"
             class="share-fb"
             :aria-label="$t('Share on Facebook')">
           </a>
@@ -70,6 +80,11 @@
           <a
             :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${issue.id}&text=${newspaper.title}`"
             target="_blank"
+            @click="$ga.event({
+              eventCategory: 'Share newspaper Twitter',
+              eventAction: newspaper.name,
+              eventLabel: newspaper.editor.id
+            })"
             class="share-twitter"
             :aria-label="$t('Share on Twitter')">
           </a>
@@ -86,7 +101,20 @@
                   <input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value="">
                   <input type="checkbox" :value="newspaper.newsletterSubscriptionUrl" :name="`group[84705][${newspaper.newsletterSubscriptionUrl}]`" checked />
                 </div>
-                <div class="clear"><input type="submit" :value="$t('Send newspaper to email')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+                <div class="clear">
+                  <input
+                    type="submit"
+                    :value="$t('Send newspaper to email')"
+                    name="subscribe"
+                    id="mc-embedded-subscribe"
+                    class="button"
+                    @click="$ga.event({
+                      eventCategory: 'Subscribe newspaper newsletter',
+                      eventAction: newspaper.name,
+                      eventLabel: newspaper.editor.id
+                    })"
+                  />
+                  </div>
               </div>
             </form>
           </div>
