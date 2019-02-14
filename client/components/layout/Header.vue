@@ -152,9 +152,12 @@ export default {
     position: relative
 
     display: grid
-    grid-template-columns: auto 1fr auto
+    grid-template-columns: auto 1fr max-content
     margin: 0 auto
     max-width: 900px
+
+    @media (max-width: $mobile)
+      grid-template-columns: minmax(100px, min-content) 1fr
 
 
 //- Main Navigation
@@ -260,8 +263,12 @@ export default {
       content: fa-content($fa-var-arrow-left)
 
   h1
+    overflow: hidden
+
     font-size: $fs-1
     font-weight: 600
+    white-space: nowrap
+    text-overflow: ellipsis
 
 
 //- User Profile
@@ -269,6 +276,7 @@ export default {
   justify-self: end
 
   cursor: pointer
+  white-space: nowrap
 
   > a
     display: inline-block

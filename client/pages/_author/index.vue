@@ -134,9 +134,16 @@ export default {
     }),
 
     visibleNewspapers() {
-      return this.showAllNewspapers
-        ? this.newspapers
-        : this.newspapers.slice(0, 3);
+      const mq = window.matchMedia("(max-width: 640px)")
+      console.log(mq.matches)
+      if (mq.matches) {
+        return this.newspapers
+      }
+      else {
+        return this.showAllNewspapers
+          ? this.newspapers
+          : this.newspapers.slice(0, 3);
+      }
     },
 
     subscription() {
@@ -354,34 +361,24 @@ author-detail--newspapers
     margin-bottom: $baseline / 2
 
     @media (max-width: $mobile)
-      grid-template-columns: 1fr 1fr
+      display: flex
       grid-column-gap: $baseline / 4
+      overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
-      newspaper-widget-view:last-of-type
-        display: none
-
-      &.show-all newspaper-widget-view:last-of-type
-        display: block
+      newspaper-widget-view
+        margin-right: $baseline / 2
+        max-width: 200px
 
   //- show/hide more newspapers
   > button
+    +button
+
     display: table
-    border-radius: $baseline
-    height: $baseline * 1.25
-    padding: 0 $baseline
     margin: 0 auto
 
-    background: $c-base
-    border: 0
-    color: #fff
-
-    font-family: $ff-sans
-    font-size: $fs--1
-    cursor: pointer
-
-    &:hover,
-    &:focus
-      background: darken($c-base, 10%)
+    @media (max-width: $mobile)
+      display: none
 
 //- Posts
 author-detail--posts
