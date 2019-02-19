@@ -193,21 +193,3 @@ Invoked by cron at the end of each month.
 Can by run manually to see how will be credits distributed for current month.
 `./manage.py payeditors --month 01/2019 --dry-run`
 
-
-## Users existing before migration
-
-(Emails should be filled)
-
-alenamarasova	 	                        Alena	Mařesová
-farin	                  	              Roman	Krejčík
-honzamikula	   	                        Jan	Mikula
-janhavel	                            	Jan	Havel
-jirikocib	                             	Jiří	Kočíb
-marekcerovsky	                         	Marek	Čeřovský
-martinmikula                            Martin Mikula
-oskarhollmann	 	                        Oskar	Hollmann
-qa@onboarding	 	                        QA	Kairly
-romanriha	 	                            Roman	Říha
-veronikasafarikova	 	                  Veronika Safaříková
-veronikavamberova	 	                    Veronika	Vamberova
-zbynekhujer                             Zbyněk Hujer
