@@ -337,7 +337,6 @@ export default {
   margin-bottom: $baseline * 2
   max-width: none
 
-  //background: url("~assets/homepage/hero-new.jpg") bottom center no-repeat
   background-size: cover
   background: #f5f5f5
 
