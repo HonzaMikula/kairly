@@ -41,49 +41,107 @@
 
       <QuoteZouzalik></QuoteZouzalik>
 
-      <section class="independent-journalists--benefits">
-        <div>
-          <h2>Publikační platforma, o kterou se nemusíte starat</h2>
 
-
-          <ul>
-            <li>Kairly je moderní publikační platforma, díky které</li>
-
-            <li>
-              Vracíme do hry profesi editorů, kteří vydávájí digitální noviny.
-              Za kvalitní výběr obsahu čtenáři platí předplatné.
-
-               Věříme, že obsah by měli pro
-              čtenáře vybírat lidi, nikoliv neprůhledné algoritmy.
-            </li>
-
-            <li>
-              Editoři zařazují do svých výdání novin ty nejlepší články a tweety od všech autorů.
-              Čtenáři se je předplácí. Editoři z
-            </li>
-          </ul>
-        </div>
+      <section class="microsite--section">
+        <picture>
+          <img src="~assets/microsite/kairly-independent-journalist-2.jpg" />
+        </picture>
 
         <div>
-          <h2>Začněte vydělávat na svém obsahu</h2>
+          <h2>Publikujte na moderní publikační platformě, o kterou se nemusíte starat.</h2>
 
+          <div>
+            <p>
+              Tvoříme pro vás moderní digitální platformu, která je šita na míru novinářům a publicistům.
+              Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, mobil, tablet či v budoucnu elektronickou čtečku.
+            </p>
 
-          <ul>
-            <li>
-              Vydělávejte na předplatném pro váš obsah.
-            </li>
-            <li>
-              Za články a tweety, které si editoři vyberou do svých vydání novin, budete odměněni.
-            </li>
-            <li>
-              Čtenáři mají možnost vás odměnit nad rámec běžného předplatného.
-            </li>
-          </ul>
+            <p>
+              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
+              a moderní trendy UX ze současných mobilních a webových aplikací.
+            </p>
+
+            <p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou platit, budeme si účtovat 15 % z ceny předplatného.</p>
+          </div>
         </div>
-
       </section>
 
+      <section class="homepage--quote">
+        <blockquote>
+          <p>
+            Pro novináře, publicisty a blogery tvoříme otevřenou platformu po vzoru sociálních sítí,
+            kde autoři budou férově soutěžit, kdo dokáže nejlépe a nejzajímavěji informovat čtenáře.
+            A dostávat za to zaslouženě zaplaceno.
+          </p>
 
+          <p>
+            V dnešní době plné nekonečného proudu nedůležitých informací a neustáleho vyrušování notifikacemi vytváříme pro čtenáře prostor,
+            kde mohou nerušeně číst, to co opravdu chtějí číst a v době, kdy jsou na to zvyklý. Zkrátka doba, kdy jsme si cestou do práce
+            koupili noviny a četli si je autobuse měla něco do sebe.
+          </p>
+
+          <footer>
+            <img src="https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY_400x400.jpeg" alt="Jan Mikula" />
+            <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
+          </footer>
+        </blockquote>
+      </section>
+
+      <section class="microsite--section">
+        <picture>
+          <img src="~assets/microsite/kairly-independent-journalist-5.jpg" />
+        </picture>
+
+        <div>
+          <h2>Začněte vydělávat na svém obsahu a staňte se skutečně nazávislým autorem.</h2>
+
+          <div>
+            <p>
+              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
+              Musíme na to chytře. Zapojte se do našeho unikátního systému placeného obsahu.
+            </p>
+
+            <p>
+              Čtenáři si vás buď mohou předplatit napřímo, nebo si předplácí noviny od editorů, kteří
+              vaše články a tweety považují za kvalitní a zařazují je do svých vydání. Vy za to dostanete
+              spravedlivý podíl z peněz, které editoři vybrali za své noviny.
+            </p>
+
+            <p>
+              Pokud píšete mimořádně zajímavý obsah, čtenáři mají možnost vám poslat peníze nad
+              rámec běžného předplatného.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="homepage--quote">
+        <blockquote>
+          <p>
+            Reklama kvalitní novinářskou a publicistickou tvorbu nezaplatí. Speciálně, když tu máme duopol Googlu a Facebooku.
+            Placený obsah se vrací. Jde to ale z těžka. Většina současných pokusů není příliš úspěšných. Musíme na to chytřeji.
+          </p>
+
+          <p>
+            Využijme toho, co udělalo sociální sítě tak úspěšné. Kairly využívá absolutní otevřenosti a síťového efektu,
+            díky kterému mohou čtenáři číst opravdu jen to, co chtějí a to od autorů na příč celou platformou.
+            Tato vysoká personalizace obsahu je klíč k úspěšněmu modelu placeného obsahu.
+          </p>
+
+          <footer>
+            <img src="https://pbs.twimg.com/profile_images/2334147233/ms3jmf3780crdrujahcm_400x400.jpeg" alt="Roman Krejčík" />
+            <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
+          </footer>
+        </blockquote>
+      </section>
+
+      <section class="homepage--howitworks">
+        <h2>{{ $t('How the platform works?') }}</h2>
+
+        <picture>
+          <img src="~assets/homepage/kairly-howitworks.jpg" />
+        </picture>
+      </section>
 
       <section class="independent-journalists--launch">
         <h2>Na ostro startujeme</h2>
@@ -94,6 +152,54 @@
           buďte mezi prvními, kdo začne na ní vydělávat.
         </p>
       </section>
+
+      <footer class="homepage--footer">
+        <div>
+          <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
+
+          <p>{{ $t('Read only what you care about.') }}</p>
+
+          <div class="homepage--footer--social-media">
+            <a
+              href="https://www.facebook.com/kairlynews/"
+              class="facebook"
+              :title="$t('Follow us on Facebook')"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            </a>
+
+            <a
+              href="https://twitter.com/kairlynews"
+              class="twitter"
+              :title="$t('Follow us on Twitter')"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/kairly/"
+              class="linkedin"
+              :title="$t('Follow us on LinkedIn')"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            </a>
+          </div>
+
+          <div class="homepage--footer--languages">
+            <a
+              href="?lang=cs"
+              @click.prevent="setLang('cs')"
+              :class="{'is-active': currentLocale == 'cs'}">
+              Česky
+            </a>
+
+            <a
+              href="?lang=en"
+              @click.prevent="setLang('en')"
+              :class="{'is-active': currentLocale == 'en'}">
+              English
+            </a>
+          </div>
+        </div>
+
+      </footer>
     </div>
   </app-layout>
 </template>
@@ -205,7 +311,7 @@ export default {
 //- FAQ
 .independent-journalist--faq
   display: grid
-  grid-template-columns: 2fr 1fr
+  grid-template-columns: 540px 334px
   grid-column-gap: $baseline
   padding-bottom: $baseline * 2
 
@@ -226,6 +332,80 @@ export default {
     height: 100%
     width: 100%
     object-fit: cover
+
+//- Section
+.microsite--section
+  display: grid
+  grid-template-areas: "hp-readers-picture hp-readers-text"
+  grid-template-columns: 334px 540px
+  grid-column-gap: $baseline
+  padding: $baseline*2 0
+
+  @media (max-width: 950px)
+    grid-template-areas: "hp-readers-picture" "hp-readers-text"
+    grid-template-columns: auto
+    padding: 0
+
+  @media (max-width: $mobile)
+    grid-template-areas: "hp-readers-picture" "hp-readers-text"
+    grid-template-columns: auto
+    padding: 0
+
+  > picture
+    grid-area: hp-readers-picture
+
+    img
+      height: 100%
+      width: 100%
+
+      object-fit: cover
+
+      @media (max-width: 950px)
+        max-height: 300px
+        object-position: 0 60%
+
+  > div
+    grid-area: hp-readers-text
+
+    @media (max-width: 950px)
+      padding: $baseline
+
+    @media (max-width: $mobile)
+      padding: $baseline / 2
+
+    h2
+      +heading
+      margin-bottom: $baseline
+
+    p
+      position: relative
+
+      margin-bottom: $baseline
+      padding-left: $baseline
+      max-width: 600px
+
+      font-size: $fs-1
+
+      &:last-of-type
+        margin-bottom: 0
+
+      @media (max-width: $mobile)
+        padding-left: 0
+
+      &::before
+        position: absolute
+        left: 0
+
+        width: $baseline
+
+        font-size: $fs-3
+        text-align: center
+
+        content: '•'
+
+        @media (max-width: $mobile)
+          content: none
+
 
 //- Benefits
 .independent-journalists--benefits
@@ -263,7 +443,8 @@ export default {
   flex-direction: column
   align-items: center
   justify-content: center
-  padding: $baseline*2 0
+  padding: $baseline * 2
+  margin-bottom: $baseline * 2
 
   background: #f5f5f5
 
