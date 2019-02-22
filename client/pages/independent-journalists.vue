@@ -5,7 +5,7 @@
         <div>
           <h1>Jste nezávislí novináři či blogeři?</h1>
           <ul>
-            <li>Publikujte na moderní publikační platformě, o kterou se nemusíte starat.</li>
+            <li>Publikujte na moderní platformě, o kterou se nemusíte starat.</li>
             <li>Začnětě vydělávat s unikátním konceptem placeného obsahu.</li>
             <li>Staňte se skutečně nezávislým autorem.</li>
           </ul>
@@ -16,20 +16,21 @@
         <div>
           <h2>Co je Kairly?</h2>
           <p>
-            Kairly je vznikající platforma pro novináře a jejich čtenáře, která nabízí unikátní koncept placeného obsahu.
+            Kairly je vznikající platforma pro novináře a jejich čtenáře, která nabízí <strong>unikátní koncept placeného obsahu</strong>.
           </p>
 
           <h2>V čem je unikátní?</h2>
           <p>
             Vracíme do žurnalistiky roli editorů. Editoři na Kairly vydávají noviny. Do nich zařazují nejlepší články a tweety od autorů napříč
-            celou platformou. Čtenáři platí za noviny předplatné. Peníze jsou pak rozděleny mezi editora a autory, kteří se
+            celou platformou. <strong>Čtenáři platí za noviny předplatné</strong>.
+            <strong>Peníze jsou pak rozděleny mezi editora a autory</strong>, kteří se
             ve vydáních novin objevili.
           </p>
 
           <h2>V čem je unikátní pro čtenáře?</h2>
           <p>
-            Nemáme žádnou reklamu. Nikoho nesledujeme. U nás čtenáři neskrolují donekonečna. Čtou je to, co opravdu chtějí číst a vždy v době,
-            kdy to chtějí číst.
+            Nemáme žádnou reklamu. Nikoho nesledujeme. U nás čtenáři neskrolují donekonečna. <strong>Čtou je to, co opravdu chtějí číst a vždy v době,
+            kdy to chtějí číst</strong>.
           </p>
         </div>
 
@@ -81,7 +82,7 @@
           </p>
 
           <footer>
-            <img src="https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY_400x400.jpeg" alt="Jan Mikula" />
+            <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
             <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
           </footer>
         </blockquote>
@@ -129,7 +130,7 @@
           </p>
 
           <footer>
-            <img src="https://pbs.twimg.com/profile_images/2334147233/ms3jmf3780crdrujahcm_400x400.jpeg" alt="Roman Krejčík" />
+            <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
             <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
           </footer>
         </blockquote>
@@ -148,9 +149,25 @@
         <p>3. čtvrtletí 2019</p>
 
         <p>
-          Zapojte se do uzavřené betaverze, pomozte nám platformu vyladit a
+          Zapojte se do uzavřené beta verze a
           buďte mezi prvními, kdo začne na ní vydělávat.
         </p>
+
+        <!-- Begin Mailchimp Signup Form -->
+        <div id="mc_embed_signup">
+          <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=aed6875343" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+            <div id="mc_embed_signup_scroll">
+              <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+              <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+              <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                <input type="text" name="b_0aa8c0b091d21d477832fbe62_aed6875343" tabindex="-1" value="">
+                <input type="checkbox" value="1" name="group[84725]" checked />
+              </div>
+              <div class="clear"><input type="submit" :value="$t('Request to join')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+            </div>
+          </form>
+        </div>
+        <!--End mc_embed_signup-->
       </section>
 
       <footer class="homepage--footer">
@@ -284,12 +301,22 @@ export default {
 
 
   ul
-    font-size: $fs-2
+    padding: 0 $baseline
 
     counter-reset: benefits
 
+    @media (max-width: $mobile)
+      padding: 0 $baseline/2
+
   li
+    display: flex
+    align-items: center
     margin-bottom: $baseline / 2
+
+    font-size: $fs-2
+
+    @media (max-width: $mobile)
+      font-size: $fs-1
 
     &::before
       display: inline-block
@@ -297,6 +324,7 @@ export default {
       border-radius: 100%
       height: $baseline * 1.25
       width: $baseline * 1.25
+      flex: 0 0 $baseline * 1.25
 
       background: #fff
 
@@ -315,6 +343,10 @@ export default {
   grid-column-gap: $baseline
   padding-bottom: $baseline * 2
 
+  @media (max-width: 950px)
+    grid-template-columns: auto
+    padding: 0
+
   h2
     margin-bottom: $baseline / 2
     font-size: $fs-3
@@ -328,10 +360,25 @@ export default {
     &:last-of-type
       margin-bottom: 0
 
+
+  @media (max-width: 950px)
+    picture
+      grid-row: 1
+
+    div
+      padding: $baseline
+
+  @media (max-width: $mobile)
+    div
+      padding: $baseline / 2
+
   img
     height: 100%
     width: 100%
     object-fit: cover
+
+    @media (max-width: 940px)
+      max-height: 300px
 
 //- Section
 .microsite--section
@@ -443,10 +490,16 @@ export default {
   flex-direction: column
   align-items: center
   justify-content: center
-  padding: $baseline * 2
+  padding: $baseline * 2 $baseline * 2 $baseline $baseline * 2
   margin-bottom: $baseline * 2
 
   background: #f5f5f5
+
+  font-size: $fs-1
+
+  @media (max-width: $mobile)
+    margin-bottom: 0
+    padding: $baseline
 
   h2
     margin-bottom: $baseline * 2
@@ -457,5 +510,84 @@ export default {
     font-size: 48px
     font-weight: 600
 
+    @media (max-width: $mobile)
+      font-size: $fs-5
+
+
+  //- Mailchimp
+  #mc_embed_signup
+    margin-top: $baseline
+
+    #mc_embed_signup_scroll
+      display: flex
+      justify-content: center
+
+      @media (max-width: $mobile)
+        align-items: center
+        flex-direction: column
+
+    input[type=email]
+      box-sizing: border-box
+      border-radius: 5px 0 0 5px
+      height: $baseline * 1.5
+      padding: 0 $baseline/2
+      margin-bottom: $baseline / 2
+      max-width: 250px
+
+      background: #fff
+      border: 1px solid #ddd
+      opacity: 0.9
+
+      font-family: $ff-sans
+      font-size: $fs-0
+      line-height: $baseline * 1.5
+
+      transition: 0.15s opacity
+
+      @media (max-width: $mobile)
+        border-radius: 5px
+
+
+      &:focus
+        opacity: 1
+
+    input[type=submit]
+      box-sizing: border-box
+      border-radius: 0 5px 5px 0
+      height: $baseline * 1.5
+      padding: 0 $baseline
+      margin-bottom: $baseline/2
+
+      background: $c-base
+      border: 0
+      color: #fff
+
+      cursor: pointer
+      font-size: $fs-1
+      font-family: $ff-sans
+      line-height: $baseline * 1.5
+
+      @media (max-width: $mobile)
+        border-radius: 5px
+
+      &:focus,
+      &:hover
+        background: darken($c-base, 10%)
+
+  #mc-embedded-subscribe-form input[type=checkbox]
+    display: inline
+    width: auto
+    margin-right: 10px
+
+  #mergeRow-gdpr
+    margin-top: 20px
+
+  #mergeRow-gdpr fieldset label
+    font-weight: normal
+
+  #mc-embedded-subscribe-form .mc_fieldset
+    border: none
+    min-height: 0px
+    padding-bottom: 0px
 
 </style>

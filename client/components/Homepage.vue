@@ -70,7 +70,7 @@
          -->
 
         <footer>
-          <img src="https://pbs.twimg.com/profile_images/522497269447147520/uGF7lbPY_400x400.jpeg" alt="Jan Mikula" />
+          <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
           <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
         </footer>
       </blockquote>
@@ -122,7 +122,7 @@
         -->
 
         <footer>
-          <img src="https://pbs.twimg.com/profile_images/2334147233/ms3jmf3780crdrujahcm_400x400.jpeg" alt="Roman Krejčík" />
+          <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
           <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
         </footer>
       </blockquote>
@@ -160,7 +160,7 @@
          -->
 
         <footer>
-          <img src="https://pbs.twimg.com/profile_images/762976177535475712/JfzxZ0RA_400x400.jpg" alt="Marek Zouzalík" />
+          <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
           <strong>Marek Zouzalík</strong> <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
         </footer>
       </blockquote>
