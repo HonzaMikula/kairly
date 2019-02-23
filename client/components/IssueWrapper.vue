@@ -36,8 +36,9 @@
 </template>
 
 <script>
-import issueSuspendedNewspaper from '@/components/issues/suspended'
-import issueUnreleasedNewspaper from '@/components/issues/unreleased'
+import issueSuspendedAuthor from '@/components/issues/suspended-author'
+import issueSuspendedNewspaper from '@/components/issues/suspended-newspaper'
+import issueUnreleasedNewspaper from '@/components/issues/unreleased-newspaper'
 import issueNewspaper from '@/components/issues/newspaper'
 import issueAuthor from '@/components/issues/author'
 import PostWrapper from '@/components/PostWrapper'
@@ -56,6 +57,7 @@ export default {
   components: {
     issueNewspaper,
     issueAuthor,
+    issueSuspendedAuthor,
     issueSuspendedNewspaper,
     issueUnreleasedNewspaper,
     PostWrapper,

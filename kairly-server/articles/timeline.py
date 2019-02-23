@@ -94,6 +94,7 @@ def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to)
 
         if sub.suspended:
             for issue in newspaper_issues:
+                issue['id'] = issue['id'].replace('.unreleased', '') + '.suspended'
                 issue['type'] = 'suspended-newspaper'
                 issue['posts'] = []
 
@@ -139,10 +140,10 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
 
     for missing in expected_issues:
         issues.append({
+            "id": '{}/{}.unreleased'.format(sub.newspaper.full_name, int(missing.timestamp())),
             "type": 'unreleased-newspaper',
             "newspaper": sub.newspaper.to_json(tzinfo),  # TODO return newspapers separately, as done alredy for subscriptions
             "time": datetime_isoformat_ecma262(missing.astimezone(tzinfo)),
-            "id": '{}/{}'.format(sub.newspaper.full_name, int(missing.timestamp())),
             "posts": []
         })
 
@@ -156,9 +157,8 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
 
 def get_author_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
     subscriptions = SubscriptionToAuthor.objects.filter(
-        Q(valid_to__gt=now) | Q(renewal=True),
-        user=request.user,
-        suspended=False,
+        Q(valid_to__gt=now) | Q(renewal=True) | Q(suspended=True),
+        user=request.user
     ).select_related('author')
 
     issues = []
@@ -181,10 +181,14 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
         int(end_dt.timestamp() if cache_valid_to is None else cache_valid_to)
     )
 
-    # there is still place to improve it using get_many or redis directly
-    cached_issues = cache.get(cache_key)
-    if cached_issues:
-        return json.loads(cached_issues)
+    if not sub.suspended:
+        # for suspended issue we must find just first interval and return
+        # suspended placeholder instead
+
+        # there is still place to improve it using get_many or redis directly
+        cached_issues = cache.get(cache_key)
+        if cached_issues:
+            return json.loads(cached_issues)
 
     dt = start_dt
     intervals = []
@@ -198,6 +202,18 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
 
     if not intervals:
         return []
+
+    if sub.suspended:
+        interval = intervals[0]
+        isodate = datetime_isoformat_ecma262(interval.end)
+        return [{
+            "id": '{}/${}/{}.suspended'.format(sub.author.username, sub.period, int(interval.end.timestamp())),
+            "type": 'suspended-author',
+            'title': interval.title,
+            'time': isodate,
+            'author': sub.author.to_json(),
+            "posts": []
+        }]
 
     posts_query = Post.objects.filter(
         author=sub.author,
