@@ -35,9 +35,19 @@ export default {
   },
 
   async asyncData({ store }) {
-    const { newspapers: ids } = await store.dispatch('getSubscriptions')
-    const newspapers = await store.dispatch('getNewspapers', Object.keys(ids))
-    newspapers.sort(({title: a}, {title: b}) => a < b ? -1 : (a > b ? 1 : 0))
+    const {newspapers: newspaperSubscriptions} = await store.dispatch('getSubscriptions')
+    const newspapers = await store.dispatch('getNewspapers', Object.keys(newspaperSubscriptions))
+    newspapers.sort(
+      (a, b) => {
+        const aSuspended = newspaperSubscriptions[a.fullName].state === 'suspended'
+        const bSuspended = newspaperSubscriptions[b.fullName].state === 'suspended'
+        if (aSuspended && !bSuspended) return -1
+        if (!aSuspended && bSuspended) return 1
+        const aTitle = a.title.toLowerCase()
+        const bTitle = b.title.toLowerCase()
+        return aTitle < bTitle ? -1 : (aTitle > bTitle ? 1 : 0)
+      }
+    )
     return {
       newspapers
     }
