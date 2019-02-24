@@ -8,6 +8,15 @@
         <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
       </my-authors--empty>
 
+      <template v-if="authors['suspended'].length">
+        <h2>{{ $t('Suspended') }}</h2>
+        <AuthorWidget
+          v-for="author in authors['suspended']"
+          :key="author.slug"
+          :author="author"
+        />
+      </template>
+
       <template v-if="authors['6x_per_day'].length">
         <h2>{{ $t('Every 3 hours') }}</h2>
         <AuthorWidget
@@ -53,6 +62,11 @@ import { mapState, mapGetters } from 'vuex'
 
 import AuthorWidget from '@/components/widgets/AuthorWidget'
 
+function sortByAuthorName(a, b) {
+  const aName = a.author.name.toLowerCase(), bName = b.author.name.toLowerCase()
+  return aName < bName ? -1 : (aName > bName ? 1 : 0)
+}
+
 export default {
   name: 'MyAuthors',
 
@@ -74,6 +88,7 @@ export default {
     authors: state => {
       const subscriptions = state.subscriptions.authors
       const sections = {
+        'suspended': [],
         '6x_per_day': [],
         '3x_per_day': [],
         'daily': [],
@@ -81,39 +96,17 @@ export default {
       }
       Object.keys(subscriptions).forEach(id => {
         const subscription = subscriptions[id]
-        sections[subscription.periodicity.frequency].push(subscription)
-      })
-      sections['3x_per_day'].sort((a, b) => {
-        const aName = a.author.name, bName = b.author.name
-        return aName < bName ? -1 : (aName > bName ? 1 : 0)
-      })
-      sections['6x_per_day'].sort((a, b) => {
-        const aName = a.author.name, bName = b.author.name
-        return aName < bName ? -1 : (aName > bName ? 1 : 0)
-      })
-      sections['daily'].sort((a, b) => {
-        const aTime = a.periodicity.time, bTime = b.periodicity.time
-        const aName = a.author.name, bName = b.author.name
-        if (aTime < bTime) return -1
-        if (aTime > bTime) return 1
-        return aName < bName ? -1 : (aName > bName ? 1 : 0)
-      })
-      sections['weekly'].sort((a, b) => {
-        const aDow = a.periodicity.dow === 0 ? 7 : a.periodicity.dow
-        const bDow = b.periodicity.dow === 0 ? 7 : b.periodicity.dow
-        const aTime = a.periodicity.time, bTime = b.periodicity.time
-        const aName = a.author.name, bName = b.author.name
-        if (aDow < bDow) return -1
-        if (aDow > bDow) return 1
-        if (aTime < bTime) return -1
-        if (aTime > bTime) return 1
-        return aName < bName ? -1 : (aName > bName ? 1 : 0)
+        if (subscription.state === 'suspended') {
+          sections.suspended.push(subscription)
+        } else {
+          sections[subscription.periodicity.frequency].push(subscription)
+        }
       })
 
-      sections['6x_per_day'] = sections['6x_per_day'].map(s => s.author)
-      sections['3x_per_day'] = sections['3x_per_day'].map(s => s.author)
-      sections['daily'] = sections['daily'].map(s => s.author)
-      sections['weekly'] = sections['weekly'].map(s => s.author)
+      Object.keys(sections).forEach(key => {
+          sections[key].sort(sortByAuthorName)
+          sections[key] = sections[key].map(s => s.author)
+      })
 
       return sections
     }
