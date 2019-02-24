@@ -177,6 +177,15 @@ const createStore = () => {
         })
         const mod = cents % 100
         return ~~(cents / 100) + "." + (mod < 10 ? "0" : "") + mod
+      },
+      hasSuspendedSubscription: state => {
+        if (!state.subscriptions) {
+          return false
+        }
+        return !!(
+          Object.values(state.subscriptions.newspapers).find(s => s.state === 'suspended') ||
+          Object.values(state.subscriptions.authors).find(s => s.state === 'suspended')
+        )
       }
     },
 

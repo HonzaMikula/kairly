@@ -135,7 +135,6 @@ export default {
 
     visibleNewspapers() {
       const mq = window.matchMedia("(max-width: 640px)")
-      console.log(mq.matches)
       if (mq.matches) {
         return this.newspapers
       }

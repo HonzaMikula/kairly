@@ -13,7 +13,7 @@
 
           <li class="subscription">
             <nuxt-link :to="{name: 'subscription-newspapers'}" title="Subscriptions">
-              <span>{{ $t('Subscriptions') }}</span>
+              <span>{{ $t('Subscriptions') }}{{ hasSuspendedSubscription ? '*' : ''}}</span>
             </nuxt-link>
           </li>
 
@@ -86,7 +86,7 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import store from '@/store'
 
 export default {
@@ -108,10 +108,14 @@ export default {
     }
   },
 
-  computed: mapState({
-    user: state => state.auth.user,
-    currentLocale: state => state.locale || 'en'
-  }),
+  computed: {
+    ...mapState({
+      user: state => state.auth.user,
+      currentLocale: state => state.locale || 'en'
+    }),
+
+    ...mapGetters(['hasSuspendedSubscription'])
+  },
 
   methods: {
     ...mapActions(['afterLogout']),
@@ -125,7 +129,20 @@ export default {
       this.setLocale(locale)
       this.$auth.$storage.setUniversal('locale', locale)
     }
+  },
+
+  mounted() {
+    if (process.client) {
+      /*
+        this cause hasSuspendedSubscription to be correctly computed
+        but it can be requested after page is rendered so we don't need trigger this
+        in asyncData (if subscriptions is not needed for other parts of page)
+      */
+      this.$store.dispatch('getSubscriptions')
+    }
   }
+
+
 }
 </script>
 
