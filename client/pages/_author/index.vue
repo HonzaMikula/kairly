@@ -134,15 +134,9 @@ export default {
     }),
 
     visibleNewspapers() {
-      const mq = window.matchMedia("(max-width: 640px)")
-      if (mq.matches) {
-        return this.newspapers
-      }
-      else {
-        return this.showAllNewspapers
-          ? this.newspapers
-          : this.newspapers.slice(0, 3);
-      }
+      return this.showAllNewspapers
+        ? this.newspapers
+        : this.newspapers.slice(0, 3);
     },
 
     subscription() {
@@ -185,6 +179,27 @@ export default {
       posts.forEach(post => this.posts.push(post));
       this.cursor = cursor;
       this.loadingPosts = false;
+    },
+
+    // can be called on client side only
+    onResize() {
+      const {matches: isMobile} = window.matchMedia("(max-width: 640px)")
+
+      if (isMobile === this._isMobile) {
+        return
+      }
+
+      if (isMobile) {
+        // for mobile use horizontal scrollbar (style with CSS)
+        // and directly show all newspapers
+        this._notMobileShowAllValue = this.showAllNewspapers
+        this.showAllNewspapers = true
+      } else {
+        // recover saved value before resize to narrow window
+        this.showAllNewspapers = this._notMobileShowAllValue
+        delete this._notMobileShowAllValue
+      }
+      this._isMobile = isMobile
     }
   },
 
@@ -229,7 +244,21 @@ export default {
     if (process.client && this.cursor === 0) {
       this.loadPosts();
     }
+  },
+
+  mounted() {
+    if (process.client) {
+      window.addEventListener('resize', this.onResize)
+    }
+  },
+
+  beforeDestroy() {
+    if (process.client) {
+      window.removeEventListener('resize', this.onResize)
+    }
   }
+
+
 };
 </script>
 
