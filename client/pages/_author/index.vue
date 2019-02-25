@@ -249,6 +249,8 @@ export default {
   mounted() {
     if (process.client) {
       window.addEventListener('resize', this.onResize)
+
+      this.onResize() // and recompute for initial page
     }
   },
 
