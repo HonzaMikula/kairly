@@ -45,7 +45,9 @@ class ChannelAdmin(admin.ModelAdmin):
             resp = requests.get(channel.rss, headers=headers)
             resp.raise_for_status()
 
-            rss_content = resp.text
+            # strip whitespaces because eg. https://www.foliomag.com/feed/
+            # generates invalid XML due to leading whitespaces
+            rss_content = resp.text.strip()
             cache.set(cache_key, rss_content, 120)
 
         return feedparser.parse(rss_content)
