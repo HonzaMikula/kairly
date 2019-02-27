@@ -30,7 +30,7 @@
         <section class="newspaper-subscription--donations">
           <h2>{{ $t('Support the newspaper and donate more') }}</h2>
           <div>
-            <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0"/>
+            <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000"/>
             {{ $t('Kč per month') }}
           </div>
         </section>

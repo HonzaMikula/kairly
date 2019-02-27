@@ -315,8 +315,8 @@ class NewspaperSubscriptionView(View):
         donation = payload.get('donation')
         if donation:
             donation = Decimal(donation)
-            if donation < 0:
-                return HttpResponseBadRequest("Invalid donation")
+            if donation < 0 or donation > 100000:
+                return HttpResponseBadRequest("Donation must be between range from 0 and 100000")
 
         credits = get_user_credits(request.user.id)
 
@@ -405,8 +405,8 @@ class AuthorSubscriptionView(View):
         donation = payload.get('donation')
         if donation:
             donation = Decimal(donation)
-            if donation < 0:
-                return HttpResponseBadRequest("Invalid donation")
+            if donation < 0 or donation > 100000:
+                return HttpResponseBadRequest("Donation must be between range from 0 and 100000")
 
         credits = get_user_credits(request.user.id)
 

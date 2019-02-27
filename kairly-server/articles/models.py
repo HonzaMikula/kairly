@@ -60,7 +60,7 @@ class Post(models.Model):
 
     # pricing helpers
     author_price = models.DecimalField(
-        _('Frozen author price at publish time'), max_digits=5, decimal_places=2,
+        _('Frozen author price at publish time'), max_digits=7, decimal_places=2,
         null=True, validators=[MinValueValidator(Decimal(0))])
     weight = models.PositiveIntegerField(null=True)
 
@@ -169,7 +169,7 @@ class Newspaper(models.Model, PeriodMixin):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True, blank=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
-    price = models.DecimalField(_('Price'), max_digits=5, decimal_places=2,
+    price = models.DecimalField(_('Price'), max_digits=7, decimal_places=2,
                                 default=Decimal(0),
                                 validators=[MinValueValidator(Decimal(0))])
 
@@ -285,7 +285,7 @@ class Subscription(models.Model):
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
     suspended = models.BooleanField(default=False)
-    donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
+    donation = models.DecimalField(_('Donation'), max_digits=7, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
         return "Subscription to {}}".format(self.newspaper.full_name)
@@ -319,7 +319,7 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
     valid_to = models.DateTimeField()
     renewal = models.BooleanField(default=True)
     suspended = models.BooleanField(default=False)
-    donation = models.DecimalField(_('Donation'), max_digits=5, decimal_places=2, default=Decimal(0))
+    donation = models.DecimalField(_('Donation'), max_digits=7, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
         title = self.author.username
