@@ -33,7 +33,7 @@ class Transaction(models.Model):
     to_author = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, related_name='+')
     to_newspaper = models.ForeignKey(Newspaper, on_delete=models.PROTECT, null=True, blank=True, related_name='+')
     kind = models.CharField(max_length=2, choices=KIND_CHOICES, db_index=True)
-    credits = models.DecimalField(_('Credits'), max_digits=7, decimal_places=2)
+    credits = models.DecimalField(_('Credits'), max_digits=11, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -63,6 +63,7 @@ class Transaction(models.Model):
             'credits': str(self.credits * -1 if reversed else self.credits),
             'created': datetime_isoformat_ecma262(self.created),
         }
+
 
 
 @receiver(post_save, sender=User)

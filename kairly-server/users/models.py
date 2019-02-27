@@ -92,7 +92,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
 
-    price = models.DecimalField(_('Subscription price'), max_digits=5, decimal_places=2,
+    price = models.DecimalField(_('Subscription price'), max_digits=11, decimal_places=2,
                                 default=Decimal(0),
                                 validators=[MinValueValidator(Decimal(0))])
 
