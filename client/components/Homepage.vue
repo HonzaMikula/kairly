@@ -166,61 +166,13 @@
       </blockquote>
     </section>
 
-    <section class="homepage--howitworks">
-      <h2>{{ $t('How the platform works?') }}</h2>
+    <HowItWorks />
 
-      <picture>
-        <img src="~assets/homepage/kairly-howitworks.jpg" />
-      </picture>
-    </section>
+    <OfficialStart />
 
-    <footer class="homepage--footer">
-      <div>
-        <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
+    <Footer />
 
-        <p>{{ $t('Read only what you care about.') }}</p>
-
-        <div class="homepage--footer--social-media">
-          <a
-            href="https://www.facebook.com/kairlynews/"
-            class="facebook"
-            :title="$t('Follow us on Facebook')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-          </a>
-
-          <a
-            href="https://twitter.com/kairlynews"
-            class="twitter"
-            :title="$t('Follow us on Twitter')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-          </a>
-
-          <a
-            href="https://www.linkedin.com/company/kairly/"
-            class="linkedin"
-            :title="$t('Follow us on LinkedIn')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-          </a>
-        </div>
-
-        <div class="homepage--footer--languages">
-          <a
-            href="?lang=cs"
-            @click.prevent="setLang('cs')"
-            :class="{'is-active': currentLocale == 'cs'}">
-            Česky
-          </a>
-
-          <a
-            href="?lang=en"
-            @click.prevent="setLang('en')"
-            :class="{'is-active': currentLocale == 'en'}">
-            English
-          </a>
-        </div>
-      </div>
-
-    </footer>
+    <FooterLinks />
 
     <portal to="modal" v-if="isJoinUsModalOpen">
       <JoinUsModal :closeModal="closeJoinUs"></JoinUsModal>
@@ -233,6 +185,10 @@ import { mapState } from 'vuex'
 import store from '@/store'
 import JoinUsModal from '@/components/modals/JoinUs'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
+import HowItWorks from '@/components/microsite/HowItWorks'
+import Footer from '@/components/microsite/Footer'
+import FooterLinks from '@/components/microsite/FooterLinks'
+import OfficialStart from '@/components/microsite/OfficialStart'
 
 
 export default {
@@ -240,7 +196,11 @@ export default {
 
   components: {
     JoinUsModal,
-    NewspaperWidget
+    NewspaperWidget,
+    HowItWorks,
+    OfficialStart,
+    Footer,
+    FooterLinks
   },
 
   head() {
@@ -632,150 +592,5 @@ export default {
       newspaper-widget-view,
       issue-widget-view
         min-width: 200px
-
-
-//- Image how it works
-.homepage--howitworks
-  margin-bottom: $baseline * 2
-
-  @media (max-width: 950px)
-    padding: $baseline $baseline 0 $baseline
-
-  @media (max-width: $mobile)
-    padding: $baseline $baseline/2
-    margin-bottom: 0
-
-  h2
-    +heading
-
-    margin-bottom: $baseline
-
-  picture
-    display: block
-    margin: 0 (-$baseline*2)
-
-    @media (max-width: 1050px)
-      margin: 0
-
-    @media (max-width: $mobile)
-      margin: 0
-
-  img
-    width: 100%
-
-
-//- Footer
-.homepage--footer
-  position: relative
-
-  display: flex
-  align-items: center
-  justify-content: center
-  height: 400px
-  max-width: none
-
-  background: url("~assets/homepage/hero-new.jpg") bottom center no-repeat
-  background-size: cover
-
-  color: #fff
-
-  font-family: $ff-serif
-  text-align: center
-
-  h2
-    display: table
-    padding: 0 $baseline/2
-    margin: 0 auto
-    margin-bottom: $baseline
-
-    background: #fff
-    color: #000
-    text-shadow: 0 0 3px #fff
-
-    font-size: $fs-4
-    font-weight: 600
-    line-height: $baseline * 2
-    text-align: left
-
-    @media (max-width: $mobile)
-      font-size: $fs-3
-      line-height: $baseline * 1.5
-
-    a
-      color: #000
-
-  p
-    display: table
-    padding: 0 $baseline/2
-    margin: 0 auto
-    margin-bottom: $baseline
-
-    background: #fff
-    color: #000
-    text-shadow: 0 0 3px #fff
-
-    font-size: $fs-2
-    font-weight: 600
-    line-height: $baseline * 1.5
-
-//- Social media links
-.homepage--footer--social-media
-  display: flex
-  justify-content: center
-
-  a
-    border-radius: 100%
-    display: inline-block
-    height: $baseline * 1.5
-    margin: 0 $baseline/2
-    width: $baseline * 1.5
-
-    background: #fff
-    color: #555
-
-    font-size: $fs-3
-    line-height: $baseline * 1.5
-    text-align: center
-
-    transition: 0.15s all
-
-    &:focus,
-    &:hover
-      color: #000
-
-    &::before
-      +fa-icon()
-      @extend .fab
-
-      line-height: $baseline * 1.5
-      vertical-align: top
-
-    &.facebook::before
-      content: fa-content($fa-var-facebook)
-
-    &.twitter::before
-      content: fa-content($fa-var-twitter)
-
-    &.linkedin::before
-      content: fa-content($fa-var-linkedin)
-
-
-//- Social media links
-.homepage--footer--languages
-  display: flex
-  justify-content: center
-  margin-top: $baseline
-
-  a
-    +button
-
-    margin: 0 $baseline/4
-
-    background: rgba(255, 255, 255, 0.5)
-    color: #000
-
-    &:hover,
-    &:focus
-      background: #fff
 
 </style>

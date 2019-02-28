@@ -1,26 +1,15 @@
 <template>
   <section class="microsite-quote">
-    <h2>{{ $t('Was said about us.') }}</h2>
+    <h2 v-if="heading">{{ heading }}</h2>
 
     <blockquote>
-      <div v-html="$t('@homepage/quote/zouzalik')"></div>
-      <!--
-      <p>
-        Nowadays, when attacks on journalists, including physical ones, are increasing, we need to find a
-        sustainable economic model for journalism. Only in this way can we keep independent journalism on
-        politicians and large private corporations. And only in this way we can resist the phenomena of fake
-        news and ensure that the complete freedom of speech is preserved.
-      </p>
-
-      <p>
-        Kairly comes up with an interesting concept of paid content on the internet, which is significantly
-        different from the current not very successful attempts.
-      </p>
-        -->
-
+      <div v-html="quote"></div>
       <footer>
-        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
-        <strong>Marek Zouzalík</strong> <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
+        <slot>
+          <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+          <strong>Marek Zouzalík</strong>
+          <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
+        </slot>
       </footer>
     </blockquote>
   </section>
@@ -29,7 +18,11 @@
 <script>
 
 export default {
-  name: 'QuoteZouzalik'
+  name: 'Quote',
+  props: {
+    heading: String,
+    quote: String
+  }
 }
 </script>
 
