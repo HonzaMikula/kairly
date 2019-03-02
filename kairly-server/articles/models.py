@@ -28,12 +28,10 @@ class Post(models.Model):
 
     NEWSPAPER = 'newspaper'
     TWEET = 'tweet'
-    PICTURE = 'picture'
 
     KIND_CHOICES = (
         (NEWSPAPER, _('Newspaper')),
         (TWEET, _('Tweet')),
-        (PICTURE, _('Picture')),
     )
 
     READ_TIME_CACHE_KEY = 'read_time_{id}'
@@ -52,7 +50,6 @@ class Post(models.Model):
     protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
 
     title = models.CharField(max_length=160)
-    picture = models.CharField(_("Picture"), max_length=300, blank=True, null=True)
     perex = models.TextField(_("Perex"), blank=True, null=True)
     content = models.TextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
