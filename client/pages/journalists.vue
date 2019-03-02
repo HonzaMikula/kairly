@@ -12,34 +12,9 @@
         </div>
       </section>
 
-      <section class="journalists--faq">
-        <div v-html="$t('@independent-journalists/faq')">
-
-        </div>
-        <!-- <h2>Co je Kairly?</h2>
-          <p>
-            Kairly je vznikající platforma pro novináře a jejich čtenáře, která nabízí <strong>unikátní koncept placeného obsahu</strong>.
-          </p>
-
-          <h2>V čem je unikátní?</h2>
-          <p>
-            Vracíme do žurnalistiky roli editorů. Editoři na Kairly vydávají noviny. Do nich zařazují nejlepší články a tweety od autorů napříč
-            celou platformou. <strong>Čtenáři platí za noviny předplatné</strong>.
-            <strong>Peníze jsou pak rozděleny mezi editora a autory</strong>, kteří se
-            ve vydáních novin objevili.
-          </p>
-
-          <h2>Co přináší čtenářům?</h2>
-          <p>
-            Nemáme žádnou reklamu. Nikoho nesledujeme. U nás čtenáři neskrolují donekonečna. <strong>Čtou jen to, co opravdu chtějí číst a vždy v době,
-            kdy to chtějí číst</strong>.
-          </p> -->
-
-        <picture>
-          <img src="~assets/microsite/kairly-independent-journalist-1.jpg" alt="Kairly" />
-        </picture>
-
-      </section>
+      <Faq>
+        <img src="~assets/microsite/kairly-independent-journalist-1.jpg" alt="Kairly" />
+      </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
         <!--
@@ -166,6 +141,7 @@ import HowItWorks from '@/components/microsite/HowItWorks'
 import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import OfficialStart from '@/components/microsite/OfficialStart'
+import Faq from '@/components/microsite/Faq'
 
 export default {
   name: 'IndependentJournalists',
@@ -178,7 +154,8 @@ export default {
     HowItWorks,
     OfficialStart,
     Footer,
-    FooterLinks
+    FooterLinks,
+    Faq
   },
 
   head() {
