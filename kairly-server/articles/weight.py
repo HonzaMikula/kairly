@@ -4,12 +4,17 @@ from collections import namedtuple
 import lxml.html
 from lxml.etree import ParserError
 
+
 PostWeight = namedtuple('PostWeight', ['word_chars', 'images'])
 IMAGE_WEIGHT = 140
 MIN_POST_WEIGHT = 100
 
 
 def calculate_post_weight(post):
+    # dont' import Post to avoid circular import
+    if post.kind == post.RECOMMENDATION:
+        return 0
+
     word_chars = 0
     images = 0
 

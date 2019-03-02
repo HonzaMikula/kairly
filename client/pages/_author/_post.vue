@@ -67,6 +67,8 @@
               :title="$t('Share on Twitter')">
             </a>
 
+            <recommend-button :post="post" />
+
             <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">
               {{ post.time | moment('DD. MM. YYYY') }}
             </time>
@@ -111,6 +113,7 @@ import { mapGetters, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+import RecommendButton from '@/components/widgets/RecommendButton'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
 
@@ -160,7 +163,8 @@ export default {
     ConsiderPost,
     AuthorSubscription,
     KairlyPromo,
-    FooterLinks
+    FooterLinks,
+    RecommendButton,
   },
 
   data() {

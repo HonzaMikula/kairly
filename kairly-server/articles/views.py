@@ -676,3 +676,31 @@ def start_newspaper(request, username):
     return JsonResponse({
         'newspaper': newspaper.to_json(tzinfo)
     })
+
+
+@ajax_login_required
+@require_POST
+@transaction.atomic
+def post_recommendation(request, username, post_slug):
+    post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False)
+
+    if post.kind == Post.RECOMMENDATION:
+        return JsonResponse({'error': "recommendation can't be recommended"}, status=400)
+
+    if post.author == request.user:
+        return JsonResponse({'error': "can't recommend own post"}, status=400)
+
+    if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_post=post).exists():
+        return JsonResponse({'error': "already recommended"}, status=400)
+
+    recommendation = Post.objects.create(
+        title=post.title,
+        kind=Post.RECOMMENDATION,
+        author=request.user,
+        ref_post=post,
+        protected=False
+    )
+
+    return JsonResponse({
+        'post': recommendation.to_json()
+    })
