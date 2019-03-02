@@ -1,0 +1,443 @@
+<template>
+  <app-layout>
+    <div class="journalists-view">
+      <section class="journalists--hero">
+        <div>
+          <!-- <h1>{{ $t('Are you independent journalist or blogger?') }}</h1> -->
+          <h1>Jste nezávislé vydavatelství?</h1>
+          <ul>
+            <li>Publikujte vaše noviny a časopisy na moderní platformě.</li>
+            <li>Začnětě vydělávat na svých titulech s unikátním konceptem placeného obsahu.</li>
+            <li>Oslovte zcela nové skupiny čtenářů.</li>
+          </ul>
+
+          <!-- <ul>
+            <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
+            <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
+            <li>{{ $t('Become a truly independent author.') }}</li>
+          </ul> -->
+        </div>
+      </section>
+
+      <section class="journalists--faq">
+        <div v-html="$t('@independent-journalists/faq')">
+
+        </div>
+        <!-- <h2>Co je Kairly?</h2>
+          <p>
+            Kairly je vznikající platforma pro novináře a jejich čtenáře, která nabízí <strong>unikátní koncept placeného obsahu</strong>.
+          </p>
+
+          <h2>V čem je unikátní?</h2>
+          <p>
+            Vracíme do žurnalistiky roli editorů. Editoři na Kairly vydávají noviny. Do nich zařazují nejlepší články a tweety od autorů napříč
+            celou platformou. <strong>Čtenáři platí za noviny předplatné</strong>.
+            <strong>Peníze jsou pak rozděleny mezi editora a autory</strong>, kteří se
+            ve vydáních novin objevili.
+          </p>
+
+          <h2>Co přináší čtenářům?</h2>
+          <p>
+            Nemáme žádnou reklamu. Nikoho nesledujeme. U nás čtenáři neskrolují donekonečna. <strong>Čtou jen to, co opravdu chtějí číst a vždy v době,
+            kdy to chtějí číst</strong>.
+          </p> -->
+
+        <picture>
+          <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
+        </picture>
+
+      </section>
+
+      <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
+        <!--
+        <p>
+          Nowadays, when attacks on journalists, including physical ones, are increasing, we need to find a
+          sustainable economic model for journalism. Only in this way can we keep independent journalism on
+          politicians and large private corporations. And only in this way we can resist the phenomena of fake
+          news and ensure that the complete freedom of speech is preserved.
+        </p>
+
+        <p>
+          Kairly comes up with an interesting concept of paid content on the internet, which is significantly
+          different from the current not very successful attempts.
+        </p>
+        -->
+        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+        <strong>Marek Zouzalík</strong>
+        <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
+      </Quote>
+
+
+      <section class="microsite--section">
+        <picture>
+          <img src="~assets/microsite/kairly-random-9.jpg" />
+        </picture>
+
+        <div>
+          <!-- <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2> -->
+          <h2>Publikujte vaše noviny a časopisy na moderní platformě</h2>
+
+          <div v-html="$t('@independent-journalists/modern-platform')">
+          </div>
+            <!-- <p>
+              Tvoříme pro vás moderní digitální platformu, která je šita na míru novinářům a publicistům.
+              Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, mobil, tablet či v budoucnu elektronickou čtečku.
+            </p>
+
+            <p>
+              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
+              a moderní trendy UX ze současných mobilních a webových aplikací.
+            </p>
+
+            <p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou platit, budeme si účtovat 15 % z ceny předplatného.</p> -->
+
+        </div>
+      </section>
+
+      <Quote :quote="$t('@independent-journalists/quote/jan-mikula')">
+        <!-- <p>
+            Pro novináře, publicisty a blogery tvoříme otevřenou platformu po vzoru sociálních sítí,
+            kde autoři budou férově soutěžit, kdo dokáže nejlépe a nejzajímavěji informovat čtenáře.
+            A dostávat za to zaslouženě zaplaceno.
+          </p>
+
+          <p>
+            V dnešní době plné nekonečného proudu nedůležitých informací a neustáleho vyrušování notifikacemi vytváříme pro čtenáře prostor,
+            kde mohou nerušeně číst, to co opravdu chtějí číst a v době, kdy jsou na to zvyklý. Zkrátka doba, kdy jsme si cestou do práce
+            koupili noviny a četli si je autobuse měla něco do sebe.
+          </p> -->
+
+        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
+        <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
+      </Quote>
+
+      <section class="microsite--section">
+        <picture>
+          <img src="~assets/microsite/kairly-random-15.jpg" />
+        </picture>
+
+        <div>
+          <!-- <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2> -->
+          <h2>Vydělávejte na svých titulech s unikátním konceptem placeného obsahu a oslovte nové čtenáře</h2>
+
+          <div v-html="$t('@independent-journalists/monetizing-content')"></div>
+            <!-- <p>
+              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
+              Musíme na to chytře. Zapojte se do našeho unikátního systému placeného obsahu.
+            </p>
+
+            <p>
+              Čtenáři si vás buď mohou předplatit napřímo, nebo si předplácí noviny od editorů, kteří
+              vaše články a tweety považují za kvalitní a zařazují je do svých vydání. Vy za to dostanete
+              spravedlivý podíl z peněz, které editoři vybrali za své noviny.
+            </p>
+
+            <p>
+              Pokud píšete mimořádně zajímavý obsah, čtenáři mají možnost vám poslat peníze nad
+              rámec běžného předplatného.
+            </p> -->
+        </div>
+      </section>
+
+      <Quote :quote="$t('@independent-journalists/quote/roman-krejcik')">
+        <!-- <p>
+            Reklama kvalitní novinářskou a publicistickou tvorbu nezaplatí. Speciálně, když tu máme duopol Googlu a Facebooku.
+            Placený obsah se vrací. Jde to ale z těžka. Většina současných pokusů není příliš úspěšných. Musíme na to chytřeji.
+          </p>
+
+          <p>
+            Využijme toho, co udělalo sociální sítě tak úspěšné. Kairly využívá absolutní otevřenosti a síťového efektu,
+            díky kterému mohou čtenáři číst opravdu jen to, co chtějí a to od autorů na příč celou platformou.
+            Tato vysoká personalizace obsahu je klíč k úspěšněmu modelu placeného obsahu.
+          </p> -->
+
+        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
+        <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
+      </Quote>
+
+      <HowItWorks />
+
+      <OfficialStart />
+
+      <Footer />
+
+      <FooterLinks />
+
+    </div>
+  </app-layout>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import AppLayout from '@/components/layout/AppLayout'
+import Quote from '@/components/microsite/Quote'
+import HowItWorks from '@/components/microsite/HowItWorks'
+import Footer from '@/components/microsite/Footer'
+import FooterLinks from '@/components/microsite/FooterLinks'
+import OfficialStart from '@/components/microsite/OfficialStart'
+
+export default {
+  name: 'Publishers',
+
+  auth: false,
+
+  components: {
+    AppLayout,
+    Quote,
+    HowItWorks,
+    OfficialStart,
+    Footer,
+    FooterLinks
+  },
+
+  head() {
+    return {
+      title: 'Publishers – Kairly',
+      meta: [
+        { hid: 'description', name: 'description', content: '' },
+      ]
+    }
+  }
+}
+</script>
+
+<style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- Mixin
+=heading
+  font-size: $fs-5
+  font-weight: 900
+  line-height: $baseline * 2
+
+  @media (max-width: $mobile)
+    font-size: $fs-3
+    line-height: $baseline * 1.2
+
+.journalists-view
+  background: #fff
+
+  > *
+    max-width: 900px
+    margin-left: auto
+    margin-right: auto
+
+//- Hero
+.journalists--hero
+  position: relative
+
+  display: flex
+  align-items: center
+  flex-direction: column
+  justify-content: center
+  height: 400px
+  margin-bottom: $baseline * 2
+  max-width: none
+
+  background-size: cover
+  background: #f5f5f5
+
+  @media (max-width: 950px)
+    margin-bottom: 0
+
+  @media (max-width: $mobile)
+    height: auto
+    padding-bottom: $baseline / 2
+
+  h1
+    +heading
+    padding: $baseline/2
+    margin-bottom: $baseline * 2
+
+    text-align: center
+
+    @media (max-width: $mobile)
+      margin: $baseline 0
+
+
+  ul
+    padding: 0 $baseline
+
+    counter-reset: benefits
+
+    @media (max-width: $mobile)
+      padding: 0 $baseline/2
+
+  li
+    display: flex
+    align-items: center
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-2
+
+    @media (max-width: $mobile)
+      font-size: $fs-1
+
+    &::before
+      display: inline-block
+      margin-right: $baseline / 2
+      border-radius: 100%
+      height: $baseline * 1.25
+      width: $baseline * 1.25
+      flex: 0 0 $baseline * 1.25
+
+      background: #fff
+
+      font-size: $fs-0
+      font-weight: 600
+      line-height: $baseline * 1.25
+      text-align: center
+
+      counter-increment: benefits
+      content: counter(benefits)
+
+//- FAQ
+.journalists--faq
+  display: grid
+  grid-template-columns: 540px 334px
+  grid-column-gap: $baseline
+  padding-bottom: $baseline * 2
+
+  @media (max-width: 950px)
+    grid-template-columns: auto
+    padding: 0
+
+  h2
+    margin-bottom: $baseline / 2
+    font-size: $fs-3
+    font-weight: 600
+
+  p
+    margin-bottom: $baseline * 1.5
+
+    font-size: $fs-1
+
+    &:last-of-type
+      margin-bottom: 0
+
+
+  @media (max-width: 950px)
+    picture
+      grid-row: 1
+
+    div
+      padding: $baseline
+
+  @media (max-width: $mobile)
+    div
+      padding: $baseline / 2
+
+  img
+    height: 100%
+    width: 100%
+    object-fit: cover
+
+    @media (max-width: 940px)
+      max-height: 300px
+
+//- Section
+.microsite--section
+  display: grid
+  grid-template-areas: "hp-readers-picture hp-readers-text"
+  grid-template-columns: 334px 540px
+  grid-column-gap: $baseline
+  margin-bottom: $baseline * 2
+
+  @media (max-width: 950px)
+    grid-template-areas: "hp-readers-picture" "hp-readers-text"
+    grid-template-columns: auto
+    padding: 0
+
+  @media (max-width: $mobile)
+    grid-template-areas: "hp-readers-picture" "hp-readers-text"
+    grid-template-columns: auto
+    padding: 0
+
+  > picture
+    grid-area: hp-readers-picture
+
+    img
+      height: 100%
+      width: 100%
+
+      object-fit: cover
+
+      @media (max-width: 950px)
+        max-height: 300px
+        object-position: 0 60%
+
+  > div
+    grid-area: hp-readers-text
+
+    @media (max-width: 950px)
+      padding: $baseline
+
+    @media (max-width: $mobile)
+      padding: $baseline / 2
+
+    h2
+      +heading
+      margin-bottom: $baseline
+
+    p
+      position: relative
+
+      margin-bottom: $baseline
+      padding-left: $baseline
+      max-width: 600px
+
+      font-size: $fs-1
+
+      &:last-of-type
+        margin-bottom: 0
+
+      @media (max-width: $mobile)
+        padding-left: 0
+
+      &::before
+        position: absolute
+        left: 0
+
+        width: $baseline
+
+        font-size: $fs-3
+        text-align: center
+
+        content: '•'
+
+        @media (max-width: $mobile)
+          content: none
+
+
+//- Benefits
+.journalists--benefits
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-column-gap: $baseline * 2
+
+  padding-bottom: $baseline * 2
+
+  div
+
+    h2
+      margin-bottom: $baseline
+
+      font-size: $fs-4
+      font-weight: 900
+      line-height: $baseline * 1.5
+
+    p
+      margin-bottom: $baseline
+
+      font-size: $fs-1
+
+
+    li
+      margin-left: $baseline / 2
+      margin-bottom: $baseline / 2
+      list-style: disc
+
+      font-size: $fs-1
+
+</style>

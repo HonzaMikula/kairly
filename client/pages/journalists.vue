@@ -1,7 +1,7 @@
 <template>
   <app-layout>
-    <div class="independent-journalists">
-      <section class="independent-journalists--hero">
+    <div class="journalists-view">
+      <section class="journalists--hero">
         <div>
           <h1>{{ $t('Are you independent journalist or blogger?') }}</h1>
           <ul>
@@ -12,7 +12,7 @@
         </div>
       </section>
 
-      <section class="independent-journalists--faq">
+      <section class="journalists--faq">
         <div v-html="$t('@independent-journalists/faq')">
 
         </div>
@@ -183,9 +183,12 @@ export default {
 
   head() {
     return {
-      title: 'Independent Journalists – Kairly',
+      title: this.$t('Platform for Journalists and Bloggers') +' – Kairly',
       meta: [
-        { hid: 'description', name: 'description', content: '' },
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$t('Kairly is platform for independent journalists and bloggers who wants to start earning money for writing good content.') },
       ]
     }
   }
@@ -206,7 +209,7 @@ export default {
     font-size: $fs-3
     line-height: $baseline * 1.2
 
-.independent-journalists
+.journalists-view
   background: #fff
 
   > *
@@ -215,7 +218,7 @@ export default {
     margin-right: auto
 
 //- Hero
-.independent-journalists--hero
+.journalists--hero
   position: relative
 
   display: flex
@@ -284,7 +287,7 @@ export default {
       content: counter(benefits)
 
 //- FAQ
-.independent-journalists--faq
+.journalists--faq
   display: grid
   grid-template-columns: 540px 334px
   grid-column-gap: $baseline
@@ -333,7 +336,7 @@ export default {
   grid-template-areas: "hp-readers-picture hp-readers-text"
   grid-template-columns: 334px 540px
   grid-column-gap: $baseline
-  padding: $baseline*2 0
+  margin-bottom: $baseline * 2
 
   @media (max-width: 950px)
     grid-template-areas: "hp-readers-picture" "hp-readers-text"
@@ -402,7 +405,7 @@ export default {
 
 
 //- Benefits
-.independent-journalists--benefits
+.journalists--benefits
   display: grid
   grid-template-columns: 1fr 1fr
   grid-column-gap: $baseline * 2

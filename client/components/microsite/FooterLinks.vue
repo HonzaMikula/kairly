@@ -4,8 +4,8 @@
       <h3>{{ $t('Kairly is platform for') }}</h3>
       <ul>
         <li class="coming-soon">{{ $t('Readers') }}</li>
-        <li><nuxt-link to="/independent-journalists">{{ $t('Journalists and bloggers') }}</nuxt-link></li>
-        <li class="coming-soon">{{ $t('Publishers') }}</li>
+        <li><nuxt-link to="/journalists">{{ $t('Journalists and bloggers') }}</nuxt-link></li>
+        <li><nuxt-link to="/publishers">{{ $t('Publishers') }}</nuxt-link></li>
         <li class="coming-soon">{{ $t('Think-tanks and NGOs') }}</li>
       </ul>
     </div>
