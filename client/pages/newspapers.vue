@@ -20,7 +20,11 @@
           </div>
 
           <div class="title">
-            <h1 v-if="selectedNewspaper">{{ selectedNewspaper.title }}</h1>
+            <h1 v-if="selectedNewspaper">
+              <nuxt-link :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}">
+                {{ selectedNewspaper.title }}
+              </nuxt-link>
+            </h1>
 
             <button-icon
               v-if="selectedNewspaper"
@@ -350,6 +354,9 @@ editor-newspapers-view
         @media (max-width: $mobile)
           margin-right: 0
           font-size: $fs-3
+
+        a
+          color: #000
 
 
       > button-icon
