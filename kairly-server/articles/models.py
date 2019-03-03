@@ -129,12 +129,7 @@ class Post(models.Model):
         if self.draft:
             result['draft'] = True
 
-        if self.kind == Post.PICTURE:
-            result['content'] = {
-                'title': self.title,
-                'picture': self.picture,
-            }
-        elif self.kind == Post.TWEET:
+        if self.kind == Post.TWEET:
             result['content'] = {
                 'content': self.content,
             }
