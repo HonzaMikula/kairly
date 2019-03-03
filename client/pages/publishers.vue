@@ -206,12 +206,12 @@ export default {
 
   head() {
     return {
-      title: this.$t('Platform for Publishers') +' – Kairly',
+      title: this.$t('Digital Publishing Platform for Publishers') +' – Kairly',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.$t('Kairly is platform for publishers that offers unique concept of paid content.') },
+          content: this.$t('Kairly is a digital publishing platform for publishers that offers a unique concept of paid content.') },
       ]
     }
   }

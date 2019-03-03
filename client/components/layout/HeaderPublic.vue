@@ -7,10 +7,10 @@
         <button @click.prevent="isDropdownOpen = !isDropdownOpen">{{ $t('Get involved as') }}</button>
 
         <ul v-if="isDropdownOpen == true">
-          <li>{{ $t('Reader') }}</li>
+          <li><nuxt-link to="/readers">{{ $t('Reader') }}</nuxt-link></li>
           <li><nuxt-link to="/journalists">{{ $t('Journalist or blogger') }}</nuxt-link></li>
           <li><nuxt-link to="/publishers">{{ $t('Publisher') }}</nuxt-link></li>
-          <li>{{ $t('Think-tank or NGO') }}</li>
+          <li><nuxt-link to="/think-tanks">{{ $t('Think-tank or NGO') }}</nuxt-link></li>
         </ul>
       </nav>
 
@@ -137,7 +137,7 @@ export default {
     ul
       position: absolute
       top: ($baseline * 2)
-      z-index: 1
+      z-index: 10
 
       border-radius: 0 0 5px 5px
       padding: $baseline / 2 $baseline

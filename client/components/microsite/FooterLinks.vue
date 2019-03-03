@@ -3,10 +3,10 @@
     <div>
       <h3>{{ $t('Kairly is platform for') }}</h3>
       <ul>
-        <li class="coming-soon">{{ $t('Readers') }}</li>
+        <li><nuxt-link to="/readers">{{ $t('Readers') }}</nuxt-link></li>
         <li><nuxt-link to="/journalists">{{ $t('Journalists and bloggers') }}</nuxt-link></li>
         <li><nuxt-link to="/publishers">{{ $t('Publishers') }}</nuxt-link></li>
-        <li class="coming-soon">{{ $t('Think-tanks and NGOs') }}</li>
+        <li><nuxt-link to="/think-tanks">{{ $t('Think-tanks and NGOs') }}</nuxt-link></li>
       </ul>
     </div>
 

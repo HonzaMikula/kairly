@@ -98,7 +98,9 @@
       </main>
     </post-detail>
 
-    <kairly-promo v-if="!loggedIn" />
+    <KairlyPromo v-if="!loggedIn" />
+
+    <FooterLinks v-if="!loggedIn" />
   </app-layout>
 </template>
 
@@ -110,6 +112,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 import KairlyPromo from '@/components/KairlyPromo'
+import FooterLinks from '@/components/microsite/FooterLinks'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
@@ -156,7 +159,8 @@ export default {
     AppLayout,
     ConsiderPost,
     AuthorSubscription,
-    KairlyPromo
+    KairlyPromo,
+    FooterLinks
   },
 
   data() {

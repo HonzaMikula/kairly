@@ -130,7 +130,9 @@
       </div>
     </div>
 
-    <kairly-promo v-if="!loggedIn" />
+    <KairlyPromo v-if="!loggedIn" />
+
+    <FooterLinks v-if="!loggedIn" />
   </app-layout>
 </template>
 
@@ -149,6 +151,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import Issue from '@/components/IssueWrapper'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 import KairlyPromo from '@/components/KairlyPromo'
+import FooterLinks from '@/components/microsite/FooterLinks'
 
 export default {
   name: 'NewspaperDetail',
@@ -206,7 +209,8 @@ export default {
     AppLayout,
     Issue,
     NewspaperSubscription,
-    KairlyPromo
+    KairlyPromo,
+    FooterLinks
   },
 
   mixins: [PeriodicityMixin],

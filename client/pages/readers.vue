@@ -3,17 +3,24 @@
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
-          <h1>{{ $t('Are you independent journalist or blogger?') }}</h1>
+          <!-- <h1>{{ $t('Are you independent journalist or blogger?') }}</h1> -->
+          <h1>Jste čtenáři zpravodajství a publicistiky?</h1>
           <ul>
+            <li>Přestaňte bezmyšlenkovitě skrolovat donekonečna. Čtěte jen to, co vás opravdu zajímá.</li>
+            <li>Nenechte se otravovat nesmyslnými notifikacemi. Čtětě jen v dobu, kdy chtete a kdy jste na to zvýklí.</li>
+            <li>Podpořte kvalitní novináře zakoupením předplatného.</li>
+          </ul>
+
+          <!-- <ul>
             <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
             <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
             <li>{{ $t('Become a truly independent author.') }}</li>
-          </ul>
+          </ul> -->
         </div>
       </section>
 
       <Faq>
-        <img src="~assets/microsite/kairly-independent-journalist-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
       </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
@@ -38,14 +45,33 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-independent-journalist-2.jpg" />
+          <img src="~assets/microsite/kairly-random-9.jpg" />
         </picture>
 
         <div>
-          <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2>
+          <!-- <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2> -->
+          <h2>Publikujte vaše noviny a časopisy na moderní platformě a oslovte nové čtenáře</h2>
 
-          <div v-html="$t('@independent-journalists/modern-platform')">
+          <!-- <div v-html="$t('@independent-journalists/modern-platform')">
+          </div> -->
+
+          <div>
+            <p>
+              Soustřeďte se na to, v čem jste dobří. Na vydávání obsahu. My se postaráme o to, aby se váš obsah
+              dostal ke čtenářům v té nejlepší podobě, ať už jsou na počítači, mobilu, tabletu či elektronické čtečce knih.
+            </p>
+
+            <p>
+              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
+              a moderní trendy UX ze současných mobilních a webových aplikací.
+            </p>
+
+            <p>
+              Naše unikátní koncepce digitálních novin vám umožní oslovit nové čtenáře, díky větší možnosti personalizace obsahu
+              a zároveň jejich pravidelnost vydávání vede k vytváření návyku u čtenářů, a tím k větší loajálnosti k vaším titulům.
+            </p>
           </div>
+
             <!-- <p>
               Tvoříme pro vás moderní digitální platformu, která je šita na míru novinářům a publicistům.
               Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, mobil, tablet či v budoucnu elektronickou čtečku.
@@ -80,13 +106,33 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-independent-journalist-5.jpg" />
+          <img src="~assets/microsite/kairly-random-15.jpg" />
         </picture>
 
         <div>
-          <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2>
+          <!-- <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2> -->
+          <h2>Vydělávejte na svých titulech s unikátním konceptem placeného obsahu</h2>
 
-          <div v-html="$t('@independent-journalists/monetizing-content')"></div>
+          <!-- <div v-html="$t('@independent-journalists/monetizing-content')"></div> -->
+
+          <div>
+            <p>
+              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
+              Musíme na to chytře. Zapojte vaše vydavatelství do našeho unikátního systému placeného obsahu.
+            </p>
+
+            <p>
+              Vydávejte vaše tituly skrz náš ojedinělý koncept digitálních novin a začněte jednodušše vydávat
+              i nové více zaměřené tituly, které vám pomohou díky personalizaci oslovit nové čtenáře a zvýšší
+              pravděpodobnost zakoupení měsíčního předplatného.
+            </p>
+
+            <p>
+              Díky otevřenosti celé platformy se váš původní obsah může objevit i ve vydání novin ostatních editorů.
+              Vy pak získáte spravedlivou peněžní odměnu z předplatného těchto novin, ve kterých
+              se váš článek objevil.
+            </p>
+          </div>
             <!-- <p>
               Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
               Musíme na to chytře. Zapojte se do našeho unikátního systému placeného obsahu.
@@ -144,7 +190,7 @@ import OfficialStart from '@/components/microsite/OfficialStart'
 import Faq from '@/components/microsite/Faq'
 
 export default {
-  name: 'IndependentJournalists',
+  name: 'Readers',
 
   auth: false,
 
@@ -160,12 +206,12 @@ export default {
 
   head() {
     return {
-      title: this.$t('Digital Publishing Platform for Journalists and Bloggers') +' – Kairly',
+      title: this.$t('Media platform for readers') +' – Kairly',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.$t('Kairly is a digital publishing platform for independent journalists and bloggers who wants to start earning money for writing good content.') },
+          content: this.$t('Kairly is a media platform for pleasant reading without distraction and endless scrolling.') },
       ]
     }
   }
@@ -262,50 +308,6 @@ export default {
 
       counter-increment: benefits
       content: counter(benefits)
-
-//- FAQ
-.journalists--faq
-  display: grid
-  grid-template-columns: 540px 334px
-  grid-column-gap: $baseline
-  padding-bottom: $baseline * 2
-
-  @media (max-width: 950px)
-    grid-template-columns: auto
-    padding: 0
-
-  h2
-    margin-bottom: $baseline / 2
-    font-size: $fs-3
-    font-weight: 600
-
-  p
-    margin-bottom: $baseline * 1.5
-
-    font-size: $fs-1
-
-    &:last-of-type
-      margin-bottom: 0
-
-
-  @media (max-width: 950px)
-    picture
-      grid-row: 1
-
-    div
-      padding: $baseline
-
-  @media (max-width: $mobile)
-    div
-      padding: $baseline / 2
-
-  img
-    height: 100%
-    width: 100%
-    object-fit: cover
-
-    @media (max-width: 940px)
-      max-height: 300px
 
 //- Section
 .microsite--section
