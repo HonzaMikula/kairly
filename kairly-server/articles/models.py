@@ -158,7 +158,12 @@ class Post(models.Model):
                 if not short:
                     result['content']['content'] = self.content
         elif self.kind == Post.RECOMMENDATION:
-            result['ref'] = self.ref_post.to_json(short, anonymous, tzinfo)
+            if self.ref_post:
+                result['type'] += '-post'
+                result['ref'] = self.ref_post.to_json(short, anonymous, tzinfo)
+            else:
+                # result['type'] += '-newsppaper'
+                raise NotImplementedError
 
         return result
 
