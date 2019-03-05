@@ -704,3 +704,29 @@ def post_recommendation(request, username, post_slug):
     return JsonResponse({
         'post': recommendation.to_json()
     })
+
+
+@ajax_login_required
+@require_POST
+@transaction.atomic
+def issue_recommendation(request, username, newspapeper_slug, issue_number):
+    newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+    issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_number)
+
+    if newspaper.editor == request.user:
+        return JsonResponse({'error': "can't recommend own issue"}, status=400)
+
+    if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_issue=issue).exists():
+        return JsonResponse({'error': "already recommended"}, status=400)
+
+    recommendation = Post.objects.create(
+        title=f'{newspaper.title} #{issue.number}',
+        kind=Post.RECOMMENDATION,
+        author=request.user,
+        ref_issue=issue,
+        protected=False
+    )
+
+    return JsonResponse({
+        'post': recommendation.to_json()
+    })

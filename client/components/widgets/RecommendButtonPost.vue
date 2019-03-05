@@ -12,7 +12,7 @@
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'RecommnendButton',
+  name: 'RecommnendButtonPost',
 
   props: {
     post: Object
@@ -25,7 +25,7 @@ export default {
       const { author, slug } = this.post
 
       try {
-        await this.$axios.post(`/recommendation/${author.id}/${slug}`)
+        await this.$axios.post(`/recommendation/post/${author.id}/${slug}`)
         this.showSuccess('Post recommended')
       } catch (err) {
         if (err.response.status === 400) {

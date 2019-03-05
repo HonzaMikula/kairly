@@ -162,8 +162,8 @@ class Post(models.Model):
                 result['type'] += '-post'
                 result['ref'] = self.ref_post.to_json(short, anonymous, tzinfo)
             else:
-                # result['type'] += '-newsppaper'
-                raise NotImplementedError
+                result['type'] += '-issue'
+                result['ref'] = self.ref_issue.to_json(tzinfo=tzinfo)
 
         return result
 

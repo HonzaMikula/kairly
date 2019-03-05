@@ -20,6 +20,7 @@ import postArticle from '@/components/posts/article'
 import postTweet from '@/components/posts/tweet'
 import postPicture from '@/components/posts/picture'
 import postRecommendationPost from '@/components/posts/recommendationPost'
+import postRecommendationIssue from '@/components/posts/recommendationIssue'
 
 export default {
   name: 'PostWrapper',
@@ -29,7 +30,8 @@ export default {
     postArticle,
     postTweet,
     postPicture,
-    postRecommendationPost
+    postRecommendationPost,
+    postRecommendationIssue
   },
 
   computed: {

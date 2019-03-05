@@ -1,6 +1,6 @@
 <template>
   <div>
-    ❤❤❤ Recommendation ❤❤❤
+    ❤❤❤ Recommended Post ❤❤❤
 
     <post-wrapper
       :post="post.ref"
@@ -11,15 +11,16 @@
 
 <script>
 import post from './post';
-import PostWrapper from '@/components/PostWrapper'
 
 export default {
   name: 'post-recommendation-post',
 
   props: ["post", "isSubscribed"],
 
+  // resolve circular component dependency
+  // https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
   components: {
-    PostWrapper
+    PostWrapper: () => import('@/components/PostWrapper')
   }
 }
 </script>
