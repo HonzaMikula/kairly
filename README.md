@@ -128,6 +128,12 @@ img
   [sizes]: none
 ```
 
+### Rename Attribute
+```
+img
+  [data-orig-file]: rename src
+```
+
 ## Selection with XPath
 
 Sometimes elements can't be selected by CSS. XPath is more strong
@@ -192,4 +198,3 @@ Invoked by cron at the end of each month.
 
 Can by run manually to see how will be credits distributed for current month.
 `./manage.py payeditors --month 01/2019 --dry-run`
-

@@ -138,15 +138,19 @@ class ArticleParser:
         elif el.tag == 'form' or el.tag == 'fieldset':
             el.tag = 'div'
 
-        self._strip_attibutes(el)
         for attr, value in self._getattrprops(el):
             try:
                 if value == 'none':
                     del el.attrib[attr]
                 elif value == 'force-https':
                     el.attrib[attr] = re.sub('http://', 'https://', el.attrib[attr])
+                elif value.startwth('rename '):
+                    new_attr = value[6:].lstip()
+                    el.attrib[new_attr] = el.attrib[attr]
+                    del el.attrib[attr]
             except KeyError:
                 pass
+        self._strip_attibutes(el)
 
         mapped_children = []
 
