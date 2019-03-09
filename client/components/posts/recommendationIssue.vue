@@ -1,16 +1,11 @@
 <template>
-  <div>
-    ❤❤❤ Recommennded Issue ❤❤❤
-
-    <IssueWidget
-      :issue="post.ref"
-    />
-  </div>
+  <IssueWidget
+    :issue="post.ref"
+  />
 </template>
 
 <script>
 import post from './post';
-import IssueWidget from '@/components/widgets/IssueWidget'
 
 export default {
   name: 'post-recommendation-issue',
@@ -18,7 +13,7 @@ export default {
   props: ["post", "isSubscribed"],
 
   components: {
-    IssueWidget
+    IssueWidget: () => import('@/components/widgets/IssueWidget')
   }
 }
 </script>

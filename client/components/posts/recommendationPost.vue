@@ -1,12 +1,8 @@
 <template>
-  <div>
-    ❤❤❤ Recommended Post ❤❤❤
-
-    <post-wrapper
-      :post="post.ref"
-      :isSubscribed="isSubscribed"
-    />
-  </div>
+  <post-wrapper
+    :post="post.ref"
+    :isSubscribed="isSubscribed"
+  />
 </template>
 
 <script>
