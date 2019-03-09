@@ -236,6 +236,10 @@ export default {
       this.postsBacklog = backlog.reverse()
       this.postsPublished = publish
       this.isBacklogLoaded = true
+
+      if (process.client) {
+        window.localStorage.setItem('manageNewspapers.selected', fullName)
+      }
     },
 
     confirmDeleteNewspaper() {
@@ -274,7 +278,12 @@ export default {
 
   created() {
     if (this.newspapers.length) {
-      this.selectNewspaper(this.newspapers[0])
+      let selectedNewspaper = null
+      if (process.client) {
+        let selectedFullName = window.localStorage.getItem('manageNewspapers.selected')
+        selectedNewspaper = this.newspapers.find(n => n.fullName === selectedFullName)
+      }
+      this.selectNewspaper(selectedNewspaper || this.newspapers[0])
     }
   },
 }
