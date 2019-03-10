@@ -63,7 +63,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v7-dependencies-{{ checksum "client/package.json" }}
+          - v8-dependencies-{{ checksum "client/package.json" }}
 
       - run:
           command: |
@@ -73,7 +73,7 @@ jobs:
       - save_cache:
           paths:
             - client/node_modules
-          key: v7-dependencies-{{ checksum "client/package.json" }}
+          key: v8-dependencies-{{ checksum "client/package.json" }}
 
       - run: invoke deploy
       - run: invoke deploy.cron
