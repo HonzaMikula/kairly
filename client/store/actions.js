@@ -66,6 +66,28 @@ export async function loadTimeline({ commit, state }, { date, cachedOnly=false})
     return null
   }
 
+  // group recommendations
+  data.issues.forEach(issue => {
+    const posts = []
+    const recommendations = []
+    issue.posts.forEach(post => {
+      if (post.type == 'recommendation-post' || post.type == 'recommendation-issue') {
+        recommendations.push(post)
+      } else {
+        posts.push(posts)
+      }
+    })
+    if (recommendations.length) {
+      posts.push({
+        author: recommendations[0].author,
+        id: `wrapper-${recommendations[0].id}`,
+        type: 'recommendations',
+        posts: recommendations,
+      })
+      issue.posts = posts
+    }
+  })
+
   if (!date) {
     commit('today', {date: data.date, validTo: data.validTo})
   }

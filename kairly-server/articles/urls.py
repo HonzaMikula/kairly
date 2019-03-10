@@ -25,4 +25,7 @@ urlpatterns = [
     path('drafts/<int:post_id>', views.DraftDetailView.as_view(), name='draft'),
     path('drafts/<int:post_id>/publish', views.publish_draft, name='publish_draft'),
     path('posts/<username>/<post_slug>', views.post, name='post'),
+
+    path('recommendation/post/<username>/<post_slug>', views.post_recommendation, name='post_recommendation'),
+    path('recommendation/issue/<username>/<slug:newspapeper_slug>/<int:issue_number>', views.issue_recommendation, name='issue_recommendation'),
 ]

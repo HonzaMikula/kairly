@@ -88,6 +88,8 @@
             class="share-twitter"
             :aria-label="$t('Share on Twitter')">
           </a>
+
+          <recommend-button-issue v-if="issue" :issue="issue" />
         </footer>
 
         <footer class="newspaper-detail--subscribe-newsletter" v-if="newspaper.newsletterSubscriptionUrl">
@@ -152,6 +154,7 @@ import Issue from '@/components/IssueWrapper'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
+import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
 
 export default {
   name: 'NewspaperDetail',
@@ -210,7 +213,8 @@ export default {
     Issue,
     NewspaperSubscription,
     KairlyPromo,
-    FooterLinks
+    FooterLinks,
+    RecommendButtonIssue,
   },
 
   mixins: [PeriodicityMixin],

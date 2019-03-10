@@ -28,10 +28,12 @@ class Post(models.Model):
 
     NEWSPAPER = 'newspaper'
     TWEET = 'tweet'
+    RECOMMENDATION = 'recommendation'
 
     KIND_CHOICES = (
         (NEWSPAPER, _('Newspaper')),
         (TWEET, _('Tweet')),
+        (RECOMMENDATION, _('Recommendation')),
     )
 
     READ_TIME_CACHE_KEY = 'read_time_{id}'
@@ -54,6 +56,9 @@ class Post(models.Model):
     content = models.TextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT, null=True)
     attachments = models.TextField(null=True)
+
+    ref_post = models.ForeignKey('articles.Post', models.CASCADE, null=True)
+    ref_issue = models.ForeignKey('articles.Issue', models.CASCADE, null=True)
 
     # pricing helpers
     author_price = models.DecimalField(
@@ -152,6 +157,14 @@ class Post(models.Model):
                 }
                 if not short:
                     result['content']['content'] = self.content
+        elif self.kind == Post.RECOMMENDATION:
+            if self.ref_post:
+                result['type'] += '-post'
+                result['ref'] = self.ref_post.to_json(short, anonymous, tzinfo)
+            else:
+                result['type'] += '-issue'
+                result['ref'] = self.ref_issue.to_json(tzinfo=tzinfo)
+
         return result
 
 
