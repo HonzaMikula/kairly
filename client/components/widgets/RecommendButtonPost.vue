@@ -1,10 +1,10 @@
 <template>
   <a
-    class="recommend-button"
+    :class="{'recommend-button': true, recommended}"
     href="#"
     @click.prevent="recommend"
     v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-    :title="$t('Recommend post')">
+    :title="recommended ? $t('Cancel recommendation') : $t('Recommend post')">
   </a>
 </template>
 
@@ -15,7 +15,8 @@ export default {
   name: 'RecommnendButtonPost',
 
   props: {
-    post: Object
+    post: Object,
+    recommended: Boolean,
   },
 
   methods: {
@@ -25,8 +26,15 @@ export default {
       const { author, slug } = this.post
 
       try {
-        await this.$axios.post(`/recommendation/post/${author.id}/${slug}`)
-        this.showSuccess('Post recommended')
+        if (this.recommended) {
+          await this.$axios.delete(`/recommendation/post/${author.id}/${slug}`)
+          this.showSuccess(this.$t('Recommendation canceled'))
+          this.$emit('update:recommended', false)
+        } else {
+          await this.$axios.post(`/recommendation/post/${author.id}/${slug}`)
+          this.showSuccess(this.$t('Post recommended'))
+          this.$emit('update:recommended', true)
+        }
       } catch (err) {
         if (err.response.status === 400) {
           this.showError(err.response.data.error)
@@ -45,4 +53,7 @@ export default {
 .recommend-button
   +button-icon($fa-var-star)
 
+  &.recommended
+    background: #444
+    color: #eee
 </style>

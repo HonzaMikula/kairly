@@ -67,7 +67,7 @@
               :title="$t('Share on Twitter')">
             </a>
 
-            <recommend-button-post :post="post" />
+            <recommend-button-post v-if="loggedIn" :post="post" :recommended.sync="recommended" />
 
             <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">
               {{ post.time | moment('DD. MM. YYYY') }}
@@ -204,8 +204,8 @@ export default {
         await store.dispatch('getSubscriptions')
       }
 
-      const { post } = await app.$axios.$get(`/posts/${author}/${postSlug}`)
-      return { post }
+      const { post, recommended } = await app.$axios.$get(`/posts/${author}/${postSlug}`)
+      return { post, recommended }
     } catch (err) {
       error(errorToParams(err))
     }

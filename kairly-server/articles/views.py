@@ -132,24 +132,31 @@ class NewspaperView(View):
             except IndexError:
                 issue = None
 
-        links = {}
+        data = {
+            'newspaper': newspaper.to_json(tzinfo),
+            'issue': None,
+            'links': {}
+        }
+
         if issue:
+            data['issue'] = issue.to_json(anonymous=request.user.is_anonymous)
+
             try:
                 prev_num = Issue.objects.filter(newspaper=newspaper, number__lt=issue.number).order_by('-number').values_list('number', flat=True)[0]
-                links['prev'] = '/{}/{}'.format(newspaper.full_name, prev_num)
+                data['links']['prev'] = '/{}/{}'.format(newspaper.full_name, prev_num)
             except IndexError:
                 pass
             try:
                 next_num = Issue.objects.filter(newspaper=newspaper, number__gt=issue.number).order_by('number').values_list('number', flat=True)[0]
-                links['next'] = '/{}/{}'.format(newspaper.full_name, next_num)
+                data['links']['next'] = '/{}/{}'.format(newspaper.full_name, next_num)
             except IndexError:
                 pass
 
-        return JsonResponse({
-            'newspaper': newspaper.to_json(tzinfo),
-            'issue': issue.to_json(anonymous=request.user.is_anonymous) if issue else None,
-            'links': links
-        })
+            if request.user.is_authenticated:
+                data['recommended'] = Post.objects.filter(
+                    author=request.user, kind=Post.RECOMMENDATION, ref_issue=issue).exists()
+
+        return JsonResponse(data)
 
     @ajax_login_required
     @transaction.atomic
@@ -618,9 +625,15 @@ def post(request, username, post_slug):
     # if not is_subscribed:
     #     return HttpResponse('402 Payment Required', status=402)
 
-    return JsonResponse({
+    data = {
         'post': post.to_json(anonymous=request.user.is_anonymous)
-    })
+    }
+
+    if request.user.is_authenticated:
+        data['recommended'] = Post.objects.filter(
+            author=request.user, kind=Post.RECOMMENDATION, ref_post=post).exists()
+
+    return JsonResponse(data)
 
 
 def get_type_from_data_uri(data):
@@ -678,55 +691,76 @@ def start_newspaper(request, username):
     })
 
 
-@ajax_login_required
-@require_POST
-@transaction.atomic
-def post_recommendation(request, username, post_slug):
-    post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False)
+class PostRecommendationView(View):
 
-    if post.kind == Post.RECOMMENDATION:
-        return JsonResponse({'error': "recommendation can't be recommended"}, status=400)
+    @ajax_login_required
+    @transaction.atomic
+    def post(self, request, username, post_slug):
+        post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False)
 
-    if post.author == request.user:
-        return JsonResponse({'error': "can't recommend own post"}, status=400)
+        if post.kind == Post.RECOMMENDATION:
+            return JsonResponse({'error': "recommendation can't be recommended"}, status=400)
 
-    if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_post=post).exists():
-        return JsonResponse({'error': "already recommended"}, status=400)
+        if post.author == request.user:
+            return JsonResponse({'error': "can't recommend own post"}, status=400)
 
-    recommendation = Post.objects.create(
-        title=post.title,
-        kind=Post.RECOMMENDATION,
-        author=request.user,
-        ref_post=post,
-        protected=False
-    )
+        if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_post=post).exists():
+            return JsonResponse({'error': "already recommended"}, status=400)
 
-    return JsonResponse({
-        'post': recommendation.to_json()
-    })
+        recommendation = Post.objects.create(
+            title=post.title,
+            kind=Post.RECOMMENDATION,
+            author=request.user,
+            ref_post=post,
+            protected=False
+        )
+
+        return JsonResponse({
+            'post': recommendation.to_json()
+        })
+
+    @ajax_login_required
+    @transaction.atomic
+    def delete(self, request, username, post_slug):
+        post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False)
+        recommendation = get_object_or_404(Post, author=request.user, ref_post=post, kind=Post.RECOMMENDATION)
+        recommendation.delete()
+
+        return JsonResponse({})
 
 
-@ajax_login_required
-@require_POST
-@transaction.atomic
-def issue_recommendation(request, username, newspapeper_slug, issue_number):
-    newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
-    issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_number)
+class IssueRecommendationView(View):
 
-    if newspaper.editor == request.user:
-        return JsonResponse({'error': "can't recommend own issue"}, status=400)
+    @ajax_login_required
+    @transaction.atomic
+    def post(self, request, username, newspapeper_slug, issue_number):
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_number)
 
-    if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_issue=issue).exists():
-        return JsonResponse({'error': "already recommended"}, status=400)
+        if newspaper.editor == request.user:
+            return JsonResponse({'error': "can't recommend own issue"}, status=400)
 
-    recommendation = Post.objects.create(
-        title=f'{newspaper.title} #{issue.number}',
-        kind=Post.RECOMMENDATION,
-        author=request.user,
-        ref_issue=issue,
-        protected=False
-    )
+        if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_issue=issue).exists():
+            return JsonResponse({'error': "already recommended"}, status=400)
 
-    return JsonResponse({
-        'post': recommendation.to_json()
-    })
+        recommendation = Post.objects.create(
+            title=f'{newspaper.title} #{issue.number}',
+            kind=Post.RECOMMENDATION,
+            author=request.user,
+            ref_issue=issue,
+            protected=False
+        )
+
+        return JsonResponse({
+            'post': recommendation.to_json()
+        })
+
+    @ajax_login_required
+    @transaction.atomic
+    def delete(self, request, username, newspapeper_slug, issue_number):
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_number)
+        recommendation = get_object_or_404(Post, author=request.user, ref_issue=issue, kind=Post.RECOMMENDATION)
+        recommendation.delete()
+
+        return JsonResponse({})

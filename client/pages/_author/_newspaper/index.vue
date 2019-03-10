@@ -89,7 +89,7 @@
             :aria-label="$t('Share on Twitter')">
           </a>
 
-          <recommend-button-issue v-if="issue" :issue="issue" />
+          <recommend-button-issue v-if="loggedIn && issue" :issue="issue" :recommended.sync="recommended" />
         </footer>
 
         <footer class="newspaper-detail--subscribe-newsletter" v-if="newspaper.newsletterSubscriptionUrl">
@@ -250,11 +250,11 @@ export default {
     }
 
     try {
-      const { newspaper, issue, links } = await store.dispatch('getNewspaperDetail', {
+      const { newspaper, issue, links, recommended } = await store.dispatch('getNewspaperDetail', {
         newspaperId: fullName,
         issue: params.issue
       })
-      return { newspaper, issue, links }
+      return { newspaper, issue, links, recommended }
     } catch (err) {
       error(errorToParams(err))
     }

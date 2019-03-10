@@ -1,10 +1,10 @@
 <template>
   <a
-    class="recommend-button"
+    :class="{'recommend-button': true, recommended}"
     href="#"
     @click.prevent="recommend"
     v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-    :title="$t('Recommend issue')">
+    :title="recommended ? $t('Cancel recommendation') : $t('Recommend issue')">
   </a>
 </template>
 
@@ -15,7 +15,8 @@ export default {
   name: 'RecommnendButtonPost',
 
   props: {
-    issue: Object
+    issue: Object,
+    recommended: Boolean,
   },
 
   methods: {
@@ -23,8 +24,15 @@ export default {
 
     async recommend() {
       try {
-        await this.$axios.post(`/recommendation/issue/${this.issue.id}`)
-        this.showSuccess('Issue recommended')
+        if (this.recommended) {
+          await this.$axios.delete(`/recommendation/issue/${this.issue.id}`)
+          this.showSuccess(this.$t('Recommendation canceled'))
+          this.$emit('update:recommended', false)
+        } else {
+          await this.$axios.post(`/recommendation/issue/${this.issue.id}`)
+          this.showSuccess(this.$t('Issue recommended'))
+          this.$emit('update:recommended', true)
+        }
       } catch (err) {
         if (err.response.status === 400) {
           this.showError(err.response.data.error)
@@ -43,4 +51,7 @@ export default {
 .recommend-button
   +button-icon($fa-var-star)
 
+  &.recommended
+    background: #444
+    color: #eee
 </style>

@@ -41,26 +41,19 @@
 </template>
 
 <script>
-import postRecommendationPost from '@/components/posts/recommendationPost'
-import postRecommendationIssue from '@/components/posts/recommendationIssue'
-
 export default {
   name: 'post-recommendations',
 
   props: ["post", "isSubscribed"],
 
-  components: {
-    postRecommendationPost,
-    postRecommendationIssue
-  },
 
   computed: {
     recommendedPosts() {
-      return this.post.posts.filter(x => x.type == 'recommendation-post')
+      return this.post.posts
     },
 
     recommendedIssues() {
-      return this.post.posts.filter(x => x.type == 'recommendation-issue')
+      return this.post.issues
     }
   }
 }

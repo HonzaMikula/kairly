@@ -69,20 +69,25 @@ export async function loadTimeline({ commit, state }, { date, cachedOnly=false})
   // group recommendations
   data.issues.forEach(issue => {
     const posts = []
-    const recommendations = []
+    const recommendedPosts = []
+    const recommendedIssues = []
     issue.posts.forEach(post => {
-      if (post.type == 'recommendation-post' || post.type == 'recommendation-issue') {
-        recommendations.push(post)
+      if (post.type == 'recommendation-post') {
+        recommendedPosts.push(post)
+      } else if (post.type == 'recommendation-issue') {
+        recommendedIssues.push(post)
       } else {
         posts.push(posts)
       }
     })
-    if (recommendations.length) {
+    if (recommendedPosts.length || recommendedIssues.length) {
+      const sample = recommendedPosts.length ? recommendedPosts[0] : recommendationIssue[0]
       posts.push({
-        author: recommendations[0].author,
-        id: `wrapper-${recommendations[0].id}`,
+        author: sample.author,
+        id: `wrapper-${sample.id}`,
         type: 'recommendations',
-        posts: recommendations,
+        posts: recommendedPosts,
+        issues: recommendedIssues,
       })
       issue.posts = posts
     }
