@@ -32,12 +32,13 @@ class KairlyUsernameValidator(validators.RegexValidator):
         'sites', 'pages', 'apps', 'posts', 'actions',
         'user', 'author', 'editor', 'edition', 'profile', 'issue', "newspaper",
         'users', 'authors', 'editors', 'editions', 'profiles', 'issues', "newspapers",
+        'journalists', 'readers', 'publishers', 'think-tanks',
         'explore', 'dashboard', 'recent',
         'subscription', 'subscriptions',
         'join-and-read-with-kairly',
         'credits', 'transactions', 'orders', 'reports', 'reporting', 'terms',
         'platform', 'system', 'sys',
-        'kairly',
+        'kairly'
     }
 
     def __call__(self, value):
