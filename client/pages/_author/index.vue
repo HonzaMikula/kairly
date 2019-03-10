@@ -176,7 +176,29 @@ export default {
         { params: { cursor: this.cursor } }
       );
 
-      posts.forEach(post => this.posts.push(post));
+      let prevRecommendation = null
+      posts.forEach(post => {
+        if (post.type == 'recommendation-post' || post.type == 'recommendation-issue') {
+          if (prevRecommendation === null) {
+            prevRecommendation = {
+              author: post.author,
+              id: `wrapper-${post.id}`,
+              type: 'recommendations',
+              posts: [],
+              issues: [],
+            }
+            this.posts.push(prevRecommendation)
+          }
+          if (post.type == 'recommendation-post') {
+            prevRecommendation.posts.push(post)
+          } else {
+            prevRecommendation.issues.push(post)
+          }
+        } else {
+          prevRecommendation = null
+          this.posts.push(post)
+        }
+      });
       this.cursor = cursor;
       this.loadingPosts = false;
     },
