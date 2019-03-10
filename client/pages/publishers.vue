@@ -20,7 +20,7 @@
       </section>
 
       <Faq>
-        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/kairly-random-21.jpg" alt="Kairly" />
       </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
@@ -45,7 +45,7 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-9.jpg" />
+          <img src="~assets/microsite/kairly-random-25.jpg" />
         </picture>
 
         <div>
