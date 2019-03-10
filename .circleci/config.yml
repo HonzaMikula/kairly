@@ -68,7 +68,7 @@ jobs:
       - run:
           command: |
             cd client
-            npm install
+            npm ci
 
       - save_cache:
           paths:
