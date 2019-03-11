@@ -39,6 +39,8 @@
           <post-detail--content v-html="post.content.content" itemprop="articleBody" />
 
           <post-detail--footer>
+            <recommend-button-post v-if="loggedIn" :post="post" :recommended.sync="recommended" />
+
             <span v-if="userNewspapers.length" @click.stop>
               <button
                 role="button"
@@ -51,7 +53,7 @@
               <consider-post v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
             </span>
 
-            <a
+            <!-- <a
               :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${post.author.id}/${post.slug}`"
               target="_blank"
               class="share-fb"
@@ -65,9 +67,7 @@
               class="share-twitter"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               :title="$t('Share on Twitter')">
-            </a>
-
-            <recommend-button-post v-if="loggedIn" :post="post" :recommended.sync="recommended" />
+            </a> -->
 
             <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">
               {{ post.time | moment('DD. MM. YYYY') }}
@@ -418,7 +418,7 @@ post-detail--footer
     position: relative
 
   .consider-post
-    +button-icon($fa-var-newspaper, icon-text)
+    +button-icon($fa-var-newspaper)
 
   //- share FB button
   .share-fb

@@ -53,6 +53,8 @@
         </div>
 
         <footer class="newspaper-detail--social-sharing">
+          <recommend-button-issue v-if="loggedIn && issue" :issue="issue" :recommended.sync="recommended" />
+
           <a
             :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
             target="_blank"
@@ -88,8 +90,6 @@
             class="share-twitter"
             :aria-label="$t('Share on Twitter')">
           </a>
-
-          <recommend-button-issue v-if="loggedIn && issue" :issue="issue" :recommended.sync="recommended" />
         </footer>
 
         <footer class="newspaper-detail--subscribe-newsletter" v-if="newspaper.newsletterSubscriptionUrl">
@@ -516,20 +516,14 @@ export default {
     margin: 0 $baseline/4
 
   a.share-fb
-    +button-icon($fa-var-facebook, icon-text, brand)
+    +button-icon($fa-var-facebook, icon, brand)
 
   a.share-twitter
-    +button-icon($fa-var-twitter, icon-text, brand)
+    +button-icon($fa-var-twitter, icon, brand)
 
   a.rss
+    margin: 0 auto
     +button-icon($fa-var-rss-square, icon-text)
-
-    background: $c-base
-    color: #fff
-
-    &:focus,
-    &:hover
-      background: darken($c-base, 10%)
 
 //- Footer with RSS and Newsletter subscription
 .newspaper-detail--subscribe-newsletter

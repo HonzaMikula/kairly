@@ -26,7 +26,7 @@
 
       <div v-for="item in recommendedPosts" :key="item.id">
         <h3>
-          <nuxt-link :to="{ name: 'author-post', params: { author: item.ref.author.id, post: item.slug }}">
+          <nuxt-link :to="{ name: 'author-post', params: { author: item.ref.author.id, post: item.ref.slug }}">
             {{ item.ref.content.title }}
           </nuxt-link>
         </h3>

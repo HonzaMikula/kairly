@@ -26,11 +26,9 @@ export default {
       try {
         if (this.recommended) {
           await this.$axios.delete(`/recommendation/issue/${this.issue.id}`)
-          this.showSuccess(this.$t('Recommendation canceled'))
           this.$emit('update:recommended', false)
         } else {
           await this.$axios.post(`/recommendation/issue/${this.issue.id}`)
-          this.showSuccess(this.$t('Issue recommended'))
           this.$emit('update:recommended', true)
         }
       } catch (err) {
@@ -52,6 +50,6 @@ export default {
   +button-icon($fa-var-star)
 
   &.recommended
-    background: #444
-    color: #eee
+    background: $c-base
+    color: #fff
 </style>

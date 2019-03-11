@@ -4,7 +4,7 @@
     href="#"
     @click.prevent="recommend"
     v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-    :title="recommended ? $t('Cancel recommendation') : $t('Recommend post')">
+    :aria-label="recommended ? $t('Cancel recommendation') : $t('Recommend post')">
   </a>
 </template>
 
@@ -28,12 +28,20 @@ export default {
       try {
         if (this.recommended) {
           await this.$axios.delete(`/recommendation/post/${author.id}/${slug}`)
-          this.showSuccess(this.$t('Recommendation canceled'))
           this.$emit('update:recommended', false)
+          this.$ga.event({
+            eventCategory: 'Unrecommend post',
+            eventAction: author.name,
+            eventLabel: slug
+          })
         } else {
           await this.$axios.post(`/recommendation/post/${author.id}/${slug}`)
-          this.showSuccess(this.$t('Post recommended'))
           this.$emit('update:recommended', true)
+          this.$ga.event({
+            eventCategory: 'Recommend post',
+            eventAction: author.name,
+            eventLabel: slug
+          })
         }
       } catch (err) {
         if (err.response.status === 400) {
@@ -54,6 +62,6 @@ export default {
   +button-icon($fa-var-star)
 
   &.recommended
-    background: #444
-    color: #eee
+    background: $c-base
+    color: #fff
 </style>

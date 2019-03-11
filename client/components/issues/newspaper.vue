@@ -19,13 +19,22 @@
       </p>
     </header>
     <slot></slot>
+    <footer>
+      <recommend-button-issue :issue="issue" :recommended.sync="recommended" />
+    </footer>
   </timeline-newspaper>
 </template>
 
 <script>
+import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
+
 export default {
   name: 'issue-newspaper',
   props: ['issue', 'hideDate'],
+
+  components: {
+    RecommendButtonIssue
+  },
 
   computed: {
     newspaper() {
