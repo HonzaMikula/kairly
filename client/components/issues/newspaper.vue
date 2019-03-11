@@ -20,7 +20,7 @@
     </header>
     <slot></slot>
     <footer>
-      <recommend-button-issue :issue="issue" :recommended.sync="recommended" />
+      <recommend-button-issue :issue="issue" />
     </footer>
   </timeline-newspaper>
 </template>
