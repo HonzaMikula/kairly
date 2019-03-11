@@ -152,10 +152,14 @@ class Command(BaseCommand):
                 newspaper = Newspaper.objects.get(slug=slug, editor__username=username)
 
             for entry in channel.parse_rss().entries:
-                if not channel.is_url_valid(entry.link):
-                    continue
-
                 try:
+                    if not hasattr(entry, 'link'):
+                        self.stdout.write("Entry {} is missing link attribute".format(entry))
+                        continue
+
+                    if not channel.is_url_valid(entry.link):
+                        continue
+
                     post, force_updated = self.import_post(channel, entry, options)
 
                     if post is None:
