@@ -180,7 +180,7 @@ class Command(BaseCommand):
                             publish_stamp=timezone.now(),
                         )
                 except Exception:
-                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {}".format(timezone.now(), channel.rss))
+                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {}".format(timezone.now(), getattr(entry, 'link', ''), channel.rss))
                     traceback.print_exc()
 
                 if options.get('last'):

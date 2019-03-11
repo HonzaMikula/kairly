@@ -33,6 +33,11 @@ class ArticleParser:
             if parent is not None:
                 parent.remove(comment)
 
+        for instr in htmltree.xpath('//processing-instruction()'):
+            parent = instr.getparent()
+            if parent is not None:
+                parent.remove(instr)
+
         for rule in parse_rules(self.rules):
             if rule.selector == '*':
                 elements = [htmltree]
