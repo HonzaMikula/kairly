@@ -118,7 +118,7 @@ class ArticleParser:
             preserve = {'title'}
 
         attrib = el.attrib
-        for attr in attrib.keys():
+        for attr in list(attrib.keys()):  # use list RuntimeError: dictionary changed size during iteration
             if el.tag == 'img' and attr == 'data-src' and not attrib.get('src'):
                 attrib['src'] = attrib['data-src']
             if attr not in preserve:
