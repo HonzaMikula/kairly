@@ -418,7 +418,7 @@ post-detail--footer
     position: relative
 
   .consider-post
-    +button-icon($fa-var-newspaper)
+    +button-icon($fa-var-newspaper, icon-text)
 
   //- share FB button
   .share-fb

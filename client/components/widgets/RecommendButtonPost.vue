@@ -3,7 +3,6 @@
     :class="{'recommend-button': true, recommended}"
     href="#"
     @click.prevent="recommend"
-    v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
     :aria-label="$t('Recommend')">
   </a>
 </template>
@@ -59,7 +58,7 @@ export default {
 @import './styles/components/buttons'
 
 .recommend-button
-  +button-icon($fa-var-star)
+  +button-icon($fa-var-star, icon-text)
 
   &.recommended
     background: $c-base

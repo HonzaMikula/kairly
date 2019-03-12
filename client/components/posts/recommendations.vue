@@ -15,8 +15,10 @@
         </p>
 
         <footer class="recommendations-post--author">
-          <img :src="item.ref.newspaper.editor.picture" :alt="item.ref.newspaper.editor.name" />
-          {{ item.ref.newspaper.editor.name }}
+          <nuxt-link :to="{name: 'author', params: {author: item.ref.newspaper.editor.id}}">
+            <img :src="item.ref.newspaper.editor.picture" :alt="item.ref.newspaper.editor.name" />
+            {{ item.ref.newspaper.editor.name }}
+          </nuxt-link>
         </footer>
       </div>
     </template>
@@ -32,8 +34,10 @@
         </h3>
 
         <footer class="recommendations-post--author">
-          <img :src="item.ref.author.picture" :alt="item.ref.author.name" />
-          {{ item.ref.author.name }}
+          <nuxt-link :to="{name: 'author', params: {author: item.ref.author.id}}">
+            <img :src="item.ref.author.picture" :alt="item.ref.author.name" />
+            {{ item.ref.author.name }}
+          </nuxt-link>
         </footer>
       </div>
     </template>
@@ -111,8 +115,8 @@ export default {
     margin-bottom: $baseline / 4
 
 //- author
-.recommendations-post--author
-  display: flex
+.recommendations-post--author a
+  display: inline-flex
 
   font-family: $ff-sans
 

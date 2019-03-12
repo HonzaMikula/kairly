@@ -81,7 +81,7 @@ export async function loadTimeline({ commit, state }, { date, cachedOnly=false})
       }
     })
     if (recommendedPosts.length || recommendedIssues.length) {
-      const sample = recommendedPosts.length ? recommendedPosts[0] : recommendationIssue[0]
+      const sample = recommendedPosts.length ? recommendedPosts[0] : recommendedIssues[0]
       posts.push({
         author: sample.author,
         id: `wrapper-${sample.id}`,
