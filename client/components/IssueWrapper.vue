@@ -22,9 +22,17 @@
     />
 
     <footer>
-      <button v-if="(tailPostsCount > 0 && !expanded)" @click.prevent="expandIssue">
-        {{ $t('Show more') }} ({{tailPostsCount}})
-      </button>
+      <div class="issue--show-more">
+        <button
+          v-if="(tailPostsCount > 0 && !expanded)"
+          @click.prevent="expandIssue">
+          {{ $t('Show more') }} ({{tailPostsCount}})
+        </button>
+      </div>
+
+      <div class="issue--recommend-button">
+        <RecommendButtonIssue v-if="loggedIn && issue.type == 'newspaper'" :issue="issue" />
+      </div>
     </footer>
 
     <!--
@@ -36,12 +44,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import issueSuspendedAuthor from '@/components/issues/suspended-author'
 import issueSuspendedNewspaper from '@/components/issues/suspended-newspaper'
 import issueUnreleasedNewspaper from '@/components/issues/unreleased-newspaper'
 import issueNewspaper from '@/components/issues/newspaper'
 import issueAuthor from '@/components/issues/author'
 import PostWrapper from '@/components/PostWrapper'
+import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
 
 const POST_LIMIT = 5
 
@@ -61,6 +72,7 @@ export default {
     issueSuspendedNewspaper,
     issueUnreleasedNewspaper,
     PostWrapper,
+    RecommendButtonIssue
   },
 
   data() {
@@ -70,6 +82,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
     expanded() {
       if (this.showTail) {
         return true
@@ -102,6 +118,9 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
 //- Newspaper
 timeline-newspaper
   display: block
@@ -151,27 +170,14 @@ timeline-newspaper
           display: none
 
   footer
-    text-align: center
+    display: flex
+    justify-content: center
 
-    button
-      display: table
-      border-radius: $baseline
-      height: $baseline * 1.25
-      padding: 0 $baseline
-      margin: 0 auto
+    > div
+      margin: 0 $baseline/4
 
-      background: $c-base
-      border: 0
-      color: #fff
-
-      font-family: $ff-sans
-      font-size: $fs--1
-      line-height: $baseline * 1.25
-      cursor: pointer
-
-      &:hover,
-      &:focus
-        background: darken($c-base, 10%)
+    .issue--show-more button
+      +button
 
 //- Issue
 .issue-footer

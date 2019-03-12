@@ -4,7 +4,7 @@
     href="#"
     @click.prevent="recommend"
     v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-    :aria-label="recommended ? $t('Cancel recommendation') : $t('Recommend post')">
+    :aria-label="$t('Recommend')">
   </a>
 </template>
 

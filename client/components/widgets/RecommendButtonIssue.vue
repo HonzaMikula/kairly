@@ -1,10 +1,11 @@
 <template>
   <a
-    :class="{'recommend-button': true, recommended}"
+    :class="{'recommend-button-issue': true, recommended}"
     href="#"
     @click.prevent="recommend"
     v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-    :title="recommended ? $t('Cancel recommendation') : $t('Recommend issue')">
+    :title="$t('Recommend')"
+    :aria-label="$t('Recommend')">
   </a>
 </template>
 
@@ -46,8 +47,8 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 
-.recommend-button
-  +button-icon($fa-var-star)
+.recommend-button-issue
+  +button-icon($fa-var-star, icon-text)
 
   &.recommended
     background: $c-base

@@ -53,8 +53,6 @@
         </div>
 
         <footer class="newspaper-detail--social-sharing">
-          <recommend-button-issue v-if="loggedIn && issue" :issue="issue" :recommended.sync="recommended" />
-
           <a
             :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
             target="_blank"
@@ -90,11 +88,9 @@
             class="share-twitter"
             :aria-label="$t('Share on Twitter')">
           </a>
-        </footer>
 
-        <footer class="newspaper-detail--subscribe-newsletter" v-if="newspaper.newsletterSubscriptionUrl">
           <!-- Begin Mailchimp Signup Form -->
-          <div id="mc_embed_signup">
+          <div id="mc_embed_signup" v-if="newspaper.newsletterSubscriptionUrl">
             <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
               <div id="mc_embed_signup_scroll">
                 <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
@@ -106,7 +102,7 @@
                 <div class="clear">
                   <input
                     type="submit"
-                    :value="$t('Send newspaper to email')"
+                    :value="$t('Send newspaper by email')"
                     name="subscribe"
                     id="mc-embedded-subscribe"
                     class="button"
@@ -512,6 +508,9 @@ export default {
   display: flex
   justify-content: center
 
+  border-top: 3px solid #eee
+  padding-top: $baseline / 2
+
   > a
     margin: 0 $baseline/4
 
@@ -522,15 +521,12 @@ export default {
     +button-icon($fa-var-twitter, icon, brand)
 
   a.rss
-    margin: 0 auto
     +button-icon($fa-var-rss-square, icon-text)
-
-//- Footer with RSS and Newsletter subscription
-.newspaper-detail--subscribe-newsletter
-  margin-top: $baseline
 
   //- Mailchimp
   #mc_embed_signup
+    margin-left: auto
+
     #mc_embed_signup_scroll
       display: flex
       justify-content: center
