@@ -153,8 +153,10 @@ class NewspaperView(View):
                 pass
 
             if request.user.is_authenticated:
-                data['recommended'] = Post.objects.filter(
-                    author=request.user, kind=Post.RECOMMENDATION, ref_issue=issue).exists()
+                if Post.objects.filter(author=request.user, kind=Post.RECOMMENDATION, ref_issue=issue).exists():
+                    data['recommended'] = [data['issue']['id']]
+                else:
+                    data['recommended'] = []
 
         return JsonResponse(data)
 
@@ -699,13 +701,10 @@ class PostRecommendationView(View):
         post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False)
 
         if post.kind == Post.RECOMMENDATION:
-            return JsonResponse({'error': "recommendation can't be recommended"}, status=400)
-
-        if post.author == request.user:
-            return JsonResponse({'error': "can't recommend own post"}, status=400)
+            return JsonResponse({'error': "Recommendation post can't be recommended."}, status=400)
 
         if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_post=post).exists():
-            return JsonResponse({'error': "already recommended"}, status=400)
+            return JsonResponse({'error': "Post is already recommended."}, status=400)
 
         recommendation = Post.objects.create(
             title=post.title,
@@ -737,11 +736,8 @@ class IssueRecommendationView(View):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_number)
 
-        if newspaper.editor == request.user:
-            return JsonResponse({'error': "can't recommend own issue"}, status=400)
-
         if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_issue=issue).exists():
-            return JsonResponse({'error': "already recommended"}, status=400)
+            return JsonResponse({'error': "Issue is already recommended."}, status=400)
 
         recommendation = Post.objects.create(
             title=f'{newspaper.title} #{issue.number}',

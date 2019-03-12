@@ -19,6 +19,7 @@ const createStore = () => {
       timeline: {
         // of date : [ issues ]
       },
+      recommendedIssues: {},
       messages: {
         error: null,
         success: null,
@@ -36,6 +37,7 @@ const createStore = () => {
           state.timelineHasNoActiveSubscriptions = false
           state.timelineExpandedIssues = {}
           state.timeline = {}
+          state.recommendedIssues = {}
       },
 
       updateCredits(state, credits) {
@@ -130,6 +132,9 @@ const createStore = () => {
       invalidateTimeline(state) {
         state.timelineHasNoActiveSubscriptions = false
         state.timeline = {}
+      },
+      recommendedIssue(state, { id, value }) {
+        Vue.set(state.recommendedIssues, id, value)
       },
       expandIssue(state, { issueId }) {
         state.timelineExpandedIssues = {

@@ -47,9 +47,9 @@
         </nav>
 
         <div class="newspaper-detail--issue">
-          <Issue :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
+          <IssueWrapper :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
             <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issue.time | moment('D. M. YYYY')}}</template>
-          </Issue>
+          </IssueWrapper>
         </div>
 
         <footer class="newspaper-detail--social-sharing">
@@ -146,7 +146,7 @@ import { errorToParams } from '@/utils/errors'
 
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import AppLayout from '@/components/layout/AppLayout'
-import Issue from '@/components/IssueWrapper'
+import IssueWrapper from '@/components/IssueWrapper'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
@@ -206,7 +206,7 @@ export default {
 
   components: {
     AppLayout,
-    Issue,
+    IssueWrapper,
     NewspaperSubscription,
     KairlyPromo,
     FooterLinks,
@@ -246,11 +246,11 @@ export default {
     }
 
     try {
-      const { newspaper, issue, links, recommended } = await store.dispatch('getNewspaperDetail', {
+      const { newspaper, issue, links } = await store.dispatch('getNewspaperDetail', {
         newspaperId: fullName,
         issue: params.issue
       })
-      return { newspaper, issue, links, recommended }
+      return { newspaper, issue, links }
     } catch (err) {
       error(errorToParams(err))
     }

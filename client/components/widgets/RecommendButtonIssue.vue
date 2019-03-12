@@ -1,6 +1,6 @@
 <template>
   <a
-    :class="{'recommend-button-issue': true, recommended}"
+    :class="{'recommend-button-issue': true, 'recommended': recommended}"
     href="#"
     @click.prevent="recommend"
     v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
@@ -13,24 +13,30 @@
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'RecommnendButtonPost',
+  name: 'RecommnendButtonIssue',
 
   props: {
     issue: Object,
-    recommended: Boolean,
+  },
+
+  computed: {
+    recommended() {
+      return this.$store.state.recommendedIssues[this.issue.id] || false
+    }
   },
 
   methods: {
-    ...mapMutations(['showError', 'showSuccess']),
+    ...mapMutations(['showError', 'showSuccess', 'recommendedIssue']),
 
     async recommend() {
       try {
+        const { id } = this.issue
         if (this.recommended) {
-          await this.$axios.delete(`/recommendation/issue/${this.issue.id}`)
-          this.$emit('update:recommended', false)
+          await this.$axios.delete(`/recommendation/issue/${id}`)
+          this.recommendedIssue({id, value: false})
         } else {
-          await this.$axios.post(`/recommendation/issue/${this.issue.id}`)
-          this.$emit('update:recommended', true)
+          await this.$axios.post(`/recommendation/issue/${id}`)
+          this.recommendedIssue({id, value: true})
         }
       } catch (err) {
         if (err.response.status === 400) {

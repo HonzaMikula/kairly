@@ -93,6 +93,10 @@ export async function loadTimeline({ commit, state }, { date, cachedOnly=false})
     }
   })
 
+  if (data.recommended) {
+    data.recommended.forEach(id => commit('recommendedIssue', {id, value: true}))
+  }
+
   if (!date) {
     commit('today', {date: data.date, validTo: data.validTo})
   }
@@ -107,6 +111,9 @@ export const invalidateTimeline = ({ commit }) => {
 export async function getNewspaperDetail({ commit }, { newspaperId, issue }) {
   const data = await this.$axios.$get(`/newspapers/${newspaperId}`, { params: {issue} })
   commit('newspaper', { newspaper: data.newspaper })
+  if (data.recommended) {
+    data.recommended.forEach(id => commit('recommendedIssue', {id, value: true}))
+  }
   return data
 }
 

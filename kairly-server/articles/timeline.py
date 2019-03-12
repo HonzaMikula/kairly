@@ -68,15 +68,37 @@ def timeline(request):
         # no subscription exists
         return HttpResponse(status=204)
 
+    newspaper_issue_ids = []
+    regular_newspaper_issues = []
+    for issue in newspaper_issues:
+        try:
+            newspaper_issue_ids.append(issue['$']['id'])
+            regular_newspaper_issues.append(issue)
+        except KeyError:
+            pass
+
+    recommendations_query = Post.objects.filter(
+        author=request.user, kind=Post.RECOMMENDATION,
+        ref_issue_id__in=newspaper_issue_ids).values_list('ref_issue_id', flat=True)
+    recommended_internal_ids = set(recommendations_query)
+    recommended_public_ids = []
+    for issue in regular_newspaper_issues:
+        if issue['$']['id'] in recommended_internal_ids:
+            recommended_public_ids.append(issue['id'])
+
     issues = list(sorted(
         chain(newspaper_issues, author_issues),
         key=itemgetter('time'), reverse=True))
+
+    for issue in issues:
+        issue.pop('$', None)  # strip internal keys
 
     return JsonResponse({
         'date': str(d),
         'issues': issues,
         'links': links,
         'validTo': cache_valid_to,
+        'recommended': recommended_public_ids,
     })
 
 
@@ -130,9 +152,9 @@ def get_newspaper_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid
 
     issues = []
     for issue in query:
-        issues.append(issue.to_json(
-            newspaper=sub.newspaper,
-            tzinfo=tzinfo))
+        issue_json = issue.to_json(newspaper=sub.newspaper, tzinfo=tzinfo)
+        issue_json['$'] = {'id': issue.id}  # internal keys, want ot cache but will be stripped on response
+        issues.append(issue_json)
         try:
             expected_issues.remove(issue.published)
         except KeyError:
