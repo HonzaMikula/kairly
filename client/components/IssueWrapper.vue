@@ -21,8 +21,8 @@
       :key="post.id"
     />
 
-    <footer>
-      <div class="issue--show-more">
+    <footer class="issue--footer">
+      <div class="issue--footer--show-more">
         <button
           v-if="(tailPostsCount > 0 && !expanded)"
           @click.prevent="expandIssue">
@@ -30,7 +30,7 @@
         </button>
       </div>
 
-      <div class="issue--recommend-button">
+      <div class="issue--footer--recommend-button">
         <RecommendButtonIssue v-if="loggedIn && issue.type == 'newspaper'" :issue="issue" />
       </div>
     </footer>
@@ -169,15 +169,17 @@ timeline-newspaper
         span
           display: none
 
-  footer
-    display: flex
-    justify-content: center
+//- Footer
+.issue--footer
+  display: flex
+  justify-content: center
 
-    > div
-      margin: 0 $baseline/4
+  > div
+    margin: 0 $baseline/4
 
-    .issue--show-more button
-      +button
+//- show more button
+.issue--footer--show-more button
+  +button
 
 //- Issue
 .issue-footer
