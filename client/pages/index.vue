@@ -161,6 +161,7 @@ export default {
     loggedIn(value) {
       if (value) {
         this.loadTimeline()
+        this.$store.dispatch('getUserBacklog')
       } else {
         this.date = null
         this.showWelcome = false
@@ -179,8 +180,6 @@ export default {
         if (this.date === null) {
           this.showWelcome = true
         }
-
-        this.$store.dispatch('getUserBacklog')
       }
     }
   },
@@ -219,8 +218,13 @@ export default {
   },
 
   created() {
-    if (process.client && !this.date) {
-      this.loadTimeline()
+    if (process.client) {
+      if (!this.date) {
+        this.loadTimeline()
+      }
+      if (this.loggedIn) {
+        this.$store.dispatch('getUserBacklog')
+      }
     }
   }
 }

@@ -273,6 +273,10 @@ export default {
       window.addEventListener('resize', this.onResize)
 
       this.onResize() // and recompute for initial page
+
+      if (this.loggedIn) {
+        this.$store.dispatch('getUserBacklog')
+      }
     }
   },
 
