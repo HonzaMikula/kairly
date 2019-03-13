@@ -41,7 +41,6 @@ export async function getTransactions({ commit, state }) {
 }
 
 export async function loadTimeline({ commit, state }, { date, cachedOnly=false}) {
-
   let cacheKey = date
   // TODO check not only valid to but also change of hour or too old timeline
   // but this is not important now
@@ -77,7 +76,7 @@ export async function loadTimeline({ commit, state }, { date, cachedOnly=false})
       } else if (post.type == 'recommendation-issue') {
         recommendedIssues.push(post)
       } else {
-        posts.push(posts)
+        posts.push(post)
       }
     })
     if (recommendedPosts.length || recommendedIssues.length) {
