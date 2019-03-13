@@ -154,6 +154,40 @@ export async function subscribeNewspaper({ commit }, { fullName, donation }) {
   return subscription
 }
 
+export async function loadAuthorPosts({ commit }, { authorId, cursor: requestedCursor }) {
+  const { posts, cursor } = await this.$axios.$get(
+    `/authors/${authorId}/posts`,
+    { params: { cursor: requestedCursor } }
+  );
+
+  let prevRecommendation = null
+  const mappedPosts = []
+
+  posts.forEach(post => {
+    if (post.type == 'recommendation-post' || post.type == 'recommendation-issue') {
+      if (prevRecommendation === null) {
+        prevRecommendation = {
+          author: post.author,
+          id: `wrapper-${post.id}`,
+          type: 'recommendations',
+          posts: [],
+          issues: [],
+        }
+         mappedPosts.push(prevRecommendation)
+      }
+      if (post.type == 'recommendation-post') {
+        prevRecommendation.posts.push(post)
+      } else {
+        prevRecommendation.issues.push(post)
+      }
+    } else {
+      prevRecommendation = null
+      mappedPosts.push(post)
+    }
+  });
+  return { posts: mappedPosts, cursor }
+}
+
 export async function unsubscribeNewspaper({ commit }, { fullName }) {
   commit('invalidateTimeline')
 

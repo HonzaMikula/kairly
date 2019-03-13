@@ -171,36 +171,11 @@ export default {
 
       this.loadingPosts = true;
 
-      const { posts, cursor } = await this.$axios.$get(
-        `/authors/${authorId}/posts`,
-        { params: { cursor: this.cursor } }
-      );
+      const { posts, cursor } = await this.$store.dispatch('loadAuthorPosts', { authorId, cursor: this.cursor})
 
-      let prevRecommendation = null
-      posts.forEach(post => {
-        if (post.type == 'recommendation-post' || post.type == 'recommendation-issue') {
-          if (prevRecommendation === null) {
-            prevRecommendation = {
-              author: post.author,
-              id: `wrapper-${post.id}`,
-              type: 'recommendations',
-              posts: [],
-              issues: [],
-            }
-            this.posts.push(prevRecommendation)
-          }
-          if (post.type == 'recommendation-post') {
-            prevRecommendation.posts.push(post)
-          } else {
-            prevRecommendation.issues.push(post)
-          }
-        } else {
-          prevRecommendation = null
-          this.posts.push(post)
-        }
-      });
-      this.cursor = cursor;
-      this.loadingPosts = false;
+      this.posts =  posts
+      this.cursor = cursor
+      this.loadingPosts = false
     },
 
     // can be called on client side only
@@ -242,10 +217,7 @@ export default {
       };
 
       if (process.server) {
-        const { posts, cursor } = await app.$axios.$get(
-          `/authors/${authorId}/posts`,
-          { params: { cursor: 0 } }
-        );
+        const { posts, cursor } = await store.dispatch('loadAuthorPosts', { authorId, cursor: 0})
         data.posts = posts;
         data.cursor = cursor;
         data.loadingPosts = false;
@@ -262,14 +234,12 @@ export default {
     }
   },
 
-  created() {
-    if (process.client && this.cursor === 0) {
-      this.loadPosts();
-    }
-  },
-
   mounted() {
     if (process.client) {
+      if (this.cursor === 0) {
+        this.loadPosts()
+      }
+
       window.addEventListener('resize', this.onResize)
 
       this.onResize() // and recompute for initial page
