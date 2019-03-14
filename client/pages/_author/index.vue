@@ -173,7 +173,7 @@ export default {
 
       const { posts, cursor } = await this.$store.dispatch('loadAuthorPosts', { authorId, cursor: this.cursor})
 
-      this.posts =  posts
+      posts.forEach(post => this.posts.push(post))
       this.cursor = cursor
       this.loadingPosts = false
     },
