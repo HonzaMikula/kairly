@@ -235,7 +235,10 @@ def author_posts(request, username):
     author = get_object_or_404(User, username=username)
 
     posts_query = Post.objects.filter(author=author, draft=False, published__lt=timezone.now())
+    if request.GET.get('skipRecommendations') == '1':
+        posts_query = posts_query.exclude(kind=Post.RECOMMENDATION)
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
+
     posts = [post.to_json(short=True, anonymous=request.user.is_anonymous) for post in posts_query]
     return JsonResponse({
         'posts': posts,

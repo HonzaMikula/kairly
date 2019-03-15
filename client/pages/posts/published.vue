@@ -61,8 +61,12 @@ export default {
 
       this.loadingPosts = true
 
+      const params = {
+        cursor: this.cursor,
+        skipRecommendations: 1
+      }
       const { posts, cursor } = await this.$axios.$get(
-        `/authors/${this.user.id}/posts`, {params: {cursor: this.cursor}})
+        `/authors/${this.user.id}/posts`, {params})
 
       posts.forEach(post => this.posts.push(post))
       this.cursor = cursor
