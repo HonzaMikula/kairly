@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('My posts')">
+  <AppLayout :name="$t('My posts')">
     <div class="my-posts">
       <header>
         <nav>
@@ -14,7 +14,7 @@
 
       <slot />
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>
@@ -26,7 +26,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: 'Posts',
+  name: 'MyPosts',
 
   head() {
     return {

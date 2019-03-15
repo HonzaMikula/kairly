@@ -1,6 +1,5 @@
 <template>
-  <div class="medium-editor-wrapper" ref="element">
-  </div>
+  <div class="medium-editor-wrapper" ref="element" />
 </template>
 
 <script>

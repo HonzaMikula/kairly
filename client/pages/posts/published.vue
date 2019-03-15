@@ -1,5 +1,5 @@
 <template>
-  <my-posts>
+  <MyPosts>
     <PostWrapper
       v-for="post in posts"
       :post="post"
@@ -11,8 +11,8 @@
           class="edit"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
           :title="$t('Edit post')"
-          @click.prevent="$router.push(`/posts/${post.id}`)">
-        </button-icon>
+          @click.prevent="$router.push(`/posts/${post.id}`)"
+        />
       </template>
     </PostWrapper>
 
@@ -21,7 +21,7 @@
     </div>
 
     <loading-spinner v-if="loadingPosts"></loading-spinner>
-  </my-posts>
+  </MyPosts>
 </template>
 
 <script>

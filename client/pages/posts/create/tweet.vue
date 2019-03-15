@@ -1,6 +1,6 @@
 <template>
   <div>
-    <edit-tweet :buttonTitle="$t('Save a draft')" @submit="createPost" />
+    <EditTweet :buttonTitle="$t('Save a draft')" @submit="createPost" />
   </div>
 </template>
 

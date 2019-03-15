@@ -1,23 +1,30 @@
 <template>
-  <post-component role="article" :class="post.type">
-    <header @mouseleave="closeAuthorWidget()">
+  <post-component
+    role="article"
+    :class="post.type"
+  >
+    <header @mouseleave="closeAuthorWidget">
       <picture>
         <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-          <img :src="post.author.picture" :alt="post.author.name" />
+          <img
+            :src="post.author.picture"
+            :alt="post.author.name"
+          />
         </nuxt-link>
       </picture>
 
       <h3>
         <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-          {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+          {{ post.author.name }}
+          <span v-if="post.author.medium">, {{post.author.medium}}</span>
         </nuxt-link>
       </h3>
 
-      <authorPopup
-        :author="post.author"
+      <AuthorPopup
         v-if="isAuthorWidgetOpen"
-        @authorwidgetclose="closeAuthorWidget()">
-      </authorPopup>
+        :author="post.author"
+        @authorwidgetclose="closeAuthorWidget"
+      />
 
       <time>
         {{ post.time | moment('calendar') }}
@@ -28,21 +35,21 @@
         <slot name="controls">
           <span>
             <button
+              v-if="userNewspapers.length > 0"
+              class="consider-post"
               role="button"
               tabindex="0"
-              class="consider-post"
-              v-if="userNewspapers.length > 0"
+              :aria-label="$t('Consider for newspaper')"
               @click.stop.prevent="showConsiderPost = true"
-              :aria-label="$t('Consider for newspaper')">
-            </button>
-            <consider-post v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
+            />
+            <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
           </span>
         </slot>
       </section>
 
     </header>
 
-    <slot></slot>
+    <slot/>
 
     <slot name="buttons"></slot>
   </post-component>

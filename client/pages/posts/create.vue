@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Write a post')">
+  <AppLayout :name="$t('Write a post')">
     <div class="edit-post-view">
       <nav class="create-post">
         <nuxt-link to="/posts/create/article">{{ $t('Write an article') }}</nuxt-link>
@@ -8,7 +8,7 @@
 
       <nuxt-child/>
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 

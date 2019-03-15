@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  name: 'DialogWindowComponent',
+  name: 'DialogWindow',
 
   props: {
     closeModal: Function

@@ -1,5 +1,5 @@
 <template>
-  <post :post="post">
+  <PostBase :post="post">
     <timeline-post--article>
       <h2>
         <span v-if="post.draft">{{ post.content.title }}</span>
@@ -29,7 +29,10 @@
     </timeline-post--article>
 
     <template slot="extendedControls">
-      <slot v-if="post.source" name="extendedControls">
+      <slot
+        v-if="post.source"
+        name="extendedControls"
+      >
         <a
           :href="post.source"
           class="external-link"
@@ -40,16 +43,20 @@
     </template>
 
     <template slot="controls"><slot name="controls"></slot></template>
-  </post>
+  </PostBase>
 </template>
 
 <script>
-import post from './post';
+import PostBase from './PostBase';
 
 export default {
-  name: 'post-article',
+  name: 'PostArticle',
+
   props: ["post", "isSubscribed"],
-  components: { post }
+
+  components: {
+    PostBase
+  }
 }
 </script>
 

@@ -27,7 +27,9 @@
             </nuxt-link>
           </td>
           <td>{{ fmtTime(t.to) }}</td>
-          <td><NewspaperSubscription :newspaper="t.newspaper" /></td>
+          <td>
+            <NewspaperSubscription :newspaper="t.newspaper" />
+          </td>
         </template>
       </tr>
     </tbody>

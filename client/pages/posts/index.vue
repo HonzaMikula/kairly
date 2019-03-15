@@ -1,5 +1,5 @@
 <template>
-  <my-posts>
+  <MyPosts>
     <div class="my-posts--empty" v-if="posts.length == 0">
       {{ $t('No drafts') }}
     </div>
@@ -18,8 +18,8 @@
             :title="$t('Edit post')"
             tabindex="0"
             role="button"
-            @click.prevent="$router.push(`/posts/${post.id}`)">
-          </button-icon>
+            @click.prevent="$router.push(`/posts/${post.id}`)"
+          />
 
           <button-icon
             class="remove"
@@ -27,13 +27,13 @@
             :title="$t('Delete post')"
             tabindex="0"
             role="button"
-            @click.prevent="deletePost(post)">
-          </button-icon>
+            @click.prevent="deletePost(post)"
+          />
 
         </template>
       </PostWrapper>
     </div>
-  </my-posts>
+  </MyPosts>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <timeline-newspaper class="issue-unreleased">
+  <timeline-newspaper>
     <header>
       <h1>
         <nuxt-link :to="{name: 'author', params: {author: issue.author.id}}">
@@ -15,18 +15,28 @@
       </p>
     </header>
 
+    <slot />
 
-    <article>
-      {{ $t('Your susbscription were suspended.') }}
-    </article>
-
+    <PostIssue
+      v-for="item in issue.issues"
+      :post="item"
+      :key="item.id"
+    />
   </timeline-newspaper>
 </template>
 
 <script>
+import PostIssue from '@/components/posts/PostIssue'
+
 export default {
-  name: 'issue-suspended-author',
-  props: ['issue'],
+  name: 'IssueAuthor',
+  props: {
+    issue: Object
+  },
+
+  components: {
+    PostIssue
+  },
 
   methods: {
     localizedTitle() {
@@ -39,10 +49,5 @@ export default {
       return title // should never happen
     }
   }
-
 }
 </script>
-
-<style lang="sass">
-/* shares issue-unreleased style from unreleased-newspaper.vue */
-</style>

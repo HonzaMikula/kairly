@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Manage newspapers')">
+  <AppLayout :name="$t('Manage newspapers')">
     <editor-newspapers-view>
       <editor-newspapers--empty
         v-if="newspapers.length === 0">
@@ -117,7 +117,7 @@
         <editor-newspapers--board v-if="isBacklogLoaded"
           :class="{'upcoming-issue': mobileSwitcher == 1, 'backlog': mobileSwitcher ==2}"
         >
-          <newspaper-backlog v-if="selectedNewspaper"
+          <NewspaperBacklog v-if="selectedNewspaper"
             :newspaper="selectedNewspaper"
             :backlog="postsBacklog"
             :published="postsPublished"
@@ -127,14 +127,14 @@
       </template>
 
       <portal to="modal" v-if="isCreateNewspaperOpen">
-        <edit-newspaper :closeModal="closeModal" :onCreated="newNewspaperCreated"></edit-newspaper>
+        <EditNewspaper :closeModal="closeModal" :onCreated="newNewspaperCreated"/>
       </portal>
 
       <portal to="modal" v-if="newspaperToEdit">
-        <edit-newspaper :closeModal="closeModal" :newspaper="newspaperToEdit"></edit-newspaper>
+        <EditNewspaper :closeModal="closeModal" :newspaper="newspaperToEdit"/>
       </portal>
     </editor-newspapers-view>
-  </app-layout>
+  </AppLayout>
 </template>
 
 

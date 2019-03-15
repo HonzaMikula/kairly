@@ -1,6 +1,6 @@
 <template>
   <div>
-    <edit-article :buttonTitle="$t('Save a draft')" @submit="createPost" />
+    <EditArticle :buttonTitle="$t('Save a draft')" @submit="createPost" />
   </div>
 </template>
 

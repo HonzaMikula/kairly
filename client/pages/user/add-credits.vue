@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Buy credits')">
+  <AppLayout :name="$t('Buy credits')">
     <div class="buy-credits-view">
       <h1>{{ $t('Buy credits') }}</h1>
 
@@ -17,7 +17,7 @@
 
       <button :disabled="btnDisabled" @click="requestCredits">{{ $t('Please, give me more') }}</button>
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

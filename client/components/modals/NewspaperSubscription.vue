@@ -1,5 +1,5 @@
 <template>
-  <dialog-window :closeModal="closeModal">
+  <DialogWindow :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="newspaper-subscription-dialog">
       <header>
         <h1 v-if="!subscription.state">{{ $t('Subscribe newspaper') }}</h1>
@@ -85,13 +85,13 @@
         </template>
       </footer>
     </modal-dialog>
-  </dialog-window>
+  </DialogWindow>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-import DialogWindow from '@/components/modals/Dialog'
+import DialogWindow from '@/components/modals/DialogWindow'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
 export default {

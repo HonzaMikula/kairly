@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Transactions')">
+  <AppLayout :name="$t('Transactions')">
     <div class="transactions">
       <header>
         <h1>System Reports</h1>
@@ -47,7 +47,7 @@
         </tbody>
       </table>
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

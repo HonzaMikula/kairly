@@ -1,8 +1,8 @@
 <template>
-  <timeline-newspaper>
+  <timeline-newspaper class="issue-unreleased">
     <header>
       <h1>
-        <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
+        <nuxt-link :to="`/${newspaper.editor.id}/${newspaper.name}`">
           <slot name="newspaperTitle">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
@@ -10,7 +10,11 @@
       <p>
         <timeline-newspaper--editor>
           <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
-            <img v-if="issue.newspaper.editor.picture" :src="newspaper.editor.picture" :alt="newspaper.editor.name" />
+            <img
+              v-if="issue.newspaper.editor.picture"
+              :src="newspaper.editor.picture"
+              :alt="newspaper.editor.name"
+            />
             {{ newspaper.editor.name }}
           </nuxt-link>
         </timeline-newspaper--editor>
@@ -18,14 +22,17 @@
         <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
     </header>
-    <slot></slot>
+
+    <article>
+      {{ $t('Your susbscription were suspended.') }}
+    </article>
+
   </timeline-newspaper>
 </template>
 
 <script>
-
 export default {
-  name: 'issue-newspaper',
+  name: 'IssueSuspendedNewspaper',
   props: ['issue', 'hideDate'],
 
   computed: {
@@ -45,3 +52,6 @@ export default {
 
 }
 </script>
+
+<style lang="sass">
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Explore')">
+  <AppLayout :name="$t('Explore')">
     <explore-view :class="$route.name === 'explore-recent' ? 'recent' : $route.params.tab">
       <header>
         <nav>
@@ -16,7 +16,7 @@
 
       <nuxt-child/>
     </explore-view>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

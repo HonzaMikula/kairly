@@ -1,14 +1,20 @@
 <template>
-  <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" class="explore" @click.stop>
+  <DialogWindow :closeModal="closeModal">
+    <modal-dialog
+      role="dialog"
+      class="explore"
+      @click.stop
+    >
       <header>
         <h1>{{ category.name }}</h1>
-
-        <button-close tabindex="0" role="button" @click="closeModal"></button-close>
+        <button-close
+          tabindex="0"
+          role="button"
+          @click="closeModal"
+        />
       </header>
 
       <explore-modal-view>
-
         <AuthorWidget
           v-for="author in category.authors.slice(limit)"
           :key="author.id"
@@ -16,13 +22,11 @@
         />
       </explore-modal-view>
     </modal-dialog>
-  </dialog-window>
+  </DialogWindow>
 </template>
 
 <script>
-
-
-import DialogWindow from '@/components/modals/Dialog'
+import DialogWindow from '@/components/modals/DialogWindow'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
 
 export default {

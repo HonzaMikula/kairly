@@ -1,35 +1,44 @@
 <template>
   <div>
     <div class="edit-article--title">
-      <input v-model="title" :placeholder="$t('Title')" />
+      <input
+        v-model="title"
+        :placeholder="$t('Title')"
+      />
     </div>
 
-    <div class="edit-article--perex" :class="{'column-view': !normalPerexView}">
+    <div :class="{'edit-article--perex': true, 'column-view': !normalPerexView}">
       <div class="edit-article--perex--controls">
         <button-icon
-          class="normal-view"
-          :class="{'is-active': normalPerexView}"
-          @click="normalPerexView = true"
+          :class="{'normal-view': true, 'is-active': normalPerexView}"
           tabindex="0"
-          role="button">
+          role="button"
+          @click="normalPerexView = true"
+        >
           {{ $t('Normal view') }}
         </button-icon>
 
         <button-icon
-          class="column-view"
-          :class="{'is-active': !normalPerexView}"
-          @click="normalPerexView = false"
+          :class="{'column-view': true, 'is-active': !normalPerexView}"
           tabindex="0"
-          role="button">
+          role="button"
+          @click="normalPerexView = false"
+        >
           {{ $t('Column view') }}
         </button-icon>
       </div>
 
-      <medium-editor v-model="perex" :options="perexOptions" />
+      <medium-editor
+        v-model="perex"
+        :options="perexOptions"
+       />
     </div>
 
     <div class="edit-article--content">
-      <medium-editor v-model="content" :options="contentOptions" />
+      <medium-editor
+        v-model="content"
+        :options="contentOptions"
+      />
     </div>
 
     <div class="edit-article--footer">

@@ -1,7 +1,13 @@
 <template>
   <div>
     <div class="edit-tweet--content">
-      <textarea v-model="content" cols="80" rows="4" maxlength="320" :placeholder="$t('Tweet Content')" />
+      <textarea
+        v-model="content"
+        cols="80"
+        rows="4"
+        maxlength="320"
+        :placeholder="$t('Tweet Content')"
+      />
     </div>
 
     <div class="edit-tweet--footer">
@@ -17,7 +23,7 @@ import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 
 function htmlDecode(input){
-  var e = document.createElement('div');
+  const e = document.createElement('div');
   e.innerHTML = input;
   // handle case of empty input
   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;

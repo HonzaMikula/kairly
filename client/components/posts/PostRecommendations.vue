@@ -46,7 +46,7 @@
 
 <script>
 export default {
-  name: 'post-recommendations',
+  name: 'PostRecommendations',
 
   props: ["post", "isSubscribed"],
 

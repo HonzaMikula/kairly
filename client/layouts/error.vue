@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <AppLayout>
     <div class="error-page">
       <template v-if="error.statusCode === 404">
         <h1>Sorry, but this page doesn't exist</h1>
@@ -15,7 +15,7 @@
         <nuxt-link to="/">Go to the homepage</nuxt-link>
       </p>
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

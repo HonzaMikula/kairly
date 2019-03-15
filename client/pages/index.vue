@@ -1,19 +1,19 @@
 <template>
-  <app-layout>
+  <AppLayout>
     <timeline-view v-if="loggedIn">
-      <Welcome v-if="showWelcome"/>
+      <WelcomePage v-if="showWelcome"/>
 
       <template v-else>
         <header
-          class="timeline--header"
           v-if="!loading"
+          class="timeline--header"
         >
           <nuxt-link
             :to="{name: 'timeline-date', params: {date: links.prev}}"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
-          ></nuxt-link>
+          />
 
           <nuxt-link
             v-if="links.next"
@@ -21,14 +21,19 @@
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
-          ></nuxt-link>
+          />
         </header>
 
         <template v-if="timeSlots.length > 0">
           <template v-for="timeSlot in timeSlots">
-            <jump-menu :datetime="timeSlot.time" :key="timeSlot.time" :timeSlots="timeSlots" />
+            <JumpMenu
+              :key="timeSlot.time"
+              :datetime="timeSlot.time"
+              :timeSlots="timeSlots"
+            />
 
-            <IssueWrapper v-for="issue in timeSlot.issues"
+            <IssueWrapper
+              v-for="issue in timeSlot.issues"
               :key="issue.id"
               :issue="issue"
               :subscription="true"
@@ -53,7 +58,11 @@
           </div>
         </template>
 
-        <footer class="timeline--footer" id="start" v-if="!loading">
+        <footer
+          v-if="!loading"
+          id="start"
+          class="timeline--footer"
+        >
           <p>{{ $t("That's it. You read the entire day.") }}</p>
 
           <nuxt-link
@@ -61,7 +70,7 @@
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
-          ></nuxt-link>
+          />
 
           <nuxt-link
             v-if="links.next"
@@ -69,23 +78,23 @@
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
-          ></nuxt-link>
+          />
         </footer>
       </template>
 
       <loading-spinner v-if="loading"></loading-spinner>
     </timeline-view>
 
-    <Homepage v-else/>
-  </app-layout>
+    <HomePage v-else/>
+  </AppLayout>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
 import moment from 'moment'
 
-import Homepage from '@/components/Homepage'
-import Welcome from '@/components/Welcome'
+import HomePage from '@/components/HomePage'
+import WelcomePage from '@/components/WelcomePage'
 import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
 import JumpMenu from '@/components/widgets/JumpMenu'
@@ -107,10 +116,10 @@ export default {
 
   components: {
     AppLayout,
-    Homepage,
+    HomePage,
     IssueWrapper,
     JumpMenu,
-    Welcome,
+    WelcomePage,
   },
 
   computed: {

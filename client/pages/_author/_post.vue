@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Article')">
+  <AppLayout :name="$t('Article')">
     <post-detail role="article">
       <post-detail--back-button
         :title="$t('Back')"
@@ -10,7 +10,10 @@
       <main itemscope itemtype="https://schema.org/NewsArticle">
         <post-detail--header>
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
-            <img :src="post.author.picture" :alt="post.author.name"/>
+            <img
+              :src="post.author.picture"
+              :alt="post.author.name"
+            />
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
 
@@ -24,7 +27,10 @@
         <post-detail--content v-html="post.content.perex" itemprop="articleBody" />
 
         <no-ssr>
-          <post-detail--continue-reading id="continue" v-if="post.content.content && showContinueReading">
+          <post-detail--continue-reading
+            v-if="post.content.content && showContinueReading"
+            id="continue"
+          >
             {{ $t('continue reading') }}
           </post-detail--continue-reading>
         </no-ssr>
@@ -36,21 +42,31 @@
         </div>
 
         <div v-else>
-          <post-detail--content v-html="post.content.content" itemprop="articleBody" />
+          <post-detail--content
+            itemprop="articleBody"
+            v-html="post.content.content"
+          />
 
           <post-detail--footer>
-            <recommend-button-post v-if="loggedIn" :post="post" :recommended.sync="recommended" />
+            <recommend-button-post
+              v-if="loggedIn"
+              :post="post"
+              :recommended.sync="recommended"
+            />
 
-            <span v-if="userNewspapers.length" @click.stop>
+            <span
+              v-if="userNewspapers.length"
+              @click.stop
+            >
               <button
                 role="button"
                 tabindex="0"
                 class="consider-post"
+                :aria-label="$t('Consider for newspaper')"
                 @click.stop.prevent="openConsiderPost()"
-                :aria-label="$t('Consider for newspaper')">
-              </button>
+              />
 
-              <consider-post v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
+              <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
             </span>
 
             <!-- <a
@@ -103,7 +119,7 @@
     <KairlyPromo v-if="!loggedIn" />
 
     <FooterLinks v-if="!loggedIn" />
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

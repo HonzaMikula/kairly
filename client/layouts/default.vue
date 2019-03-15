@@ -5,8 +5,8 @@
 
       <portal-target name="modal" slim></portal-target>
 
-      <info-message v-if="errorMessage" type="error">{{ errorMessage }}</info-message>
-      <info-message v-if="successMessage" type="success">{{ successMessage }}</info-message>
+      <InfoMessage v-if="errorMessage" type="error">{{ errorMessage }}</InfoMessage>
+      <InfoMessage v-if="successMessage" type="success">{{ successMessage }}</InfoMessage>
     </template>
   </app-view>
 </template>

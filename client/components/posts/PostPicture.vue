@@ -1,5 +1,5 @@
 <template>
-  <post :post="post">
+  <PostBase :post="post">
     <timeline-post--picture>
       <figure>
         <img :src="post.content.picture" :alt="post.content.title" />
@@ -8,16 +8,18 @@
       </figure>
     </timeline-post--picture>
     <template slot="controls"><slot name="controls"></slot></template>
-  </post>
+  </PostBase>
 </template>
 
 <script>
-import post from './post';
+import PostBase from './PostBase';
 
 export default {
   name: 'post-picture',
+
   props: ["post", "isSubscribed"],
-  components: { post }
+
+  components: { PostBase }
 }
 </script>
 

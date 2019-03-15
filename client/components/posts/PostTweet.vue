@@ -1,5 +1,5 @@
 <template>
-  <post :post="post">
+  <PostBase :post="post">
     <timeline-post--tweet>
       <!-- p tag is not allowed here because content can cointains other <p>
           (eg extrnal url). And it brokes hydrating server side rendered page-->
@@ -28,12 +28,12 @@
     </template>
 
     <template slot="controls"><slot name="controls"></slot></template>
-  </post>
+  </PostBase>
 </template>
 
 <script>
 
-import post from './post'
+import PostBase from './PostBase'
 import TweetAttachmentGif from './TweetAttachmentGif'
 import TweetAttachmentLink from './TweetAttachmentLink'
 import TweetAttachmentPhoto from './TweetAttachmentPhoto'
@@ -46,7 +46,7 @@ export default {
   props: ["post", "isSubscribed"],
 
   components: {
-    post,
+    PostBase,
     TweetAttachmentLink,
     TweetAttachmentPhoto,
     TweetAttachmentQuote,

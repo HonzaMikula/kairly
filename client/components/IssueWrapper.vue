@@ -1,11 +1,13 @@
 <template>
   <component
-    :is="'issue-' + issue.type"
-    :issue="issue"
+    :is="componentName"
     :key="issue.id"
+    :issue="issue"
     :hideDate="hideDate">
 
-    <template slot="newspaperTitle"><slot name="newspaperTitle"></slot></template>
+    <template slot="newspaperTitle">
+      <slot name="newspaperTitle"/>
+    </template>
 
     <PostWrapper
       v-for="post in headPosts"
@@ -16,9 +18,9 @@
 
     <PostWrapper
       v-for="post in tailPosts"
+      :key="post.id"
       :post="post"
       :isSubscribed="true"
-      :key="post.id"
     />
 
     <footer class="issue--footer">
@@ -31,26 +33,23 @@
       </div>
 
       <div class="issue--footer--recommend-button">
-        <RecommendButtonIssue v-if="loggedIn && issue.type == 'newspaper'" :issue="issue" />
+        <RecommendButtonIssue
+          v-if="loggedIn && issue.type == 'newspaper'"
+          :issue="issue"
+        />
       </div>
     </footer>
-
-    <!--
-    <div class="issue-footer">
-      <button>Thanks</button>
-    </div>
-    -->
   </component>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-import issueSuspendedAuthor from '@/components/issues/suspended-author'
-import issueSuspendedNewspaper from '@/components/issues/suspended-newspaper'
-import issueUnreleasedNewspaper from '@/components/issues/unreleased-newspaper'
-import issueNewspaper from '@/components/issues/newspaper'
-import issueAuthor from '@/components/issues/author'
+import IssueSuspendedAuthor from '@/components/issues/IssueSuspendedAuthor'
+import IssueSuspendedNewspaper from '@/components/issues/IssueSuspendedNewspaper'
+import IssueUnreleasedNewspaper from '@/components/issues/IssueUnreleasedNewspaper'
+import IssueNewspaper from '@/components/issues/IssueNewspaper'
+import IssueAuthor from '@/components/issues/IssueAuthor'
 import PostWrapper from '@/components/PostWrapper'
 import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
 
@@ -58,6 +57,7 @@ const POST_LIMIT = 5
 
 export default {
   name: 'IssueWrapper',
+
   props: {
     issue: Object,
     subscription: Boolean,
@@ -66,11 +66,11 @@ export default {
   },
 
   components: {
-    issueNewspaper,
-    issueAuthor,
-    issueSuspendedAuthor,
-    issueSuspendedNewspaper,
-    issueUnreleasedNewspaper,
+    IssueAuthor,
+    IssueNewspaper,
+    IssueSuspendedAuthor,
+    IssueSuspendedNewspaper,
+    IssueUnreleasedNewspaper,
     PostWrapper,
     RecommendButtonIssue
   },
@@ -85,6 +85,10 @@ export default {
     ...mapState({
       loggedIn: state => state.auth.loggedIn
     }),
+
+    componentName() {
+      return 'issue-' + this.issue.type
+    },
 
     expanded() {
       if (this.showTail) {

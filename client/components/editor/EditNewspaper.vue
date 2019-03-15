@@ -1,15 +1,25 @@
 <template>
-  <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" @click.stop="showPeriodicityWidget = false">
+  <DialogWindow :closeModal="closeModal">
+    <modal-dialog
+      role="dialog"
+      @click.stop="showPeriodicityWidget = false"
+    >
       <header>
         <h1>{{ newspaper ? $t('Modify the newspaper') : $t('Start a new newspaper') }}</h1>
-        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
+        <button-close
+          tabindex="0"
+          role="button"
+          @click="closeModal()"
+        />
       </header>
 
       <main class="edit-newspaper-view">
         <div>
           <label for="name">{{ $t('Newspaper name') }}</label>
-          <input id="name" v-model="title" />
+          <input
+            id="name"
+            v-model="title"
+          />
         </div>
 
         <div>
@@ -18,7 +28,7 @@
             id="description"
             v-model="description"
             :placeholder="$t('What this newspaper is about?')"
-          ></textarea>
+          />
           <p>Maximum 160 characters.</p>
         </div>
 
@@ -31,26 +41,32 @@
             {{ $t('Select periodicity') }}
           </button>
 
-          <span v-if="periodicity" @click.stop="showPeriodicityWidget = true">
+          <span
+            v-if="periodicity"
+            @click.stop="showPeriodicityWidget = true"
+          >
             <template v-if="periodicity.frequency == '3x_per_day'">{{ $t('At 6:00, 12:00 and 18:00') }}</template>
-
             <template v-else-if="periodicity.frequency == '6x_per_day'">{{ $t('Every 3 hours') }}</template>
-
             <template v-else-if="periodicity.frequency == '6x_per_day'">
               {{ $t('Continously every 3 hours.') }}
             </template>
-
             <template v-else>
               {{ periodicity.frequency }} {{ getDayOfWeekLabel(periodicity.dow) }} {{ periodicity.time }}
             </template>
           </span>
 
-          <period-widget v-if="showPeriodicityWidget" @changePeriodicity="changePeriodicity"/>
+          <PeriodWidget
+            v-if="showPeriodicityWidget"
+            @changePeriodicity="changePeriodicity"
+          />
         </div>
 
         <div>
           <label for="price">{{ $t('Subscription price') }}</label>
-          <select id="price" v-model="price">
+          <select
+            id="price"
+            v-model="price"
+          >
             <option value="0">{{ $t('Free') }}</option>
             <option value="25">25 Kč</option>
             <option value="75">75 Kč</option>
@@ -63,7 +79,6 @@
           <picture>
             <picture-input
               ref="pictureInput"
-              @change="onPictureChange"
               width="182"
               height="78"
               accept="image/jpeg, image/png"
@@ -73,7 +88,8 @@
               :customStrings="{
                 drag: $t('Upload image')
               }"
-            ></picture-input>
+              @change="onPictureChange"
+            />
           </picture>
         </div>
       </main>
@@ -82,7 +98,7 @@
         <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
       </footer>
     </modal-dialog>
-  </dialog-window>
+  </DialogWindow>
 </template>
 
 <script>
@@ -90,7 +106,7 @@ import { mapActions, mapState } from "vuex";
 
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
-import DialogWindow from '@/components/modals/Dialog'
+import DialogWindow from '@/components/modals/DialogWindow'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
 export default {

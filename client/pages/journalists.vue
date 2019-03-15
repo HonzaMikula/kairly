@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <AppLayout>
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
@@ -130,11 +130,12 @@
       <FooterLinks />
 
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'

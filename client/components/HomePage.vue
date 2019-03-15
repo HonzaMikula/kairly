@@ -182,7 +182,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import store from '@/store'
+
 import JoinUsModal from '@/components/modals/JoinUs'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import HowItWorks from '@/components/microsite/HowItWorks'

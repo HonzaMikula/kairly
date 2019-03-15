@@ -18,6 +18,7 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 export default {
   name: 'ConsiderPost',
+
   props: {
     post: Object
   },

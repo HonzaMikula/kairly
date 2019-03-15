@@ -1,5 +1,8 @@
 <template>
-  <div class="change-periodicity-view" @click.stop>
+  <div
+    class="change-periodicity-view"
+    @click.stop
+  >
     <template v-if="frequency === null">
       <header>
         {{ $t('How often do you want to read it?') }}

@@ -1,18 +1,19 @@
 <template>
   <div class="timeline-time-slot">
     <button
-      @click="isMenuOpen = !isMenuOpen"
+      :id="currentAnchor"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :title="$t('Jump to different time')"
-      :id="currentAnchor"
-    ></button>
+      @click="isMenuOpen = !isMenuOpen"
+    />
 
     <h1 @click="isMenuOpen = !isMenuOpen">{{ dayTitle }} – {{ timeTitle }}</h1>
 
     <div
       v-if="isMenuOpen"
       v-on-clickaway="hideJumpMenu"
-      class="timeline-navigation--menu">
+      class="timeline-navigation--menu"
+    >
       <header>
         <h3>{{ $t('Jump to different time') }}</h3>
       </header>
@@ -22,7 +23,9 @@
           <li v-for="anchor in anchors" :key="anchor.link">
             <a :href="anchor.link" @click="hideJumpMenu">{{ anchor.title }}</a>
           </li>
-          <li><a href="#start">{{ $t('Beginning of the day') }}</a></li>
+          <li>
+            <a href="#start">{{ $t('Beginning of the day') }}</a>
+          </li>
         </ul>
       </section>
     </div>

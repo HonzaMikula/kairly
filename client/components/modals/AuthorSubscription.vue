@@ -1,13 +1,21 @@
 <template>
-  <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" @click.stop="closeChangePeriodicityDialog()" class="author-subscription-dialog">
+  <DialogWindow :closeModal="closeModal">
+    <modal-dialog
+      class="author-subscription-dialog"
+      role="dialog"
+      @click.stop="closeChangePeriodicityDialog()"
+    >
       <header>
         <h1 v-if="!subscription.state">{{ $t('Subscribe to author') }}</h1>
         <h1 v-else-if="subscription.state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
         <h1 v-else-if="subscription.state === 'canceled'">{{ $t('Renew subscription') }}</h1>
         <h1 v-else-if="subscription.state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
 
-        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
+        <button-close
+          tabindex="0"
+          role="button"
+          @click="closeModal()"
+        />
       </header>
       <main>
         <section class="author-subscription--author">
@@ -48,11 +56,12 @@
         <template v-if="!subscription.state">
           <div
             :title="!canPay && $t('You don\'t have enough credit')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          >
             <button
               class="confirm"
-              @click="subscribe()"
               :disabled="!canPay"
+              @click="subscribe()"
             >
               {{ $t('Subscribe') }}
             </button>
@@ -62,17 +71,26 @@
         </template>
 
         <template v-else-if="subscription.state === 'active'">
-          <button class="confirm" @click="subscribe()">
+          <button
+            class="confirm"
+            @click="subscribe()"
+          >
             {{ $t('Update subscription') }}
           </button>
 
-          <button class="cancel" @click="unsubscribe()">
+          <button
+            class="cancel"
+            @click="unsubscribe()"
+          >
             {{ $t('Cancel subscription') }}
           </button>
         </template>
 
         <template v-else-if="subscription.state === 'canceled'">
-          <button class="confirm" @click="subscribe()">
+          <button
+            class="confirm"
+            @click="subscribe()"
+          >
             {{ $t('Renew subscription') }}
           </button>
 
@@ -84,7 +102,11 @@
         </template>
 
         <template v-else-if="subscription.state === 'suspended'">
-          <button class="confirm" v-if="canPay" @click="subscribe()">
+          <button
+            v-if="canPay"
+            class="confirm"
+            @click="subscribe()"
+          >
             {{ $t('Renew subscription') }}
           </button>
 
@@ -96,13 +118,13 @@
         </template>
       </footer>
     </modal-dialog>
-  </dialog-window>
+  </DialogWindow>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-import DialogWindow from '@/components/modals/Dialog'
+import DialogWindow from '@/components/modals/DialogWindow'
 import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 

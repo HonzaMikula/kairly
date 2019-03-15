@@ -1,9 +1,9 @@
 <template>
   <component
     :is="'post-' + postType"
+    :key="post.id"
     :post="post"
     :isSubscribed="isSubscribed"
-    :key="post.id"
   >
     <template slot="extendedControls">
       <slot name="extendedControls"></slot>
@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import postArticle from '@/components/posts/article'
-import postTweet from '@/components/posts/tweet'
-import postPicture from '@/components/posts/picture'
-import postRecommendations from '@/components/posts/recommendations'
+import PostArticle from '@/components/posts/PostArticle'
+import PostTweet from '@/components/posts/PostTweet'
+import PostPicture from '@/components/posts/PostPicture'
+import PostRecommendations from '@/components/posts/PostRecommendations'
 
 
 export default {
@@ -27,10 +27,10 @@ export default {
   props: ['post', 'isSubscribed'],
 
   components: {
-    postArticle,
-    postTweet,
-    postPicture,
-    postRecommendations,
+    PostArticle,
+    PostTweet,
+    PostPicture,
+    PostRecommendations,
   },
 
   computed: {

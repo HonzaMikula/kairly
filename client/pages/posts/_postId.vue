@@ -1,10 +1,10 @@
 <template>
-  <app-layout :name="$t('Edit a post')">
+  <AppLayout :name="$t('Edit a post')">
     <div class="edit-post">
-      <edit-article v-if="post.type == 'newspaper'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
-      <edit-tweet v-if="post.type == 'tweet'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
+      <EditArticle v-if="post.type == 'newspaper'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
+      <EditTweet v-if="post.type == 'tweet'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 

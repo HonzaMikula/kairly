@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Subscriptions')">
+  <AppLayout :name="$t('Subscriptions')">
     <my-subscription-view>
       <nav>
         <nuxt-link :to="{name: 'subscription-newspapers'}">{{ $t('Newspapers') }}</nuxt-link>
@@ -53,7 +53,7 @@
         </section>
       </aside>
     </my-subscription-view>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

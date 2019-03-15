@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Author\'s profile')">
+  <AppLayout :name="$t('Author\'s profile')">
     <author-detail-view
       v-infinite-scroll="loadPosts"
       infinite-scroll-disabled="loadingPosts"
@@ -9,8 +9,16 @@
     >
       <author-detail--header>
         <picture>
-          <img v-if="author.picture" itemprop="image" :src="author.picture" :alt="author.name">
-          <img v-else src="~assets/user.png" :alt="author.name">
+          <img
+            v-if="author.picture"
+            itemprop="image"
+            :src="author.picture"
+            :alt="author.name"
+          >
+          <img v-else
+            src="~assets/user.png"
+            :alt="author.name"
+          >
         </picture>
 
         <section>
@@ -60,7 +68,7 @@
 
       <loading-spinner v-if="loadingPosts"></loading-spinner>
     </author-detail-view>
-  </app-layout>
+  </AppLayout>
 </template>
 
 

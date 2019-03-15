@@ -1,7 +1,11 @@
 <template>
   <app-main>
-    <AppHeader :pageTitle="name" v-if="loggedIn" />
+    <AppHeader
+      v-if="loggedIn"
+      :pageTitle="name"
+    />
     <AppHeaderPublic v-else />
+
     <slot></slot>
   </app-main>
 </template>
@@ -9,8 +13,8 @@
 <script>
 import { mapState } from 'vuex'
 
-import AppHeader from '@/components/layout/Header'
-import AppHeaderPublic from '@/components/layout/HeaderPublic'
+import AppHeader from '@/components/layout/AppHeader'
+import AppHeaderPublic from '@/components/layout/AppHeaderPublic'
 
 export default {
   name: 'AppLayout',

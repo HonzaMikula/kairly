@@ -1,5 +1,5 @@
 <template>
-  <dialog-window :closeModal="closeModal">
+  <DialogWindow :closeModal="closeModal">
     <modal-dialog role="dialog" @click.stop class="sign-in">
       <header>
         <h1>{{ $t('Sign In') }}</h1>
@@ -25,12 +25,12 @@
         </form>
       </main>
     </modal-dialog>
-  </dialog-window>
+  </DialogWindow>
 </template>
 
 
 <script>
-import DialogWindow from '@/components/modals/Dialog'
+import DialogWindow from '@/components/modals/DialogWindow'
 
 export default {
   name: 'JoinUsDialog',

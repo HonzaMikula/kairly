@@ -1,9 +1,17 @@
 <template>
-  <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" @click.stop class="join-us">
+  <DialogWindow :closeModal="closeModal">
+    <modal-dialog
+      role="dialog"
+      class="join-us"
+      @click.stop
+    >
       <header>
         <h1>{{ $t('Are you interested in Kairly?') }}</h1>
-        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
+        <button-close
+          tabindex="0"
+          role="button"
+          @click="closeModal"
+        />
       </header>
       <main>
         <h3>{{ $t('Participate in user testing') }}</h3>
@@ -38,20 +46,20 @@
           <a
             href="https://www.facebook.com/kairlynews/"
             class="facebook"
-            aria-label="Facebook">
-          </a>
+            aria-label="Facebook"
+          />
 
           <a
             href="https://twitter.com/kairlynews"
             class="twitter"
-            aria-label="Twitter">
-          </a>
+            aria-label="Twitter"
+          />
 
           <a
             href="https://www.linkedin.com/company/kairly/"
             class="linkedin"
-            aria-label="LinkedIn">
-          </a>
+            aria-label="LinkedIn"
+          />
         </div>
 
         <h3>{{ $t('Join private beta') }}</h3>
@@ -77,12 +85,12 @@
         <!--End mc_embed_signup-->
       </main>
     </modal-dialog>
-  </dialog-window>
+  </DialogWindow>
 </template>
 
 
 <script>
-import DialogWindow from '@/components/modals/Dialog'
+import DialogWindow from '@/components/modals/DialogWindow'
 
 export default {
   name: 'JoinUsDialog',

@@ -23,7 +23,7 @@
     </ul>
 
     <issue-widget--subscribe>
-      <newspaper-subscription :newspaper="issue.newspaper" />
+      <NewspaperSubscription :newspaper="issue.newspaper" />
 
       <p>
         {{ issue.newspaper.likes }} {{ $t('subscribers') }}

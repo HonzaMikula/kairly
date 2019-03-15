@@ -1,17 +1,21 @@
 <template>
-  <app-layout :name="$t('Newspaper detail')">
+  <AppLayout :name="$t('Newspaper detail')">
     <div class="newspaper-detail" itemtype="https://bib.schema.org/Newspaper" itemscope>
       <header class="newspaper-detail--header">
         <h1 itemprop="name"><nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</nuxt-link></h1>
         <p>{{ newspaper.description }}</p>
 
         <picture itemprop="image">
-          <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
+          <img
+            v-if="newspaper.picture"
+            :src="newspaper.picture"
+            :alt="newspaper.title"
+          />
           <div v-else class="image-placeholder"></div>
         </picture>
 
         <div class="newspaper-detail--subscribe" v-if="loggedIn">
-          <newspaper-subscription :newspaper="newspaper" />
+          <NewspaperSubscription :newspaper="newspaper" />
 
           <p>{{ periodicity }}</p>
         </div>
@@ -35,7 +39,7 @@
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="$t('Previous issue')"
             class="previous"
-          ></nuxt-link>
+          />
 
           <nuxt-link
             v-if="links.next"
@@ -43,7 +47,7 @@
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="$t('Next issue')"
             class="next"
-          ></nuxt-link>
+          />
         </nav>
 
         <div class="newspaper-detail--issue">
@@ -57,37 +61,37 @@
             :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
             target="_blank"
             class="rss"
+            :aria-label="$t('Subscribe RSS')"
             @click="$ga.event({
               eventCategory: 'Subscribe RSS newspaper',
               eventAction: newspaper.name,
               eventLabel: newspaper.editor.id
             })"
-            :aria-label="$t('Subscribe RSS')">
-          </a>
+          />
 
           <a
             :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${issue.id}`"
             target="_blank"
+            class="share-fb"
+            :aria-label="$t('Share on Facebook')"
             @click="$ga.event({
               eventCategory: 'Share newspaper FB',
               eventAction: newspaper.name,
               eventLabel: newspaper.editor.id
             })"
-            class="share-fb"
-            :aria-label="$t('Share on Facebook')">
-          </a>
+          />
 
           <a
             :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${issue.id}&text=${newspaper.title}`"
             target="_blank"
+            class="share-twitter"
+            :aria-label="$t('Share on Twitter')"
             @click="$ga.event({
               eventCategory: 'Share newspaper Twitter',
               eventAction: newspaper.name,
               eventLabel: newspaper.editor.id
-            })"
-            class="share-twitter"
-            :aria-label="$t('Share on Twitter')">
-          </a>
+              })"
+          />
 
           <!-- Begin Mailchimp Signup Form -->
           <div id="mc_embed_signup" v-if="newspaper.newsletterSubscriptionUrl">
@@ -101,10 +105,10 @@
                 </div>
                 <div class="clear">
                   <input
+                    id="mc-embedded-subscribe"
                     type="submit"
                     :value="$t('Send newspaper by email')"
                     name="subscribe"
-                    id="mc-embedded-subscribe"
                     class="button"
                     @click="$ga.event({
                       eventCategory: 'Subscribe newspaper newsletter',
@@ -112,7 +116,7 @@
                       eventLabel: newspaper.editor.id
                     })"
                   />
-                  </div>
+                </div>
               </div>
             </form>
           </div>
@@ -131,7 +135,7 @@
     <KairlyPromo v-if="!loggedIn" />
 
     <FooterLinks v-if="!loggedIn" />
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

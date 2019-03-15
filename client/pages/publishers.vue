@@ -1,5 +1,5 @@
 <template>
-  <app-layout>
+  <AppLayout>
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
@@ -176,7 +176,7 @@
       <FooterLinks />
 
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

@@ -1,26 +1,49 @@
 <template>
-  <dialog-window :closeModal="closeModal">
-    <modal-dialog role="dialog" class="change-password-dialog" @click.stop>
+  <DialogWindow :closeModal="closeModal">
+    <modal-dialog
+      role="dialog"
+      class="change-password-dialog"
+      @click.stop
+    >
       <header>
         <h1>{{ $t('Change Password') }}</h1>
 
-        <button-close tabindex="0" role="button" @click="closeModal"></button-close>
+        <button-close
+          tabindex="0"
+          role="button"
+          @click="closeModal"
+        />
       </header>
 
-      <change-password-view role="dialog" @click.stop>
+      <change-password-view
+        role="dialog"
+        @click.stop
+      >
         <div>
           <label for="oldPassword">{{ $t('Old password') }}</label>
-          <input id="oldPassword" type="password" v-model="oldPassword">
+          <input
+            id="oldPassword"
+            v-model="oldPassword"
+            type="password"
+          />
         </div>
 
         <div>
           <label for="newPassword">{{ $t('New password') }}</label>
-          <input id="newPassword" type="password" v-model="newPassword1">
+          <input
+            id="newPassword"
+            v-model="newPassword1"
+            type="password"
+          />
         </div>
 
         <div>
           <label for="newPassword2">{{ $t('New password again') }}</label>
-          <input id="newPassword2" type="password" v-model="newPassword2">
+          <input
+            id="newPassword2"
+            v-model="newPassword2"
+            type="password"
+          />
         </div>
       </change-password-view>
 
@@ -28,14 +51,13 @@
         <button @click="submit">{{ $t('Change password') }}</button>
       </footer>
     </modal-dialog>
-  </dialog-window>
+  </DialogWindow>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
 
-
-import DialogWindow from '@/components/modals/Dialog'
+import DialogWindow from '@/components/modals/DialogWindow'
 
 export default {
   name: 'ChangePassword',

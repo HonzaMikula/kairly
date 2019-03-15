@@ -2,8 +2,15 @@
   <newspaper-widget-view>
     <picture>
       <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
-        <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
-        <div v-else class="image-placeholder"></div>
+        <img
+          v-if="newspaper.picture"
+          :src="newspaper.picture"
+          :alt="newspaper.title"
+        />
+        <div
+          v-else
+          class="image-placeholder"
+        />
       </nuxt-link>
     </picture>
 
@@ -23,7 +30,7 @@
     </newspaper-widget--author>
 
     <newspaper-widget--subscribe v-if="loggedIn">
-      <newspaper-subscription :newspaper="newspaper" />
+      <NewspaperSubscription :newspaper="newspaper" />
 
       <p>
         {{ newspaper.likes }} {{ $t('subscribers') }}

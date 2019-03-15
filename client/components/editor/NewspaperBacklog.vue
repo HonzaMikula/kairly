@@ -4,12 +4,11 @@
     <newspaper-backlog--info>
       <div>
         {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
-        {{ $t('will be automatically published in') }} <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
+        {{ $t('will be automatically published in') }}
+        <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
       </div>
 
-      <div v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})">
-
-      </div>
+      <div v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})" />
     </newspaper-backlog--info>
 
     <div>
@@ -32,24 +31,24 @@
 
           <template slot="controls">
             <button-icon
+              v-show="idx !== 0"
               class="up"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               tabindex="0"
               role="button"
               :title="$t('Move post up')"
-              v-show="idx !== 0"
-              @click="moveUp(idx)">
-            </button-icon>
+              @click="moveUp(idx)"
+            />
 
             <button-icon
+              v-show="idx !== published.length - 1"
               class="down"
               v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
               tabindex="0"
               role="button"
               :title="$t('Move post down')"
-              v-show="idx !== published.length - 1"
-              @click="moveDown(idx)">
-            </button-icon>
+              @click="moveDown(idx)"
+            />
 
             <button-icon
               class="remove"
@@ -57,20 +56,27 @@
               tabindex="0"
               role="button"
               :title="$t('Remove from issue')"
-              @click.prevent="undoPublish(post)">
-            </button-icon>
+              @click.prevent="undoPublish(post)"
+            />
           </template>
         </PostWrapper>
       </newspaper-backlog--next-issue>
 
       <newspaper-backlog--backlog>
-        <div v-if="backlog.length == 0" class="no-post">
+        <div
+          v-if="backlog.length == 0"
+          class="no-post"
+        >
           <h2>{{ $t('No considered posts!') }}</h2>
 
           <p>{{ $t('Go on your timeline and start adding interesting articles and tweets for considaration.') }}</p>
         </div>
 
-        <div v-for="post in backlog" class="backlog-post" :key="post.id">
+        <div
+          v-for="post in backlog"
+          :key="post.id"
+          class="backlog-post"
+        >
           <header>
             <picture>
               <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">

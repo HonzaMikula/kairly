@@ -1,5 +1,5 @@
 <template>
-  <app-layout :name="$t('Credits')">
+  <AppLayout :name="$t('Credits')">
     <div class="transactions">
       <header>
         <h1>{{ $t('Credit balance') }}</h1>
@@ -30,7 +30,7 @@
         <nuxt-child/>
       </main>
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

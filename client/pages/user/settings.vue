@@ -1,13 +1,12 @@
 <template>
-  <app-layout :name="$t('Account Settings')">
+  <AppLayout :name="$t('Account Settings')">
     <div class="settings-view">
       <h1>{{ $t('Account Settings') }}</h1>
 
       <div>
         <div class="settings--profile-picture">
-          <picture-input
+          <PictureInput
             ref="pictureInput"
-            @change="onPictureChange"
             width="104"
             height="104"
             accept="image/jpeg,image/png"
@@ -16,8 +15,9 @@
             :prefill="this.user.picture"
             :customStrings="{
               drag: $t('Upload image')
-            }">
-          </picture-input>
+            }"
+            @change="onPictureChange"
+          />
         </div>
 
         <div class="settings--form">
@@ -80,10 +80,10 @@
       </div>
 
       <portal to="modal" v-if="isChangePasswordOpen">
-        <change-password :closeModal="closeChangePassword"></change-password>
+        <ChangePassword :closeModal="closeChangePassword" />
       </portal>
     </div>
-  </app-layout>
+  </AppLayout>
 </template>
 
 <script>

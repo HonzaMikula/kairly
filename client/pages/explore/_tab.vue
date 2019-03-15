@@ -19,7 +19,10 @@
           :author="author"
         />
 
-        <button v-if="category.authors.length > LIMIT" @click="openCategoryModal(category)">
+        <button
+          v-if="category.authors.length > LIMIT"
+          @click="openCategoryModal(category)"
+        >
           {{ $t('Show more') }}
         </button>
     </section>
@@ -27,8 +30,11 @@
     <portal to="explore-header">{{ tab.name }}</portal>
 
     <portal to="modal" v-if="showCaregoryInModal">
-      <explore-modal :closeModal="closeCategoryModal"
-        :category="showCaregoryInModal" :limit="LIMIT" />
+      <ExploreModal
+        :closeModal="closeCategoryModal"
+        :category="showCaregoryInModal"
+        :limit="LIMIT"
+       />
     </portal>
   </main>
 </template>
