@@ -26,32 +26,58 @@ npm run local
 
 ## Setup Python Environment
 
-Install [pipenv](https://docs.pipenv.org/), then
+Project requires Python 3.6+
+Virtualenvwrapper is not necessary, but it is recommended. http://virtualenvwrapper.readthedocs.io/en/latest/
 
 ```
-pipenv install
+pip install virtualenvwrapper
 ```
 
-Create your settings with database config. Then setup env variable
+Create virtual env for the project (isolated python environment)
+
+```
+mkvirtualenv --python=`which python3` kairly
+````
+
+Create your settings with database config (in /kairly-server/kairly)
 (with your own settings file, you can use settings_farin.py as template)
+
+Edit virtual env postactivate hook
 ```
-echo "DJANGO_SETTINGS_MODULE=kairly.settings_myconf" > .env
+nano ~/.virtualenvs/kairly/bin/postactivate
 ```
 
-Create database and sync tables.
+Let DJANGO_SETTINGS_MODULE point to your settings python file.
+Eg. content of my postactive script
 ```
-pipenv run ./manage.py migrate
+#!/bin/bash
+# This hook is sourced after this virtualenv is activated.
+
+export DJANGO_SETTINGS_MODULE=kairly.settings_farin
 ```
 
-Create your admin account
+Deactivate and activate virtual env to trigger hook
 ```
-pipenv run ./manage.py createsuperuser
+deactivate
+workon kairly
+```
+
+Install dependencies (run from kairly-server folder)
+```
+pip install -r requirements.txt
 ```
 
 ## Run Dev server
 
+With enabled virtual env (`workon kairly`), run from kairly-sarver folder
+
+Sync tables if new migrations exists
 ```
-pipenv run ./manage.py runserver
+./manage.py migrate
+```
+
+```
+./manage.py runserver
 
 ```
 
