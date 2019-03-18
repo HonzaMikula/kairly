@@ -1,13 +1,16 @@
 <template>
   <div class="timeline-time-slot">
     <button
-      :id="currentAnchor"
       v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
       :title="$t('Jump to different time')"
       @click="isMenuOpen = !isMenuOpen"
     />
 
-    <h1 @click="isMenuOpen = !isMenuOpen">{{ dayTitle }} – {{ timeTitle }}</h1>
+    <h1
+      @click="isMenuOpen = !isMenuOpen"
+      :id="currentAnchor">
+      {{ dayTitle }} – {{ timeTitle }}
+    </h1>
 
     <div
       v-if="isMenuOpen"
