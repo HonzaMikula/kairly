@@ -8,7 +8,7 @@ https://kairly.com/
 
 ``` bash
 # install utilities required for i18n
-apt install gettext python3-pip
+apt install gettext python3-pip default-libmysqlclient-dev
 python3 -m pip install polib
 
 # install dependencies
