@@ -1,6 +1,6 @@
 import rapidjson as json
 import math
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from decimal import Decimal
 import re
 import hashlib
@@ -12,6 +12,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Count, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import now as timezone_now
@@ -61,8 +62,8 @@ class Post(models.Model):
     ref_issue = models.ForeignKey('articles.Issue', models.CASCADE, null=True)
 
     # pricing helpers
-    author_price = models.DecimalField(
-        _('Frozen author price at publish time'), max_digits=11, decimal_places=2,
+    price = models.DecimalField(
+        _('Article price'), max_digits=11, decimal_places=2,
         null=True, validators=[MinValueValidator(Decimal(0))])
     weight = models.PositiveIntegerField(null=True)
 
@@ -95,15 +96,65 @@ class Post(models.Model):
 
             self.slug = slug
 
-        if self.author_price is None and not self.draft:
-            self.author_price = self.author.price
-
         if not self.draft and (recalculate_weight or self.weight is None):
             self.weight = calculate_post_weight(self)
+
+        if not self.draft and self.price is None:
+            self.price = self.calculate_fair_price()
+            if self.price is None:
+                self.price = self._round_fair_price(self.author.price / 5)
 
         if self.source and not self.source_md5:
             self.source_md5 = hashlib.md5(self.source.encode()).hexdigest()
         return super().save(*args, **kwargs)
+
+    def _round_fair_price(self, price):
+        if price < 0.1:
+            return Decimal('0.1')
+        if price < 1:
+            return price.quantize(Decimal('0.1'))
+        if price < 5:
+            # round to 0.5
+            return (price * 2).quantize(Decimal(0)) / 2
+        return price.quantize(Decimal(0))
+
+    def calculate_fair_price(self):
+        author_price = self.author.price
+        if author_price == 0:
+            return Decimal(0)
+
+        # compare only to articles to yesterday (this allows caching and easier rss imports)
+        days = 30
+        end = timezone_now().replace(hour=0, minute=0, second=0, microsecond=0)
+        start = end - timedelta(days=days)
+
+        cache_key = f"author_post_weight:{end:%Y%m%d}"
+        cache_value = cache.get(cache_key)
+        if cache_value:
+            agg = json.loads(cache_value)
+        else:
+            agg = Post.objects.filter(author=self.author, draft=False, published__gte=start, published__lt=end) \
+                              .exclude(kind=Post.RECOMMENDATION) \
+                              .aggregate(count=Count('*'), weight=Sum('weight'))
+            cache.set(cache_key, json.dumps(agg))
+
+        count = agg['count']
+        total_weight = agg['weight']
+
+        if count == 0:
+            return None
+
+        if start < self.author.date_joined:
+            # rare case for new author
+            ratio = days / (start - self.author.date_joined).days
+            total_weight = round(total_weight * ratio)
+
+        post_weight = calculate_post_weight(self) if self.weight is None else self.weight
+
+        total_weight += post_weight
+        weight_fraction = min(0.5, post_weight / total_weight)
+
+        return self._round_fair_price(Decimal(weight_fraction) * author_price)
 
     @property
     def read_time(self):
@@ -130,6 +181,7 @@ class Post(models.Model):
             'source': self.source,
             'type': self.kind,
             'time': datetime_isoformat_ecma262(self.published.astimezone(tzinfo)),
+            'price': None if self.price is None else str(self.price),
         }
         if self.draft:
             result['draft'] = True

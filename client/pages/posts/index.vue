@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 import MyPosts from '@/components/layout/MyPosts'
 import PostWrapper from '@/components/PostWrapper'
@@ -57,6 +57,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['showError']),
+
     async deletePost(post) {
       if (confirm("Are you sure?")) {
         await this.$axios.$delete(`/drafts/${post.id}`)
@@ -68,9 +70,25 @@ export default {
     },
 
     async publishPost(post) {
-      const { post: publishedPost } = await this.$axios.$post(`/drafts/${post.id}/publish`)
-      const idx = this.posts.findIndex(p => p.id === post.id)
-      this.posts.splice(idx, 1, publishedPost)
+      try {
+        const { price: fairPrice } = await this.$axios.$get(`/drafts/${post.id}/fair-price`)
+
+        const price = window.prompt('Set article price', fairPrice)
+        if (price === null) {
+          // user cancels
+          return
+        }
+
+        const { post: publishedPost } = await this.$axios.$post(`/drafts/${post.id}/publish`, { price })
+        const idx = this.posts.findIndex(p => p.id === post.id)
+        this.posts.splice(idx, 1, publishedPost)
+      } catch (err) {
+        if (err.response.status === 400) {
+          this.showError(err.response.data.error)
+        } else {
+          this.showError((err + '') || 'Request failed')
+        }
+      }
     }
   },
 

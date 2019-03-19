@@ -53,16 +53,6 @@ class Command(BaseCommand):
         else:
             interval = (t - relativedelta(months=1), t)
 
-        @lru_cache(maxsize=None)
-        def get_author_total_weight(author_id):
-            weight = Post.objects.filter(
-                draft=False,
-                published__gte=interval[0],
-                published__lt=interval[1],
-                author_id=author_id
-            ).aggregate(Sum('weight'))['weight__sum'] or 0
-            return weight
-
         newspapers = Transaction.objects.filter(
             to_newspaper__isnull=False,
             created__gte=interval[0],
@@ -86,15 +76,13 @@ class Command(BaseCommand):
                 published__lt=interval[1],
             )
 
-            posts = Post.objects.filter(issuepost__issue__in=issues, author_price__gt=0)
-
             author_cost = defaultdict(Decimal)
             total = 0
 
-            for post in posts:
-                post_cost = post.author_price * Decimal(post.weight) / Decimal(get_author_total_weight(post.author_id))
-                author_cost[post.author_id] += post_cost
-                total += post_cost
+            query = Post.objects.filter(issuepost__issue__in=issues, price__gt=0).values_list('author_id', 'price')
+            for author_id, price in query:
+                author_cost[author_id] += price
+                total += price
 
             remainder = credits
             with transaction.atomic():

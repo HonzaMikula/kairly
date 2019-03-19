@@ -65,7 +65,6 @@ class Transaction(models.Model):
         }
 
 
-
 @receiver(post_save, sender=User)
 def update_stock(sender, instance, created, **kwargs):
     if created:

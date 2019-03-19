@@ -3,7 +3,7 @@ import html
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
-from decimal import Decimal
+from decimal import Decimal, ConversionSyntax
 
 from dateutil.relativedelta import relativedelta
 
@@ -605,12 +605,36 @@ class DraftDetailView(View):
 
 
 @ajax_login_required
-def publish_draft(request, post_id):
+def draft_fair_price(request, post_id):
     post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
 
-    if post.kind == Post.NEWSPAPER and post.perex == '':
-        return HttpResponseBadRequest('Perex is empty')
+    return JsonResponse({
+        'price': str(post.calculate_fair_price())
+    })
 
+
+@ajax_login_required
+@require_POST
+@transaction.atomic
+def publish_draft(request, post_id):
+    post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+    payload = json.loads(request.body.decode('utf-8'))
+
+    if post.kind == Post.NEWSPAPER and post.perex == '':
+        return JsonResponse({'error': 'Perex is empty'}, status=400)
+
+    try:
+        price = Decimal(payload['price']).quantize(Decimal('0.01'))
+    except ConversionSyntax:
+        return JsonResponse({'error': "Invalid syntax"}, status=400)
+
+    if price < 0:
+        return JsonResponse({'error': "Price can't be negative"}, status=400)
+
+    if price > 100000:
+        return JsonResponse({'error': "Price too high"}, status=400)
+
+    post.price = price
     post.draft = False
     post.published = timezone_now()
     post.save()
