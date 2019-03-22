@@ -1,3 +1,5 @@
+import warnings
+
 import lxml.html
 from lxml import etree
 
@@ -28,7 +30,11 @@ def create_element(tag, text=None, *, tail=None, children=None):
 def copy_element(el, text=None, *, tail=None, children=None):
     cpy = create_element(el.tag, text, tail=tail, children=children)
     if el.attrib:
-        cpy.attrib.update(el.attrib)
+        for k, v in el.attrib.items():
+            try:
+                cpy.attrib[k] = v
+            except ValueError as e:
+                warnings.warn(f"{k}={v} >>> {e}")
     return cpy
 
 
