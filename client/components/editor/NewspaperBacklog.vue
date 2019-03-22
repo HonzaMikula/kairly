@@ -3,12 +3,24 @@
 
     <newspaper-backlog--info>
       <div>
-        {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
-        {{ $t('will be automatically published in') }}
-        <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
+        <p>
+          {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
+          {{ $t('will be automatically published in') }}
+          <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
+        </p>
+
+        <p>
+          <strong
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            title="Revenue - Cost = Profit">
+            25 - {{ issueCost }} = 10 Kč
+          </strong>
+        </p>
       </div>
 
-      <div v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})" />
+      <div>
+        <p v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})" />
+      </div>
     </newspaper-backlog--info>
 
     <div>
@@ -26,7 +38,7 @@
           :key="post.id"
         >
           <template slot="extendedControls">
-            &nbsp;
+            <span class="price">{{ post.price }} Kč</span>
           </template>
 
           <template slot="controls">
@@ -94,6 +106,8 @@
               {{ post.time | moment('calendar') }}
               •
               {{ post.timeRead }} {{ $t('read') }}
+              •
+              {{ post.price }} Kč
             </time>
 
             <section>
@@ -144,6 +158,12 @@ export default {
     published: Array
   },
 
+  data() {
+    return {
+      issueCost: this.computeIssueCost()
+    }
+  },
+
   methods: {
     timeFrom(dt) {
       return moment(dt).from()
@@ -153,6 +173,13 @@ export default {
       const { fullName } = this.newspaper
       const postIds = this.published.map(p => p.id)
       await this.$axios.post(`/newspapers/${fullName}/backlog/publish`, postIds)
+      this.issueCost = this.computeIssueCost()
+
+    },
+
+    computeIssueCost() {
+      const cost = this.published.map(item => item.price).reduce((prev, next) => parseFloat(prev) + parseFloat(next))
+      return cost.toFixed(2)
     },
 
     publish(post) {
@@ -220,6 +247,16 @@ newspaper-backlog--info
   font-size: $fs--1
   font-family: $ff-serif
   text-align: center
+
+  > div
+    display: flex
+
+    p:first-child
+      margin-right: auto
+
+    p:last-child
+      span:first-child
+        margin-right: $baseline / 2
 
 //- Next Issue
 newspaper-backlog--next-issue

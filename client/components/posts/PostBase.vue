@@ -40,6 +40,8 @@
               role="button"
               tabindex="0"
               :aria-label="$t('Consider for newspaper')"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              :title="$t('Consider for newspaper')"
               @click.stop.prevent="showConsiderPost = true"
             />
             <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
@@ -225,6 +227,13 @@ post-component > header
     //- consider post
     > span
       position: relative
+
+    //- price
+    > .price
+      margin-right: $baseline / 4
+
+      font-weight: 600
+      line-height: $baseline * 1.25
 
     .consider-post
       +button-icon($fa-var-newspaper)
