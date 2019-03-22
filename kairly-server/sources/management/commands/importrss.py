@@ -157,6 +157,10 @@ class Command(BaseCommand):
                         self.stdout.write("Entry {} is missing link attribute".format(entry))
                         continue
 
+                    if not hasattr(entry, 'description'):
+                        self.stdout.write("Entry {} is missing description attribute".format(entry))
+                        continue
+
                     if not channel.is_url_valid(entry.link):
                         continue
 
