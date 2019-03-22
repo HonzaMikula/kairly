@@ -13,6 +13,23 @@ from articles.signals import post_publish
 from sources.models import Channel
 
 
+# additional timezones which are not recognized byt dateutil.parser by default
+TZ_INFOS = {
+    'PST': dateutil.tz.gettz('US/Pacific'),
+    'PDT': dateutil.tz.gettz('US/Pacific'),
+    'PT': dateutil.tz.gettz('US/Pacific'),
+    'MST': dateutil.tz.gettz('US/Mountain'),
+    'MDT': dateutil.tz.gettz('US/Mountain'),
+    'MT': dateutil.tz.gettz('US/Mountain'),
+    'CST': dateutil.tz.gettz('US/Central'),
+    'CDT': dateutil.tz.gettz('US/Central'),
+    'CT': dateutil.tz.gettz('US/Central'),
+    'EST': dateutil.tz.gettz('US/Eastern'),
+    'EDT': dateutil.tz.gettz('US/Eastern'),
+    'ET': dateutil.tz.gettz('US/Eastern')
+}
+
+
 class Command(BaseCommand):
     help = 'Import posts from RSS channels'
 
@@ -81,7 +98,7 @@ class Command(BaseCommand):
 
         for attr in ['published', 'date']:
             try:
-                published = dateutil.parser.parse(getattr(entry, attr))
+                published = dateutil.parser.parse(getattr(entry, attr), tzinfos=TZ_INFOS)
                 break
             except AttributeError:
                 pass
