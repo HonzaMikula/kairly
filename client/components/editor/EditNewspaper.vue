@@ -29,7 +29,7 @@
             v-model="description"
             :placeholder="$t('What this newspaper is about?')"
           />
-          <p>Maximum 160 characters.</p>
+          <p>{{ $t('Maximum 160 characters.') }}</p>
         </div>
 
         <div class="periodicity">

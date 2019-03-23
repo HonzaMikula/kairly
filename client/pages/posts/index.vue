@@ -10,7 +10,7 @@
         :isSubscribed="true"
       >
         <template slot="controls" v-if="post.draft">
-          <button @click="publishPost(post)">{{ $t('Publish') }}</button>
+          <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
 
           <button-icon
             class="edit"
@@ -33,6 +33,13 @@
         </template>
       </PostWrapper>
     </div>
+
+    <portal to="modal" v-if="isPublishPostDialogOpen">
+      <PublishPostDialog
+        :post="postToPublish"
+        :closeModal="closePublishDialog">
+      </PublishPostDialog>
+    </portal>
   </MyPosts>
 </template>
 
@@ -41,13 +48,22 @@ import { mapMutations, mapState } from 'vuex'
 
 import MyPosts from '@/components/layout/MyPosts'
 import PostWrapper from '@/components/PostWrapper'
+import PublishPostDialog from '@/components/modals/PublishPost'
 
 export default {
   name: 'Drafts',
 
   components: {
     MyPosts,
-    PostWrapper
+    PostWrapper,
+    PublishPostDialog
+  },
+
+  data() {
+    return {
+      isPublishPostDialogOpen: null,
+      postToPublish: null
+    }
   },
 
   computed: {
@@ -58,6 +74,17 @@ export default {
 
   methods: {
     ...mapMutations(['showError']),
+
+    openPublishDialog(post) {
+      this.isPublishPostDialogOpen = true
+      this.postToPublish = post
+
+      console.log(this.postToPublish)
+    },
+
+    closePublishDialog() {
+      this.isPublishPostDialogOpen = false
+    },
 
     async deletePost(post) {
       if (confirm("Are you sure?")) {
