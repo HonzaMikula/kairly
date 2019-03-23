@@ -8,9 +8,26 @@ import dateutil.parser
 from django.utils import timezone
 from django.core.management.base import BaseCommand
 
-from articles.models import Post, Newspaper, Backlog
+from articles.models import Post, Newspaper, Backlog, IssuePost
 from articles.signals import post_publish
-from sources.models import Channel
+from sources.models import Channel, EntryHasNoContentException
+
+
+# additional timezones which are not recognized byt dateutil.parser by default
+TZ_INFOS = {
+    'PST': dateutil.tz.gettz('US/Pacific'),
+    'PDT': dateutil.tz.gettz('US/Pacific'),
+    'PT': dateutil.tz.gettz('US/Pacific'),
+    'MST': dateutil.tz.gettz('US/Mountain'),
+    'MDT': dateutil.tz.gettz('US/Mountain'),
+    'MT': dateutil.tz.gettz('US/Mountain'),
+    'CST': dateutil.tz.gettz('US/Central'),
+    'CDT': dateutil.tz.gettz('US/Central'),
+    'CT': dateutil.tz.gettz('US/Central'),
+    'EST': dateutil.tz.gettz('US/Eastern'),
+    'EDT': dateutil.tz.gettz('US/Eastern'),
+    'ET': dateutil.tz.gettz('US/Eastern')
+}
 
 
 class Command(BaseCommand):
@@ -72,7 +89,7 @@ class Command(BaseCommand):
         if post and not force:
             if verbosity > 1:
                 self.stdout.write('Skipping {}. Already imported'.format(url))
-            return None, False
+            return post, False
 
         if verbosity > 0:
             self.stdout.write('Importing {}'.format(url))
@@ -81,7 +98,7 @@ class Command(BaseCommand):
 
         for attr in ['published', 'date']:
             try:
-                published = dateutil.parser.parse(getattr(entry, attr))
+                published = dateutil.parser.parse(getattr(entry, attr), tzinfos=TZ_INFOS)
                 break
             except AttributeError:
                 pass
@@ -114,13 +131,11 @@ class Command(BaseCommand):
         if post is None:
             post = Post.objects.create(**args)
             post_publish.send(sender=self.__class__, post=post)
-            updated = False
         else:
             post.__dict__.update(args)
             post.save()
-            updated = True
 
-        return post, updated
+        return post, True
 
     def get_title_from_entry(self, entry):
         detail = entry.title_detail
@@ -160,17 +175,23 @@ class Command(BaseCommand):
                     if not channel.is_url_valid(entry.link):
                         continue
 
-                    post, force_updated = self.import_post(channel, entry, options)
+                    try:
+                        post, imported = self.import_post(channel, entry, options)
+                    except EntryHasNoContentException:
+                        self.stdout.write("Entry {} is missing content/description attribute".format(entry))
 
                     if post is None:
                         continue
 
-                    counter_posts += 1
-
-                    if force_updated:
-                        continue
+                    if imported:
+                        counter_posts += 1
 
                     if newspaper:
+                        if IssuePost.objects.filter(issue__newspaper=newspaper, post=post).exists():
+                            continue
+                        if Backlog.objects.filter(newspaper=newspaper, post=post).exists():
+                            continue
+
                         if verbosity > 1:
                             self.stdout.write('Publishing {} in {}'.format(post.guid, channel.newspaper))
 

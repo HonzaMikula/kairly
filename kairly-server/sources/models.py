@@ -23,6 +23,10 @@ from articles.models import Backlog
 from articles.signals import post_publish
 
 
+class EntryHasNoContentException(Exception):
+    pass
+
+
 class Channel(models.Model):
     name = models.CharField(max_length=160)
     provider = models.CharField(max_length=32, help_text="Source identifier (namespace for guid)")
@@ -92,7 +96,10 @@ class Channel(models.Model):
                         html = content.value
                         break
             if html is None:
-                html = entry.description
+                html = getattr(entry, 'description', None)
+
+            if html is None:
+                raise EntryHasNoContentException
 
             # hit document to get real url
             entry_url = entry.link.split('#', maxsplit=1)[0]
