@@ -4,7 +4,7 @@
       <header>
         <h1>{{ $t('Publish post') }}</h1>
 
-        <button-close tabindex="0" role="button" @keydown.esc="closeModal()" @click="closeModal()"></button-close>
+        <button-close tabindex="0" role="button" @keydown.esc="closeModal" @click="closeModal"></button-close>
       </header>
 
       <main>
@@ -27,7 +27,7 @@
       </main>
 
       <footer class="publish-post--footer">
-        <button @click="subscribe()" class="publish-now">
+        <button @click="submit" class="publish-now">
           {{ showSchedule ? $t('Schedule post') : $t('Publish now') }}
         </button>
 
@@ -48,20 +48,30 @@ import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 export default {
   name: 'PublishPostDialog',
 
+  components: {
+    DialogWindow
+  },
+
   props: {
     post: Object,
-    closeModal: Function
+    price: String
   },
 
   data() {
     return {
-      postPrice: this.post.price ? this.post.price : '0.00',
+      postPrice: this.price ? this.price : '0.00',
       showSchedule: null
     }
   },
 
-  components: {
-    DialogWindow
+  methods: {
+    closeModal() {
+      this.$emit('publish', null)
+    },
+
+    submit() {
+      this.$emit('publish', this.price)
+    }
   }
 }
 </script>

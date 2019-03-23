@@ -26,7 +26,8 @@ from utils.upload import file_from_data_uri
 from users.models import User
 from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 from .models import (Newspaper, Issue, Backlog,
-                     Post, Subscription, SubscriptionToAuthor)
+                     Post, Subscription, SubscriptionToAuthor,
+                     round_fair_price)
 from .signals import post_publish
 from .period import parse_periodicity
 
@@ -607,9 +608,13 @@ class DraftDetailView(View):
 @ajax_login_required
 def draft_fair_price(request, post_id):
     post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+    price = post.calculate_fair_price()
+
+    if price is None:
+        price = round_fair_price(request.user.price / 5)
 
     return JsonResponse({
-        'price': str(post.calculate_fair_price())
+        'price': f"{price:.2f}"
     })
 
 

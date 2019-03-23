@@ -36,8 +36,9 @@
 
     <portal to="modal" v-if="isPublishPostDialogOpen">
       <PublishPostDialog
-        :post="postToPublish"
-        :closeModal="closePublishDialog">
+        :post="modalPost"
+        :price="modalPrice"
+        @publish="publishPost">
       </PublishPostDialog>
     </portal>
   </MyPosts>
@@ -62,7 +63,8 @@ export default {
   data() {
     return {
       isPublishPostDialogOpen: null,
-      postToPublish: null
+      modalPost: null,
+      modalPrice: null
     }
   },
 
@@ -74,13 +76,6 @@ export default {
 
   methods: {
     ...mapMutations(['showError']),
-
-    openPublishDialog(post) {
-      this.isPublishPostDialogOpen = true
-      this.postToPublish = post
-
-      console.log(this.postToPublish)
-    },
 
     closePublishDialog() {
       this.isPublishPostDialogOpen = false
@@ -96,11 +91,19 @@ export default {
       }
     },
 
-    async publishPost(post) {
-      try {
-        const { price: fairPrice } = await this.$axios.$get(`/drafts/${post.id}/fair-price`)
+    async openPublishDialog(post) {
+      const { price: fairPrice } = await this.$axios.$get(`/drafts/${post.id}/fair-price`)
 
-        const price = window.prompt('Set article price', fairPrice)
+      this.modalPrice = fairPrice
+      this.modalPost = post
+      this.isPublishPostDialogOpen = true
+    },
+
+    async publishPost(price) {
+      const post = this.modalPost
+      this.isPublishPostDialogOpen = false
+
+      try {
         if (price === null) {
           // user cancels
           return
@@ -110,7 +113,7 @@ export default {
         const idx = this.posts.findIndex(p => p.id === post.id)
         this.posts.splice(idx, 1, publishedPost)
       } catch (err) {
-        if (err.response.status === 400) {
+        if (err.response && err.response.status === 400) {
           this.showError(err.response.data.error)
         } else {
           this.showError((err + '') || 'Request failed')

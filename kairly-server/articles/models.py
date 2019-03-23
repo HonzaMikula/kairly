@@ -25,6 +25,17 @@ from .period import PeriodMixin, periodicity_to_json
 from .weight import calculate_post_weight
 
 
+def round_fair_price(price):
+    if price < 0.1:
+        return Decimal('0.1')
+    if price < 1:
+        return price.quantize(Decimal('0.1'))
+    if price < 5:
+        # round to 0.5
+        return (price * 2).quantize(Decimal(0)) / 2
+    return price.quantize(Decimal(0))
+
+
 class Post(models.Model):
 
     NEWSPAPER = 'newspaper'
@@ -102,21 +113,11 @@ class Post(models.Model):
         if not self.draft and self.price is None:
             self.price = self.calculate_fair_price()
             if self.price is None:
-                self.price = self._round_fair_price(self.author.price / 5)
+                self.price = round_fair_price(self.author.price / 5)
 
         if self.source and not self.source_md5:
             self.source_md5 = hashlib.md5(self.source.encode()).hexdigest()
         return super().save(*args, **kwargs)
-
-    def _round_fair_price(self, price):
-        if price < 0.1:
-            return Decimal('0.1')
-        if price < 1:
-            return price.quantize(Decimal('0.1'))
-        if price < 5:
-            # round to 0.5
-            return (price * 2).quantize(Decimal(0)) / 2
-        return price.quantize(Decimal(0))
 
     def calculate_fair_price(self):
         author_price = self.author.price
@@ -154,7 +155,7 @@ class Post(models.Model):
         total_weight += post_weight
         weight_fraction = min(0.5, post_weight / total_weight)
 
-        return self._round_fair_price(Decimal(weight_fraction) * author_price)
+        return round_fair_price(Decimal(weight_fraction) * author_price)
 
     @property
     def read_time(self):
