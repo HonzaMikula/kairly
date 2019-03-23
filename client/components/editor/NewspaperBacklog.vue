@@ -12,7 +12,7 @@
         <p>
           <strong
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            title="Revenue - Cost = Profit">
+            :title="$t('Revenue - Cost = Profit')">
             25 - {{ issueCost }} = 10 Kč
           </strong>
         </p>
