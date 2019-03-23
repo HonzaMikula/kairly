@@ -10,7 +10,7 @@ from django.core.management.base import BaseCommand
 
 from articles.models import Post, Newspaper, Backlog, IssuePost
 from articles.signals import post_publish
-from sources.models import Channel
+from sources.models import Channel, EntryHasNoContentException
 
 
 # additional timezones which are not recognized byt dateutil.parser by default
@@ -172,14 +172,13 @@ class Command(BaseCommand):
                         self.stdout.write("Entry {} is missing link attribute".format(entry))
                         continue
 
-                    if not hasattr(entry, 'description'):
-                        self.stdout.write("Entry {} is missing description attribute".format(entry))
-                        continue
-
                     if not channel.is_url_valid(entry.link):
                         continue
 
-                    post, imported = self.import_post(channel, entry, options)
+                    try:
+                        post, imported = self.import_post(channel, entry, options)
+                    except EntryHasNoContentException:
+                        self.stdout.write("Entry {} is missing content/description attribute".format(entry))
 
                     if post is None:
                         continue
