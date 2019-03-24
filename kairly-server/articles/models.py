@@ -265,6 +265,18 @@ class Newspaper(models.Model, PeriodMixin):
         editor_tz = pytz.timezone(self.editor.timezone)
         return self.get_period_interval(timezone_now(), editor_tz).end
 
+    def current_month_upcomming_issues(self):
+        editor_tz = pytz.timezone(self.editor.timezone)
+        dt = timezone_now().astimezone(editor_tz)
+        month = dt.month
+        issue_dates = []
+        while True:
+            dt = self.get_period_interval(dt, editor_tz).end
+            if dt.month == month:
+                issue_dates.append(dt)
+            else:
+                return issue_dates
+
     @property
     def full_name(self):
         return "{}/{}".format(self.editor.username, self.slug)

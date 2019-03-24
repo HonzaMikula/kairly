@@ -1,5 +1,7 @@
 import rapidjson as json
 import html
+import pytz
+
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
@@ -9,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404
 from django.http import (HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
@@ -267,6 +269,21 @@ def newspaper_backlog(request, username, newspapeper_slug):
             .order_by('ordering').select_related('post')
         for log in query:
             result['publish'].append(log.post.to_json())
+
+        editor_tz = pytz.timezone(newspaper.editor.timezone)
+        now = timezone_now().astimezone(editor_tz)
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        issue_ids = Issue.objects.filter(newspaper=newspaper, published__gte=month_start).values_list('id', flat=True)
+        cost = Post.objects.filter(issuepost__issue__id__in=issue_ids).aggregate(Sum('price'))['price__sum']
+        if cost is None:
+            cost = Decimal(0)
+
+        result['currentMonth'] = {
+            'priorIssues': len(issue_ids),
+            'priorIssuesCost': str(cost),
+            'upcommingIssues': len(newspaper.current_month_upcomming_issues())
+        }
+
         return JsonResponse(result)
 
     if request.method == 'PUT':

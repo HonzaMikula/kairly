@@ -11,9 +11,12 @@
 
         <p>
           <strong
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-            :title="$t('Revenue - Cost = Profit')">
-            25 - {{ issueCost }} = 10 Kč
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 100 }}"
+            :title="$t('Prior issues / Current Issue / Remaining credit for future issues')">
+            <!-- {{ fmtPrice(newspaper.price) }} Kč = -->
+            {{ fmtPrice(currentMonth.priorIssuesCost) }} ({{ currentMonth.priorIssues }}) /
+            {{ fmtPrice(currentIssueCost) }} /
+            {{ fmtPrice(profit) }} ({{ currentMonth.upcommingIssues - 1 }}) Kč
           </strong>
         </p>
       </div>
@@ -155,12 +158,21 @@ export default {
   props: {
     newspaper: Object,
     backlog: Array,
-    published: Array
+    published: Array,
+    currentMonth: Object,
   },
 
-  data() {
-    return {
-        issueCost: this.computeIssueCost()
+  computed: {
+    currentIssueCost() {
+      return this.published.map(item => item.price).reduce((prev, next) => parseFloat(prev) + parseFloat(next), 0)
+    },
+
+    cost() {
+      return parseFloat(this.currentMonth.priorIssuesCost) + this.currentIssueCost
+    },
+
+    profit() {
+      return parseFloat(this.newspaper.price) - this.cost
     }
   },
 
@@ -169,18 +181,22 @@ export default {
       return moment(dt).from()
     },
 
+    fmtPrice(value) {
+      if (value === null) {
+        return ''
+      }
+      if (typeof value.toFixed === 'function') {
+        return value.toFixed(2)
+      }
+      return value
+    },
+
     async publishBacklog() {
       const { fullName } = this.newspaper
       const postIds = this.published.map(p => p.id)
       await this.$axios.post(`/newspapers/${fullName}/backlog/publish`, postIds)
-      this.issueCost = this.computeIssueCost()
-
     },
 
-    computeIssueCost() {
-      const cost = this.published.map(item => item.price).reduce((prev, next) => parseFloat(prev) + parseFloat(next), 0)
-      return cost.toFixed(2)
-    },
 
     publish(post) {
       this.backlog.splice(this.backlog.indexOf(post), 1)

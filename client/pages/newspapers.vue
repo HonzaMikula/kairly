@@ -129,6 +129,7 @@
             :newspaper="selectedNewspaper"
             :backlog="postsBacklog"
             :published="postsPublished"
+            :current-month="currentMonthStats"
           />
         </editor-newspapers--board>
         <loading-spinner v-else />
@@ -188,7 +189,8 @@ export default {
       selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
       isBacklogLoaded: false,
       postsBacklog: [],
-      postsPublished: []
+      postsPublished: [],
+      currentMonthStats: null
     }
   },
 
@@ -233,6 +235,7 @@ export default {
         this.selectedFullName = null
         this.postsBacklog = []
         this.postsPublished = []
+        this.currentMonthStats = null
         return
       }
 
@@ -240,9 +243,10 @@ export default {
       this.selectedFullName = fullName
 
       this.isBacklogLoaded = false
-      const { backlog, publish } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
+      const { backlog, publish, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
       this.postsBacklog = backlog.reverse()
       this.postsPublished = publish
+      this.currentMonthStats = currentMonth
       this.isBacklogLoaded = true
 
       if (process.client) {
