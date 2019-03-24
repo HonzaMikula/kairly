@@ -50,40 +50,29 @@
 
         <div>
           <!-- <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2> -->
-          <h2>Publikujte vaše noviny a časopisy na moderní platformě a oslovte nové čtenáře</h2>
+          <h2>Čtěte na platformě, kde je jen obsah, který vás zajímá a nikdo vás tam neruší.</h2>
 
           <!-- <div v-html="$t('@independent-journalists/modern-platform')">
           </div> -->
 
           <div>
             <p>
-              Soustřeďte se na to, v čem jste dobří. Na vydávání obsahu. My se postaráme o to, aby se váš obsah
-              dostal ke čtenářům v té nejlepší podobě, ať už jsou na počítači, mobilu, tabletu či elektronické čtečce knih.
+              V dnešní době sociálních sítí a nespočtu aplikací, které se neustále dožadují vaší
+              pozornosti, budujeme pro vás místo, kde můžete v klidu číst jen to, co vás zajímá.
             </p>
 
             <p>
-              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
-              a moderní trendy UX ze současných mobilních a webových aplikací.
+              Nostalgicky vzpomínáme na papírové noviny, kde člověk nemusel donekonečna skrolovat.
+              S každým otočením listu papíru dostal čtenář perfektně upravený obsah profesionálním editorem.
+              Tohle nám na internetu chybí.
             </p>
 
             <p>
-              Naše unikátní koncepce digitálních novin vám umožní oslovit nové čtenáře, díky větší možnosti personalizace obsahu
-              a zároveň jejich pravidelnost vydávání vede k vytváření návyku u čtenářů, a tím k větší loajálnosti k vaším titulům.
+              Naše unikátní koncepce digitálních novin nabízí čtenářům vysoce personalizovaný obsah, který
+              je ale zároveň profesionálně připravený. Naše aplikace nevede k závislosti, ale k vytváření
+              prospěšných zvyků při čtení zpravodajství a publicistiky.
             </p>
           </div>
-
-            <!-- <p>
-              Tvoříme pro vás moderní digitální platformu, která je šita na míru novinářům a publicistům.
-              Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, mobil, tablet či v budoucnu elektronickou čtečku.
-            </p>
-
-            <p>
-              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
-              a moderní trendy UX ze současných mobilních a webových aplikací.
-            </p>
-
-            <p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou platit, budeme si účtovat 15 % z ceny předplatného.</p> -->
-
         </div>
       </section>
 
@@ -111,43 +100,28 @@
 
         <div>
           <!-- <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2> -->
-          <h2>Vydělávejte na svých titulech s unikátním konceptem placeného obsahu</h2>
+          <h2>Zakoupením digitálních novin pomáháte dobrým novinářům a publicistům.</h2>
 
           <!-- <div v-html="$t('@independent-journalists/monetizing-content')"></div> -->
 
           <div>
             <p>
-              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
-              Musíme na to chytře. Zapojte vaše vydavatelství do našeho unikátního systému placeného obsahu.
+              Reklama kvalitní novináře nezaplatí. Pokud budou novináři závislí převážně na reklamě,
+              budou psát obsah, kterému jde především o počet prokliků. Nám jde o kvalitní obsah,
+              proto se u nás za něj platí.
             </p>
 
             <p>
-              Vydávejte vaše tituly skrz náš ojedinělý koncept digitálních novin a začněte jednodušše vydávat
-              i nové více zaměřené tituly, které vám pomohou díky personalizaci oslovit nové čtenáře a zvýšší
-              pravděpodobnost zakoupení měsíčního předplatného.
+              Zakoupením předplatného digitálních novin podporujete editory, u kterých si ceníte
+              jejich výběru článků a tweetů. Podporujete ale i autory, které se ve vámi předplacených
+              novinách objevují.
             </p>
 
             <p>
-              Díky otevřenosti celé platformy se váš původní obsah může objevit i ve vydání novin ostatních editorů.
-              Vy pak získáte spravedlivou peněžní odměnu z předplatného těchto novin, ve kterých
-              se váš článek objevil.
+              Vaše oblíbené autory, think-tanky či neziskové organizace můžete podpořit nad rámec
+              běžného předplatného.
             </p>
           </div>
-            <!-- <p>
-              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
-              Musíme na to chytře. Zapojte se do našeho unikátního systému placeného obsahu.
-            </p>
-
-            <p>
-              Čtenáři si vás buď mohou předplatit napřímo, nebo si předplácí noviny od editorů, kteří
-              vaše články a tweety považují za kvalitní a zařazují je do svých vydání. Vy za to dostanete
-              spravedlivý podíl z peněz, které editoři vybrali za své noviny.
-            </p>
-
-            <p>
-              Pokud píšete mimořádně zajímavý obsah, čtenáři mají možnost vám poslat peníze nad
-              rámec běžného předplatného.
-            </p> -->
         </div>
       </section>
 
