@@ -45,7 +45,7 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-9.jpg" />
+          <img src="~assets/microsite/kairly-random-26.jpg" />
         </picture>
 
         <div>
@@ -106,7 +106,7 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-15.jpg" />
+          <img src="~assets/microsite/kairly-random-35.jpg" />
         </picture>
 
         <div>
