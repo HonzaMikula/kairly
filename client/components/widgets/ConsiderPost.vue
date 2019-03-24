@@ -1,6 +1,14 @@
 <template>
   <div class="consider-post-view" v-on-clickaway="closeDialog">
-    <header>{{ $t('For which newspaper?') }}</header>
+    <header>
+      <h4>{{ $t('For which newspaper?') }}</h4>
+      <strong
+        class="consider-post--price"
+        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+        :title="$t('Article cost')">
+        {{ post.price }} Kč
+      </strong>
+    </header>
 
     <section>
       <ul>
@@ -78,6 +86,15 @@ export default {
       left: inherit
       right: 5px
 
+  //- header
+  header
+    display: flex
+    padding: 0 $baseline/2
+
+    h4
+      margin-right: auto
+
+  //- list
   li
     a::after
       content: fa-content($fa-var-check)

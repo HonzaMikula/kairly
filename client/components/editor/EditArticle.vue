@@ -42,7 +42,7 @@
     </div>
 
     <div class="edit-article--footer">
-      <button @click="submit">{{ buttonTitle }}</button>
+      <button @click="submit" :disabled="title === ''">{{ buttonTitle }}</button>
     </div>
   </div>
 </template>

@@ -1,15 +1,17 @@
 import rapidjson as json
 import html
+import pytz
+
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
-from decimal import Decimal
+from decimal import Decimal, ConversionSyntax
 
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404
 from django.http import (HttpResponse, HttpResponseNotFound,
                          HttpResponseForbidden, HttpResponseBadRequest)
@@ -26,7 +28,8 @@ from utils.upload import file_from_data_uri
 from users.models import User
 from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 from .models import (Newspaper, Issue, Backlog,
-                     Post, Subscription, SubscriptionToAuthor)
+                     Post, Subscription, SubscriptionToAuthor,
+                     round_fair_price)
 from .signals import post_publish
 from .period import parse_periodicity
 
@@ -266,6 +269,21 @@ def newspaper_backlog(request, username, newspapeper_slug):
             .order_by('ordering').select_related('post')
         for log in query:
             result['publish'].append(log.post.to_json())
+
+        editor_tz = pytz.timezone(newspaper.editor.timezone)
+        now = timezone_now().astimezone(editor_tz)
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        issue_ids = Issue.objects.filter(newspaper=newspaper, published__gte=month_start).values_list('id', flat=True)
+        cost = Post.objects.filter(issuepost__issue__id__in=issue_ids).aggregate(Sum('price'))['price__sum']
+        if cost is None:
+            cost = Decimal(0)
+
+        result['currentMonth'] = {
+            'priorIssues': len(issue_ids),
+            'priorIssuesCost': str(cost),
+            'upcommingIssues': len(newspaper.current_month_upcomming_issues())
+        }
+
         return JsonResponse(result)
 
     if request.method == 'PUT':
@@ -605,12 +623,40 @@ class DraftDetailView(View):
 
 
 @ajax_login_required
+def draft_fair_price(request, post_id):
+    post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+    price = post.calculate_fair_price()
+
+    if price is None:
+        price = round_fair_price(request.user.price / 5)
+
+    return JsonResponse({
+        'price': f"{price:.2f}"
+    })
+
+
+@ajax_login_required
+@require_POST
+@transaction.atomic
 def publish_draft(request, post_id):
     post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
+    payload = json.loads(request.body.decode('utf-8'))
 
     if post.kind == Post.NEWSPAPER and post.perex == '':
-        return HttpResponseBadRequest('Perex is empty')
+        return JsonResponse({'error': 'Perex is empty'}, status=400)
 
+    try:
+        price = Decimal(payload['price']).quantize(Decimal('0.01'))
+    except ConversionSyntax:
+        return JsonResponse({'error': "Invalid syntax"}, status=400)
+
+    if price < 0:
+        return JsonResponse({'error': "Price can't be negative"}, status=400)
+
+    if price > 100000:
+        return JsonResponse({'error': "Price too high"}, status=400)
+
+    post.price = price
     post.draft = False
     post.published = timezone_now()
     post.save()

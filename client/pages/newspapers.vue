@@ -20,17 +20,18 @@
           </div>
 
           <div class="title">
-            <h1 v-if="selectedNewspaper">
-              <nuxt-link :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}">
-                {{ selectedNewspaper.title }}
-              </nuxt-link>
+            <h1
+              v-if="selectedNewspaper"
+              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen">
+              {{ selectedNewspaper.title }}
             </h1>
 
             <button-icon
               v-if="selectedNewspaper"
+              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen"
+              class="dropdown"
               role="button"
-              tabindex="0" class="dropdown"
-              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen">
+              tabindex="0" >
             </button-icon>
 
             <editor-newspapers--header--dropdown
@@ -54,6 +55,13 @@
           </div>
 
           <div class="newspaper-controls" v-if="selectedNewspaper">
+            <nuxt-link
+              class="detail"
+              :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
+              :title="$t('Go to newspaper detail')"
+              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            </nuxt-link>
+
             <button-icon
               class="edit"
               role="button"
@@ -121,6 +129,7 @@
             :newspaper="selectedNewspaper"
             :backlog="postsBacklog"
             :published="postsPublished"
+            :current-month="currentMonthStats"
           />
         </editor-newspapers--board>
         <loading-spinner v-else />
@@ -180,7 +189,8 @@ export default {
       selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
       isBacklogLoaded: false,
       postsBacklog: [],
-      postsPublished: []
+      postsPublished: [],
+      currentMonthStats: null
     }
   },
 
@@ -225,6 +235,7 @@ export default {
         this.selectedFullName = null
         this.postsBacklog = []
         this.postsPublished = []
+        this.currentMonthStats = null
         return
       }
 
@@ -232,9 +243,10 @@ export default {
       this.selectedFullName = fullName
 
       this.isBacklogLoaded = false
-      const { backlog, publish } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
+      const { backlog, publish, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
       this.postsBacklog = backlog.reverse()
       this.postsPublished = publish
+      this.currentMonthStats = currentMonth
       this.isBacklogLoaded = true
 
       if (process.client) {
@@ -352,6 +364,7 @@ editor-newspapers-view
         display: inline-block
         margin-right: $baseline / 2
 
+        cursor: pointer
         font-family: $ff-serif
         font-size: $fs-4
         font-weight: 600
@@ -404,7 +417,8 @@ editor-newspapers-view
       @media (max-width: 800px)
         display: none
 
-      > button-icon
+      > button-icon,
+      > a
         display: inline-block
         border-radius: 100%
         height: $baseline * 1.25
@@ -412,6 +426,7 @@ editor-newspapers-view
         width: $baseline * 1.25
 
         background: #fff
+        color: #000
 
         cursor: pointer
         line-height: $baseline * 1.25
@@ -420,6 +435,11 @@ editor-newspapers-view
         &:focus,
         &:hover
           background: #eee
+
+        &.detail::before
+          +fa-icon()
+          @extend .fas
+          content: fa-content($fa-var-info-circle)
 
         &.edit::before
           content: fa-content($fa-var-pencil-alt)

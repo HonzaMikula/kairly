@@ -3,12 +3,27 @@
 
     <newspaper-backlog--info>
       <div>
-        {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
-        {{ $t('will be automatically published in') }}
-        <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
+        <p>
+          {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
+          {{ $t('will be automatically published in') }}
+          <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
+        </p>
+
+        <p>
+          <strong
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 100 }}"
+            :title="$t('Prior issues / Current Issue / Remaining credit for future issues')">
+            <!-- {{ fmtPrice(newspaper.price) }} Kč = -->
+            {{ fmtPrice(currentMonth.priorIssuesCost) }} ({{ currentMonth.priorIssues }}) /
+            {{ fmtPrice(currentIssueCost) }} /
+            {{ fmtPrice(profit) }} ({{ currentMonth.upcommingIssues - 1 }}) Kč
+          </strong>
+        </p>
       </div>
 
-      <div v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})" />
+      <div>
+        <p v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})" />
+      </div>
     </newspaper-backlog--info>
 
     <div>
@@ -26,7 +41,7 @@
           :key="post.id"
         >
           <template slot="extendedControls">
-            &nbsp;
+            <span class="price">{{ post.price }} Kč</span>
           </template>
 
           <template slot="controls">
@@ -94,6 +109,8 @@
               {{ post.time | moment('calendar') }}
               •
               {{ post.timeRead }} {{ $t('read') }}
+              •
+              {{ post.price }} Kč
             </time>
 
             <section>
@@ -141,7 +158,22 @@ export default {
   props: {
     newspaper: Object,
     backlog: Array,
-    published: Array
+    published: Array,
+    currentMonth: Object,
+  },
+
+  computed: {
+    currentIssueCost() {
+      return this.published.map(item => item.price).reduce((prev, next) => parseFloat(prev) + parseFloat(next), 0)
+    },
+
+    cost() {
+      return parseFloat(this.currentMonth.priorIssuesCost) + this.currentIssueCost
+    },
+
+    profit() {
+      return parseFloat(this.newspaper.price) - this.cost
+    }
   },
 
   methods: {
@@ -149,11 +181,22 @@ export default {
       return moment(dt).from()
     },
 
+    fmtPrice(value) {
+      if (value === null) {
+        return ''
+      }
+      if (typeof value.toFixed === 'function') {
+        return value.toFixed(2)
+      }
+      return value
+    },
+
     async publishBacklog() {
       const { fullName } = this.newspaper
       const postIds = this.published.map(p => p.id)
       await this.$axios.post(`/newspapers/${fullName}/backlog/publish`, postIds)
     },
+
 
     publish(post) {
       this.backlog.splice(this.backlog.indexOf(post), 1)
@@ -220,6 +263,16 @@ newspaper-backlog--info
   font-size: $fs--1
   font-family: $ff-serif
   text-align: center
+
+  > div
+    display: flex
+
+    p:first-child
+      margin-right: auto
+
+    p:last-child
+      span:first-child
+        margin-right: $baseline / 2
 
 //- Next Issue
 newspaper-backlog--next-issue

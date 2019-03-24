@@ -10,7 +10,7 @@
         :isSubscribed="true"
       >
         <template slot="controls" v-if="post.draft">
-          <button @click="publishPost(post)">{{ $t('Publish') }}</button>
+          <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
 
           <button-icon
             class="edit"
@@ -33,21 +33,39 @@
         </template>
       </PostWrapper>
     </div>
+
+    <portal to="modal" v-if="isPublishPostDialogOpen">
+      <PublishPostDialog
+        :post="modalPost"
+        :price="modalPrice"
+        @publish="publishPost">
+      </PublishPostDialog>
+    </portal>
   </MyPosts>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 import MyPosts from '@/components/layout/MyPosts'
 import PostWrapper from '@/components/PostWrapper'
+import PublishPostDialog from '@/components/modals/PublishPost'
 
 export default {
   name: 'Drafts',
 
   components: {
     MyPosts,
-    PostWrapper
+    PostWrapper,
+    PublishPostDialog
+  },
+
+  data() {
+    return {
+      isPublishPostDialogOpen: null,
+      modalPost: null,
+      modalPrice: null
+    }
   },
 
   computed: {
@@ -57,6 +75,12 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['showError']),
+
+    closePublishDialog() {
+      this.isPublishPostDialogOpen = false
+    },
+
     async deletePost(post) {
       if (confirm("Are you sure?")) {
         await this.$axios.$delete(`/drafts/${post.id}`)
@@ -67,10 +91,34 @@ export default {
       }
     },
 
-    async publishPost(post) {
-      const { post: publishedPost } = await this.$axios.$post(`/drafts/${post.id}/publish`)
-      const idx = this.posts.findIndex(p => p.id === post.id)
-      this.posts.splice(idx, 1, publishedPost)
+    async openPublishDialog(post) {
+      const { price: fairPrice } = await this.$axios.$get(`/drafts/${post.id}/fair-price`)
+
+      this.modalPrice = fairPrice
+      this.modalPost = post
+      this.isPublishPostDialogOpen = true
+    },
+
+    async publishPost(price) {
+      const post = this.modalPost
+      this.isPublishPostDialogOpen = false
+
+      try {
+        if (price === null) {
+          // user cancels
+          return
+        }
+
+        const { post: publishedPost } = await this.$axios.$post(`/drafts/${post.id}/publish`, { price })
+        const idx = this.posts.findIndex(p => p.id === post.id)
+        this.posts.splice(idx, 1, publishedPost)
+      } catch (err) {
+        if (err.response && err.response.status === 400) {
+          this.showError(err.response.data.error)
+        } else {
+          this.showError((err + '') || 'Request failed')
+        }
+      }
     }
   },
 
