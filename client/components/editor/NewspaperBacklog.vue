@@ -160,7 +160,7 @@ export default {
 
   data() {
     return {
-      issueCost: this.computeIssueCost()
+        issueCost: this.computeIssueCost()
     }
   },
 
@@ -178,7 +178,7 @@ export default {
     },
 
     computeIssueCost() {
-      const cost = this.published.map(item => item.price).reduce((prev, next) => parseFloat(prev) + parseFloat(next))
+      const cost = this.published.map(item => item.price).reduce((prev, next) => parseFloat(prev) + parseFloat(next), 0)
       return cost.toFixed(2)
     },
 

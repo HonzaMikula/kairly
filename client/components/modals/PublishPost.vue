@@ -31,9 +31,9 @@
           {{ showSchedule ? $t('Schedule post') : $t('Publish now') }}
         </button>
 
-        <button class="schedule" @click="showSchedule = !showSchedule">
+        <!--button class="schedule" @click="showSchedule = !showSchedule">
           {{ showSchedule ? $t('Cancel scheduling') : $t('Schedule for later') }}
-        </button>
+        </button-->
       </footer>
     </modal-dialog>
   </DialogWindow>
