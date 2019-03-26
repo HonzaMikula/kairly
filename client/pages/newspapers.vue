@@ -595,20 +595,20 @@ editor-newspapers--mobile-switcher
 // Board
 editor-newspapers--board
   @media (max-width: 1260px)
-    newspaper-backlog--info
+    .newspaper-backlog--info
       display: none
 
-    newspaper-backlog-view > div
+    .newspaper-backlog-view > div
         grid-template-columns: 1fr
 
     //- if upcoming issue is opened
     &.upcoming-issue
-      newspaper-backlog--backlog
+      .newspaper-backlog--backlog
         display: none
 
     //- if backlog is opened
     &.backlog
-      newspaper-backlog--next-issue
+      .newspaper-backlog--next-issue
         display: none
 
 

@@ -1,7 +1,7 @@
 <template>
-  <newspaper-backlog-view>
+  <div class="newspaper-backlog-view">
 
-    <newspaper-backlog--info>
+    <div class="newspaper-backlog--info">
       <div>
         <p>
           {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
@@ -9,25 +9,98 @@
           <strong :title="newspaper.nextRelease">{{timeFrom(newspaper.nextRelease)}}</strong>
         </p>
 
-        <p>
+        <p class="newspaper-backlog--info--profit">
           <strong
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 100 }}"
-            :title="$t('Prior issues / Current Issue / Remaining credit for future issues')">
-            <!-- {{ fmtPrice(newspaper.price) }} Kč = -->
-            {{ fmtPrice(currentMonth.priorIssuesCost) }} ({{ currentMonth.priorIssues }}) /
-            {{ fmtPrice(currentIssueCost) }} /
-            {{ fmtPrice(profit) }} ({{ currentMonth.upcommingIssues - 1 }}) Kč
+            @click="openProfitDropdown = !openProfitDropdown"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            :title="$t('Revenue - Cost = Profit')">
+            {{ fmtPrice(revenuePerIssue) }}
+            -
+            {{ fmtPrice(currentIssueCost) }}
+            =
+            {{ fmtPrice(profitPerIssue) }} Kč
           </strong>
         </p>
+
+        <div
+          v-if="openProfitDropdown"
+          v-on-clickaway="() => openProfitDropdown = false"
+          class="newspaper-backlog--info--profit-dropdown">
+
+          <table>
+            <thead>
+              <tr>
+                <th>{{ $t('Current Issue') }}</th>
+                <th>{{ $t('Per subscriber') }}</th>
+                <th>{{ $t('For {subscribers} subscribers', {subscribers: newspaper.likes}) }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <th>{{ $t('Avg. revenue per issue') }}</th>
+                <td>{{ fmtPrice(revenuePerIssue) }} Kč</td>
+                <td>{{ fmtPrice(revenuePerIssue * newspaper.likes) }} Kč</td>
+              </tr>
+              <tr>
+                <th>{{ $t('Cost of current issue') }}</th>
+                <td>{{ fmtPrice(currentIssueCost) }} Kč</td>
+                <td>{{ fmtPrice(currentIssueCost * newspaper.likes) }} Kč</td>
+              </tr>
+              <tr class="profit">
+                <th>{{ $t('Profit from current issue') }}</th>
+                <td>{{ fmtPrice(profitPerIssue) }} Kč</td>
+                <td>{{ fmtPrice(profitPerIssue * newspaper.likes) }} Kč</td>
+              </tr>
+            </tbody>
+
+            <thead>
+              <tr>
+                <th>{{ $t('Total for this month') }}</th>
+                <th>{{ $t('Per subscriber') }}</th>
+                <th>{{ $t('For {subscribers} subscribers', {subscribers: newspaper.likes}) }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>{{ $t('Total revenues') }}</th>
+                <td>{{ fmtPrice(newspaper.price) }} Kč</td>
+                <td>{{ fmtPrice(newspaper.price * newspaper.likes) }} Kč</td>
+              </tr>
+
+              <tr>
+                <th>{{ $t('Number of previous issues') }}</th>
+                <td colspan="2">{{ currentMonth.priorIssues }}</td>
+              </tr>
+
+              <tr>
+                <th>{{ $t('Cost of previous issues') }}</th>
+                <td>{{ fmtPrice(currentMonth.priorIssuesCost) }} Kč</td>
+                <td>{{ fmtPrice(currentMonth.priorIssuesCost * newspaper.likes) }} Kč</td>
+              </tr>
+
+              <tr>
+                <th>{{ $t('Number of remaining issues') }}</th>
+                <td colspan="2">{{ currentMonth.upcommingIssues }}</td>
+              </tr>
+
+              <tr class="profit">
+                <th>{{ $t('Remaining profit') }}</th>
+                <td>{{ fmtPrice(profit) }} Kč</td>
+                <td>{{ fmtPrice(profit * newspaper.likes) }} Kč</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div>
         <p v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength: backlog.length})" />
       </div>
-    </newspaper-backlog--info>
+    </div>
 
     <div>
-      <newspaper-backlog--next-issue>
+      <div class="newspaper-backlog--next-issue">
         <div v-if="published.length == 0" class="no-post">
           <h2>{{ $t('No posts for the upcoming issue!') }}</h2>
 
@@ -75,9 +148,9 @@
             />
           </template>
         </PostWrapper>
-      </newspaper-backlog--next-issue>
+      </div>
 
-      <newspaper-backlog--backlog>
+      <div class="newspaper-backlog--backlog">
         <div
           v-if="backlog.length == 0"
           class="no-post"
@@ -136,15 +209,16 @@
             <h2><nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link></h2>
           </template>
         </div>
-      </newspaper-backlog--backlog>
+      </div>
     </div>
-  </newspaper-backlog-view>
+  </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { mapActions, mapMutations } from 'vuex'
 import moment from 'moment'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import PostWrapper from '@/components/PostWrapper'
 
@@ -155,11 +229,21 @@ export default {
     PostWrapper
   },
 
+  directives: {
+    onClickaway
+  },
+
   props: {
     newspaper: Object,
     backlog: Array,
     published: Array,
     currentMonth: Object,
+  },
+
+  data() {
+    return {
+      openProfitDropdown: false
+    }
   },
 
   computed: {
@@ -173,6 +257,15 @@ export default {
 
     profit() {
       return parseFloat(this.newspaper.price) - this.cost
+    },
+
+    revenuePerIssue() {
+      const totalIssues = this.currentMonth.priorIssues + this.currentMonth.upcommingIssues
+      return parseFloat(this.newspaper.price) / totalIssues
+    },
+
+    profitPerIssue() {
+      return this.revenuePerIssue - this.currentIssueCost
     }
   },
 
@@ -239,17 +332,17 @@ export default {
 
 <style lang="sass">
 @import './styles/components/buttons'
+@import './styles/components/mixins'
 
-newspaper-backlog-view
+.newspaper-backlog-view
   > div
     display: grid
     grid-template-columns: 970px auto
     grid-column-gap: $baseline
-    min-height: 50vh
 
 
 //- Info when release go out
-newspaper-backlog--info
+.newspaper-backlog--info
   display: grid
   grid-template-columns: 970px auto
   grid-column-gap: $baseline
@@ -265,17 +358,84 @@ newspaper-backlog--info
   text-align: center
 
   > div
+    position: relative
+
     display: flex
+
+    //- report button opening dropdown
+    button-icon.report
+      &::before
+        +fa-icon()
+        @extend .fas
+
+        content: fa-content($fa-var-chart-bar)
 
     p:first-child
       margin-right: auto
 
-    p:last-child
-      span:first-child
-        margin-right: $baseline / 2
+p.newspaper-backlog--info--profit
+  strong
+    margin-right: $baseline / 2
+
+    color: $c-base
+
+    cursor: pointer
+
+    &:hover,
+    &:focus
+      darken($c-base, 10%)
+
+//- Detail report dropdown
+.newspaper-backlog--info--profit-dropdown
+  position: absolute
+  right: 0
+  top: $baseline
+  z-index: 1
+
+  padding: $baseline/4 $baseline/2
+
+  background: #fff
+  border: 1px solid #eee
+  +box-shadow
+
+  //- general table
+  td, th
+    padding: $baseline/4 $baseline/2 $baseline/4 0
+
+    font-family: $ff-sans
+    text-align: left
+
+  th
+    font-weight: 600
+
+  //- header
+  thead:last-of-type th
+    padding-top: $baseline
+
+  //- body
+  tbody th
+    font-weight: 400
+
+  tbody td
+    text-align: right
+
+    &[colspan]
+      text-align: center
+
+      &::before,
+      &::after
+        content: ' ~ '
+
+  //- profit
+  .profit th,
+  .profit td
+    border-top: 1px solid #555
+    font-weight: 600
+
+
 
 //- Next Issue
-newspaper-backlog--next-issue
+.newspaper-backlog--next-issue
   .no-post
     display: flex
     align-items: center
@@ -305,7 +465,7 @@ newspaper-backlog--next-issue
       text-align: center
 
 //- Backlog
-newspaper-backlog--backlog
+.newspaper-backlog--backlog
   .no-post
     display: flex
     align-items: center
