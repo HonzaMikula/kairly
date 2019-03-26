@@ -8,7 +8,7 @@
       </header>
 
       <main>
-        <h2>{{ post.content.title }}</h2>
+        <h2>{{ post.content.title ? post.content.title : post.content.content }}</h2>
 
         <section class="publish-post--price">
           <h2>{{ $t('Set price of the article for editors') }}</h2>
