@@ -39,7 +39,7 @@ Create virtual env for the project (isolated python environment)
 mkvirtualenv --python=`which python3` kairly
 ````
 
-Create your settings with database config (in /kairly-server/kairly)
+Create your settings with database config (in /server/kairly)
 (with your own settings file, you can use settings_farin.py as template)
 
 Edit virtual env postactivate hook
@@ -62,7 +62,7 @@ deactivate
 workon kairly
 ```
 
-Install dependencies (run from kairly-server folder)
+Install dependencies (run from server folder)
 ```
 pip install -r requirements.txt
 ```

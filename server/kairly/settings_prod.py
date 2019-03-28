@@ -96,7 +96,7 @@ EMAIL_HOST_PASSWORD = '4c0e19fa5bae44c2bbf26b0a11ef11dd'
 #     '/srv/kairly/kairly-client/dist',
 # )
 
-MEDIA_ROOT = '/srv/kairly/kairly-server/media'
+MEDIA_ROOT = '/srv/kairly/server/media'
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SECURE_SSL_REDIRECT = True

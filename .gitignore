@@ -1,5 +1,5 @@
-/kairly-server/kairly/settings_miky.py
-/kairly-server/myenv
+/server/kairly/settings_miky.py
+/server/myenv
 /.vscode
 .pytest_cache
 kairly.sql.gz

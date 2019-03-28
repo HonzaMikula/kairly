@@ -85,7 +85,7 @@ def deploy_cron(ctx):
         'source /srv/.bashrc',
         'cd /srv/kairly',
         'git pull',
-        'cp /srv/kairly/kairly-server/cron/crontab /srv/conf',
+        'cp /srv/kairly/server/cron/crontab /srv/conf',
         'crontab /srv/conf/crontab'
     ]
     ctx.run("ssh -T -p {} {} '{}'".format(CRON_PORT, CRON_HOST, ' && '.join(remote_commands)))
@@ -95,7 +95,7 @@ def deploy_cron(ctx):
 def dbdump_prod(ctx):
     import os
     import sys
-    server_root = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'kairly-server')
+    server_root = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'server')
     sys.path.append(server_root)
 
     from kairly import settings_prod as settings
@@ -136,7 +136,7 @@ def dbdump_import(ctx):
 
 @task()
 def download_media(ctx):
-    ctx.run("rsync -chavzP -e 'ssh -p {}' --stats {}:/srv/app/media kairly-server".format(PY_PORT, PY_HOST))
+    ctx.run("rsync -chavzP -e 'ssh -p {}' --stats {}:/srv/app/media server".format(PY_PORT, PY_HOST))
 
 
 deploy_ns = Collection('deploy')

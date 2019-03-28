@@ -3,4 +3,4 @@
 . /srv/venv/bin/activate
 export DJANGO_SETTINGS_MODULE=kairly.settings_cron_prod
 export PYTHONIOENCODING=utf-8
-/srv/kairly/kairly-server/manage.py payauthors -v 0
+/srv/kairly/server/manage.py renewsubscriptions -v 0
