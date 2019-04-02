@@ -14,11 +14,11 @@
             @click="openProfitDropdown = !openProfitDropdown"
             v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
             :title="$t('Revenue - Cost = Profit')">
-            {{ fmtPrice(revenuePerIssue) }}
+            <MoneyFormat :value="revenuePerIssue" />
             -
-            {{ fmtPrice(currentIssueCost) }}
+            <MoneyFormat :value="currentIssueCost" />
             =
-            {{ fmtPrice(profitPerIssue) }} Kč
+            <MoneyFormat :value="profitPerIssue" currency="Kč" />
           </strong>
         </p>
 
@@ -39,18 +39,18 @@
             <tbody>
               <tr>
                 <th>{{ $t('Avg. revenue per issue') }}</th>
-                <td>{{ fmtPrice(revenuePerIssue) }} Kč</td>
-                <td>{{ fmtPrice(revenuePerIssue * newspaper.likes) }} Kč</td>
+                <td><MoneyFormat :value="revenuePerIssue" currency="Kč" /></td>
+                <td><MoneyFormat :value="revenuePerIssue * newspaper.likes" currency="Kč" /></td>
               </tr>
               <tr>
                 <th>{{ $t('Cost of current issue') }}</th>
-                <td>{{ fmtPrice(currentIssueCost) }} Kč</td>
-                <td>{{ fmtPrice(currentIssueCost * newspaper.likes) }} Kč</td>
+                <td><MoneyFormat :value="currentIssueCost" currency="Kč" /></td>
+                <td><MoneyFormat :value="currentIssueCost * newspaper.likes" currency="Kč" /></td>
               </tr>
               <tr class="profit">
                 <th>{{ $t('Profit from current issue') }}</th>
-                <td>{{ fmtPrice(profitPerIssue) }} Kč</td>
-                <td>{{ fmtPrice(profitPerIssue * newspaper.likes) }} Kč</td>
+                <td><MoneyFormat :value="profitPerIssue" currency="Kč" /></td>
+                <td><MoneyFormat :value="profitPerIssue * newspaper.likes" currency="Kč" /></td>
               </tr>
             </tbody>
 
@@ -64,8 +64,8 @@
             <tbody>
               <tr>
                 <th>{{ $t('Total revenues') }}</th>
-                <td>{{ fmtPrice(newspaper.price) }} Kč</td>
-                <td>{{ fmtPrice(newspaper.price * newspaper.likes) }} Kč</td>
+                <td><MoneyFormat :value="newspaper.price" currency="Kč" /></td>
+                <td><MoneyFormat :value="newspaper.price * newspaper.likes" currency="Kč" /></td>
               </tr>
 
               <tr>
@@ -75,8 +75,8 @@
 
               <tr>
                 <th>{{ $t('Cost of previous issues') }}</th>
-                <td>{{ fmtPrice(currentMonth.priorIssuesCost) }} Kč</td>
-                <td>{{ fmtPrice(currentMonth.priorIssuesCost * newspaper.likes) }} Kč</td>
+                <td><MoneyFormat :value="currentMonth.priorIssuesCost" currency="Kč" /></td>
+                <td><MoneyFormat :value="currentMonth.priorIssuesCost * newspaper.likes" currency="Kč" /></td>
               </tr>
 
               <tr>
@@ -86,8 +86,8 @@
 
               <tr class="profit">
                 <th>{{ $t('Remaining profit') }}</th>
-                <td>{{ fmtPrice(profit) }} Kč</td>
-                <td>{{ fmtPrice(profit * newspaper.likes) }} Kč</td>
+                <td><MoneyFormat :value="profit" currency="Kč" /></td>
+                <td><MoneyFormat :value="profit * newspaper.likes" currency="Kč" /></td>
               </tr>
             </tbody>
           </table>
@@ -183,7 +183,7 @@
               •
               {{ post.timeRead }} {{ $t('read') }}
               •
-              {{ post.price }} Kč
+              <MoneyFormat :value="post.price" currency="Kč" />
             </time>
 
             <section>
@@ -221,11 +221,13 @@ import moment from 'moment'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import PostWrapper from '@/components/PostWrapper'
+import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 export default {
   name: 'NewspaperBacklog',
 
   components: {
+    MoneyFormat,
     PostWrapper
   },
 
@@ -272,16 +274,6 @@ export default {
   methods: {
     timeFrom(dt) {
       return moment(dt).from()
-    },
-
-    fmtPrice(value) {
-      if (value === null) {
-        return ''
-      }
-      if (typeof value.toFixed === 'function') {
-        return value.toFixed(2)
-      }
-      return value
     },
 
     async publishBacklog() {

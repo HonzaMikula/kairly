@@ -41,11 +41,13 @@ class Post(models.Model):
     NEWSPAPER = 'newspaper'
     TWEET = 'tweet'
     RECOMMENDATION = 'recommendation'
+    LINK = 'link'
 
     KIND_CHOICES = (
         (NEWSPAPER, _('Newspaper')),
         (TWEET, _('Tweet')),
         (RECOMMENDATION, _('Recommendation')),
+        (LINK, _('Link')),
     )
 
     READ_TIME_CACHE_KEY = 'read_time_{id}'

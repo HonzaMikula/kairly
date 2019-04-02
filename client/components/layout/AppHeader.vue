@@ -36,7 +36,7 @@
           class="credits"
           v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
           :title="$t('Available credits')">
-          {{ user.credits.split('.')[0] }} Kč
+          <MoneyFormat :value="user.credits" currency="Kč" :short="true"/>
         </nuxt-link>
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
@@ -89,6 +89,8 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import store from '@/store'
 
+import MoneyFormat from '@/components/widgets/MoneyFormat'
+
 export default {
   name: 'AppHeader',
 
@@ -98,6 +100,10 @@ export default {
 
   props: {
     pageTitle: String
+  },
+
+  components: {
+    MoneyFormat
   },
 
   data: function() {

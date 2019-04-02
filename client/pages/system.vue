@@ -23,7 +23,9 @@
         <tbody>
           <tr v-for="t in transactions" :key="t.created">
             <td>{{ t.created | moment('calendar') }}</td>
-            <td>{{ t.credits > 0 ? '+' : ''}}{{ t.credits }} Kč</td>
+            <td>
+              <MoneyFormat :value="t.credits" currency="Kč" :force-sign="true"/>
+            </td>
 
             <td v-if="t.source.newspaper">
               <!-- Monthly reward for newspaper editor -->
@@ -53,8 +55,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 
-
 import AppLayout from '@/components/layout/AppLayout'
+import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 
 export default {
@@ -68,6 +70,7 @@ export default {
 
   components: {
     AppLayout,
+    MoneyFormat
   },
 
   async fetch ({ store, redirect }) {

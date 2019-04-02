@@ -12,12 +12,16 @@
       <section class="transactions--info">
         <div>
           <h3>{{ $t('Current balance') }}</h3>
-          <p>{{ user.credits }} Kč</p>
+          <p>
+            <MoneyFormat :value="user.credits" currency="Kč" />
+          </p>
         </div>
 
         <div>
           <h3>{{ $t('Monthly spending') }}</h3>
-          <p>{{ monthSpending }} Kč</p>
+          <p>
+            <MoneyFormat :value="monthSpending" currency="Kč" />
+          </p>
         </div>
       </section>
 
@@ -38,6 +42,7 @@ import { mapState, mapGetters } from 'vuex'
 
 
 import AppLayout from '@/components/layout/AppLayout'
+import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 
 export default {
@@ -45,6 +50,7 @@ export default {
 
   components: {
     AppLayout,
+    MoneyFormat,
   },
 
   computed: {

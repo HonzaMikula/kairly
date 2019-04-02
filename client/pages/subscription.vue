@@ -14,10 +14,14 @@
         <section class="subscription--credits">
           <h2><nuxt-link to="/user/transactions/history">{{ $t('Credits') }}</nuxt-link></h2>
           <p>{{ $t('Current balance') }}</p>
-          <p class="credits">{{ user.credits.split('.')[0] }} Kč</p>
+          <p class="credits">
+            <MoneyFormat :value="user.credits" currency="Kč" :short="true"/>
+          </p>
 
           <p>{{ $t('Monthly spending') }}</p>
-          <p class="credits">{{ monthSpending.split('.')[0] }} Kč</p>
+          <p class="credits">
+            <MoneyFormat :value="monthSpending" currency="Kč" :short="true"/>
+          </p>
           <nuxt-link to="/user/add-credits">
             <button>{{ $t('Buy credits') }}</button>
           </nuxt-link>
@@ -60,11 +64,14 @@
 import AppLayout from '@/components/layout/AppLayout'
 import { mapGetters, mapState, mapActions } from 'vuex'
 
+import MoneyFormat from '@/components/widgets/MoneyFormat'
+
 export default {
   name: 'MySubscription',
 
   components: {
-    AppLayout
+    AppLayout,
+    MoneyFormat
   },
 
   computed: {

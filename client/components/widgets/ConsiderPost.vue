@@ -6,7 +6,7 @@
         class="consider-post--price"
         v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
         :title="$t('Article cost')">
-        {{ post.price }} Kč
+        <MoneyFormat :value="post.price" currency="Kč"/>
       </strong>
     </header>
 
@@ -24,6 +24,8 @@
 import { mapGetters, mapState, mapActions } from 'vuex'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
+import MoneyFormat from '@/components/widgets/MoneyFormat'
+
 export default {
   name: 'ConsiderPost',
 
@@ -33,6 +35,10 @@ export default {
 
   directives: {
     onClickaway
+  },
+
+  components: {
+    MoneyFormat
   },
 
   computed: {

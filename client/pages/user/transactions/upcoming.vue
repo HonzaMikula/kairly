@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="t in transactions" :key="t">
+      <tr v-for="(t, index) in transactions" :key="index">
         <template v-if="t.author">
           <td class="author">
             <nuxt-link :to="{name: 'author', params: {author: t.author.id}}">

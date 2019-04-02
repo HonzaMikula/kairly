@@ -41,7 +41,10 @@
           <h2 v-else-if="subscription.state === 'canceled'">{{ $t('You were paying') }}</h2>
           <h2 v-else-if="subscription.state === 'suspended'">{{ $t('You should be paying') }}</h2>
 
-          <p>{{ author.price.split('.')[0] }} {{ $t('Kč per month') }}</p>
+          <p>
+            <MoneyFormat :value="author.price" :short="true" />
+            {{ $t('Kč per month') }}
+          </p>
         </section>
 
         <section class="author-subscription--donations">
@@ -126,6 +129,7 @@ import { mapState } from 'vuex'
 
 import DialogWindow from '@/components/modals/DialogWindow'
 import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
+import MoneyFormat from '@/components/widgets/MoneyFormat'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
 export default {
@@ -139,7 +143,8 @@ export default {
 
   components: {
     DialogWindow,
-    ChangePeriodicity
+    ChangePeriodicity,
+    MoneyFormat,
   },
 
   mixins: [PeriodicityMixin],

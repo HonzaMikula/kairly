@@ -44,7 +44,9 @@
           Free credits
         </td>
         <td>{{ fmtTime(t.created) }}</td>
-        <td>{{ t.credits > 0 ? '+' : ''}}{{ t.credits }} Kč</td>
+        <td>
+          <MoneyFormat :value="t.credits" currency="Kč" :force-sign="true"/>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -55,6 +57,8 @@ import moment from 'moment'
 
 import { mapState, mapGetters } from 'vuex'
 
+import MoneyFormat from '@/components/widgets/MoneyFormat'
+
 export default {
   name: 'TransactionHistory',
 
@@ -62,6 +66,10 @@ export default {
     return {
       title: this.$t('Credit balance – Kairly')
     }
+  },
+
+  components: {
+    MoneyFormat
   },
 
   methods: {

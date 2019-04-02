@@ -27,7 +27,10 @@
           <li class="issues">#{{ newspaper.issues }}</li>
           <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
           <li>{{ newspaper.editor.name }}</li>
-          <li class="price">{{ newspaper.price.split('.')[0] }} Kč měsíčně</li>
+          <li class="price">
+            <MoneyFormat :value="newspaper.price" currency="Kč" :short="true" />
+            {{ $t('monthly') }}
+          </li>
         </ul>
       </div>
 
@@ -155,6 +158,7 @@ import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
+import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 export default {
   name: 'NewspaperDetail',
@@ -215,6 +219,7 @@ export default {
     KairlyPromo,
     FooterLinks,
     RecommendButtonIssue,
+    MoneyFormat,
   },
 
   mixins: [PeriodicityMixin],

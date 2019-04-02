@@ -106,7 +106,9 @@ def recent_issues(request):
 @ajax_login_required
 def recent_posts(request):
     tzinfo = request.user.tzinfo
-    posts = Post.objects.filter(draft=False, published__lt=timezone.now()).select_related('author').order_by('-published')[:12]
+    posts = Post.objects.filter(draft=False, published__lt=timezone.now())\
+        .exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])\
+        .select_related('author').order_by('-published')[:12]
     return JsonResponse([post.to_json(tzinfo=tzinfo) for post in posts])
 
 
@@ -239,7 +241,7 @@ def author_posts(request, username):
 
     posts_query = Post.objects.filter(author=author, draft=False, published__lt=timezone.now())
     if request.GET.get('skipRecommendations') == '1':
-        posts_query = posts_query.exclude(kind=Post.RECOMMENDATION)
+        posts_query = posts_query.exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
 
     posts = [post.to_json(short=True, anonymous=request.user.is_anonymous) for post in posts_query]
