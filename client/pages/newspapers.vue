@@ -156,7 +156,7 @@ import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import EditNewspaper from '@/components/editor/EditNewspaper'
-import NewspaperBacklog from '@/components/editor/NewspaperBacklog'
+import NewspaperBacklog from '@/components/editor/backlog/NewspaperBacklog'
 
 export default {
   name: 'Newspapers',
