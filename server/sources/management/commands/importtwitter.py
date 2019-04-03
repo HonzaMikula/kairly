@@ -40,6 +40,7 @@ class Command(BaseCommand):
         content = status.full_text
 
         external_urls = []
+        already_added_urls = set()
         media = []
         quoted_status_item = []
 
@@ -97,13 +98,17 @@ class Command(BaseCommand):
                         attachment['href'] = resp.url
                         attachment['title'] = page_title
 
+                    if attachment['href'] in already_added_urls:
+                        continue
+
                     external_urls.append(attachment)
+                    already_added_urls.add(attachment['href'])
                 except IOError:
                     page_title = u.expanded_url
 
                 link_body = pu.netloc + pu.path
                 if len(link_body) > 30:
-                    link_body = link_body[:30] + '…'
+                    link_body = link_body[:30].rstrip('.') + '…'
                 content = content.replace(u.url, '<a href="{}" title="{}">{}</a>'.format(u.expanded_url, page_title, link_body))
 
         for m in (status.media or []):
