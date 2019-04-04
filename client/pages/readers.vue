@@ -3,19 +3,13 @@
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
-          <!-- <h1>{{ $t('Are you independent journalist or blogger?') }}</h1> -->
-          <h1>Jste čtenáři zpravodajství a publicistiky?</h1>
-          <ul>
-            <li>Přestaňte bezmyšlenkovitě skrolovat donekonečna. Čtěte jen to, co vás opravdu zajímá.</li>
-            <li>Nenechte se otravovat nesmyslnými notifikacemi. Čtětě jen v dobu, kdy chtete a kdy jste na to zvýklí.</li>
-            <li>Podpořte kvalitní novináře zakoupením předplatného.</li>
-          </ul>
+          <h1>{{ $t('Are you a news reader?') }}</h1>
 
-          <!-- <ul>
-            <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
-            <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
-            <li>{{ $t('Become a truly independent author.') }}</li>
-          </ul> -->
+          <ul>
+            <li>{{ $t('Stop endlessly scrolling without thinking. Read only what you really care about.') }}</li>
+            <li>{{ $t('Don\'t be bothered by nonsense notifications. Read only when you want and when you\'re used to it.') }}</li>
+            <li>{{ $t('Support high-quality journalists by purchasing a subscription.') }}</li>
+          </ul>
         </div>
       </section>
 
@@ -49,13 +43,12 @@
         </picture>
 
         <div>
-          <!-- <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2> -->
-          <h2>Čtěte na platformě, kde je jen obsah, který vás zajímá a nikdo vás tam neruší.</h2>
+          <h2>{{ $t('Read on the platform where there is only content that interests you and no one is disturbing you there.') }}</h2>
+          <!-- <h2>Čtěte na platformě, kde je jen obsah, který vás zajímá a nikdo vás tam neruší.</h2> -->
 
-          <!-- <div v-html="$t('@independent-journalists/modern-platform')">
-          </div> -->
+          <div v-html="$t('@readers/modern-platform')" />
 
-          <div>
+          <!-- <div>
             <p>
               V dnešní době sociálních sítí a nespočtu aplikací, které se neustále dožadují vaší
               pozornosti, budujeme pro vás místo, kde můžete v klidu číst jen to, co vás zajímá.
@@ -72,7 +65,7 @@
               je ale zároveň profesionálně připravený. Naše aplikace nevede k závislosti, ale k vytváření
               prospěšných zvyků při čtení zpravodajství a publicistiky.
             </p>
-          </div>
+          </div> -->
         </div>
       </section>
 
@@ -99,21 +92,20 @@
         </picture>
 
         <div>
-          <!-- <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2> -->
-          <h2>Zakoupením digitálních novin pomáháte dobrým novinářům a publicistům.</h2>
+          <h2>{{ $t('By purchasing digital newspapers, you help good journalists and publicists.') }}</h2>
 
-          <!-- <div v-html="$t('@independent-journalists/monetizing-content')"></div> -->
+          <div v-html="$t('@readers/monetizing-content')" />
 
-          <div>
+          <!-- <div>
             <p>
               Reklama kvalitní novináře nezaplatí. Pokud budou novináři závislí převážně na reklamě,
-              budou psát obsah, kterému jde především o počet prokliků. Nám jde o kvalitní obsah,
-              proto se u nás za něj platí.
+              budou psát obsah, kterému jde především o počet prokliků. Nám jde o kvalitu,
+              proto se u nás za obsah platí.
             </p>
 
             <p>
               Zakoupením předplatného digitálních novin podporujete editory, u kterých si ceníte
-              jejich výběru článků a tweetů. Podporujete ale i autory, které se ve vámi předplacených
+              jejich výběru článků a tweetů. Pomáháte i autorům, kteří se ve vámi předplacených
               novinách objevují.
             </p>
 
@@ -121,7 +113,7 @@
               Vaše oblíbené autory, think-tanky či neziskové organizace můžete podpořit nad rámec
               běžného předplatného.
             </p>
-          </div>
+          </div> -->
         </div>
       </section>
 
