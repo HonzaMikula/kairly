@@ -50,25 +50,25 @@
 
         <div>
           <!-- <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2> -->
-          <h2>Publikujte vaše noviny a časopisy na moderní platformě a oslovte nové čtenáře</h2>
+          <h2>Publikujte vaše myšlenky na moderní platformě a oslovte nové skupiny lidí</h2>
 
           <!-- <div v-html="$t('@independent-journalists/modern-platform')">
           </div> -->
 
           <div>
             <p>
-              Soustřeďte se na to, v čem jste dobří. Na vydávání obsahu. My se postaráme o to, aby se váš obsah
-              dostal ke čtenářům v té nejlepší podobě, ať už jsou na počítači, mobilu, tabletu či elektronické čtečce knih.
+             Soustřeďte se na sdělení vašich idejích. My se postaráme o to, aby se váš obsah dostal k lidem v té nejlepší podobě,
+             ať už používají počítač, mobil, tablet či elektronickou čtečku knih.
             </p>
 
             <p>
-              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
-              a moderní trendy UX ze současných mobilních a webových aplikací.
+              Naše platforma se soustředí na vytváření příjemného prostředí pro čtenáře, kde čtou jen to,
+              co je opravdu zajímá a nejsou otravováni neustálými notifikacemi.
             </p>
 
             <p>
-              Naše unikátní koncepce digitálních novin vám umožní oslovit nové čtenáře, díky větší možnosti personalizace obsahu
-              a zároveň jejich pravidelnost vydávání vede k vytváření návyku u čtenářů, a tím k větší loajálnosti k vaším titulům.
+              Přicházíme s unikátní koncepcí digitálních novin. Pokud editor novin shledá váš obsah zajímavý a dobře zpracovaný,
+              zařadí váš článek do vydání svých novin. Díky tomu můžete oslovit pro vaši myšlenku zcela nové skupiny lidí.
             </p>
           </div>
 
@@ -111,26 +111,24 @@
 
         <div>
           <!-- <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2> -->
-          <h2>Vydělávejte na svých titulech s unikátním konceptem placeného obsahu</h2>
+          <h2>Získejte pravidelné peněžní příspěvky od vašich stoupenců</h2>
 
           <!-- <div v-html="$t('@independent-journalists/monetizing-content')"></div> -->
 
           <div>
             <p>
-              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
-              Musíme na to chytře. Zapojte vaše vydavatelství do našeho unikátního systému placeného obsahu.
+              Přicházíme se zcela novým konceptem placeného obsahu na internetu. Jeho součástí je i možnost
+              pravidelných plateb od čtenářů organizacím, jako je ta vaše.
             </p>
 
             <p>
-              Vydávejte vaše tituly skrz náš ojedinělý koncept digitálních novin a začněte jednodušše vydávat
-              i nové více zaměřené tituly, které vám pomohou díky personalizaci oslovit nové čtenáře a zvýšší
-              pravděpodobnost zakoupení měsíčního předplatného.
+              Čtenáři mohou odebírat váš obsah zdarma. Můžete také vyžadovat i pravidelné měsíční předplatné.
+              Ať už bude váš obsah zdarma nebo ne, čtenáři vám mohou dobrovolně a pravidelně přispívat peníze navíc.
             </p>
 
             <p>
-              Díky otevřenosti celé platformy se váš původní obsah může objevit i ve vydání novin ostatních editorů.
-              Vy pak získáte spravedlivou peněžní odměnu z předplatného těchto novin, ve kterých
-              se váš článek objevil.
+              Váš obsah se může objevit i v nejrůznějších digitálních novinách. Nejen, že oslovíte nové skupiny lidí,
+              získáte i spravedlivý podíl z předplatného těchto novin, čímž získáte dodatečné peníze.
             </p>
           </div>
             <!-- <p>
