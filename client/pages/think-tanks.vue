@@ -6,9 +6,9 @@
           <!-- <h1>{{ $t('Are you independent journalist or blogger?') }}</h1> -->
           <h1>Jste think-tank nebo nezisková organizace?</h1>
           <ul>
-            <li>Publikujte své myšlenky na moderní publikační platformě.</li>
+            <li>Publikujte své názory na moderní publikační platformě.</li>
             <li>Oslovte pro vaše ideje zcela nové skupiny čtenářů.</li>
-            <li>Nechte si posílat pravidelné finanční dary od vašich příznivců.</li>
+            <li>Získejte pravidelné finanční dary od vašich příznivců.</li>
           </ul>
 
           <!-- <ul>
