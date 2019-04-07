@@ -17,6 +17,7 @@
 
 <script>
 import PostArticle from '@/components/posts/PostArticle'
+import PostLink from '@/components/posts/PostLink'
 import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
 import PostRecommendations from '@/components/posts/PostRecommendations'
@@ -28,6 +29,7 @@ export default {
 
   components: {
     PostArticle,
+    PostLink,
     PostTweet,
     PostPicture,
     PostRecommendations,

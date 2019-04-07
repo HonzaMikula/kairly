@@ -125,11 +125,9 @@
         <editor-newspapers--board v-if="isBacklogLoaded"
           :class="{'upcoming-issue': mobileSwitcher == 1, 'backlog': mobileSwitcher ==2}"
         >
-          <NewspaperBacklog v-if="selectedNewspaper"
+          <NewspaperBacklog
+            v-if="selectedNewspaper"
             :newspaper="selectedNewspaper"
-            :backlog="postsBacklog"
-            :published="postsPublished"
-            :current-month="currentMonthStats"
           />
         </editor-newspapers--board>
         <loading-spinner v-else />
@@ -188,9 +186,6 @@ export default {
 
       selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
       isBacklogLoaded: false,
-      postsBacklog: [],
-      postsPublished: [],
-      currentMonthStats: null
     }
   },
 
@@ -233,9 +228,6 @@ export default {
 
       if (!newspaper) {
         this.selectedFullName = null
-        this.postsBacklog = []
-        this.postsPublished = []
-        this.currentMonthStats = null
         return
       }
 
@@ -243,10 +235,7 @@ export default {
       this.selectedFullName = fullName
 
       this.isBacklogLoaded = false
-      const { backlog, publish, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
-      this.postsBacklog = backlog.reverse()
-      this.postsPublished = publish
-      this.currentMonthStats = currentMonth
+      await this.loadNewspaperBacklog(fullName)
       this.isBacklogLoaded = true
 
       if (process.client) {
@@ -276,7 +265,7 @@ export default {
       this.selectNewspaper(newspaper)
     },
 
-    ...mapActions(['deleteNewspaper'])
+    ...mapActions(['deleteNewspaper', 'loadNewspaperBacklog'])
   },
 
   async fetch({ store, redirect }) {

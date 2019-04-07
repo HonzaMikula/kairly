@@ -219,7 +219,13 @@ class Post(models.Model):
             else:
                 result['type'] += '-issue'
                 result['ref'] = self.ref_issue.to_json(tzinfo=tzinfo)
-
+        elif self.kind == Post.LINK:
+            result['content'] = {
+                'title': self.title,
+                'perex': self.perex,
+            }
+            if self.attachments:
+                result['content']['attachments'] = json.loads(self.attachments)
         return result
 
 
@@ -307,6 +313,16 @@ class Backlog(models.Model):
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
+
+    @classmethod
+    def consider_post(cls, newspaper, post):
+        if cls.objects.filter(newspaper=newspaper, post=post).exists():
+            return None
+
+        return cls.objects.create(
+            newspaper=newspaper,
+            post=post
+        )
 
 
 class Issue(models.Model):

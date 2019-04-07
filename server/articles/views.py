@@ -1,12 +1,12 @@
 import rapidjson as json
 import html
 import pytz
-
 from collections import defaultdict
 from datetime import datetime
 from operator import attrgetter
 from decimal import Decimal, ConversionSyntax
 
+import lxml.html
 from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
@@ -27,11 +27,14 @@ from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from users.models import User
 from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
+from sources.parser.og import parse_og_tags
 from .models import (Newspaper, Issue, Backlog,
                      Post, Subscription, SubscriptionToAuthor,
                      round_fair_price)
 from .signals import post_publish
 from .period import parse_periodicity
+
+from utils.url import fetch_url
 
 
 AUTOR_POSTS_PAGE_SIZE = 20
@@ -291,20 +294,17 @@ def newspaper_backlog(request, username, newspapeper_slug):
     if request.method == 'PUT':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
-
-        if Backlog.objects.filter(newspaper=newspaper, post=post).exists():
-            return HttpResponse(status=204)
-        else:
-            Backlog.objects.create(
-                newspaper=newspaper,
-                post=post
-            )
-            return HttpResponse(status=201)
+        created = Backlog.consider_post(newspaper, post)
+        return HttpResponse(status=201 if created else 204)
 
     if request.method == 'DELETE':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
         Backlog.objects.filter(newspaper=newspaper, post=post).delete()
+
+        if post.kind == Post.LINK:
+            post.delete()
+
         return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)
@@ -332,6 +332,64 @@ def backlog_publish(request, username, newspapeper_slug):
             log.ordering = None
         log.save()
     return HttpResponse(status=204)
+
+
+@ajax_login_required
+@require_POST
+@transaction.atomic
+def create_link(request, username, newspapeper_slug):
+    newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+    if newspaper.editor_id != request.user.id:
+        return HttpResponseForbidden()
+
+    payload = json.loads(request.body.decode('utf-8'))
+    url = payload['url']
+
+    if '://' not in url:
+        url = 'http://' + url
+
+    try:
+        html, resolved_url = fetch_url(url)
+    except IOError as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=409)
+
+    existing_post = Post.find_by_source_url(resolved_url)
+    if existing_post:
+        created = Backlog.consider_post(newspaper, existing_post)
+        return JsonResponse({
+            'post': existing_post.to_json() if created else None
+        })
+
+    htmltree = lxml.html.fromstring(html)
+    try:
+        title = htmltree.cssselect('head title')[0].text
+    except IndexError:
+        title = resolved_url
+
+    og = parse_og_tags(htmltree)
+    attachments = {}
+    if 'image' in og:
+        attachments['image'] = og['image']
+
+    post = Post.objects.create(
+        kind=Post.LINK,
+        source=resolved_url,
+        protected=False,
+        title=og.get('title', title),
+        perex=og.get('description', ''),
+        attachments=json.dumps(attachments) if attachments else None,
+        author=request.user,
+        price=0,
+        weight=0
+    )
+
+    Backlog.consider_post(newspaper, post)
+
+    return JsonResponse({
+        'post': post.to_json()
+    })
 
 
 class NewspaperSubscriptionView(View):

@@ -60,6 +60,8 @@
       </div>
 
       <div class="newspaper-backlog--backlog">
+        <!--a href="" @click.prevent="addExternalLink">Add external link</a-->
+
         <div
           v-if="backlog.length == 0"
           class="no-post"
@@ -99,55 +101,68 @@ export default {
   },
 
   props: {
-    newspaper: Object,
-    backlog: Array,
-    published: Array,
-    currentMonth: Object,
+    newspaper: Object
+  },
+
+  computed: {
+    newspaperBacklog() {
+      return this.$store.state.newspaperBacklog[this.newspaper.fullName]
+    },
+    backlog() {
+      return this.newspaperBacklog ? this.newspaperBacklog.postsBacklog : []
+    },
+    published() {
+      return this.newspaperBacklog ? this.newspaperBacklog.postsPublished : []
+    },
+    currentMonth() {
+      return this.newspaperBacklog ? this.newspaperBacklog.currentMonthStats : []
+    }
   },
 
   methods: {
-    async publishBacklog() {
-      const { fullName } = this.newspaper
-      const postIds = this.published.map(p => p.id)
-      await this.$axios.post(`/newspapers/${fullName}/backlog/publish`, postIds)
-    },
-
-
     publish(post) {
-      this.backlog.splice(this.backlog.indexOf(post), 1)
-      this.published.push(post)
-      this.publishBacklog()
-      this.backlogSetPostState({newspaper: this.newspaper, post: post, state: 'P'})
+      this.backlogPublish({newspaper: this.newspaper, post})
     },
 
     undoPublish(post) {
-      this.published.splice(this.published.indexOf(post), 1)
-      this.backlog.push(post)
-      this.publishBacklog()
-      this.backlogSetPostState({newspaper: this.newspaper, post: post, state: 'C'})
+      this.backlogUndoPublish({newspaper: this.newspaper, post})
     },
 
-    moveUp(idx) {
-      const post = this.published[idx]
-      Vue.set(this.published, idx, this.published[idx - 1])
-      Vue.set(this.published, idx - 1, post)
-      this.publishBacklog()
+    moveUp(index) {
+      this.backlogMoveUp({newspaper: this.newspaper, index})
     },
 
-    moveDown(idx) {
-      const post = this.published[idx]
-      Vue.set(this.published, idx, this.published[idx + 1])
-      Vue.set(this.published, idx + 1, post)
-      this.publishBacklog()
+    moveDown(index) {
+      this.backlogMoveDown({newspaper: this.newspaper, index})
     },
 
     removePost(post) {
-      this.backlog.splice(this.backlog.indexOf(post), 1)
-      this.removeFromBacklog({newspaper: this.newspaper, post: post})
+      this.removeFromBacklog({newspaper: this.newspaper, post})
     },
 
-    ...mapActions(['removeFromBacklog']),
-    ...mapMutations(['backlogSetPostState'])
+    async addExternalLink() {
+      const url = window.prompt('Article URL')
+      if (!url) {
+        return
+      }
+
+      try {
+        await this.addLinkToBacklog({newspaper: this.newspaper, url})
+      } catch (err) {
+        if (err.response.status >= 400) {
+          this.showError(err.response.data.error)
+        } else {
+          this.showError((err + '') || 'Request failed')
+        }
+      }
+    },
+
+    ...mapActions([
+        'removeFromBacklog', 'addLinkToBacklog',
+        'backlogMoveDown', 'backlogMoveUp',
+        'backlogPublish', 'backlogUndoPublish'
+    ]),
+    ...mapMutations(['showError'])
   }
 }
 </script>

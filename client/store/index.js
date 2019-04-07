@@ -12,6 +12,7 @@ const createStore = () => {
       subscriptions: null,
       backlog: null,
       newspapers: {},
+      newspaperBacklog: {},
       authors: {},
       today: null,
       timelineHasNoActiveSubscriptions: false,
@@ -73,6 +74,9 @@ const createStore = () => {
           delete backlog[postId]
         }
         state.backlog = backlog
+      },
+      newspaperBacklog( state, { fullName, postsBacklog, postsPublished, currentMonthStats}) {
+        Vue.set(state.newspaperBacklog, fullName, { postsBacklog, postsPublished, currentMonthStats })
       },
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
@@ -157,6 +161,7 @@ const createStore = () => {
       // user: state => state.auth.user,
       userNewspapers: state => state.auth.user ? state.auth.user.newspapers : [],
       newspaper: state => id => state.newspapers[id],
+      // getNewspaperBacklog: state => fullName => state.newspaperBacklog[fullName],
       getNewspaperSubscription: state => newspaper => state.subscriptions === null ? false : state.subscriptions.newspapers[newspaper.fullName],
       getAuthorSubscription: state => author => {
         if (state.subscriptions === null) {

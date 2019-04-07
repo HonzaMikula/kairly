@@ -131,6 +131,145 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
   return data
 }
 
+export async function loadNewspaperBacklog({ commit, state, dispatch }, fullName) {
+  const { backlog, publish, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog: backlog.reverse(),
+    postsPublished: publish,
+    currentMonthStats: currentMonth
+  })
+}
+
+export async function backlogPublish({ commit, state}, {newspaper, post}) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const modifiedBacklog = [...postsBacklog]
+  const modifiedPublished = [...postsPublished]
+  modifiedBacklog.splice(modifiedBacklog.indexOf(post), 1)
+  modifiedPublished.push(post)
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog: modifiedBacklog,
+    postsPublished: modifiedPublished,
+    currentMonthStats
+  })
+  const postIds = modifiedPublished.map(p => p.id)
+  await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
+  commit('backlogSetPostState', {newspaper: fullName, postId: post.id, val: 'P'})
+}
+
+export async function backlogUndoPublish({ commit, state}, {newspaper, post}) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const modifiedBacklog = [...postsBacklog]
+  const modifiedPublished = [...postsPublished]
+  modifiedBacklog.push(post)
+  modifiedPublished.splice(modifiedPublished.indexOf(post), 1)
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog: modifiedBacklog,
+    postsPublished: modifiedPublished,
+    currentMonthStats
+  })
+  const postIds = modifiedPublished.map(p => p.id)
+  await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
+  commit('backlogSetPostState', {newspaper: fullName, postId: post.id, val: 'C'})
+}
+
+export async function backlogMoveUp({ commit, state}, {newspaper, index}) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const post = postsPublished[index]
+  const modified = [...postsPublished]
+  modified[index] = postsPublished[index - 1]
+  modified[index - 1] = post
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog,
+    postsPublished: modified,
+    currentMonthStats
+  })
+  const postIds = modified.map(p => p.id)
+  await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
+}
+
+export async function backlogMoveDown({ commit, state}, {newspaper, index}) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const post = postsPublished[index]
+  const modified = [...postsPublished]
+  modified[index] = postsPublished[index + 1]
+  modified[index + 1] = post
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog,
+    postsPublished: modified,
+    currentMonthStats
+  })
+  const postIds = modified.map(p => p.id)
+  await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
+}
+
+export async function removeFromBacklog({ commit, state }, { newspaper, post }) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const modifiedBacklog = [...postsBacklog]
+  modifiedBacklog.splice(modifiedBacklog.indexOf(post), 1)
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog: modifiedBacklog,
+    postsPublished,
+    currentMonthStats
+  })
+
+  // TODO to have better user experience, post can be removed immediately
+  // and reverted when api call fails
+  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: post.id}})
+  commit('backlogRemove', {
+    newspaperId: newspaper.fullName,
+    postId: post.id,
+    meta: {
+      analytics: [
+        ['event', {
+          eventCategory: 'Stop considering for newspaper',
+          eventAction: newspaper.fullName
+        }]
+      ]
+    }
+  })
+}
+
+
+export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
+  if (resp.post) {
+    const modifiedBacklog = [...postsBacklog]
+    modifiedBacklog.unshift(resp.post)
+    commit('newspaperBacklog', {
+      fullName,
+      postsBacklog: modifiedBacklog,
+      postsPublished,
+      currentMonthStats
+    })
+
+    commit('backlogAdd', {
+      newspaperId: newspaper.fullName,
+      postId: resp.post.id,
+      meta: {
+        analytics: [
+          ['event', {
+            eventCategory: 'Consider for newspaper',
+            eventAction: newspaper.fullName
+          }]
+        ]
+      }
+    })
+  }
+}
+
 export async function subscribeNewspaper({ commit }, { fullName, donation }) {
   commit('invalidateTimeline')
 
@@ -311,24 +450,6 @@ export async function addToBacklog({ commit }, { newspaper, post }) {
       analytics: [
         ['event', {
           eventCategory: 'Consider for newspaper',
-          eventAction: newspaper.fullName
-        }]
-      ]
-    }
-  })
-}
-
-export async function removeFromBacklog({ commit }, { newspaper, post }) {
-  // TODO to have better user experience, post can be removed immediately
-  // and reverted when api call fails
-  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: post.id}})
-  commit('backlogRemove', {
-    newspaperId: newspaper.fullName,
-    postId: post.id,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Stop considering for newspaper',
           eventAction: newspaper.fullName
         }]
       ]
