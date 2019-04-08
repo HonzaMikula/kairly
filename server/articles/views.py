@@ -367,6 +367,10 @@ def create_link(request, username, newspapeper_slug):
         title = htmltree.cssselect('head title')[0].text
     except IndexError:
         title = resolved_url
+    try:
+        description = htmltree.cssselect('head meta[name=description]')[0].attrib.get('content', '')
+    except IndexError:
+        description = ''
 
     og = parse_og_tags(htmltree)
     attachments = {}
@@ -378,7 +382,7 @@ def create_link(request, username, newspapeper_slug):
         source=resolved_url,
         protected=False,
         title=og.get('title', title),
-        perex=og.get('description', ''),
+        perex=og.get('description', description),
         attachments=json.dumps(attachments) if attachments else None,
         author=request.user,
         price=0,

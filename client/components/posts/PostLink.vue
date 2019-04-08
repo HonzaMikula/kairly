@@ -4,7 +4,7 @@
       <h2>
         <a :href="post.source" target="_blank">{{ post.content.title }}</a>
       </h2>
-      <div v-if="post.content.attachments.image">
+      <div v-if="post.content.attachments && post.content.attachments.image">
         <img height="200" :src="post.content.attachments.image"/>
       </div>
       <div v-html="post.content.perex"></div>
