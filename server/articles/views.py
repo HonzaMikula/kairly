@@ -373,6 +373,7 @@ def create_link(request, username, newspapeper_slug):
         description = ''
 
     og = parse_og_tags(htmltree)
+
     attachments = {}
     if 'image' in og:
         attachments['image'] = og['image']
