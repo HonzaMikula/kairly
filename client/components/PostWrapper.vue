@@ -5,6 +5,10 @@
     :post="post"
     :isSubscribed="isSubscribed"
   >
+    <template slot="author">
+      <slot name="author"></slot>
+    </template>
+
     <template slot="extendedControls">
       <slot name="extendedControls"></slot>
     </template>

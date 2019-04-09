@@ -81,6 +81,8 @@ export default {
     font-weight: 600
     font-family: $ff-serif
 
+    word-break: break-word
+
     a
       color: #000
 

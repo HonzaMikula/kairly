@@ -4,31 +4,33 @@
     :class="post.type"
   >
     <header @mouseleave="closeAuthorWidget">
-      <picture>
-        <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-          <img
-            :src="post.author.picture"
-            :alt="post.author.name"
-          />
-        </nuxt-link>
-      </picture>
+      <slot name="author">
+        <picture>
+          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+            <img
+              :src="post.author.picture"
+              :alt="post.author.name"
+            />
+          </nuxt-link>
+        </picture>
 
-      <h3>
-        <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-          {{ post.author.name }}
-          <span v-if="post.author.medium">, {{post.author.medium}}</span>
-        </nuxt-link>
-      </h3>
+        <h3>
+          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+            {{ post.author.name }}
+            <span v-if="post.author.medium">, {{post.author.medium}}</span>
+          </nuxt-link>
+        </h3>
 
-      <AuthorPopup
-        v-if="isAuthorWidgetOpen"
-        :author="post.author"
-        @authorwidgetclose="closeAuthorWidget"
-      />
+        <AuthorPopup
+          v-if="isAuthorWidgetOpen"
+          :author="post.author"
+          @authorwidgetclose="closeAuthorWidget"
+        />
 
-      <time>
-        {{ post.time | moment('calendar') }}
-      </time>
+        <time>
+          {{ post.time | moment('calendar') }}
+        </time>
+      </slot>
 
       <section>
         <slot name="extendedControls"></slot>
@@ -125,7 +127,8 @@ post-component
 
   background: #fff
 
-  &.tweet
+  &.tweet,
+  &.link
     max-width: 576px
 
   @media (max-width: $mobile)
