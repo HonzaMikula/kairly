@@ -37,10 +37,11 @@ def fetch_url(url, *, nocache=False, user_agent=None):
         if user_agent:
             headers['User-Agent'] = user_agent
         resp = requests.get(url, headers=headers, timeout=10)
+        resp.raise_for_status()
 
         if resp.encoding == 'ISO-8859-1':
             # some sources doesn't sent proper encoding header, eg osel.cz or atletika.cz
-            encoding = get_encoding_From_meta(resp.content)
+            encoding = get_encoding_from_meta(resp.content)
             if encoding is not None:
                 html = resp.content.decode(encoding)
 
@@ -61,7 +62,7 @@ def fetch_url(url, *, nocache=False, user_agent=None):
     return html, resolved_url
 
 
-def get_encoding_From_meta(self, content):
+def get_encoding_from_meta(content):
     for meta in lxml.html.fromstring(content).cssselect('meta'):
         try:
             if meta.attrib['http-equiv'] == 'Content-Type':
