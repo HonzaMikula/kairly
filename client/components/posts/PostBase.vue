@@ -16,8 +16,7 @@
 
         <h3>
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-            {{ post.author.name }}
-            <span v-if="post.author.medium">, {{post.author.medium}}</span>
+            {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
         </h3>
 
@@ -27,9 +26,7 @@
           @authorwidgetclose="closeAuthorWidget"
         />
 
-        <time>
-          {{ post.time | moment('calendar') }}
-        </time>
+        <time>{{ post.time | moment('MMM D') }}</time>
       </slot>
 
       <section>
@@ -139,11 +136,9 @@ post-component
 post-component > header
   position: relative
 
-  display: grid
-  grid-template-areas: "picture author" "picture info"
-  grid-template-columns: 52px 1fr auto
-  grid-template-rows: 0.75*$baseline 0.75*$baseline
-  margin-bottom: $baseline / 2
+  display: flex
+  align-items: center
+  margin-bottom: $baseline / 4
 
   font-family: $ff-sans
 
@@ -152,10 +147,11 @@ post-component > header
     grid-area: picture
 
     img
+      display: block
       border-radius: 100%
-      height: $baseline * 1.5
-      margin-right: $baseline / 2
-      width: $baseline * 1.5
+      height: $baseline
+      margin-right: $baseline / 4
+      width: $baseline
 
       object-fit: cover
 
@@ -165,24 +161,30 @@ post-component > header
     grid-area: author
     max-width: max-content
 
-    color: $c-base
+    color: #555
 
     font-size: $fs--1
-    line-height: $baseline * 0.75
+    font-weight: 600
+    white-space: nowrap
+
+    span
+      font-weight: 400
 
     a
-      color: $c-base
+      color: #555
 
 
   //-- date of publication
   time
-    grid-area: info
-    width: 100%
+    flex: 1
 
-    color: #999
+    color: #555
 
     font-size: $fs--1
-    line-height: $baseline * 0.75
+
+    &::before
+      margin: 0 $baseline/4
+      content: '•'
 
   //-- controls
   > section
@@ -195,14 +197,15 @@ post-component > header
     > a
       display: inline-block
       border-radius: 100%
-      height: $baseline * 1.25
-      width: $baseline * 1.25
+      height: $baseline
+      width: $baseline
 
       background: #eee
       color: #000
 
       cursor: pointer
-      line-height: $baseline * 1.25
+      font-size: $fs--1
+      line-height: $baseline
       text-align: center
 
       transition: 0.15s background
@@ -240,6 +243,13 @@ post-component > header
 
     .consider-post
       +button-icon($fa-var-newspaper)
+
+      height: $baseline
+      width: $baseline
+
+      &::before
+        font-size: $fs--1
+        line-height: $baseline
 
 
 

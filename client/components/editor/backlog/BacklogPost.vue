@@ -14,7 +14,8 @@
       </h3>
 
       <time>
-        {{ post.time | moment('calendar') }}
+        •
+        {{ post.time | moment('MMM D') }}
         •
         {{ post.timeRead }} {{ $t('read') }}
         •
@@ -93,55 +94,52 @@ export default {
   > header
     position: relative
 
-    display: grid
-    grid-template-areas: "picture author" "picture info"
-    grid-template-columns: 52px 1fr auto
-    grid-template-rows: 0.75*$baseline 0.75*$baseline
-    margin-bottom: $baseline / 2
+    display: flex
+    align-items: center
+    margin-bottom: $baseline / 4
 
     font-family: $ff-sans
 
     //-- author image
     picture
-      grid-area: picture
 
       img
+        display: block
         border-radius: 100%
-        height: $baseline * 1.5
-        margin-right: $baseline / 2
-        width: $baseline * 1.5
+        height: $baseline
+        margin-right: $baseline / 4
+        width: $baseline
 
         object-fit: cover
 
 
     //-- author
     h3
-      grid-area: author
-      max-width: max-content
-
-      color: $c-base
+      color: #555
 
       font-size: $fs--1
-      line-height: $baseline * 0.75
+      white-space: nowrap
 
       a
-        color: $c-base
+        color: #555
 
 
     //-- date of publication
     time
-      grid-area: info
-      width: 100%
+      flex: 1
+      margin-left: $baseline / 4
 
-      color: #999
+      color: #555
 
       font-size: $fs--1
-      line-height: $baseline * 0.75
 
     //-- controls
     section
+      display: flex
       > button
         +button(primary, small)
+
+        margin-right: $baseline / 4
 
       button-icon
         display: inline-block

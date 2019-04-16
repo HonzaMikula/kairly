@@ -28,20 +28,6 @@
       </timeline-post--article--content>
     </timeline-post--article>
 
-    <template slot="extendedControls">
-      <slot
-        v-if="post.source"
-        name="extendedControls"
-      >
-        <a
-          :href="post.source"
-          class="external-link"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
-          :title="$t('Original article')">
-        </a>
-      </slot>
-    </template>
-
     <template slot="controls"><slot name="controls"></slot></template>
   </PostBase>
 </template>
