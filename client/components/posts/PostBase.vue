@@ -177,10 +177,12 @@ post-component > header
   //-- date of publication
   time
     flex: 1
+    overflow: hidden
 
     color: #555
 
     font-size: $fs--1
+    white-space: nowrap
 
     &::before
       margin: 0 $baseline/4
