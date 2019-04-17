@@ -6,18 +6,21 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'Kairly – We aim for exceptional journalism',
+    title: 'Kairly – Read only what you care about',
     meta: [
       { charset: 'utf-8' },
       { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
-      { hid: 'description', name: 'description', content: 'Kairly is new platform that wants to create better environment for journalist and readers.' }
+      { hid: 'description', name: 'description', content: 'Subscribe to a digital newspapers informing you on topics you are interested in.' }
     ],
     link: [
       { rel: 'icon', sizes: '192x192', href: '/favicon.png' },
       { rel: 'apple-touch-icon', sizes: '192x192', href: '/favicon.png' },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i|Roboto:400,400i,700,700i&amp;subset=latin-ext" }
-    ]
+    ],
+    htmlAttrs: {
+      lang: 'en',
+    }
   },
   css: [
     'medium-editor/dist/css/medium-editor.min.css',

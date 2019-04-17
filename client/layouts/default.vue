@@ -28,8 +28,17 @@ export default {
   computed: mapState({
     errorMessage: state => state.messages.error,
     successMessage: state => state.messages.success,
-    loggedIn: state => state.auth.loggedIn
+    loggedIn: state => state.auth.loggedIn,
+    currentLocale: state => state.locale || 'en'
   }),
+
+  head() {
+    return {
+      htmlAttrs: {
+        lang: this.currentLocale,
+      }
+    }
+  },
 
   watch: {
     '$route' (to, from) {
