@@ -8,7 +8,7 @@
       <h3>External article</h3>
 
       <time>
-        {{ post.time | moment('calendar') }}
+        {{ post.time | moment('MMM D') }}
       </time>
     </template>
 
@@ -51,13 +51,14 @@ export default {
 post-component picture .external-link
   display: block
   border-radius: 100%
-  height: $baseline * 1.5
+  height: $baseline
   margin-right: $baseline / 2
-  width: $baseline * 1.5
+  width: $baseline
 
   background: #eee
 
-  line-height: $baseline * 1.5
+  font-size: $fs--1
+  line-height: $baseline
   text-align: center
 
   &::before

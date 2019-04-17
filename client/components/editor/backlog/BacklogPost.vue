@@ -11,16 +11,9 @@
         <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
           {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
         </nuxt-link>
-      </h3>
-
-      <time>
         •
         {{ post.time | moment('MMM D') }}
-        •
-        {{ post.timeRead }} {{ $t('read') }}
-        •
-        <MoneyFormat :value="post.price" currency="Kč" />
-      </time>
+      </h3>
 
       <section>
         <button @click="$emit('publish')">{{ $t('Publish') }}</button>
@@ -43,6 +36,11 @@
 
     <template v-else>
       <h2><nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link></h2>
+      <p>
+        {{ post.timeRead }} {{ $t('read') }}
+        •
+        <MoneyFormat :value="post.price" currency="Kč" />
+      </p>
     </template>
   </div>
 </template>
@@ -94,7 +92,8 @@ export default {
   > header
     position: relative
 
-    display: flex
+    display: grid
+    grid-template-columns: min-content auto 1fr
     align-items: center
     margin-bottom: $baseline / 4
 
@@ -118,24 +117,17 @@ export default {
       color: #555
 
       font-size: $fs--1
+      overflow: hidden
       white-space: nowrap
+      text-overflow: ellipsis
 
       a
         color: #555
 
-
-    //-- date of publication
-    time
-      flex: 1
-      margin-left: $baseline / 4
-
-      color: #555
-
-      font-size: $fs--1
-
     //-- controls
     section
       display: flex
+      justify-content: flex-end
       > button
         +button(primary, small)
 
