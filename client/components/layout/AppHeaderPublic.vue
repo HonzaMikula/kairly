@@ -4,13 +4,13 @@
       <h1><a href="/">Kairly</a></h1>
 
       <nav class="app-header-public--get-involved" v-on-clickaway="() => isDropdownOpen = false">
-        <button @click.prevent="isDropdownOpen = !isDropdownOpen">{{ $t('Get involved as') }}</button>
+        <button @click.prevent="isDropdownOpen = !isDropdownOpen">{{ $t('Solution for') }}</button>
 
         <ul v-if="isDropdownOpen == true">
-          <li><nuxt-link to="/readers">{{ $t('Reader') }}</nuxt-link></li>
-          <li><nuxt-link to="/journalists">{{ $t('Journalist or blogger') }}</nuxt-link></li>
-          <li><nuxt-link to="/publishers">{{ $t('Publisher') }}</nuxt-link></li>
-          <li><nuxt-link to="/think-tanks">{{ $t('Think-tank or NGO') }}</nuxt-link></li>
+          <li><nuxt-link to="/readers">{{ $t('Readers') }}</nuxt-link></li>
+          <li><nuxt-link to="/journalists">{{ $t('Journalists and bloggers') }}</nuxt-link></li>
+          <li><nuxt-link to="/publishers">{{ $t('Publishers') }}</nuxt-link></li>
+          <li><nuxt-link to="/think-tanks">{{ $t('Think-tanks and NGOs') }}</nuxt-link></li>
         </ul>
       </nav>
 
