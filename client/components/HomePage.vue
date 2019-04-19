@@ -293,7 +293,7 @@ export default {
   justify-content: center
   min-height: 400px
   margin-bottom: $baseline * 2
-  padding: $baseline 0
+  padding: $baseline
   max-width: none
 
   background-size: cover
@@ -304,12 +304,16 @@ export default {
 
   @media (max-width: $mobile)
     height: auto
+    padding: 0
     padding-bottom: $baseline / 2
 
   > div  
     display: grid
     grid-template-columns: 2fr 1fr
     max-width: 900px
+
+    @media (max-width: $mobile)
+      grid-template-columns: auto
 
   section
     display: flex
@@ -324,6 +328,9 @@ export default {
 
     @media (max-width: $mobile)
       margin: $baseline 0
+      width: 100%
+
+      text-align: center
 
 
   > p
