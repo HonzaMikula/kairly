@@ -38,6 +38,11 @@ export default {
   methods: {
     async submit() {
       const { username, email, password } = this
+
+      this.$ga.event({
+        eventCategory: 'Sign up'
+      })
+
       try {
         const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
         await this.$axios.post('/signup',
