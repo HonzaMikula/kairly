@@ -3,7 +3,25 @@
     <div>
       <section class="kairly-promo--info">
         <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
-        <p>{{ $t('Read only what you care about.') }}</p>
+        <p>
+          <nuxt-link to="/readers">
+            {{ $t('Read only what you care about.') }}
+          </nuxt-link>
+        </p>
+
+        <p>
+          <nuxt-link to="/journalists">
+            {{ $t('Publish your content on modern platform.') }}
+          </nuxt-link>
+        </p>
+        
+        <p>
+          <nuxt-link to="/publishers">
+            {{ $t('Start your own digital newspapers.') }}
+          </nuxt-link>
+        </p>
+        
+        <p>{{ $t('Get paid.') }}</p>
 
         <div class="kairly-promo--learn-more">
           <nuxt-link to="/">{{ $t('Learn more about the platform') }}</nuxt-link>
@@ -115,6 +133,9 @@ export default {
     font-size: $fs-2
     font-weight: 600
     line-height: $baseline * 1.5
+
+    a
+      color: #000
 
 //- Learn more links
 .kairly-promo--learn-more

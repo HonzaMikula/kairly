@@ -97,7 +97,7 @@ my-subscription-view
   display: grid
   grid-column-gap: $baseline
   grid-template-columns: 2fr 1fr
-  grid-template-rows: auto auto
+  grid-template-rows: min-content 1fr
   grid-template-areas: "subscription-nav subscription-explore" "subscription-main subscription-explore"
 
   padding: 0 $baseline

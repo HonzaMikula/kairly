@@ -121,6 +121,7 @@ export default {
 //- WELCOME VIEW -//
 .welcome-view
   display: block
+  padding-bottom: $baseline
 
   //- Welcome heading
   > h1
