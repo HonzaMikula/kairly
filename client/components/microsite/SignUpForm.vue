@@ -82,8 +82,10 @@ export default {
   padding: $baseline
 
   background: #fff
-  
+  background: rgba(255,255,255,0.95)
   border: 1px solid #ddd
+
+  font-family: $ff-sans
 
   @media (max-width: $mobile)
     border: 0

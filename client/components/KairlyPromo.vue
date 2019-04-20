@@ -1,43 +1,52 @@
 <template>
   <div class="kairly-promo">
     <div>
-      <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
-      <p>Čtěte jen to, co vás zajímá.</p>
+      <section class="kairly-promo--info">
+        <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
+        <p>{{ $t('Read only what you care about.') }}</p>
 
-      <div class="kairly-promo--learn-more">
-        <nuxt-link to="/">{{ $t('Learn more about the platform') }}</nuxt-link>
-      </div>
+        <div class="kairly-promo--learn-more">
+          <nuxt-link to="/">{{ $t('Learn more about the platform') }}</nuxt-link>
+        </div>
 
-      <div class="kairly-promo--social-media">
-        <a
-          href="https://www.facebook.com/kairlynews/"
-          class="facebook"
-          :title="$t('Follow us on Facebook')"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-        </a>
+        <div class="kairly-promo--social-media">
+          <a
+            href="https://www.facebook.com/kairlynews/"
+            class="facebook"
+            :title="$t('Follow us on Facebook')"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+          </a>
 
-        <a
-          href="https://twitter.com/kairlynews"
-          class="twitter"
-          :title="$t('Follow us on Twitter')"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-        </a>
+          <a
+            href="https://twitter.com/kairlynews"
+            class="twitter"
+            :title="$t('Follow us on Twitter')"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+          </a>
 
-        <a
-          href="https://www.linkedin.com/company/kairly/"
-          class="linkedin"
-          :title="$t('Follow us on LinkedIn')"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
-        </a>
-      </div>
+          <a
+            href="https://www.linkedin.com/company/kairly/"
+            class="linkedin"
+            :title="$t('Follow us on LinkedIn')"
+            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+          </a>
+        </div>
+      </section>
 
+      <SignUpForm></SignUpForm>
     </div>
   </div>
 </template>
 
 <script>
+import SignUpForm from '@/components/microsite/SignUpForm'
+
 export default {
-  name: 'KairlyPromo'
+  name: 'KairlyPromo',
+
+  components: {
+    SignUpForm
+  }
 }
 </script>
 
@@ -53,21 +62,29 @@ export default {
   display: flex
   align-items: center
   justify-content: center
-  height: 400px
   padding: $baseline
 
   background: url("~assets/homepage/hero-new.jpg") bottom center no-repeat
   background-size: cover
 
+  > div
+    display: grid
+    grid-template-columns: 2fr 1fr
+    max-width: 900px
+
+    @media (max-width: $mobile)
+      grid-template-columns: auto
+      grid-row-gap: $baseline 
+
+.kairly-promo--info
   color: #fff
 
   font-family: $ff-serif
-  text-align: center
-
+  text-align: left
+  
   h2
     display: table
     padding: 0 $baseline/2
-    margin: 0 auto
     margin-bottom: $baseline
 
     background: #fff
@@ -89,7 +106,6 @@ export default {
   p
     display: table
     padding: 0 $baseline/2
-    margin: 0 auto
     margin-bottom: $baseline
 
     background: #fff
@@ -102,30 +118,29 @@ export default {
 
 //- Learn more links
 .kairly-promo--learn-more
-  display: table
-  margin: 0 auto
+  display: none
 
   a
-    +button(primary, large)
+    +button(primary, medium)
 
 
 //- Social media links
 .kairly-promo--social-media
   display: flex
-  justify-content: center
+  justify-content: flex-start
   margin-top: $baseline
 
   a
     border-radius: 100%
     display: inline-block
     height: $baseline * 1.5
-    margin: 0 $baseline/2
+    margin-right: $baseline
     width: $baseline * 1.5
 
     background: #fff
     color: #555
 
-    font-size: $fs-3
+    font-size: $fs-2
     line-height: $baseline * 1.5
     text-align: center
 
