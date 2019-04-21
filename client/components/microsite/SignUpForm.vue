@@ -1,6 +1,6 @@
 <template>
   <div class="microsite-signup-form">
-    <h2>{{ $t('Sign Up') }}</h2>
+    <h2>{{ $t('@signupform/heading') }}</h2>
     <p>{{ $t('We are opening the platform for first 250 beta testers.') }}</p>
     <div class="error" v-if="error">{{ error }}</div>
 
