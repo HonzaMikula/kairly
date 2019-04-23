@@ -1,10 +1,8 @@
-from datetime import datetime, timezone
 from collections import namedtuple
 
-from django.db import connection
-from django.contrib.sitemaps import Sitemap
-
 from articles.period import PeriodMixin
+from django.contrib.sitemaps import Sitemap
+from django.db import connection
 
 
 def namedtuplefetchall(cursor):
@@ -61,6 +59,7 @@ class PostSitemap(Sitemap):
             WHERE
                source IS NULL AND
                draft = 0 AND
+               p.kind = 'newspaper' AND
                u.username != 'kairly-newuser' AND
                published BETWEEN '2018-11-01 00:00:00' AND NOW()
         """
