@@ -1,41 +1,38 @@
-import rapidjson as json
 import html
-import pytz
 from collections import defaultdict
 from datetime import datetime
+from decimal import ConversionSyntax, Decimal
 from operator import attrgetter
-from decimal import Decimal, ConversionSyntax
 
 import lxml.html
+import pytz
+import rapidjson as json
+from credits.utils import (get_user_credits, pay_author_subscription,
+                           pay_newspaper_subscription)
 from dateutil.relativedelta import relativedelta
-
 from django.conf import settings
 from django.db import transaction
 from django.db.models import Q, Sum
+from django.http import (HttpResponse, HttpResponseBadRequest,
+                         HttpResponseForbidden, HttpResponseNotFound)
 from django.shortcuts import get_object_or_404
-from django.http import (HttpResponse, HttpResponseNotFound,
-                         HttpResponseForbidden, HttpResponseBadRequest)
-from django.views import View
-from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
-
+from django.views import View
+from django.views.decorators.http import require_POST
+from sources.parser.og import parse_og_tags
+from users.models import User
 from utils.decorators import ajax_login_required
-from utils.html import sanitize, convert_data_uris
+from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
-from users.models import User
-from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
-from sources.parser.og import parse_og_tags
-from .models import (Newspaper, Issue, Backlog,
-                     Post, Subscription, SubscriptionToAuthor,
-                     round_fair_price)
-from .signals import post_publish
-from .period import parse_periodicity
-
 from utils.url import fetch_url
 
+from .models import (Backlog, Issue, Newspaper, Post, Subscription,
+                     SubscriptionToAuthor, round_fair_price)
+from .period import parse_periodicity
+from .signals import post_publish
 
 AUTOR_POSTS_PAGE_SIZE = 20
 
@@ -101,7 +98,7 @@ def recent_issues(request):
     resp = []
     for issue in issues:
         issue.newspaper = newspapers[issue.newspaper_id]
-        resp.append(issue.to_json(posts=True, tzinfo=tzinfo)),
+        resp.append(issue.to_json(posts=True, tzinfo=tzinfo))
 
     return JsonResponse(resp)
 
@@ -127,13 +124,13 @@ class NewspaperView(View):
         tzinfo = request.user.tzinfo
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
-        issueNo = request.GET.get('issue')
-        if issueNo:
+        issue_no = request.GET.get('issue')
+        if issue_no:
             try:
-                issueNo = int(issueNo)
+                issue_no = int(issue_no)
             except ValueError:
                 return HttpResponse('Invalid issue number.', status=400)
-            issue = get_object_or_404(Issue, newspaper=newspaper, number=issueNo)
+            issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_no)
         else:
             try:
                 issue = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[0]
@@ -162,7 +159,7 @@ class NewspaperView(View):
 
             if request.user.is_authenticated:
                 if Post.objects.filter(author=request.user, kind=Post.RECOMMENDATION, ref_issue=issue).exists():
-                    data['recommended'] = [data['issue']['id']]
+                    data['recommended'] = [data['issue']['id']]  # pylint: disable=unsubscriptable-object
                 else:
                     data['recommended'] = []
 
@@ -222,7 +219,7 @@ class NewspaperView(View):
         return HttpResponse(status=204)
 
 
-def author(request, username):
+def author_detail(request, username):
     tzinfo = request.user.tzinfo
     author = get_object_or_404(User, username=username)
 

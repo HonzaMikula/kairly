@@ -1,36 +1,33 @@
 import time
-import urllib.request
 import urllib.error
+import urllib.request
 from decimal import Decimal
 
 import jwt
-from libgravatar import Gravatar
-from pytz import timezone, UnknownTimeZoneError
 import rapidjson as json
-
-from django.db.utils import IntegrityError
-from django.db.models import Count
+from articles.models import Newspaper
+from credits.utils import get_user_credits
+from dal import autocomplete
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.core.validators import EmailValidator
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
+from django.db.models import Count
+from django.db.utils import IntegrityError
 from django.http import HttpResponse
-from django.views import View
 from django.utils.timezone import localdate
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
-from dal import autocomplete
-
+from libgravatar import Gravatar
+from pytz import UnknownTimeZoneError, timezone
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
-from articles.models import Newspaper
-from credits.utils import get_user_credits
-from .models import User, Category, CategoryUser
 
+from .models import Category, CategoryUser, User
 
 TOKEN_EXPIRATION = 30 * 86400
 

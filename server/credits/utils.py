@@ -1,10 +1,10 @@
 from decimal import Decimal
 
+from django.core.cache import cache
 from django.db import transaction
 from django.db.models import Sum
-from django.core.cache import cache
-from .models import Transaction
 
+from .models import Transaction
 
 AUTHOR_CREDITS_CACHE_KEY = 'balance:author:{}'
 NEWSPAPER_CREDITS_CACHE_KEY = 'balance:newspaper:{}'

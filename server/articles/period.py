@@ -1,5 +1,5 @@
-from datetime import time, timedelta
 from collections import namedtuple
+from datetime import time, timedelta
 
 from more_itertools import windowed
 

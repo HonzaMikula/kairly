@@ -1,12 +1,10 @@
+from articles.models import Newspaper
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-
-from utils.json import datetime_isoformat_ecma262
+from django.utils.translation import ugettext_lazy as _
 from users.models import User
-from articles.models import Newspaper
+from utils.json import datetime_isoformat_ecma262
 
 
 class Transaction(models.Model):
