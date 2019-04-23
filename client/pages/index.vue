@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapActions, mapState } from 'vuex'
 import moment from 'moment'
 
@@ -175,6 +176,15 @@ export default {
         this.date = null
         this.showWelcome = false
       }
+    },
+
+    date(value, oldValue) {
+      if (process.client && oldValue === null && value !== null && history.state.scrollY) {
+        // timeline was loased asynchronously and scroll position was recorded
+        Vue.nextTick(() => {
+          window.scrollTo(0, history.state.scrollY)
+        })
+      }
     }
   },
 
@@ -235,7 +245,18 @@ export default {
         this.$store.dispatch('getUserBacklog')
       }
     }
-  }
+  },
+
+  beforeRouteLeave(to, from, next) {
+    try {
+      if (this.loggedIn) {
+        const { history, location } = window
+        history.replaceState({...history.state, scrollY: window.scrollY}, document.title, location.pathname)
+      }
+    } finally {
+      next()
+    }
+  },
 }
 </script>
 
