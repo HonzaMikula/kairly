@@ -153,7 +153,7 @@ export default {
     },
 
     removePost(post) {
-      this.removeFromBacklog({newspaper: this.newspaper, post})
+      this.removeFromNewspaperBacklog({newspaper: this.newspaper, post})
     },
 
     async addExternalLink() {
@@ -181,7 +181,7 @@ export default {
     },
 
     ...mapActions([
-        'removeFromBacklog', 'addLinkToBacklog',
+        'removeFromNewspaperBacklog', 'addLinkToBacklog',
         'backlogMoveDown', 'backlogMoveUp',
         'backlogPublish', 'backlogUndoPublish'
     ]),
