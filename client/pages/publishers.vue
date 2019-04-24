@@ -3,19 +3,23 @@
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
-          <h1>{{ $t('Are you an independent publisher?') }}</h1>
-          <!-- <h1>Jste nezávislé vydavatelství?</h1>
-          <ul>
-            <li>Publikujte vaše noviny a časopisy na moderní platformě.</li>
-            <li>Začnětě vydělávat na svých titulech s unikátním konceptem placeného obsahu.</li>
-            <li>Oslovte zcela nové skupiny čtenářů.</li>
-          </ul> -->
+          <section>
+            <h1>{{ $t('Are you an independent publisher?') }}</h1>
+            <!-- <h1>Jste nezávislé vydavatelství?</h1>
+            <ul>
+              <li>Publikujte vaše noviny a časopisy na moderní platformě.</li>
+              <li>Začnětě vydělávat na svých titulech s unikátním konceptem placeného obsahu.</li>
+              <li>Oslovte zcela nové skupiny čtenářů.</li>
+            </ul> -->
 
-          <ul>
-            <li>{{ $t('Publish your newspapers and magazines on a modern platform.') }}</li>
-            <li>{{ $t('Start earning on your publications with a unique concept of paid content.') }}</li>
-            <li>{{ $t('Reach new audiences.') }}</li>
-          </ul>
+            <ul>
+              <li>{{ $t('Publish your newspapers and magazines on a modern platform.') }}</li>
+              <li>{{ $t('Start earning on your publications with a unique concept of paid content.') }}</li>
+              <li>{{ $t('Reach new audiences.') }}</li>
+            </ul>
+          </section>
+
+          <SignUpForm></SignUpForm>
         </div>
       </section>
 
@@ -114,6 +118,8 @@
 
 <script>
 import { mapState } from 'vuex'
+
+import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'
@@ -134,7 +140,8 @@ export default {
     OfficialStart,
     Footer,
     FooterLinks,
-    Faq
+    Faq,
+    SignUpForm
   },
 
   head() {
@@ -179,10 +186,10 @@ export default {
 
   display: flex
   align-items: center
-  flex-direction: column
   justify-content: center
-  height: 400px
+  min-height: 400px
   margin-bottom: $baseline * 2
+  padding: $baseline
   max-width: none
 
   background-size: cover
@@ -193,21 +200,39 @@ export default {
 
   @media (max-width: $mobile)
     height: auto
+    padding: 0
     padding-bottom: $baseline / 2
+
+  > div  
+    display: grid
+    grid-template-columns: 2fr 1fr
+    max-width: 900px
+
+    @media (max-width: $mobile)
+      grid-template-columns: auto
+
+  section
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
 
   h1
     +heading
-    padding: $baseline/2
+    padding: 0
     margin-bottom: $baseline * 2
-
-    text-align: center
 
     @media (max-width: $mobile)
       margin: $baseline 0
+      width: 100%
 
+
+  > p
+    font-size: $fs-0
+    text-align: center
 
   ul
-    padding: 0 $baseline
+    padding: 0 $baseline 0 0
 
     counter-reset: benefits
 
@@ -219,7 +244,7 @@ export default {
     align-items: center
     margin-bottom: $baseline / 2
 
-    font-size: $fs-2
+    font-size: $fs-1
 
     @media (max-width: $mobile)
       font-size: $fs-1

@@ -3,19 +3,23 @@
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
-          <!-- <h1>{{ $t('Are you independent journalist or blogger?') }}</h1> -->
-          <h1>Jste think-tank nebo nezisková organizace?</h1>
-          <ul>
-            <li>Publikujte své názory na moderní publikační platformě.</li>
-            <li>Oslovte pro vaše ideje zcela nové skupiny čtenářů.</li>
-            <li>Získejte pravidelné finanční dary od vašich příznivců.</li>
-          </ul>
+          <section>
+            <!-- <h1>{{ $t('Are you independent journalist or blogger?') }}</h1> -->
+            <h1>Jste think-tank nebo nezisková organizace?</h1>
+            <ul>
+              <li>Publikujte své názory na moderní publikační platformě.</li>
+              <li>Oslovte pro vaše ideje zcela nové skupiny čtenářů.</li>
+              <li>Získejte pravidelné finanční dary od vašich příznivců.</li>
+            </ul>
 
-          <!-- <ul>
-            <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
-            <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
-            <li>{{ $t('Become a truly independent author.') }}</li>
-          </ul> -->
+            <!-- <ul>
+              <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
+              <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
+              <li>{{ $t('Become a truly independent author.') }}</li>
+            </ul> -->
+          </section>
+
+          <SignUpForm></SignUpForm>
         </div>
       </section>
 
@@ -179,6 +183,8 @@
 
 <script>
 import { mapState } from 'vuex'
+
+import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'
@@ -199,7 +205,8 @@ export default {
     OfficialStart,
     Footer,
     FooterLinks,
-    Faq
+    Faq,
+    SignUpForm
   },
 
   head() {
@@ -244,10 +251,10 @@ export default {
 
   display: flex
   align-items: center
-  flex-direction: column
   justify-content: center
-  height: 400px
+  min-height: 400px
   margin-bottom: $baseline * 2
+  padding: $baseline
   max-width: none
 
   background-size: cover
@@ -258,21 +265,39 @@ export default {
 
   @media (max-width: $mobile)
     height: auto
+    padding: 0
     padding-bottom: $baseline / 2
+
+  > div  
+    display: grid
+    grid-template-columns: 2fr 1fr
+    max-width: 900px
+
+    @media (max-width: $mobile)
+      grid-template-columns: auto
+
+  section
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
 
   h1
     +heading
-    padding: $baseline/2
+    padding: 0
     margin-bottom: $baseline * 2
-
-    text-align: center
 
     @media (max-width: $mobile)
       margin: $baseline 0
+      width: 100%
 
+
+  > p
+    font-size: $fs-0
+    text-align: center
 
   ul
-    padding: 0 $baseline
+    padding: 0 $baseline 0 0
 
     counter-reset: benefits
 
@@ -284,7 +309,7 @@ export default {
     align-items: center
     margin-bottom: $baseline / 2
 
-    font-size: $fs-2
+    font-size: $fs-1
 
     @media (max-width: $mobile)
       font-size: $fs-1

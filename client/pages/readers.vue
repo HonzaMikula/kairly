@@ -3,13 +3,17 @@
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
-          <h1>{{ $t('Are you a news reader?') }}</h1>
+          <section>
+            <h1>{{ $t('Are you a news reader?') }}</h1>
 
-          <ul>
-            <li>{{ $t('Stop endlessly scrolling without thinking. Read only what you really care about.') }}</li>
-            <li>{{ $t('Don\'t be bothered by nonsense notifications. Read only when you want and when you\'re used to it.') }}</li>
-            <li>{{ $t('Support high-quality journalists by purchasing a subscription.') }}</li>
-          </ul>
+            <ul>
+              <li>{{ $t('Stop endlessly scrolling without thinking. Read only what you really care about.') }}</li>
+              <li>{{ $t('Don\'t be bothered by nonsense notifications. Read only when you want and when you\'re used to it.') }}</li>
+              <li>{{ $t('Support high-quality journalists by purchasing a subscription.') }}</li>
+            </ul>
+          </section>
+
+          <SignUpForm></SignUpForm>
         </div>
       </section>
 
@@ -147,6 +151,8 @@
 
 <script>
 import { mapState } from 'vuex'
+
+import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'
@@ -167,7 +173,8 @@ export default {
     OfficialStart,
     Footer,
     FooterLinks,
-    Faq
+    Faq,
+    SignUpForm
   },
 
   head() {
@@ -212,10 +219,10 @@ export default {
 
   display: flex
   align-items: center
-  flex-direction: column
   justify-content: center
-  height: 400px
+  min-height: 400px
   margin-bottom: $baseline * 2
+  padding: $baseline
   max-width: none
 
   background-size: cover
@@ -226,21 +233,39 @@ export default {
 
   @media (max-width: $mobile)
     height: auto
+    padding: 0
     padding-bottom: $baseline / 2
+
+  > div  
+    display: grid
+    grid-template-columns: 2fr 1fr
+    max-width: 900px
+
+    @media (max-width: $mobile)
+      grid-template-columns: auto
+
+  section
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
 
   h1
     +heading
-    padding: $baseline/2
+    padding: 0
     margin-bottom: $baseline * 2
-
-    text-align: center
 
     @media (max-width: $mobile)
       margin: $baseline 0
+      width: 100%
 
+
+  > p
+    font-size: $fs-0
+    text-align: center
 
   ul
-    padding: 0 $baseline
+    padding: 0 $baseline 0 0
 
     counter-reset: benefits
 
@@ -252,7 +277,7 @@ export default {
     align-items: center
     margin-bottom: $baseline / 2
 
-    font-size: $fs-2
+    font-size: $fs-1
 
     @media (max-width: $mobile)
       font-size: $fs-1

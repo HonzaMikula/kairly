@@ -55,6 +55,11 @@ export default {
     async login() {
       this.invalidCredentials = false
       const { username, password } = this
+
+      this.$ga.event({
+        eventCategory: 'Sign in'
+      })
+
       try {
         await this.$auth.loginWith('local', {
           data: { username, password }

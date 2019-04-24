@@ -3,12 +3,16 @@
     <div class="journalists-view">
       <section class="journalists--hero">
         <div>
-          <h1>{{ $t('Are you independent journalist or blogger?') }}</h1>
-          <ul>
-            <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
-            <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
-            <li>{{ $t('Become a truly independent author.') }}</li>
-          </ul>
+          <section>
+            <h1>{{ $t('Are you independent journalist or blogger?') }}</h1>
+            <ul>
+              <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
+              <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
+              <li>{{ $t('Become a truly independent author.') }}</li>
+            </ul>
+          </section>
+
+          <SignUpForm></SignUpForm>
         </div>
       </section>
 
@@ -136,6 +140,7 @@
 <script>
 import { mapState } from 'vuex'
 
+import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'
@@ -156,7 +161,8 @@ export default {
     OfficialStart,
     Footer,
     FooterLinks,
-    Faq
+    Faq,
+    SignUpForm
   },
 
   head() {
@@ -201,10 +207,10 @@ export default {
 
   display: flex
   align-items: center
-  flex-direction: column
   justify-content: center
-  height: 400px
+  min-height: 400px
   margin-bottom: $baseline * 2
+  padding: $baseline
   max-width: none
 
   background-size: cover
@@ -215,21 +221,39 @@ export default {
 
   @media (max-width: $mobile)
     height: auto
+    padding: 0
     padding-bottom: $baseline / 2
+
+  > div  
+    display: grid
+    grid-template-columns: 2fr 1fr
+    max-width: 900px
+
+    @media (max-width: $mobile)
+      grid-template-columns: auto
+
+  section
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
 
   h1
     +heading
-    padding: $baseline/2
+    padding: 0
     margin-bottom: $baseline * 2
-
-    text-align: center
 
     @media (max-width: $mobile)
       margin: $baseline 0
+      width: 100%
 
+
+  > p
+    font-size: $fs-0
+    text-align: center
 
   ul
-    padding: 0 $baseline
+    padding: 0 $baseline 0 0
 
     counter-reset: benefits
 
@@ -241,7 +265,7 @@ export default {
     align-items: center
     margin-bottom: $baseline / 2
 
-    font-size: $fs-2
+    font-size: $fs-1
 
     @media (max-width: $mobile)
       font-size: $fs-1
@@ -263,50 +287,6 @@ export default {
 
       counter-increment: benefits
       content: counter(benefits)
-
-//- FAQ
-.journalists--faq
-  display: grid
-  grid-template-columns: 540px 334px
-  grid-column-gap: $baseline
-  padding-bottom: $baseline * 2
-
-  @media (max-width: 950px)
-    grid-template-columns: auto
-    padding: 0
-
-  h2
-    margin-bottom: $baseline / 2
-    font-size: $fs-3
-    font-weight: 600
-
-  p
-    margin-bottom: $baseline * 1.5
-
-    font-size: $fs-1
-
-    &:last-of-type
-      margin-bottom: 0
-
-
-  @media (max-width: 950px)
-    picture
-      grid-row: 1
-
-    div
-      padding: $baseline
-
-  @media (max-width: $mobile)
-    div
-      padding: $baseline / 2
-
-  img
-    height: 100%
-    width: 100%
-    object-fit: cover
-
-    @media (max-width: 940px)
-      max-height: 300px
 
 //- Section
 .microsite--section
