@@ -1,16 +1,33 @@
 ---
 name: Marketing plan
-about: Marketing plan for given week.
+about: Marketing plan for given month.
 title: 'Marketing plan #'
 labels: marketing
 assignees: HonzaMikula
 
 ---
 
-### Regular tasks
-- [ ] Weekly summary what's new on Kairly, what new authors we have and what we plan 
-- [ ] Promote Týdeník škola hrou on FB
-- [ ] Promote Product Design Weekly on Slack, LinkedIn 
+#### Monthly summary
+- [ ] Write it and publish it on Kairly
+- [ ] Promote it on social networks FB, LinkedIn and Twitter
+- [ ] Post in Facebook Group
+- [ ] Send it through MailChimp to all members
+
+#### Blog post
+- [ ] Write concept
+- [ ] Proof reading
+
+#### Promote Týdeník škola hrou on FB
+- [ ] Week 1
+- [ ] Week 2
+- [ ] Week 3
+- [ ] Week 4
+
+#### Promote Product Design Weekly
+- [ ] Week 1
+- [ ] Week 2
+- [ ] Week 3
+- [ ] Week 4
 
 ### Get new readers
 
