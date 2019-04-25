@@ -4,19 +4,13 @@
       <section class="journalists--hero">
         <div>
           <section>
-            <!-- <h1>{{ $t('Are you independent journalist or blogger?') }}</h1> -->
-            <h1>Jste think-tank nebo nezisková organizace?</h1>
-            <ul>
-              <li>Publikujte své názory na moderní publikační platformě.</li>
-              <li>Oslovte pro vaše ideje zcela nové skupiny čtenářů.</li>
-              <li>Získejte pravidelné finanční dary od vašich příznivců.</li>
-            </ul>
+            <h1>{{ $t('Are you think-tank or NGO?') }}</h1>
 
-            <!-- <ul>
-              <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
-              <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
-              <li>{{ $t('Become a truly independent author.') }}</li>
-            </ul> -->
+            <ul>
+              <li>{{ $t('Publish your ideas on a modern publishing platform.') }}</li>
+              <li>{{ $t('Reach new audiences for your cause.') }}</li>
+              <li>{{ $t('Get regular financial donations from your supporters.') }}</li>
+            </ul>
           </section>
 
           <SignUpForm></SignUpForm>
@@ -53,40 +47,9 @@
         </picture>
 
         <div>
-          <!-- <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2> -->
-          <h2>Publikujte vaše myšlenky na moderní platformě a oslovte nové skupiny lidí</h2>
+          <h2>{{ $t('Publish your ideas on a modern platform and reach out to new audiences.') }}</h2>
 
-          <!-- <div v-html="$t('@independent-journalists/modern-platform')">
-          </div> -->
-
-          <div>
-            <p>
-             Soustřeďte se na sdělení vašich idejích. My se postaráme o to, aby se váš obsah dostal k lidem v té nejlepší podobě,
-             ať už používají počítač, mobil, tablet či elektronickou čtečku knih.
-            </p>
-
-            <p>
-              Naše platforma se soustředí na vytváření příjemného prostředí pro čtenáře, kde čtou jen to,
-              co je opravdu zajímá a nejsou otravováni neustálými notifikacemi.
-            </p>
-
-            <p>
-              Přicházíme s unikátní koncepcí digitálních novin. Pokud editor novin shledá váš obsah zajímavý a dobře zpracovaný,
-              zařadí váš článek do vydání svých novin. Díky tomu můžete oslovit pro vaši myšlenku zcela nové skupiny lidí.
-            </p>
-          </div>
-
-            <!-- <p>
-              Tvoříme pro vás moderní digitální platformu, která je šita na míru novinářům a publicistům.
-              Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, mobil, tablet či v budoucnu elektronickou čtečku.
-            </p>
-
-            <p>
-              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
-              a moderní trendy UX ze současných mobilních a webových aplikací.
-            </p>
-
-            <p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou platit, budeme si účtovat 15 % z ceny předplatného.</p> -->
+          <div v-html="$t('@think-tanks/modern-platform')"></div>
 
         </div>
       </section>
@@ -114,10 +77,9 @@
         </picture>
 
         <div>
-          <!-- <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2> -->
-          <h2>Získejte pravidelné peněžní příspěvky od vašich stoupenců</h2>
+          <h2>{{ $t('Get regular monetary contributions from your followers.') }}</h2>
 
-          <!-- <div v-html="$t('@independent-journalists/monetizing-content')"></div> -->
+          <!-- <div v-html="$t('@think-tanks/monetizing-content')"></div> -->
 
           <div>
             <p>
@@ -135,21 +97,6 @@
               získáte i spravedlivý podíl z předplatného těchto novin, čímž získáte dodatečné peníze.
             </p>
           </div>
-            <!-- <p>
-              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
-              Musíme na to chytře. Zapojte se do našeho unikátního systému placeného obsahu.
-            </p>
-
-            <p>
-              Čtenáři si vás buď mohou předplatit napřímo, nebo si předplácí noviny od editorů, kteří
-              vaše články a tweety považují za kvalitní a zařazují je do svých vydání. Vy za to dostanete
-              spravedlivý podíl z peněz, které editoři vybrali za své noviny.
-            </p>
-
-            <p>
-              Pokud píšete mimořádně zajímavý obsah, čtenáři mají možnost vám poslat peníze nad
-              rámec běžného předplatného.
-            </p> -->
         </div>
       </section>
 
