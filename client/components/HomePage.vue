@@ -205,7 +205,7 @@ export default {
     return {
       title: this.$t('Kairly – Read only what you care about'),
       meta: [
-        { hid: 'description', name: 'description', content: this.$t('Kairly is new platform that wants to create better environment for journalist and readers.') },
+        { hid: 'description', name: 'description', content: this.$t('Stop the distraction. Grow healthy reading habits with us. Import your RSS feed and Twitter and start reading the content in healthy way.') },
       ]
     }
   },

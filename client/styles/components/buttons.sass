@@ -170,3 +170,35 @@ button-icon
     content: fa-content($fa-var-align-justify)
 
     transform: rotate(90deg)
+
+
+//- Text Button
+=button-text
+  padding: 0
+
+  background: transparent
+  border: 0
+  color: $c-base
+
+  font-size: $fs-0
+  font-weight: 600
+
+  cursor: pointer
+  transition: .15s all
+
+  &:hover
+    color: darken($c-base, 10%)
+
+    &::after
+      transform: translateX($baseline/4)
+
+  &::after
+    +fa-icon()
+    @extend .fas
+
+    margin-left: $baseline / 2
+
+    opacity: 0.5
+    transition: .15s all
+
+    content: fa-content($fa-var-arrow-right)

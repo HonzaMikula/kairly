@@ -27,8 +27,20 @@
           </nuxt-link>
         </section>
 
+        <section class="subscription--imports">
+          <h2>Import authors</h2>
+
+          <h3>Import RSS feeds</h3>
+          <p>Upload OPML file with your feeds.</p>
+          <button>Upload OPML file</button>
+
+          <h3>Read your Twitter on Kairly</h3>
+          <p>Connect to your Twitter account and read your timeline on Kairly.</p>
+          <button>Connect to your Twitter</button>
+        </section>
+
         <section>
-          <h2>{{ $t('Explore') }}</h2>
+          <h2><nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link></h2>
 
           <h3>{{ $t('Recent newspaper issue') }}</h3>
           <ul>
@@ -93,6 +105,10 @@ export default {
 </script>
 
 <style lang="sass">
+//- Imports
+@import './styles/components/buttons'
+
+//- Subscription View -//  
 my-subscription-view
   display: grid
   grid-column-gap: $baseline
@@ -150,9 +166,13 @@ my-subscription-view
     @media (max-width: 800px)
       display: none
 
+    //- add credits
+    button
+      +button-text 
+
 
     section
-      margin-bottom: $baseline * 2
+      margin-bottom: $baseline
 
     .subscription--credits
       //- info about credits
@@ -163,30 +183,7 @@ my-subscription-view
 
       //- add credits
       button
-        padding: 0
-
-        background: transparent
-        border: 0
-        color: $c-base
-
-        font-size: $fs-0
-        font-weight: 600
-
-        cursor: pointer
-        transition: .15s all
-
-        &:hover
-          color: darken($c-base, 10%)
-
-        &::after
-          +fa-icon()
-          @extend .fas
-
-          margin-left: $baseline / 2
-
-          opacity: 0.5
-
-          content: fa-content($fa-var-arrow-right)
+        +button-text
 
     h2
       margin-bottom: $baseline
@@ -221,23 +218,14 @@ my-subscription-view
       margin-top: $baseline / 2
 
       a
-        color: $c-base
+        +button-text
 
-        font-weight: 600
+//- Section import
+.subscription--imports
+  margin-bottom: 0
 
-        transition: .15s all
+  button
+    +button-text
 
-        &:hover
-          color: darken($c-base, 10%)
-
-        &::after
-          +fa-icon()
-          @extend .fas
-
-          margin-left: $baseline / 2
-
-          opacity: 0.5
-
-          content: fa-content($fa-var-arrow-right)
-
+    margin-bottom: $baseline
 </style>

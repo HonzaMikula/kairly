@@ -3,8 +3,31 @@
     <div class="welcome-view">
       <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
+      <h2>{{ $t('Start with importing your favorite authors') }}</h2>
+
+      <section class="welcome--import">
+        <div class="welcome--import--rss">
+          <nuxt-link to="/import">
+            <button>
+              Import RSS feeds
+            </button>
+          </nuxt-link>
+          <p>Upload OPML file.</p>
+        </div>
+
+        <div class="welcome--import--twitter">
+          <nuxt-link to="/import">
+            <button>
+              Read your Twitter on Kairly
+            </button>
+          </nuxt-link>
+
+          <p>Connect your Twitter account.</p>
+        </div>
+      </section>
+
       <section class="welcome--topics">
-        <h2>{{ $t('Start with subscribing to newspapers') }}</h2>
+        <h2>{{ $t('Or subscribe to newspapers') }}</h2>
 
         <ul>
           <li v-for="topic in topics" :key="topic.name">
@@ -134,6 +157,7 @@ export default {
     text-align: center
 
   //- Sections
+  > h2,
   > section > h2
       margin-bottom: $baseline
 
@@ -142,6 +166,27 @@ export default {
       font-weight: 600
       text-align: center
 
+//- Import
+.welcome--import
+  display: flex
+  justify-content: center
+  margin-bottom: $baseline * 2
+
+  > div
+    margin: 0 $baseline*2
+
+    text-align: center
+
+  p
+    font-size: $fs--1  
+
+.welcome--import--twitter
+  button
+    +button-icon($fa-var-twitter, icon-text, brand)
+
+.welcome--import--rss
+  button
+    +button-icon($fa-var-rss, icon-text, solid)
 
 //- Topics
 .welcome--topics
