@@ -374,10 +374,11 @@ export default {
       margin-bottom: $baseline / 2
 
       font-size: $fs-1
-      line-height: $baseline * 1.25
+      line-height: 1.42
 
       @media (max-width: $mobile)
-        font-size: $fs-1
+        font-size: $fs-0
+        line-height: 1.42
 
       &::before
         display: inline-block
@@ -410,6 +411,9 @@ export default {
   ul
     display: flex
     justify-content: center
+
+    @media (max-width: $mobile)
+      flex-direction: column
   
   li
     display: flex
@@ -418,6 +422,9 @@ export default {
 
     font-size: $fs-0
     font-weight: 600
+
+    @media (max-width: $mobile)
+      margin-bottom: $baseline / 2
 
     &:last-of-type
       margin-right: 0
