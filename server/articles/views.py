@@ -239,7 +239,10 @@ def author_posts(request, username):
 
     author = get_object_or_404(User, username=username)
 
-    posts_query = Post.objects.filter(author=author, draft=False, published__lt=timezone.now())
+    posts_query = Post.objects\
+        .filter(author=author, draft=False, published__lt=timezone.now())\
+        .exclude(kind=Post.LINK)
+
     if request.GET.get('skipRecommendations') == '1':
         posts_query = posts_query.exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
