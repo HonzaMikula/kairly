@@ -12,9 +12,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="source in sources" :key="source.id">
+          <tr v-for="source in sources" :key="source.xmlUrl">
             <td><input type="checkbox" checked name="" /></td>
-            <th>{{ source.name }}</th>
+            <th>{{ source.title }}</th>
             <td>Every 3 hours</td>
           </tr>
         </tbody>
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import AppLayout from '@/components/layout/AppLayout'
 
 export default {
@@ -37,20 +39,9 @@ export default {
     }
   },
 
-  data() {
-    return {
-      sources: [
-        {
-          id: 1,
-          name: "Zive.cz"
-        },
-        {
-          id: 2,
-          name: "Technet.cz"
-        }
-      ]
-    }
-  },
+  computed: mapState({
+    sources: state => state.opml,
+  }),
 
   components: {
     AppLayout
@@ -86,7 +77,7 @@ export default {
 
   td:first-child,
   th:first-child
-    padding-right: $baseline / 4 
+    padding-right: $baseline / 4
 
   thead th
     border-bottom: 1px solid #eee

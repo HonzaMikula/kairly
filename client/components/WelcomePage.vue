@@ -7,11 +7,10 @@
 
       <section class="welcome--import">
         <div class="welcome--import--rss">
-          <nuxt-link to="/import">
-            <button>
-              Import RSS feeds
-            </button>
-          </nuxt-link>
+          <label>
+            Import RSS feeds
+            <input ref type="file" accept=".opml" @change="importOpml($event)" hidden>
+          </label>
           <p>Upload OPML file.</p>
         </div>
 
@@ -127,6 +126,32 @@ export default {
       this.loading = true
       this.newspapers = await this.$store.dispatch('getNewspapers', topic.newspapers)
       this.loading = false
+    },
+
+    importOpml(ev) {
+      const f = event.target.files[0]
+      const reader = new FileReader()
+      const items = []
+      reader.addEventListener('loadend', ev => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(reader.result, "application/xml");
+        const outlines = doc.getElementsByTagName('outline');
+
+        for (let i = 0; i < outlines.length; i++) {
+          const outline = outlines[i]
+          if (!outline.hasChildNodes()) {
+            const title = outline.getAttribute('title')
+            const xmlUrl  = outline.getAttribute('xmlUrl')
+            items.push({title, xmlUrl})
+          }
+        }
+        this.$store.commit('opml', items)
+        this.$router.push('/import')
+      })
+      // reader.addEventListener('error', ev => {
+      //   console.error(ev)
+      // })
+      reader.readAsText(f)
     }
   },
 
@@ -178,14 +203,14 @@ export default {
     text-align: center
 
   p
-    font-size: $fs--1  
+    font-size: $fs--1
 
 .welcome--import--twitter
   button
     +button-icon($fa-var-twitter, icon-text, brand)
 
 .welcome--import--rss
-  button
+  label
     +button-icon($fa-var-rss, icon-text, solid)
 
 //- Topics

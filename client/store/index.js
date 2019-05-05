@@ -25,7 +25,8 @@ const createStore = () => {
         error: null,
         success: null,
       },
-      locale: null
+      locale: null,
+      opml: null
     },
 
     mutations: {
@@ -154,7 +155,10 @@ const createStore = () => {
       },
       setLang (state, locale) {
         state.locale = locale
-      }
+      },
+      opml (state, opml) {
+        state.opml = opml
+      },
     },
 
     getters: {
