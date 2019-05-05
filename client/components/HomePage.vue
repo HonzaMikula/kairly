@@ -5,18 +5,41 @@
       <div>
         <section>
           <h1>
-            {{ $t('Read only what you care about.') }}
+            {{ $t('Stop be distracted.') }}
+            <br />
+            {{ $t('Grow healthy reading habits.') }}
           </h1>
-        
+
           <ul>
-            <li>{{ $t('Read digital newspapers prepared by professional editors.') }}</li>
-            <li>{{ $t('Write on platform where you earn money for good writings.') }}</li>
-            <li>{{ $t('Be editor and start your own digital newspapers. It\'s paid as well.') }}</li>
+            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
+            <li>{{ $t('Read your sources at regular time you want. E.g. every day at 9am.') }}</li>
+            <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
+            <li>{{ $t('No magic algorithms. The content is chosen by you and the professional editors you trust.') }}</li>
           </ul>
         </section>
-      
+
         <SignUpForm></SignUpForm>
       </div>
+    </section>
+
+    <section class="homepage--process">
+
+      <h2>How to start?</h2>
+
+      <ul>
+        <li class="rss">
+          {{ $t('Import your RSS feeds') }}
+        </li>
+
+        <li class="twitter">
+          {{ $t('Connect to your Twitter') }}
+        </li>
+
+        <li class="newspaper">
+          {{ $t('Subscribe to digital newspapers') }}
+        </li>
+      </ul>
+
     </section>
 
     <section class="homepage--readers">
@@ -203,7 +226,7 @@ export default {
 
   head() {
     return {
-      title: this.$t('Kairly – Read only what you care about'),
+      title: this.$t('Kairly – Stop be distracted. Grow healthy reading habits.'),
       meta: [
         { hid: 'description', name: 'description', content: this.$t('Stop the distraction. Grow healthy reading habits with us. Import your RSS feed and Twitter and start reading the content in healthy way.') },
       ]
@@ -307,7 +330,7 @@ export default {
     padding: 0
     padding-bottom: $baseline / 2
 
-  > div  
+  > div
     display: grid
     grid-template-columns: 2fr 1fr
     max-width: 900px
@@ -321,57 +344,119 @@ export default {
     align-items: flex-start
     justify-content: center
 
-  h1
-    +heading
-    padding: 0
-    margin-bottom: $baseline * 2
+    h1
+      +heading
+      padding: 0
+      margin-bottom: $baseline * 2
 
-    @media (max-width: $mobile)
-      margin: $baseline 0
-      width: 100%
+      @media (max-width: $mobile)
+        margin: $baseline 0
+        width: 100%
 
+        text-align: center
+
+
+    > p
+      font-size: $fs-0
       text-align: center
 
+    ul
+      padding: 0 $baseline 0 0
 
-  > p
-    font-size: $fs-0
-    text-align: center
+      counter-reset: benefits
+
+      @media (max-width: $mobile)
+        padding: 0 $baseline/2
+
+    li
+      display: flex
+      align-items: center
+      margin-bottom: $baseline / 2
+
+      font-size: $fs-1
+      line-height: 1.42
+
+      @media (max-width: $mobile)
+        font-size: $fs-0
+        line-height: 1.42
+
+      &::before
+        display: inline-block
+        margin-right: $baseline / 2
+        border-radius: 100%
+        height: $baseline * 1.25
+        width: $baseline * 1.25
+        flex: 0 0 $baseline * 1.25
+
+        background: #fff
+
+        font-size: $fs-0
+        font-weight: 600
+        line-height: $baseline * 1.25
+        text-align: center
+
+        counter-increment: benefits
+        content: counter(benefits)
+
+//- Process
+.homepage--process
+  background: #f5f5f5
+  padding: $baseline
+
+  h2
+    +heading
+    margin-bottom: $baseline / 2
+    display: none
 
   ul
-    padding: 0 $baseline 0 0
-
-    counter-reset: benefits
+    display: flex
+    justify-content: center
 
     @media (max-width: $mobile)
-      padding: 0 $baseline/2
+      flex-direction: column
 
   li
     display: flex
     align-items: center
-    margin-bottom: $baseline / 2
+    margin-right: $baseline * 2
 
-    font-size: $fs-1
+    font-size: $fs-0
+    font-weight: 600
 
     @media (max-width: $mobile)
-      font-size: $fs-1
+      margin-bottom: $baseline / 2
+
+    &:last-of-type
+      margin-right: 0
 
     &::before
-      display: inline-block
-      margin-right: $baseline / 2
+      +fa-icon()
+
       border-radius: 100%
+      margin-right: $baseline / 4
       height: $baseline * 1.25
       width: $baseline * 1.25
-      flex: 0 0 $baseline * 1.25
 
-      background: #fff
-
-      font-size: $fs-0
-      font-weight: 600
+      font-size: $fs-1
       line-height: $baseline * 1.25
       text-align: center
 
-      counter-increment: benefits
-      content: counter(benefits)
+      background: #fff
+
+  .rss::before
+    @extend .fas
+
+    content: fa-content($fa-var-rss)
+
+  .twitter::before
+    @extend .fab
+
+    content: fa-content($fa-var-twitter)
+
+  .newspaper::before
+    @extend .fas
+
+    content: fa-content($fa-var-newspaper)
 
 
 //- Readers
