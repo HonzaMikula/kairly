@@ -30,8 +30,6 @@
 
         <ChangePeriodicity
           v-if="showChangePeriodicityDialog"
-          :author="author"
-          :subscription="subscription"
           @changePeriodicity="changePeriodicity"
         />
 

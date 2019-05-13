@@ -65,12 +65,6 @@ import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 export default {
   name: 'ChangePeriodicity',
 
-  props: {
-    author: Object,
-    subscription: Object,
-    cancelingSubscription: Boolean, // TODO maybe this will be deleted
-  },
-
   mixins: [PeriodicityMixin],
 
   data() {
@@ -82,7 +76,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(['subscribeAuthor']),
     ...mapMutations(['showError']),
 
     changePeriodicity() {

@@ -6,21 +6,43 @@
       <table>
         <thead>
           <tr>
-            <th><input type="checkbox" checked name="" /></th>
+            <th><input type="checkbox" checked name="" @change="selectAll($event)" /></th>
             <th>Name</th>
             <th>When to display new posts?</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="source in sources" :key="source.xmlUrl">
-            <td><input type="checkbox" checked name="" /></td>
-            <th>{{ source.title }}</th>
-            <td>Every 3 hours</td>
+            <td>
+              <input
+                v-model="source.selected"
+                type="checkbox"
+                name=""
+              />
+            </td>
+            <th>
+              {{ source.title }}
+              </th>
+            <td>
+              <template v-if="isKairlyNewspaper(source.xmlUrl)">
+                Subscribe to the newspaper
+              </template>
+              <template v-else>
+                <a href="" @click.prevent.stop="changePerodicityTarget = source; showChangePeriodicityDialog = !showChangePeriodicityDialog">
+                  {{ getPeriodicityLabel(source.periodicity) }}
+                </a>
+              </template>
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <button>Import feeds</button>
+      <ChangePeriodicity
+        v-if="showChangePeriodicityDialog"
+        @changePeriodicity="changePeriodicity"
+      />
+
+      <button @click="submit">Import feeds</button>
     </div>
   </AppLayout>
 </template>
@@ -29,9 +51,18 @@
 import { mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
+import PeriodicityMixin from '@/mixins/PeriodicityMixin'
+import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
 
 export default {
   name: 'Settings',
+
+  components: {
+    AppLayout,
+    ChangePeriodicity,
+  },
+
+  mixins: [PeriodicityMixin],
 
   head() {
     return {
@@ -39,12 +70,55 @@ export default {
     }
   },
 
-  computed: mapState({
-    sources: state => state.opml,
-  }),
+  data() {
+    return {
+      showChangePeriodicityDialog: false,
+      changePerodicityTarget: null,
+      sources: this.$store.state.opml.map(source => {
+        const newpspaper = this.isKairlyNewspaper(source.xmlUrl)
+        return {
+          ...source,
+          newpspaper,
+          selected: true,
+          periodicity: newpspaper ? null : {frequency: '6x_per_day'}
+        }
+      })
+    }
+  },
 
-  components: {
-    AppLayout
+  methods: {
+    selectAll(ev) {
+      const value = ev.target.checked
+      this.sources.forEach(s => s.selected = value)
+    },
+
+    changePeriodicity(frequency, dow, time) {
+      this.changePerodicityTarget.periodicity = {
+        "frequency": frequency,
+        "dow": dow,
+        "time": time
+      }
+      this.showChangePeriodicityDialog = false
+      this.changePerodicityTarget = null
+    },
+
+    isKairlyNewspaper(url) {
+      return url.match('://kairly.com/[^/]+/[^/]+/rss')
+    },
+
+    async submit() {
+      const sources = this.sources
+        .filter(s => s.selected)
+        .map(s => ({title: s.title, url: s.xmlUrl, periodicity: s.periodicity}))
+      await this.$axios.$post(`/import-rss`, {sources})
+      //this.$router.push("/")
+    }
+  },
+
+  fetch ({ store, redirect }) {
+    if (store.state.opml === null) {
+      redirect('/')
+    }
   }
 }
 </script>
