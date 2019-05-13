@@ -102,7 +102,8 @@ class Channel(models.Model):
 
             # hit document to get real url
             entry_url = entry.link.split('#', maxsplit=1)[0]
-            resolved_url = requests.head(entry_url, allow_redirects=True).url
+            headers = {'User-Agent': settings.DEFAULT_USER_AGENT}
+            resolved_url = requests.head(entry_url, headers=headers, allow_redirects=True).url
         else:
             html, resolved_url = fetch_url(url, nocache=nocache, user_agent=self.user_agent)
 

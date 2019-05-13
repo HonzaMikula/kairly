@@ -6,6 +6,7 @@ import lxml.html
 from bs4 import UnicodeDammit
 
 from django.core.cache import cache
+from django.conf import settings
 
 
 def clean_url(url):
@@ -36,6 +37,9 @@ def fetch_url(url, *, nocache=False, user_agent=None):
         headers = {}
         if user_agent:
             headers['User-Agent'] = user_agent
+        else:
+            headers['User-Agent'] = settings.DEFAULT_USER_AGENT
+
         resp = requests.get(url, headers=headers, timeout=10)
         resp.raise_for_status()
 

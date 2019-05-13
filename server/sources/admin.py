@@ -7,6 +7,7 @@ import requests
 
 from django import forms
 from django.contrib import admin
+from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
@@ -41,6 +42,8 @@ class ChannelAdmin(admin.ModelAdmin):
             headers = {}
             if channel.user_agent:
                 headers['User-Agent'] = channel.user_agent
+            else:
+                headers['User-Agent'] = settings.DEFAULT_USER_AGENT
 
             resp = requests.get(channel.rss, headers=headers)
             resp.raise_for_status()

@@ -13,6 +13,7 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 
 from .models import Issue, Post, Subscription, SubscriptionToAuthor
+from users.models import User
 
 DAY_START_HOUR = 6
 
@@ -241,6 +242,8 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
         published__gte=intervals[0].start,
         published__lt=intervals[-1].end,
     )
+    if sub.author.kind == User.PERSONAL:
+        posts_query = posts_query.exclude(kind=Post.LINK)
 
     posts = peekable(posts_query.order_by('published'))
 

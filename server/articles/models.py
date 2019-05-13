@@ -83,7 +83,7 @@ class Post(models.Model):
     def find_by_source_url(cls, url):
         url = clean_url(url)
         md5 = hashlib.md5(url.encode()).hexdigest()
-        for p in cls.objects.filter(source_md5=md5).order_by('-published'):
+        for p in cls.objects.filter(source_md5=md5).exclude(kind__in=[Post.LINK, Post.RECOMMENDATION]).order_by('-published'):
             if p.source == url:
                 return p
 

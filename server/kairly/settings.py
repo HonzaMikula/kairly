@@ -182,3 +182,5 @@ except ImportError:
 
 
 REMOTE_CACHE_API_KEY = 'llV45alRPaHU'
+
+DEFAULT_USER_AGENT = 'Mozilla/5.0 Kairly'

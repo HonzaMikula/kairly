@@ -10,6 +10,7 @@ from django.core.management.base import BaseCommand
 
 from articles.models import Post, Newspaper, Backlog, IssuePost
 from articles.signals import post_publish
+from articles.utils import create_post_link
 from sources.models import Channel, EntryHasNoContentException
 
 
@@ -93,6 +94,22 @@ class Command(BaseCommand):
 
         if verbosity > 0:
             self.stdout.write('Importing {}'.format(url))
+
+        if channel.import_links:
+            post = create_post_link(url, channel.author, guid=guid)
+            if post.kind == Post.LINK:
+                return post, True
+
+            # post already exists under regular author, add recommendation instead
+            recommendation = Post.objects.create(
+                title=post.title,
+                kind=Post.RECOMMENDATION,
+                author=channel.author,
+                guid=guid,
+                ref_post=post,
+                protected=False
+            )
+            return recommendation, True
 
         perex, content, resolved_url = channel.parse_entry(entry, nocache=force)
 
@@ -186,7 +203,7 @@ class Command(BaseCommand):
                     if imported:
                         counter_posts += 1
 
-                    if newspaper:
+                    if newspaper and post.kind not in [Post.RECOMMENDATION, Post.LINK]:
                         if IssuePost.objects.filter(issue__newspaper=newspaper, post=post).exists():
                             continue
                         if Backlog.objects.filter(newspaper=newspaper, post=post).exists():

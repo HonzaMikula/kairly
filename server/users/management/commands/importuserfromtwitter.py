@@ -48,7 +48,7 @@ class Command(BaseCommand):
         )
 
         image_resp = requests.get(image_url)
-        if image_resp.status_code == requests.codes.ok:
+        if image_resp.ok:
             cf = ContentFile(image_resp.content)
             user.picture.save(f"{username}.{image_url.split('.')[-1]}", cf)
             user.save()

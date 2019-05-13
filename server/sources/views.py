@@ -6,6 +6,7 @@ from decimal import Decimal
 import requests
 import rapidjson as json
 from django.db import transaction
+from django.conf import settings
 from django.http import HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from dateutil.relativedelta import relativedelta
@@ -83,7 +84,20 @@ def import_rss(request):
         subscription.set_periodicity(periodicity)
         author_subscriptions.append(subscription)
 
-    for source in payload['sources']:
+    def is_rss(header):
+        just_type = header.split(';')[0]
+        try:
+            second_part = just_type.split('/')[1]
+        except IndexError:
+            second_part = just_type
+
+        return second_part in ('rss+xml', 'rss', 'xml', 'atom+xml')
+
+    sources = payload['sources']
+    if len(sources) > 100:
+        raise HttpResponseBadRequest('Too many sources')
+
+    for source in sources:
         url = source['xmlUrl']
         m = RE_NEWSPAPER.match(url)
         if m:
@@ -99,9 +113,17 @@ def import_rss(request):
 
         # feed item is regular url
         try:
-            resp = requests.head(url, allow_redirects=True, timeout=5)
+            headers = {'User-Agent': settings.DEFAULT_USER_AGENT}
+            resp = requests.head(url, headers=headers, allow_redirects=True, timeout=3)
         except requests.exceptions.Timeout:
             print(f"{url} time out")
+            continue
+        except IOError as e:
+            print(f"{url} raised {str(e)}")
+            continue
+
+        if not resp.ok:
+            print(f"Invalid response for {url}. Status code {resp.status_code}")
             continue
 
         try:
@@ -110,9 +132,9 @@ def import_rss(request):
             return HttpResponseBadRequest(str(e))
 
         url = resp.url
-        content_type = resp.headers['Content-Type'].split(';')[0]
+        content_type = resp.headers['Content-Type']
 
-        if content_type.split('/')[1] not in ('rss+xml', 'xml', 'atom+xml'):
+        if not is_rss(content_type):
             print(f"Unknown content type {content_type} for {url}")
             continue
 

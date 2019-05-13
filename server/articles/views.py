@@ -4,7 +4,6 @@ from datetime import datetime
 from decimal import ConversionSyntax, Decimal
 from operator import attrgetter
 
-import lxml.html
 import pytz
 import rapidjson as json
 from credits.utils import (get_user_credits, pay_author_subscription,
@@ -21,18 +20,17 @@ from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
 from django.views import View
 from django.views.decorators.http import require_POST
-from sources.parser.og import parse_og_tags
 from users.models import User
 from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
-from utils.url import fetch_url
 
 from .models import (Backlog, Issue, Newspaper, Post, Subscription,
                      SubscriptionToAuthor, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
+from .utils import create_post_link
 
 AUTOR_POSTS_PAGE_SIZE = 20
 
@@ -240,8 +238,10 @@ def author_posts(request, username):
     author = get_object_or_404(User, username=username)
 
     posts_query = Post.objects\
-        .filter(author=author, draft=False, published__lt=timezone.now())\
-        .exclude(kind=Post.LINK)
+        .filter(author=author, draft=False, published__lt=timezone.now())
+
+    if author.kind == User.PERSONAL:
+        posts_query = posts_query.exclude(kind=Post.LINK)
 
     if request.GET.get('skipRecommendations') == '1':
         posts_query = posts_query.exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])
@@ -349,46 +349,17 @@ def create_link(request, username, newspapeper_slug):
         url = 'http://' + url
 
     try:
-        html, resolved_url = fetch_url(url)
+        post = create_post_link(url, request.user)
     except IOError as e:
         return JsonResponse({
             'error': str(e)
         }, status=409)
 
-    existing_post = Post.find_by_source_url(resolved_url)
-    if existing_post:
-        created = Backlog.consider_post(newspaper, existing_post)
+    if post.kink != Post.LINK:
+        created = Backlog.consider_post(newspaper, post)
         return JsonResponse({
-            'post': existing_post.to_json() if created else None
+            'post': post.to_json() if created else None
         })
-
-    htmltree = lxml.html.fromstring(html)
-    try:
-        title = htmltree.cssselect('head title')[0].text
-    except IndexError:
-        title = resolved_url
-    try:
-        description = htmltree.cssselect('head meta[name=description]')[0].attrib.get('content', '')
-    except IndexError:
-        description = ''
-
-    og = parse_og_tags(htmltree)
-
-    attachments = {}
-    if 'image' in og:
-        attachments['image'] = og['image']
-
-    post = Post.objects.create(
-        kind=Post.LINK,
-        source=resolved_url,
-        protected=False,
-        title=og.get('title', title),
-        perex=og.get('description', description),
-        attachments=json.dumps(attachments) if attachments else None,
-        author=request.user,
-        price=0,
-        weight=0
-    )
 
     Backlog.consider_post(newspaper, post)
 

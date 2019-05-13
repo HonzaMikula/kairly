@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 import TABS from '@/exploreTabs'
 
@@ -121,6 +121,8 @@ export default {
   },
 
   methods: {
+     ...mapMutations(['showError']),
+
     async selectTopic(topic) {
       this.selectedTopic = topic
       this.loading = true
@@ -140,14 +142,25 @@ export default {
         for (let i = 0; i < outlines.length; i++) {
           const outline = outlines[i]
           if (!outline.hasChildNodes()) {
-            const title = outline.getAttribute('title')
+            let title = outline.getAttribute('title')
             const xmlUrl  = outline.getAttribute('xmlUrl')
             const htmlUrl  = outline.getAttribute('htmlUrl')
-            items.push({title, xmlUrl, htmlUrl})
+            if (xmlUrl) {
+              if (!title) {
+                title = (htmlUrl || xmlUrl).replace('http://', '').replace('https://', '')
+              }
+              items.push({title, xmlUrl, htmlUrl})
+            }
           }
         }
-        this.$store.commit('opml', items)
-        this.$router.push('/import')
+        if (items.length > 100) {
+          this.showError('Too many items')
+        } else if (items.length == 0) {
+          this.showError('OPML is empty')
+        } else {
+          this.$store.commit('opml', items)
+          this.$router.push('/import')
+        }
       })
       // reader.addEventListener('error', ev => {
       //   console.error(ev)
