@@ -48,7 +48,10 @@
         @changePeriodicity="changePeriodicity"
       />
 
-      <loading-spinner v-if="importing" />
+      <div v-if="importing">
+        {{ progress }} / {{ progressTotal }}
+        <loading-spinner></loading-spinner>
+      </div>
       <button
         v-else
         @click="submit">Import feeds
@@ -58,7 +61,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
@@ -85,6 +88,8 @@ export default {
   data() {
     return {
       importing: false,
+      progress: null,
+      progressTotal: null,
       showChangePeriodicityDialog: false,
       changePerodicityTarget: null,
     }
@@ -109,6 +114,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['subscribeAuthor', 'subscribeNewspaper']),
+
     selectAll(ev) {
       const value = ev.target.checked
       this.sources.forEach(s => s.selected = value)
@@ -129,14 +136,45 @@ export default {
     },
 
     async submit() {
-      this.importing = true
       const sources = this.sources
         .filter(s => s.selected)
         .map(s => ({title: s.title, xmlUrl: s.xmlUrl, htmlUrl: s.htmlUrl, periodicity: s.periodicity}))
-      const { credits } = await this.$axios.$post(`/import-rss`, {sources})
-      this.$store.commit('updateCredits', credits)
-      this.$store.commit('resetTimeline')
-      this.$router.push("/")
+
+      if (sources.length) {
+        const targets = []
+
+        this.importing = true
+        this.progress = 0
+        this.progressTotal = sources.length + 1  // one to step for final subscribe
+
+
+        for (const source of sources) {
+          const data = await this.$axios.$post(`/import-rss`, {source})
+          this.progress += 1
+          if (data.type) {
+            // result is not error
+            targets.push({...data, periodicity: source.periodicity})
+          }
+        }
+
+        for (const target of targets) {
+          if (target.type === 'newspaper') {
+            await this.subscribeNewspaper({
+              fullName: target.fullName,
+              donation: 0
+            })
+          }
+          if (target.type === 'author') {
+            await this.subscribeAuthor({
+              author: {id: target.id},
+              periodicity: target.periodicity,
+              donation: 0
+            })
+          }
+        }
+
+        this.$router.push("/")
+      }
     }
   }
 }
