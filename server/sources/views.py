@@ -6,11 +6,13 @@ import rapidjson as json
 from django.db import transaction
 from django.conf import settings
 from django.views.decorators.http import require_POST
+from django.core.management import call_command
 
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from articles.models import Newspaper
 from sources.models import Channel
+from sources.management.commands import importrss
 from users.models import User
 
 
@@ -97,6 +99,8 @@ def import_rss(request):
             directives='',
             author=author,
         )
+
+        call_command(importrss.Command(), verbosity=3, nosleep=True, provider=uniq_id)
 
         return JsonResponse({
             'type': 'author',

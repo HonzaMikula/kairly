@@ -48,6 +48,12 @@ class Command(BaseCommand):
             help='Override existing posts',
         )
         parser.add_argument(
+            '--nosleep',
+            action='store_true',
+            dest='nosleep',
+            help='Do not wait between requests',
+        )
+        parser.add_argument(
             '--draft',
             action='store_true',
             dest='draft',
@@ -224,7 +230,8 @@ class Command(BaseCommand):
                 if options.get('last'):
                     break
 
-                time.sleep(0.03)
+                if not options.get('nosleep'):
+                    time.sleep(0.01)
 
         counter_end = time.perf_counter()
         self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: importtrss finished in {} / {} channels / {} posts imported".format(
