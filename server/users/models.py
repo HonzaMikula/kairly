@@ -54,10 +54,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     PERSONAL = 'personal'
     MEDIUM = 'medium'
+    FEED = 'medium'
 
     KIND_CHOICES = (
         (PERSONAL, _('Personal')),
         (MEDIUM, _('Medium')),
+        (FEED, _('Feed')),
     )
 
     username = models.CharField(

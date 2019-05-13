@@ -29,6 +29,7 @@ class Channel(models.Model):
     name = models.CharField(max_length=160)
     provider = models.CharField(max_length=32, help_text="Source identifier (namespace for guid)")
     rss = models.CharField(max_length=250)
+    import_links = models.BooleanField(default=False)
     parse_content_from_rss = models.BooleanField(default=False)
     user_agent = models.CharField(help_text="Force User-Agent header when fetching RSS or post", max_length=250, null=True, blank=True)
     parser = models.TextField(help_text="Parse rules to get content from webpage/rss.", blank=False, validators=[validate_rules])

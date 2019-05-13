@@ -42,7 +42,11 @@
         @changePeriodicity="changePeriodicity"
       />
 
-      <button @click="submit">Import feeds</button>
+      <loading-spinner v-if="importing" />
+      <button
+        v-else
+        @click="submit">Import feeds
+      </button>
     </div>
   </AppLayout>
 </template>
@@ -72,6 +76,7 @@ export default {
 
   data() {
     return {
+      importing: false,
       showChangePeriodicityDialog: false,
       changePerodicityTarget: null,
       sources: this.$store.state.opml.map(source => {
@@ -103,15 +108,18 @@ export default {
     },
 
     isKairlyNewspaper(url) {
-      return url.match('://kairly.com/[^/]+/[^/]+/rss')
+      return url.match('://kairly\\.com/[^/]+/[^/]+/rss$')
     },
 
     async submit() {
+      this.importing = true
       const sources = this.sources
         .filter(s => s.selected)
-        .map(s => ({title: s.title, url: s.xmlUrl, periodicity: s.periodicity}))
-      await this.$axios.$post(`/import-rss`, {sources})
-      //this.$router.push("/")
+        .map(s => ({title: s.title, xmlUrl: s.xmlUrl, htmlUrl: s.htmlUrl, periodicity: s.periodicity}))
+      const { credits } = await this.$axios.$post(`/import-rss`, {sources})
+      this.$store.commit('updateCredits', credits)
+      this.$store.commit('resetTimeline')
+      this.$router.push("/")
     }
   },
 

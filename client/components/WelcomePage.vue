@@ -142,7 +142,8 @@ export default {
           if (!outline.hasChildNodes()) {
             const title = outline.getAttribute('title')
             const xmlUrl  = outline.getAttribute('xmlUrl')
-            items.push({title, xmlUrl})
+            const htmlUrl  = outline.getAttribute('htmlUrl')
+            items.push({title, xmlUrl, htmlUrl})
           }
         }
         this.$store.commit('opml', items)

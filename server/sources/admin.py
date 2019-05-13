@@ -22,8 +22,8 @@ FakeEntry = namedtuple('FakeEntry', ['link'])
 
 @admin.register(Channel)
 class ChannelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'provider', 'author', 'newspaper', 'enabled', 'rss', 'parse_content_from_rss')
-    list_filter = ('enabled', 'parse_content_from_rss')
+    list_display = ('name', 'provider', 'author', 'newspaper', 'enabled', 'rss', 'import_links', 'parse_content_from_rss')
+    list_filter = ('enabled', 'import_links', 'parse_content_from_rss')
     search_fields = ('name', 'provider', 'author__name')
 
     def get_urls(self):

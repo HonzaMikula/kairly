@@ -41,6 +41,12 @@ const createStore = () => {
           state.timeline = {}
           state.recommendedIssues = {}
       },
+      resetTimeline(state) {
+        state.today = null
+        state.timelineHasNoActiveSubscriptions = false
+        state.timelineExpandedIssues = {}
+        state.timeline = {}
+      },
 
       updateCredits(state, credits) {
         state.auth.user.credits = credits
