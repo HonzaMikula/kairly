@@ -161,14 +161,16 @@ export default {
           if (target.type === 'newspaper') {
             await this.subscribeNewspaper({
               fullName: target.fullName,
-              donation: 0
+              donation: 0,
+              allowSuspended: true
             })
           }
           if (target.type === 'author') {
             await this.subscribeAuthor({
               author: {id: target.id},
               periodicity: target.periodicity,
-              donation: 0
+              donation: 0,
+              allowSuspended: true
             })
           }
         }

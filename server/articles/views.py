@@ -378,6 +378,7 @@ class NewspaperSubscriptionView(View):
         newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
 
         payload = json.loads(request.body.decode('utf-8'))
+        allow_suspended = payload.get('allowSuspended')
         donation = payload.get('donation')
         if donation:
             donation = Decimal(donation)
@@ -400,7 +401,9 @@ class NewspaperSubscriptionView(View):
             subscription.save()
         else:
             donation = donation or Decimal(0)
-            if credits < newspaper.price + donation:
+            has_credits = credits >= newspaper.price + donation
+
+            if not has_credits and not allow_suspended:
                 return HttpResponse("Insufficient credit.", status=402)
 
             if not subscription:
@@ -409,14 +412,22 @@ class NewspaperSubscriptionView(View):
                     newspaper=newspaper
                 )
 
-            subscription.suspended = False
-            subscription.valid_from = now
-            subscription.valid_to = now + relativedelta(months=1)
+            if has_credits:
+                subscription.suspended = False
+                subscription.valid_from = now
+                subscription.valid_to = now + relativedelta(months=1)
+            else:
+                if not subscription.suspended:
+                    subscription.suspended = True
+                    subscription.valid_from = now - relativedelta(months=1)
+                    subscription.valid_to = now
+
             subscription.donation = donation
             subscription.save()
 
-            credits -= newspaper.price + donation
-            pay_newspaper_subscription(subscription)
+            if has_credits:
+                credits -= newspaper.price + donation
+                pay_newspaper_subscription(subscription)
 
         return JsonResponse({
             'credits': str(credits),
@@ -467,6 +478,7 @@ class AuthorSubscriptionView(View):
         else:
             periodicity = None
 
+        allow_suspended = payload.get('allowSuspended')
         keep_status = payload.get('keepStatus')
         donation = payload.get('donation')
         if donation:
@@ -503,7 +515,9 @@ class AuthorSubscriptionView(View):
             subscription.save()
         else:
             donation = donation or Decimal(0)
-            if credits < author.price + donation:
+            has_credits = credits >= author.price + donation
+
+            if not has_credits and not allow_suspended:
                 return HttpResponse("Insufficient credit.", status=402)
 
             if not subscription:
@@ -512,17 +526,25 @@ class AuthorSubscriptionView(View):
                     author=author
                 )
 
+            if has_credits:
+                subscription.suspended = False
+                subscription.valid_from = now
+                subscription.valid_to = now + relativedelta(months=1)
+            else:
+                if not subscription.suspended:
+                    subscription.suspended = True
+                    subscription.valid_from = now - relativedelta(months=1)
+                    subscription.valid_to = now
+
             if periodicity:
                 subscription.set_periodicity(periodicity)
 
-            subscription.suspended = False
-            subscription.valid_from = now
-            subscription.valid_to = now + relativedelta(months=1)
             subscription.donation = donation
             subscription.save()
 
-            pay_author_subscription(subscription)
-            credits -= author.price + donation
+            if has_credits:
+                pay_author_subscription(subscription)
+                credits -= author.price + donation
 
         return JsonResponse({
             'credits': str(credits),
