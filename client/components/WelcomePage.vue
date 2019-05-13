@@ -6,13 +6,7 @@
       <h2>{{ $t('Start with importing your favorite authors') }}</h2>
 
       <section class="welcome--import">
-        <div class="welcome--import--rss">
-          <label>
-            Import RSS feeds
-            <input ref type="file" accept=".opml" @change="importOpml($event)" hidden>
-          </label>
-          <p>Upload OPML file.</p>
-        </div>
+        <WelcomeImportRss @loaded="$router.push('/import')" />
 
         <div class="welcome--import--twitter">
           <nuxt-link to="/import">
@@ -93,17 +87,19 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
+import WelcomeImportRss from '@/components/widgets/WelcomeImportRss'
 
 export default {
   name: 'Welcome',
 
   components: {
-    NewspaperWidget
+    NewspaperWidget,
+    WelcomeImportRss
   },
 
   data() {
@@ -121,52 +117,12 @@ export default {
   },
 
   methods: {
-     ...mapMutations(['showError']),
-
     async selectTopic(topic) {
       this.selectedTopic = topic
       this.loading = true
       this.newspapers = await this.$store.dispatch('getNewspapers', topic.newspapers)
       this.loading = false
     },
-
-    importOpml(ev) {
-      const f = event.target.files[0]
-      const reader = new FileReader()
-      const items = []
-      reader.addEventListener('loadend', ev => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(reader.result, "application/xml");
-        const outlines = doc.getElementsByTagName('outline');
-
-        for (let i = 0; i < outlines.length; i++) {
-          const outline = outlines[i]
-          if (!outline.hasChildNodes()) {
-            let title = outline.getAttribute('title')
-            const xmlUrl  = outline.getAttribute('xmlUrl')
-            const htmlUrl  = outline.getAttribute('htmlUrl')
-            if (xmlUrl) {
-              if (!title) {
-                title = (htmlUrl || xmlUrl).replace('http://', '').replace('https://', '')
-              }
-              items.push({title, xmlUrl, htmlUrl})
-            }
-          }
-        }
-        if (items.length > 100) {
-          this.showError('Too many items')
-        } else if (items.length == 0) {
-          this.showError('OPML is empty')
-        } else {
-          this.$store.commit('opml', items)
-          this.$router.push('/import')
-        }
-      })
-      // reader.addEventListener('error', ev => {
-      //   console.error(ev)
-      // })
-      reader.readAsText(f)
-    }
   },
 
   async created() {
@@ -222,10 +178,6 @@ export default {
 .welcome--import--twitter
   button
     +button-icon($fa-var-twitter, icon-text, brand)
-
-.welcome--import--rss
-  label
-    +button-icon($fa-var-rss, icon-text, solid)
 
 //- Topics
 .welcome--topics

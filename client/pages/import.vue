@@ -1,6 +1,12 @@
 <template>
   <AppLayout :name="$t('Import')">
-    <div class="import-view">
+    <div v-if="sources === null">
+      <WelcomeImportRss style="margin: auto; width: 300px; margin-top: 40px" />
+    </div>
+    <div
+      v-else
+      class="import-view"
+    >
       <h1>Feeds to import</h1>
 
       <table>
@@ -57,6 +63,7 @@ import { mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
+import WelcomeImportRss from '@/components/widgets/WelcomeImportRss'
 
 export default {
   name: 'Settings',
@@ -64,6 +71,7 @@ export default {
   components: {
     AppLayout,
     ChangePeriodicity,
+    WelcomeImportRss,
   },
 
   mixins: [PeriodicityMixin],
@@ -79,7 +87,16 @@ export default {
       importing: false,
       showChangePeriodicityDialog: false,
       changePerodicityTarget: null,
-      sources: this.$store.state.opml.map(source => {
+    }
+  },
+
+  computed: {
+    sources() {
+      const { opml } = this.$store.state
+      if (!opml) {
+        return null
+      }
+      return opml.map(source => {
         const newpspaper = this.isKairlyNewspaper(source.xmlUrl)
         return {
           ...source,
@@ -120,12 +137,6 @@ export default {
       this.$store.commit('updateCredits', credits)
       this.$store.commit('resetTimeline')
       this.$router.push("/")
-    }
-  },
-
-  fetch ({ store, redirect }) {
-    if (store.state.opml === null) {
-      redirect('/')
     }
   }
 }
