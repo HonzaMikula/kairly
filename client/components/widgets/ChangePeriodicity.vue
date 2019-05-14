@@ -123,6 +123,7 @@ export default {
 .change-periodicity-view
   border-radius: 5px
   margin-bottom: $baseline / 2
+  width: 220px
 
   background: #fff
   border: 1px solid lighten($c-base, 30%)
@@ -133,15 +134,19 @@ export default {
   //- header
   header
     position: relative
+    display: flex
+    align-items: center
+    justify-content: center
 
     padding: 0 $baseline/2
+    min-height: $baseline * 1.25
 
     background: lighten($c-base, 30%)
     color: #000
 
     font-weight: 600
     font-size: $fs-0
-    line-height: $baseline * 1.25
+    line-height: 1.42
     text-align: center
 
     //-- arrow back
@@ -149,12 +154,16 @@ export default {
       position: absolute
       left: 0
 
+      height: 100%
       width: $baseline * 1.25
 
       color: darken($c-base, 20%)
 
       cursor: pointer
       font-size: $fs--1
+      display: inline-flex
+      justify-content: center
+      align-items: center
 
       &:focus,
       &:hover

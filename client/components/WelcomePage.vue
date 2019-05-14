@@ -11,11 +11,11 @@
         <div class="welcome--import--twitter">
           <nuxt-link to="/import">
             <button>
-              Read your Twitter on Kairly
+              {{ $t('Read your Twitter on Kairly') }}
             </button>
           </nuxt-link>
 
-          <p>Connect your Twitter account.</p>
+          <p>{{ $t('Connect your Twitter account.') }}</p>
         </div>
       </section>
 

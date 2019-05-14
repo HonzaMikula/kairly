@@ -9,3 +9,18 @@
 //- BOX SHADOW -//
 =box-shadow
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+
+
+
+=fa-spin
+  animation: fa-spin 2s infinite linear
+
+=fa-pulse
+  animation: fa-spin 1s infinite steps(8)
+
+@keyframes fa-spin
+  0%
+    transform: rotate(0deg)
+
+  100%
+    transform: rotate(360deg)

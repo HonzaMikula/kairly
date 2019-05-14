@@ -1,10 +1,10 @@
 <template>
   <div class="welcome--import--rss">
     <label>
-      Import RSS feeds
+      {{ $t('Import RSS feeds') }}
       <input ref type="file" accept=".opml" @change="importOpml($event)" hidden>
     </label>
-    <p>Upload OPML file.</p>
+    <p>{{ $t('Upload OPML file.') }}</p>
   </div>
 </template>
 

@@ -709,7 +709,7 @@ msgstr "Jak často to chcete číst?"
 #: components/widgets/ChangePeriodicity.vue:23
 #: components/widgets/PeriodWidget.vue:15
 msgid "Which day?"
-msgstr "Jaký den"
+msgstr "Jaký den?"
 
 #: components/widgets/ChangePeriodicity.vue:29
 #: components/widgets/PeriodWidget.vue:19 mixins/PeriodicityMixin.js:8

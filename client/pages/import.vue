@@ -5,20 +5,20 @@
     </div>
     <div
       v-else
-      class="import-view"
+      class="import-rss-view"
     >
-      <h1>Feeds to import</h1>
+      <h1>{{ $t('Feeds to import') }}</h1>
 
       <table>
         <thead>
           <tr>
             <th><input type="checkbox" checked name="" @change="selectAll($event)" /></th>
-            <th>Name</th>
-            <th>When to display new posts?</th>
+            <th>{{ $t('Name') }}</th>
+            <th>{{ $t('When to display new posts?') }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="source in sources" :key="source.xmlUrl">
+          <tr v-for="(source, index) in sources" :key="source.xmlUrl">
             <td>
               <input
                 v-model="source.selected"
@@ -26,36 +26,39 @@
                 name=""
               />
             </td>
-            <th>
+            <th @click="selectSource(index)">
               {{ source.title }}
-              </th>
-            <td>
+            </th>
+            <td class="import-rss--change-periodicity">
               <template v-if="isKairlyNewspaper(source.xmlUrl)">
-                Subscribe to the newspaper
+                {{ $t('Subscribe to the newspaper') }}
               </template>
               <template v-else>
-                <a href="" @click.prevent.stop="changePerodicityTarget = source; showChangePeriodicityDialog = !showChangePeriodicityDialog">
+                <a href="" @click.prevent.stop="clickChangePeriodicity(source, index)">
                   {{ getPeriodicityLabel(source.periodicity) }}
                 </a>
               </template>
+              <ChangePeriodicity
+                v-if="showChangePeriodicityDialog[index]"
+                @changePeriodicity="changePeriodicity"
+              />
             </td>
           </tr>
         </tbody>
       </table>
 
-      <ChangePeriodicity
-        v-if="showChangePeriodicityDialog"
-        @changePeriodicity="changePeriodicity"
-      />
-
-      <div v-if="importing">
-        {{ progress }} / {{ progressTotal }}
-        <loading-spinner></loading-spinner>
-      </div>
-      <button
-        v-else
-        @click="submit">Import feeds
-      </button>
+      <footer class="import-rss--footer">
+        <button
+          @click="submit"
+          :disabled="importing"
+          :class="{'loading': importing}">
+          {{ importing ? $t('Importing feeds') : $t('Import feeds') }}
+        </button>
+        <template v-if="importing">
+          <progress :value="progress" :max="progressTotal"></progress>
+          <span>{{ progress }} / {{ progressTotal }}</span>
+        </template>
+      </footer>
     </div>
   </AppLayout>
 </template>
@@ -81,16 +84,17 @@ export default {
 
   head() {
     return {
-      title: this.$t('System Reports')
+      title: this.$t('Import RSS feeds – Kairly')
     }
   },
 
   data() {
     return {
       importing: false,
+      importingTest: false,
       progress: null,
       progressTotal: null,
-      showChangePeriodicityDialog: false,
+      showChangePeriodicityDialog: [],
       changePerodicityTarget: null,
     }
   },
@@ -116,9 +120,32 @@ export default {
   methods: {
     ...mapActions(['subscribeAuthor', 'subscribeNewspaper']),
 
+    clickChangePeriodicity(source, index) {
+      this.changePerodicityTarget = source
+      
+      if (this.showChangePeriodicityDialog[index]) {
+        this.showChangePeriodicityDialog[index] = false
+      }
+      else {
+        this.showChangePeriodicityDialog.fill(false)
+        this.showChangePeriodicityDialog[index] = true
+      }
+    
+      this.$forceUpdate()
+    },
+
     selectAll(ev) {
       const value = ev.target.checked
       this.sources.forEach(s => s.selected = value)
+      this.$forceUpdate()
+    },
+
+    selectSource(index) {
+      if (this.sources[index].selected)
+        this.sources[index].selected = false
+      else
+        this.sources[index].selected = true
+      this.$forceUpdate()
     },
 
     changePeriodicity(frequency, dow, time) {
@@ -127,7 +154,7 @@ export default {
         "dow": dow,
         "time": time
       }
-      this.showChangePeriodicityDialog = false
+      this.showChangePeriodicityDialog.fill(false)
       this.changePerodicityTarget = null
     },
 
@@ -184,9 +211,10 @@ export default {
 
 <style lang="sass">
 @import './styles/components/buttons'
+@import './styles/components/mixins'
 
 //- Import
-.import-view
+.import-rss-view
   margin: $baseline auto
   max-width: 900px
 
@@ -224,8 +252,69 @@ export default {
 
     text-align: left
 
+  tbody th
+    cursor: pointer
+
+//- Footer
+.import-rss--footer    
+  display: flex
+  align-items: center
+
+  // Info label about progress
+  > span
+    font-size: $fs--1
+
+  // Progress
+  progress
+    appearance: none
+    border: none
+
+    border-radius: $baseline * 1.25/2
+    overflow: hidden
+    margin-right: $baseline
+    height: $baseline / 2
+    width: 200px
+
+    background: #ddd
+
+    &::-webkit-progress-bar
+      background: #ddd
+
+    &::-webkit-progress-value,
+    &::-moz-progress-bar
+      background: $c-base
+
+
+
   // Submit Button
   > button
     +button
+
+    margin-right: $baseline
+
+    &.loading::after
+      +fa-icon()
+      @extend .fas
+      +fa-spin
+
+      margin-left: $baseline / 4
+
+      content: fa-content($fa-var-sync)
+
+//- Change periodicity
+.import-rss--change-periodicity
+  position: relative
+
+  > a
+    color: $c-base
+
+    &:focus,
+    &:hover
+      color: darken($c-base, 10%)
+
+  .change-periodicity-view
+    position: absolute
+    z-index: 5
+
 
 </style>

@@ -28,15 +28,15 @@
         </section>
 
         <section class="subscription--imports">
-          <h2>Import authors</h2>
+          <h2>{{ $t('Import authors') }}</h2>
 
-          <h3>Import RSS feeds</h3>
-          <p>Upload OPML file with your feeds.</p>
-          <button>Upload OPML file</button>
+          <h3>{{ $t('Import RSS feeds') }}</h3>
 
-          <h3>Read your Twitter on Kairly</h3>
-          <p>Connect to your Twitter account and read your timeline on Kairly.</p>
-          <button>Connect to your Twitter</button>
+          <WelcomeImportRss @loaded="$router.push('/import')" />
+
+          <h3>{{ $t('Read your Twitter on Kairly') }}</h3>
+          <p>{{ $t('Connect to your Twitter account and read your timeline on Kairly.') }}</p>
+          <button>{{ $t('Connect to your Twitter') }}</button>
         </section>
 
         <section>
@@ -77,13 +77,15 @@ import AppLayout from '@/components/layout/AppLayout'
 import { mapGetters, mapState, mapActions } from 'vuex'
 
 import MoneyFormat from '@/components/widgets/MoneyFormat'
+import WelcomeImportRss from '@/components/widgets/WelcomeImportRss'
 
 export default {
   name: 'MySubscription',
 
   components: {
     AppLayout,
-    MoneyFormat
+    MoneyFormat,
+    WelcomeImportRss
   },
 
   computed: {
@@ -184,6 +186,9 @@ my-subscription-view
       //- add credits
       button
         +button-text
+
+    .welcome--import--rss
+      margin-bottom: $baseline
 
     h2
       margin-bottom: $baseline
