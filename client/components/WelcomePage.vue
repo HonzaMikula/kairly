@@ -9,11 +9,9 @@
         <WelcomeImportRss @loaded="$router.push('/import')" />
 
         <div class="welcome--import--twitter">
-          <nuxt-link to="/import">
-            <button>
-              {{ $t('Read your Twitter on Kairly') }}
-            </button>
-          </nuxt-link>
+          <button disabled>
+            {{ $t('Read your Twitter on Kairly') }}
+          </button>
 
           <p>{{ $t('Connect your Twitter account.') }}</p>
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <AppLayout :name="$t('Import')">
+  <AppLayout :name="$t('Import RSS feeds')">
     <div v-if="sources === null">
       <WelcomeImportRss style="margin: auto; width: 300px; margin-top: 40px" />
     </div>
@@ -7,7 +7,7 @@
       v-else
       class="import-rss-view"
     >
-      <h1>{{ $t('Feeds to import') }}</h1>
+      <h1>{{ $t('RSS feeds to import') }}</h1>
 
       <table>
         <thead>
@@ -166,6 +166,13 @@ export default {
       const sources = this.sources
         .filter(s => s.selected)
         .map(s => ({title: s.title, xmlUrl: s.xmlUrl, htmlUrl: s.htmlUrl, periodicity: s.periodicity}))
+
+      this.$ga.event({
+        eventCategory: 'Onboarding / Exploring',
+        eventAction: 'Import RSS feeds',
+        eventLabel: null,
+        eventValue: sources.length
+      })
 
       if (sources.length) {
         const targets = []

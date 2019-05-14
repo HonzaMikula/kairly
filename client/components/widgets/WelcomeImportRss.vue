@@ -21,6 +21,7 @@ export default {
       const f = event.target.files[0]
       const reader = new FileReader()
       const items = []
+
       reader.addEventListener('loadend', ev => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(reader.result, "application/xml");
@@ -40,6 +41,14 @@ export default {
             }
           }
         }
+
+        this.$ga.event({
+          eventCategory: 'Onboarding / Exploring',
+          eventAction: 'Upload OPML with RSS feeds',
+          eventLabel: null,
+          eventValue: items.length
+        })
+
         if (items.length > 100) {
           this.showError('Too many items')
         } else if (items.length == 0) {
