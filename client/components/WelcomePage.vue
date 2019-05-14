@@ -6,8 +6,12 @@
       <h2>{{ $t('Start with importing your favorite authors') }}</h2>
 
       <section class="welcome--import">
-        <WelcomeImportRss @loaded="$router.push('/import')" />
-
+        <div>
+          <ImportRssButton @loaded="$router.push('/import')" :text="$t('Import RSS feeds')" />
+ 
+          <p>{{ $t('Upload OPML file.') }}</p>
+        </div>
+      
         <div class="welcome--import--twitter">
           <button disabled>
             {{ $t('Read your Twitter on Kairly') }}
@@ -90,14 +94,14 @@ import { mapState, mapGetters } from 'vuex'
 import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import WelcomeImportRss from '@/components/widgets/WelcomeImportRss'
+import ImportRssButton from '@/components/widgets/ImportRssButton' 
 
 export default {
   name: 'Welcome',
 
   components: {
     NewspaperWidget,
-    WelcomeImportRss
+    ImportRssButton
   },
 
   data() {
@@ -173,9 +177,13 @@ export default {
   p
     font-size: $fs--1
 
-.welcome--import--twitter
-  button
-    +button-icon($fa-var-twitter, icon-text, brand)
+  .welcome--import--twitter
+    button
+      +button-icon($fa-var-twitter, icon-text, brand)
+
+  .import-rss-button
+    label
+      +button-icon($fa-var-rss, icon-text, solid)
 
 //- Topics
 .welcome--topics

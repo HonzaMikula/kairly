@@ -1,10 +1,9 @@
 <template>
-  <div class="welcome--import--rss">
+  <div class="import-rss-button">
     <label>
-      {{ $t('Import RSS feeds') }}
+      {{ text }}
       <input ref type="file" accept=".opml" @change="importOpml($event)" hidden>
     </label>
-    <p>{{ $t('Upload OPML file.') }}</p>
   </div>
 </template>
 
@@ -12,7 +11,10 @@
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'WelcomeImportRss',
+  name: 'ImportRssButton',
+  props: {
+    text: String
+  },
 
   methods: {
      ...mapMutations(['showError']),
@@ -66,14 +68,3 @@ export default {
   },
 }
 </script>
-
-
-<style lang="sass">
-//- Imports
-@import './styles/components/buttons'
-
-.welcome--import--rss
-  label
-    +button-icon($fa-var-rss, icon-text, solid)
-
-</style>

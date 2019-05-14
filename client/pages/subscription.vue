@@ -31,8 +31,9 @@
           <h2>{{ $t('Import authors') }}</h2>
 
           <h3>{{ $t('Import RSS feeds') }}</h3>
+          <p>{{ $t('Upload your OPML file with RSS feeds and read your favorite sources on Kairly.') }}</p>
 
-          <WelcomeImportRss @loaded="$router.push('/import')" />
+          <ImportRssButton @loaded="$router.push('/import')" :text="$t('Upload OPML file')" />
 
           <h3>{{ $t('Read your Twitter on Kairly') }}</h3>
           <p>{{ $t('Connect to your Twitter account and read your timeline on Kairly.') }}</p>
@@ -77,7 +78,7 @@ import AppLayout from '@/components/layout/AppLayout'
 import { mapGetters, mapState, mapActions } from 'vuex'
 
 import MoneyFormat from '@/components/widgets/MoneyFormat'
-import WelcomeImportRss from '@/components/widgets/WelcomeImportRss'
+import ImportRssButton from '@/components/widgets/ImportRssButton'
 
 export default {
   name: 'MySubscription',
@@ -85,7 +86,7 @@ export default {
   components: {
     AppLayout,
     MoneyFormat,
-    WelcomeImportRss
+    ImportRssButton
   },
 
   computed: {
@@ -187,8 +188,11 @@ my-subscription-view
       button
         +button-text
 
-    .welcome--import--rss
+    .import-rss-button
       margin-bottom: $baseline
+
+      label
+        +button-text 
 
     h2
       margin-bottom: $baseline

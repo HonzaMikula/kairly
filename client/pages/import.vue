@@ -1,8 +1,12 @@
 <template>
   <AppLayout :name="$t('Import RSS feeds')">
-    <div v-if="sources === null">
-      <WelcomeImportRss style="margin: auto; width: 300px; margin-top: 40px" />
+    <div v-if="sources === null" class="import-rss-empty-view">
+      <h1>{{ $t('Import your RSS feeds') }}</h1>
+
+      <p>{{ $t('Export your feeds from your current RSS reader in OPML format and upload the file here.') }}</p>
+      <ImportRssButton :text="$t('Upload OPML file')" />
     </div>
+
     <div
       v-else
       class="import-rss-view"
@@ -71,7 +75,7 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 import AppLayout from '@/components/layout/AppLayout'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
-import WelcomeImportRss from '@/components/widgets/WelcomeImportRss'
+import ImportRssButton from '@/components/widgets/ImportRssButton'
 
 export default {
   name: 'Settings',
@@ -79,7 +83,7 @@ export default {
   components: {
     AppLayout,
     ChangePeriodicity,
-    WelcomeImportRss,
+    ImportRssButton,
   },
 
   directives: {
@@ -232,7 +236,30 @@ export default {
 @import './styles/components/buttons'
 @import './styles/components/mixins'
 
-//- Import
+//- Import RSS Empty view
+.import-rss-empty-view
+  margin: $baseline auto
+  max-width: 900px
+
+  > h1
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
+    line-height: 1.42
+
+  > p
+    margin-bottom: $baseline
+
+    font-size: $fs-1 
+    line-height: 1.42 
+
+  .import-rss-button
+    label
+      +button 
+
+
+//- Import RSS
 .import-rss-view
   margin: $baseline auto
   max-width: 900px
