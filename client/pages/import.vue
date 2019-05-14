@@ -41,6 +41,7 @@
               <ChangePeriodicity
                 v-if="showChangePeriodicityDialog[index]"
                 @changePeriodicity="changePeriodicity"
+                v-on-clickaway="() => closeAllWidgets()"
               />
             </td>
           </tr>
@@ -65,6 +66,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import AppLayout from '@/components/layout/AppLayout'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
@@ -78,6 +80,10 @@ export default {
     AppLayout,
     ChangePeriodicity,
     WelcomeImportRss,
+  },
+
+  directives: {
+    onClickaway
   },
 
   mixins: [PeriodicityMixin],
@@ -158,6 +164,12 @@ export default {
       this.changePerodicityTarget = null
     },
 
+    closeAllWidgets() {
+      console.log('ahoj')
+      this.showChangePeriodicityDialog.fill(false)
+      this.$forceUpdate()
+    },
+
     isKairlyNewspaper(url) {
       return url.match('://kairly\\.com/[^/]+/[^/]+/rss$')
     },
@@ -225,6 +237,9 @@ export default {
   margin: $baseline auto
   max-width: 900px
 
+  @media (max-width: $mobile)
+    padding: 0 $baseline / 2
+
   > h1
     margin-bottom: $baseline / 2
 
@@ -267,6 +282,9 @@ export default {
   display: flex
   align-items: center
 
+  @media (max-width: $mobile)
+    flex-direction: column
+
   // Info label about progress
   > span
     font-size: $fs--1
@@ -284,6 +302,9 @@ export default {
 
     background: #ddd
 
+    @media (max-width: $mobile)
+      margin-right: 0
+
     &::-webkit-progress-bar
       background: #ddd
 
@@ -292,12 +313,15 @@ export default {
       background: $c-base
 
 
-
   // Submit Button
   > button
     +button
 
     margin-right: $baseline
+
+    @media (max-width: $mobile)
+      margin-right: 0
+      margin-bottom: $baseline / 2
 
     &.loading::after
       +fa-icon()
