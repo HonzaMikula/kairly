@@ -70,6 +70,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { Sema } from 'async-sema'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import AppLayout from '@/components/layout/AppLayout'
@@ -200,20 +201,30 @@ export default {
         this.progress = 0
         this.progressTotal = sources.length + 1  // +1 for subscribe
 
-        for (const source of sources) {
-          const data = await this.$axios.$post(`/import-rss`, {source}, { progress: false })
-          this.progress += 1
-          if (data.type === 'newspaper') {
-            subscribeData.newspapers.push({
-              fullName: data.fullName
-            })
-          } else if (data.type === 'author') {
-            subscribeData.authors.push({
-              username: data.username,
-              periodicity: source.periodicity
-            })
+        const s = new Sema(2)
+
+        const importSource = async (source) => {
+          await s.acquire()
+          try {
+            const data = await this.$axios.$post(`/import-rss`, {source}, { progress: false })
+            this.progress += 1
+
+            if (data.type === 'newspaper') {
+              subscribeData.newspapers.push({
+                fullName: data.fullName
+              })
+            } else if (data.type === 'author') {
+              subscribeData.authors.push({
+                username: data.username,
+                periodicity: source.periodicity
+              })
+            }
+          } finally {
+            s.release();
           }
         }
+
+        await Promise.all(sources.map(importSource));
 
         const { credits } = await this.$axios.$post(`/subscribe-rss`, subscribeData, { progress: false })
         this.progress += 1
