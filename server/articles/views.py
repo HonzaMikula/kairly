@@ -350,7 +350,7 @@ def create_link(request, username, newspapeper_slug):
         url = 'http://' + url
 
     try:
-        post = create_post_link(url, request.user, True)
+        post = create_post_link(url, request.user, hidden=True)
     except IOError as e:
         return JsonResponse({
             'error': str(e)

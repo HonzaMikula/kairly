@@ -61,7 +61,7 @@
         </button>
         <template v-if="importing">
           <progress :value="progress" :max="progressTotal"></progress>
-          <span>{{ progress }} / {{ progressTotal }}</span>
+          <span>{{ parseInt(progress / 2) }} / {{ parseInt(progressTotal / 2) }}</span>
         </template>
       </footer>
     </div>
@@ -132,7 +132,7 @@ export default {
 
     clickChangePeriodicity(source, index) {
       this.changePerodicityTarget = source
-      
+
       if (this.showChangePeriodicityDialog[index]) {
         this.showChangePeriodicityDialog[index] = false
       }
@@ -140,7 +140,7 @@ export default {
         this.showChangePeriodicityDialog.fill(false)
         this.showChangePeriodicityDialog[index] = true
       }
-    
+
       this.$forceUpdate()
     },
 
@@ -195,11 +195,11 @@ export default {
 
         this.importing = true
         this.progress = 0
-        this.progressTotal = sources.length + 1  // one to step for final subscribe
+        this.progressTotal = sources.length * 2  // one step for import, second for final subscribe
 
 
         for (const source of sources) {
-          const data = await this.$axios.$post(`/import-rss`, {source})
+          const data = await this.$axios.$post(`/import-rss`, {source}, { progress: false })
           this.progress += 1
           if (data.type) {
             // result is not error
@@ -223,6 +223,7 @@ export default {
               allowSuspended: true
             })
           }
+          this.progress += 1
         }
 
         this.$router.push("/")
@@ -251,12 +252,12 @@ export default {
   > p
     margin-bottom: $baseline
 
-    font-size: $fs-1 
-    line-height: 1.42 
+    font-size: $fs-1
+    line-height: 1.42
 
   .import-rss-button
     label
-      +button 
+      +button
 
 
 //- Import RSS
@@ -305,7 +306,7 @@ export default {
     cursor: pointer
 
 //- Footer
-.import-rss--footer    
+.import-rss--footer
   display: flex
   align-items: center
 

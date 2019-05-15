@@ -13,7 +13,6 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 
 from .models import Issue, Post, Subscription, SubscriptionToAuthor
-from users.models import User
 
 DAY_START_HOUR = 6
 

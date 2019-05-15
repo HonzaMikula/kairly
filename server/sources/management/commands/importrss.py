@@ -60,111 +60,11 @@ class Command(BaseCommand):
             help='Create posts as draft',
         )
         parser.add_argument(
-            '--last',
-            action='store_true',
-            dest='last',
-            help='Import single document only for each channel (debug option)',
-        )
-        parser.add_argument(
             '--url',
             action='store',
             dest='url',
             help='Import only post with selected url (debug option)',
         )
-
-    def import_post(self, channel, entry, options):
-        verbosity = options.get('verbosity')
-        force = options.get('force')
-
-        url = entry.link.split('#', maxsplit=1)[0]
-
-        if options.get('url') and url != options.get('url'):
-            return None, False
-
-        # some feeds has not guid attribute
-        if hasattr(entry, 'id'):
-            entry_id = entry.id
-        else:
-            entry_id = re.sub('^https?://', '', url)
-        guid = "{}|{}".format(channel.provider, entry_id)
-
-        try:
-            post = Post.objects.get(guid=guid)
-        except Post.DoesNotExist:
-            post = None
-
-        if post and not force:
-            if verbosity > 1:
-                self.stdout.write('Skipping {}. Already imported'.format(url))
-            return post, False
-
-        if verbosity > 0:
-            self.stdout.write('Importing {}'.format(url))
-
-        if channel.import_links:
-            post = create_post_link(url, channel.author, False, guid=guid)
-            if post.kind == Post.LINK:
-                return post, True
-
-            # post already exists under regular author, add recommendation instead
-            recommendation = Post.objects.create(
-                title=post.title,
-                kind=Post.RECOMMENDATION,
-                author=channel.author,
-                guid=guid,
-                ref_post=post,
-                protected=False
-            )
-            return recommendation, True
-
-        perex, content, resolved_url = channel.parse_entry(entry, nocache=force)
-
-        for attr in ['published', 'date']:
-            try:
-                published = dateutil.parser.parse(getattr(entry, attr), tzinfos=TZ_INFOS)
-                break
-            except AttributeError:
-                pass
-        else:
-            # some fields has no published time in feed, eg kitchenette
-            published = timezone.now()
-
-        replacements = [d for d in channel.get_directives('replace', 'title')]
-        title = self.get_title_from_entry(entry)
-        for replacement in replacements:
-            title = replacement.replace(title)
-
-        replacements = [d for d in channel.get_directives('replace', 'document')]
-        for replacement in replacements:
-            perex = replacement.replace(perex)
-            content = replacement.replace(content)
-
-        args = dict(
-            kind=Post.NEWSPAPER,
-            published=published,
-            draft=options.get('draft'),
-            guid=guid,
-            source=resolved_url,
-            title=title,
-            perex=perex,
-            content=content,
-            author=channel.author
-        )
-
-        if post is None:
-            post = Post.objects.create(**args)
-            post_publish.send(sender=self.__class__, post=post)
-        else:
-            post.__dict__.update(args)
-            post.save()
-
-        return post, True
-
-    def get_title_from_entry(self, entry):
-        detail = entry.title_detail
-        if detail['type'] == 'text/html':
-            return lxml.html.fromstring(detail['value']).text_content()
-        return detail['value']
 
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
@@ -191,17 +91,13 @@ class Command(BaseCommand):
 
             for entry in channel.parse_rss().entries:
                 try:
-                    if not hasattr(entry, 'link'):
-                        self.stdout.write("Entry {} is missing link attribute".format(entry))
-                        continue
-
-                    if not channel.is_url_valid(entry.link):
-                        continue
-
-                    try:
-                        post, imported = self.import_post(channel, entry, options)
-                    except EntryHasNoContentException:
-                        self.stdout.write("Entry {} is missing content/description attribute".format(entry))
+                    post, imported = _import_feed_entry(
+                        channel, entry, self.stdout,
+                        verbosity=options.get('verbosity'),
+                        force=options.get('force'),
+                        only_url=options.get('url'),
+                        draft=options.get('draft'),
+                    )
 
                     if post is None:
                         continue
@@ -227,12 +123,125 @@ class Command(BaseCommand):
                     self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {}".format(timezone.now(), getattr(entry, 'link', ''), channel.rss))
                     traceback.print_exc()
 
-                if options.get('last'):
-                    break
-
                 if not options.get('nosleep'):
                     time.sleep(0.01)
 
         counter_end = time.perf_counter()
         self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: importtrss finished in {} / {} channels / {} posts imported".format(
             timezone.now(), timedelta(seconds=counter_end - counter_start), counter_channels, counter_posts))
+
+
+def import_feed_entry(channel, entry):
+    post, _ = _import_feed_entry(channel, entry, verbosity=3)
+    return post
+
+
+def get_entry_publish_date(entry):
+    for attr in ['published', 'date']:
+        try:
+            return dateutil.parser.parse(getattr(entry, attr), tzinfos=TZ_INFOS)
+        except AttributeError:
+            pass
+
+    # some fields has no published time in feed, eg kitchenette
+    return timezone.now()
+
+
+def _import_feed_entry(channel, entry, stdout=None, verbosity=0, force=False, only_url=None, draft=False):
+    if not hasattr(entry, 'link'):
+        stdout and stdout.write("Entry {} is missing link attribute".format(entry))
+        return None, None
+
+    if not channel.is_url_valid(entry.link):
+        return None, None
+
+    try:
+        return _import_post(channel, entry, stdout, verbosity, force, only_url, draft)
+    except EntryHasNoContentException:
+        stdout and stdout.write("Entry {} is missing content/description attribute".format(entry))
+
+
+def _get_title_from_entry(entry):
+    detail = entry.title_detail
+    if detail['type'] == 'text/html':
+        return lxml.html.fromstring(detail['value']).text_content()
+    return detail['value']
+
+
+def _import_post(channel, entry, stdout, verbosity, force, only_url, draft):
+    url = entry.link.split('#', maxsplit=1)[0]
+
+    if only_url and url != only_url:
+        return None, False
+
+    # some feeds has not guid attribute
+    if hasattr(entry, 'id'):
+        entry_id = entry.id
+    else:
+        entry_id = re.sub('^https?://', '', url)
+    guid = "{}|{}".format(channel.provider, entry_id)
+
+    try:
+        post = Post.objects.get(guid=guid)
+    except Post.DoesNotExist:
+        post = None
+
+    if post and not force:
+        if verbosity > 1:
+            stdout and stdout.write('Skipping {}. Already imported'.format(url))
+        return post, False
+
+    if verbosity > 0:
+        stdout and stdout.write('Importing {}'.format(url))
+
+    published = get_entry_publish_date(entry)
+
+    if channel.import_links:
+        post = create_post_link(url, channel.author, hidden=False, published=published, guid=guid)
+        if post.kind == Post.LINK:
+            return post, True
+
+        # post already exists under regular author, add recommendation instead
+        recommendation = Post.objects.create(
+            title=post.title,
+            kind=Post.RECOMMENDATION,
+            author=channel.author,
+            guid=guid,
+            ref_post=post,
+            protected=False,
+            published=published,
+        )
+        return recommendation, True
+
+    perex, content, resolved_url = channel.parse_entry(entry, usecache=False)
+
+    replacements = [d for d in channel.get_directives('replace', 'title')]
+    title = _get_title_from_entry(entry)
+    for replacement in replacements:
+        title = replacement.replace(title)
+
+    replacements = [d for d in channel.get_directives('replace', 'document')]
+    for replacement in replacements:
+        perex = replacement.replace(perex)
+        content = replacement.replace(content)
+
+    args = dict(
+        kind=Post.NEWSPAPER,
+        published=published,
+        draft=draft,
+        guid=guid,
+        source=resolved_url,
+        title=title,
+        perex=perex,
+        content=content,
+        author=channel.author
+    )
+
+    if post is None:
+        post = Post.objects.create(**args)
+        post_publish.send(sender=Command, post=post)
+    else:
+        post.__dict__.update(args)
+        post.save()
+
+    return post, True

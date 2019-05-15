@@ -7,7 +7,7 @@ from sources.parser.og import parse_og_tags
 from utils.url import fetch_url
 
 
-def create_post_link(url, user, hidden, guid=None):
+def create_post_link(url, user, hidden=False, published=None, guid=None):
     html, resolved_url = fetch_url(url)
     existing_post = Post.find_by_source_url(resolved_url)
     if existing_post:
@@ -34,6 +34,7 @@ def create_post_link(url, user, hidden, guid=None):
         source=resolved_url,
         guid=guid,
         protected=False,
+        published=published,
         hidden=hidden,
         title=og.get('title', title),
         perex=og.get('description', description),

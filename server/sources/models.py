@@ -69,12 +69,12 @@ class Channel(models.Model):
             kwargs['agent'] = self.user_agent
         return feedparser.parse(self.rss, **kwargs)
 
-    def parse_entry(self, entry, *, nocache=False):
-        fragments, resolved_url = self.parse_article_from_entry(entry, nocache=nocache)
+    def parse_entry(self, entry, *, usecache=False):
+        fragments, resolved_url = self.parse_article_from_entry(entry, usecache=usecache)
         perex, content = split_article_to_perex_and_content(fragments, [500, 950])
         return perex, content, resolved_url
 
-    def parse_article_from_entry(self, entry, *, nocache=False):
+    def parse_article_from_entry(self, entry, *, usecache=False):
         parsed_url = urlsplit(entry.link)
         url = urlunsplit(parsed_url[:-1] + ("",))  # strip fragment
         html = None
@@ -105,7 +105,7 @@ class Channel(models.Model):
             headers = {'User-Agent': settings.DEFAULT_USER_AGENT}
             resolved_url = requests.head(entry_url, headers=headers, allow_redirects=True).url
         else:
-            html, resolved_url = fetch_url(url, nocache=nocache, user_agent=self.user_agent)
+            html, resolved_url = fetch_url(url, usecache=usecache, user_agent=self.user_agent)
 
         htmltree = lxml.html.fromstring(html)
         try:

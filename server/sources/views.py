@@ -1,18 +1,20 @@
 import re
 import hashlib
+from datetime import timedelta
 
+import feedparser
 import requests
 import rapidjson as json
 from django.db import transaction
 from django.conf import settings
+from django.utils.timezone import now as timezone_now
 from django.views.decorators.http import require_POST
-from django.core.management import call_command
 
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from articles.models import Newspaper
 from sources.models import Channel
-from sources.management.commands import importrss
+from sources.management.commands.importrss import import_feed_entry, get_entry_publish_date
 from users.models import User
 
 
@@ -52,7 +54,7 @@ def import_rss(request):
 
     try:
         headers = {'User-Agent': settings.DEFAULT_USER_AGENT}
-        resp = requests.head(url, headers=headers, allow_redirects=True, timeout=3)
+        resp = requests.get(url, headers=headers, allow_redirects=True, timeout=3)
     except requests.exceptions.Timeout:
         return JsonResponse({'error': 'Request timed out.'})
     except IOError as e:
@@ -90,7 +92,7 @@ def import_rss(request):
             bio=url
         )
 
-        Channel.objects.create(
+        channel = Channel.objects.create(
             name=source['title'],
             provider=uniq_id,
             rss=url,
@@ -100,7 +102,16 @@ def import_rss(request):
             author=author,
         )
 
-        call_command(importrss.Command(), verbosity=3, nosleep=True, provider=uniq_id)
+        rss = feedparser.parse(resp.content)
+        date_limit = timezone_now() - timedelta(days=1)
+        count_limit = 3
+        for entry in rss.entries:
+            published = get_entry_publish_date(entry)
+            if published > date_limit:
+                import_feed_entry(channel, entry)
+                count_limit -= 1
+                if count_limit == 0:
+                    break
 
         return JsonResponse({
             'type': 'author',

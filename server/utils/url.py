@@ -27,12 +27,12 @@ def clean_url(url):
     )
 
 
-def fetch_url(url, *, nocache=False, user_agent=None):
+def fetch_url(url, *, usecache=False, user_agent=None):
     cache_key_document = 'fetchurl:doc:' + url
     cache_key_resolved_url = 'fetchurl:resolved_url:' + url
 
-    html = None if nocache else cache.get(cache_key_document)
-    resolved_url = None if nocache else cache.get(cache_key_resolved_url)
+    html = cache.get(cache_key_document) if usecache else None
+    resolved_url = cache.get(cache_key_resolved_url) if usecache else None
     if html is None:
         headers = {}
         if user_agent:
@@ -59,8 +59,9 @@ def fetch_url(url, *, nocache=False, user_agent=None):
 
         resolved_url = resp.url
 
-        cache.set(cache_key_document, html, 3600)
-        cache.set(cache_key_resolved_url, resolved_url, 3610)
+        if usecache:
+            cache.set(cache_key_document, html, 3600)
+            cache.set(cache_key_resolved_url, resolved_url, 3610)
 
     assert resolved_url is not None, "Inconsistent cache"
     return html, resolved_url
