@@ -1,5 +1,6 @@
 import re
 import hashlib
+import warnings
 from datetime import datetime, timedelta
 
 import feedparser
@@ -57,25 +58,7 @@ def import_rss(request):
             'fullName': newspaper.full_name
         })
 
-    try:
-        headers = {'User-Agent': settings.DEFAULT_USER_AGENT}
-        resp = requests.get(url, headers=headers, allow_redirects=True, timeout=3)
-    except requests.exceptions.Timeout:
-        return JsonResponse({'error': 'Request timed out.'})
-    except IOError as e:
-        return JsonResponse({'error': str(e)})
-
-    if not resp.ok:
-        return JsonResponse({'error': f"Feed request returned {resp.status_code}"})
-
-    url = resp.url
-    content_type = resp.headers['Content-Type']
-
-    if not is_rss(content_type):
-        return JsonResponse({'error': f"Not feed content type, got {content_type}"})
-
-    try:
-        channel = Channel.objects.get(rss=url)
+    def response_for_channel(channel):
         if channel.newspaper:
             return JsonResponse({
                 'type': 'newspaper',
@@ -86,42 +69,75 @@ def import_rss(request):
                 'type': 'author',
                 'username': channel.author.username
             })
+
+    try:
+        channel = Channel.objects.get(rss=url)
+        return response_for_channel(channel)
     except Channel.DoesNotExist:
-        uniq_id = hashlib.sha224(url.encode('utf-8')).hexdigest()[:12]
-        author = User.objects.create(
-            username=f"feed-{uniq_id}",
-            name=source['title'],
-            email='',
-            kind=User.FEED,
-            medium='',
-            bio=url
-        )
+        pass
 
-        channel = Channel.objects.create(
-            name=source['title'],
-            provider=uniq_id,
-            rss=url,
-            import_links=True,
-            parser='*',
-            directives='',
-            author=author,
-        )
+    try:
+        headers = {'User-Agent': settings.DEFAULT_USER_AGENT}
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            resp = requests.get(url, headers=headers, allow_redirects=True, timeout=1, verify=False)
+    except requests.exceptions.Timeout:
+        return JsonResponse({'error': 'Request timed out.'})
+    except IOError as e:
+        return JsonResponse({'error': str(e)})
 
-        rss = feedparser.parse(resp.content)
-        date_limit = timezone_now() - timedelta(days=1)
-        count_limit = 3
-        for entry in rss.entries:
-            published = get_entry_publish_date(entry)
-            if published > date_limit:
-                import_feed_entry(channel, entry)
-                count_limit -= 1
-                if count_limit == 0:
-                    break
+    if not resp.ok:
+        return JsonResponse({'error': f"Feed request returned {resp.status_code}"})
 
-        return JsonResponse({
-            'type': 'author',
-            'username': author.username
-        })
+    content_type = resp.headers['Content-Type']
+
+    if not is_rss(content_type):
+        return JsonResponse({'error': f"Not feed content type, got {content_type}"})
+
+    if url != resp.url:
+        # redirect happend, try to reload channel with new url
+        url = resp.url
+        try:
+            channel = Channel.objects.get(rss=url)
+            return response_for_channel(channel)
+        except Channel.DoesNotExist:
+            pass
+
+    uniq_id = hashlib.sha1(url.encode('utf-8')).hexdigest()[:12]
+    author = User.objects.create(
+        username=f"feed-{uniq_id}",
+        name=source['title'],
+        email='',
+        kind=User.FEED,
+        medium='',
+        bio=url
+    )
+
+    channel = Channel.objects.create(
+        name=source['title'],
+        provider=uniq_id,
+        rss=url,
+        import_links=True,
+        parser='*',
+        directives='',
+        author=author,
+    )
+
+    rss = feedparser.parse(resp.content)
+    date_limit = timezone_now() - timedelta(days=1)
+    count_limit = 3
+    for entry in rss.entries:
+        published = get_entry_publish_date(entry)
+        if published > date_limit:
+            import_feed_entry(channel, entry)
+            count_limit -= 1
+            if count_limit == 0:
+                break
+
+    return JsonResponse({
+        'type': 'author',
+        'username': author.username
+    })
 
 
 @ajax_login_required
