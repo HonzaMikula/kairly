@@ -20,12 +20,12 @@ from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
 from django.views import View
 from django.views.decorators.http import require_POST
+
 from users.models import User
 from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
-
 from .models import (Backlog, Issue, Newspaper, Post, Subscription,
                      SubscriptionToAuthor, round_fair_price)
 from .period import parse_periodicity
@@ -375,8 +375,7 @@ class NewspaperSubscriptionView(View):
     @transaction.atomic
     def post(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
-        author = get_object_or_404(User, username=username)
-        newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
         payload = json.loads(request.body.decode('utf-8'))
         allow_suspended = payload.get('allowSuspended')
@@ -439,8 +438,7 @@ class NewspaperSubscriptionView(View):
     @transaction.atomic
     def delete(self, request, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
-        author = get_object_or_404(User, username=username)
-        newspaper = get_object_or_404(Newspaper, editor=author, slug=newspapeper_slug)
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
         subscription = Subscription.objects.filter(
             Q(renewal=True) | Q(suspended=True),

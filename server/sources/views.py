@@ -1,21 +1,26 @@
 import re
 import hashlib
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import feedparser
 import requests
 import rapidjson as json
+from dateutil.relativedelta import relativedelta
 from django.db import transaction
+from django.db.models import Q
 from django.conf import settings
 from django.utils.timezone import now as timezone_now
 from django.views.decorators.http import require_POST
 
-from utils.decorators import ajax_login_required
-from utils.json import JsonResponse
-from articles.models import Newspaper
+from articles.models import Newspaper, Subscription, SubscriptionToAuthor
+from articles.period import parse_periodicity
+from credits.utils import (get_user_credits, pay_author_subscription,
+                           pay_newspaper_subscription)
 from sources.models import Channel
 from sources.management.commands.importrss import import_feed_entry, get_entry_publish_date
 from users.models import User
+from utils.decorators import ajax_login_required
+from utils.json import JsonResponse
 
 
 RE_NEWSPAPER = re.compile(r'https?://kairly.com/([^/]+)/([^/]+)/rss$')
@@ -79,7 +84,7 @@ def import_rss(request):
         else:
             return JsonResponse({
                 'type': 'author',
-                'id': channel.author.username
+                'username': channel.author.username
             })
     except Channel.DoesNotExist:
         uniq_id = hashlib.sha224(url.encode('utf-8')).hexdigest()[:12]
@@ -115,5 +120,102 @@ def import_rss(request):
 
         return JsonResponse({
             'type': 'author',
-            'id': author.username
+            'username': author.username
         })
+
+
+@ajax_login_required
+@require_POST
+@transaction.atomic
+def subscribe_rss(request):
+    now = datetime.now(request.user.tzinfo)
+    payload = json.loads(request.body.decode('utf-8'))
+    newspaper_items = payload['newspapers']
+    author_items = payload['authors']
+
+    credits = get_user_credits(request.user.id)
+
+    if newspaper_items:
+        bulk = []
+
+        query = None
+        for n in newspaper_items:
+            username, slug = n['fullName'].split('/', maxsplit=1)
+            q = Q(editor__username=username, slug=slug)
+            query = q if query is None else query | q
+
+        newspapers = list(Newspaper.objects.filter(query).select_related('editor'))
+        already_subscribed = set(
+            s.newspaper_id for s in
+            Subscription.objects.filter(Q(valid_to__gt=now) | Q(renewal=True), user=request.user, newspaper__in=newspapers))
+        if already_subscribed:
+            newspapers = [n for n in newspapers if n.id not in already_subscribed]
+
+        for newspaper in newspapers:
+            has_credits = credits >= newspaper.price
+
+            subscription = Subscription(
+                user=request.user,
+                newspaper=newspaper
+            )
+
+            if has_credits:
+                subscription.suspended = False
+                subscription.valid_from = now
+                subscription.valid_to = now + relativedelta(months=1)
+            else:
+                subscription.suspended = True
+                subscription.valid_from = now - relativedelta(months=1)
+                subscription.valid_to = now
+
+            bulk.append(subscription)
+
+            if has_credits:
+                credits -= newspaper.price
+                pay_newspaper_subscription(subscription)
+
+        if bulk:
+            Subscription.objects.bulk_create(bulk)
+
+    if author_items:
+        bulk = []
+        ids = [item['username'] for item in author_items]
+        periodicities = {item['username']: parse_periodicity(item['periodicity']) for item in author_items}
+
+        authors = list(User.objects.filter(username__in=ids))
+        already_subscribed = set(
+            s.author_id for s in
+            SubscriptionToAuthor.objects.filter(Q(valid_to__gt=now) | Q(renewal=True), user=request.user, author__in=authors))
+        if already_subscribed:
+            authors = [a for a in authors if a.id not in already_subscribed]
+
+        for author in authors:
+            has_credits = credits >= author.price
+
+            subscription = SubscriptionToAuthor(
+                user=request.user,
+                author=author
+            )
+
+            if has_credits:
+                subscription.suspended = False
+                subscription.valid_from = now
+                subscription.valid_to = now + relativedelta(months=1)
+            else:
+                subscription.suspended = True
+                subscription.valid_from = now - relativedelta(months=1)
+                subscription.valid_to = now
+
+            subscription.set_periodicity(periodicities[author.username])
+            bulk.append(subscription)
+
+            if has_credits:
+                credits -= author.price
+                pay_author_subscription(subscription)
+
+        if bulk:
+            SubscriptionToAuthor.objects.bulk_create(bulk)
+
+    return JsonResponse({
+        'credits': str(credits),
+    })

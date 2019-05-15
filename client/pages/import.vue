@@ -61,7 +61,7 @@
         </button>
         <template v-if="importing">
           <progress :value="progress" :max="progressTotal"></progress>
-          <span>{{ parseInt(progress / 2) }} / {{ parseInt(progressTotal / 2) }}</span>
+          <span>{{ progress }} / {{ progressTotal }}</span>
         </template>
       </footer>
     </div>
@@ -191,41 +191,35 @@ export default {
       })
 
       if (sources.length) {
-        const targets = []
+        const subscribeData = {
+          newspapers: [],
+          authors: [],
+        }
 
         this.importing = true
         this.progress = 0
-        this.progressTotal = sources.length * 2  // one step for import, second for final subscribe
-
+        this.progressTotal = sources.length + 1  // +1 for subscribe
 
         for (const source of sources) {
           const data = await this.$axios.$post(`/import-rss`, {source}, { progress: false })
           this.progress += 1
-          if (data.type) {
-            // result is not error
-            targets.push({...data, periodicity: source.periodicity})
+          if (data.type === 'newspaper') {
+            subscribeData.newspapers.push({
+              fullName: data.fullName
+            })
+          } else if (data.type === 'author') {
+            subscribeData.authors.push({
+              username: data.username,
+              periodicity: source.periodicity
+            })
           }
         }
 
-        for (const target of targets) {
-          if (target.type === 'newspaper') {
-            await this.subscribeNewspaper({
-              fullName: target.fullName,
-              donation: 0,
-              allowSuspended: true
-            })
-          }
-          if (target.type === 'author') {
-            await this.subscribeAuthor({
-              author: {id: target.id},
-              periodicity: target.periodicity,
-              donation: 0,
-              allowSuspended: true
-            })
-          }
-          this.progress += 1
-        }
+        const { credits } = await this.$axios.$post(`/subscribe-rss`, subscribeData, { progress: false })
+        this.progress += 1
 
+        this.$store.commit('updateCredits', credits)
+        this.$store.commit('invalidateTimeline')
         this.$router.push("/")
       }
     }
