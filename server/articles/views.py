@@ -237,11 +237,12 @@ def author_posts(request, username):
 
     author = get_object_or_404(User, username=username)
 
-    posts_query = Post.objects\
-        .filter(author=author, draft=False, published__lt=timezone.now())
-
-    if author.kind == User.PERSONAL:
-        posts_query = posts_query.exclude(kind=Post.LINK)
+    posts_query = Post.objects.filter(
+        author=author,
+        draft=False,
+        published__lt=timezone.now(),
+        hidden=False,
+    )
 
     if request.GET.get('skipRecommendations') == '1':
         posts_query = posts_query.exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])
@@ -349,7 +350,7 @@ def create_link(request, username, newspapeper_slug):
         url = 'http://' + url
 
     try:
-        post = create_post_link(url, request.user)
+        post = create_post_link(url, request.user, True)
     except IOError as e:
         return JsonResponse({
             'error': str(e)

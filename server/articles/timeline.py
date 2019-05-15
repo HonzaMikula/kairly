@@ -241,9 +241,8 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
         draft=False,
         published__gte=intervals[0].start,
         published__lt=intervals[-1].end,
+        hidden=False
     )
-    if sub.author.kind == User.PERSONAL:
-        posts_query = posts_query.exclude(kind=Post.LINK)
 
     posts = peekable(posts_query.order_by('published'))
 

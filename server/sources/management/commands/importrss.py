@@ -102,7 +102,7 @@ class Command(BaseCommand):
             self.stdout.write('Importing {}'.format(url))
 
         if channel.import_links:
-            post = create_post_link(url, channel.author, guid=guid)
+            post = create_post_link(url, channel.author, False, guid=guid)
             if post.kind == Post.LINK:
                 return post, True
 

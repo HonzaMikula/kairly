@@ -63,6 +63,7 @@ class Post(models.Model):
     source = models.CharField(_('Link to original article'), max_length=300, blank=True, null=True)  # be aware that utf8mb fields ca have index only if length <= 191
     source_md5 = models.CharField('Source MD5', max_length=32, blank=True, null=True, db_index=True)
     protected = models.BooleanField(default=True, help_text="Only users logged in can see full content")
+    hidden = models.BooleanField(default=False, help_text="Don't show hidden posts in authors detail")
 
     title = models.CharField(max_length=160)
     perex = models.TextField(_("Perex"), blank=True, null=True)
