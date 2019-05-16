@@ -1,6 +1,7 @@
 import re
 import hashlib
 import warnings
+import logging
 from datetime import datetime, timedelta
 
 import feedparser
@@ -34,7 +35,8 @@ def is_rss(header):
     except IndexError:
         second_part = just_type
 
-    return second_part in ('rss+xml', 'rss', 'xml', 'atom+xml')
+    # allow alsi html, lot of feeds returns invlid text/html
+    return second_part in ('rss+xml', 'rss', 'xml', 'atom+xml', 'html')
 
 
 @ajax_login_required
@@ -124,15 +126,25 @@ def import_rss(request):
     )
 
     rss = feedparser.parse(resp.content)
+
+    if not rss.feed:
+        if rss.bozo:
+            return JsonResponse({'error': str(getattr(rss, 'bozo_exception', ''))})
+        else:
+            return JsonResponse({'error': f"Resource is not valid feed"})
+
     date_limit = timezone_now() - timedelta(days=1)
     count_limit = 3
     for entry in rss.entries:
         published = get_entry_publish_date(entry)
         if published > date_limit:
-            import_feed_entry(channel, entry)
-            count_limit -= 1
-            if count_limit == 0:
-                break
+            try:
+                import_feed_entry(channel, entry)
+                count_limit -= 1
+                if count_limit == 0:
+                    break
+            except IOError as e:
+                logging.warning(str(e))
 
     return JsonResponse({
         'type': 'author',
