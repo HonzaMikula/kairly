@@ -219,6 +219,8 @@ export default {
                 periodicity: source.periodicity
               })
             }
+          } catch (e) {
+            console.log(e)
           } finally {
             s.release();
           }
