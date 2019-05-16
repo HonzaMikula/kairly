@@ -41,6 +41,13 @@ const createStore = () => {
           state.timeline = {}
           state.recommendedIssues = {}
       },
+      invalidateTimeline(state) {
+        state.timelineHasNoActiveSubscriptions = false
+        state.timeline = {}
+      },
+      invalidateSubscriptions(state) {
+        state.subscriptions = null
+      },
 
       updateCredits(state, credits) {
         state.auth.user.credits = credits
@@ -133,10 +140,6 @@ const createStore = () => {
       },
       today(state, value) {
         state.today = value
-      },
-      invalidateTimeline(state) {
-        state.timelineHasNoActiveSubscriptions = false
-        state.timeline = {}
       },
       recommendedIssue(state, { id, value }) {
         Vue.set(state.recommendedIssues, id, value)

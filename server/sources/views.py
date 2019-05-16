@@ -143,6 +143,11 @@ def import_rss(request):
                 count_limit -= 1
                 if count_limit == 0:
                     break
+            except requests.exceptions.SSLError as e:
+                logging.warning(str(e))
+                # do not try other links
+                # to not block web worker for long time
+                break
             except IOError as e:
                 logging.warning(str(e))
 

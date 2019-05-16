@@ -233,6 +233,7 @@ export default {
 
         this.$store.commit('updateCredits', credits)
         this.$store.commit('invalidateTimeline')
+        this.$store.commit('invalidateSubscriptions')
         this.$router.push("/")
       }
     }
