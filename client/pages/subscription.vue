@@ -37,7 +37,7 @@
 
           <h3>{{ $t('Read your Twitter on Kairly') }}</h3>
           <p>{{ $t('Connect to your Twitter account and read your timeline on Kairly.') }}</p>
-          <button>{{ $t('Connect to your Twitter') }}</button>
+          <button @click="importTwitter()">{{ $t('Connect to your Twitter') }}</button>
         </section>
 
         <section>
@@ -94,6 +94,16 @@ export default {
       user: state => state.auth.user
     }),
     ...mapGetters(['monthSpending']),
+  },
+
+  methods: {
+    importTwitter() {
+      this.$ga.event({
+        eventCategory: 'Onboarding / Exploring',
+        eventAction: 'Import Twitter',
+        eventLabel: 'Subscription page'
+      })
+    }
   },
 
   async asyncData({ app }) {
