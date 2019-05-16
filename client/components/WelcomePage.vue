@@ -13,7 +13,7 @@
         </div>
       
         <div class="welcome--import--twitter">
-          <button disabled>
+          <button @click="importTwitter()">
             {{ $t('Read your Twitter on Kairly') }}
           </button>
 
@@ -125,6 +125,14 @@ export default {
       this.newspapers = await this.$store.dispatch('getNewspapers', topic.newspapers)
       this.loading = false
     },
+
+    importTwitter() {
+      this.$ga.event({
+        eventCategory: 'Onboarding / Exploring',
+        eventAction: 'Import Twitter',
+        eventLabel: 'Welcome screen'
+      })
+    }
   },
 
   async created() {
