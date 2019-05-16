@@ -247,6 +247,9 @@ export default {
   margin: $baseline auto
   max-width: 900px
 
+  @media (max-width: $mobile)
+    padding: 0 $baseline / 2
+
   > h1
     margin-bottom: $baseline
 
@@ -306,6 +309,7 @@ export default {
     border-bottom: 1px solid #eee
 
     text-align: left
+    word-break: break-word;
 
   tbody th
     cursor: pointer
