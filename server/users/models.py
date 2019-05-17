@@ -54,7 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     PERSONAL = 'personal'
     MEDIUM = 'medium'
-    FEED = 'medium'
+    FEED = 'feed'
 
     KIND_CHOICES = (
         (PERSONAL, _('Personal')),
