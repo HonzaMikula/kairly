@@ -28,7 +28,7 @@
 
       <ul>
         <li class="rss">
-          {{ $t('Import your RSS feeds') }}
+          <nuxt-link to="/rss-reader">{{ $t('Import your RSS feeds') }}</nuxt-link>
         </li>
 
         <li class="twitter">
@@ -442,6 +442,15 @@ export default {
       text-align: center
 
       background: #fff
+    
+    a
+      color: #000
+
+      text-decoration: underline
+
+      &:hover,
+      &:focus
+        text-decoration: none
 
   .rss::before
     @extend .fas

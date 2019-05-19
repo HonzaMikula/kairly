@@ -3,7 +3,11 @@
     <div>
       <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
 
-      <p>{{ $t('Read only what you care about.') }}</p>
+      <p>
+        {{ $t('Stop be distracted.') }}
+        <br />
+        {{ $t('Grow healthy reading habits.') }}
+      </p>
 
       <div class="microsite-footer--social-media">
         <a

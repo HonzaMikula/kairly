@@ -4,24 +4,30 @@
       <section class="kairly-promo--info">
         <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
         <p>
-          <nuxt-link to="/readers">
-            {{ $t('Read only what you care about.') }}
+          <nuxt-link to="/rss-reader">
+            {{ $t('Stop be distracted.') }}
           </nuxt-link>
         </p>
 
         <p>
-          <nuxt-link to="/journalists">
-            {{ $t('Publish your content on modern platform.') }}
+          <nuxt-link to="/rss-reader">
+            {{ $t('Import your RSS feeds.') }}
           </nuxt-link>
         </p>
         
         <p>
-          <nuxt-link to="/publishers">
-            {{ $t('Start your own digital newspapers.') }}
+          <nuxt-link to="/rss-reader">
+            {{ $t('Set when you want to read what content.') }}
+            <!-- Nastavte si, kdy chcete číst jaký obsah. -->
           </nuxt-link>
         </p>
         
-        <p>{{ $t('Get paid.') }}</p>
+        <p>
+          <nuxt-link to="/rss-reader">
+            {{ $t('Grow healthy reading habits.') }}
+            <!-- Vytvořte si dobré návyky při čtení. -->
+          </nuxt-link>
+        </p>
 
         <div class="kairly-promo--learn-more">
           <nuxt-link to="/">{{ $t('Learn more about the platform') }}</nuxt-link>
