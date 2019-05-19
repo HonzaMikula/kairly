@@ -1,6 +1,6 @@
 <template>
   <AppLayout :name="$t('Subscriptions')">
-    <my-subscription-view>
+    <div class="my-subscription-view">
       <nav>
         <nuxt-link :to="{name: 'subscription-newspapers'}">{{ $t('Newspapers') }}</nuxt-link>
         <nuxt-link :to="{name: 'subscription-authors'}">{{ $t('Authors') }}</nuxt-link>
@@ -40,6 +40,10 @@
           <button @click="importTwitter()">{{ $t('Connect to your Twitter') }}</button>
         </section>
 
+        <portal to="modal" v-if="isTwitterApologyModalOpen">
+          <TwitterApologyModal :closeModal="closeTwitterApology"></TwitterApologyModal>
+        </portal>
+
         <section>
           <h2><nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link></h2>
 
@@ -69,7 +73,7 @@
           <p class="explore-more-content"><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
         </section>
       </aside>
-    </my-subscription-view>
+    </div>
   </AppLayout>
 </template>
 
@@ -79,6 +83,7 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 
 import MoneyFormat from '@/components/widgets/MoneyFormat'
 import ImportRssButton from '@/components/widgets/ImportRssButton'
+import TwitterApologyModal from '@/components/modals/TwitterApology'
 
 export default {
   name: 'MySubscription',
@@ -86,7 +91,14 @@ export default {
   components: {
     AppLayout,
     MoneyFormat,
-    ImportRssButton
+    ImportRssButton,
+    TwitterApologyModal
+  },
+
+  data() {
+    return {
+      isTwitterApologyModalOpen: false
+    }
   },
 
   computed: {
@@ -98,11 +110,17 @@ export default {
 
   methods: {
     importTwitter() {
+      this.isTwitterApologyModalOpen = true
+
       this.$ga.event({
         eventCategory: 'Onboarding / Exploring',
         eventAction: 'Import Twitter',
         eventLabel: 'Subscription page'
       })
+    },
+
+    closeTwitterApology() {
+      this.isTwitterApologyModalOpen = false
     }
   },
 
@@ -122,7 +140,7 @@ export default {
 @import './styles/components/buttons'
 
 //- Subscription View -//  
-my-subscription-view
+.my-subscription-view
   display: grid
   grid-column-gap: $baseline
   grid-template-columns: 2fr 1fr

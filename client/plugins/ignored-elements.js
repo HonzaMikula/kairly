@@ -1,10 +1,6 @@
 import Vue from 'vue'
 
 Vue.config.ignoredElements = [
-  'app-header--nav',
-  'app-header--user-profile',
-  'app-header--user-profile-menu',
-  'app-header-view',
   'app-main',
   'app-view',
   'author-detail--header',
@@ -84,11 +80,8 @@ Vue.config.ignoredElements = [
   'timeline-post--continue-reading',
   'timeline-post--tweet',
   'timeline-view',
-  'timeline-welcome',
   'tweet-attachment-gallery',
   'tweet-attachment-link-view',
   'tweet-attachment-quote-view',
   'tweet-attachment-video-view',
-  'welcome-view',
-  'welcome--roles',
 ]

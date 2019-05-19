@@ -1,91 +1,93 @@
 <template>
-  <timeline-welcome>
-    <div class="welcome-view">
-      <h1>{{ $t('Welcome to Kairly!') }}</h1>
+  <div class="welcome-view">
+    <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
-      <h2>{{ $t('Start with importing your favorite authors') }}</h2>
+    <h2>{{ $t('Start with importing your favorite authors') }}</h2>
 
-      <section class="welcome--import">
-        <div>
-          <ImportRssButton @loaded="$router.push('/import')" :text="$t('Import RSS feeds')" />
- 
-          <p>{{ $t('Upload OPML file.') }}</p>
-        </div>
-      
-        <div class="welcome--import--twitter">
-          <button @click="importTwitter()">
-            {{ $t('Read your Twitter on Kairly') }}
-          </button>
+    <section class="welcome--import">
+      <div>
+        <ImportRssButton @loaded="$router.push('/import')" :text="$t('Import RSS feeds')" />
 
-          <p>{{ $t('Connect your Twitter account.') }}</p>
-        </div>
-      </section>
+        <p>{{ $t('Upload OPML file.') }}</p>
+      </div>
+    
+      <div class="welcome--import--twitter">
+        <button @click="importTwitter()">
+          {{ $t('Read your Twitter on Kairly') }}
+        </button>
 
-      <section class="welcome--topics">
-        <h2>{{ $t('Or subscribe to newspapers') }}</h2>
+        <p>{{ $t('Connect your Twitter account.') }}</p>
+      </div>
+    </section>
 
-        <ul>
-          <li v-for="topic in topics" :key="topic.name">
-            <a href="" @click.stop.prevent="selectTopic(topic)" :class="{'is-active': selectedTopic === topic}">{{ topic.name }}</a>
-          </li>
-        </ul>
-      </section>
+    <section class="welcome--topics">
+      <h2>{{ $t('Or subscribe to newspapers') }}</h2>
 
-      <section class="welcome--newspapers">
-        <div>
-          <template v-if="loading">
-            <div class="welcome--newspapers--loading" v-for="x in [1,2,3]" :key="x">
-              <div class="picture"></div>
-              <div class="title"></div>
-              <p>Daily at 9:00</p>
-              <div class="description"></div>
-              <div class="subscribe">Subscribe</div>
-            </div>
-          </template>
-          <NewspaperWidget
-            v-else
-            v-for="newspaper in newspapers"
-            :key="newspaper.fullName"
-            :newspaper="newspaper"
-          />
-        </div>
-      </section>
+      <ul>
+        <li v-for="topic in topics" :key="topic.name">
+          <a href="" @click.stop.prevent="selectTopic(topic)" :class="{'is-active': selectedTopic === topic}">{{ topic.name }}</a>
+        </li>
+      </ul>
+    </section>
 
-      <section class="welcome--roles">
-        <h2>{{ $t('Start using Kairly') }}</h2>
-        <div>
-          <section>
-            <h3>{{ $t('As a reader') }}</h3>
-            <p>
-              {{ $t('Are you interested in more newspapers and authors?') }}
-            </p>
-            <p><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
-          </section>
+    <section class="welcome--newspapers">
+      <div>
+        <template v-if="loading">
+          <div class="welcome--newspapers--loading" v-for="x in [1,2,3]" :key="x">
+            <div class="picture"></div>
+            <div class="title"></div>
+            <p>Daily at 9:00</p>
+            <div class="description"></div>
+            <div class="subscribe">Subscribe</div>
+          </div>
+        </template>
+        <NewspaperWidget
+          v-else
+          v-for="newspaper in newspapers"
+          :key="newspaper.fullName"
+          :newspaper="newspaper"
+        />
+      </div>
+    </section>
 
-          <section>
-            <h3>{{ $t('As an editor') }}</h3>
-            <p>
-              {{ $t('Do you want to start a newspaper and pick the best content for others?') }}
-            </p>
+    <section class="welcome--roles">
+      <h2>{{ $t('Start using Kairly') }}</h2>
+      <div>
+        <section>
+          <h3>{{ $t('As a reader') }}</h3>
+          <p>
+            {{ $t('Are you interested in more newspapers and authors?') }}
+          </p>
+          <p><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
+        </section>
 
-            <p><nuxt-link to="/newspapers">{{ $t('Start a newspaper') }}</nuxt-link></p>
-          </section>
+        <section>
+          <h3>{{ $t('As an editor') }}</h3>
+          <p>
+            {{ $t('Do you want to start a newspaper and pick the best content for others?') }}
+          </p>
 
-          <section>
-            <h3>{{ $t('As an author') }}</h3>
-            <p>
-              {{ $t('Do you want to start writing articles and tweets?') }}
-            </p>
+          <p><nuxt-link to="/newspapers">{{ $t('Start a newspaper') }}</nuxt-link></p>
+        </section>
 
-            <p><nuxt-link to="/posts">{{ $t('Write a new post') }}</nuxt-link></p>
-          </section>
-        </div>
+        <section>
+          <h3>{{ $t('As an author') }}</h3>
+          <p>
+            {{ $t('Do you want to start writing articles and tweets?') }}
+          </p>
 
-        <a href="" @click.prevent="$router.go({path:'/', force: true})">{{ $t('Go Home to start reading') }}</a>
-      </section>
+          <p><nuxt-link to="/posts">{{ $t('Write a new post') }}</nuxt-link></p>
+        </section>
+      </div>
 
-    </div>
-  </timeline-welcome>
+      <a href="" @click.prevent="$router.go({path:'/', force: true})">{{ $t('Go Home to start reading') }}</a>
+    </section>
+
+    <portal to="modal" v-if="isTwitterApologyModalOpen">
+      <TwitterApologyModal :closeModal="closeTwitterApology"></TwitterApologyModal>
+    </portal>
+
+  </div>
 </template>
 
 <script>
@@ -94,14 +96,16 @@ import { mapState, mapGetters } from 'vuex'
 import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import ImportRssButton from '@/components/widgets/ImportRssButton' 
+import ImportRssButton from '@/components/widgets/ImportRssButton'
+import TwitterApologyModal from '@/components/modals/TwitterApology'
 
 export default {
   name: 'Welcome',
 
   components: {
     NewspaperWidget,
-    ImportRssButton
+    ImportRssButton,
+    TwitterApologyModal
   },
 
   data() {
@@ -114,7 +118,8 @@ export default {
       topics,
       selectedTopic: topics[0],
       loading: true,
-      newspapers: []
+      newspapers: [],
+      isTwitterApologyModalOpen: false
     }
   },
 
@@ -127,11 +132,17 @@ export default {
     },
 
     importTwitter() {
+      this.isTwitterApologyModalOpen = true
+
       this.$ga.event({
         eventCategory: 'Onboarding / Exploring',
         eventAction: 'Import Twitter',
         eventLabel: 'Welcome screen'
       })
+    },
+
+    closeTwitterApology() {
+      this.isTwitterApologyModalOpen = false
     }
   },
 

@@ -21,7 +21,8 @@
         <section class="author-subscription--author">
           <h3>{{ author.name }}</h3>
           <picture>
-            <img :src="author.picture" :alt="author.name" />
+            <img v-if="author.picture" :src="author.picture" :alt="author.name" />
+            <img v-else src="~assets/user.png" :alt="author.name"/>
           </picture>
 
           <time>{{ getPeriodicityLabel(periodicity) }}</time>
