@@ -1,7 +1,7 @@
 <template>
   <footer class="microsite-footer">
     <div>
-      <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
+      <h2 itemprop="name"><nuxt-link to="/">Kairly</nuxt-link></h2>
 
       <p>
         {{ $t('Stop be distracted.') }}

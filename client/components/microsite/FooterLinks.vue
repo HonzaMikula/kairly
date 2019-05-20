@@ -30,8 +30,8 @@
       <h3>{{ $t('Contact us') }}</h3>
 
       <ul>
-        <li><a href="mailto:info@kairly.com">info@kairly.com</a></li>
-        <li class="phone"><a href="tel:+420739222781">+420 739 222 781</a></li>
+        <li itemprop="email"><a href="mailto:info@kairly.com">info@kairly.com</a></li>
+        <li itemprop="telephone" class="phone"><a href="tel:+420739222781">+420 739 222 781</a></li>
       </ul>
     </div>
 

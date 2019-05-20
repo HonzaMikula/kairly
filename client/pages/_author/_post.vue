@@ -21,7 +21,7 @@
         </post-detail--header>
 
         <post-detail--title id="start">
-          <h1 itemprop="name headline">{{post.content.title}}</h1>
+          <h1 itemprop="name headline mainEntityOfPage">{{post.content.title}}</h1>
         </post-detail--title>
 
         <post-detail--content v-html="post.content.perex" itemprop="articleBody" />
@@ -91,7 +91,7 @@
           </post-detail--footer>
         </div>
 
-        <post-detail--author itemprop="author publisher" itemscope itemtype="https://schema.org/Person">
+        <post-detail--author itemprop="author" itemscope itemtype="https://schema.org/Person">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
               <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>

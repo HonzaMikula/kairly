@@ -1,6 +1,6 @@
 <template>
   <AppLayout :name="$t('Newspaper detail')">
-    <div class="newspaper-detail" itemtype="https://bib.schema.org/Newspaper" itemscope>
+    <div class="newspaper-detail" itemtype="https://schema.org/Newspaper" itemscope>
       <header class="newspaper-detail--header">
         <h1 itemprop="name"><nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</nuxt-link></h1>
         <p>{{ newspaper.description }}</p>
@@ -26,7 +26,7 @@
           <li>{{ periodicity }}</li>
           <li class="issues">#{{ newspaper.issues }}</li>
           <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
-          <li>{{ newspaper.editor.name }}</li>
+          <li itemprop="editor" itemscope itemtype="http://schema.org/Person">{{ newspaper.editor.name }}</li>
           <li class="price">
             <MoneyFormat :value="newspaper.price" currency="Kč" :short="true" />
             {{ $t('monthly') }}
@@ -55,7 +55,7 @@
 
         <div class="newspaper-detail--issue">
           <IssueWrapper :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
-            <template slot="newspaperTitle">{{ $t('Issue from') }} {{ issue.time | moment('D. M. YYYY')}}</template>
+            <template slot="newspaperTitle">{{ $t('Issue from') }} <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY')}}</time></template>
           </IssueWrapper>
         </div>
 

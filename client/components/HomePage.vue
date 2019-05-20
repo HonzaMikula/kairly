@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage-view">
+  <div class="homepage-view" itemscope itemtype="http://schema.org/WebPage">
 
     <section class="homepage--cover">
       <div>
@@ -73,7 +73,7 @@
 
     <section class="homepage--quote">
       <blockquote>
-        <div v-html="$t('@homepage/quote/honza')"></div>
+        <div v-html="$t('@homepage/quote/honza')" itemprop="citation"></div>
         <!--
         <p>
           Sociální sítě se nás snaží přehltit zábavným či šokujícím obsahem, aby vydělali co nejvíce na reklamě.
@@ -125,7 +125,7 @@
 
     <section class="homepage--quote">
       <blockquote>
-        <div v-html="$t('@homepage/quote/roman')"></div>
+        <div v-html="$t('@homepage/quote/roman')" itemprop="citation"></div>
         <!--
         <p>
           O placeném obsahu se mluví už roky, ale současné modely pay-wallů zatím úspěchy příliš nesklízejí.
@@ -163,7 +163,7 @@
       <h2>{{ $t('Was said about us.') }}</h2>
 
       <blockquote>
-        <div v-html="$t('@homepage/quote/zouzalik')"></div>
+        <div v-html="$t('@homepage/quote/zouzalik')" itemprop="citation"></div>
         <!--
         <p>
           Nowadays, when attacks on journalists, including physical ones, are increasing, we need to find a
@@ -189,9 +189,11 @@
 
     <OfficialStart />
 
-    <Footer />
+    <div itemprop="author" itemscope itemtype="http://schema.org/Organization">
+      <Footer />
 
-    <FooterLinks />
+      <FooterLinks />
+    </div>
 
     <portal to="modal" v-if="isJoinUsModalOpen">
       <JoinUsModal :closeModal="closeJoinUs"></JoinUsModal>
