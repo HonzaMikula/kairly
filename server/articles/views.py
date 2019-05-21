@@ -356,7 +356,7 @@ def create_link(request, username, newspapeper_slug):
             'error': str(e)
         }, status=409)
 
-    if post.kink != Post.LINK:
+    if post.kind != Post.LINK:
         created = Backlog.consider_post(newspaper, post)
         return JsonResponse({
             'post': post.to_json() if created else None

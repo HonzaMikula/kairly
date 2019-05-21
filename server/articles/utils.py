@@ -29,12 +29,11 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
     if 'image' in og:
         attachments['image'] = og['image']
 
-    return Post.objects.create(
+    args = dict(
         kind=Post.LINK,
         source=resolved_url,
         guid=guid,
         protected=False,
-        published=published,
         hidden=hidden,
         title=og.get('title', title),
         perex=og.get('description', description),
@@ -43,3 +42,9 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         price=0,
         weight=0
     )
+
+    if published is not None:
+        args['published'] = published
+
+    return Post.objects.create(**args)
+
