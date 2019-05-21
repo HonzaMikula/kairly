@@ -6,12 +6,6 @@
           <section>
             <h1>{{ $t('RSS reader that prevents distraction') }}</h1>
 
-            <!-- <ul>
-              <li>Moderní aplikace podvědomě vytváří nutkání neustále tyto aplikace kontrolovat.</li>
-              <li>My na to jdeme jinak. Timelinu vám aktualizujeme jen každé 3 hodiny. Tak je to rozumné.</li>
-              <li>U nás si nastavíte, kdy chcete číst co. Např. váš oblíbený zpravodajský web budete dostávat každé ráno v 9:00.</li>
-            </ul> -->
-
             <ul>
               <li>{{ $t('Modern applications subconsciously create the urge to constantly check these applications.') }}</li>
               <li>{{ $t('We\'re doing things differently. We update the timeline only every 3 hours. That\'s reasonable.') }}</li>
@@ -167,6 +161,8 @@ import FooterLinks from '@/components/microsite/FooterLinks'
 import OfficialStart from '@/components/microsite/OfficialStart'
 import Faq from '@/components/microsite/Faq'
 
+import ogImage from '@/assets/microsite/kairly-random-25.jpg';
+
 export default {
   name: 'Readers',
 
@@ -184,14 +180,26 @@ export default {
   },
 
   head() {
+    const metaTitle = this.$t('RSS reader that prevents distraction') +' – Kairly'
+    const metaDescription = this.$t('Our RSS reader allows people to choose when they want to read what. That leads to a healthy reading habits.')
+    const metaUrl = 'https://kairly.com/rss-reader'
+    const baseUrl = 'https://kairly.com'
+
     return {
-      title: this.$t('RSS reader that prevents distraction') +' – Kairly',
+      title: metaTitle,
       meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.$t('Our RSS reader allows people to choose when they want to read what. That leads to a healthy reading habits.')
-        },
+        { hid: 'description', name: 'description', content: metaDescription },
+        { hid: 'og:title', property: 'og:title', content: metaTitle },
+        { hid: 'og:description', property: 'og:description', content: metaDescription },
+        { hid: 'og:image', property: 'og:image', content: baseUrl + ogImage },
+        { hid: 'og:image:alt', property: 'og:image:alt', content: 'Man reading' },
+        { hid: 'og:type', property: 'og:type', content: 'product' },
+        { hid: 'og:url', property: 'og:url', content: metaUrl },
+        { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
+        { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
+        { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
+        { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
+        { hid: 'twitter:image', property: 'twitter:image', content: baseUrl + ogImage }
       ]
     }
   }

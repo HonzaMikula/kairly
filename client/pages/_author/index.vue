@@ -99,13 +99,13 @@ export default {
         {
           hid: `og:url`,
           property: "og:url",
-          content: `https://www.kairly.com/${id}`
+          content: `https://kairly.com/${id}`
         },
         { hid: `twitter:card`, property: "twitter:card", content: "summary" },
         {
           hid: `twitter:site`,
           property: "twitter:site",
-          content: "@kairlyapp"
+          content: "@kairlynews"
         },
         {
           hid: `twitter:title`,

@@ -212,6 +212,7 @@ import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import OfficialStart from '@/components/microsite/OfficialStart'
 
+import ogImage from '@/assets/homepage/kairly-1.jpg'
 
 export default {
   name: 'Homepage',
@@ -227,10 +228,26 @@ export default {
   },
 
   head() {
+    const metaTitle = this.$t('Kairly – Stop be distracted. Grow healthy reading habits.')
+    const metaDescription = this.$t('Stop the distraction. Grow healthy reading habits with us. Import your RSS feed and Twitter and start reading the content in healthy way.')
+    const metaUrl = 'https://kairly.com/'
+    const baseUrl = 'https://kairly.com'
+
     return {
-      title: this.$t('Kairly – Stop be distracted. Grow healthy reading habits.'),
+      title: metaTitle,
       meta: [
-        { hid: 'description', name: 'description', content: this.$t('Stop the distraction. Grow healthy reading habits with us. Import your RSS feed and Twitter and start reading the content in healthy way.') },
+        { hid: 'description', name: 'description', content: metaDescription },
+        { hid: 'og:title', property: 'og:title', content: metaTitle },
+        { hid: 'og:description', property: 'og:description', content: metaDescription },
+        { hid: 'og:image', property: 'og:image', content: baseUrl + ogImage },
+        { hid: 'og:image:alt', property: 'og:image:alt', content: 'Woman reading' },
+        { hid: 'og:type', property: 'og:type', content: 'product' },
+        { hid: 'og:url', property: 'og:url', content: metaUrl },
+        { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
+        { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
+        { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
+        { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
+        { hid: 'twitter:image', property: 'twitter:image', content: baseUrl + ogImage }
       ]
     }
   },

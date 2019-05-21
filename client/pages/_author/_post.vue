@@ -155,7 +155,7 @@ export default {
       { hid: `og:type`, property: 'og:type', content: 'article'},
       { hid: `og:url`, property: 'og:url', content: `https://www.kairly.com/${id}`},
       { hid: `twitter:card`, property: 'twitter:card', content: 'summary'},
-      { hid: `twitter:site`, property: 'twitter:site', content: '@kairlyapp'},
+      { hid: `twitter:site`, property: 'twitter:site', content: '@kairlynews'},
       { hid: `twitter:title`, property: 'twitter:title', content: `${title} – ${author.name} – Kairly`},
       { hid: `twitter:description`, property: 'twitter:description', content: description},
     ]

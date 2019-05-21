@@ -200,7 +200,7 @@ export default {
         { hid: 'og:type', property: 'og:type', content: 'product' },
         { hid: 'og:url', property: 'og:url', content: metaUrl },
         { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
-        { hid: 'twitter:site', property: 'twitter:site', content: '@kairlyapp' },
+        { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
         { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: picture },
