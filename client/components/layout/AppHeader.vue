@@ -54,6 +54,7 @@
           <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ $t('Profile') }}</nuxt-link></li>
           <li><nuxt-link :to="{name: 'user-settings'}"><span>{{ $t('Settings') }}</span></nuxt-link></li>
           <li class="divider"></li>
+          <li class="rss"><nuxt-link to="/import">{{ $t('Add RSS source') }}</nuxt-link></li>
           <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>{{ $t('Subscriptions') }}</span></nuxt-link></li>
           <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>{{ $t('Explore') }}</span></nuxt-link></li>
           <li class="divider"></li>
