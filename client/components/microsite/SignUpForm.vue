@@ -39,10 +39,6 @@ export default {
     async submit() {
       const { username, email, password } = this
 
-      this.$ga.event({
-        eventCategory: 'Sign up'
-      })
-
       try {
         const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
         await this.$axios.post('/signup',
@@ -52,6 +48,10 @@ export default {
         await this.$auth.loginWith('local', {
           data: { username, password }
         })
+        this.$ga.event({
+          eventCategory: 'Sign up',
+          eventAction: 'Successful'
+        })
         this.$router.push("/")
       } catch (err) {
         if (err.response) {
@@ -59,6 +59,11 @@ export default {
         } else {
           this.error = err
         }
+        this.$ga.event({
+          eventCategory: 'Sign up',
+          eventAction: 'Error',
+          eventLabel: this.error
+        })
       }
     }
   },
