@@ -147,6 +147,14 @@ class Channel(models.Model):
             fix_attr(el, 'href')
 
 
+class AlternateRss(models.Model):
+    channnel = models.ForeignKey(Channel, models.CASCADE)
+    rss = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.rss
+
+
 class Automation(models.Model):
     newspaper = models.ForeignKey('articles.Newspaper', models.CASCADE)
 

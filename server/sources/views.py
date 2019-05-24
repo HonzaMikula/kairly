@@ -73,7 +73,7 @@ def import_rss(request):
             })
 
     try:
-        channel = Channel.objects.get(rss=url)
+        channel = Channel.objects.get(Q(rss=url) | Q(alternaterss__rss=url), enabled=True)
         return response_for_channel(channel)
     except Channel.DoesNotExist:
         pass

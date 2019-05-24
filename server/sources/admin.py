@@ -4,7 +4,6 @@ from collections import namedtuple
 import feedparser
 import requests
 
-
 from django import forms
 from django.contrib import admin
 from django.conf import settings
@@ -12,20 +11,30 @@ from django.core.cache import cache
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.urls import path
+from django.utils.html import escape, mark_safe
 from dal import autocomplete
 
 from users.models import User
-from .models import Channel, Automation, AutomationItem
+from .models import Channel, Automation, AutomationItem, AlternateRss
 
 
 FakeEntry = namedtuple('FakeEntry', ['link'])
 
 
+class AlternateRssItemInline(admin.TabularInline):
+    model = AlternateRss
+    extra = 1
+
+
 @admin.register(Channel)
 class ChannelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'provider', 'author', 'newspaper', 'enabled', 'rss', 'import_links', 'parse_content_from_rss')
+    list_display = ('name', 'provider', 'author', 'newspaper', 'enabled', 'rss_all', 'import_links', 'parse_content_from_rss')
     list_filter = ('enabled', 'import_links', 'parse_content_from_rss')
-    search_fields = ('name', 'provider', 'author__name')
+    search_fields = ('name', 'provider', 'author__name', 'rss', 'alternaterss__rss')
+    inlines = [AlternateRssItemInline]
+
+    def get_queryset(self, request):
+        return super(ChannelAdmin, self).get_queryset(request).prefetch_related('alternaterss_set')
 
     def get_urls(self):
         urls = super().get_urls()
@@ -112,6 +121,13 @@ class ChannelAdmin(admin.ModelAdmin):
         ])
 
         return HttpResponse(document)
+
+    def rss_all(self, obj):
+        rss_list = [escape(obj.rss)]
+        rss_list.extend(escape(a.rss) for a in obj.alternaterss_set.all())
+        return mark_safe('<br>'.join(rss_list))
+    rss_all.admin_order_field = 'rss'
+    rss_all.short_description = 'RSS'
 
 
 class AutomationItemForm(forms.ModelForm):
