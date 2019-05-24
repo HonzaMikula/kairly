@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import feedparser
 import requests
 import rapidjson as json
+from dal import autocomplete
 from dateutil.relativedelta import relativedelta
 from django.db import transaction
 from django.db.models import Q
@@ -252,3 +253,19 @@ def subscribe_rss(request):
     return JsonResponse({
         'credits': str(credits),
     })
+
+
+class ChannelAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_staff and not self.request.user.is_superuser:
+            return Channel.objects.none()
+
+        qs = Channel.objects.filter(enabled=True)
+
+        if self.q:
+            qs = qs.filter(Q(name__icontains=self.q) | Q(rss__icontains=self.q))
+
+        return qs
+
+    def get_result_label(self, item):
+        return f"{item.name} - {item.rss}"

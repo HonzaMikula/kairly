@@ -8,15 +8,17 @@ from django import forms
 from django.contrib import admin
 from django.conf import settings
 from django.core.cache import cache
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.urls import path
 from django.utils.html import escape, mark_safe
+from django.db import transaction
 from dal import autocomplete
 
 from users.models import User
+from articles.models import SubscriptionToAuthor, Post
+from credits.models import Transaction
 from .models import Channel, Automation, AutomationItem, AlternateRss
-
 
 FakeEntry = namedtuple('FakeEntry', ['link'])
 
@@ -24,6 +26,13 @@ FakeEntry = namedtuple('FakeEntry', ['link'])
 class AlternateRssItemInline(admin.TabularInline):
     model = AlternateRss
     extra = 1
+
+
+class SelectChannelForm(forms.Form):
+    channel = forms.ModelChoiceField(
+        queryset=Channel.objects.filter(enabled=True),
+        widget=autocomplete.ModelSelect2(url='channel-autocomplete')
+    )
 
 
 @admin.register(Channel)
@@ -41,6 +50,7 @@ class ChannelAdmin(admin.ModelAdmin):
         my_urls = [
             path('<int:channel_id>/preview/', self.preview),
             path('<int:channel_id>/render-preview/', self.render_preview),
+            path('<int:channel_id>/merge/', self.merge),
         ]
         return my_urls + urls
 
@@ -63,6 +73,40 @@ class ChannelAdmin(admin.ModelAdmin):
             cache.set(cache_key, rss_content, 120)
 
         return feedparser.parse(rss_content)
+
+    def merge(self, request, channel_id):
+        channel = Channel.objects.get(id=channel_id)
+        if not channel.author_id or channel.newspaper:
+            raise ValueError("Only channel with author can be merged")
+
+        if request.method == 'POST':
+            form = SelectChannelForm(request.POST)
+            if form.is_valid():
+                target = form.cleaned_data['channel']
+                if target == channel:
+                    form.add_error("channel", "Can't merge into self")
+                elif not target.author_id:
+                    form.add_error("channel", "Channel has not author")
+                else:
+                    with transaction.atomic():
+                        AlternateRss.objects.create(channel=target, rss=channel.rss)
+                        SubscriptionToAuthor.objects.filter(author=channel.author).update(author=target.author)
+                        Post.objects.filter(author=channel.author).delete()
+                        Transaction.objects.filter(to_user=channel.author).delete()
+                        channel.author.delete()
+                        channel.delete()
+                    return HttpResponseRedirect('/admin/sources/channel/')
+        else:
+            form = SelectChannelForm()
+
+        context = dict(
+            # Include common variables for rendering the admin template.
+            self.admin_site.each_context(request),
+            # Anything else you want in the context...
+            channel=channel,
+            form=form
+        )
+        return TemplateResponse(request, "admin/merge.html", context)
 
     def preview(self, request, channel_id):
         channel = Channel.objects.get(id=channel_id)

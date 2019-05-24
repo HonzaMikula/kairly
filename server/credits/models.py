@@ -34,9 +34,6 @@ class Transaction(models.Model):
     credits = models.DecimalField(_('Credits'), max_digits=11, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return '{} {}'.format(self.user.username, self.credits)
-
     def to_json(self, reversed=False):
         source = {}
         if self.from_user:

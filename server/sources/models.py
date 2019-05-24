@@ -148,7 +148,7 @@ class Channel(models.Model):
 
 
 class AlternateRss(models.Model):
-    channnel = models.ForeignKey(Channel, models.CASCADE)
+    channel = models.ForeignKey(Channel, models.CASCADE)
     rss = models.CharField(max_length=250)
 
     def __str__(self):

@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrahead %}
+    {{ form.media }}
+{% endblock %}
+
+{% block content %}
+<div>
+    <h1>{{ channel.name }} - {{ channel.rss }}</h1>
+
+    <p>
+        <strong>Merge channel {{ channel.name }} into</strong>
+    </p>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+
+        <br><br>
+        <input type="submit" value="Merge">
+        <br><br>
+    </form>
+
+    <p>
+        This includes: updateing subscription, adding alternate RSS to target channel and removing
+        channel ({{ channel.name }}) and feed author ({{ channel.author }})
+
+    </p>
+</div>
+
+
+{% endblock %}

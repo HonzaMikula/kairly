@@ -5,4 +5,6 @@ from . import views
 urlpatterns = [
     path('import-rss', views.import_rss, name='import-rss'),
     path('subscribe-rss', views.subscribe_rss, name='subscribe-rss'),
+
+    path('autocomplete/channel/', views.ChannelAutocomplete.as_view(), name='channel-autocomplete'),
 ]

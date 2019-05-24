@@ -17,6 +17,9 @@ a.preview-button {
 </style>
 
 <a class="preview-button" href="../preview/">Show preview</a>
+{% if original.author_id and not original.newspaper %}
+  <a class="preview-button" href="../merge/">Merge into</a>
+{% endif %}
 
 {{ block.super }}
 
