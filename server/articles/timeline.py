@@ -13,6 +13,7 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 
 from .models import Issue, Post, Subscription, SubscriptionToAuthor
+from users.models import User
 
 DAY_START_HOUR = 6
 
@@ -241,9 +242,14 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
         published__gte=intervals[0].start,
         published__lt=intervals[-1].end,
         hidden=False
-    )
+    ).select_related('author')
 
     posts = peekable(posts_query.order_by('published'))
+
+    def post_to_json(author, post):
+        if author.kind == User.FEED and post.kind == Post.RECOMMENDATION and post.ref_post:
+            return post.ref_post.to_json(short=True, tzinfo=tzinfo)
+        return post.to_json(short=True, tzinfo=tzinfo)
 
     issues = []
     for interval in intervals:
@@ -262,7 +268,7 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
                 'title': interval.title,
                 'time': isodate,
                 'author': sub.author.to_json(),
-                'posts': [p.to_json(short=True, tzinfo=tzinfo) for p in interval_posts],
+                'posts': [post_to_json(sub.author, p) for p in interval_posts],
             })
 
     if cache_valid_to is None:
