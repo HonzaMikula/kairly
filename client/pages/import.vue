@@ -182,7 +182,7 @@ export default {
     async submit() {
       const sources = this.sources
         .filter(s => s.selected)
-        .map(s => ({title: s.title, xmlUrl: s.xmlUrl, htmlUrl: s.htmlUrl, periodicity: s.periodicity}))
+        .map(s => ({url: s.xmlUrl, periodicity: s.periodicity}))
 
       this.$ga.event({
         eventCategory: 'Onboarding / Exploring',
@@ -206,7 +206,7 @@ export default {
         const importSource = async (source) => {
           await s.acquire()
           try {
-            const data = await this.$axios.$post(`/import-rss`, {source}, { progress: false })
+            const data = await this.$axios.$post(`/import-rss`, {url: source.url}, { progress: false })
             this.progress += 1
 
             if (data.type === 'newspaper') {

@@ -45,9 +45,8 @@ def is_rss(header):
 @transaction.atomic
 def import_rss(request):
     payload = json.loads(request.body.decode('utf-8'))
+    url = payload['url']
 
-    source = payload['source']
-    url = source['xmlUrl']
     m = RE_NEWSPAPER.match(url)
     if m:
         # special casefeed item is kairly newspaper
@@ -106,26 +105,6 @@ def import_rss(request):
         except Channel.DoesNotExist:
             pass
 
-    uniq_id = hashlib.sha1(url.encode('utf-8')).hexdigest()[:12]
-    author = User.objects.create(
-        username=f"feed-{uniq_id}",
-        name=source['title'],
-        email='',
-        kind=User.FEED,
-        medium='',
-        bio=url
-    )
-
-    channel = Channel.objects.create(
-        name=source['title'],
-        provider=uniq_id,
-        rss=url,
-        import_links=True,
-        parser='*',
-        directives='',
-        author=author,
-    )
-
     rss = feedparser.parse(resp.content)
 
     if not rss.feed:
@@ -133,6 +112,27 @@ def import_rss(request):
             return JsonResponse({'error': str(getattr(rss, 'bozo_exception', ''))})
         else:
             return JsonResponse({'error': f"Resource is not valid feed"})
+
+    uniq_id = hashlib.sha1(url.encode('utf-8')).hexdigest()[:12]
+    title = rss.feed.title or url.replace('https://', '').replace('http://')
+    author = User.objects.create(
+        username=f"feed-{uniq_id}",
+        name=title,
+        email='',
+        kind=User.FEED,
+        medium='',
+        bio=rss.feed.subtitle + '\n' + url if rss.feed.subtitle else url
+    )
+
+    channel = Channel.objects.create(
+        name=title,
+        provider=uniq_id,
+        rss=url,
+        import_links=True,
+        parser='*',
+        directives='',
+        author=author,
+    )
 
     date_limit = timezone_now() - timedelta(days=1)
     count_limit = 3
