@@ -103,7 +103,10 @@ class Channel(models.Model):
             # hit document to get real url
             entry_url = entry.link.split('#', maxsplit=1)[0]
             headers = {'User-Agent': settings.DEFAULT_USER_AGENT}
-            resolved_url = requests.head(entry_url, headers=headers, allow_redirects=True).url
+            if entry_url:
+                resolved_url = requests.head(entry_url, headers=headers, allow_redirects=True).url
+            else:
+                resolved_url = None
         else:
             html, resolved_url = fetch_url(url, usecache=usecache, user_agent=self.user_agent)
 
@@ -114,11 +117,17 @@ class Channel(models.Model):
         except IndexError:
             pass
 
-        self.fix_relative_links(htmltree, parsed_url)
+        if entry.link:
+            self.fix_relative_links(htmltree, parsed_url)
+
         parser = ArticleParser(self.parser)
         fragments = parser.parse(htmltree)
         fragments = parser.normalize(fragments)
-        return fragments, clean_url(resolved_url)
+
+        if resolved_url:
+            resolved_url = clean_url(resolved_url)
+
+        return fragments, resolved_url
 
     def is_url_valid(self, url):
         domains = [d.value for d in self.get_directives('skip', 'domain')]

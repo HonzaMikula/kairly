@@ -1,3 +1,4 @@
+import hashlib
 import re
 import time
 import traceback
@@ -177,8 +178,13 @@ def _import_post(channel, entry, stdout, verbosity, force, only_url, draft):
     # some feeds has not guid attribute
     if hasattr(entry, 'id'):
         entry_id = entry.id
-    else:
+    elif url:
         entry_id = re.sub('^https?://', '', url)
+    else:
+        h = hashlib.sha1()
+        h.update(entry.description.encode('utf-8'))
+        h.update(entry.published.encode('utf-8'))
+        entry_id = h.hexdigest()
     guid = "{}|{}".format(channel.provider, entry_id)
 
     try:
