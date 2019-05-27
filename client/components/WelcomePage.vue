@@ -6,11 +6,11 @@
 
     <section class="welcome--import">
       <div>
-        <ImportRssButton @loaded="$router.push('/import')" :text="$t('Import RSS feeds')" />
+        <ImportOpmlButton @loaded="$router.push('/import')" :text="$t('Import RSS feeds')" />
 
         <p>{{ $t('Upload OPML file.') }}</p>
       </div>
-    
+
       <div class="welcome--import--twitter">
         <button @click="importTwitter()">
           {{ $t('Read your Twitter on Kairly') }}
@@ -96,7 +96,7 @@ import { mapState, mapGetters } from 'vuex'
 import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import ImportRssButton from '@/components/widgets/ImportRssButton'
+import ImportOpmlButton from '@/components/widgets/ImportOpmlButton'
 import TwitterApologyModal from '@/components/modals/TwitterApology'
 
 export default {
@@ -104,7 +104,7 @@ export default {
 
   components: {
     NewspaperWidget,
-    ImportRssButton,
+    ImportOpmlButton,
     TwitterApologyModal
   },
 
@@ -200,7 +200,7 @@ export default {
     button
       +button-icon($fa-var-twitter, icon-text, brand)
 
-  .import-rss-button
+  .import-opml-button
     label
       +button-icon($fa-var-rss, icon-text, solid)
 

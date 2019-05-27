@@ -4,7 +4,7 @@
       <h1>{{ $t('Import your RSS feeds') }}</h1>
 
       <p>{{ $t('Export your feeds from your current RSS reader in OPML format and upload the file here.') }}</p>
-      <ImportRssButton :text="$t('Upload OPML file')" />
+      <ImportOpmlButton :text="$t('Upload OPML file')" />
     </div>
 
     <div
@@ -76,7 +76,7 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 import AppLayout from '@/components/layout/AppLayout'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
-import ImportRssButton from '@/components/widgets/ImportRssButton'
+import ImportOpmlButton from '@/components/widgets/ImportOpmlButton'
 
 export default {
   name: 'Settings',
@@ -84,7 +84,7 @@ export default {
   components: {
     AppLayout,
     ChangePeriodicity,
-    ImportRssButton,
+    ImportOpmlButton,
   },
 
   directives: {
@@ -266,7 +266,7 @@ export default {
     font-size: $fs-1
     line-height: 1.42
 
-  .import-rss-button
+  .import-opml-button
     label
       +button
 
