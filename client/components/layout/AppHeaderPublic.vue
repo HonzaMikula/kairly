@@ -15,7 +15,7 @@
       </nav>
 
       <nav class="app-header-public--sign-in">
-        <a href="" @click.prevent="isSignInModalOpen = true">{{ $t('Sign In') }}</a>
+        <a href="" @click.prevent="openSignInModal()">{{ $t('Sign In') }}</a>
       </nav>
     </div>
 
@@ -49,6 +49,14 @@ export default {
   },
 
   methods: {
+    openSignInModal() {
+      this.isSignInModalOpen = true
+      this.$ga.event({
+        eventCategory: 'Authentication',
+        eventAction: 'Open Sign in modal'
+      })
+    },
+
     closeModals() {
       this.isDropdownOpen = null
       this.isSignInModalOpen = null
