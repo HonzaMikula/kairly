@@ -120,6 +120,7 @@ def import_rss(request):
         name=title,
         email='',
         kind=User.FEED,
+        is_active=False,
         medium='',
         bio=rss.feed.subtitle + '\n' + url if rss.feed.subtitle else url
     )
