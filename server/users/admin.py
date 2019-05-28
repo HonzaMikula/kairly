@@ -1,16 +1,18 @@
 from datetime import timedelta
 
 from django import forms
+from django.db.models import Count, Q
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
-from django.utils.timezone import localdate
+from django.utils.timezone import localdate, now as timezone_now
 
 from dal import autocomplete
 
 from .models import User, Category, CategoryUser
+from articles.models import Subscription
 from credits.utils import get_author_retained_credits, get_user_credits
 
 admin.site.unregister(Group)
@@ -32,9 +34,38 @@ class UserAdmin(OriginalUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-    list_display = ('username', 'email', 'img', 'name', 'kind', 'medium', 'price_int', 'is_active', 'last_logged', 'activity')
+    list_display = ('username', 'email', 'img', 'name', 'kind', 'medium', 'price_int', 'is_active', 'last_logged',
+                    '_subscribed_newspapers', '_subscribed_authors', 'activity')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'kind')
     search_fields = ('username', 'name', 'email')
+
+    def get_queryset(self, request):
+        qs = super(UserAdmin, self).get_queryset(request)
+        now = timezone_now()
+        # unfortunatelly both subscriptions can't be annotated, probably Django bug
+        # https://code.djangoproject.com/ticket/30518#ticket
+
+        # return qs.annotate(
+        #     subscribed_newspapers=Count('subscription', filter=Q(subscription__valid_to__gt=now) | Q(subscription__renewal=True))
+        return qs.annotate(
+            subscribed_authors=Count('subscriptiontoauthor', filter=Q(subscriptiontoauthor__valid_to__gt=now) | Q(subscriptiontoauthor__renewal=True))
+        )
+
+    def _subscribed_newspapers(self, obj):
+        if obj.kind != User.PERSONAL:
+            return '-'
+        # return obj.subscribed_newspapers
+        now = timezone_now()
+        return Subscription.objects.filter(user=obj).filter(Q(valid_to__gt=now) | Q(renewal=True)).count()
+    _subscribed_newspapers.short_description = 's/newspapers'
+    # _subscribed_newspapers.admin_order_field = 'subscribed_newspapers'
+
+    def _subscribed_authors(self, obj):
+        if obj.kind != User.PERSONAL:
+            return '-'
+        return obj.subscribed_authors
+    _subscribed_authors.short_description = 's/authors'
+    _subscribed_authors.admin_order_field = 'subscribed_authors'
 
     def price_int(self, obj):
         return int(obj.price)
