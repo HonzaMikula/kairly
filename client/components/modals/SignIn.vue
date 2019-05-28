@@ -31,7 +31,7 @@
 
           <p v-else>
             {{ $t('Contact us on') }} 
-            <a href="mailto:info@kairly.com?subject=Forgot passwordx`&body=Your username or email: [fill it]">info@kairly.com</a>.
+            <a href="mailto:info@kairly.com?subject=Zapomenuté heslo`&body=Vaše uživatelské jméno nebo email: [vyplňte]">info@kairly.com</a>.
           </p>
         </div>
       </main>

@@ -78,6 +78,11 @@
             </a>
           </li>
           <li class="divider"></li>
+          <li>
+            <a href="mailto:info@kairly.com?subject=Zpětná vazba">
+              {{ $t('Give us feedback') }}
+            </a>
+          </li>
           <li><a href="" @click.prevent="logout">{{ $t('Logout') }}</a></li>
         </ul>
       </nav>
