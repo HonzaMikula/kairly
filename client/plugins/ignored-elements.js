@@ -9,7 +9,6 @@ Vue.config.ignoredElements = [
   'author-detail--subscribe',
   'author-detail-view',
   'author-subscription-view',
-  'author-widget-view',
   'backlog-add--dropdown',
   'backlog-add-view',
   'button-close',

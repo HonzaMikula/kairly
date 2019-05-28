@@ -133,7 +133,7 @@ export default {
     &:first-of-type
       margin-top: 0
 
-my-newspapers-view author-widget-view
+my-newspapers-view .author-widget-view
   width: 576px
 
 my-authors--empty

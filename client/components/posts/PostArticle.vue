@@ -105,6 +105,8 @@ timeline-post--continue-reading
   font-size: $fs--1
   text-align: center
 
+  break-inside: avoid-column
+
   a[href]
     display: table
     border-radius: 15px

@@ -115,6 +115,9 @@ export default {
 @import './styles/components/buttons'
 
 .author-subscription-view
+  button
+    white-space: nowrap
+    
   //- when newspaper is subscribed
   button.is-subscribed
     +button(primary, small)

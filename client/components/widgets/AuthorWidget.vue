@@ -1,5 +1,5 @@
 <template>
-  <author-widget-view>
+  <div class="author-widget-view">
     <header>
       <picture>
         <nuxt-link :to="{name: 'author', params: {author: author.id}}">
@@ -27,7 +27,7 @@
     </header>
 
     <p>{{ author.bio }}</p>
-  </author-widget-view>
+  </div>
 </template>
 
 <script>
@@ -57,7 +57,8 @@ export default {
 //- Imports
 @import './styles/components/buttons'
 
-author-widget-view
+//- Author Widget View -//
+.author-widget-view
   position: relative
 
   box-sizing: border-box
@@ -72,7 +73,7 @@ author-widget-view
     display: grid
     grid-column-gap: $baseline / 4
     grid-template-columns: $baseline*1.25 1fr auto
-    grid-template-rows: $baseline * 1.25
+    grid-template-rows: minmax($baseline * 1.25, auto)
     grid-template-areas: "author-widget-image author-widget-name author-widget-subscription"
     align-items: center
     margin-bottom: $baseline / 4
@@ -92,6 +93,9 @@ author-widget-view
       grid-area: author-widget-name
 
       font-weight: 600
+      line-height: 1.42
+      word-wrap: break-word
+      hyphens: auto
 
       a
         color: #000
