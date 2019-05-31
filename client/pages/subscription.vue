@@ -31,9 +31,8 @@
           <h2>{{ $t('Import authors') }}</h2>
 
           <h3>{{ $t('Import RSS feeds') }}</h3>
-          <p>{{ $t('Upload your OPML file with RSS feeds and read your favorite sources on Kairly.') }}</p>
-
-          <ImportRssButton @loaded="$router.push('/import')" :text="$t('Upload OPML file')" />
+          <p>{{ $t('Add RSS/Atom source or import OPML file with feeds.') }}</p>
+          <nuxt-link to="/import">{{ $t('Add RSS source(s)') }}</nuxt-link> 
 
           <h3>{{ $t('Read your Twitter on Kairly') }}</h3>
           <p>{{ $t('Connect to your Twitter account and read your timeline on Kairly.') }}</p>
@@ -82,7 +81,6 @@ import AppLayout from '@/components/layout/AppLayout'
 import { mapGetters, mapState, mapActions } from 'vuex'
 
 import MoneyFormat from '@/components/widgets/MoneyFormat'
-import ImportRssButton from '@/components/widgets/ImportRssButton'
 import TwitterApologyModal from '@/components/modals/TwitterApology'
 
 export default {
@@ -91,7 +89,6 @@ export default {
   components: {
     AppLayout,
     MoneyFormat,
-    ImportRssButton,
     TwitterApologyModal
   },
 
@@ -139,7 +136,7 @@ export default {
 //- Imports
 @import './styles/components/buttons'
 
-//- Subscription View -//  
+//- Subscription View -//
 .my-subscription-view
   display: grid
   grid-column-gap: $baseline
@@ -199,7 +196,7 @@ export default {
 
     //- add credits
     button
-      +button-text 
+      +button-text
 
 
     section
@@ -215,12 +212,6 @@ export default {
       //- add credits
       button
         +button-text
-
-    .import-rss-button
-      margin-bottom: $baseline
-
-      label
-        +button-text 
 
     h2
       margin-bottom: $baseline
@@ -261,8 +252,10 @@ export default {
 .subscription--imports
   margin-bottom: 0
 
-  button
+  button,
+  a
     +button-text
 
+    display: inline-block
     margin-bottom: $baseline
 </style>

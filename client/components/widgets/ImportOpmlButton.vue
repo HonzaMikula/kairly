@@ -1,5 +1,5 @@
 <template>
-  <div class="import-rss-button">
+  <div class="import-opml-button">
     <label>
       {{ text }}
       <input ref type="file" accept=".opml" @change="importOpml($event)" hidden>
@@ -11,7 +11,7 @@
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'ImportRssButton',
+  name: 'ImportOpmlButton',
   props: {
     text: String
   },
