@@ -5,8 +5,8 @@
     <h2>{{ $t('Start with importing your favorite authors') }}</h2>
 
     <section class="welcome--import">
-      <div>
-        <ImportOpmlButton @loaded="$router.push('/import')" :text="$t('Import RSS feeds')" />
+      <div class="welcome--import--rss">
+        <nuxt-link to="/import">{{  $t('Import RSS feeds')  }}</nuxt-link>
 
         <p>{{ $t('Upload OPML file.') }}</p>
       </div>
@@ -96,7 +96,6 @@ import { mapState, mapGetters } from 'vuex'
 import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import ImportOpmlButton from '@/components/widgets/ImportOpmlButton'
 import TwitterApologyModal from '@/components/modals/TwitterApology'
 
 export default {
@@ -104,7 +103,6 @@ export default {
 
   components: {
     NewspaperWidget,
-    ImportOpmlButton,
     TwitterApologyModal
   },
 
@@ -200,8 +198,8 @@ export default {
     button
       +button-icon($fa-var-twitter, icon-text, brand)
 
-  .import-opml-button
-    label
+  .welcome--import--rss
+    a
       +button-icon($fa-var-rss, icon-text, solid)
 
 //- Topics

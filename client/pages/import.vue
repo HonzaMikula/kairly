@@ -1,69 +1,92 @@
 <template>
   <AppLayout :name="$t('Import RSS feeds')">
-    <div v-if="sources === null" class="import-rss-empty-view">
-      <h1>{{ $t('Import your RSS feeds') }}</h1>
+    <div class="import-rss-view">
+      <header>
+        <h1>{{ $t('Add RSS source(s)') }}</h1>
+        <ImportOpmlButton :text="$t('Upload OPML file')" />
+      </header>
 
-      <p>{{ $t('Export your feeds from your current RSS reader in OPML format and upload the file here.') }}</p>
-      <ImportOpmlButton :text="$t('Upload OPML file')" />
-    </div>
+      <section class="import-rss--add-source">
+        <input type="text" v-model="rssSource" placeholder="Paste URL e.g. https://example.con/feeds/" />
+        <button @click="addRssSource()">Add RSS feed</button>
+      </section>
+    
+      <section v-if="sources === null" class="import-rss-empty-view">
+        <div>
+          <h2>Add single RSS/Atom feed</h2>
+          <p>Paste URL of the feed to the field above.</p>
+          <img src="~/assets/import/kairly-copy-rss.png" alt="Copy RSS source"/>
+        </div>
 
-    <div
-      v-else
-      class="import-rss-view"
-    >
-      <h1>{{ $t('RSS feeds to import') }}</h1>
+        <div>
+          <h2>Import RSS/Atom feeds in bulk</h2>
+          <p>{{ $t('Export your feeds from your current RSS reader in OPML format and upload the file here.') }}</p>
+          <p>
+            Tip: If you're using 
+            <a href="https://feedly.com/">Feedly</a>, go to Settings -> 
+            <a href="https://feedly.com/i/opml">OPML Export</a> and download the OPML file.</p>
+          <img src="~/assets/import/kairly-export-opml.png" alt="Export OPML from feedly"/>
+        </div>
+      </section>
 
-      <table>
-        <thead>
-          <tr>
-            <th><input type="checkbox" checked name="" @change="selectAll($event)" /></th>
-            <th>{{ $t('Name') }}</th>
-            <th>{{ $t('When to display new posts?') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(source, index) in sources" :key="source.xmlUrl">
-            <td>
-              <input
-                v-model="source.selected"
-                type="checkbox"
-                name=""
-              />
-            </td>
-            <th @click="selectSource(index)">
-              {{ source.title }}
-            </th>
-            <td class="import-rss--change-periodicity">
-              <template v-if="isKairlyNewspaper(source.xmlUrl)">
-                {{ $t('Subscribe to the newspaper') }}
-              </template>
-              <template v-else>
-                <a href="" @click.prevent.stop="clickChangePeriodicity(source, index)">
-                  {{ getPeriodicityLabel(source.periodicity) }}
-                </a>
-              </template>
-              <ChangePeriodicity
-                v-if="showChangePeriodicityDialog[index]"
-                @changePeriodicity="changePeriodicity"
-                v-on-clickaway="() => closeAllWidgets()"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <section
+        v-else
+        class="import-rss--table"
+      >
+        <h2>{{ $t('RSS feeds to import') }}</h2>
 
-      <footer class="import-rss--footer">
-        <button
-          @click="submit"
-          :disabled="importing"
-          :class="{'loading': importing}">
-          {{ importing ? $t('Importing feeds') : $t('Import feeds') }}
-        </button>
-        <template v-if="importing">
-          <progress :value="progress" :max="progressTotal"></progress>
-          <span>{{ progress }} / {{ progressTotal }}</span>
-        </template>
-      </footer>
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" checked name="" @change="selectAll($event)" /></th>
+              <th>{{ $t('Name') }}</th>
+              <th>{{ $t('When to display new posts?') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(source, index) in sources" :key="source.xmlUrl">
+              <td>
+                <input
+                  v-model="source.selected"
+                  type="checkbox"
+                  name=""
+                />
+              </td>
+              <th @click="selectSource(index)">
+                {{ source.title }}
+              </th>
+              <td class="import-rss--change-periodicity">
+                <template v-if="isKairlyNewspaper(source.xmlUrl)">
+                  {{ $t('Subscribe to the newspaper') }}
+                </template>
+                <template v-else>
+                  <a href="" @click.prevent.stop="clickChangePeriodicity(source, index)">
+                    {{ getPeriodicityLabel(source.periodicity) }}
+                  </a>
+                </template>
+                <ChangePeriodicity
+                  v-if="showChangePeriodicityDialog[index]"
+                  @changePeriodicity="changePeriodicity"
+                  v-on-clickaway="() => closeAllWidgets()"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <footer class="import-rss--footer">
+          <button
+            @click="submit"
+            :disabled="importing"
+            :class="{'loading': importing}">
+            {{ importing ? $t('Importing feeds') : $t('Import feeds') }}
+          </button>
+          <template v-if="importing">
+            <progress :value="progress" :max="progressTotal"></progress>
+            <span>{{ progress }} / {{ progressTotal }}</span>
+          </template>
+        </footer>
+      </section>
     </div>
   </AppLayout>
 </template>
@@ -107,6 +130,7 @@ export default {
       progressTotal: null,
       showChangePeriodicityDialog: [],
       changePerodicityTarget: null,
+      rssSource: null
     }
   },
 
@@ -130,6 +154,20 @@ export default {
 
   methods: {
     ...mapActions(['subscribeAuthor', 'subscribeNewspaper']),
+
+    addRssSource() {
+      const url = this.rssSource
+      if (!url) {
+          return
+      }
+
+      const title = url.replace('http://', '').replace('https://', '')
+
+      this.$store.commit('opml', [
+          {title, xmlUrl: url, htmlUrl: url}
+      ])
+      this.$emit('loaded')
+    },
 
     clickChangePeriodicity(source, index) {
       this.changePerodicityTarget = source
@@ -247,28 +285,87 @@ export default {
 
 //- Import RSS Empty view
 .import-rss-empty-view
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-column-gap: $baseline*2
   margin: $baseline auto
   max-width: 900px
 
   @media (max-width: $mobile)
     padding: 0 $baseline / 2
 
-  > h1
-    margin-bottom: $baseline
+  div
+    > h1
+      margin-bottom: $baseline
 
-    font-size: $fs-3
-    font-weight: 600
-    line-height: 1.42
+      font-size: $fs-3
+      font-weight: 600
+      line-height: 1.42
 
-  > p
-    margin-bottom: $baseline
+    > p
+      margin-bottom: $baseline
 
-    font-size: $fs-1
-    line-height: 1.42
+      font-size: $fs-1
+      line-height: 1.42
 
-  .import-opml-button
-    label
-      +button
+      & + p
+        font-style: italic
+        font-size: $fs-0
+
+      a
+        color: $c-base
+
+        text-decoration: underline
+
+        &:hover,
+        &:focus
+          text-decoration: none
+
+    h2
+      margin-bottom: $baseline / 2
+
+      font-size: $fs-1
+      font-weight: 600
+
+    img
+      width: 100%
+
+      background: #fff
+      border-radius: 5px
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
+
+//- Add source
+.import-rss--add-source 
+  display: flex
+  padding: $baseline 0
+  margin: 0 $baseline*5
+
+  input
+    border-radius: 5px
+    box-sizing: border-box
+    height: $baseline * 1.5
+    padding: 0 $baseline / 2 
+    width: 100%
+
+    border: 1px solid #eee
+
+    font-size: $fs-0
+
+  button
+    padding: 0 $baseline/2
+
+    background: $c-base
+    border: 0
+    border-radius: 0 5px 5px 0 
+    color: #fff
+
+    cursor: pointer
+    font-size: $fs-0
+    white-space: nowrap
+
+    &:hover,
+    &:focus
+      background: darken($c-base, 10%)
 
 
 //- Import RSS
@@ -279,10 +376,28 @@ export default {
   @media (max-width: $mobile)
     padding: 0 $baseline / 2
 
-  > h1
-    margin-bottom: $baseline / 2
+  //- Header
+  > header
+    display: flex  
 
-    font-size: $fs-2
+    //- heading
+    > h1
+      flex: 1
+      margin-bottom: $baseline / 2
+
+      font-size: $fs-2
+      font-weight: 600
+
+    //- upload opml button
+    .import-opml-button
+      label
+        +button
+
+//- Table
+.import-rss--table
+  > h2
+    margin-bottom: $baseline/2
+    font-size: $fs-1
     font-weight: 600
 
   //- Table
