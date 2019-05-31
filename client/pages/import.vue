@@ -7,25 +7,26 @@
       </header>
 
       <section class="import-rss--add-source">
-        <input type="text" v-model="rssSource" placeholder="Paste URL e.g. https://example.con/feeds/" />
-        <button @click="addRssSource()">Add RSS feed</button>
+        <input type="text" v-model="rssSource" :placeholder="$t('Paste URL e.g. https://example.con/feeds/')" />
+        <button @click="addRssSource()">{{ $t('Add RSS feed') }}</button>
       </section>
     
       <section v-if="sources === null" class="import-rss-empty-view">
         <div>
-          <h2>Add single RSS/Atom feed</h2>
-          <p>Paste URL of the feed to the field above.</p>
-          <img src="~/assets/import/kairly-copy-rss.png" alt="Copy RSS source"/>
+          <h2>{{ $t('Add single RSS/Atom feed') }}</h2>
+          <p>{{ $t('Paste URL of the feed to the field above.') }}</p>
+          <img src="~/assets/import/kairly-copy-rss.png" :alt="$t('Copy RSS source')"/>
         </div>
 
         <div>
-          <h2>Import RSS/Atom feeds in bulk</h2>
+          <h2>{{ $t('Import RSS/Atom feeds in bulk') }}</h2>
           <p>{{ $t('Export your feeds from your current RSS reader in OPML format and upload the file here.') }}</p>
-          <p>
+          <p v-html="$t('@import/tip')">
             Tip: If you're using 
             <a href="https://feedly.com/">Feedly</a>, go to Settings -> 
-            <a href="https://feedly.com/i/opml">OPML Export</a> and download the OPML file.</p>
-          <img src="~/assets/import/kairly-export-opml.png" alt="Export OPML from feedly"/>
+            <a href="https://feedly.com/i/opml">OPML Export</a> and download the OPML file.
+          </p>
+          <img src="~/assets/import/kairly-export-opml.png" :alt="$t('Export OPML from feedly')"/>
         </div>
       </section>
 

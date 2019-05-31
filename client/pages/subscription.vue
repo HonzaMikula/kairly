@@ -32,7 +32,7 @@
 
           <h3>{{ $t('Import RSS feeds') }}</h3>
           <p>{{ $t('Add RSS/Atom source or import OPML file with feeds.') }}</p>
-          <nuxt-link to="/import">Add RSS source(s)</nuxt-link> 
+          <nuxt-link to="/import">{{ $t('Add RSS source(s)') }}</nuxt-link> 
 
           <h3>{{ $t('Read your Twitter on Kairly') }}</h3>
           <p>{{ $t('Connect to your Twitter account and read your timeline on Kairly.') }}</p>

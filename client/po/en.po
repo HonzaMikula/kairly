@@ -11,6 +11,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2\n"
 
+#: components/editor/backlog/BacklogPost.vue:19 pages/posts/index.vue:13
+msgid "Publish"
+msgstr ""
+
+#: components/editor/backlog/BacklogPost.vue:24
+msgid "Remove post from considaration"
+msgstr ""
+
+#: components/editor/backlog/BacklogPost.vue:40
+#: components/posts/PostArticle.vue:14 components/posts/PostArticle.vue:25
+msgid "read"
+msgstr ""
+
 #: components/editor/backlog/NewspaperBacklog.vue:14
 msgid "No posts for the upcoming issue!"
 msgstr ""
@@ -41,40 +54,6 @@ msgstr ""
 msgid ""
 "Go on your timeline and start adding interesting articles and tweets for "
 "considaration."
-msgstr ""
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:5
-msgid "Issue"
-msgstr ""
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:6
-msgid "will be automatically published in"
-msgstr ""
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:14
-msgid "Revenue - Cost = Profit"
-msgstr ""
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:35
-msgid "<strong>{backlogLength} posts</strong> are considered"
-msgstr ""
-
-#: components/editor/EditArticle.vue:6
-msgid "Title"
-msgstr ""
-
-#: components/editor/EditArticle.vue:18
-msgid "Normal view"
-msgstr ""
-
-#: components/editor/EditArticle.vue:27
-msgid "Column view"
-msgstr ""
-
-#: components/explore/ExploreModal.vue:43 components/layout/AppHeader.vue:22
-#: components/layout/AppHeader.vue:59 pages/explore.vue:2 pages/index.vue:56
-#: pages/subscription.vue:48
-msgid "Explore"
 msgstr ""
 
 #: components/editor/backlog/ProfitDropdown.vue:7
@@ -127,6 +106,83 @@ msgstr ""
 msgid "Remaining profit"
 msgstr ""
 
+#: components/editor/EditTweet.vue:9
+msgid "Tweet Content"
+msgstr ""
+
+#: components/explore/ExploreModal.vue:43 components/layout/AppHeader.vue:22
+#: components/layout/AppHeader.vue:59 pages/explore.vue:2 pages/index.vue:56
+#: pages/subscription.vue:47
+msgid "Explore"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:8
+msgid "Modify the newspaper"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:8
+msgid "Start a new newspaper"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:18
+msgid "Newspaper name"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:26
+msgid "Short description"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:30
+msgid "What this newspaper is about?"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:32
+msgid "Maximum 160 characters."
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:36
+msgid "Periodicity"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:41
+msgid "Select periodicity"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:48
+msgid "At 6:00, 12:00 and 18:00"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:49
+#: components/widgets/ChangePeriodicity.vue:13
+#: components/widgets/PeriodWidget.vue:6 pages/subscription/authors.vue:21
+msgid "Every 3 hours"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:51
+msgid "Continously every 3 hours."
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:65 pages/user/settings.vue:68
+msgid "Subscription price"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:70
+msgid "Free"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:89 pages/user/settings.vue:17
+msgid "Upload image"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:98 pages/posts/_postId.vue:4
+#: pages/posts/_postId.vue:5
+msgid "Save"
+msgstr ""
+
+#: components/editor/EditNewspaper.vue:98
+msgid "Create newspaper"
+msgstr ""
+
 #: components/HomePage.vue:8 components/KairlyPromo.vue:8
 #: components/microsite/Footer.vue:7
 msgid "Stop be distracted."
@@ -155,11 +211,11 @@ msgid ""
 "editors you trust."
 msgstr ""
 
-#: components/HomePage.vue:31 pages/import.vue:4
+#: components/HomePage.vue:31
 msgid "Import your RSS feeds"
 msgstr ""
 
-#: components/HomePage.vue:35 pages/subscription.vue:40
+#: components/HomePage.vue:35 pages/subscription.vue:39
 msgid "Connect to your Twitter"
 msgstr ""
 
@@ -221,10 +277,11 @@ msgstr ""
 "truly enrich you. \n"
 "</p> \n"
 
-#: components/HomePage.vue:145 components/HomePage.vue:93 pages/readers.vue:137
-#: pages/readers.vue:90 pages/rss-reader.vue:137 pages/rss-reader.vue:90
+#: components/HomePage.vue:145 components/HomePage.vue:93
 #: pages/publishers.vue:104 pages/publishers.vue:76 pages/journalists.vue:125
-#: pages/journalists.vue:82 pages/think-tanks.vue:116 pages/think-tanks.vue:71
+#: pages/journalists.vue:82 pages/rss-reader.vue:137 pages/rss-reader.vue:90
+#: pages/think-tanks.vue:116 pages/think-tanks.vue:71 pages/readers.vue:137
+#: pages/readers.vue:90
 msgid "founder of Kairly"
 msgstr ""
 
@@ -282,13 +339,13 @@ msgstr ""
 msgid "Check out some of our newspapers."
 msgstr ""
 
-#: components/HomePage.vue:163 pages/readers.vue:24 pages/rss-reader.vue:24
-#: pages/publishers.vue:30 pages/journalists.vue:23 pages/think-tanks.vue:24
+#: components/HomePage.vue:163 pages/publishers.vue:30 pages/journalists.vue:23
+#: pages/rss-reader.vue:24 pages/think-tanks.vue:24 pages/readers.vue:24
 msgid "Was said about us."
 msgstr ""
 
-#: components/HomePage.vue:166 pages/readers.vue:24 pages/rss-reader.vue:24
-#: pages/publishers.vue:30 pages/journalists.vue:23 pages/think-tanks.vue:24
+#: components/HomePage.vue:166 pages/publishers.vue:30 pages/journalists.vue:23
+#: pages/rss-reader.vue:24 pages/think-tanks.vue:24 pages/readers.vue:24
 msgid "@homepage/quote/zouzalik"
 msgstr ""
 "<p> \n"
@@ -308,8 +365,8 @@ msgstr ""
 "</p> \n"
 
 #: components/HomePage.vue:183 components/microsite/Quote.vue:11
-#: pages/readers.vue:40 pages/rss-reader.vue:40 pages/publishers.vue:46
-#: pages/journalists.vue:39 pages/think-tanks.vue:40
+#: pages/publishers.vue:46 pages/journalists.vue:39 pages/rss-reader.vue:40
+#: pages/think-tanks.vue:40 pages/readers.vue:40
 msgid "chairman of the Prague Syndicate of Journalists"
 msgstr ""
 
@@ -323,69 +380,34 @@ msgid ""
 "feed and Twitter and start reading the content in healthy way."
 msgstr ""
 
-#: components/editor/backlog/BacklogPost.vue:19 pages/posts/index.vue:13
-msgid "Publish"
+#: components/issues/IssueSuspendedAuthor.vue:24
+#: components/issues/IssueSuspendedNewspaper.vue:27
+msgid "Your susbscription were suspended."
 msgstr ""
 
-#: components/editor/backlog/BacklogPost.vue:24
-msgid "Remove post from considaration"
-msgstr ""
-
-#: components/editor/backlog/BacklogPost.vue:40
-#: components/posts/PostArticle.vue:14 components/posts/PostArticle.vue:25
-msgid "read"
-msgstr ""
-
-#: components/issues/IssueAuthor.vue:45
-#: components/issues/IssueSuspendedNewspaper.vue:45
 #: components/issues/IssueSuspendedAuthor.vue:39
+#: components/issues/IssueAuthor.vue:45 components/issues/IssueNewspaper.vue:42
 #: components/issues/IssueUnreleasedNewspaper.vue:45
-#: components/issues/IssueNewspaper.vue:42
+#: components/issues/IssueSuspendedNewspaper.vue:45
 msgid "6× per day"
 msgstr ""
 
-#: components/issues/IssueAuthor.vue:46
-#: components/issues/IssueSuspendedNewspaper.vue:46
 #: components/issues/IssueSuspendedAuthor.vue:40
+#: components/issues/IssueAuthor.vue:46 components/issues/IssueNewspaper.vue:43
 #: components/issues/IssueUnreleasedNewspaper.vue:46
-#: components/issues/IssueNewspaper.vue:43
+#: components/issues/IssueSuspendedNewspaper.vue:46
 #: components/widgets/ChangePeriodicity.vue:14
 msgid "3× per day"
 msgstr ""
 
-#: components/issues/IssueAuthor.vue:47
 #: components/issues/IssueSuspendedAuthor.vue:41
+#: components/issues/IssueAuthor.vue:47
 msgid "Daily summary"
 msgstr ""
 
-#: components/issues/IssueAuthor.vue:48
 #: components/issues/IssueSuspendedAuthor.vue:42
+#: components/issues/IssueAuthor.vue:48
 msgid "Weekly summary"
-msgstr ""
-
-#: components/issues/IssueSuspendedNewspaper.vue:27
-#: components/issues/IssueSuspendedAuthor.vue:24
-msgid "Your susbscription were suspended."
-msgstr ""
-
-#: components/issues/IssueSuspendedNewspaper.vue:47
-#: components/issues/IssueUnreleasedNewspaper.vue:47
-#: components/issues/IssueNewspaper.vue:44
-#: components/widgets/ChangePeriodicity.vue:16
-#: components/widgets/PeriodWidget.vue:9 pages/subscription/authors.vue:48
-msgid "Weekly"
-msgstr ""
-
-#: components/issues/IssueSuspendedNewspaper.vue:48
-#: components/issues/IssueUnreleasedNewspaper.vue:48
-#: components/issues/IssueNewspaper.vue:45
-#: components/widgets/ChangePeriodicity.vue:15
-#: components/widgets/PeriodWidget.vue:8 pages/subscription/authors.vue:39
-msgid "Daily"
-msgstr ""
-
-#: components/issues/IssueUnreleasedNewspaper.vue:27
-msgid "We are very sorry, but {editor} didn't prepare a new release for you."
 msgstr ""
 
 #: components/KairlyPromo.vue:14
@@ -410,6 +432,30 @@ msgstr ""
 
 #: components/KairlyPromo.vue:54 components/microsite/Footer.vue:30
 msgid "Follow us on LinkedIn"
+msgstr ""
+
+#: components/issues/IssueNewspaper.vue:44
+#: components/issues/IssueUnreleasedNewspaper.vue:47
+#: components/issues/IssueSuspendedNewspaper.vue:47
+#: components/widgets/ChangePeriodicity.vue:16
+#: components/widgets/PeriodWidget.vue:9 pages/subscription/authors.vue:48
+msgid "Weekly"
+msgstr ""
+
+#: components/issues/IssueNewspaper.vue:45
+#: components/issues/IssueUnreleasedNewspaper.vue:48
+#: components/issues/IssueSuspendedNewspaper.vue:48
+#: components/widgets/ChangePeriodicity.vue:15
+#: components/widgets/PeriodWidget.vue:8 pages/subscription/authors.vue:39
+msgid "Daily"
+msgstr ""
+
+#: components/issues/IssueUnreleasedNewspaper.vue:27
+msgid "We are very sorry, but {editor} didn't prepare a new release for you."
+msgstr ""
+
+#: components/IssueWrapper.vue:31 pages/explore/_tab.vue:26
+msgid "Show more"
 msgstr ""
 
 #: components/layout/AppHeader.vue:10 components/layout/AppHeader.vue:53
@@ -453,33 +499,17 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: components/IssueWrapper.vue:31 pages/explore/_tab.vue:26
-msgid "Show more"
+#: components/editor/EditArticle.vue:6
+msgid "Title"
 msgstr ""
 
-#: components/microsite/Faq.vue:3
-msgid "@independent-journalists/faq"
+#: components/editor/EditArticle.vue:18
+msgid "Normal view"
 msgstr ""
-"<h2>What is Kairly?</h2> \n"
-"<p> \n"
-"Kairly is an emerging platform for journalists and their readers, which "
-"offers<strong> a unique concept of paid content</strong>. \n"
-"</p> \n"
-"<h2>Why is it unique?</h2> \n"
-"<p> \n"
-"We are returning the role of editors to journalism. Editors at Kairly "
-"publish newspapers. They include in them the best articles and tweets from "
-"authors across the platform. \n"
-"<strong>The readers pay a subscription for the newspapers</strong>. \n"
-"<strong>Money is then divided between the editor and the authors</strong>  "
-"who appeared in editions of newspapers.\n"
-"</p> \n"
-"<h2>What it brings to the readers?</h2> \n"
-"<p> \n"
-" We have no advertising. We're not spying anyone. Our readers don't scroll "
-"endlessly. <strong>They only read what they really want to read \n"
-" and always when they want to read it</strong>. \n"
-"</p> \n"
+
+#: components/editor/EditArticle.vue:27
+msgid "Column view"
+msgstr ""
 
 #: components/microsite/FooterLinks.vue:4
 msgid "Kairly is platform for"
@@ -513,47 +543,41 @@ msgstr ""
 msgid "Contact us"
 msgstr ""
 
-#: components/layout/MyPosts.vue:2
-msgid "My posts"
-msgstr ""
-
-#: components/layout/MyPosts.vue:6
-msgid "Drafts"
-msgstr ""
-
-#: components/layout/MyPosts.vue:7
-msgid "Published posts"
-msgstr ""
-
-#: components/layout/MyPosts.vue:11
-msgid "Create a post"
-msgstr ""
-
-#: components/layout/MyPosts.vue:33 pages/posts/create/article.vue:18
-#: pages/posts/create/tweet.vue:17 pages/posts/_postId.vue:23
-msgid "My Posts – Kairly"
-msgstr ""
-
-#: components/microsite/OfficialStart.vue:3
-msgid "We start officially"
-msgstr ""
-
-#: components/microsite/OfficialStart.vue:4
-msgid "3rd quarter 2019"
-msgstr ""
-
-#: components/microsite/OfficialStart.vue:5
-msgid ""
-"Participate in closed beta and be among the first to begin making money on "
-"it."
-msgstr ""
-
-#: components/microsite/OfficialStart.vue:17 components/modals/JoinUs.vue:81
-msgid "Request to join"
-msgstr ""
-
 #: components/microsite/HowItWorks.vue:3
 msgid "How the platform works?"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:3
+msgid "@signupform/heading"
+msgstr "Sign Up"
+
+#: components/microsite/SignUpForm.vue:4
+msgid "We are opening the platform for first 125 beta testers."
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:8 components/modals/SignIn.vue:11
+#: pages/join-and-read-with-kairly.vue:13
+msgid "Username"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:12
+#: pages/join-and-read-with-kairly.vue:17
+msgid "Email"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:16 components/modals/SignIn.vue:16
+#: pages/join-and-read-with-kairly.vue:21 pages/user/settings.vue:51
+msgid "Password"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:18
+#: pages/join-and-read-with-kairly.vue:23
+msgid "At least 8 characters"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:21
+#: pages/join-and-read-with-kairly.vue:26
+msgid "Sign Up"
 msgstr ""
 
 #: components/modals/AuthorSubscription.vue:9
@@ -658,38 +682,113 @@ msgstr ""
 msgid "Buy credits to renew a subscption"
 msgstr ""
 
-#: components/microsite/SignUpForm.vue:3
-msgid "@signupform/heading"
-msgstr "Sign Up"
-
-#: components/microsite/SignUpForm.vue:4
-msgid "We are opening the platform for first 125 beta testers."
+#: components/layout/MyPosts.vue:2
+msgid "My posts"
 msgstr ""
 
-#: components/microsite/SignUpForm.vue:8 components/modals/SignIn.vue:11
-#: pages/join-and-read-with-kairly.vue:13
-msgid "Username"
+#: components/layout/MyPosts.vue:6
+msgid "Drafts"
 msgstr ""
 
-#: components/microsite/SignUpForm.vue:12
-#: pages/join-and-read-with-kairly.vue:17
-msgid "Email"
+#: components/layout/MyPosts.vue:7
+msgid "Published posts"
 msgstr ""
 
-#: components/microsite/SignUpForm.vue:16 components/modals/SignIn.vue:16
-#: pages/user/settings.vue:51 pages/join-and-read-with-kairly.vue:21
-msgid "Password"
+#: components/layout/MyPosts.vue:11
+msgid "Create a post"
 msgstr ""
 
-#: components/microsite/SignUpForm.vue:18
-#: pages/join-and-read-with-kairly.vue:23
-msgid "At least 8 characters"
+#: components/layout/MyPosts.vue:33 pages/posts/create/tweet.vue:17
+#: pages/posts/create/article.vue:18 pages/posts/_postId.vue:23
+msgid "My Posts – Kairly"
 msgstr ""
 
-#: components/microsite/SignUpForm.vue:21
-#: pages/join-and-read-with-kairly.vue:26
-msgid "Sign Up"
+#: components/layout/AppHeaderPublic.vue:7
+msgid "Solution for"
 msgstr ""
+
+#: components/layout/AppHeaderPublic.vue:18 components/modals/SignIn.vue:5
+msgid "Sign In"
+msgstr ""
+
+#: components/modals/PublishPost.vue:5
+msgid "Publish post"
+msgstr ""
+
+#: components/modals/PublishPost.vue:14
+msgid "Set price of the article for editors"
+msgstr ""
+
+#: components/modals/PublishPost.vue:17
+msgid "Kč per subscriber"
+msgstr ""
+
+#: components/modals/PublishPost.vue:19
+msgid ""
+"You will recieve <strong>{price} Kč</strong> from each subscriber from "
+"newspaper where your post will appear."
+msgstr ""
+
+#: components/modals/PublishPost.vue:24
+msgid "Schedule a time to publish"
+msgstr ""
+
+#: components/modals/PublishPost.vue:31
+msgid "Schedule post"
+msgstr ""
+
+#: components/modals/PublishPost.vue:31
+msgid "Publish now"
+msgstr ""
+
+#: components/modals/PublishPost.vue:35
+msgid "Cancel scheduling"
+msgstr ""
+
+#: components/modals/PublishPost.vue:35
+msgid "Schedule for later"
+msgstr ""
+
+#: components/modals/NewspaperSubscription.vue:48
+#: components/modals/NewspaperSubscription.vue:5
+msgid "Subscribe newspaper"
+msgstr ""
+
+#: components/modals/NewspaperSubscription.vue:31
+msgid "Support the newspaper and donate more"
+msgstr ""
+
+#: components/modals/NewspaperSubscription.vue:56
+msgid "Update donation"
+msgstr ""
+
+#: components/modals/NewspaperSubscription.vue:72
+msgid "Till then you will still see the newspaper on the timeline."
+msgstr ""
+
+#: components/microsite/Faq.vue:3
+msgid "@independent-journalists/faq"
+msgstr ""
+"<h2>What is Kairly?</h2> \n"
+"<p> \n"
+"Kairly is an emerging platform for journalists and their readers, which "
+"offers<strong> a unique concept of paid content</strong>. \n"
+"</p> \n"
+"<h2>Why is it unique?</h2> \n"
+"<p> \n"
+"We are returning the role of editors to journalism. Editors at Kairly "
+"publish newspapers. They include in them the best articles and tweets from "
+"authors across the platform. \n"
+"<strong>The readers pay a subscription for the newspapers</strong>. \n"
+"<strong>Money is then divided between the editor and the authors</strong>  "
+"who appeared in editions of newspapers.\n"
+"</p> \n"
+"<h2>What it brings to the readers?</h2> \n"
+"<p> \n"
+" We have no advertising. We're not spying anyone. Our readers don't scroll "
+"endlessly. <strong>They only read what they really want to read \n"
+" and always when they want to read it</strong>. \n"
+"</p> \n"
 
 #: components/modals/JoinUs.vue:9
 msgid "Are you interested in Kairly?"
@@ -741,142 +840,8 @@ msgstr ""
 msgid "email address"
 msgstr ""
 
-#: components/editor/EditTweet.vue:9
-msgid "Tweet Content"
-msgstr ""
-
-#: components/modals/NewspaperSubscription.vue:48
-#: components/modals/NewspaperSubscription.vue:5
-msgid "Subscribe newspaper"
-msgstr ""
-
-#: components/modals/NewspaperSubscription.vue:31
-msgid "Support the newspaper and donate more"
-msgstr ""
-
-#: components/modals/NewspaperSubscription.vue:56
-msgid "Update donation"
-msgstr ""
-
-#: components/modals/NewspaperSubscription.vue:72
-msgid "Till then you will still see the newspaper on the timeline."
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:8
-msgid "Modify the newspaper"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:8
-msgid "Start a new newspaper"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:18
-msgid "Newspaper name"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:26
-msgid "Short description"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:30
-msgid "What this newspaper is about?"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:32
-msgid "Maximum 160 characters."
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:36
-msgid "Periodicity"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:41
-msgid "Select periodicity"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:48
-msgid "At 6:00, 12:00 and 18:00"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:49
-#: components/widgets/ChangePeriodicity.vue:13
-#: components/widgets/PeriodWidget.vue:6 pages/subscription/authors.vue:21
-msgid "Every 3 hours"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:51
-msgid "Continously every 3 hours."
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:65 pages/user/settings.vue:68
-msgid "Subscription price"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:70
-msgid "Free"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:89 pages/user/settings.vue:17
-msgid "Upload image"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:98 pages/posts/_postId.vue:4
-#: pages/posts/_postId.vue:5
-msgid "Save"
-msgstr ""
-
-#: components/editor/EditNewspaper.vue:98
-msgid "Create newspaper"
-msgstr ""
-
-#: components/posts/PostArticle.vue:13
-msgid "Read the article"
-msgstr ""
-
-#: components/posts/PostArticle.vue:19
-msgid "Continue reading"
-msgstr ""
-
-#: components/posts/PostArticle.vue:23
-msgid "Subscribe newspaper to continue reading"
-msgstr ""
-
-#: components/modals/PublishPost.vue:5
-msgid "Publish post"
-msgstr ""
-
-#: components/modals/PublishPost.vue:14
-msgid "Set price of the article for editors"
-msgstr ""
-
-#: components/modals/PublishPost.vue:17
-msgid "Kč per subscriber"
-msgstr ""
-
-#: components/modals/PublishPost.vue:19
-msgid ""
-"You will recieve <strong>{price} Kč</strong> from each subscriber from "
-"newspaper where your post will appear."
-msgstr ""
-
-#: components/modals/PublishPost.vue:24
-msgid "Schedule a time to publish"
-msgstr ""
-
-#: components/modals/PublishPost.vue:31
-msgid "Schedule post"
-msgstr ""
-
-#: components/modals/PublishPost.vue:31
-msgid "Publish now"
-msgstr ""
-
-#: components/modals/PublishPost.vue:35
-msgid "Cancel scheduling"
-msgstr ""
-
-#: components/modals/PublishPost.vue:35
-msgid "Schedule for later"
+#: components/modals/JoinUs.vue:81 components/microsite/OfficialStart.vue:17
+msgid "Request to join"
 msgstr ""
 
 #: components/modals/TwitterApology.vue:9
@@ -887,21 +852,17 @@ msgstr ""
 msgid "We are sorry, but we are still working on the integration with Twitter."
 msgstr ""
 
-#: components/posts/PostRecommendations.vue:4
-msgid "Recommended issues"
-msgstr ""
-
-#: components/posts/PostRecommendations.vue:27
-msgid "Recommended posts"
-msgstr ""
-
 #: components/posts/PostBase.vue:41 components/posts/PostBase.vue:43
 #: pages/_author/_post.vue:65
 msgid "Consider for newspaper"
 msgstr ""
 
-#: components/modals/SignIn.vue:5 components/layout/AppHeaderPublic.vue:18
-msgid "Sign In"
+#: components/posts/PostLink.vue:28
+msgid "Read article"
+msgstr ""
+
+#: components/posts/PostTweet.vue:25
+msgid "Original tweet"
 msgstr ""
 
 #: components/modals/SignIn.vue:20
@@ -912,12 +873,38 @@ msgstr ""
 msgid "Wrong username or password"
 msgstr ""
 
-#: components/posts/PostTweet.vue:25
-msgid "Original tweet"
+#: components/posts/PostRecommendations.vue:4
+msgid "Recommended issues"
 msgstr ""
 
-#: components/posts/PostLink.vue:28
-msgid "Read article"
+#: components/posts/PostRecommendations.vue:27
+msgid "Recommended posts"
+msgstr ""
+
+#: components/widgets/AuthorSubscription.vue:15
+#: components/widgets/NewspaperSubscription.vue:15
+msgid "Subscribe for free"
+msgstr ""
+
+#: components/widgets/AuthorSubscription.vue:15
+#: components/widgets/NewspaperSubscription.vue:15
+msgid "Subscribe for {price}"
+msgstr ""
+
+#: components/widgets/AuthorSubscription.vue:19
+#: components/widgets/NewspaperSubscription.vue:19
+msgid "Subscribed for free"
+msgstr ""
+
+#: components/widgets/AuthorSubscription.vue:19
+#: components/widgets/NewspaperSubscription.vue:19
+msgid "Subscribed for {price}"
+msgstr ""
+
+#: components/widgets/AuthorSubscription.vue:23
+#: components/widgets/NewspaperSubscription.vue:24
+#: pages/subscription/authors.vue:12
+msgid "Suspended"
 msgstr ""
 
 #: components/WelcomePage.vue:3
@@ -936,7 +923,7 @@ msgstr ""
 msgid "Upload OPML file."
 msgstr ""
 
-#: components/WelcomePage.vue:16 pages/subscription.vue:38
+#: components/WelcomePage.vue:16 pages/subscription.vue:37
 msgid "Read your Twitter on Kairly"
 msgstr ""
 
@@ -960,7 +947,7 @@ msgstr ""
 msgid "Are you interested in more newspapers and authors?"
 msgstr ""
 
-#: components/WelcomePage.vue:61 pages/subscription.vue:73
+#: components/WelcomePage.vue:61 pages/subscription.vue:72
 msgid "Explore more content"
 msgstr ""
 
@@ -972,8 +959,8 @@ msgstr ""
 msgid "Do you want to start a newspaper and pick the best content for others?"
 msgstr ""
 
-#: components/WelcomePage.vue:70 pages/_author/index.vue:65
-#: pages/newspapers.vue:13 pages/newspapers.vue:19
+#: components/WelcomePage.vue:70 pages/newspapers.vue:13
+#: pages/newspapers.vue:19 pages/_author/index.vue:65
 msgid "Start a newspaper"
 msgstr ""
 
@@ -993,41 +980,16 @@ msgstr ""
 msgid "Go Home to start reading"
 msgstr ""
 
-#: components/profile/ChangePassword.vue:9
-msgid "Change Password"
+#: components/posts/PostArticle.vue:13
+msgid "Read the article"
 msgstr ""
 
-#: components/profile/ChangePassword.vue:23
-msgid "Old password"
+#: components/posts/PostArticle.vue:19
+msgid "Continue reading"
 msgstr ""
 
-#: components/profile/ChangePassword.vue:32
-msgid "New password"
-msgstr ""
-
-#: components/profile/ChangePassword.vue:41
-msgid "New password again"
-msgstr ""
-
-#: components/profile/ChangePassword.vue:51 pages/user/settings.vue:54
-msgid "Change password"
-msgstr ""
-
-#: components/profile/ChangePassword.vue:71
-msgid "Change password - Kairly"
-msgstr ""
-
-#: components/profile/ChangePassword.vue:92
-msgid "Password doesn't match"
-msgstr ""
-
-#: components/profile/ChangePassword.vue:102
-msgid "Password has been updated."
-msgstr ""
-
-#: components/widgets/IssueWidget.vue:29
-#: components/widgets/NewspaperWidget.vue:36
-msgid "subscribers"
+#: components/posts/PostArticle.vue:23
+msgid "Subscribe newspaper to continue reading"
 msgstr ""
 
 #: components/widgets/ChangePeriodicity.vue:8
@@ -1109,58 +1071,6 @@ msgstr ""
 msgid "Night (21:00)"
 msgstr ""
 
-#: components/widgets/ConsiderPost.vue:4
-msgid "For which newspaper?"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:8
-msgid "Article cost"
-msgstr ""
-
-#: components/layout/AppHeaderPublic.vue:7
-msgid "Solution for"
-msgstr ""
-
-#: components/widgets/PeriodWidget.vue:4
-msgid "How often do you want to publish?"
-msgstr ""
-
-#: components/widgets/PeriodWidget.vue:7 pages/subscription/authors.vue:30
-msgid "3x per day"
-msgstr ""
-
-#: components/widgets/NewspaperSubscription.vue:15
-#: components/widgets/AuthorSubscription.vue:15
-msgid "Subscribe for free"
-msgstr ""
-
-#: components/widgets/NewspaperSubscription.vue:15
-#: components/widgets/AuthorSubscription.vue:15
-msgid "Subscribe for {price}"
-msgstr ""
-
-#: components/widgets/NewspaperSubscription.vue:19
-#: components/widgets/AuthorSubscription.vue:19
-msgid "Subscribed for free"
-msgstr ""
-
-#: components/widgets/NewspaperSubscription.vue:19
-#: components/widgets/AuthorSubscription.vue:19
-msgid "Subscribed for {price}"
-msgstr ""
-
-#: components/widgets/NewspaperSubscription.vue:24
-#: components/widgets/AuthorSubscription.vue:23
-#: pages/subscription/authors.vue:12
-msgid "Suspended"
-msgstr ""
-
-#: components/widgets/RecommendButtonIssue.vue:7
-#: components/widgets/RecommendButtonIssue.vue:8
-#: components/widgets/RecommendButtonPost.vue:6
-msgid "Recommend"
-msgstr ""
-
 #: components/widgets/JumpMenu.vue:21 components/widgets/JumpMenu.vue:5
 msgid "Jump to different time"
 msgstr ""
@@ -1197,46 +1107,69 @@ msgstr ""
 msgid "Early morning"
 msgstr ""
 
-#: pages/explore.vue:11 pages/explore/recent.vue:27
-msgid "Most Recent"
+#: components/microsite/OfficialStart.vue:3
+msgid "We start officially"
 msgstr ""
 
-#: pages/import.vue:6
+#: components/microsite/OfficialStart.vue:4
+msgid "3rd quarter 2019"
+msgstr ""
+
+#: components/microsite/OfficialStart.vue:5
 msgid ""
-"Export your feeds from your current RSS reader in OPML format and upload the "
-"file here."
+"Participate in closed beta and be among the first to begin making money on "
+"it."
 msgstr ""
 
-#: pages/import.vue:7 pages/subscription.vue:36
-msgid "Upload OPML file"
+#: components/profile/ChangePassword.vue:9
+msgid "Change Password"
 msgstr ""
 
-#: pages/import.vue:14
-msgid "RSS feeds to import"
+#: components/profile/ChangePassword.vue:23
+msgid "Old password"
 msgstr ""
 
-#: pages/import.vue:20 pages/user/settings.vue:26
-msgid "Name"
+#: components/profile/ChangePassword.vue:32
+msgid "New password"
 msgstr ""
 
-#: pages/import.vue:21
-msgid "When to display new posts?"
+#: components/profile/ChangePassword.vue:41
+msgid "New password again"
 msgstr ""
 
-#: pages/import.vue:38
-msgid "Subscribe to the newspaper"
+#: components/profile/ChangePassword.vue:51 pages/user/settings.vue:54
+msgid "Change password"
 msgstr ""
 
-#: pages/import.vue:60
-msgid "Importing feeds"
+#: components/profile/ChangePassword.vue:71
+msgid "Change password - Kairly"
 msgstr ""
 
-#: pages/import.vue:60
-msgid "Import feeds"
+#: components/profile/ChangePassword.vue:92
+msgid "Password doesn't match"
 msgstr ""
 
-#: pages/import.vue:98
-msgid "Import RSS feeds – Kairly"
+#: components/profile/ChangePassword.vue:102
+msgid "Password has been updated."
+msgstr ""
+
+#: components/widgets/NewspaperWidget.vue:36
+#: components/widgets/IssueWidget.vue:29
+msgid "subscribers"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:4
+msgid "For which newspaper?"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:8
+msgid "Article cost"
+msgstr ""
+
+#: components/widgets/RecommendButtonPost.vue:6
+#: components/widgets/RecommendButtonIssue.vue:7
+#: components/widgets/RecommendButtonIssue.vue:8
+msgid "Recommend"
 msgstr ""
 
 #: pages/explore/recent.vue:4
@@ -1247,8 +1180,97 @@ msgstr ""
 msgid "Recent Posts"
 msgstr ""
 
+#: pages/explore/recent.vue:27 pages/explore.vue:11
+msgid "Most Recent"
+msgstr ""
+
 #: pages/explore/recent.vue:48
 msgid "Most Recent – Explore – Kairly"
+msgstr ""
+
+#: components/widgets/PeriodWidget.vue:4
+msgid "How often do you want to publish?"
+msgstr ""
+
+#: components/widgets/PeriodWidget.vue:7 pages/subscription/authors.vue:30
+msgid "3x per day"
+msgstr ""
+
+#: pages/import.vue:5 pages/subscription.vue:35
+msgid "Add RSS source(s)"
+msgstr ""
+
+#: pages/import.vue:6
+msgid "Upload OPML file"
+msgstr ""
+
+#: pages/import.vue:10
+msgid "Paste URL e.g. https://example.con/feeds/"
+msgstr ""
+
+#: pages/import.vue:11
+msgid "Add RSS feed"
+msgstr ""
+
+#: pages/import.vue:16
+msgid "Add single RSS/Atom feed"
+msgstr ""
+
+#: pages/import.vue:17
+msgid "Paste URL of the feed to the field above."
+msgstr ""
+
+#: pages/import.vue:18
+msgid "Copy RSS source"
+msgstr ""
+
+#: pages/import.vue:22
+msgid "Import RSS/Atom feeds in bulk"
+msgstr ""
+
+#: pages/import.vue:23
+msgid ""
+"Export your feeds from your current RSS reader in OPML format and upload the "
+"file here."
+msgstr ""
+
+#: pages/import.vue:24
+msgid "@import/tip"
+msgstr ""
+"Tip: If you're using <a href=\"https://feedly.com/\">Feedly</a>, go to "
+"Settings -> <a href=\"https://feedly.com/i/opml\">OPML Export</a> and "
+"download the OPML file."
+
+#: pages/import.vue:29
+msgid "Export OPML from feedly"
+msgstr ""
+
+#: pages/import.vue:37
+msgid "RSS feeds to import"
+msgstr ""
+
+#: pages/import.vue:43 pages/user/settings.vue:26
+msgid "Name"
+msgstr ""
+
+#: pages/import.vue:44
+msgid "When to display new posts?"
+msgstr ""
+
+#: pages/import.vue:61
+msgid "Subscribe to the newspaper"
+msgstr ""
+
+#: pages/import.vue:83
+msgid "Importing feeds"
+msgstr ""
+
+#: pages/import.vue:83
+msgid "Import feeds"
+msgstr ""
+
+#: pages/import.vue:122
+msgid "Import RSS feeds – Kairly"
 msgstr ""
 
 #: pages/index.vue:50
@@ -1265,8 +1287,66 @@ msgstr ""
 msgid "That's it. You read the entire day."
 msgstr ""
 
-#: pages/posts/create/article.vue:3 pages/posts/create/tweet.vue:3
+#: pages/newspapers.vue:7
+msgid "Start your first newspaper!"
+msgstr ""
+
+#: pages/newspapers.vue:10
+msgid ""
+"Are you interested in specific topic? Found a newspaper and start providing "
+"selection of best articles and tweets to others."
+msgstr ""
+
+#: pages/newspapers.vue:49
+msgid "is releasing in"
+msgstr ""
+
+#: pages/newspapers.vue:50
+msgid "with"
+msgstr ""
+
+#: pages/newspapers.vue:51
+msgid "posts"
+msgstr ""
+
+#: pages/newspapers.vue:61
+msgid "Go to newspaper detail"
+msgstr ""
+
+#: pages/newspapers.vue:100 pages/newspapers.vue:69
+msgid "Edit newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:101 pages/newspapers.vue:78
+msgid "Delete newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:99
+msgid "Start new newspaper"
+msgstr ""
+
+#: pages/newspapers.vue:113
+msgid "Upcoming issue"
+msgstr ""
+
+#: pages/newspapers.vue:120
+msgid "Considered posts"
+msgstr ""
+
+#: pages/join-and-read-with-kairly.vue:6
+msgid "Sign up to help with resurrection of exceptional journalism."
+msgstr ""
+
+#: pages/posts/create/tweet.vue:3 pages/posts/create/article.vue:3
 msgid "Save a draft"
+msgstr ""
+
+#: pages/posts/create.vue:5
+msgid "Write an article"
+msgstr ""
+
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
 msgstr ""
 
 #: pages/posts/index.vue:4
@@ -1287,238 +1367,6 @@ msgstr ""
 
 #: pages/posts/published.vue:20
 msgid "You didn't publish any post."
-msgstr ""
-
-#: pages/posts/create.vue:5
-msgid "Write an article"
-msgstr ""
-
-#: pages/posts/create.vue:6
-msgid "Write a tweet"
-msgstr ""
-
-#: pages/subscription/newspapers.vue:6
-msgid "No newspapers"
-msgstr ""
-
-#: pages/subscription/newspapers.vue:7
-msgid ""
-"You haven't subscribe to any newspapers yet. On Explore page you can find "
-"newspapers you might like."
-msgstr ""
-
-#: pages/subscription/newspapers.vue:8
-msgid "Explore newspapers"
-msgstr ""
-
-#: pages/subscription/newspapers.vue:31
-msgid "Newspapers – My Subscription – Kairly"
-msgstr ""
-
-#: pages/readers.vue:7
-msgid "Are you a news reader?"
-msgstr ""
-
-#: pages/readers.vue:10
-msgid ""
-"Stop endlessly scrolling without thinking. Read only what you really care "
-"about."
-msgstr ""
-
-#: pages/readers.vue:11
-msgid ""
-"Don't be bothered by nonsense notifications. Read only when you want and "
-"when you're used to it."
-msgstr ""
-
-#: pages/readers.vue:12
-msgid "Support high-quality journalists by purchasing a subscription."
-msgstr ""
-
-#: pages/readers.vue:50 pages/rss-reader.vue:50
-msgid ""
-"Read on the platform where there is only content that interests you and no "
-"one is disturbing you there."
-msgstr ""
-
-#: pages/readers.vue:53 pages/rss-reader.vue:53
-msgid "@readers/modern-platform"
-msgstr ""
-"<p> \n"
-"In today's world of social networks and countless apps that constantly "
-"demand your attention, we are building a place for you where you can only "
-"read what interests you.</p> \n"
-"<p>We are nostalgically looking back to the paper newspaper, where one did "
-"not have to scroll forever. With each turn of the paper, the reader got a "
-"perfectly edited content by a professional editor. This experience is "
-"missing on the Internet.</p> \n"
-"<p> \n"
-"Our unique concept of digital newspaper offers readers highly personalized "
-"content that is as well professionaly prepared. Our app does not lead to "
-"addiction, but it creates good reading news habits.</p> \n"
-
-#: pages/readers.vue:76 pages/rss-reader.vue:76 pages/publishers.vue:62
-#: pages/journalists.vue:68 pages/think-tanks.vue:57
-msgid "@independent-journalists/quote/jan-mikula"
-msgstr ""
-"<p> \n"
-"For journalists, journalists, and bloggers, we are creating an open platform "
-"inspired by, \n"
-"social networks where authors will be fairly competing who can inform "
-"readers in the best and most interesting way. \n"
-"</p> \n"
-"<p> \n"
-"Nowadays, with an infinite stream of insignificant information and "
-"constantly disturbing notifications, we create an environment for readers to "
-"read, what they really want to read, and when they are used to read. The "
-"time, when we bought a newspaper and read them on the bus had, wasn't bad at "
-"all.</p> \n"
-
-#: pages/readers.vue:99 pages/rss-reader.vue:99
-msgid ""
-"By purchasing digital newspapers, you help good journalists and publicists."
-msgstr ""
-
-#: pages/readers.vue:101 pages/rss-reader.vue:101
-msgid "@readers/monetizing-content"
-msgstr ""
-"<p> \n"
-"Advertising can't pay high-quality journalists. If journalists are "
-"predominantly dependent on advertising, they will write content that is "
-"primarily about clicks. We are concerned with quality, so on our platform "
-"readers pay for content.</p> \n"
-"<p>By purchasing a digital newspaper subscription, you support editors with "
-"good choice of articles and tweets. You are also helping authors who appear "
-"in your prepaid newspaper.</p> \n"
-"<p> \n"
-"You can support your favorite authors, think-tanks or non-profit "
-"organizations beyond your regular subscription.</p> \n"
-
-#: pages/readers.vue:124 pages/rss-reader.vue:124 pages/publishers.vue:91
-#: pages/journalists.vue:112 pages/think-tanks.vue:103
-msgid "@independent-journalists/quote/roman-krejcik"
-msgstr ""
-"<p> \n"
-"Advertising does not pay for high-quality journalism. Especially when we "
-"have a duopoly of Google and Facebook. \n"
-"Paid content is returning. But there are lots of troubles. Most current "
-"attempts are not very successful. We have to be smarter about it. \n"
-"</p> \n"
-"<p> \n"
-"Let's take advantage of what social networks have done so well. Kairly uses "
-"princples of absolute openness and network effect,  \n"
-"allowing readers to really read only what they want, and from the authors "
-"across the platform. This high personalization of the content \n"
-"is the key to a successful paid content model. \n"
-"</p> \n"
-
-#: pages/readers.vue:182
-msgid "Media platform for readers"
-msgstr ""
-
-#: pages/readers.vue:187
-msgid ""
-"Kairly is a media platform for pleasant reading without distraction and "
-"endless scrolling."
-msgstr ""
-
-#: pages/subscription/authors.vue:6
-msgid "No authors"
-msgstr ""
-
-#: pages/subscription/authors.vue:7
-msgid ""
-"You haven't subscribe to any author yet. On Explore page you can find "
-"authors you might like."
-msgstr ""
-
-#: pages/subscription/authors.vue:8
-msgid "Explore authors"
-msgstr ""
-
-#: pages/subscription/authors.vue:75
-msgid "Authors – My Subscription – Kairly"
-msgstr ""
-
-#: pages/subscription.vue:5
-msgid "Newspapers"
-msgstr ""
-
-#: pages/subscription.vue:6
-msgid "Authors"
-msgstr ""
-
-#: pages/subscription.vue:15 pages/user/transactions/history.vue:7
-#: pages/user/transactions.vue:2
-msgid "Credits"
-msgstr ""
-
-#: pages/subscription.vue:16 pages/user/transactions.vue:14
-msgid "Current balance"
-msgstr ""
-
-#: pages/subscription.vue:21 pages/user/transactions.vue:21
-msgid "Monthly spending"
-msgstr ""
-
-#: pages/subscription.vue:26 pages/user/add-credits.vue:2
-#: pages/user/add-credits.vue:34 pages/user/add-credits.vue:4
-#: pages/user/transactions.vue:8
-msgid "Buy credits"
-msgstr ""
-
-#: pages/subscription.vue:31
-msgid "Import authors"
-msgstr ""
-
-#: pages/subscription.vue:34
-msgid ""
-"Upload your OPML file with RSS feeds and read your favorite sources on "
-"Kairly."
-msgstr ""
-
-#: pages/subscription.vue:39
-msgid "Connect to your Twitter account and read your timeline on Kairly."
-msgstr ""
-
-#: pages/subscription.vue:50
-msgid "Recent newspaper issue"
-msgstr ""
-
-#: pages/subscription.vue:62
-msgid "New authors on Kairly"
-msgstr ""
-
-#: pages/subscription.vue:71
-msgid "You can find more newspapers and authors on Explore page."
-msgstr ""
-
-#: pages/rss-reader.vue:183 pages/rss-reader.vue:7
-msgid "RSS reader that prevents distraction"
-msgstr ""
-
-#: pages/rss-reader.vue:10
-msgid ""
-"Modern applications subconsciously create the urge to constantly check these "
-"applications."
-msgstr ""
-
-#: pages/rss-reader.vue:11
-msgid ""
-"We're doing things differently. We update the timeline only every 3 hours. "
-"That's reasonable."
-msgstr ""
-
-#: pages/rss-reader.vue:12
-msgid ""
-"Here you set when you want to read what. E.g. you will be receiving articles "
-"from your favorite news site every morning at 9:00 AM."
-msgstr ""
-
-#: pages/rss-reader.vue:184
-msgid ""
-"Our RSS reader allows people to choose when they want to read what. That "
-"leads to a healthy reading habits."
 msgstr ""
 
 #: pages/publishers.vue:7
@@ -1561,6 +1409,23 @@ msgstr ""
 "publishing, lead to the formation of readers' habits and thus more loyalty "
 "to your publications.</p> \n"
 
+#: pages/publishers.vue:62 pages/journalists.vue:68 pages/rss-reader.vue:76
+#: pages/think-tanks.vue:57 pages/readers.vue:76
+msgid "@independent-journalists/quote/jan-mikula"
+msgstr ""
+"<p> \n"
+"For journalists, journalists, and bloggers, we are creating an open platform "
+"inspired by, \n"
+"social networks where authors will be fairly competing who can inform "
+"readers in the best and most interesting way. \n"
+"</p> \n"
+"<p> \n"
+"Nowadays, with an infinite stream of insignificant information and "
+"constantly disturbing notifications, we create an environment for readers to "
+"read, what they really want to read, and when they are used to read. The "
+"time, when we bought a newspaper and read them on the bus had, wasn't bad at "
+"all.</p> \n"
+
 #: pages/publishers.vue:85
 msgid "Make money on your publications with a unique concept of paid content."
 msgstr ""
@@ -1583,6 +1448,24 @@ msgstr ""
 "receive a fair monetaryreward from the newspaper's subscription where your "
 "post appeared.</p> \n"
 
+#: pages/publishers.vue:91 pages/journalists.vue:112 pages/rss-reader.vue:124
+#: pages/think-tanks.vue:103 pages/readers.vue:124
+msgid "@independent-journalists/quote/roman-krejcik"
+msgstr ""
+"<p> \n"
+"Advertising does not pay for high-quality journalism. Especially when we "
+"have a duopoly of Google and Facebook. \n"
+"Paid content is returning. But there are lots of troubles. Most current "
+"attempts are not very successful. We have to be smarter about it. \n"
+"</p> \n"
+"<p> \n"
+"Let's take advantage of what social networks have done so well. Kairly uses "
+"princples of absolute openness and network effect,  \n"
+"allowing readers to really read only what they want, and from the authors "
+"across the platform. This high personalization of the content \n"
+"is the key to a successful paid content model. \n"
+"</p> \n"
+
 #: pages/publishers.vue:149
 msgid "Digital Publishing Platform for Publishers"
 msgstr ""
@@ -1591,38 +1474,6 @@ msgstr ""
 msgid ""
 "Kairly is a digital publishing platform for publishers that offers a unique "
 "concept of paid content."
-msgstr ""
-
-#: pages/system.vue:2
-msgid "Transactions"
-msgstr ""
-
-#: pages/system.vue:67
-msgid "System Reports"
-msgstr ""
-
-#: pages/user/add-credits.vue:7
-msgid ""
-"Kairly is currently in beta. You will receive free credit automatically "
-"every month."
-msgstr ""
-
-#: pages/user/add-credits.vue:11
-msgid ""
-"In future you will have to buy credit. But we will also start paying authors "
-"and editors for their good work."
-msgstr ""
-
-#: pages/user/add-credits.vue:15
-msgid "Do you need more credits?"
-msgstr ""
-
-#: pages/user/add-credits.vue:18
-msgid "Please, give me more"
-msgstr ""
-
-#: pages/user/add-credits.vue:63
-msgid "Don't be greedy."
 msgstr ""
 
 #: pages/journalists.vue:7
@@ -1700,76 +1551,151 @@ msgid ""
 "bloggers who wants to start earning money for writing good content."
 msgstr ""
 
-#: pages/user/transactions/history.vue:5
-msgid "Subject"
+#: pages/subscription/authors.vue:6
+msgid "No authors"
 msgstr ""
 
-#: pages/user/transactions/history.vue:6
-msgid "Datetime"
-msgstr ""
-
-#: pages/user/transactions/history.vue:67
-msgid "Credit balance – Kairly"
-msgstr ""
-
-#: pages/user/settings.vue:2 pages/user/settings.vue:4
-msgid "Account Settings"
-msgstr ""
-
-#: pages/user/settings.vue:24
-msgid "Personal"
-msgstr ""
-
-#: pages/user/settings.vue:31
-msgid "Medium"
-msgstr ""
-
-#: pages/user/settings.vue:33
-msgid "Are you writing articles or editing for some medium?"
-msgstr ""
-
-#: pages/user/settings.vue:42
-msgid "Timezone"
-msgstr ""
-
-#: pages/user/settings.vue:47
+#: pages/subscription/authors.vue:7
 msgid ""
-"Tell us in which timezone are you living in, so we can deliver news at the "
-"right time."
+"You haven't subscribe to any author yet. On Explore page you can find "
+"authors you might like."
 msgstr ""
 
-#: pages/user/settings.vue:53
-msgid "Do you want to have different password?"
+#: pages/subscription/authors.vue:8
+msgid "Explore authors"
 msgstr ""
 
-#: pages/user/settings.vue:57
-msgid "Integrations"
+#: pages/subscription/authors.vue:75
+msgid "Authors – My Subscription – Kairly"
 msgstr ""
 
-#: pages/user/settings.vue:60
-msgid "Twitter username"
+#: pages/rss-reader.vue:183 pages/rss-reader.vue:7
+msgid "RSS reader that prevents distraction"
 msgstr ""
 
-#: pages/user/settings.vue:62
+#: pages/rss-reader.vue:10
 msgid ""
-"Provide us with your Twitter username and we will automatically publish your "
-"tweets on Kairly."
+"Modern applications subconsciously create the urge to constantly check these "
+"applications."
 msgstr ""
 
-#: pages/user/settings.vue:65
-msgid "Publishing"
+#: pages/rss-reader.vue:11
+msgid ""
+"We're doing things differently. We update the timeline only every 3 hours. "
+"That's reasonable."
 msgstr ""
 
-#: pages/user/settings.vue:75
-msgid "Montly subscription price for my posts."
+#: pages/rss-reader.vue:12
+msgid ""
+"Here you set when you want to read what. E.g. you will be receiving articles "
+"from your favorite news site every morning at 9:00 AM."
 msgstr ""
 
-#: pages/user/settings.vue:78
-msgid "Save profile"
+#: pages/rss-reader.vue:50 pages/readers.vue:50
+msgid ""
+"Read on the platform where there is only content that interests you and no "
+"one is disturbing you there."
 msgstr ""
 
-#: pages/user/settings.vue:102
-msgid "Account Settings – Kairly"
+#: pages/rss-reader.vue:53 pages/readers.vue:53
+msgid "@readers/modern-platform"
+msgstr ""
+"<p> \n"
+"In today's world of social networks and countless apps that constantly "
+"demand your attention, we are building a place for you where you can only "
+"read what interests you.</p> \n"
+"<p>We are nostalgically looking back to the paper newspaper, where one did "
+"not have to scroll forever. With each turn of the paper, the reader got a "
+"perfectly edited content by a professional editor. This experience is "
+"missing on the Internet.</p> \n"
+"<p> \n"
+"Our unique concept of digital newspaper offers readers highly personalized "
+"content that is as well professionaly prepared. Our app does not lead to "
+"addiction, but it creates good reading news habits.</p> \n"
+
+#: pages/rss-reader.vue:99 pages/readers.vue:99
+msgid ""
+"By purchasing digital newspapers, you help good journalists and publicists."
+msgstr ""
+
+#: pages/rss-reader.vue:101 pages/readers.vue:101
+msgid "@readers/monetizing-content"
+msgstr ""
+"<p> \n"
+"Advertising can't pay high-quality journalists. If journalists are "
+"predominantly dependent on advertising, they will write content that is "
+"primarily about clicks. We are concerned with quality, so on our platform "
+"readers pay for content.</p> \n"
+"<p>By purchasing a digital newspaper subscription, you support editors with "
+"good choice of articles and tweets. You are also helping authors who appear "
+"in your prepaid newspaper.</p> \n"
+"<p> \n"
+"You can support your favorite authors, think-tanks or non-profit "
+"organizations beyond your regular subscription.</p> \n"
+
+#: pages/rss-reader.vue:184
+msgid ""
+"Our RSS reader allows people to choose when they want to read what. That "
+"leads to a healthy reading habits."
+msgstr ""
+
+#: pages/subscription.vue:5
+msgid "Newspapers"
+msgstr ""
+
+#: pages/subscription.vue:6
+msgid "Authors"
+msgstr ""
+
+#: pages/subscription.vue:15 pages/user/transactions/history.vue:7
+#: pages/user/transactions.vue:2
+msgid "Credits"
+msgstr ""
+
+#: pages/subscription.vue:16 pages/user/transactions.vue:14
+msgid "Current balance"
+msgstr ""
+
+#: pages/subscription.vue:21 pages/user/transactions.vue:21
+msgid "Monthly spending"
+msgstr ""
+
+#: pages/subscription.vue:26 pages/user/add-credits.vue:2
+#: pages/user/add-credits.vue:34 pages/user/add-credits.vue:4
+#: pages/user/transactions.vue:8
+msgid "Buy credits"
+msgstr ""
+
+#: pages/subscription.vue:31
+msgid "Import authors"
+msgstr ""
+
+#: pages/subscription.vue:34
+msgid "Add RSS/Atom source or import OPML file with feeds."
+msgstr ""
+
+#: pages/subscription.vue:38
+msgid "Connect to your Twitter account and read your timeline on Kairly."
+msgstr ""
+
+#: pages/subscription.vue:49
+msgid "Recent newspaper issue"
+msgstr ""
+
+#: pages/subscription.vue:61
+msgid "New authors on Kairly"
+msgstr ""
+
+#: pages/subscription.vue:70
+msgid "You can find more newspapers and authors on Explore page."
+msgstr ""
+
+#: pages/system.vue:2
+msgid "Transactions"
+msgstr ""
+
+#: pages/system.vue:67
+msgid "System Reports"
 msgstr ""
 
 #: pages/think-tanks.vue:7
@@ -1838,6 +1764,102 @@ msgid ""
 "them to receive voluntary donations."
 msgstr ""
 
+#: pages/user/add-credits.vue:7
+msgid ""
+"Kairly is currently in beta. You will receive free credit automatically "
+"every month."
+msgstr ""
+
+#: pages/user/add-credits.vue:11
+msgid ""
+"In future you will have to buy credit. But we will also start paying authors "
+"and editors for their good work."
+msgstr ""
+
+#: pages/user/add-credits.vue:15
+msgid "Do you need more credits?"
+msgstr ""
+
+#: pages/user/add-credits.vue:18
+msgid "Please, give me more"
+msgstr ""
+
+#: pages/user/add-credits.vue:63
+msgid "Don't be greedy."
+msgstr ""
+
+#: pages/user/settings.vue:2 pages/user/settings.vue:4
+msgid "Account Settings"
+msgstr ""
+
+#: pages/user/settings.vue:24
+msgid "Personal"
+msgstr ""
+
+#: pages/user/settings.vue:31
+msgid "Medium"
+msgstr ""
+
+#: pages/user/settings.vue:33
+msgid "Are you writing articles or editing for some medium?"
+msgstr ""
+
+#: pages/user/settings.vue:42
+msgid "Timezone"
+msgstr ""
+
+#: pages/user/settings.vue:47
+msgid ""
+"Tell us in which timezone are you living in, so we can deliver news at the "
+"right time."
+msgstr ""
+
+#: pages/user/settings.vue:53
+msgid "Do you want to have different password?"
+msgstr ""
+
+#: pages/user/settings.vue:57
+msgid "Integrations"
+msgstr ""
+
+#: pages/user/settings.vue:60
+msgid "Twitter username"
+msgstr ""
+
+#: pages/user/settings.vue:62
+msgid ""
+"Provide us with your Twitter username and we will automatically publish your "
+"tweets on Kairly."
+msgstr ""
+
+#: pages/user/settings.vue:65
+msgid "Publishing"
+msgstr ""
+
+#: pages/user/settings.vue:75
+msgid "Montly subscription price for my posts."
+msgstr ""
+
+#: pages/user/settings.vue:78
+msgid "Save profile"
+msgstr ""
+
+#: pages/user/settings.vue:102
+msgid "Account Settings – Kairly"
+msgstr ""
+
+#: pages/user/transactions/history.vue:5
+msgid "Subject"
+msgstr ""
+
+#: pages/user/transactions/history.vue:6
+msgid "Datetime"
+msgstr ""
+
+#: pages/user/transactions/history.vue:67
+msgid "Credit balance – Kairly"
+msgstr ""
+
 #: pages/user/transactions/upcoming.vue:5
 msgid "Newspaper / Author"
 msgstr ""
@@ -1856,6 +1878,42 @@ msgstr ""
 
 #: pages/user/transactions.vue:30
 msgid "Past payments"
+msgstr ""
+
+#: mixins/PeriodicityMixin.js:19
+msgid "Daily at 6:00, 12:00 and 18:00"
+msgstr ""
+
+#: mixins/PeriodicityMixin.js:22
+msgid "Daily every 3 hours"
+msgstr ""
+
+#: mixins/PeriodicityMixin.js:25
+msgid "Daily at {at}"
+msgstr ""
+
+#: mixins/PeriodicityMixin.js:28
+msgid "Every {dow} at {at}"
+msgstr ""
+
+#: pages/_author/index.vue:2
+msgid "Author's profile"
+msgstr ""
+
+#: pages/_author/index.vue:48
+msgid "Show all newspapers"
+msgstr ""
+
+#: pages/_author/index.vue:48
+msgid "Hide newspapers"
+msgstr ""
+
+#: pages/_author/index.vue:59
+msgid "User didn't write any posts and didn't start any newspaper."
+msgstr ""
+
+#: pages/_author/index.vue:63
+msgid "You didn't write any post and didn't start any newspaper."
 msgstr ""
 
 #: pages/_author/_newspaper/index.vue:2
@@ -1908,24 +1966,50 @@ msgid ""
 "timeline."
 msgstr ""
 
-#: pages/_author/index.vue:2
-msgid "Author's profile"
+#: components/editor/backlog/NewspaperBacklogInfo.vue:5
+msgid "Issue"
 msgstr ""
 
-#: pages/_author/index.vue:48
-msgid "Show all newspapers"
+#: components/editor/backlog/NewspaperBacklogInfo.vue:6
+msgid "will be automatically published in"
 msgstr ""
 
-#: pages/_author/index.vue:48
-msgid "Hide newspapers"
+#: components/editor/backlog/NewspaperBacklogInfo.vue:14
+msgid "Revenue - Cost = Profit"
 msgstr ""
 
-#: pages/_author/index.vue:59
-msgid "User didn't write any posts and didn't start any newspaper."
+#: components/editor/backlog/NewspaperBacklogInfo.vue:35
+msgid "<strong>{backlogLength} posts</strong> are considered"
 msgstr ""
 
-#: pages/_author/index.vue:63
-msgid "You didn't write any post and didn't start any newspaper."
+#: pages/readers.vue:7
+msgid "Are you a news reader?"
+msgstr ""
+
+#: pages/readers.vue:10
+msgid ""
+"Stop endlessly scrolling without thinking. Read only what you really care "
+"about."
+msgstr ""
+
+#: pages/readers.vue:11
+msgid ""
+"Don't be bothered by nonsense notifications. Read only when you want and "
+"when you're used to it."
+msgstr ""
+
+#: pages/readers.vue:12
+msgid "Support high-quality journalists by purchasing a subscription."
+msgstr ""
+
+#: pages/readers.vue:182
+msgid "Media platform for readers"
+msgstr ""
+
+#: pages/readers.vue:187
+msgid ""
+"Kairly is a media platform for pleasant reading without distraction and "
+"endless scrolling."
 msgstr ""
 
 #: pages/_author/_post.vue:2
@@ -1948,68 +2032,20 @@ msgstr ""
 msgid "Read full article"
 msgstr ""
 
-#: pages/newspapers.vue:7
-msgid "Start your first newspaper!"
+#: pages/subscription/newspapers.vue:6
+msgid "No newspapers"
 msgstr ""
 
-#: pages/newspapers.vue:10
+#: pages/subscription/newspapers.vue:7
 msgid ""
-"Are you interested in specific topic? Found a newspaper and start providing "
-"selection of best articles and tweets to others."
+"You haven't subscribe to any newspapers yet. On Explore page you can find "
+"newspapers you might like."
 msgstr ""
 
-#: pages/newspapers.vue:49
-msgid "is releasing in"
+#: pages/subscription/newspapers.vue:8
+msgid "Explore newspapers"
 msgstr ""
 
-#: pages/newspapers.vue:50
-msgid "with"
-msgstr ""
-
-#: pages/newspapers.vue:51
-msgid "posts"
-msgstr ""
-
-#: pages/newspapers.vue:61
-msgid "Go to newspaper detail"
-msgstr ""
-
-#: pages/newspapers.vue:100 pages/newspapers.vue:69
-msgid "Edit newspaper"
-msgstr ""
-
-#: pages/newspapers.vue:101 pages/newspapers.vue:78
-msgid "Delete newspaper"
-msgstr ""
-
-#: pages/newspapers.vue:99
-msgid "Start new newspaper"
-msgstr ""
-
-#: pages/newspapers.vue:113
-msgid "Upcoming issue"
-msgstr ""
-
-#: pages/newspapers.vue:120
-msgid "Considered posts"
-msgstr ""
-
-#: pages/join-and-read-with-kairly.vue:6
-msgid "Sign up to help with resurrection of exceptional journalism."
-msgstr ""
-
-#: mixins/PeriodicityMixin.js:19
-msgid "Daily at 6:00, 12:00 and 18:00"
-msgstr ""
-
-#: mixins/PeriodicityMixin.js:22
-msgid "Daily every 3 hours"
-msgstr ""
-
-#: mixins/PeriodicityMixin.js:25
-msgid "Daily at {at}"
-msgstr ""
-
-#: mixins/PeriodicityMixin.js:28
-msgid "Every {dow} at {at}"
+#: pages/subscription/newspapers.vue:31
+msgid "Newspapers – My Subscription – Kairly"
 msgstr ""
