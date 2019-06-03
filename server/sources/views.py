@@ -36,7 +36,7 @@ def is_rss(header):
     except IndexError:
         second_part = just_type
 
-    # allow alsi html, lot of feeds returns invlid text/html
+    # allow also html, lot of feeds returns invalid text/html
     return second_part in ('rss+xml', 'rss', 'xml', 'atom+xml', 'html')
 
 
@@ -106,6 +106,9 @@ def import_rss(request):
             pass
 
     rss = feedparser.parse(resp.content)
+
+    if hasattr(rss.feed, 'html'):
+        return JsonResponse({'error': f"Resource is not valid feed"})
 
     if not rss.feed:
         if rss.bozo:

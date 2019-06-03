@@ -27,7 +27,7 @@
         :revenue-per-issue="revenuePerIssue"
         :current-issue-cost="currentIssueCost"
         :profit-per-issue="profitPerIssue"
-        @clickaway="() => openProfitDropdown = false"
+        v-on-clickaway="() => openProfitDropdown = false"
       />
     </div>
 

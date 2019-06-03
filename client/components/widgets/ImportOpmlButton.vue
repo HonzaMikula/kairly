@@ -39,7 +39,7 @@ export default {
               if (!title) {
                 title = (htmlUrl || xmlUrl).replace('http://', '').replace('https://', '')
               }
-              items.push({title, xmlUrl, htmlUrl})
+              items.push({title, url: xmlUrl})
             }
           }
         }
@@ -56,8 +56,7 @@ export default {
         } else if (items.length == 0) {
           this.showError('OPML is empty')
         } else {
-          this.$store.commit('opml', items)
-          this.$emit('loaded')
+          this.$emit('loaded', items)
         }
       })
       reader.addEventListener('error', ev => {

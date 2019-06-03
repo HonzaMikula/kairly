@@ -3,15 +3,20 @@
     <div class="import-rss-view">
       <header>
         <h1>{{ $t('Add RSS source(s)') }}</h1>
-        <ImportOpmlButton :text="$t('Upload OPML file')" />
+        <ImportOpmlButton :text="$t('Upload OPML file')" @loaded="addOpml" />
       </header>
 
       <section class="import-rss--add-source">
-        <input type="text" v-model="rssSource" :placeholder="$t('Paste URL e.g. https://example.con/feeds/')" />
-        <button @click="addRssSource()">{{ $t('Add RSS feed') }}</button>
+        <input
+          type="text"
+          v-model="rssSource"
+          :placeholder="$t('Paste URL e.g. https://example.con/feeds/')"
+          @keyup.enter="addRssSource"
+        />
+        <button @click="addRssSource">{{ $t('Add RSS feed') }}</button>
       </section>
-    
-      <section v-if="sources === null" class="import-rss-empty-view">
+
+      <section v-if="sources.length === 0" class="import-rss-empty-view">
         <div>
           <h2>{{ $t('Add single RSS/Atom feed') }}</h2>
           <p>{{ $t('Paste URL of the feed to the field above.') }}</p>
@@ -22,8 +27,8 @@
           <h2>{{ $t('Import RSS/Atom feeds in bulk') }}</h2>
           <p>{{ $t('Export your feeds from your current RSS reader in OPML format and upload the file here.') }}</p>
           <p v-html="$t('@import/tip')">
-            Tip: If you're using 
-            <a href="https://feedly.com/">Feedly</a>, go to Settings -> 
+            Tip: If you're using
+            <a href="https://feedly.com/">Feedly</a>, go to Settings ->
             <a href="https://feedly.com/i/opml">OPML Export</a> and download the OPML file.
           </p>
           <img src="~/assets/import/kairly-export-opml.png" :alt="$t('Export OPML from feedly')"/>
@@ -45,7 +50,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(source, index) in sources" :key="source.xmlUrl">
+            <tr
+              v-for="(source, index) in sources"
+              :key="source.url"
+            >
               <td>
                 <input
                   v-model="source.selected"
@@ -57,18 +65,21 @@
                 {{ source.title }}
               </th>
               <td class="import-rss--change-periodicity">
-                <template v-if="isKairlyNewspaper(source.xmlUrl)">
+                <template v-if="source.newspaper">
                   {{ $t('Subscribe to the newspaper') }}
                 </template>
                 <template v-else>
-                  <a href="" @click.prevent.stop="clickChangePeriodicity(source, index)">
+                  <a
+                    href=""
+                    @click.prevent.stop="clickChangePeriodicity(source, index)"
+                  >
                     {{ getPeriodicityLabel(source.periodicity) }}
                   </a>
                 </template>
                 <ChangePeriodicity
-                  v-if="showChangePeriodicityDialog[index]"
+                  v-if="changePerodicityTarget === source"
                   @changePeriodicity="changePeriodicity"
-                  v-on-clickaway="() => closeAllWidgets()"
+                  v-on-clickaway="closePeriodicityWidget"
                 />
               </td>
             </tr>
@@ -78,7 +89,7 @@
         <footer class="import-rss--footer">
           <button
             @click="submit"
-            :disabled="importing"
+            :disabled="importing || !sources.filter(s => s.selected).length"
             :class="{'loading': importing}">
             {{ importing ? $t('Importing feeds') : $t('Import feeds') }}
           </button>
@@ -103,7 +114,7 @@ import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
 import ImportOpmlButton from '@/components/widgets/ImportOpmlButton'
 
 export default {
-  name: 'Settings',
+  name: 'ImportRssPage',
 
   components: {
     AppLayout,
@@ -126,59 +137,66 @@ export default {
   data() {
     return {
       importing: false,
-      importingTest: false,
       progress: null,
       progressTotal: null,
-      showChangePeriodicityDialog: [],
       changePerodicityTarget: null,
-      rssSource: null
-    }
-  },
-
-  computed: {
-    sources() {
-      const { opml } = this.$store.state
-      if (!opml) {
-        return null
-      }
-      return opml.map(source => {
-        const newpspaper = this.isKairlyNewspaper(source.xmlUrl)
-        return {
-          ...source,
-          newpspaper,
-          selected: true,
-          periodicity: newpspaper ? null : {frequency: '6x_per_day'}
-        }
-      })
+      rssSource: '',
+      sources: []
     }
   },
 
   methods: {
     ...mapActions(['subscribeAuthor', 'subscribeNewspaper']),
 
+    appendItem(title, url) {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return
+      }
+
+      const newspaper = this.isKairlyNewspaper(url)
+
+      this.sources.push({
+        title,
+        url,
+        newspaper,
+        selected: true,
+        periodicity: newspaper ? null : {frequency: '6x_per_day'}
+      })
+    },
+
     addRssSource() {
-      const url = this.rssSource
-      if (!url) {
+      const url = this.rssSource.trim()
+      if (url === '') {
           return
       }
 
-      const title = url.replace('http://', '').replace('https://', '')
+      const existing = {}
+      this.sources.forEach(source => existing[source.url] = true)
 
-      this.$store.commit('opml', [
-          {title, xmlUrl: url, htmlUrl: url}
-      ])
-      this.$emit('loaded')
+      if (!existing[url]) {
+        const title = url.replace('http://', '').replace('https://', '')
+        this.appendItem(title, url)
+      }
+
+      this.rssSource = ''
+    },
+
+    addOpml(items) {
+      const existing = {}
+      this.sources.forEach(source => existing[source.url] = true)
+
+      items.forEach(source => {
+        if (!existing[source.url]) {
+          this.appendItem(source.title, source.url)
+        }
+      })
     },
 
     clickChangePeriodicity(source, index) {
-      this.changePerodicityTarget = source
-
-      if (this.showChangePeriodicityDialog[index]) {
-        this.showChangePeriodicityDialog[index] = false
-      }
-      else {
-        this.showChangePeriodicityDialog.fill(false)
-        this.showChangePeriodicityDialog[index] = true
+      if (this.changePerodicityTarget === source) {
+        this.changePerodicityTarget = null
+      } else {
+        this.changePerodicityTarget = source
       }
 
       this.$forceUpdate()
@@ -204,24 +222,24 @@ export default {
         "dow": dow,
         "time": time
       }
-      this.showChangePeriodicityDialog.fill(false)
       this.changePerodicityTarget = null
     },
 
-    closeAllWidgets() {
-      console.log('ahoj')
-      this.showChangePeriodicityDialog.fill(false)
-      this.$forceUpdate()
+    closePeriodicityWidget() {
+      this.changePerodicityTarget = null
     },
 
     isKairlyNewspaper(url) {
-      return url.match('://kairly\\.com/[^/]+/[^/]+/rss$')
+      return !!url.match('://kairly\\.com/[^/]+/[^/]+/rss$')
     },
 
     async submit() {
       const sources = this.sources
         .filter(s => s.selected)
-        .map(s => ({url: s.xmlUrl, periodicity: s.periodicity}))
+
+      if (!sources.length) {
+        return
+      }
 
       this.$ga.event({
         eventCategory: 'Onboarding / Exploring',
@@ -230,51 +248,49 @@ export default {
         eventValue: sources.length
       })
 
-      if (sources.length) {
-        const subscribeData = {
-          newspapers: [],
-          authors: [],
-        }
-
-        this.importing = true
-        this.progress = 0
-        this.progressTotal = sources.length + 1  // +1 for subscribe
-
-        const s = new Sema(2)
-
-        const importSource = async (source) => {
-          await s.acquire()
-          try {
-            const data = await this.$axios.$post(`/import-rss`, {url: source.url}, { progress: false })
-            this.progress += 1
-
-            if (data.type === 'newspaper') {
-              subscribeData.newspapers.push({
-                fullName: data.fullName
-              })
-            } else if (data.type === 'author') {
-              subscribeData.authors.push({
-                username: data.username,
-                periodicity: source.periodicity
-              })
-            }
-          } catch (e) {
-            console.log(e)
-          } finally {
-            s.release();
-          }
-        }
-
-        await Promise.all(sources.map(importSource));
-
-        const { credits } = await this.$axios.$post(`/subscribe-rss`, subscribeData, { progress: false })
-        this.progress += 1
-
-        this.$store.commit('updateCredits', credits)
-        this.$store.commit('invalidateTimeline')
-        this.$store.commit('invalidateSubscriptions')
-        this.$router.push("/")
+      const subscribeData = {
+        newspapers: [],
+        authors: [],
       }
+
+      this.importing = true
+      this.progress = 0
+      this.progressTotal = sources.length + 1  // +1 for subscribe
+
+      const s = new Sema(2)
+
+      const importSource = async (source) => {
+        await s.acquire()
+        try {
+          const data = await this.$axios.$post(`/import-rss`, {url: source.url}, { progress: false })
+          this.progress += 1
+
+          if (data.type === 'newspaper') {
+            subscribeData.newspapers.push({
+              fullName: data.fullName
+            })
+          } else if (data.type === 'author') {
+            subscribeData.authors.push({
+              username: data.username,
+              periodicity: source.periodicity
+            })
+          }
+        } catch (e) {
+          console.log(e)
+        } finally {
+          s.release();
+        }
+      }
+
+      await Promise.all(sources.map(importSource));
+
+      const { credits } = await this.$axios.$post(`/subscribe-rss`, subscribeData, { progress: false })
+      this.progress += 1
+
+      this.$store.commit('updateCredits', credits)
+      this.$store.commit('invalidateTimeline')
+      this.$store.commit('invalidateSubscriptions')
+      this.$router.push("/")
     }
   }
 }
@@ -336,7 +352,7 @@ export default {
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
 
 //- Add source
-.import-rss--add-source 
+.import-rss--add-source
   display: flex
   padding: $baseline 0
   margin: 0 $baseline*5
@@ -345,7 +361,7 @@ export default {
     border-radius: 5px
     box-sizing: border-box
     height: $baseline * 1.5
-    padding: 0 $baseline / 2 
+    padding: 0 $baseline / 2
     width: 100%
 
     border: 1px solid #eee
@@ -357,7 +373,7 @@ export default {
 
     background: $c-base
     border: 0
-    border-radius: 0 5px 5px 0 
+    border-radius: 0 5px 5px 0
     color: #fff
 
     cursor: pointer
@@ -379,7 +395,7 @@ export default {
 
   //- Header
   > header
-    display: flex  
+    display: flex
 
     //- heading
     > h1
