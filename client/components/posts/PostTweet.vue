@@ -21,7 +21,7 @@
           :href="post.source"
           target="_blank"
           class="tweet"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          v-b-tooltip
           :title="$t('Original tweet')">
         </a>
       </slot>

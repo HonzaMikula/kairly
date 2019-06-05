@@ -3,7 +3,7 @@
     :class="{'recommend-button-issue': true, 'recommended': recommended}"
     href="#"
     @click.prevent="recommend"
-    v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+    v-b-tooltip
     :title="$t('Recommend')"
     :aria-label="$t('Recommend')">
   </a>

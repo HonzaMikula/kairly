@@ -1,7 +1,7 @@
 <template>
   <div class="timeline-time-slot">
     <button
-      v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+      v-b-tooltip
       :title="$t('Jump to different time')"
       @click="isMenuOpen = !isMenuOpen"
     />

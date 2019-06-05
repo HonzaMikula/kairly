@@ -39,7 +39,7 @@
           <nuxt-link
             v-if="links.prev"
             :to="links.prev"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="$t('Previous issue')"
             class="previous"
           />
@@ -47,7 +47,7 @@
           <nuxt-link
             v-if="links.next"
             :to="links.next"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="$t('Next issue')"
             class="next"
           />

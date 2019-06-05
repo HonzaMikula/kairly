@@ -22,7 +22,7 @@
           class="remove"
           role="button"
           :title="$t('Remove post from considaration')"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          v-b-tooltip
           tabindex="0"
           @click.prevent="$emit('remove')">
         </button-icon>

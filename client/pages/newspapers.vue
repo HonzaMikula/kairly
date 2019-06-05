@@ -59,7 +59,7 @@
               class="detail"
               :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
               :title="$t('Go to newspaper detail')"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+              v-b-tooltip>
             </nuxt-link>
 
             <button-icon
@@ -67,7 +67,7 @@
               role="button"
               tabindex="0"
               :title="$t('Edit newspaper')"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               @click="newspaperToEdit = selectedNewspaper">
             </button-icon>
 
@@ -76,7 +76,7 @@
               role="button"
               tabindex="0"
               :title="$t('Delete newspaper')"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               @click.prevent="confirmDeleteNewspaper">
             </button-icon>
           </div>

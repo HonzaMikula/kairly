@@ -7,7 +7,7 @@
         'is-canceled': subscription.state === 'canceled',
         'is-suspended': subscription.state === 'suspended',
       }"
-      v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+      v-b-tooltip
       :title="buttonTitle"
       @click="openModal"
     >

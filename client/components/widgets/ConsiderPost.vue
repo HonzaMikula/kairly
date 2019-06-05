@@ -4,7 +4,7 @@
       <h4>{{ $t('For which newspaper?') }}</h4>
       <strong
         class="consider-post--price"
-        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+        v-b-tooltip
         :title="$t('Article cost')">
         <MoneyFormat :value="post.price" currency="Kč"/>
       </strong>

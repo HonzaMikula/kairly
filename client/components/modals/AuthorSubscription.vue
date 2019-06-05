@@ -58,7 +58,7 @@
         <template v-if="!subscription.state">
           <div
             :title="!canPay && $t('You don\'t have enough credit')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
           >
             <button
               class="confirm"

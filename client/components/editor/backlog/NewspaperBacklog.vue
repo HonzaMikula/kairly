@@ -30,7 +30,7 @@
             <button-icon
               v-show="idx !== 0"
               class="up"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               tabindex="0"
               role="button"
               :title="$t('Move post up')"
@@ -40,7 +40,7 @@
             <button-icon
               v-show="idx !== published.length - 1"
               class="down"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               tabindex="0"
               role="button"
               :title="$t('Move post down')"
@@ -49,7 +49,7 @@
 
             <button-icon
               class="remove"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               tabindex="0"
               role="button"
               :title="$t('Remove from issue')"

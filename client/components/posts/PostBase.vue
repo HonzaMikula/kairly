@@ -39,7 +39,7 @@
               role="button"
               tabindex="0"
               :aria-label="$t('Consider for newspaper')"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               :title="$t('Consider for newspaper')"
               @click.stop.prevent="showConsiderPost = true"
             />

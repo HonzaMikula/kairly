@@ -10,7 +10,7 @@
         >
           <nuxt-link
             :to="{name: 'timeline-date', params: {date: links.prev}}"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
           />
@@ -18,7 +18,7 @@
           <nuxt-link
             v-if="links.next"
             :to="{name: 'timeline-date', params: {date: links.next}}"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
           />
@@ -67,7 +67,7 @@
 
           <nuxt-link
             :to="{name: 'timeline-date', params: {date: links.prev}}"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
           />
@@ -75,7 +75,7 @@
           <nuxt-link
             v-if="links.next"
             :to="{name: 'timeline-date', params: {date: links.next}}"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
           />

@@ -10,7 +10,7 @@
       <p class="newspaper-backlog--info--profit">
         <strong
           @click="openProfitDropdown = !openProfitDropdown"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          v-b-tooltip
           :title="$t('Revenue - Cost = Profit')">
           <MoneyFormat :value="revenuePerIssue" />
           -

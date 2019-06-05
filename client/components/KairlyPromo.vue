@@ -38,21 +38,21 @@
             href="https://www.facebook.com/kairlynews/"
             class="facebook"
             :title="$t('Follow us on Facebook')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            v-b-tooltip>
           </a>
 
           <a
             href="https://twitter.com/kairlynews"
             class="twitter"
             :title="$t('Follow us on Twitter')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            v-b-tooltip>
           </a>
 
           <a
             href="https://www.linkedin.com/company/kairly/"
             class="linkedin"
             :title="$t('Follow us on LinkedIn')"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}">
+            v-b-tooltip>
           </a>
         </div>
       </section>

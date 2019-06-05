@@ -3,7 +3,7 @@
     <post-detail role="article">
       <post-detail--back-button
         :title="$t('Back')"
-        v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+        v-b-tooltip
         @click="$router.go(-1)">
       </post-detail--back-button>
 
@@ -73,7 +73,7 @@
               :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${post.author.id}/${post.slug}`"
               target="_blank"
               class="share-fb"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               :title="$t('Share on Facebook')">
             </a>
 
@@ -81,7 +81,7 @@
               :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${post.author.id}/${post.slug}&text=${post.content.title}`"
               target="_blank"
               class="share-twitter"
-              v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+              v-b-tooltip
               :title="$t('Share on Twitter')">
             </a> -->
 

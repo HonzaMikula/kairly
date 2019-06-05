@@ -35,7 +35,6 @@ module.exports = {
   plugins: [
     '~/plugins/ignored-elements',
     '~/plugins/portal-vue',
-    {src: '~/plugins/tooltip', ssr: false},
     {src: '~/plugins/vue-infinite-scroll', ssr: false},
     {src: '~/plugins/medium-editor', ssr: false },
     '~/plugins/vue-moment',
@@ -48,8 +47,20 @@ module.exports = {
     ['@nuxtjs/google-analytics', {
       id: process.env.GA_ID
     }],
-    ['@nuxtjs/style-resources']
+    ['@nuxtjs/style-resources'],
+    ['bootstrap-vue/nuxt']
   ],
+
+  bootstrapVue: {
+    bootstrapCSS: false,
+    bootstrapVueCSS: false,
+    directivePlugins: ['VBTooltipPlugin'],
+    config: {
+      'BTooltip': {
+        'delay': { 'show': 500, 'hide': 0 }
+      }
+    }
+  },
 
   styleResources: {
     sass: '@/styles/base.sass'

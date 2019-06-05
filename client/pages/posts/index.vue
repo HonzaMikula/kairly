@@ -14,7 +14,7 @@
 
           <button-icon
             class="edit"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="$t('Edit post')"
             tabindex="0"
             role="button"
@@ -23,7 +23,7 @@
 
           <button-icon
             class="remove"
-            v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+            v-b-tooltip
             :title="$t('Delete post')"
             tabindex="0"
             role="button"

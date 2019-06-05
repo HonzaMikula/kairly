@@ -34,7 +34,7 @@
         <nuxt-link
           to="/user/transactions/upcoming"
           class="credits"
-          v-b-tooltip="{delay:{ 'show': 500, 'hide': 0 }}"
+          v-b-tooltip
           :title="$t('Available credits')">
           <MoneyFormat :value="user.credits" currency="Kč" :short="true"/>
         </nuxt-link>
