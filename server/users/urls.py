@@ -13,4 +13,5 @@ urlpatterns = [
     path('explore/<tab>', views.explore_tab),
 
     path('autocomplete/user/', views.UserAutocomplete.as_view(), name='user-autocomplete'),
+    # path('query/user/', views.query_user, name="query-user"),
 ]

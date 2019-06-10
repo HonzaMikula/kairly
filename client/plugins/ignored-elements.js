@@ -14,7 +14,6 @@ Vue.config.ignoredElements = [
   'button-close',
   'button-icon',
   'change-password-view',
-  'edit-newspaper-view',
   'editor-newspapers--board',
   'editor-newspapers--empty',
   'editor-newspapers--header',

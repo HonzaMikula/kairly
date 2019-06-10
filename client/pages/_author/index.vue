@@ -214,10 +214,7 @@ export default {
     }
 
     try {
-      const { author, newspapers } = await store.dispatch(
-        "getAuthor",
-        authorId
-      );
+      const { author, newspapers } = await store.dispatch("getAuthor", authorId);
 
       const data = {
         author,

@@ -26,7 +26,7 @@ from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
-from .models import (Backlog, Issue, Newspaper, Post, Subscription,
+from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
                      SubscriptionToAuthor, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
@@ -136,7 +136,7 @@ class NewspaperView(View):
                 issue = None
 
         data = {
-            'newspaper': newspaper.to_json(tzinfo),
+            'newspaper': newspaper.to_json(tzinfo, co_editors=newspaper.editor == request.user),
             'issue': None,
             'links': {}
         }
@@ -199,6 +199,19 @@ class NewspaperView(View):
             image = file_from_data_uri(image, "{}-{}".format(request.user.username, newspaper.slug))
             newspaper.image = image
 
+        if 'coEditors' in payload:
+            editors = {u.id for u in User.objects.filter(username__in=payload['coEditors']).exclude(id=newspaper.editor_id)}
+            actual = set(newspaper.co_editors.values_list('id', flat=True))
+
+            to_del = list(actual - editors)
+            to_add = list(editors - actual)
+            if to_del:
+                CoEditor.objects.filter(newspaper=newspaper, editor_id__in=to_del).delete()
+            if to_add:
+                CoEditor.objects.bulk_create(
+                    [CoEditor(newspaper=newspaper, editor_id=eid) for eid in to_add]
+                )
+
         newspaper.save()
 
         return JsonResponse({
@@ -260,7 +273,8 @@ def author_posts(request, username):
 def newspaper_backlog(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
-        return HttpResponseForbidden()
+        if request.user not in newspaper.co_editors.all():
+            return HttpResponseForbidden()
 
     if request.method == 'GET':
         result = {'backlog': [], 'publish': []}
@@ -317,7 +331,8 @@ def newspaper_backlog(request, username, newspapeper_slug):
 def backlog_publish(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
-        return HttpResponseForbidden()
+        if request.user not in newspaper.co_editors.all():
+            return HttpResponseForbidden()
 
     post_ids = json.loads(request.body.decode('utf-8'))
     publish_stamp = timezone.now()
@@ -341,7 +356,8 @@ def backlog_publish(request, username, newspapeper_slug):
 def create_link(request, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
-        return HttpResponseForbidden()
+        if request.user not in newspaper.co_editors.all():
+            return HttpResponseForbidden()
 
     payload = json.loads(request.body.decode('utf-8'))
     url = payload['url']
@@ -792,6 +808,13 @@ def start_newspaper(request, username):
         period_time=periodicity.time,
         period_dow=periodicity.dow,
         editor=author
+    )
+
+    CoEditor.objects.bulk_create(
+        [
+            CoEditor(newspaper=newspaper, editor_id=u.id)
+            for u in User.objects.filter(username__in=payload['coEditors']).exclude(id=author.id)
+        ]
     )
 
     return JsonResponse({

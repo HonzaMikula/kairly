@@ -10,13 +10,13 @@
           {{ $t("Are you interested in specific topic? Found a newspaper and start providing selection of best articles and tweets to others.") }}
         </p>
 
-        <a href="" @click.prevent="isCreateNewspaperOpen = true">{{ $t('Start a newspaper') }}</a>
+        <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
       </editor-newspapers--empty>
 
       <template v-else>
         <editor-newspapers--header>
           <div class="create-newspaper">
-            <a href="" @click.prevent="isCreateNewspaperOpen = true">{{ $t('Start a newspaper') }}</a>
+            <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
           </div>
 
           <div class="title">
@@ -62,16 +62,16 @@
               v-b-tooltip>
             </nuxt-link>
 
-            <button-icon
-              class="edit"
-              role="button"
-              tabindex="0"
+            <nuxt-link
+              v-if="selectedNewspaper.editor.id === user.id"
+              class="settings"
+              :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
               :title="$t('Edit newspaper')"
-              v-b-tooltip
-              @click="newspaperToEdit = selectedNewspaper">
-            </button-icon>
+              v-b-tooltip>
+            </nuxt-link>
 
             <button-icon
+              v-if="selectedNewspaper.editor.id === user.id"
               class="delete"
               role="button"
               tabindex="0"
@@ -96,9 +96,17 @@
               v-if="isMobileMenuOpen"
               v-on-clickaway="() => isMobileMenuOpen = false">
               <ul>
-                <li><a href="" @click.prevent="isCreateNewspaperOpen = true">{{ $t('Start new newspaper') }}</a></li>
-                <li><a href="" @click.prevent="newspaperToEdit = selectedNewspaper">{{ $t('Edit newspaper') }}</a></li>
-                <li><a href="" @click.prevent="confirmDeleteNewspaper">{{ $t('Delete newspaper') }}</a></li>
+                <li>
+                  <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
+                </li>
+                <li v-if="selectedNewspaper.editor.id === user.id">
+                  <nuxt-link
+                    :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
+                  >{{ $t('Edit newspaper') }}</nuxt-link>
+                </li>
+                <li v-if="selectedNewspaper.editor.id === user.id">
+                  <a href="" @click.prevent="confirmDeleteNewspaper">{{ $t('Delete newspaper') }}</a>
+                </li>
               </ul>
             </div>
           </div>
@@ -132,14 +140,6 @@
         </editor-newspapers--board>
         <loading-spinner v-else />
       </template>
-
-      <portal to="modal" v-if="isCreateNewspaperOpen">
-        <EditNewspaper :closeModal="closeModal" :onCreated="newNewspaperCreated"/>
-      </portal>
-
-      <portal to="modal" v-if="newspaperToEdit">
-        <EditNewspaper :closeModal="closeModal" :newspaper="newspaperToEdit"/>
-      </portal>
     </editor-newspapers-view>
   </AppLayout>
 </template>
@@ -153,7 +153,6 @@ import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import EditNewspaper from '@/components/editor/EditNewspaper'
 import NewspaperBacklog from '@/components/editor/backlog/NewspaperBacklog'
 
 export default {
@@ -167,7 +166,6 @@ export default {
 
   components: {
     AppLayout,
-    EditNewspaper,
     NewspaperWidget,
     NewspaperBacklog
   },
@@ -178,11 +176,9 @@ export default {
 
   data() {
     return {
-      isCreateNewspaperOpen: false,
       isSelectNewspaperOpen: false,
       isMobileMenuOpen: false,
       mobileSwitcher: 1,
-      newspaperToEdit: null,
 
       selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
       isBacklogLoaded: false,
@@ -258,7 +254,6 @@ export default {
 
     closeModal() {
       this.isCreateNewspaperOpen = false
-      this.newspaperToEdit = null
     },
 
     newNewspaperCreated(newspaper) {
@@ -429,6 +424,11 @@ editor-newspapers-view
           +fa-icon()
           @extend .fas
           content: fa-content($fa-var-info-circle)
+
+        &.settings::before
+          +fa-icon()
+          @extend .fas
+          content: fa-content($fa-var-cog)
 
         &.edit::before
           content: fa-content($fa-var-pencil-alt)

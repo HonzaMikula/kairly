@@ -93,7 +93,7 @@
               eventCategory: 'Share newspaper Twitter',
               eventAction: newspaper.name,
               eventLabel: newspaper.editor.id
-              })"
+            })"
           />
 
           <!-- Begin Mailchimp Signup Form -->

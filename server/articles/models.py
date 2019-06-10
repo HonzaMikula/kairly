@@ -235,6 +235,7 @@ class Newspaper(models.Model, PeriodMixin):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='editions', null=True, blank=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
+    co_editors = models.ManyToManyField(settings.AUTH_USER_MODEL, through="CoEditor", related_name="+")
     price = models.DecimalField(_('Price'), max_digits=11, decimal_places=2,
                                 default=Decimal(0),
                                 validators=[MinValueValidator(Decimal(0))])
@@ -289,7 +290,7 @@ class Newspaper(models.Model, PeriodMixin):
     def full_name(self):
         return "{}/{}".format(self.editor.username, self.slug)
 
-    def to_json(self, tzinfo):
+    def to_json(self, tzinfo, co_editors=False):
         data = {
             "name": self.slug,
             "fullName": self.full_name,
@@ -303,9 +304,19 @@ class Newspaper(models.Model, PeriodMixin):
             "likes": self.likes,
             "price": str(self.price),
         }
+        if co_editors:
+            data['coEditors'] = [ce.to_json() for ce in self.co_editors.all().order_by('username')]
         if self.newsletter_subscription_url:
             data['newsletterSubscriptionUrl'] = self.newsletter_subscription_url
         return data
+
+
+class CoEditor(models.Model):
+    """Keep relation as separate model because of future extension
+    with different co-editor permissions
+    """
+    newspaper = models.ForeignKey(Newspaper, on_delete=models.CASCADE)
+    editor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
 class Backlog(models.Model):

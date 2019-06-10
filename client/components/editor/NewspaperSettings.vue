@@ -1,19 +1,10 @@
 <template>
-  <DialogWindow :closeModal="closeModal">
-    <modal-dialog
-      role="dialog"
-      @click.stop="showPeriodicityWidget = false"
-    >
-      <header>
-        <h1>{{ newspaper ? $t('Modify the newspaper') : $t('Start a new newspaper') }}</h1>
-        <button-close
-          tabindex="0"
-          role="button"
-          @click="closeModal()"
-        />
-      </header>
+  <div class="newspaper-settings-view">
+    <h1>{{ $t('Newspaper settings') }}</h1>
 
-      <main class="edit-newspaper-view">
+    <main>
+      <section class="newspaper-settings--general">
+        <h2>General</h2>
         <div>
           <label for="name">{{ $t('Newspaper name') }}</label>
           <input
@@ -31,6 +22,8 @@
           />
           <p>{{ $t('Maximum 160 characters.') }}</p>
         </div>
+
+        <h2>{{ $t('Subscription') }}</h2>
 
         <div class="periodicity">
           <label>{{ $t('Periodicity') }}</label>
@@ -73,14 +66,16 @@
             <option value="175">175 Kč</option>
           </select>
         </div>
+      </section>
 
+      <section class="newspaper-settings--side">
         <div class="picture">
-          <label>Picture</label>
+          <h2>{{ $t('Picture') }}</h2>
           <picture>
             <picture-input
               ref="pictureInput"
-              width="182"
-              height="78"
+              width="364"
+              height="156"
               accept="image/jpeg, image/png"
               size="10"
               buttonClass="btn"
@@ -92,33 +87,68 @@
             />
           </picture>
         </div>
-      </main>
 
-      <footer>
-        <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
-      </footer>
-    </modal-dialog>
-  </DialogWindow>
+        <h2>{{ $t('Editors') }}</h2>
+
+        <div class="newspaper-settings--editors">
+          <ul>
+            <EditorCard
+              :editor="editor"
+              :role="$t('Main editor')"
+              :can-delete="false"
+            />
+
+            <EditorCard
+              v-for="(editor, idx) in coEditors"
+              :key="editor.id"
+              :editor="editor"
+              :role="$t('Co-editor')"
+              :can-delete="true"
+              @delete="coEditors.splice(idx, 1)"
+            />
+          </ul>
+
+          <h3>{{ $t('Add co-editor') }}</h3>
+
+          <div class="newspaper-settings--editors--add-editor">
+            <input
+              v-model="coEditorSlug"
+              type="search"
+              :placeholder="$t('Type username slug')"
+              @keyup.enter="addCoEditor"
+            />
+            <button
+              :disabled="coEditorSlug === ''"
+              @click="addCoEditor"
+            >{{ $t('Add co-editor') }}</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
+    </footer>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
 
+import AppLayout from '@/components/layout/AppLayout'
+import EditorCard from '@/components/editor/EditorCard'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import DialogWindow from '@/components/modals/DialogWindow'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
-export default {
-  name: "EditNewspaperModal",
 
-  props: {
-    newspaper: Object,
-    closeModal: Function,
-    onCreated: Function
-  },
+export default {
+  name: "NewspaperSettings",
 
   components: {
+    AppLayout,
+    EditorCard,
     PeriodWidget,
     PictureInput,
     DialogWindow
@@ -126,20 +156,30 @@ export default {
 
   mixins: [PeriodicityMixin],
 
+  props: {
+    newspaper: Object,
+  },
+
   data() {
     return {
       title: this.newspaper ? this.newspaper.title : "",
       description: this.newspaper ? this.newspaper.description : "",
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
       price: this.newspaper ? ~~this.newspaper.price : 25,
+      coEditors: this.newspaper ? [...this.newspaper.coEditors] : [],
+      coEditorSlug: '',
       image: null,
       showPeriodicityWidget: false
     }
   },
 
-  computed: mapState({
-    user: state => state.auth.user
-  }),
+  computed: {
+    ...mapState({
+      user: state => state.auth.user,
+    }),
+
+    editor() { return this.newspaper ? this.newspaper.editor : this.user }
+  },
 
   methods: {
     onPictureChange(image) {
@@ -156,19 +196,43 @@ export default {
       }
     },
 
+    updateComponentData({ title, description, price }) {
+      this.title = title
+      this.description = description
+      this.price = ~~price
+    },
+
+    async addCoEditor() {
+      const slug = this.coEditorSlug.trim()
+      if (slug === '') {
+        return
+      }
+
+      try {
+        const { author: editor } = await this.$store.dispatch("getAuthor", slug)
+        if (editor.id != this.editor.id && !this.coEditors.find(item => item.id === editor.id)) {
+          this.coEditors.push(editor)
+        }
+        this.coEditorSlug = ''
+      } catch (e) {
+        return
+      }
+    },
+
     async submit() {
       const errors = [];
+      let fullName = null;
 
       if (this.title.trim() === "") {
-        errors.push("Title is empty");
+        errors.push(this.$t("Title is empty"));
       }
 
       if (this.description.trim() === "") {
-        errors.push("Editorial is empty");
+        errors.push(this.$t("Editorial is empty"));
       }
 
       if (this.periodicity === null) {
-        errors.push("Periodicity is not selected");
+        errors.push(this.$t("Periodicity is not selected"));
       }
 
       if (errors.length) {
@@ -179,6 +243,8 @@ export default {
 
       if (this.newspaper) {
         const fields = {};
+        fullName = this.newspaper.fullName
+
         if (this.title !== this.newspaper.title) {
           fields.title = this.title;
         }
@@ -192,29 +258,36 @@ export default {
           //TODO compare periodicity
           fields.periodicity = this.periodicity;
         }
-
         if (this.image) {
           fields.image = this.image;
         }
+        const actualCoEditors = this.newspaper.coEditors.map(editor => editor.id)
+        const newCoEditors = this.coEditors.map(editor => editor.id)
+        if (JSON.stringify(actualCoEditors) !== JSON.stringify(newCoEditors)) {
+          fields.coEditors = newCoEditors
+        }
+
         await this.updateNewspaper({
-          fullName: this.newspaper.fullName,
+          fullName,
           fields
         });
       } else {
-        const createdNewspaper = await this.startNewspaper({
+        const created = await this.startNewspaper({
           authorId: this.user.id,
           newspaper: {
             title: this.title,
             description: this.description,
             periodicity: this.periodicity,
             price: this.price,
-            image: this.image
+            image: this.image,
+            coEditors: this.coEditors.map(editor => editor.id),
           }
         });
-        this.onCreated(createdNewspaper);
+        fullName = created.fullName
       }
 
-      this.closeModal();
+      window.localStorage.setItem('manageNewspapers.selected', fullName)
+      this.$router.push('/newspapers')
     },
 
     ...mapActions(["startNewspaper", "updateNewspaper"])
@@ -226,19 +299,51 @@ export default {
 @import './styles/components/buttons'
 
 //- EDIT NEWSPAPER -//
-.edit-newspaper-view
+.newspaper-settings-view
   display: block
   padding: $baseline
+  max-width: 900px
+  margin: 0 auto
+
+  //- Heading
+  > h1
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
+
+  //- Sections heading
+  h2
+    margin-bottom: $baseline / 2
+    font-size: $fs-2
+    font-weight: 600
+
+  //- Section template
+  main
+    display: grid
+    grid-column-gap: $baseline
+    grid-template-areas: "newspaper-settings-general newspaper-settings-side"
+    grid-template-columns: auto auto
+    grid-template-rows: auto
+
+  .newspaper-settings--general
+    grid-area: newspaper-settings-general
+
+  .newspaper-settings--side
+    grid-area: newspaper-settings-side
+
+
+  section
+    margin-bottom: $baseline
 
   //- form fields
-  > div
+  section > div
     display: table
     width: $baseline * 14
     margin-bottom: $baseline
 
-
     //- label
-    label, h3
+    label
       display: table
 
       font-size: $fs--1
@@ -328,10 +433,36 @@ export default {
   .picture
     picture
       display: block
-      height: $baseline * 2
+      width: 100%
+      height: 156px
       padding-bottom: $baseline
 
     button
       margin-top: $baseline / 4
 
+  //- Footer
+  footer
+    button
+      +button(primary, large)
+
+
+//- Editors
+.newspaper-settings--editors
+  > h3
+    font-weight: 600
+
+
+//- Add editor form
+.newspaper-settings--editors--add-editor
+  display: flex
+
+  input
+    flex: 1
+    border-radius: 5px 0 0 5px
+
+  button
+    +button
+
+    border-radius: 0 5px 5px 0
+    padding: 0 $baseline/2
 </style>

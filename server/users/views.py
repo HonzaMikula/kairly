@@ -5,15 +5,13 @@ from decimal import Decimal
 
 import jwt
 import rapidjson as json
-from articles.models import Newspaper
-from credits.utils import get_user_credits
 from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.utils.timezone import localdate
@@ -22,11 +20,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from libgravatar import Gravatar
 from pytz import UnknownTimeZoneError, timezone
+
+from articles.models import Newspaper
+from credits.utils import get_user_credits
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
-
 from .models import Category, CategoryUser, User
 
 TOKEN_EXPIRATION = 30 * 86400
@@ -67,8 +67,8 @@ class ProfileView(View):
     @ajax_login_required
     def get(self, request):
         newspapers = []
-        for newspaper in Newspaper.objects.filter(editor=request.user).values_list('id', 'slug', 'title', named=True):
-            full_name = '{}/{}'.format(request.user.username, newspaper.slug)
+        for newspaper in Newspaper.objects.filter(Q(editor=request.user) | Q(co_editors=request.user)).values_list('id', 'editor__username', 'slug', 'title', named=True):
+            full_name = '{}/{}'.format(newspaper.editor__username, newspaper.slug)
             newspapers.append({
                 'fullName': full_name,
                 'title': newspaper.title,
@@ -225,3 +225,14 @@ class UserAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(username__istartswith=self.q)
 
         return qs
+
+
+# def query_user(request):
+#     query = request.GET['q']
+#     users = User.objects\
+#         .filter(kind=User.PERSONAL, is_active=True)\
+#         .filter(username__istartswith=query)
+
+#     return JsonResponse({
+#         'items': [user.to_json() for user in users[:20]]
+#     })
