@@ -74,8 +74,8 @@
           <picture>
             <picture-input
               ref="pictureInput"
-              width="364"
-              height="156"
+              width="300"
+              height="129"
               accept="image/jpeg, image/png"
               size="10"
               buttonClass="btn"
@@ -305,6 +305,9 @@ export default {
   max-width: 900px
   margin: 0 auto
 
+  @media (max-width: $mobile)
+    padding: $baseline / 2
+
   //- Heading
   > h1
     margin-bottom: $baseline
@@ -326,8 +329,18 @@ export default {
     grid-template-columns: auto auto
     grid-template-rows: auto
 
+    @media (max-width: $mobile)
+      grid-template-areas: "newspaper-settings-general" "newspaper-settings-side"
+      grid-template-columns: auto
+
   .newspaper-settings--general
     grid-area: newspaper-settings-general
+
+    h2:last-of-type
+      margin-top: $baseline
+
+    > div:first-of-type
+      margin-bottom: $baseline / 2
 
   .newspaper-settings--side
     grid-area: newspaper-settings-side
@@ -338,10 +351,7 @@ export default {
 
   //- form fields
   section > div
-    display: table
-    width: $baseline * 14
-    margin-bottom: $baseline
-
+    
     //- label
     label
       display: table
@@ -375,7 +385,7 @@ export default {
       font-size: $fs--1
 
       @media (max-width: $mobile)
-        width: 100%
+        width: 80%
 
 
     //- select
@@ -413,6 +423,8 @@ export default {
   .periodicity
     position: relative
 
+    margin-bottom: $baseline / 2
+
     button
       +button(primary, small)
 
@@ -431,14 +443,26 @@ export default {
 
   //- picture
   .picture
+    padding-bottom: $baseline
+    width: 320px
+
     picture
       display: block
       width: 100%
-      height: 156px
-      padding-bottom: $baseline
-
+      
     button
       margin-top: $baseline / 4
+      padding: 0
+
+      background: #fff
+      border: 0
+      color: $c-base
+      
+      cursor: pointer
+
+      &:hover,
+      &:focus
+        color: darken($c-base, 10%)
 
   //- Footer
   footer
