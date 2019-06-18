@@ -1,5 +1,5 @@
 <template>
-  <modal-window @click="closeModal">
+  <modal-window @click="close">
     <slot></slot>
   </modal-window>
 </template>
@@ -10,10 +10,17 @@ export default {
   name: 'DialogWindow',
 
   props: {
-    closeModal: Function
+    closeModal: Function,
+    cancelClosingOnBackground: Boolean
   },
 
   methods: {
+    close() {
+      if(!this.cancelClosingOnBackground) {
+        this.closeModal()
+      }
+    },
+
     onEscapeKeyUp (event) {
       if (event.which === 27) {
         this.closeModal()

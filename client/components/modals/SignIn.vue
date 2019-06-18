@@ -1,5 +1,5 @@
 <template>
-  <DialogWindow :closeModal="closeModal">
+  <DialogWindow :closeModal="closeModal" :cancelClosingOnBackground="true">
     <modal-dialog role="dialog" @click.stop class="sign-in">
       <header>
         <h1>{{ $t('Sign In') }}</h1>
