@@ -454,7 +454,7 @@ export default {
       margin-top: $baseline / 4
       padding: 0
 
-      background: #fff
+      background: transparent
       border: 0
       color: $c-base
       

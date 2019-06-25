@@ -48,7 +48,7 @@ export default {
 <style lang="sass">
 @import './styles/components/article-perex'
 
-post-component picture .external-link
+.post picture .external-link
   display: block
   border-radius: 100%
   height: $baseline

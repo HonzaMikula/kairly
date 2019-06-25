@@ -57,7 +57,6 @@ Vue.config.ignoredElements = [
   'newspaper-widget--author',
   'newspaper-widget--subscribe',
   'newspaper-widget-view',
-  'post-component',
   'post-detail',
   'post-detail--author--subscription',
   'post-detail--author',

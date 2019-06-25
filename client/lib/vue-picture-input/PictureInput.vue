@@ -164,7 +164,7 @@ export default {
         upload: '<p>Your device does not support file uploading.</p>',
         drag: 'Drag an image or <br>click here to select a file',
         tap: 'Tap here to select a photo <br>from your gallery',
-        change: 'Change Photo',
+        change: 'Change photo',
         aspect: 'Landscape/Portrait',
         remove: 'Remove Photo',
         select: 'Select a Photo',

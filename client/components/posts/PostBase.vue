@@ -1,5 +1,5 @@
 <template>
-  <post-component
+  <article class="post"
     role="article"
     :class="post.type"
   >
@@ -53,7 +53,7 @@
     <slot/>
 
     <slot name="buttons"></slot>
-  </post-component>
+  </article>
 </template>
 
 <script>
@@ -116,7 +116,7 @@ export default {
 @import './styles/components/buttons'
 
 //- Post -//
-post-component
+.post
   display: block
   border-radius: 6px
   margin-bottom: $baseline / 2
@@ -133,7 +133,7 @@ post-component
 
 
 //- Post header
-post-component > header
+.post > header
   position: relative
 
   display: flex
@@ -195,38 +195,26 @@ post-component > header
     > *
       margin-left: $baseline / 4
 
-    > button-icon,
-    > a
-      display: inline-block
+    > a,
+    > button-icon
       border-radius: 100%
-      height: $baseline
-      width: $baseline
+      height: $baseline * 1.25
+      width: $baseline * 1.25
 
-      background: #eee
-      color: #000
-
-      cursor: pointer
-      font-size: $fs--1
-      line-height: $baseline
+      line-height: $baseline * 1.25
       text-align: center
 
-      transition: 0.15s background
+      background: #eee
 
-      &:focus,
-      &:hover
+      &:hover,
+      &:focus
         background: #ddd
 
-    > a
-      &::before
-        +fa-icon()
-
-      &.tweet::before
-        @extend .fab
-        content: fa-content($fa-var-twitter)
+      &.tweet
+        +button-icon($fa-var-twitter, icon, brand)
 
       &.external-link::before
-        @extend .fas
-        content: fa-content($fa-var-external-link-square-alt)
+        +button-icon($fa-var-external-link-square-alt, icon, solid)
 
     > button
       +button(primary, medium)
