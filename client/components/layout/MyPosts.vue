@@ -8,7 +8,7 @@
         </nav>
 
         <div class="my-posts--create-post">
-          <nuxt-link to="/posts/create/article">{{ $t('Create a post') }}</nuxt-link>
+          <nuxt-link to="/posts/create/article">{{ $t('Create post') }}</nuxt-link>
         </div>
       </header>
 
@@ -63,10 +63,6 @@ export default {
   //- header
   > header
     display: flex
-    margin-bottom: $baseline / 2
-
-    @media (max-width: $mobile)
-      display: block
 
     nav
       flex: 1
@@ -86,7 +82,7 @@ export default {
         font-weight: 600
 
         @media (max-width: $mobile)
-          font-size: $fs-2
+          font-size: $fs-1
           margin-right: $baseline / 2
 
         &.nuxt-link-active
@@ -95,11 +91,14 @@ export default {
 
 //- Create Post button
 .my-posts--create-post
-  @media (max-width: $mobile)
-    display: block
-
-    text-align: center
 
   a
     +button
+
+    @media (max-width: $mobile)
+      height: $baseline
+      padding: 0 $baseline/4
+
+      font-size: $fs--1
+      line-height: $baseline
 </style>

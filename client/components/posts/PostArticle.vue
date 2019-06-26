@@ -29,6 +29,7 @@
     </timeline-post--article>
 
     <template slot="controls"><slot name="controls"></slot></template>
+    <template slot="extendedControls"><slot name="extendedControls"></slot></template>
   </PostBase>
 </template>
 

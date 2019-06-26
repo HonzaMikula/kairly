@@ -128,23 +128,27 @@ export default {
     section
       display: flex
       justify-content: flex-end
+
       > button
         +button(primary, small)
 
         margin-right: $baseline / 4
 
-      button-icon
-        display: inline-block
-        border-radius: 100%
-        width: $baseline
-
+      > button-icon
         background: #eee
-
-        text-align: center
 
         transition: 0.15s background
 
         &:focus,
         &:hover
           background: #ddd
+
+        &.up
+          +button-icon($fa-var-arrow-up, icon, solid, small)
+
+        &.down
+          +button-icon($fa-var-arrow-down, icon, solid, small) 
+
+        &.remove
+          +button-icon($fa-var-times, icon, solid, small) 
 </style>

@@ -69,18 +69,15 @@
 
 
 //- Button icon mixin
-=button-icon($icon, $type: icon, $collection: solid)
+=button-icon($icon, $type: icon, $collection: solid, $size: medium)
   display: inline-flex
   border-radius: $baseline * 1.25/2
-  height: $baseline * 1.25
   padding: 0 $baseline 0 $baseline/4
 
   background: #eee
   border: 0
   color: #000
 
-  font-size: $fs-0
-  line-height: $baseline * 1.25
   text-align: center
 
   cursor: pointer
@@ -88,14 +85,6 @@
 
   @media (max-width: $mobile)
     padding: 0
-
-  //- only icon
-  @if $type == icon
-    padding: 0
-
-  //- icon with text
-  @else if $type == icon-text
-    width: auto
 
   &:hover,
   &:focus
@@ -112,23 +101,67 @@
     @else if $collection == brand
       @extend .fab
 
-    height: $baseline * 1.25
-    width: $baseline * 1.25
-
-    line-height: $baseline * 1.25
-
     content: fa-content($icon)
 
   &::after
-    height: $baseline * 1.25
-
-    line-height: $baseline * 1.25
-
     @if $type == icon-text
       content: attr(aria-label)
 
     @media (max-width: $mobile)
       display: none
+  
+  //- large button
+  @if $size == large
+    height: $baseline * 1.5
+
+    font-size: $fs-1
+    line-height: $baseline * 1.5
+
+    &::before,
+    &::after
+      height: $baseline * 1.5
+      width: $baseline * 1.5
+
+      line-height: $baseline * 1.5
+
+  //- medium button
+  @else if $size == medium
+    height: $baseline * 1.25
+
+    font-size: $fs-0
+    line-height: $baseline * 1.25
+
+    &::before,
+    &::after
+      height: $baseline * 1.25
+      width: $baseline * 1.25
+
+      line-height: $baseline * 1.25
+
+  //- small medium
+  @else if $size == small
+    height: $baseline
+
+    font-size: $fs--1
+    line-height: $baseline 
+
+    &::before,
+    &::after
+      height: $baseline
+      width: $baseline
+
+      line-height: $baseline 
+
+  //- only icon
+  @if $type == icon
+    padding: 0
+
+  //- icon with text
+  @else if $type == icon-text
+    width: auto
+
+    &::after
+      width: auto
 
 //- Buttons with Icons
 button-icon
@@ -153,12 +186,6 @@ button-icon
 
   &.edit::before
     content: fa-content($fa-var-pencil-alt)
-
-  &.up::before
-    content: fa-content($fa-var-arrow-up)
-
-  &.down::before
-    content: fa-content($fa-var-arrow-down)
 
   &.menu::before
     content: fa-content($fa-var-ellipsis-v)

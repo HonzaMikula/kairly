@@ -136,36 +136,34 @@ export default {
 .post > header
   position: relative
 
-  display: flex
+  display: grid
+  grid-template-columns: min-content minmax(auto, max-content) auto max-content
   align-items: center
   margin-bottom: $baseline / 4
 
   font-family: $ff-sans
 
   //-- author image
-  picture
-    grid-area: picture
+  picture img
+    display: block
+    border-radius: 100%
+    height: $baseline
+    margin-right: $baseline / 4
+    width: $baseline
 
-    img
-      display: block
-      border-radius: 100%
-      height: $baseline
-      margin-right: $baseline / 4
-      width: $baseline
-
-      object-fit: cover
+    object-fit: cover
 
 
   //-- author
   h3
-    grid-area: author
-    max-width: max-content
+    overflow: hidden
 
     color: #555
 
     font-size: $fs--1
     font-weight: 600
     white-space: nowrap
+    text-overflow: ellipsis
 
     span
       font-weight: 400
@@ -176,7 +174,6 @@ export default {
 
   //-- date of publication
   time
-    flex: 1
     overflow: hidden
 
     color: #555
@@ -197,27 +194,34 @@ export default {
 
     > a,
     > button-icon
-      border-radius: 100%
-      height: $baseline * 1.25
-      width: $baseline * 1.25
-
-      line-height: $baseline * 1.25
-      text-align: center
-
       background: #eee
+
+      transition: 0.15s background
 
       &:hover,
       &:focus
         background: #ddd
 
       &.tweet
-        +button-icon($fa-var-twitter, icon, brand)
+        +button-icon($fa-var-twitter, icon, brand, small) 
 
       &.external-link::before
-        +button-icon($fa-var-external-link-square-alt, icon, solid)
+        +button-icon($fa-var-external-link-square-alt, icon, solid, small)
+
+      &.edit
+        +button-icon($fa-var-pencil-alt, icon, solid, small) 
+
+      &.up
+        +button-icon($fa-var-arrow-up, icon, solid, small)
+
+      &.down
+        +button-icon($fa-var-arrow-down, icon, solid, small) 
+
+      &.remove
+        +button-icon($fa-var-times, icon, solid, small) 
 
     > button
-      +button(primary, medium)
+      +button(primary, small)
       margin-left: $baseline / 4
 
     //- consider post
@@ -229,7 +233,7 @@ export default {
       margin-right: $baseline / 4
 
       font-weight: 600
-      line-height: $baseline * 1.25
+      line-height: $baseline
 
     .consider-post
       +button-icon($fa-var-newspaper)
