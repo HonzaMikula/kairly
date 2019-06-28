@@ -22,6 +22,29 @@
       </div>
     </section>
 
+    <section class="homepage--explore">
+      <h2>{{ $t('We believe in human editors.') }} <br> {{ $t('Read recently published newspapers.') }}</h2>
+
+      <div class="homepage--explore--crossroad">
+        <div v-for="category in exploreNewspapers" :key="category.name">
+          <h3>{{category.name}}</h3>
+          <ul>
+            <li v-for="item in category.newspapers" :key="item.id" :class="{'is-selected': item.id == selectedNewspaper}">
+              <a :href="item.id" @click.prevent="showNewspaper(item.id)">{{ item.name }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="homepage--explore--issue" :class="{'is-expanded': expandNewspaper}">
+        <IssueWrapper v-if="issue" :issue="issue" showTail></IssueWrapper>
+
+        <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
+
+        <button v-if="!expandNewspaper" @click="showMore()">{{ $t('Show more') }}</button>  
+      </div>
+    </section>
+
     <section class="homepage--process">
 
       <h2>How to start?</h2>
@@ -147,7 +170,7 @@
       </blockquote>
     </section>
 
-    <section class="homepage--newspapers">
+    <!-- <section class="homepage--newspapers">
       <h2>{{ $t('Check out some of our newspapers.') }}</h2>
 
       <div>
@@ -157,7 +180,9 @@
           :newspaper="newspaper"
         />
       </div>
-    </section>
+    </section> -->
+
+    <HowItWorks />
 
     <section class="homepage--quote">
       <h2>{{ $t('Was said about us.') }}</h2>
@@ -183,34 +208,31 @@
           <strong>Marek Zouzalík</strong> <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
         </footer>
       </blockquote>
-    </section>
+    </section>  
 
-    <HowItWorks />
-
-    <OfficialStart />
+    <!-- <OfficialStart /> -->
 
     <div itemprop="author" itemscope itemtype="http://schema.org/Organization">
       <Footer />
 
       <FooterLinks />
     </div>
-
-    <portal to="modal" v-if="isJoinUsModalOpen">
-      <JoinUsModal :closeModal="closeJoinUs"></JoinUsModal>
-    </portal>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import NEWSPAPERS from '@/topNewspapers'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
+import { errorToParams } from '@/utils/errors'
 
 import SignUpForm from '@/components/microsite/SignUpForm'
-import JoinUsModal from '@/components/modals/JoinUs'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import HowItWorks from '@/components/microsite/HowItWorks'
 import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import OfficialStart from '@/components/microsite/OfficialStart'
+import IssueWrapper from '@/components/IssueWrapper'
 
 import ogImage from '@/assets/homepage/kairly-1.jpg'
 
@@ -219,12 +241,12 @@ export default {
 
   components: {
     SignUpForm,
-    JoinUsModal,
     NewspaperWidget,
     HowItWorks,
     OfficialStart,
     Footer,
-    FooterLinks
+    FooterLinks,
+    IssueWrapper
   },
 
   head() {
@@ -255,51 +277,49 @@ export default {
   data() {
     return {
       invalidCredentials: false,
-      username: null,
-      password: null,
-      isJoinUsModalOpen: null,
-      newspapers: null
+      newspapers: null,
+      issue: null,
+      expandNewspaper: false,
+      exploreNewspapers: NEWSPAPERS,
+      selectedNewspaper: 'janmikula/malostranskenoviny'
     }
-  },
-
-  computed: {
-    ...mapState({
-      currentLocale: state => state.locale || 'en'
-    }),
-  },
-
-  async created() {
-    const newspapersToShow = [
-        'janmikula/malostranskenoviny',
-        'farin/nej-novinari-na-twitteru',
-        'janmikula/technologicky-denik'
-      ]
-    this.newspapers = await this.$store.dispatch('getNewspapers', newspapersToShow)
   },
 
   methods: {
-    async login() {
-      this.invalidCredentials = false
-      const { username, password } = this
-      try {
-        await this.$auth.loginWith('local', {
-          data: { username, password }
-        })
-        this.$router.push("/")
-      } catch (e) {
-        this.invalidCredentials = true
-      }
+    async showNewspaper(newspaperId) {
+      this.selectedNewspaper = newspaperId
+
+      this.$ga.event({
+        eventCategory: 'Homepage',
+        eventAction: 'Show newspaper',
+        eventLabel: newspaperId
+      })
+
+      const { newspaper, issue, links } = await this.$store.dispatch('getNewspaperDetail', {
+        newspaperId: newspaperId
+      })
+      this.issue = issue
     },
 
-    closeJoinUs() {
-      this.isJoinUsModalOpen = null
-    },
+    showMore() {
+      this.expandNewspaper = true
 
-    setLang(locale) {
-      this.setLocale(locale)
-      this.$auth.$storage.setUniversal('locale', locale)
+      this.$ga.event({
+        eventCategory: 'Homepage',
+        eventAction: 'Show more',
+        eventLabel: this.selectedNewspaper
+      })
     }
   },
+
+  async created() {
+    const { newspaper, issue, links } = await this.$store.dispatch('getNewspaperDetail', {
+      newspaperId: 'janmikula/malostranskenoviny'
+    })
+
+    this.issue = issue
+  }
+
 
 }
 </script>
@@ -310,9 +330,9 @@ export default {
 
 //- Mixin
 =heading
-  font-size: $fs-5
+  font-size: $fs-4
   font-weight: 900
-  line-height: $baseline * 2
+  line-height: 1.42
 
   @media (max-width: $mobile)
     font-size: $fs-3
@@ -347,7 +367,6 @@ export default {
   @media (max-width: $mobile)
     height: auto
     padding: 0
-    padding-bottom: $baseline / 2
 
   > div
     display: grid
@@ -416,6 +435,117 @@ export default {
 
         counter-increment: benefits
         content: counter(benefits)
+
+.homepage--explore
+  padding-bottom: $baseline * 2
+
+  @media (max-width: $mobile)
+    padding: $baseline/2 $baseline/2
+
+  > h2
+    +heading
+
+    font-size: $fs-4
+    margin-bottom: $baseline / 2
+
+.homepage--explore--crossroad
+  display: flex
+  padding: $baseline $baseline*2
+  margin: 0 (-$baseline*2)
+
+  background: #fafafa
+  border-bottom: 1px solid #eee
+
+  @media (max-width: $mobile)
+    margin: 0 (-$baseline/2)
+    padding: $baseline/2
+    overflow-x: auto
+    -webkit-overflow-scrolling: touch
+
+  > div
+    flex: 1
+    margin-right: $baseline / 2
+
+    &:last-of-type
+      margin-right: 0
+
+    @media (max-width: $mobile)
+      min-width: 200px
+      
+
+  h3
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-2
+    font-weight: 600
+
+    @media (max-width: $mobile)
+      font-size: $fs-1
+
+  li
+    a
+      color: $c-base
+
+    &.is-selected
+      font-weight: 600
+
+      a
+        color: #000
+
+.homepage--explore--issue
+  position: relative
+  max-height: 700px
+  overflow: hidden
+  margin: 0 (-$baseline*2)
+  padding: 0 $baseline * 2
+
+  background: #fafafa
+
+  @media (max-width: $mobile)
+    margin: 0 (-$baseline/2)
+    padding: 0
+
+  timeline-newspaper
+    margin-top: $baseline
+
+  &.is-expanded
+    max-height: none
+
+    &::after
+      display: none
+
+  &::after
+    position: absolute
+    bottom: 0
+    left: 0
+
+    height: $baseline * 5
+    width: 100%
+
+    background: linear-gradient(to top, rgba(255, 255, 255, 1), transparent)
+
+    content: ''
+
+  //- Show more
+  > button
+    +button
+    position: absolute
+    left: 50%
+    bottom: 0
+    z-index: 1
+
+    transform: translateX(-50%)
+
+  //- That's it...
+  > p
+    font-family: $ff-serif
+    font-size: $fs-1
+    font-weight: 600
+    line-height: 1.42
+    text-align: center
+
+    padding-bottom: $baseline
+    
 
 //- Process
 .homepage--process

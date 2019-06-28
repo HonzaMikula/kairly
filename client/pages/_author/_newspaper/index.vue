@@ -57,6 +57,8 @@
           <IssueWrapper :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
             <template slot="newspaperTitle">{{ $t('Issue from') }} <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY')}}</time></template>
           </IssueWrapper>
+
+          <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
         </div>
 
         <footer class="newspaper-detail--social-sharing">
@@ -254,6 +256,7 @@ export default {
       await store.dispatch('getSubscriptions')
     }
 
+    console.log(params.issue)
     try {
       const { newspaper, issue, links } = await store.dispatch('getNewspaperDetail', {
         newspaperId: fullName,
@@ -510,6 +513,16 @@ export default {
 
   timeline-newspaper
     margin-top: $baseline
+
+  //- That's it...
+  > p
+    font-family: $ff-serif
+    font-size: $fs-1
+    font-weight: 600
+    line-height: 1.42
+    text-align: center
+
+    padding-bottom: $baseline
 
 
 //- Footer with social buttons
