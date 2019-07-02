@@ -30,7 +30,16 @@ export default {
 
   computed: mapState({
     loggedIn: state => state.auth.loggedIn
-  })
+  }),
+
+  created() {
+    if (this.loggedIn) {
+      this.$ga.set('dimension1', 'yes')
+    }
+    else {
+      this.$ga.set('dimension1', 'no')
+    }
+  },
 }
 </script>
 

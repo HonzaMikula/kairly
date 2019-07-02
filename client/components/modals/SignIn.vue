@@ -87,6 +87,9 @@ export default {
           eventAction: 'Sign in',
           eventLabel: 'Success'
         })
+
+        this.$ga.set('dimension1', 'yes')
+        
       } catch (e) {
         this.invalidCredentials = true
         this.$ga.event({
