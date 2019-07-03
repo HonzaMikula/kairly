@@ -32,7 +32,7 @@ export default {
     loggedIn: state => state.auth.loggedIn
   }),
 
-  created() {
+  mounted() {
     if (this.loggedIn) {
       this.$ga.set('dimension1', 'yes')
     }
