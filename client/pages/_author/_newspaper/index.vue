@@ -14,25 +14,12 @@
           <div v-else class="image-placeholder"></div>
         </picture>
 
-        <div class="newspaper-detail--subscribe" v-if="loggedIn">
+        <div class="newspaper-detail--subscribe">
           <NewspaperSubscription :newspaper="newspaper" />
 
           <p>{{ periodicity }}</p>
         </div>
       </header>
-
-      <div class="newspaper-detail--info">
-        <ul>
-          <li>{{ periodicity }}</li>
-          <li class="issues">#{{ newspaper.issues }}</li>
-          <li>{{ newspaper.likes }} {{ $t('readers') }}</li>
-          <li itemprop="editor" itemscope itemtype="http://schema.org/Person">{{ newspaper.editor.name }}</li>
-          <li class="price">
-            <MoneyFormat :value="newspaper.price" currency="Kč" :short="true" />
-            {{ $t('monthly') }}
-          </li>
-        </ul>
-      </div>
 
       <template v-if="issue">
         <nav class="newspaper-detail--navigation" v-if="links.prev || links.next">
@@ -67,6 +54,8 @@
             target="_blank"
             class="rss"
             :aria-label="$t('Subscribe RSS')"
+            v-b-tooltip
+            :title="$t('Subscribe RSS')"
             @click="$ga.event({
               eventCategory: 'Subscribe RSS newspaper',
               eventAction: newspaper.name,
@@ -79,6 +68,8 @@
             target="_blank"
             class="share-fb"
             :aria-label="$t('Share on Facebook')"
+            v-b-tooltip
+            :title="$t('Share on Facebook')"
             @click="$ga.event({
               eventCategory: 'Share newspaper FB',
               eventAction: newspaper.name,
@@ -91,6 +82,8 @@
             target="_blank"
             class="share-twitter"
             :aria-label="$t('Share on Twitter')"
+            v-b-tooltip
+            :title="$t('Share on Twitter')"
             @click="$ga.event({
               eventCategory: 'Share newspaper Twitter',
               eventAction: newspaper.name,
@@ -293,8 +286,8 @@ export default {
   grid-template-areas: "issue-header-image issue-header-title issue-header-subscription" "issue-header-image issue-header-description issue-header-subscription"
   grid-template-columns: $baseline*7 auto $baseline*7
   grid-template-rows: auto auto
-  padding: $baseline/4 0
-  margin: $baseline*0.75 0
+  padding: $baseline/4
+  margin: $baseline*0.75 (-$baseline/4)
   overflow: hidden
 
   backdrop-filter: blur(10px) saturate(125%)
@@ -409,48 +402,6 @@ export default {
     @media (max-width: $mobile)
       display: none
 
-//- Info row about newspaper
-.newspaper-detail--info
-  display: block
-  padding: $baseline/4 0
-
-  border-bottom: 1px solid #ddd
-  border-top: 1px solid #ddd
-
-  ul
-    display: table
-    margin: 0 auto
-
-    @media (max-width: $mobile)
-      padding: 0 $baseline/4
-
-  li
-    display: inline-block
-
-    font-size: $fs--1
-    font-family: $ff-serif
-    vertical-align: middle
-
-    &::after
-      display: inline-block
-      padding: 0 $baseline/2
-
-      content: '•'
-
-      @media (max-width: $mobile)
-        padding: 0 $baseline/4
-
-    &:last-of-type::after
-      display: none
-
-    @media (max-width: $mobile)
-      &.issues,
-      &.price
-        display: none
-
-      &:nth-of-type(4)::after
-        display: none
-
 //- Navigation between issues
 .newspaper-detail--navigation
   display: grid
@@ -458,6 +409,8 @@ export default {
   grid-template-areas: "prev-link . next-link"
   padding-top: $baseline / 2
   margin-bottom: -($baseline * 2.375)
+
+  border-top: 1px solid #eee
 
   a
     position: relative
@@ -543,7 +496,7 @@ export default {
     +button-icon($fa-var-twitter, icon, brand)
 
   a.rss
-    +button-icon($fa-var-rss-square, icon-text)
+    +button-icon($fa-var-rss-square, icon)
 
   //- Mailchimp
   #mc_embed_signup
@@ -561,10 +514,10 @@ export default {
     input[type=email]
       box-sizing: border-box
       border-radius: 5px 0 0 5px
-      height: $baseline * 1.5
+      height: $baseline * 1.25
       padding: 0 $baseline/2
       margin-bottom: $baseline / 2
-      width: 250px
+      width: 200px
 
       background: #fff
       border: 1px solid #ddd
@@ -572,7 +525,7 @@ export default {
 
       font-family: $ff-sans
       font-size: $fs-0
-      line-height: $baseline * 1.5
+      line-height: $baseline * 1.25
 
       transition: 0.15s opacity
 
@@ -585,7 +538,7 @@ export default {
     input[type=submit]
       box-sizing: border-box
       border-radius: 0 5px 5px 0
-      height: $baseline * 1.5
+      height: $baseline * 1.25
       padding: 0 $baseline
       margin-bottom: $baseline
 
@@ -594,9 +547,9 @@ export default {
       color: #fff
 
       cursor: pointer
-      font-size: $fs-1
+      font-size: $fs-0
       font-family: $ff-sans
-      line-height: $baseline * 1.5
+      line-height: $baseline * 1.25
 
       @media (max-width: $mobile)
         border-radius: 5px

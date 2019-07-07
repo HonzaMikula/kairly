@@ -1,15 +1,15 @@
 <template>
   <AppLayout>
-    <div class="rss-reader-view">
-      <section class="rss-reader--hero">
+    <div class="journalists-view">
+      <section class="journalists--hero">
         <div>
           <section>
-            <h1>{{ $t('RSS reader that prevents distraction') }}</h1>
+            <h1>{{ $t('Are you a news reader?') }}</h1>
 
             <ul>
-              <li>{{ $t('Modern applications subconsciously create the urge to constantly check these applications.') }}</li>
-              <li>{{ $t('We\'re doing things differently. We update the timeline only every 3 hours. That\'s reasonable.') }}</li>
-              <li>{{ $t('Here you set when you want to read what. E.g. you will be receiving articles from your favorite news site every morning at 9:00 AM.') }}</li>
+              <li>{{ $t('Stop endlessly scrolling without thinking. Read only what you really care about.') }}</li>
+              <li>{{ $t('Don\'t be bothered by nonsense notifications. Read only when you want and when you\'re used to it.') }}</li>
+              <li>{{ $t('Support high-quality journalists by purchasing a subscription.') }}</li>
             </ul>
           </section>
 
@@ -161,8 +161,6 @@ import FooterLinks from '@/components/microsite/FooterLinks'
 import OfficialStart from '@/components/microsite/OfficialStart'
 import Faq from '@/components/microsite/Faq'
 
-import ogImage from '@/assets/microsite/kairly-random-25.jpg';
-
 export default {
   name: 'Readers',
 
@@ -180,26 +178,13 @@ export default {
   },
 
   head() {
-    const metaTitle = this.$t('RSS reader that prevents distraction') +' – Kairly'
-    const metaDescription = this.$t('Our RSS reader allows people to choose when they want to read what. That leads to a healthy reading habits.')
-    const metaUrl = 'https://kairly.com/rss-reader'
-    const baseUrl = 'https://kairly.com'
-
     return {
-      title: metaTitle,
+      title: this.$t('Media platform for readers') +' – Kairly',
       meta: [
-        { hid: 'description', name: 'description', content: metaDescription },
-        { hid: 'og:title', property: 'og:title', content: metaTitle },
-        { hid: 'og:description', property: 'og:description', content: metaDescription },
-        { hid: 'og:image', property: 'og:image', content: baseUrl + ogImage },
-        { hid: 'og:image:alt', property: 'og:image:alt', content: 'Man reading' },
-        { hid: 'og:type', property: 'og:type', content: 'product' },
-        { hid: 'og:url', property: 'og:url', content: metaUrl },
-        { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
-        { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
-        { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
-        { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
-        { hid: 'twitter:image', property: 'twitter:image', content: baseUrl + ogImage }
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$t('Kairly is a media platform for pleasant reading without distraction and endless scrolling.') },
       ]
     }
   }
@@ -220,7 +205,7 @@ export default {
     font-size: $fs-3
     line-height: $baseline * 1.2
 
-.rss-reader-view
+.journalists-view
   background: #fff
 
   > *
@@ -229,7 +214,7 @@ export default {
     margin-right: auto
 
 //- Hero
-.rss-reader--hero
+.journalists--hero
   position: relative
 
   display: flex
@@ -271,7 +256,7 @@ export default {
     margin-bottom: $baseline * 2
 
     @media (max-width: $mobile)
-      margin: $baseline 0
+      margin: $baseline $baseline/2
       width: 100%
 
 

@@ -4,12 +4,18 @@
       <section class="journalists--hero">
         <div>
           <section>
-            <h1>{{ $t('Are you think-tank or NGO?') }}</h1>
+            <h1>{{ $t('Are you an independent publisher?') }}</h1>
+            <!-- <h1>Jste nezávislé vydavatelství?</h1>
+            <ul>
+              <li>Publikujte vaše noviny a časopisy na moderní platformě.</li>
+              <li>Začnětě vydělávat na svých titulech s unikátním konceptem placeného obsahu.</li>
+              <li>Oslovte zcela nové skupiny čtenářů.</li>
+            </ul> -->
 
             <ul>
-              <li>{{ $t('Publish your ideas on a modern publishing platform.') }}</li>
-              <li>{{ $t('Reach new audiences for your cause.') }}</li>
-              <li>{{ $t('Get regular financial donations from your supporters.') }}</li>
+              <li>{{ $t('Publish your newspapers and magazines on a modern platform.') }}</li>
+              <li>{{ $t('Start earning on your publications with a unique concept of paid content.') }}</li>
+              <li>{{ $t('Reach new audiences.') }}</li>
             </ul>
           </section>
 
@@ -18,7 +24,7 @@
       </section>
 
       <Faq>
-        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/kairly-random-21.jpg" alt="Kairly" />
       </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
@@ -43,14 +49,13 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-9.jpg" />
+          <img src="~assets/microsite/kairly-random-25.jpg" />
         </picture>
 
         <div>
-          <h2>{{ $t('Publish your ideas on a modern platform and reach out to new audiences.') }}</h2>
+          <h2>{{ $t('Publish your newspapers and magazines on a modern platform and reach out to new readers.') }}</h2>
 
-          <div v-html="$t('@think-tanks/modern-platform')"></div>
-
+          <div v-html="$t('@publishers/modern-platform')" />
         </div>
       </section>
 
@@ -77,26 +82,9 @@
         </picture>
 
         <div>
-          <h2>{{ $t('Get regular monetary contributions from your followers.') }}</h2>
+          <h2>{{ $t('Make money on your publications with a unique concept of paid content.') }}</h2>
 
-          <!-- <div v-html="$t('@think-tanks/monetizing-content')"></div> -->
-
-          <div>
-            <p>
-              Přicházíme se zcela novým konceptem placeného obsahu na internetu. Jeho součástí je i možnost
-              pravidelných plateb od čtenářů organizacím, jako je ta vaše.
-            </p>
-
-            <p>
-              Čtenáři mohou odebírat váš obsah zdarma. Můžete také vyžadovat i pravidelné měsíční předplatné.
-              Ať už bude váš obsah zdarma nebo ne, čtenáři vám mohou dobrovolně a pravidelně přispívat peníze navíc.
-            </p>
-
-            <p>
-              Váš obsah se může objevit i v nejrůznějších digitálních novinách. Nejen, že oslovíte nové skupiny lidí,
-              získáte i spravedlivý podíl z předplatného těchto novin, čímž získáte dodatečné peníze.
-            </p>
-          </div>
+          <div v-html="$t('@publishers/monetizing-content')"></div>
         </div>
       </section>
 
@@ -141,7 +129,7 @@ import OfficialStart from '@/components/microsite/OfficialStart'
 import Faq from '@/components/microsite/Faq'
 
 export default {
-  name: 'ThinkTanks',
+  name: 'Publishers',
 
   auth: false,
 
@@ -158,12 +146,12 @@ export default {
 
   head() {
     return {
-      title: this.$t('Digital Publishing Platform for Think-tanks & NGOs') +' – Kairly',
+      title: this.$t('Digital Publishing Platform for Publishers') +' – Kairly',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.$t('Kairly is a digital publishing platform for think-tanks and NGOs that allow them to receive voluntary donations.') },
+          content: this.$t('Kairly is a digital publishing platform for publishers that offers a unique concept of paid content.') },
       ]
     }
   }
@@ -235,7 +223,7 @@ export default {
     margin-bottom: $baseline * 2
 
     @media (max-width: $mobile)
-      margin: $baseline 0
+      margin: $baseline $baseline/2
       width: 100%
 
 

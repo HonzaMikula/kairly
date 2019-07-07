@@ -32,29 +32,6 @@
         <div class="kairly-promo--learn-more">
           <nuxt-link to="/">{{ $t('Learn more about the platform') }}</nuxt-link>
         </div>
-
-        <div class="kairly-promo--social-media">
-          <a
-            href="https://www.facebook.com/kairlynews/"
-            class="facebook"
-            :title="$t('Follow us on Facebook')"
-            v-b-tooltip>
-          </a>
-
-          <a
-            href="https://twitter.com/kairlynews"
-            class="twitter"
-            :title="$t('Follow us on Twitter')"
-            v-b-tooltip>
-          </a>
-
-          <a
-            href="https://www.linkedin.com/company/kairly/"
-            class="linkedin"
-            :title="$t('Follow us on LinkedIn')"
-            v-b-tooltip>
-          </a>
-        </div>
       </section>
 
       <SignUpForm></SignUpForm>
@@ -88,8 +65,7 @@ export default {
   justify-content: center
   padding: $baseline
 
-  background: url("~assets/homepage/hero-new.jpg") bottom center no-repeat
-  background-size: cover
+  background: #eee
 
   > div
     display: grid
@@ -151,44 +127,4 @@ export default {
     +button(primary, medium)
 
 
-//- Social media links
-.kairly-promo--social-media
-  display: flex
-  justify-content: flex-start
-  margin-top: $baseline
-
-  a
-    border-radius: 100%
-    display: inline-block
-    height: $baseline * 1.5
-    margin-right: $baseline
-    width: $baseline * 1.5
-
-    background: #fff
-    color: #555
-
-    font-size: $fs-2
-    line-height: $baseline * 1.5
-    text-align: center
-
-    transition: 0.15s all
-
-    &:focus,
-    &:hover
-      color: #000
-
-    &::before
-      +fa-icon()
-      @extend .fab
-      line-height: $baseline * 1.5
-      vertical-align: top
-
-    &.facebook::before
-      content: fa-content($fa-var-facebook)
-
-    &.twitter::before
-      content: fa-content($fa-var-twitter)
-
-    &.linkedin::before
-      content: fa-content($fa-var-linkedin)
 </style>

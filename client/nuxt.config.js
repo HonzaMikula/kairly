@@ -51,7 +51,8 @@ module.exports = {
       id: process.env.GA_ID
     }],
     ['@nuxtjs/style-resources'],
-    ['bootstrap-vue/nuxt']
+    ['bootstrap-vue/nuxt'],
+    '@nuxtjs/redirect-module',
   ],
 
   bootstrapVue: {
@@ -138,5 +139,17 @@ module.exports = {
         chunkName: 'pages/_author/_newspaper/index'
       })
     }
-  }
+  },
+
+  redirect: [
+    { from: '^/platform$', to: '/platform/readers', statusCode: 302 },
+    { from: '^/platform/$', to: '/platform/readers', statusCode: 302 },
+    { from: '^/readers$', to: '/platform/readers', statusCode: 302 },
+    { from: '^/journalists$', to: '/platform/journalists', statusCode: 302 },
+    { from: '^/publishers$', to: '/platform/publishers', statusCode: 302 },
+    { from: '^/think-tanks$', to: '/platform/think-tanks', statusCode: 302 },
+    { from: '^/features$', to: '/features/rss-reader', statusCode: 302 },
+    { from: '^/features/$', to: '/features/rss-reader', statusCode: 302 },
+    { from: '^/rss-reader$', to: '/features/rss-reader', statusCode: 302 },
+  ]
 }
