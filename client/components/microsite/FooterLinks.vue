@@ -70,6 +70,10 @@ export default {
     setLang(locale) {
       this.setLocale(locale)
       this.$auth.$storage.setUniversal('locale', locale)
+      this.$ga.event({
+        eventCategory: 'Switch language',
+        eventAction: locale
+      })
     }
   },
 
