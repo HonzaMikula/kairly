@@ -36,7 +36,10 @@
       </template>
     </nav>
 
-    <nav class="app-header-public--mobile-menu" v-if="isMobileMenuOpen">
+    <nav
+      class="app-header-public--mobile-menu"
+      v-if="isMobileMenuOpen"
+      v-on-clickaway="() => openMobileMenu()">
       <ul>
         <li><nuxt-link to="/">{{ $t('Home') }}</nuxt-link></li>
         <li><nuxt-link to="/platform/readers">{{ $t('About platform') }}</nuxt-link></li>
@@ -207,8 +210,12 @@ export default {
 
     &:active,
     &.nuxt-link-active
-        color: #000
-        font-weight: 600
+      color: #000
+      font-weight: 600
+
+    &.nuxt-link-exact-active
+      color: #000 !important
+      font-weight: 600 !important
 
   li:first-of-type a.nuxt-link-active
       color: $c-base
