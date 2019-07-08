@@ -9,28 +9,7 @@
         {{ $t('Grow healthy reading habits.') }}
       </p>
 
-      <div class="microsite-footer--social-media">
-        <a
-          href="https://www.facebook.com/kairlynews/"
-          class="facebook"
-          :title="$t('Follow us on Facebook')"
-          v-b-tooltip>
-        </a>
-
-        <a
-          href="https://twitter.com/kairlynews"
-          class="twitter"
-          :title="$t('Follow us on Twitter')"
-          v-b-tooltip>
-        </a>
-
-        <a
-          href="https://www.linkedin.com/company/kairly/"
-          class="linkedin"
-          :title="$t('Follow us on LinkedIn')"
-          v-b-tooltip>
-        </a>
-      </div>
+      
     </div>
   </footer>
 </template>
@@ -96,44 +75,4 @@ export default {
     font-weight: 600
     line-height: $baseline * 1.5
 
-//- Social media links
-.microsite-footer--social-media
-  display: flex
-  justify-content: center
-
-  a
-    border-radius: 100%
-    display: inline-block
-    height: $baseline * 1.5
-    margin: 0 $baseline/2
-    width: $baseline * 1.5
-
-    background: #fff
-    color: #555
-
-    font-size: $fs-3
-    line-height: $baseline * 1.5
-    text-align: center
-
-    transition: 0.15s all
-
-    &:focus,
-    &:hover
-      color: #000
-
-    &::before
-      +fa-icon()
-      @extend .fab
-
-      line-height: $baseline * 1.5
-      vertical-align: top
-
-    &.facebook::before
-      content: fa-content($fa-var-facebook)
-
-    &.twitter::before
-      content: fa-content($fa-var-twitter)
-
-    &.linkedin::before
-      content: fa-content($fa-var-linkedin)
 </style>

@@ -5,7 +5,7 @@ export default [
       newspapersTitle: 'Top newspapers',
       newspapers: [
         'janmikula/malostranskenoviny',
-        'aktualnecz/domaci',
+        'farin/nej-novinari-na-twitteru',
         'janmikula/technologicky-denik'
       ]
     },
@@ -15,7 +15,7 @@ export default [
       newspapersTitle: 'Top newspapers',
       newspapers: [
         'janmikula/malostranskenoviny',
-        'aktualnecz/domaci',
+        'farin/nej-novinari-na-twitteru',
         'rozhlas/zpravy-z-domova'
       ]
     },
@@ -25,7 +25,7 @@ export default [
       newspapersTitle: 'Politics newpapers',
       newspapers: [
         'janmikula/malostranskenoviny',
-        'aktualnecz/domaci',
+        'farin/nej-novinari-na-twitteru',
         'rozhlas/zpravy-z-domova'
       ]
     },
@@ -45,7 +45,7 @@ export default [
       newspapersTitle: 'Technology newspapers',
       newspapers: [
         'janmikula/technologicky-denik',
-        'rozhlas/veda-technologie',
+        'farin/elektromobilita',
         'janmikula/product-design-weekly'
       ]
     },
@@ -54,9 +54,9 @@ export default [
       slug: 'life',
       newspapersTitle: 'Life newspapers',
       newspapers: [
-        'rozhlas/kultura',
-        'aktualnecz/kultura',
-        'janmikula/tydenik-skola-hrou'
+        'janmikula/tydenik-skola-hrou',
+        'farin/moucnikove-tipy-na-vikend',
+        'janmikula/parodicky-denicek'
       ]
     }
     // },

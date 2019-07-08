@@ -3,21 +3,50 @@
     <div>
       <h1><a href="/">Kairly</a></h1>
 
-      <nav class="app-header-public--get-involved" v-on-clickaway="() => isDropdownOpen = false">
-        <button @click.prevent="isDropdownOpen = !isDropdownOpen">{{ $t('Solution for') }}</button>
-
-        <ul v-if="isDropdownOpen == true">
-          <li><nuxt-link to="/readers">{{ $t('Readers') }}</nuxt-link></li>
-          <li><nuxt-link to="/journalists">{{ $t('Journalists and bloggers') }}</nuxt-link></li>
-          <li><nuxt-link to="/publishers">{{ $t('Publishers') }}</nuxt-link></li>
-          <li><nuxt-link to="/think-tanks">{{ $t('Think-tanks and NGOs') }}</nuxt-link></li>
+      <nav class="app-header-public--menu">
+        <ul>
+          <li><nuxt-link to="/platform/readers">{{ $t('About platform') }}</nuxt-link></li>
+          <li><nuxt-link to="/features/rss-reader">{{ $t('Features') }}</nuxt-link></li>
+          <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)')}}</nuxt-link></li>
         </ul>
       </nav>
 
-      <nav class="app-header-public--sign-in">
+      <nav class="app-header-public--controls">
         <a href="" @click.prevent="openSignInModal()">{{ $t('Sign In') }}</a>
+        <button class="hamburger-menu" @click="openMobileMenu()"></button>
       </nav>
     </div>
+
+    <nav class="app-header-public--submenu">
+      <template v-if="topRoute == '/' || topRoute == 'platform'">
+        <span>{{ $t('For who?') }}</span>
+
+        <ul>
+          <li><nuxt-link to="/platform/readers">{{ $t('Readers') }}</nuxt-link></li>
+          <li><nuxt-link to="/platform/journalists">{{ $t('Journalists and bloggers') }}</nuxt-link></li>
+          <li><nuxt-link to="/platform/publishers">{{ $t('Publishers') }}</nuxt-link></li>
+          <li><nuxt-link to="/platform/think-tanks">{{ $t('Think-tanks and NGOs') }}</nuxt-link></li>
+        </ul>
+      </template>
+
+      <template v-else-if="topRoute == 'features'">
+        <ul>
+          <li><nuxt-link to="/features/rss-reader">{{ $t('RSS reader') }}</nuxt-link></li>
+        </ul>
+      </template>
+    </nav>
+
+    <nav
+      class="app-header-public--mobile-menu"
+      v-if="isMobileMenuOpen"
+      v-on-clickaway="() => openMobileMenu()">
+      <ul>
+        <li><nuxt-link to="/">{{ $t('Home') }}</nuxt-link></li>
+        <li><nuxt-link to="/platform/readers">{{ $t('About platform') }}</nuxt-link></li>
+        <li><nuxt-link to="/features/rss-reader">{{ $t('Features') }}</nuxt-link></li>
+        <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)')}}</nuxt-link></li>
+      </ul>
+    </nav>
 
     <portal to="modal" v-if="isSignInModalOpen">
       <SignInModal :closeModal="closeModals"></SignInModal>
@@ -43,8 +72,19 @@ export default {
 
   data() {
     return {
-      isDropdownOpen: null,
+      isMobileMenuOpen: null,
       isSignInModalOpen: null
+    }
+  },
+
+  computed: {
+    topRoute() {
+      const routes = this.$route.path.split('/')
+      
+      if (routes[1] == '') {
+        return '/'
+      }
+      return routes[1]
     }
   },
 
@@ -55,6 +95,10 @@ export default {
         eventCategory: 'Authentication',
         eventAction: 'Open Sign in modal'
       })
+    },
+
+    openMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen
     },
 
     closeModals() {
@@ -72,7 +116,6 @@ export default {
 //- HEADER -//
 .app-header-public
   display: block
-  height: $baseline * 2
   padding: 0 $baseline
 
   background: #fff
@@ -113,84 +156,150 @@ export default {
 
 
   //- Get Involved
-  .app-header-public--get-involved
-    margin-left: auto
-    margin-right: $baseline
+  .app-header-public--menu
+    margin-right: auto
+
+    ul
+      display: flex
+
+      @media (max-width: $mobile)
+        display: none
+
+    li 
+      list-style: none
+      a
+        display: block
+        border-radius: 5px
+        padding: 0 $baseline/2
+        margin-top: $baseline / 4
+        margin-right: $baseline / 4
+
+        color: #555
+
+        line-height: $baseline * 1.5
+        
+
+        &:focus,
+        &:hover,
+        &.nuxt-link-active
+          background: #eee
 
     @media (max-width: $mobile)
       margin-right: $baseline / 2
 
-    //- get involved button
-    button
-      +button
+.app-header-public--mobile-menu
+  position: absolute
+  top: $baseline * 2
+  right: 0
+  z-index: 1000000
 
-      padding-right: $baseline /2
+  box-sizing: border-box
+  padding: 0 $baseline/2
 
-      @media (max-width: $mobile)
-        padding: 0 $baseline/2
-        font-size: $fs--1
+  background: #fff
+  border: 1px solid #eee
+  border-top: 0
 
-        &::after
-          content: none
+  line-height: $baseline
 
-      &::after
-        +fa-icon()
-        @extend .fas
+  a
+    display: block
+    padding: $baseline/4 0
 
-        margin-left: $baseline / 2
+    color: $c-base
 
-        content: fa-content($fa-var-caret-down)
+    &:active,
+    &.nuxt-link-active
+      color: #000
+      font-weight: 600
 
-    //- dropdown
-    ul
-      position: absolute
-      top: ($baseline * 2)
-      z-index: 10
+    &.nuxt-link-exact-active
+      color: #000 !important
+      font-weight: 600 !important
 
-      border-radius: 0 0 5px 5px
-      padding: $baseline / 2 $baseline
+  li:first-of-type a.nuxt-link-active
+      color: $c-base
+      font-weight: 400
+      
 
-      background: #fff
-      border: 1px solid #eee
-      +box-shadow
 
-      line-height: 1.42
+.app-header-public--submenu
+  margin: 0 auto
+  max-width: 900px
+  padding: 0 $baseline
 
-      @media (max-width: $mobile)
-        left: 50%
-        transform: translate(-50%,0)
+  font-size: $fs-0
+  font-style: italic
+
+  @media (max-width: $mobile)
+    padding: 0
+
+  > span
+    margin-right: $baseline
+
+    @media (max-width: $mobile)
+      display: none
+
+  ul
+    display: inline-block
+
+    font-style: normal
+
+    @media (max-width: $mobile)
+      display: block
+
+      white-space: nowrap
+      overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
     li
-      margin-bottom: $baseline / 2
+      display: inline-block
+      margin-right: $baseline
+
+      @media (max-width: $mobile)
+        margin-right: $baseline / 2
+
+    a
+      display: block
+
+      color: #777
+
+      line-height: $baseline * 1.5
+
+      &:hover,
+      &:focus,
+        color: #000
+
+      &.nuxt-link-active
+        color: #000
+
+        font-weight: 600
+
+
+//- Sign In
+.app-header-public--controls
+  display: flex
+  align-items: center
+  margin-left: auto
+
+  a
+    +button(secondary)
+
+    @media (max-width: $mobile)
+      padding: 0 $baseline/2
+      font-size: $fs--1
 
       white-space: nowrap
 
-      &:last-of-type
-        margin-bottom: 0
+  //- hamburger menu for mobile
+  .hamburger-menu    
+    +button-icon($fa-var-bars)
+    display: none
+    margin-left: $baseline / 4
 
-      a
-        color: #777
+    @media (max-width: $mobile)
+      display: block
 
-        &.nuxt-link-active
-          color: #000
-
-          font-weight: 600
-
-        &:hover,
-        &:focus
-          color: #000
-
-
-  //- Sign In
-  .app-header-public--sign-in
-    a
-      +button(secondary)
-
-      @media (max-width: $mobile)
-        padding: 0 $baseline/2
-        font-size: $fs--1
-
-        white-space: nowrap
 
 
 

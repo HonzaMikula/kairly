@@ -4,11 +4,12 @@
       <section class="journalists--hero">
         <div>
           <section>
-            <h1>{{ $t('Are you independent journalist or blogger?') }}</h1>
+            <h1>{{ $t('Are you think-tank or NGO?') }}</h1>
+
             <ul>
-              <li>{{ $t('Publish on a modern platform that you do not have to maintain.') }}</li>
-              <li>{{ $t('Start earning with a unique concept of paid content.') }}</li>
-              <li>{{ $t('Become a truly independent author.') }}</li>
+              <li>{{ $t('Publish your ideas on a modern publishing platform.') }}</li>
+              <li>{{ $t('Reach new audiences for your cause.') }}</li>
+              <li>{{ $t('Get regular financial donations from your supporters.') }}</li>
             </ul>
           </section>
 
@@ -17,7 +18,7 @@
       </section>
 
       <Faq>
-        <img src="~assets/microsite/kairly-independent-journalist-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
       </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
@@ -42,25 +43,13 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-independent-journalist-2.jpg" />
+          <img src="~assets/microsite/kairly-random-9.jpg" />
         </picture>
 
         <div>
-          <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2>
+          <h2>{{ $t('Publish your ideas on a modern platform and reach out to new audiences.') }}</h2>
 
-          <div v-html="$t('@independent-journalists/modern-platform')">
-          </div>
-            <!-- <p>
-              Tvoříme pro vás moderní digitální platformu, která je šita na míru novinářům a publicistům.
-              Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, mobil, tablet či v budoucnu elektronickou čtečku.
-            </p>
-
-            <p>
-              Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy kombinuje to nejlepší z éry tištěných periodik
-              a moderní trendy UX ze současných mobilních a webových aplikací.
-            </p>
-
-            <p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou platit, budeme si účtovat 15 % z ceny předplatného.</p> -->
+          <div v-html="$t('@think-tanks/modern-platform')"></div>
 
         </div>
       </section>
@@ -84,28 +73,30 @@
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-independent-journalist-5.jpg" />
+          <img src="~assets/microsite/kairly-random-15.jpg" />
         </picture>
 
         <div>
-          <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2>
+          <h2>{{ $t('Get regular monetary contributions from your followers.') }}</h2>
 
-          <div v-html="$t('@independent-journalists/monetizing-content')"></div>
-            <!-- <p>
-              Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
-              Musíme na to chytře. Zapojte se do našeho unikátního systému placeného obsahu.
+          <!-- <div v-html="$t('@think-tanks/monetizing-content')"></div> -->
+
+          <div>
+            <p>
+              Přicházíme se zcela novým konceptem placeného obsahu na internetu. Jeho součástí je i možnost
+              pravidelných plateb od čtenářů organizacím, jako je ta vaše.
             </p>
 
             <p>
-              Čtenáři si vás buď mohou předplatit napřímo, nebo si předplácí noviny od editorů, kteří
-              vaše články a tweety považují za kvalitní a zařazují je do svých vydání. Vy za to dostanete
-              spravedlivý podíl z peněz, které editoři vybrali za své noviny.
+              Čtenáři mohou odebírat váš obsah zdarma. Můžete také vyžadovat i pravidelné měsíční předplatné.
+              Ať už bude váš obsah zdarma nebo ne, čtenáři vám mohou dobrovolně a pravidelně přispívat peníze navíc.
             </p>
 
             <p>
-              Pokud píšete mimořádně zajímavý obsah, čtenáři mají možnost vám poslat peníze nad
-              rámec běžného předplatného.
-            </p> -->
+              Váš obsah se může objevit i v nejrůznějších digitálních novinách. Nejen, že oslovíte nové skupiny lidí,
+              získáte i spravedlivý podíl z předplatného těchto novin, čímž získáte dodatečné peníze.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -150,7 +141,7 @@ import OfficialStart from '@/components/microsite/OfficialStart'
 import Faq from '@/components/microsite/Faq'
 
 export default {
-  name: 'IndependentJournalists',
+  name: 'ThinkTanks',
 
   auth: false,
 
@@ -167,12 +158,12 @@ export default {
 
   head() {
     return {
-      title: this.$t('Digital Publishing Platform for Journalists and Bloggers') +' – Kairly',
+      title: this.$t('Digital Publishing Platform for Think-tanks & NGOs') +' – Kairly',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.$t('Kairly is a digital publishing platform for independent journalists and bloggers who wants to start earning money for writing good content.') },
+          content: this.$t('Kairly is a digital publishing platform for think-tanks and NGOs that allow them to receive voluntary donations.') },
       ]
     }
   }
@@ -244,7 +235,7 @@ export default {
     margin-bottom: $baseline * 2
 
     @media (max-width: $mobile)
-      margin: $baseline 0
+      margin: $baseline $baseline/2
       width: 100%
 
 
