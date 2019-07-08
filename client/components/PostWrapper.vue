@@ -25,7 +25,7 @@ import PostLink from '@/components/posts/PostLink'
 import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
 import PostRecommendations from '@/components/posts/PostRecommendations'
-
+import PostEditorial from '@/components/posts/Editorial'
 
 export default {
   name: 'PostWrapper',
@@ -37,13 +37,14 @@ export default {
     PostTweet,
     PostPicture,
     PostRecommendations,
+    PostEditorial
   },
 
   computed: {
     //- TEMP hack - we can get rid of it after migration
     postType() {
       if (this.post.type == 'newspaper') {
-        return 'article'
+        return 'editorial' // TODO: back to 'article'
       }
       else {
         return this.post.type
