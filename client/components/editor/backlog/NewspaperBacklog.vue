@@ -21,12 +21,38 @@
           :post="post"
           :isSubscribed="true"
           :key="post.id"
+          :editorial="editorial[post.id]"
         >
           <template slot="extendedControls">
             <span class="price">{{ post.price }} Kč</span>
           </template>
 
           <template slot="controls">
+            <button-icon
+              class="editorial"
+              v-b-tooltip="$t('Add editorial')"
+              tabindex="0"
+              role="button"
+              :id="`editorial-button-${post.id}`"
+            />
+
+            <b-popover
+              :target="`editorial-button-${post.id}`"
+              placement="auto"
+              triggers="click blur"  
+            >
+              <ul>
+                <li tabindex="0" @click="setEditorial('article', post.id)">
+                  <h6>Add editorial comment</h6>
+                  <p>Write short comment to the topic</p>
+                </li>
+                <li tabindex="0" @click="setEditorial('tweet', post.id)">
+                  <h6>Add editorial tweet(s)</h6>
+                  <p>Comment the topic using tweets</p>
+                </li>
+              </ul>
+            </b-popover>
+
             <button-icon
               v-show="idx !== 0"
               class="up"
@@ -96,6 +122,7 @@
 <script>
 import Vue from 'vue'
 import { mapActions, mapMutations } from 'vuex'
+import { BPopover } from 'bootstrap-vue'
 
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
@@ -107,12 +134,14 @@ export default {
   components: {
     PostWrapper,
     NewspaperBacklogInfo,
-    BacklogPost
+    BacklogPost,
+    BPopover
   },
 
   data() {
     return {
-      externalLink: null
+      externalLink: null,
+      editorial: []
     }
   },
 
@@ -136,6 +165,11 @@ export default {
   },
 
   methods: {
+    setEditorial (type, postId) {
+      this.editorial[postId] = type
+      this.$forceUpdate()
+    },
+
     publish(post) {
       this.backlogPublish({newspaper: this.newspaper, post})
     },

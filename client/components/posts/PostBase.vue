@@ -219,6 +219,9 @@ export default {
 
       &.remove
         +button-icon($fa-var-times, icon, solid, small) 
+      
+      &.editorial
+          +button-icon($fa-var-comment-dots, icon, solid, small) 
 
     > button
       +button(primary, small)
@@ -246,5 +249,22 @@ export default {
         line-height: $baseline
 
 
+//- Popover TODO: maybe move it somewhere else
+.popover-body
+  padding: 0
 
+  font-family: $ff-sans
+  font-size: $fs-0
+
+  li
+    padding: $baseline/4 $baseline/2
+
+    cursor: pointer
+
+    &:hover,
+    &:focus
+      background: #eee
+
+    h6
+      font-weight: 600
 </style>

@@ -1,30 +1,36 @@
 <template>
   <section class="editorial-post" :class="{'is-before': isBefore}">
-    <PostArticle :post="post" :isSubscribed="isSubscribed" />
+    <PostArticle :post="post" :isSubscribed="isSubscribed">
+      <template slot="controls"><slot name="controls"></slot></template>
+      <template slot="extendedControls"><slot name="extendedControls"></slot></template>
+    </PostArticle>
 
-    <component :is="'editorial-'+ editorialComponent" />
+    <component 
+      :is="'editorial-'+ editorialComponent"
+      @saveEditorialArticle="setType('article')"
+    />
   </section>
 </template>
 
-
-
 <script>
-// Docs
-// - component is for distinguishing tweets, article, writing article, selecting tweets
-//
+// TODO
+// - component is for distinguishing selecting tweets
+// - controls for Manage newspaper
+// - turn on this mode
+
 import PostArticle from './PostArticle'
-import EditorialTweets from './EditorialTweets'
+import EditorialTweet from './EditorialTweet'
 import EditorialArticle from './EditorialArticle'
 import EditorialEditor from './EditorialEditor'
 
 export default {
   name: 'Editorial',
 
-  props: ["post", "isSubscribed"],
+  props: ['post', 'isSubscribed', 'editorial'],
 
   components: {
     PostArticle,
-    EditorialTweets,
+    EditorialTweet,
     EditorialArticle,
     EditorialEditor
   },
@@ -34,6 +40,20 @@ export default {
       isBefore: false, //- editorials should appear on left on right
       editorialComponent: 'editor' //- to quickly change component: article, tweets
     }
+  },
+
+  methods: {
+    setType(type) {
+      this.editorialComponent = type
+    }
+  },
+
+  created() {
+    console.log(this.editorial)
+    if (this.editorial == 'article')
+      this.editorialComponent = 'editor'
+    else
+      this.editorialComponent = this.editorial
   }
 }
 </script>

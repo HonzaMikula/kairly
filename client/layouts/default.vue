@@ -56,6 +56,7 @@ export default {
 @import '../node_modules/node-reset-scss/scss/_reset'
 @import '../node_modules/@fortawesome/fontawesome-free/scss/fontawesome'
 @import '../node_modules/bootstrap/scss/_tooltip'
+@import '../node_modules/bootstrap/scss/_popover'
 
 //- Scaffolding
 @import 'styles/scaffolding/layout'

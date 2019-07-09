@@ -11,7 +11,7 @@
           <a href="/janmikula" class="">Jan Mikula, editor</a>
         </h3>
         <section>
-          <button>Save</button>
+          <button @click="save()">Save</button>
         </section>
       </header>
 
@@ -36,6 +36,12 @@ export default {
       options: {
         placeholder: {text: 'Content', hideOnClick: false},
       },
+    }
+  },
+
+  methods: {
+    save() {
+      this.$emit('saveEditorialArticle')
     }
   }
 

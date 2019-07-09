@@ -4,6 +4,7 @@
     :key="post.id"
     :post="post"
     :isSubscribed="isSubscribed"
+    :editorial="editorial"
   >
     <template slot="author">
       <slot name="author"></slot>
@@ -29,7 +30,7 @@ import PostEditorial from '@/components/posts/Editorial'
 
 export default {
   name: 'PostWrapper',
-  props: ['post', 'isSubscribed'],
+  props: ['post', 'isSubscribed', 'editorial'],
 
   components: {
     PostArticle,
@@ -43,8 +44,11 @@ export default {
   computed: {
     //- TEMP hack - we can get rid of it after migration
     postType() {
-      if (this.post.type == 'newspaper') {
-        return 'editorial' // TODO: back to 'article'
+      if (this.editorial == 'article' || this.editorial == 'tweet') {
+        return 'editorial'
+      }
+      else if (this.post.type == 'newspaper') {
+        return 'article' // TODO: back to 'article'
       }
       else {
         return this.post.type
