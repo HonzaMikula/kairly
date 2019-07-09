@@ -237,6 +237,15 @@ class EditorialComment(models.Model):
     def __str__(self):
         return self.title
 
+    def to_json(self):
+        return {
+            'author': self.author.to_json(),
+            'title': self.title,
+            'content': self.content,
+            'type': 'article',
+            'position': 'right',
+        }
+
 
 class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)

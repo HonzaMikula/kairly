@@ -16,8 +16,15 @@
       </header>
 
       <div class="content">
-        <input type="text" placeholder="Title"/>
-        <medium-editor v-model="content" :options="options" />
+        <input
+          v-model="title"
+          type="text"
+          placeholder="Title"
+        />
+        <medium-editor
+          v-model="content"
+          :options="options"
+        />
       </div>
     </article>
   </div>
@@ -31,11 +38,13 @@ export default {
   name: 'EditorialEditor',
 
   props: {
-
+    newspaper: Object,
+    post: Object
   },
 
   data() {
     return {
+      title: '',
       content: '',
       options: {
         placeholder: {text: 'Content', hideOnClick: false},
@@ -45,8 +54,12 @@ export default {
 
   methods: {
     async save() {
-      //const { x: x } =
-      //await this.$axios.$post(`/drafts/${post.id}/publish`, { price })
+      this.$store.dispatch('saveEditorial', {
+        newspaperId: this.newspaper.fullName,
+        postId: this.post.id,
+        title: this.title,
+        content: this.content
+      })
 
       this.$emit('saveEditorialArticle')
     }

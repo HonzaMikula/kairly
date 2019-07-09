@@ -27,7 +27,7 @@ from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
-                     SubscriptionToAuthor, round_fair_price)
+                     SubscriptionToAuthor, EditorialComment, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
 from .utils import create_post_link
@@ -282,13 +282,19 @@ def newspaper_backlog(request, username, newspapeper_slug):
         query = Backlog.objects.filter(
             newspaper=newspaper, publish_stamp__isnull=True).select_related('post')
         for log in query:
-            result['backlog'].append(log.post.to_json())
+            result['backlog'].append({
+                'post': log.post.to_json(),
+                'editorial': log.editorial_comment.to_json() if log.editorial_comment else None
+            })
 
         query = Backlog.objects.filter(
             newspaper=newspaper, publish_stamp__isnull=False)\
             .order_by('ordering').select_related('post')
         for log in query:
-            result['publish'].append(log.post.to_json())
+            result['publish'].append({
+                'post': log.post.to_json(),
+                'editorial': log.editorial_comment.to_json() if log.editorial_comment else None
+            })
 
         editor_tz = pytz.timezone(newspaper.editor.timezone)
         now = timezone_now().astimezone(editor_tz)
@@ -389,9 +395,30 @@ class EditorialsView(View):
 
     @ajax_login_required
     @transaction.atomic
-    def post(self, request, username, newspapeper_slug):
+    def post(self, request, username, newspapeper_slug, post_id):
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        if newspaper.editor_id != request.user.id:
+            if request.user not in newspaper.co_editors.all():
+                return HttpResponseForbidden()
+
         payload = json.loads(request.body.decode('utf-8'))
-        return JsonResponse({})
+        title = payload['title'].strip()
+        content = sanitize(payload['content'].strip())
+
+        if not title:
+            raise ValueError("No title")
+
+        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
+        editorial = backlog.editorial_comment or EditorialComment()
+        editorial.title = title
+        editorial.content = content
+        editorial.author = request.user
+        editorial.save()
+
+        if not backlog.editorial_comment:
+            Backlog.objects.filter(id=backlog.id).update(editorial_comment=editorial)
+
+        return JsonResponse(editorial.to_json())
 
 
 class NewspaperSubscriptionView(View):

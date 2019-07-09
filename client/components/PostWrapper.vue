@@ -1,5 +1,5 @@
 <template>
-  <section :class="{'editorial-post': !!editorialPosition, 'is-before': editorialPosition === 'left'}">
+  <section :class="{'editorial-post': !!editorial, 'is-before': editorial && editorial.position === 'left'}">
     <component
       :is="'post-' + postType"
       :key="post.id"
@@ -22,8 +22,9 @@
     <slot name="editorial">
       <!-- :is="'editorial-' + post.editorial.type" -->
       <component
-        v-if="editorialPosition"
-        :is="'article'"
+        v-if="editorial"
+        :is="'editorial-' + editorial.type"
+        :editorial="editorial"
       />
     </slot>
   </section>
@@ -44,7 +45,7 @@ export default {
   props: {
     post: Object,
     isSubscribed: Boolean,
-    editorialPosition: String,  // right or left
+    editorial: Object,  // right or left
   },
 
   components: {

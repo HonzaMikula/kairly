@@ -5,7 +5,7 @@
       :newspaper="newspaper"
       :current-month="currentMonth"
       :backlog-length="backlog.length"
-      :published="published"
+      :published="published.map(log => log.post)"
     />
 
     <div>
@@ -17,14 +17,14 @@
         </div>
 
         <PostWrapper
-          v-for="(post, idx) in published"
-          :post="post"
+          v-for="(log, idx) in published"
+          :post="log.post"
           :isSubscribed="true"
-          :key="post.id"
-          :editorialPosition="openEditorialEditors[post.id] ? openEditorialEditors[post.id].position : null"
+          :key="log.post.id"
+          :editorial="editorialEditors[log.post.id] || log.editorial || null"
         >
           <template slot="extendedControls">
-            <span class="price">{{ post.price }} Kč</span>
+            <span class="price">{{ log.post.price }} Kč</span>
           </template>
 
           <template slot="controls">
@@ -33,33 +33,33 @@
               v-b-tooltip="$t('Add editorial')"
               tabindex="0"
               role="button"
-              :id="`editorial-button-${post.id}`"
-              :class="{'is-active': openEditorialEditors[post.id]}"
+              :id="`editorial-button-${log.post.id}`"
+              :class="{'is-active': editorialEditors[log.post.id]}"
             />
 
             <b-popover
-              :target="`editorial-button-${post.id}`"
+              :target="`editorial-button-${log.post.id}`"
               placement="auto"
               triggers="click blur"
             >
               <ul>
-                <template v-if="!openEditorialEditors[post.id]">
-                  <li tabindex="0" @click="setEditorial('article', post.id)">
+                <template v-if="!editorialEditors[log.post.id]">
+                  <li tabindex="0" @click="setEditorial('article', log.post.id)">
                     <h6>Add editorial comment</h6>
                     <p>Write short comment to the topic</p>
                   </li>
-                  <li tabindex="0" @click="setEditorial('tweet', post.id)">
+                  <li tabindex="0" @click="setEditorial('tweet', log.post.id)">
                     <h6>Add editorial tweet(s)</h6>
                     <p>Comment the topic using tweets</p>
                   </li>
                 </template>
 
                 <template v-else>
-                  <li tabindex="0" @click="changeEditorialPosition(post.id)">
+                  <li tabindex="0" @click="changeEditorialPosition(log.post.id)">
                     <h6>Display editorial before</h6>
                     <p>On desktop in the left</p>
                   </li>
-                  <li tabindex="0" @click="removeEditorial(post.id)">
+                  <li tabindex="0" @click="removeEditorial(log.post.id)">
                     <h6>Remove editorial</h6>
                     <p>Your changes will be lost</p>
                   </li>
@@ -93,15 +93,18 @@
               tabindex="0"
               role="button"
               :title="$t('Remove from issue')"
-              @click.prevent="undoPublish(post)"
+              @click.prevent="undoPublish(log)"
             />
           </template>
 
           <template
-            v-if="openEditorialEditors[post.id]"
+            v-if="editorialEditors[log.post.id]"
             slot="editorial"
           >
-            <EditorialEditor />
+            <EditorialEditor
+              :newspaper="newspaper"
+              :post="log.post"
+            />
           </template>
         </PostWrapper>
       </div>
@@ -129,11 +132,11 @@
         </div>
 
         <BacklogPost
-          v-for="post in backlog"
-          :key="post.id"
-          :post="post"
-          @publish="publish(post)"
-          @remove="removePost(post)"
+          v-for="log in backlog"
+          :key="log.post.id"
+          :post="log.post"
+          @publish="publish(log)"
+          @remove="removePost(log)"
         />
       </div>
     </div>
@@ -149,6 +152,7 @@ import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
 import BacklogPost from '@/components/editor/backlog/BacklogPost'
 import EditorialEditor from '@/components/posts/EditorialEditor'
+import PostWrapperVue from '../../PostWrapper.vue';
 
 export default {
   name: 'NewspaperBacklog',
@@ -164,7 +168,7 @@ export default {
   data() {
     return {
       externalLink: null,
-      openEditorialEditors: {},
+      editorialEditors: {},
     }
   },
 
@@ -189,24 +193,24 @@ export default {
 
   methods: {
     setEditorial (type, postId) {
-      Vue.set(this.openEditorialEditors, postId, {type, position: 'right'})
+      Vue.set(this.editorialEditors, postId, {type, position: 'right'})
     },
 
     removeEditorial(postId) {
-      Vue.delete(this.openEditorialEditors, postId)
+      Vue.delete(this.editorialEditors, postId)
     },
 
     changeEditorialPosition(postId) {
-      const curr = this.openEditorialEditors[postId].position
-      this.openEditorialEditors[postId].position = curr === 'left' ? 'right': 'left'
+      const curr = this.editorialEditors[postId].position
+      this.editorialEditors[postId].position = curr === 'left' ? 'right': 'left'
     },
 
-    publish(post) {
-      this.backlogPublish({newspaper: this.newspaper, post})
+    publish(log) {
+      this.backlogPublish({newspaper: this.newspaper, log})
     },
 
-    undoPublish(post) {
-      this.backlogUndoPublish({newspaper: this.newspaper, post})
+    undoPublish(log) {
+      this.backlogUndoPublish({newspaper: this.newspaper, log})
     },
 
     moveUp(index) {
@@ -218,7 +222,7 @@ export default {
     },
 
     removePost(post) {
-      this.removeFromNewspaperBacklog({newspaper: this.newspaper, post})
+      this.removeFromNewspaperBacklog({newspaper: this.newspaper, log})
     },
 
     async addExternalLink() {

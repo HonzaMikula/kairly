@@ -3,23 +3,23 @@
     <article role="article" class="post newspaper editorial">
       <header>
         <picture>
-          <a href="/janmikula" class="">
-            <img src="https://cdn.kairly.com/media/users/janmikula.jpg" alt="Dojnice">
-          </a>
+          <nuxt-link :to="{name: 'author', params: {author: editorial.author.id}}">
+            <img
+              :src="editorial.author.picture"
+              :alt="editorial.author.name"
+            />
+          </nuxt-link>
         </picture>
+
         <h3>
-          <a href="/janmikula" class="">Jan Mikula, editor</a>
+          <nuxt-link :to="{name: 'author', params: {author: editorial.author.id}}">
+            {{ editorial.author.name }}<span v-if="editorial.author.medium">, {{editorial.author.medium}}</span>
+          </nuxt-link>
         </h3>
       </header>
       <timeline-post--article>
-        <h2>Nebezpečný Babiš</h2>
-        <timeline-post--article--content>
-          <img src="http://cdn.xsd.cz/resize/e884c16700743e3cb6718cbd0f7c113e_extract=91,0,1959,1102_resize=640,360_.jpg?hash=c688b6b5977eaee434011a70e0afe8a3"/>
-          <p>Všichni tady lamentujeme nad Babišem a jeho nejrůznějšími nekalými dotačními praktiky. Co se takhle spojit?</p>
-
-          <p>Ne, proti Babišovi. Ale proti dotacím, ať už na evropské či národní úrovni. Zrušme je.</p>
-
-        </timeline-post--article--content>
+        <h2>{{ editorial.title }}</h2>
+        <timeline-post--article--content v-html="editorial.content" />
       </timeline-post--article>
     </article>
   </div>
@@ -32,6 +32,9 @@
 export default {
   name: 'EditorialArticle',
 
+  props: {
+    editorial: Object
+  }
 }
 </script>
 <style lang="sass">

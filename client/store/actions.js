@@ -141,81 +141,81 @@ export async function loadNewspaperBacklog({ commit, state, dispatch }, fullName
   })
 }
 
-export async function backlogPublish({ commit, state}, {newspaper, post}) {
+export async function backlogPublish({ commit, state}, {newspaper, log}) {
   const { fullName } = newspaper
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
   const modifiedBacklog = [...postsBacklog]
   const modifiedPublished = [...postsPublished]
-  modifiedBacklog.splice(modifiedBacklog.indexOf(post), 1)
-  modifiedPublished.push(post)
+  modifiedBacklog.splice(modifiedBacklog.indexOf(log), 1)
+  modifiedPublished.push(log)
   commit('newspaperBacklog', {
     fullName,
     postsBacklog: modifiedBacklog,
     postsPublished: modifiedPublished,
     currentMonthStats
   })
-  const postIds = modifiedPublished.map(p => p.id)
+  const postIds = modifiedPublished.map(item => item.post.id)
   await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
-  commit('backlogSetPostState', {newspaper: fullName, postId: post.id, val: 'P'})
+  commit('backlogSetPostState', {newspaper: fullName, postId: log.post.id, val: 'P'})
 }
 
-export async function backlogUndoPublish({ commit, state}, {newspaper, post}) {
+export async function backlogUndoPublish({ commit, state}, {newspaper, log}) {
   const { fullName } = newspaper
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
   const modifiedBacklog = [...postsBacklog]
   const modifiedPublished = [...postsPublished]
-  modifiedBacklog.push(post)
-  modifiedPublished.splice(modifiedPublished.indexOf(post), 1)
+  modifiedBacklog.push(log)
+  modifiedPublished.splice(modifiedPublished.indexOf(log), 1)
   commit('newspaperBacklog', {
     fullName,
     postsBacklog: modifiedBacklog,
     postsPublished: modifiedPublished,
     currentMonthStats
   })
-  const postIds = modifiedPublished.map(p => p.id)
+  const postIds = modifiedPublished.map(item => item.post.id)
   await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
-  commit('backlogSetPostState', {newspaper: fullName, postId: post.id, val: 'C'})
+  commit('backlogSetPostState', {newspaper: fullName, postId: log.post.id, val: 'C'})
 }
 
 export async function backlogMoveUp({ commit, state}, {newspaper, index}) {
   const { fullName } = newspaper
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
-  const post = postsPublished[index]
+  const log = postsPublished[index]
   const modified = [...postsPublished]
   modified[index] = postsPublished[index - 1]
-  modified[index - 1] = post
+  modified[index - 1] = log
   commit('newspaperBacklog', {
     fullName,
     postsBacklog,
     postsPublished: modified,
     currentMonthStats
   })
-  const postIds = modified.map(p => p.id)
+  const postIds = modified.map(item => item.post.id)
   await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
 }
 
 export async function backlogMoveDown({ commit, state}, {newspaper, index}) {
   const { fullName } = newspaper
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
-  const post = postsPublished[index]
+  const log = postsPublished[index]
   const modified = [...postsPublished]
   modified[index] = postsPublished[index + 1]
-  modified[index + 1] = post
+  modified[index + 1] = log
   commit('newspaperBacklog', {
     fullName,
     postsBacklog,
     postsPublished: modified,
     currentMonthStats
   })
-  const postIds = modified.map(p => p.id)
+  const postIds = modified.map(item => item.post.id)
   await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
 }
 
-export async function removeFromNewspaperBacklog({ commit, state }, { newspaper, post }) {
+export async function removeFromNewspaperBacklog({ commit, state }, { newspaper, log }) {
   const { fullName } = newspaper
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
   const modifiedBacklog = [...postsBacklog]
-  modifiedBacklog.splice(modifiedBacklog.indexOf(post), 1)
+  modifiedBacklog.splice(modifiedBacklog.indexOf(log), 1)
   commit('newspaperBacklog', {
     fullName,
     postsBacklog: modifiedBacklog,
@@ -225,10 +225,10 @@ export async function removeFromNewspaperBacklog({ commit, state }, { newspaper,
 
   // TODO to have better user experience, post can be removed immediately
   // and reverted when api call fails
-  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: post.id}})
+  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: log.post.id}})
   commit('backlogRemove', {
     newspaperId: newspaper.fullName,
-    postId: post.id,
+    postId: log.post.id,
     meta: {
       analytics: [
         ['event', {
@@ -239,7 +239,6 @@ export async function removeFromNewspaperBacklog({ commit, state }, { newspaper,
     }
   })
 }
-
 
 export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   const { fullName } = newspaper
@@ -269,6 +268,14 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
     })
   }
 }
+
+export async function saveEditorial({ commit }, { newspaperId, postId, title, content}) {
+  const resp = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, {
+    title,
+    content
+  })
+}
+
 
 export async function subscribeNewspaper({ commit }, { fullName, donation, allowSuspended=false }) {
   commit('invalidateTimeline')
