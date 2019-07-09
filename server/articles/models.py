@@ -229,6 +229,15 @@ class Post(models.Model):
         return result
 
 
+class EditorialComment(models.Model):
+    title = models.CharField(max_length=160)
+    content = models.TextField(_("Content"), blank=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
+
+    def __str__(self):
+        return self.title
+
+
 class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
     slug = models.SlugField(_('Slug'))
@@ -324,6 +333,7 @@ class Backlog(models.Model):
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
+    editorial_comment = models.ForeignKey(EditorialComment, models.PROTECT, null=True)
 
     @classmethod
     def consider_post(cls, newspaper, post):

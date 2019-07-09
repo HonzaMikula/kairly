@@ -385,6 +385,15 @@ def create_link(request, username, newspapeper_slug):
     })
 
 
+class EditorialsView(View):
+
+    @ajax_login_required
+    @transaction.atomic
+    def post(self, request, username, newspapeper_slug):
+        payload = json.loads(request.body.decode('utf-8'))
+        return JsonResponse({})
+
+
 class NewspaperSubscriptionView(View):
 
     @ajax_login_required
