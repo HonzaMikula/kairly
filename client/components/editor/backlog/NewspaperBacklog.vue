@@ -43,25 +43,32 @@
               triggers="click blur"
             >
               <ul>
-                <template v-if="!editorialEditors[log.post.id]">
-                  <li tabindex="0" @click="setEditorial('article', log.post.id)">
-                    <h6>Add editorial comment</h6>
-                    <p>Write short comment to the topic</p>
-                  </li>
-                  <li tabindex="0" @click="setEditorial('tweet', log.post.id)">
-                    <h6>Add editorial tweet(s)</h6>
-                    <p>Comment the topic using tweets</p>
-                  </li>
-                </template>
-
-                <template v-else>
-                  <li tabindex="0" @click="changeEditorialPosition(log.post.id)">
+                <template v-if="log.editorial || editorialEditors[log.post.id]">
+                  <li tabindex="0" @click="changeEditorialPosition(log)">
                     <h6>Display editorial before</h6>
                     <p>On desktop in the left</p>
                   </li>
-                  <li tabindex="0" @click="removeEditorial(log.post.id)">
+                  <li tabindex="0" @click="removeEditorial(log)">
                     <h6>Remove editorial</h6>
                     <p>Your changes will be lost</p>
+                  </li>
+                </template>
+
+                <template v-if="log.editorial && !editorialEditors[log.post.id]">
+                  <li tabindex="0" @click="editEditorial(log)">
+                    <h6>Update editorial comment</h6>
+                    <p>Write short comment to the topic</p>
+                  </li>
+                </template>
+
+                <template v-if="!log.editorial && !editorialEditors[log.post.id]">
+                  <li tabindex="0" @click="startEditorial('article', log.post.id)">
+                    <h6>Add editorial comment</h6>
+                    <p>Write short comment to the topic</p>
+                  </li>
+                  <li tabindex="0" @click="startEditorial('tweet', log.post.id)">
+                    <h6>Add editorial tweet(s)</h6>
+                    <p>Comment the topic using tweets</p>
                   </li>
                 </template>
               </ul>
@@ -102,8 +109,8 @@
             slot="editorial"
           >
             <EditorialEditor
-              :newspaper="newspaper"
-              :post="log.post"
+              :editorial="log.editorial"
+              @save="ev => saveEditorial(log, ev)"
             />
           </template>
         </PostWrapper>
@@ -192,17 +199,50 @@ export default {
   },
 
   methods: {
-    setEditorial (type, postId) {
+    startEditorial(type, postId) {
       Vue.set(this.editorialEditors, postId, {type, position: 'right'})
     },
 
-    removeEditorial(postId) {
-      Vue.delete(this.editorialEditors, postId)
+    editEditorial(log) {
+      Vue.set(this.editorialEditors, log.post.id, {type: log.editorial.type, position: log.editorial.position})
     },
 
-    changeEditorialPosition(postId) {
-      const curr = this.editorialEditors[postId].position
-      this.editorialEditors[postId].position = curr === 'left' ? 'right': 'left'
+    saveEditorial(log, { title, content}) {
+      const edit = this.editorialEditors[log.post.id]
+      this.$store.dispatch('saveEditorial', {
+        newspaperId: this.newspaper.fullName,
+        postId: log.post.id,
+        title: title,
+        content: content,
+        position: edit.position
+      })
+      Vue.delete(this.editorialEditors, log.post.id)
+    },
+
+    removeEditorial(log) {
+      const edit = this.editorialEditors[log.post.id]
+      if (edit) {
+        Vue.delete(this.editorialEditors, log.post.id)
+      } else {
+        this.$store.dispatch('removeEditorial', {
+          newspaperId: this.newspaper.fullName,
+          postId: log.post.id,
+        })
+      }
+    },
+
+    changeEditorialPosition(log) {
+      const edit = this.editorialEditors[log.post.id]
+      if (edit) {
+        edit.position = edit.position === 'left' ? 'right': 'left'
+      } else {
+        // change existing editorial
+        this.$store.dispatch('saveEditorial', {
+          newspaperId: this.newspaper.fullName,
+          postId: log.post.id,
+          position: log.editorial.position === 'left' ? 'right': 'left'
+        })
+      }
     },
 
     publish(log) {

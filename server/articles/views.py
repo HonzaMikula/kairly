@@ -402,23 +402,52 @@ class EditorialsView(View):
                 return HttpResponseForbidden()
 
         payload = json.loads(request.body.decode('utf-8'))
-        title = payload['title'].strip()
-        content = sanitize(payload['content'].strip())
+        position_only = set(payload.keys()) == {'position'}
+        position = payload['position']
 
-        if not title:
-            raise ValueError("No title")
+        if position not in ('left', 'right'):
+            raise ValueError("Invalid position")
+
+        if not position_only:
+            title = payload['title'].strip()
+            content = sanitize(payload['content'].strip())
+
+            if not title:
+                raise ValueError("No title")
 
         backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
         editorial = backlog.editorial_comment or EditorialComment()
-        editorial.title = title
-        editorial.content = content
-        editorial.author = request.user
+        editorial.position = position
+
+        if position_only:
+            if not editorial.id:
+                return HttpResponseNotFound()
+        else:
+            editorial.title = title
+            editorial.content = content
+            if not editorial.author_id:  # keep original author even if different editor change content
+                editorial.author = request.user
         editorial.save()
 
         if not backlog.editorial_comment:
             Backlog.objects.filter(id=backlog.id).update(editorial_comment=editorial)
 
         return JsonResponse(editorial.to_json())
+
+    @ajax_login_required
+    @transaction.atomic
+    def delete(self, request, username, newspapeper_slug, post_id):
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        if newspaper.editor_id != request.user.id:
+            if request.user not in newspaper.co_editors.all():
+                return HttpResponseForbidden()
+
+        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
+        if not backlog.editorial_comment:
+            return HttpResponseNotFound()
+
+        backlog.editorial_comment.delete()
+        return HttpResponse(status=204)
 
 
 class NewspaperSubscriptionView(View):

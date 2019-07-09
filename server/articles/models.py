@@ -233,6 +233,7 @@ class EditorialComment(models.Model):
     title = models.CharField(max_length=160)
     content = models.TextField(_("Content"), blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
+    position = models.CharField(max_length=32)
 
     def __str__(self):
         return self.title
@@ -243,7 +244,7 @@ class EditorialComment(models.Model):
             'title': self.title,
             'content': self.content,
             'type': 'article',
-            'position': 'right',
+            'position': self.position,
         }
 
 
@@ -342,7 +343,7 @@ class Backlog(models.Model):
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
-    editorial_comment = models.ForeignKey(EditorialComment, models.PROTECT, null=True)
+    editorial_comment = models.ForeignKey(EditorialComment, models.SET_NULL, null=True)
 
     @classmethod
     def consider_post(cls, newspaper, post):

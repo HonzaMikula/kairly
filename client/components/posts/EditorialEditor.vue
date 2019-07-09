@@ -38,14 +38,13 @@ export default {
   name: 'EditorialEditor',
 
   props: {
-    newspaper: Object,
-    post: Object
+    editorial: Object
   },
 
   data() {
     return {
-      title: '',
-      content: '',
+      title: this.editorial ? this.editorial.title : '',
+      content: this.editorial ? this.editorial.content : '',
       options: {
         placeholder: {text: 'Content', hideOnClick: false},
       },
@@ -54,14 +53,17 @@ export default {
 
   methods: {
     async save() {
-      this.$store.dispatch('saveEditorial', {
-        newspaperId: this.newspaper.fullName,
-        postId: this.post.id,
+      // this.$store.dispatch('saveEditorial', {
+      //   newspaperId: this.newspaper.fullName,
+      //   postId: this.post.id,
+      //   title: this.title,
+      //   content: this.content,
+      //   position: 'right'
+      // })
+      this.$emit('save', {
         title: this.title,
-        content: this.content
+        content: this.content,
       })
-
-      this.$emit('saveEditorialArticle')
     }
   }
 

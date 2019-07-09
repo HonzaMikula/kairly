@@ -269,11 +269,16 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   }
 }
 
-export async function saveEditorial({ commit }, { newspaperId, postId, title, content}) {
+export async function saveEditorial({ commit }, { newspaperId, postId, title, content, position}) {
   const resp = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, {
     title,
-    content
+    content,
+    position,
   })
+}
+
+export async function removeEditorial({ commit }, { newspaperId, postId}) {
+  await this.$axios.$delete(`/newspapers/${newspaperId}/editorials/${postId}`)
 }
 
 
