@@ -1,5 +1,5 @@
 <template>
-  <section class="editorial-post" :class="{'is-before': isBefore}">
+  <section class="editorial-post" :class="{'is-before': editorialPosition}">
     <PostArticle :post="post" :isSubscribed="isSubscribed">
       <template slot="controls"><slot name="controls"></slot></template>
       <template slot="extendedControls"><slot name="extendedControls"></slot></template>
@@ -13,11 +13,6 @@
 </template>
 
 <script>
-// TODO
-// - component is for distinguishing selecting tweets
-// - controls for Manage newspaper
-// - turn on this mode
-
 import PostArticle from './PostArticle'
 import EditorialTweet from './EditorialTweet'
 import EditorialArticle from './EditorialArticle'
@@ -26,7 +21,7 @@ import EditorialEditor from './EditorialEditor'
 export default {
   name: 'Editorial',
 
-  props: ['post', 'isSubscribed', 'editorial'],
+  props: ['post', 'isSubscribed', 'editorial', 'editorialPosition'],
 
   components: {
     PostArticle,
@@ -49,7 +44,6 @@ export default {
   },
 
   created() {
-    console.log(this.editorial)
     if (this.editorial == 'article')
       this.editorialComponent = 'editor'
     else

@@ -221,7 +221,10 @@ export default {
         +button-icon($fa-var-times, icon, solid, small) 
       
       &.editorial
-          +button-icon($fa-var-comment-dots, icon, solid, small) 
+        +button-icon($fa-var-comment-dots, icon, solid, small) 
+
+        &.is-active
+          background: $c-base
 
     > button
       +button(primary, small)
@@ -259,7 +262,12 @@ export default {
   li
     padding: $baseline/4 $baseline/2
 
+    border-bottom: 1px solid #eee
+
     cursor: pointer
+
+    &:last-of-type
+      border-bottom: 0
 
     &:hover,
     &:focus

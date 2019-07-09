@@ -22,6 +22,7 @@
           :isSubscribed="true"
           :key="post.id"
           :editorial="editorial[post.id]"
+          :editorialPosition="editorialPosition[post.id]"
         >
           <template slot="extendedControls">
             <span class="price">{{ post.price }} Kč</span>
@@ -34,6 +35,7 @@
               tabindex="0"
               role="button"
               :id="`editorial-button-${post.id}`"
+              :class="{'is-active': editorial[post.id]}"
             />
 
             <b-popover
@@ -42,14 +44,27 @@
               triggers="click blur"  
             >
               <ul>
-                <li tabindex="0" @click="setEditorial('article', post.id)">
-                  <h6>Add editorial comment</h6>
-                  <p>Write short comment to the topic</p>
-                </li>
-                <li tabindex="0" @click="setEditorial('tweet', post.id)">
-                  <h6>Add editorial tweet(s)</h6>
-                  <p>Comment the topic using tweets</p>
-                </li>
+                <template v-if="!editorial[post.id]">
+                  <li tabindex="0" @click="setEditorial('article', post.id)">
+                    <h6>Add editorial comment</h6>
+                    <p>Write short comment to the topic</p>
+                  </li>
+                  <li tabindex="0" @click="setEditorial('tweet', post.id)">
+                    <h6>Add editorial tweet(s)</h6>
+                    <p>Comment the topic using tweets</p>
+                  </li>
+                </template>
+
+                <template v-else> 
+                  <li tabindex="0" @click="changeEditorialPosition(post.id)">
+                    <h6>Display editorial before</h6>
+                    <p>On desktop in the left</p>
+                  </li>
+                  <li tabindex="0" @click="removeEditorial(post.id)">
+                    <h6>Remove editorial</h6>
+                    <p>Your changes will be lost</p>
+                  </li>
+                </template>
               </ul>
             </b-popover>
 
@@ -141,7 +156,8 @@ export default {
   data() {
     return {
       externalLink: null,
-      editorial: []
+      editorial: [],
+      editorialPosition: []
     }
   },
 
@@ -167,6 +183,16 @@ export default {
   methods: {
     setEditorial (type, postId) {
       this.editorial[postId] = type
+      this.$forceUpdate()
+    },
+
+    removeEditorial(postId) {
+      this.editorial[postId] = null
+      this.$forceUpdate()
+    },
+
+    changeEditorialPosition(postId) {
+      this.editorialPosition[postId] = !this.editorialPosition[postId]
       this.$forceUpdate()
     },
 

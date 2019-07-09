@@ -5,6 +5,7 @@
     :post="post"
     :isSubscribed="isSubscribed"
     :editorial="editorial"
+    :editorialPosition="editorialPosition"
   >
     <template slot="author">
       <slot name="author"></slot>
@@ -30,7 +31,7 @@ import PostEditorial from '@/components/posts/Editorial'
 
 export default {
   name: 'PostWrapper',
-  props: ['post', 'isSubscribed', 'editorial'],
+  props: ['post', 'isSubscribed', 'editorial', 'editorialPosition'],
 
   components: {
     PostArticle,
