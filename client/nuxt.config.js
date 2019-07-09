@@ -48,7 +48,7 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     ['@nuxtjs/google-analytics', {
-      id: process.env.GA_ID
+      id: 'UA-114180015-2'
     }],
     ['@nuxtjs/style-resources'],
     ['bootstrap-vue/nuxt'],
