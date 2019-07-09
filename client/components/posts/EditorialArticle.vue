@@ -18,7 +18,7 @@
           <p>Všichni tady lamentujeme nad Babišem a jeho nejrůznějšími nekalými dotačními praktiky. Co se takhle spojit?</p>
 
           <p>Ne, proti Babišovi. Ale proti dotacím, ať už na evropské či národní úrovni. Zrušme je.</p>
-          
+
         </timeline-post--article--content>
       </timeline-post--article>
     </article>
@@ -30,7 +30,7 @@
 <script>
 
 export default {
-  name: 'EditorialTweets',
+  name: 'EditorialArticle',
 
 }
 </script>

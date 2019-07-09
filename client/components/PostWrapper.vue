@@ -1,24 +1,32 @@
 <template>
-  <component
-    :is="'post-' + postType"
-    :key="post.id"
-    :post="post"
-    :isSubscribed="isSubscribed"
-    :editorial="editorial"
-    :editorialPosition="editorialPosition"
-  >
-    <template slot="author">
-      <slot name="author"></slot>
-    </template>
+  <section :class="{'editorial-post': !!editorialPosition, 'is-before': editorialPosition === 'left'}">
+    <component
+      :is="'post-' + postType"
+      :key="post.id"
+      :post="post"
+      :isSubscribed="isSubscribed"
+    >
+      <template slot="author">
+        <slot name="author"></slot>
+      </template>
 
-    <template slot="extendedControls">
-      <slot name="extendedControls"></slot>
-    </template>
+      <template slot="extendedControls">
+        <slot name="extendedControls"></slot>
+      </template>
 
-    <template slot="controls">
-      <slot name="controls"></slot>
-    </template>
-  </component>
+      <template slot="controls">
+        <slot name="controls"></slot>
+      </template>
+    </component>
+
+    <slot name="editorial">
+      <!-- :is="'editorial-' + post.editorial.type" -->
+      <component
+        v-if="editorialPosition"
+        :is="'article'"
+      />
+    </slot>
+  </section>
 </template>
 
 <script>
@@ -27,11 +35,17 @@ import PostLink from '@/components/posts/PostLink'
 import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
 import PostRecommendations from '@/components/posts/PostRecommendations'
-import PostEditorial from '@/components/posts/Editorial'
+
+import EditorialTweet from '@/components/posts/EditorialTweet'
+import EditorialArticle from '@/components/posts/EditorialArticle'
 
 export default {
   name: 'PostWrapper',
-  props: ['post', 'isSubscribed', 'editorial', 'editorialPosition'],
+  props: {
+    post: Object,
+    isSubscribed: Boolean,
+    editorialPosition: String,  // right or left
+  },
 
   components: {
     PostArticle,
@@ -39,16 +53,17 @@ export default {
     PostTweet,
     PostPicture,
     PostRecommendations,
-    PostEditorial
+    EditorialTweet,
+    EditorialArticle
   },
 
   computed: {
     //- TEMP hack - we can get rid of it after migration
     postType() {
-      if (this.editorial == 'article' || this.editorial == 'tweet') {
-        return 'editorial'
-      }
-      else if (this.post.type == 'newspaper') {
+      // if (this.editorial == 'article' || this.editorial == 'tweet') {
+      //   return 'editorial'
+      // }
+      if (this.post.type == 'newspaper') {
         return 'article' // TODO: back to 'article'
       }
       else {
@@ -58,3 +73,39 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+.editorial-post
+  display: grid
+  grid-template-columns: 1fr 1fr 1fr
+  border: 1px solid #eee
+  margin-bottom: $baseline / 2
+
+  background: #f5f5f5
+
+  //- main article
+  .newspaper
+    grid-column: 1 / span 2
+    grid-row: 1
+    margin: 0
+
+    timeline-post--article--content
+      column-count: 2
+
+  //- tweets
+  .editorial-post--editorial
+    align-self: center
+    grid-column: 3 / span 1
+    grid-row: 1
+
+    article
+      background: #f5f5f5
+
+  &.is-before
+    .newspaper
+      grid-column: 2 / span 2
+
+    .editorial-post--editorial
+      grid-column: 1 / span 1
+</style>
+

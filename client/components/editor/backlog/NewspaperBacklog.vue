@@ -21,8 +21,7 @@
           :post="post"
           :isSubscribed="true"
           :key="post.id"
-          :editorial="editorial[post.id]"
-          :editorialPosition="editorialPosition[post.id]"
+          :editorialPosition="openEditorialEditors[post.id] ? openEditorialEditors[post.id].position : null"
         >
           <template slot="extendedControls">
             <span class="price">{{ post.price }} Kč</span>
@@ -35,16 +34,16 @@
               tabindex="0"
               role="button"
               :id="`editorial-button-${post.id}`"
-              :class="{'is-active': editorial[post.id]}"
+              :class="{'is-active': openEditorialEditors[post.id]}"
             />
 
             <b-popover
               :target="`editorial-button-${post.id}`"
               placement="auto"
-              triggers="click blur"  
+              triggers="click blur"
             >
               <ul>
-                <template v-if="!editorial[post.id]">
+                <template v-if="!openEditorialEditors[post.id]">
                   <li tabindex="0" @click="setEditorial('article', post.id)">
                     <h6>Add editorial comment</h6>
                     <p>Write short comment to the topic</p>
@@ -55,7 +54,7 @@
                   </li>
                 </template>
 
-                <template v-else> 
+                <template v-else>
                   <li tabindex="0" @click="changeEditorialPosition(post.id)">
                     <h6>Display editorial before</h6>
                     <p>On desktop in the left</p>
@@ -96,6 +95,13 @@
               :title="$t('Remove from issue')"
               @click.prevent="undoPublish(post)"
             />
+          </template>
+
+          <template
+            v-if="openEditorialEditors[post.id]"
+            slot="editorial"
+          >
+            <EditorialEditor />
           </template>
         </PostWrapper>
       </div>
@@ -142,22 +148,23 @@ import { BPopover } from 'bootstrap-vue'
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
 import BacklogPost from '@/components/editor/backlog/BacklogPost'
+import EditorialEditor from '@/components/posts/EditorialEditor'
 
 export default {
   name: 'NewspaperBacklog',
 
   components: {
+    BacklogPost,
+    BPopover,
+    EditorialEditor,
     PostWrapper,
     NewspaperBacklogInfo,
-    BacklogPost,
-    BPopover
   },
 
   data() {
     return {
       externalLink: null,
-      editorial: [],
-      editorialPosition: []
+      openEditorialEditors: {},
     }
   },
 
@@ -182,18 +189,16 @@ export default {
 
   methods: {
     setEditorial (type, postId) {
-      this.editorial[postId] = type
-      this.$forceUpdate()
+      Vue.set(this.openEditorialEditors, postId, {type, position: 'right'})
     },
 
     removeEditorial(postId) {
-      this.editorial[postId] = null
-      this.$forceUpdate()
+      Vue.delete(this.openEditorialEditors, postId)
     },
 
     changeEditorialPosition(postId) {
-      this.editorialPosition[postId] = !this.editorialPosition[postId]
-      this.$forceUpdate()
+      const curr = this.openEditorialEditors[postId].position
+      this.openEditorialEditors[postId].position = curr === 'left' ? 'right': 'left'
     },
 
     publish(post) {

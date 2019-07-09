@@ -28,7 +28,11 @@
 <script>
 
 export default {
-  name: 'EditorialTweets',
+  name: 'EditorialEditor',
+
+  props: {
+
+  },
 
   data() {
     return {
@@ -40,7 +44,10 @@ export default {
   },
 
   methods: {
-    save() {
+    async save() {
+      //const { x: x } =
+      //await this.$axios.$post(`/drafts/${post.id}/publish`, { price })
+
       this.$emit('saveEditorialArticle')
     }
   }
