@@ -269,16 +269,41 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   }
 }
 
-export async function saveEditorial({ commit }, { newspaperId, postId, title, content, position}) {
-  const resp = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, {
+export async function saveEditorial({ commit, state }, { newspaperId, postId, title, content, position}) {
+  const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, {
     title,
     content,
     position,
   })
+
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[newspaperId]
+  const idx = postsPublished.findIndex(({post}) => post.id === postId)
+  const log = postsPublished[idx]
+  const modified = [...postsPublished]
+  modified[idx] = {...log, editorial}
+
+  commit('newspaperBacklog', {
+    fullName: newspaperId,
+    postsBacklog,
+    postsPublished: modified,
+    currentMonthStats
+  })
 }
 
-export async function removeEditorial({ commit }, { newspaperId, postId}) {
+export async function removeEditorial({ commit, state }, { newspaperId, postId}) {
   await this.$axios.$delete(`/newspapers/${newspaperId}/editorials/${postId}`)
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[newspaperId]
+  const idx = postsPublished.findIndex(({post}) => post.id === postId)
+  const log = postsPublished[idx]
+  const modified = [...postsPublished]
+  modified[idx] = {...log, editorial: null}
+
+  commit('newspaperBacklog', {
+    fullName: newspaperId,
+    postsBacklog,
+    postsPublished: modified,
+    currentMonthStats
+  })
 }
 
 
