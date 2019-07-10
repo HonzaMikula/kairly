@@ -1,5 +1,5 @@
 <template>
-  <div class="editorial-post--editorial editor">
+  <div class="editorial-post-editor">
     <article role="article" class="post newspaper editorial">
       <header>
         <picture>
@@ -15,7 +15,7 @@
         </section>
       </header>
 
-      <div class="content">
+      <div class="editorial-post-editor--content">
         <input
           v-model="title"
           type="text"
@@ -29,8 +29,6 @@
     </article>
   </div>
 </template>
-
-
 
 <script>
 
@@ -70,7 +68,7 @@ export default {
 }
 </script>
 <style lang="sass">
-.editorial-post--editorial.editor
+.editorial-post-editor
   display: flex
   height: 100%
 
@@ -79,11 +77,27 @@ export default {
     flex-direction: column
     width: 100%
 
-    .content
-      display: flex
-      flex-direction: column
-      flex: 1
+//- Content
+.editorial-post-editor--content
+  display: flex
+  flex-direction: column
+  flex: 1
 
-      > div
-        flex: 1
+  //- title
+  > input
+    margin-bottom: $baseline / 2
+
+    border: 0
+    padding: 0
+
+    font-family: $ff-serif
+    font-size: $fs-1
+    font-weight: 600
+    line-height: 1.58
+    
+
+  //- medium editor
+  > div
+    flex: 1
+
 </style>
