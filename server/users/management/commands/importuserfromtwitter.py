@@ -1,11 +1,10 @@
-import twitter
 import requests
 
 from django.core.management.base import BaseCommand
-from django.conf import settings
 from django.core.files.base import ContentFile
 
 from users.models import User
+from sources.twitter_api import get_api_connection
 
 
 class Command(BaseCommand):
@@ -22,11 +21,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        self.api = twitter.Api(consumer_key=settings.TWITTER_CONSUMER_KEY,
-                               consumer_secret=settings.TWITTER_CONSUMER_SECRET,
-                               access_token_key=settings.TWITTER_ACCESS_TOKEN_KEY,
-                               access_token_secret=settings.TWITTER_ACCESS_TOKEN_SECRET,
-                               tweet_mode='extended')
+        self.api = get_api_connection()
 
         account = options['twitter_account'][0]
         username = options.get('username') or account.lower()  # get returns None if arg not exists

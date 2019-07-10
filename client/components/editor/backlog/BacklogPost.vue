@@ -8,9 +8,14 @@
       </picture>
 
       <h3>
-        <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-          {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-        </nuxt-link>
+        <template v-if="post.author.kind == 'external'">
+          <a :href="post.author.url" target="_blank">{{ post.author.name }}</a>
+        </template>
+        <template v-else>
+          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+            {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+          </nuxt-link>
+        </template>
         •
         {{ post.time | moment('MMM D') }}
       </h3>
@@ -147,8 +152,8 @@ export default {
           +button-icon($fa-var-arrow-up, icon, solid, small)
 
         &.down
-          +button-icon($fa-var-arrow-down, icon, solid, small) 
+          +button-icon($fa-var-arrow-down, icon, solid, small)
 
         &.remove
-          +button-icon($fa-var-times, icon, solid, small) 
+          +button-icon($fa-var-times, icon, solid, small)
 </style>

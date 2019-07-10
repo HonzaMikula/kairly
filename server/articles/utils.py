@@ -1,10 +1,14 @@
+import re
 import lxml.html
 
 import rapidjson as json
 
 from articles.models import Post
 from sources.parser.og import parse_og_tags
+from sources.twitter_api import get_api_connection, status_to_post_args
 from utils.url import fetch_url
+
+RE_TWITTER_URL = re.compile(r'https://twitter\.com/[^/]+/status/(\d+)')
 
 
 def create_post_link(url, user, hidden=False, published=None, guid=None):
@@ -12,6 +16,23 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
     existing_post = Post.find_by_source_url(resolved_url)
     if existing_post:
         return existing_post
+
+    m = RE_TWITTER_URL.fullmatch(resolved_url)
+    if m:
+        api = get_api_connection()
+        status_id = m.group(1)
+        status = api.GetStatus(status_id)
+        args = status_to_post_args(api, status, dump_attachments=False)
+        attachments = args['attachments'] or []
+        attachments.append({
+            'type': 'author',
+            'id': status.user.id,
+            'name': status.user.name,
+            'screen_name': status.user.screen_name,
+            'profile_image_url_https': status.user.profile_image_url_https,
+        })
+        args['attachments'] = json.dumps(attachments)
+        return Post.objects.create(**args)
 
     htmltree = lxml.html.fromstring(html)
     try:

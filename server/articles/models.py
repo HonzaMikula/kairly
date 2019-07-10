@@ -122,7 +122,7 @@ class Post(models.Model):
         return super().save(*args, **kwargs)
 
     def calculate_fair_price(self):
-        author_price = self.author.price
+        author_price = self.author.price if self.author else 0
         if author_price == 0:
             return Decimal(0)
 
@@ -180,21 +180,39 @@ class Post(models.Model):
         result = {
             'id': self.id,  # id is still used by backlog endpoints, TODO remove this
             'slug': self.slug,
-            'author': self.author.to_json(),
             'source': self.source,
             'type': self.kind,
             'time': datetime_isoformat_ecma262(self.published.astimezone(tzinfo)),
             'price': None if self.price is None else str(self.price),
         }
+        if self.author:
+            result['author'] = self.author.to_json()
+
         if self.draft:
             result['draft'] = True
 
         if self.kind == Post.TWEET:
+            attachments = json.loads(self.attachments) if self.attachments else None
             result['content'] = {
                 'content': self.content,
             }
-            if self.attachments:
-                result['content']['attachments'] = json.loads(self.attachments)
+            if self.author is None and attachments:
+                _attachments = []
+                for a in attachments:
+                    if a['type'] == 'author':
+                        result['author'] = {
+                           'id': 'twitter|' + a['screen_name'],
+                           'name': a['name'],
+                           'picture': a['profile_image_url_https'],
+                           'url': 'https://twitter.com/' + a['screen_name'],
+                           'kind': 'external',
+                        }
+                    else:
+                        _attachments.append(a)
+                attachments = _attachments
+
+            if attachments:
+                result['content']['attachments'] = attachments
         elif self.kind == Post.NEWSPAPER:
             if anonymous and self.protected:
                 result['timeRead'] = self.read_time
