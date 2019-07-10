@@ -261,7 +261,7 @@ export default {
       this.backlogMoveDown({newspaper: this.newspaper, index})
     },
 
-    removePost(post) {
+    removePost(log) {
       this.removeFromNewspaperBacklog({newspaper: this.newspaper, log})
     },
 

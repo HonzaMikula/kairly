@@ -246,7 +246,7 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
   if (resp.post) {
     const modifiedBacklog = [...postsBacklog]
-    modifiedBacklog.unshift(resp.post)
+    modifiedBacklog.unshift({ post: resp.post, editorial: null })
     commit('newspaperBacklog', {
       fullName,
       postsBacklog: modifiedBacklog,
