@@ -121,7 +121,7 @@
 
             <EditorialTweetsEditor
               v-if="edit.type === 'tweets'"
-              :tweets="log.editorial ? log.editorial.tweets : []"
+              :tweets="edit.tweets"
               @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
             />
           </template>
@@ -220,25 +220,31 @@ export default {
 
   methods: {
     startEditorial(type, postId) {
-      Vue.set(this.editorialEditors, postId, {
+      const edit = {
         type,
         position: 'right'
-      })
+      }
       if (type === 'tweets') {
         this.tweetsTarget = postId
+        edit.tweets = []
       }
+
+      Vue.set(this.editorialEditors, postId, edit)
     },
 
     editEditorial(log) {
       const postId = log.post.id
       const { type, position, tweets} = log.editorial
-      Vue.set(this.editorialEditors, postId, {
+      const edit = {
         type: type,
         position: position,
-      })
+      }
       if (type === 'tweets') {
         this.tweetsTarget = postId
+        edit.tweets = [...tweets]
       }
+      Vue.set(this.editorialEditors, postId, edit)
+
     },
 
     saveArticleEditorial(log, { title, content}) {
@@ -257,10 +263,10 @@ export default {
       Vue.delete(this.editorialEditors, postId)
     },
 
-    saveTweetsEditorial(log, tweets) {
+    async saveTweetsEditorial(log, tweets) {
       const postId = log.post.id
       const edit = this.editorialEditors[postId]
-      this.$store.dispatch('saveEditorial', {
+      const editorial = await this.$store.dispatch('saveEditorial', {
         newspaperId: this.newspaper.fullName,
         postId: postId,
         editorial: {
@@ -269,6 +275,8 @@ export default {
           position: edit.position
         }
       })
+      // update content with server side version
+      edit.tweets = [...editorial.tweets]
     },
 
     cancelEditorialEdit(log) {
@@ -302,13 +310,13 @@ export default {
 
     addTweetToEditorial({ post }) {
       const log = this.published.find(l => l.post.id === this.tweetsTarget)
-      const tweets = log.editorial ? [...log.editorial.tweets] : []
+      const { tweets } = this.editorialEditors[this.tweetsTarget]
       tweets.push(post)
       this.saveTweetsEditorial(log, tweets)
     },
 
     removeTweetFromEditorial(log, tweet) {
-      const tweets = log.editorial ? [...log.editorial.tweets] : []
+      const { tweets } = this.editorialEditors[this.tweetsTarget]
       const idx = tweets.indexOf(tweet)
       tweets.splice(idx, 1)
       this.saveTweetsEditorial(log, tweets)

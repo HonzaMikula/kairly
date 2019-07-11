@@ -287,11 +287,13 @@ function _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial) 
 export async function saveEditorial({ commit, state }, { newspaperId, postId, editorial: payload}) {
   const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, payload)
   _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial)
+  return editorial
 }
 
 export async function saveEditorialPosition({ commit, state }, { newspaperId, postId, position }) {
   const editorial = await this.$axios.$patch(`/newspapers/${newspaperId}/editorials/${postId}`, {position})
   _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial)
+  return editorial
 }
 
 export async function removeEditorial({ commit, state }, { newspaperId, postId}) {
