@@ -256,8 +256,8 @@ class Editorial(models.Model):
         (TWEETS, _('Tweets')),
     )
 
-    title = models.CharField(max_length=160)
-    content = models.TextField(_("Content"), blank=True)
+    title = models.CharField(max_length=160, null=True)
+    content = models.TextField(_("Content"), blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
     kind = models.CharField(max_length=60, choices=KIND_CHOICES)
     position = models.CharField(max_length=32)
@@ -266,13 +266,27 @@ class Editorial(models.Model):
         return self.title
 
     def to_json(self):
-        return {
+        data = {
             'author': self.author.to_json(),
-            'title': self.title,
-            'content': self.content,
             'type': self.kind,
             'position': self.position,
         }
+
+        if self.kind == 'article':
+            data['title'] = self.title
+            data['content'] = self.content
+        elif self.kind == 'tweets':
+            tweets = EditorialTweet.objects.filter(editorial=self).select_related('post').order_by('ordering')
+            data['tweets'] = [t.post.to_json() for t in tweets]
+        else:
+            raise ValueError
+        return data
+
+
+class EditorialTweet(models.Model):
+    editorial = models.ForeignKey(Editorial, models.CASCADE)
+    post = models.ForeignKey(Post, models.CASCADE)
+    ordering = models.IntegerField(null=True)
 
 
 class Newspaper(models.Model, PeriodMixin):

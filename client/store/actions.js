@@ -269,14 +269,12 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   }
 }
 
-export async function saveEditorial({ commit, state }, { newspaperId, postId, editorial: payload}) {
-  const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, payload)
-
+function _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial) {
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[newspaperId]
-  const idx = postsPublished.findIndex(({post}) => post.id === postId)
+  const idx = postsPublished.findIndex(({ post }) => post.id === postId)
   const log = postsPublished[idx]
   const modified = [...postsPublished]
-  modified[idx] = {...log, editorial}
+  modified[idx] = { ...log, editorial }
 
   commit('newspaperBacklog', {
     fullName: newspaperId,
@@ -286,20 +284,19 @@ export async function saveEditorial({ commit, state }, { newspaperId, postId, ed
   })
 }
 
+export async function saveEditorial({ commit, state }, { newspaperId, postId, editorial: payload}) {
+  const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, payload)
+  _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial)
+}
+
+export async function saveEditorialPosition({ commit, state }, { newspaperId, postId, position }) {
+  const editorial = await this.$axios.$patch(`/newspapers/${newspaperId}/editorials/${postId}`, {position})
+  _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial)
+}
+
 export async function removeEditorial({ commit, state }, { newspaperId, postId}) {
   await this.$axios.$delete(`/newspapers/${newspaperId}/editorials/${postId}`)
-  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[newspaperId]
-  const idx = postsPublished.findIndex(({post}) => post.id === postId)
-  const log = postsPublished[idx]
-  const modified = [...postsPublished]
-  modified[idx] = {...log, editorial: null}
-
-  commit('newspaperBacklog', {
-    fullName: newspaperId,
-    postsBacklog,
-    postsPublished: modified,
-    currentMonthStats
-  })
+  _updateNewspaperBacklog(commit, state, newspaperId, postId, null)
 }
 
 

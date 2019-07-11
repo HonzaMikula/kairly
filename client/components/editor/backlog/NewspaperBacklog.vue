@@ -121,7 +121,7 @@
 
             <EditorialTweetsEditor
               v-if="edit.type === 'tweets'"
-              :tweets="edit.tweets"
+              :tweets="log.editorial ? log.editorial.tweets : []"
               @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
             />
           </template>
@@ -220,14 +220,25 @@ export default {
 
   methods: {
     startEditorial(type, postId) {
-      Vue.set(this.editorialEditors, postId, {type, position: 'right', tweets: []})
+      Vue.set(this.editorialEditors, postId, {
+        type,
+        position: 'right'
+      })
       if (type === 'tweets') {
         this.tweetsTarget = postId
       }
     },
 
     editEditorial(log) {
-      Vue.set(this.editorialEditors, log.post.id, {type: log.editorial.type, position: log.editorial.position})
+      const postId = log.post.id
+      const { type, position, tweets} = log.editorial
+      Vue.set(this.editorialEditors, postId, {
+        type: type,
+        position: position,
+      })
+      if (type === 'tweets') {
+        this.tweetsTarget = postId
+      }
     },
 
     saveArticleEditorial(log, { title, content}) {
@@ -258,10 +269,6 @@ export default {
           position: edit.position
         }
       })
-      Vue.delete(this.editorialEditors, postId)
-      if (this.tweetsTarget === postId) {
-        this.tweetsTarget = null
-      }
     },
 
     cancelEditorialEdit(log) {
@@ -285,25 +292,23 @@ export default {
         edit.position = edit.position === 'left' ? 'right': 'left'
       } else {
         // change existing editorial
-        this.$store.dispatch('saveEditorial', {
+        this.$store.dispatch('saveEditorialPosition', {
           newspaperId: this.newspaper.fullName,
           postId: log.post.id,
-          editorial: {
-            position: log.editorial.position === 'left' ? 'right': 'left'
-          }
+          position: log.editorial.position === 'left' ? 'right': 'left'
         })
       }
     },
 
     addTweetToEditorial({ post }) {
       const log = this.published.find(l => l.post.id === this.tweetsTarget)
-      const { tweets } = this.editorialEditors[this.tweetsTarget]
+      const tweets = log.editorial ? [...log.editorial.tweets] : []
       tweets.push(post)
       this.saveTweetsEditorial(log, tweets)
     },
 
     removeTweetFromEditorial(log, tweet) {
-      const { tweets } = this.editorialEditors[this.tweetsTarget]
+      const tweets = log.editorial ? [...log.editorial.tweets] : []
       const idx = tweets.indexOf(tweet)
       tweets.splice(idx, 1)
       this.saveTweetsEditorial(log, tweets)

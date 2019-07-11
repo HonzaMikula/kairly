@@ -27,7 +27,7 @@ from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
-                     SubscriptionToAuthor, Editorial, round_fair_price)
+                     SubscriptionToAuthor, Editorial, EditorialTweet, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
 from .utils import create_post_link
@@ -395,35 +395,89 @@ class EditorialsView(View):
                 return HttpResponseForbidden()
 
         payload = json.loads(request.body.decode('utf-8'))
-        position_only = set(payload.keys()) == {'position'}
         position = payload['position']
+        kind = payload['type']
 
         if position not in ('left', 'right'):
-            raise ValueError("Invalid position")
+            return HttpResponseBadRequest("Invalid position value")
 
-        if not position_only:
+        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
+        kind_changed = backlog.editorial and backlog.editorial.kind != kind
+        editorial = backlog.editorial or Editorial(kind=kind)
+        editorial.position = position
+        editorial.kind = kind
+
+        if kind == 'article':
             title = payload['title'].strip()
             content = sanitize(payload['content'].strip())
 
             if not title:
-                raise ValueError("No title")
+                return HttpResponseBadRequest("No title")
 
-        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
-        editorial = backlog.editorial or Editorial(kind=Editorial.ARTICLE)
-        editorial.position = position
-
-        if position_only:
-            if not editorial.id:
-                return HttpResponseNotFound()
-        else:
             editorial.title = title
             editorial.content = content
-            if not editorial.author_id:  # keep original author even if different editor change content
-                editorial.author = request.user
+
+        elif kind == 'tweets':
+            editorial.title = None
+            editorial.content = None
+        else:
+            return HttpResponseBadRequest("Invalid editorial type")
+
+        # keep original author even if different editor change content
+        if not editorial.author_id:
+            editorial.author = request.user
+
         editorial.save()
+
+        if kind == 'tweets':
+            tweets = list(Post.objects.filter(id__in=payload['tweets'], kind=Post.TWEET))
+            ids = [t.id for t in tweets]
+            ids_in_db = set()
+            for et in EditorialTweet.objects.filter(editorial=editorial):
+                ids_in_db.add(et.post_id)
+                try:
+                    idx = ids.index(et.post_id)
+                    if et.ordering != idx:
+                        et.ordering = idx
+                        et.save()
+                except ValueError:
+                    et.delete()
+
+            for post_id in set(ids) - ids_in_db:
+                idx = ids.index(post_id)
+                EditorialTweet.objects.create(editorial=editorial, post_id=post_id, ordering=idx)
+
+        else:
+            if kind_changed:
+                EditorialTweet.objects.filter(editorial=editorial).delete()
 
         if not backlog.editorial:
             Backlog.objects.filter(id=backlog.id).update(editorial=editorial)
+
+        return JsonResponse(editorial.to_json())
+
+    @ajax_login_required
+    @transaction.atomic
+    def patch(self, request, username, newspapeper_slug, post_id):
+        """Update editorial position"""
+        newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
+        if newspaper.editor_id != request.user.id:
+            if request.user not in newspaper.co_editors.all():
+                return HttpResponseForbidden()
+
+        payload = json.loads(request.body.decode('utf-8'))
+        if set(payload.keys()) != {'position'}:
+            return HttpResponseBadRequest("Only position key is expected")
+
+        position = payload['position']
+
+        if position not in ('left', 'right'):
+            return HttpResponseBadRequest("Invalid position value")
+
+        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
+        editorial = backlog.editorial
+        editorial.position = position
+        editorial.save()
 
         return JsonResponse(editorial.to_json())
 
