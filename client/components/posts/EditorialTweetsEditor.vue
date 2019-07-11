@@ -10,12 +10,9 @@
         <h3>
           <a href="/janmikula" class="">Jan Mikula, editor</a>
         </h3>
-        <section>
-          <button @click="save()">Save</button>
-        </section>
       </header>
 
-      <div>
+      <div v-if="tweets.length">
         <PostTweet v-for="tweet in tweets" :key="tweet.id" :post="tweet">
           <template slot="controls">
             <a
@@ -24,6 +21,9 @@
             >Remove</a>
           </template>
         </PostTweet>
+      </div>
+      <div v-else>
+          Add tweets here.
       </div>
     </article>
   </div>
@@ -44,9 +44,6 @@ export default {
   },
 
   methods: {
-    async save() {
-      this.$emit('save', {})
-    }
   }
 
 }

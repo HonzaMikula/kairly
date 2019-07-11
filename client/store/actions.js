@@ -269,12 +269,8 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   }
 }
 
-export async function saveEditorial({ commit, state }, { newspaperId, postId, title, content, position}) {
-  const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, {
-    title,
-    content,
-    position,
-  })
+export async function saveEditorial({ commit, state }, { newspaperId, postId, editorial: payload}) {
+  const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, payload)
 
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[newspaperId]
   const idx = postsPublished.findIndex(({post}) => post.id === postId)
