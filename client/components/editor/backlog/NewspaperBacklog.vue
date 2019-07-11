@@ -48,10 +48,6 @@
                     <h6>Display editorial before</h6>
                     <p>On desktop in the left</p>
                   </li>
-                  <li tabindex="0" @click="removeEditorial(log)">
-                    <h6>Remove editorial</h6>
-                    <p>Your changes will be lost</p>
-                  </li>
                 </template>
 
                 <template v-if="log.editorial && !edit">
@@ -59,8 +55,17 @@
                     <h6>Update editorial comment</h6>
                     <p>Write short comment to the topic</p>
                   </li>
+                  <li tabindex="0" @click="removeEditorial(log)">
+                    <h6>Remove editorial</h6>
+                    <p>Remove existing editorial</p>
+                  </li>
                 </template>
-
+                <template v-if="edit">
+                  <li tabindex="0" @click="cancelEditorialEdit(log)">
+                    <h6>Cancel edit</h6>
+                    <p>Your changes will be lost</p>
+                  </li>
+                </template>
                 <template v-if="!log.editorial && !edit">
                   <li tabindex="0" @click="startEditorial('article', log.post.id)">
                     <h6>Add editorial comment</h6>
@@ -116,8 +121,9 @@
 
             <EditorialTweetsEditor
               v-if="edit.type === 'tweets'"
-              :editorial="log.editorial"
+              :tweets="edit.tweets"
               @save="ev => saveEditorial(log, ev)"
+              @removeTweet="removeTweetFromEditorial"
             />
           </template>
         </PostWrapper>
@@ -149,6 +155,8 @@
           v-for="log in backlog"
           :key="log.post.id"
           :post="log.post"
+          :isTweersEditorialOpen="!!tweetsTarget"
+          @addToEditorial="addTweetToEditorial(log)"
           @publish="publish(log)"
           @remove="removePost(log)"
         />
@@ -185,6 +193,7 @@ export default {
     return {
       externalLink: null,
       editorialEditors: {},
+      tweetsTarget: null
     }
   },
 
@@ -212,7 +221,10 @@ export default {
 
   methods: {
     startEditorial(type, postId) {
-      Vue.set(this.editorialEditors, postId, {type, position: 'right'})
+      Vue.set(this.editorialEditors, postId, {type, position: 'right', tweets: []})
+      if (type === 'tweets') {
+        this.tweetsTarget = postId
+      }
     },
 
     editEditorial(log) {
@@ -220,27 +232,34 @@ export default {
     },
 
     saveEditorial(log, { title, content}) {
-      const edit = this.editorialEditors[log.post.id]
+      const postId = log.post.id
+      const edit = this.editorialEditors[postId]
       this.$store.dispatch('saveEditorial', {
         newspaperId: this.newspaper.fullName,
-        postId: log.post.id,
+        postId: postId,
         title: title,
         content: content,
         position: edit.position
       })
-      Vue.delete(this.editorialEditors, log.post.id)
+      Vue.delete(this.editorialEditors, postId)
+      if (this.tweetsTarget === postId) {
+        this.tweetsTarget = null
+      }
+    },
+
+    cancelEditorialEdit(log) {
+      const postId = log.post.id
+      Vue.delete(this.editorialEditors, postId)
+      if (this.tweetsTarget === postId) {
+        this.tweetsTarget = null
+      }
     },
 
     removeEditorial(log) {
-      const edit = this.editorialEditors[log.post.id]
-      if (edit) {
-        Vue.delete(this.editorialEditors, log.post.id)
-      } else {
-        this.$store.dispatch('removeEditorial', {
-          newspaperId: this.newspaper.fullName,
-          postId: log.post.id,
-        })
-      }
+      this.$store.dispatch('removeEditorial', {
+        newspaperId: this.newspaper.fullName,
+        postId: log.post.id,
+      })
     },
 
     changeEditorialPosition(log) {
@@ -255,6 +274,17 @@ export default {
           position: log.editorial.position === 'left' ? 'right': 'left'
         })
       }
+    },
+
+    addTweetToEditorial(log) {
+      const { tweets } = this.editorialEditors[this.tweetsTarget]
+      tweets.push(log.post)
+    },
+
+    removeTweetFromEditorial(post) {
+      const { tweets } = this.editorialEditors[this.tweetsTarget]
+      const idx = tweets.indexOf(post)
+      tweets.splice(idx, 1)
     },
 
     publish(log) {

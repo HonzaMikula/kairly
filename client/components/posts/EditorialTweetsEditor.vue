@@ -16,29 +16,31 @@
       </header>
 
       <div>
-        TODO
+        <PostTweet v-for="tweet in tweets" :key="tweet.id" :post="tweet">
+          <template slot="controls">
+            <a
+              href="#"
+              @click.prevent="$emit('removeTweet', tweet)"
+            >Remove</a>
+          </template>
+        </PostTweet>
       </div>
     </article>
   </div>
 </template>
 
 <script>
+import PostTweet from './PostTweet'
 
 export default {
   name: 'EditorialTweetsEditor',
 
-  props: {
-    editorial: Object
+  components: {
+    PostTweet
   },
 
-  data() {
-    return {
-      title: this.editorial ? this.editorial.title : '',
-      content: this.editorial ? this.editorial.content : '',
-      options: {
-        placeholder: {text: 'Content', hideOnClick: false},
-      },
-    }
+  props: {
+    tweets: Array
   },
 
   methods: {

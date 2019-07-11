@@ -1,6 +1,6 @@
 <template>
   <div class="editorial-post--editorial">
-    <PostTweet v-for="tweet in tweets" :key="tweet.id" :post="tweet" />
+    <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 // Docs
 // - component is for distinguishing tweets, article, writing article, selecting tweets
 //
-import TWEETS from '@/tempDataTweets'
+
 import PostTweet from './PostTweet'
 
 export default {
@@ -20,10 +20,8 @@ export default {
     PostTweet
   },
 
-  data() {
-    return {
-      tweets: TWEETS
-    }
+  props: {
+    editorial: Object
   }
 }
 </script>

@@ -21,6 +21,13 @@
       </h3>
 
       <section>
+        <button
+          v-if="isTweersEditorialOpen && post.type == 'tweet'"
+          @click="$emit('addToEditorial')"
+        >
+          {{ $t('Add To Editorial') }}
+        </button>
+
         <button @click="$emit('publish')">{{ $t('Publish') }}</button>
 
         <button-icon
@@ -29,8 +36,8 @@
           :title="$t('Remove post from considaration')"
           v-b-tooltip
           tabindex="0"
-          @click.prevent="$emit('remove')">
-        </button-icon>
+          @click.prevent="$emit('remove')"
+        />
       </section>
 
     </header>
@@ -60,6 +67,7 @@ export default {
 
   props: {
     post: Object,
+    isTweersEditorialOpen: Boolean,
     publish: Function,
     removePost: Function
   },
