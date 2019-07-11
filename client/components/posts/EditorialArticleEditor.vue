@@ -33,7 +33,7 @@
 <script>
 
 export default {
-  name: 'EditorialEditor',
+  name: 'EditorialArticleEditor',
 
   props: {
     editorial: Object
@@ -51,13 +51,6 @@ export default {
 
   methods: {
     async save() {
-      // this.$store.dispatch('saveEditorial', {
-      //   newspaperId: this.newspaper.fullName,
-      //   postId: this.post.id,
-      //   title: this.title,
-      //   content: this.content,
-      //   position: 'right'
-      // })
       this.$emit('save', {
         title: this.title,
         content: this.content,
@@ -94,7 +87,7 @@ export default {
     font-size: $fs-1
     font-weight: 600
     line-height: 1.58
-    
+
 
   //- medium editor
   > div

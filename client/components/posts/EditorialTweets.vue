@@ -14,7 +14,7 @@ import TWEETS from '@/tempDataTweets'
 import PostTweet from './PostTweet'
 
 export default {
-  name: 'EditorialTweet',
+  name: 'EditorialTweets',
 
   components: {
     PostTweet

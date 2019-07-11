@@ -37,7 +37,7 @@ import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
 import PostRecommendations from '@/components/posts/PostRecommendations'
 
-import EditorialTweet from '@/components/posts/EditorialTweet'
+import EditorialTweets from '@/components/posts/EditorialTweets'
 import EditorialArticle from '@/components/posts/EditorialArticle'
 
 export default {
@@ -54,7 +54,7 @@ export default {
     PostTweet,
     PostPicture,
     PostRecommendations,
-    EditorialTweet,
+    EditorialTweets,
     EditorialArticle
   },
 

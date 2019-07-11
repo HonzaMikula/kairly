@@ -17,11 +17,11 @@
         </div>
 
         <PostWrapper
-          v-for="(log, idx) in published"
+          v-for="([log, edit], idx) in publishedWithEditor"
           :post="log.post"
           :isSubscribed="true"
           :key="log.post.id"
-          :editorial="editorialEditors[log.post.id] || log.editorial || null"
+          :editorial="edit || log.editorial || null"
         >
           <template slot="extendedControls">
             <span class="price">{{ log.post.price }} Kč</span>
@@ -34,7 +34,7 @@
               tabindex="0"
               role="button"
               :id="`editorial-button-${log.post.id}`"
-              :class="{'is-active': editorialEditors[log.post.id]}"
+              :class="{'is-active': edit}"
             />
 
             <b-popover
@@ -43,7 +43,7 @@
               triggers="click blur"
             >
               <ul>
-                <template v-if="log.editorial || editorialEditors[log.post.id]">
+                <template v-if="log.editorial || edit">
                   <li tabindex="0" @click="changeEditorialPosition(log)">
                     <h6>Display editorial before</h6>
                     <p>On desktop in the left</p>
@@ -54,19 +54,19 @@
                   </li>
                 </template>
 
-                <template v-if="log.editorial && !editorialEditors[log.post.id]">
+                <template v-if="log.editorial && !edit">
                   <li tabindex="0" @click="editEditorial(log)">
                     <h6>Update editorial comment</h6>
                     <p>Write short comment to the topic</p>
                   </li>
                 </template>
 
-                <template v-if="!log.editorial && !editorialEditors[log.post.id]">
+                <template v-if="!log.editorial && !edit">
                   <li tabindex="0" @click="startEditorial('article', log.post.id)">
                     <h6>Add editorial comment</h6>
                     <p>Write short comment to the topic</p>
                   </li>
-                  <li tabindex="0" @click="startEditorial('tweet', log.post.id)">
+                  <li tabindex="0" @click="startEditorial('tweets', log.post.id)">
                     <h6>Add editorial tweet(s)</h6>
                     <p>Comment the topic using tweets</p>
                   </li>
@@ -105,10 +105,17 @@
           </template>
 
           <template
-            v-if="editorialEditors[log.post.id]"
+            v-if="edit"
             slot="editorial"
           >
-            <EditorialEditor
+            <EditorialArticleEditor
+              v-if="edit.type === 'article'"
+              :editorial="log.editorial"
+              @save="ev => saveEditorial(log, ev)"
+            />
+
+            <EditorialTweetsEditor
+              v-if="edit.type === 'tweets'"
               :editorial="log.editorial"
               @save="ev => saveEditorial(log, ev)"
             />
@@ -158,7 +165,8 @@ import { BPopover } from 'bootstrap-vue'
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
 import BacklogPost from '@/components/editor/backlog/BacklogPost'
-import EditorialEditor from '@/components/posts/EditorialEditor'
+import EditorialArticleEditor from '@/components/posts/EditorialArticleEditor'
+import EditorialTweetsEditor from '@/components/posts/EditorialTweetsEditor'
 import PostWrapperVue from '../../PostWrapper.vue';
 
 export default {
@@ -167,7 +175,8 @@ export default {
   components: {
     BacklogPost,
     BPopover,
-    EditorialEditor,
+    EditorialArticleEditor,
+    EditorialTweetsEditor,
     PostWrapper,
     NewspaperBacklogInfo,
   },
@@ -192,6 +201,9 @@ export default {
     },
     published() {
       return this.newspaperBacklog ? this.newspaperBacklog.postsPublished : []
+    },
+    publishedWithEditor() {
+      return this.published.map(log => [log, this.editorialEditors[log.post.id]])
     },
     currentMonth() {
       return this.newspaperBacklog ? this.newspaperBacklog.currentMonthStats : []
