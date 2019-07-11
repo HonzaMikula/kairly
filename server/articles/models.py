@@ -247,10 +247,19 @@ class Post(models.Model):
         return result
 
 
-class EditorialComment(models.Model):
+class Editorial(models.Model):
+    ARTICLE = 'article'
+    TWEETS = 'tweets'
+
+    KIND_CHOICES = (
+        (ARTICLE, _('Article')),
+        (TWEETS, _('Tweets')),
+    )
+
     title = models.CharField(max_length=160)
     content = models.TextField(_("Content"), blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
+    kind = models.CharField(max_length=60, choices=KIND_CHOICES)
     position = models.CharField(max_length=32)
 
     def __str__(self):
@@ -261,7 +270,7 @@ class EditorialComment(models.Model):
             'author': self.author.to_json(),
             'title': self.title,
             'content': self.content,
-            'type': 'article',
+            'type': self.kind,
             'position': self.position,
         }
 
@@ -361,7 +370,7 @@ class Backlog(models.Model):
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
-    editorial_comment = models.ForeignKey(EditorialComment, models.SET_NULL, null=True)
+    editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True)
 
     @classmethod
     def consider_post(cls, newspaper, post):

@@ -27,7 +27,7 @@ from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
-                     SubscriptionToAuthor, EditorialComment, round_fair_price)
+                     SubscriptionToAuthor, Editorial, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
 from .utils import create_post_link
@@ -284,7 +284,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
         for log in query:
             result['backlog'].append({
                 'post': log.post.to_json(),
-                'editorial': log.editorial_comment.to_json() if log.editorial_comment else None
+                'editorial': log.editorial.to_json() if log.editorial else None
             })
 
         query = Backlog.objects.filter(
@@ -293,7 +293,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
         for log in query:
             result['publish'].append({
                 'post': log.post.to_json(),
-                'editorial': log.editorial_comment.to_json() if log.editorial_comment else None
+                'editorial': log.editorial.to_json() if log.editorial else None
             })
 
         editor_tz = pytz.timezone(newspaper.editor.timezone)
@@ -409,7 +409,7 @@ class EditorialsView(View):
                 raise ValueError("No title")
 
         backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
-        editorial = backlog.editorial_comment or EditorialComment()
+        editorial = backlog.editorial or Editorial(kind=Editorial.ARTICLE)
         editorial.position = position
 
         if position_only:
@@ -422,8 +422,8 @@ class EditorialsView(View):
                 editorial.author = request.user
         editorial.save()
 
-        if not backlog.editorial_comment:
-            Backlog.objects.filter(id=backlog.id).update(editorial_comment=editorial)
+        if not backlog.editorial:
+            Backlog.objects.filter(id=backlog.id).update(editorial=editorial)
 
         return JsonResponse(editorial.to_json())
 
@@ -436,10 +436,10 @@ class EditorialsView(View):
                 return HttpResponseForbidden()
 
         backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
-        if not backlog.editorial_comment:
+        if not backlog.editorial:
             return HttpResponseNotFound()
 
-        backlog.editorial_comment.delete()
+        backlog.editorial.delete()
         return HttpResponse(status=204)
 
 
