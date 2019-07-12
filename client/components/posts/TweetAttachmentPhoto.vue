@@ -24,7 +24,7 @@ tweet-attachment-gallery
   display: grid
   grid-column-gap: 2px
   grid-row-gap: 2px
-  height: 383px
+  max-height: 383px
   margin-bottom: -($baseline/2)
   margin-top: $baseline / 2
 
