@@ -421,17 +421,18 @@ class Issue(models.Model):
         }
         result['id'] = '{}/{}'.format(result['newspaper']['fullName'], self.number)
         if posts:
-            result["posts"] = [
-                p.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo) for p in
-                self.posts.filter(draft=False, published__lt=timezone_now())
-                    .order_by('issuepost__ordering', '-published')
-            ]
+            query = IssuePost.objects.filter(issue=self).select_related('post', 'editorial').order_by('ordering', '-post__published')
+            result["posts"] = [{
+                'post': ip.post.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo),
+                'editorial': ip.editorial.to_json() if ip.editorial else None
+            } for ip in query]
         return result
 
 
 class IssuePost(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    editorial = models.ForeignKey(Editorial, on_delete=models.SET_NULL, null=True)
     ordering = models.IntegerField(default=1)
 
     def __str__(self):

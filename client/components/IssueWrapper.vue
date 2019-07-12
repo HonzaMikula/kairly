@@ -10,16 +10,18 @@
     </template>
 
     <PostWrapper
-      v-for="post in headPosts"
-      :post="post"
-      :isSubscribed="true"
+      v-for="{post, editorial} in headPosts"
       :key="post.id"
+      :post="post"
+      :editorial="editorial"
+      :isSubscribed="true"
     />
 
     <PostWrapper
-      v-for="post in tailPosts"
+      v-for="{post, editorial} in tailPosts"
       :key="post.id"
       :post="post"
+      :editorial="editorial"
       :isSubscribed="true"
     />
 
