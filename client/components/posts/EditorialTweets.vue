@@ -1,5 +1,7 @@
 <template>
-  <div class="editorial-post--editorial">
+  <div
+    class="editorial-post--editorial"
+    :class="{'many-tweets': editorial.tweets.length > 1}">
     <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
   </div>
 </template>
@@ -26,4 +28,6 @@ export default {
 }
 </script>
 <style lang="sass">
+.editorial-post--editorial.many-tweets
+  align-self: start !important
 </style>

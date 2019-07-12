@@ -83,6 +83,7 @@ export default {
   margin-bottom: $baseline / 2
 
   background: #f5f5f5
+  background: #F2ECEC
 
   @media (max-width: $mobile)
     grid-template-columns: 1fr
@@ -95,6 +96,7 @@ export default {
 
     @media (max-width: $mobile)
       grid-column: 1 / span 1
+      grid-row: 1
 
     timeline-post--article--content
       column-count: 2
@@ -106,10 +108,19 @@ export default {
     grid-row: 1
 
     article
-      background: #f5f5f5
+      margin: 0
+      background: #F2ECEC
+
+      timeline-post--tweet
+        margin: 0
+
+      timeline-post--article--content
+        @media (max-width: $mobile)
+          column-count: 2 !important
 
     @media (max-width: $mobile)
       grid-column: 1 / span 1
+      grid-row: 2
 
   &.is-before
     .newspaper

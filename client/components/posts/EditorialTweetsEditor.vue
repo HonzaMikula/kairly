@@ -1,5 +1,7 @@
 <template>
-  <div class="editorial-post-tweet-editor">
+  <div 
+    class="editorial-post-tweet-editor"
+    :class="{'many-tweets': tweets.length > 1}">
     <template v-if="tweets.length">
       <PostTweet v-for="tweet in tweets" :key="tweet.id" :post="tweet">
         <template slot="extendedControls">&nbsp;</template>
@@ -60,8 +62,12 @@ export default {
   flex-direction: column
   justify-content: space-around
 
-  background: #f5f5f5
+  background: #F2ECEC
+
+  &.many-tweets
+    align-self: start !important
 
   .post.tweet
-    background: #f5f5f5
+    background: #F2ECEC
+  
 </style>
