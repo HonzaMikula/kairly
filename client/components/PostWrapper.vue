@@ -84,11 +84,17 @@ export default {
 
   background: #f5f5f5
 
+  @media (max-width: $mobile)
+    grid-template-columns: 1fr
+
   //- main article
   .newspaper
     grid-column: 1 / span 2
     grid-row: 1
     margin: 0
+
+    @media (max-width: $mobile)
+      grid-column: 1 / span 1
 
     timeline-post--article--content
       column-count: 2
@@ -102,11 +108,22 @@ export default {
     article
       background: #f5f5f5
 
+    @media (max-width: $mobile)
+      grid-column: 1 / span 1
+
   &.is-before
     .newspaper
       grid-column: 2 / span 2
 
+      @media (max-width: $mobile)
+        grid-column: 1
+        grid-row: 2
+
     .editorial-post--editorial
       grid-column: 1 / span 1
+
+      @media (max-width: $mobile)
+        grid-column: 1
+        grid-row: 1
 </style>
 

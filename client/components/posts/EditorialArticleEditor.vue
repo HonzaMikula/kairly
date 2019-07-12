@@ -11,7 +11,7 @@
           <a href="/janmikula" class="">Jan Mikula, editor</a>
         </h3>
         <section>
-          <button @click="save()">Save</button>
+          <button @click="save()" class="save">Save</button>
         </section>
       </header>
 
@@ -61,6 +61,9 @@ export default {
 }
 </script>
 <style lang="sass">
+@import './styles/components/article-perex'
+
+//- Editorial Post Editor
 .editorial-post-editor
   display: flex
   height: 100%
@@ -69,6 +72,11 @@ export default {
     display: flex
     flex-direction: column
     width: 100%
+
+    background: #f5f5f5
+
+    header section .save
+      margin-left: auto
 
 //- Content
 .editorial-post-editor--content
@@ -79,10 +87,11 @@ export default {
   //- title
   > input
     margin-bottom: $baseline / 2
-
-    border: 0
     padding: 0
 
+    border: 0
+    background: #f5f5f5
+    
     font-family: $ff-serif
     font-size: $fs-1
     font-weight: 600
@@ -90,7 +99,15 @@ export default {
 
 
   //- medium editor
-  > div
+  .medium-editor-wrapper
     flex: 1
+    min-height: $baseline * 3
+
+    background: #f5f5f5
+
+    line-height: 1.58
+    hyphens: auto
+
+    +article-perex
 
 </style>

@@ -1,31 +1,37 @@
 <template>
-  <div class="editorial-post-editor">
-    <article role="article" class="post newspaper editorial">
-      <header>
-        <picture>
-          <a href="/janmikula" class="">
-            <img src="https://cdn.kairly.com/media/users/janmikula.jpg" alt="Dojnice">
-          </a>
-        </picture>
-        <h3>
-          <a href="/janmikula" class="">Jan Mikula, editor</a>
-        </h3>
-      </header>
-
-      <div v-if="tweets.length">
-        <PostTweet v-for="tweet in tweets" :key="tweet.id" :post="tweet">
-          <template slot="controls">
-            <a
-              href="#"
-              @click.prevent="$emit('removeTweet', tweet)"
-            >Remove</a>
-          </template>
-        </PostTweet>
-      </div>
-      <div v-else>
-          Add tweets here.
-      </div>
-    </article>
+  <div class="editorial-post-tweet-editor">
+    <template v-if="tweets.length">
+      <PostTweet v-for="tweet in tweets" :key="tweet.id" :post="tweet">
+        <template slot="extendedControls">&nbsp;</template>
+        <template slot="controls">
+          <button-icon
+            class="up"
+            v-b-tooltip
+            tabindex="0"
+            role="button"
+            :title="$t('Move tweet up')"
+          />
+          <button-icon
+            class="down"
+            v-b-tooltip
+            tabindex="0"
+            role="button"
+            :title="$t('Move tweet down')"
+          />
+          <button-icon
+            class="remove"
+            v-b-tooltip
+            tabindex="0"
+            role="button"
+            :title="$t('Remove tweet')"
+            @click="$emit('removeTweet', tweet)"
+          />
+        </template>
+      </PostTweet>
+    </template>
+    <template v-else>
+      Add tweets here.
+    </template>
   </div>
 </template>
 
@@ -49,5 +55,13 @@ export default {
 }
 </script>
 <style lang="sass">
+.editorial-post-tweet-editor
+  display: flex
+  flex-direction: column
+  justify-content: space-around
 
+  background: #f5f5f5
+
+  .post.tweet
+    background: #f5f5f5
 </style>

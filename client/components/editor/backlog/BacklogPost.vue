@@ -25,7 +25,7 @@
           v-if="isTweersEditorialOpen && post.type == 'tweet'"
           @click="$emit('addToEditorial')"
         >
-          {{ $t('Add To Editorial') }}
+          {{ $t('Add to editorial') }}
         </button>
 
         <button @click="$emit('publish')">{{ $t('Publish') }}</button>
