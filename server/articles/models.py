@@ -432,6 +432,7 @@ class Issue(models.Model):
 class IssuePost(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    editorial = models.ForeignKey(Editorial, on_delete=models.SET_NULL, null=True)
     ordering = models.IntegerField(default=1)
 
     def __str__(self):
