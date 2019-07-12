@@ -249,7 +249,10 @@ def get_author_subscription_issues(sub, tzinfo, start_dt, end_dt, cache_valid_to
     def post_to_json(author, post):
         if author.kind == User.FEED and post.kind == Post.RECOMMENDATION and post.ref_post:
             return post.ref_post.to_json(short=True, tzinfo=tzinfo)
-        return post.to_json(short=True, tzinfo=tzinfo)
+        return {
+            'post': post.to_json(short=True, tzinfo=tzinfo),
+            'editorial': None
+        }
 
     issues = []
     for interval in intervals:

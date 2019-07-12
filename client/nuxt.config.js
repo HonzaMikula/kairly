@@ -6,7 +6,7 @@ module.exports = {
   ** Headers of the page
   */
   head: function() {
-    return {
+    const h = {
       title: 'Kairly – Read only what you care about',
       meta: [
         { charset: 'utf-8' },
@@ -18,12 +18,16 @@ module.exports = {
         { rel: 'icon', sizes: '192x192', href: '/favicon.png' },
         { rel: 'apple-touch-icon', sizes: '192x192', href: '/favicon.png' },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i|Roboto:400,400i,700,700i&amp;subset=latin-ext' },
-        { rel: 'canonical', href: 'https://kairly.com'+ this.$route.path }
       ],
       htmlAttrs: {
         lang: 'en',
       }
     }
+    // this.$route is not present in spa mode
+    if (this.$route) {
+      h.link.push({ rel: 'canonical', href: 'https://kairly.com'+ this.$route.path })
+    }
+    return h
   },
   css: [
     'medium-editor/dist/css/medium-editor.min.css',
