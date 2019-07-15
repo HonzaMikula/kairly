@@ -124,6 +124,7 @@
             <EditorialArticleEditor
               v-if="edit.type === 'article'"
               :editorial="log.editorial"
+              :editor="newspaper.editor"
               @save="ev => saveArticleEditorial(log, ev)"
             />
 

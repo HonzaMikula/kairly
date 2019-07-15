@@ -3,15 +3,20 @@
     <article role="article" class="post newspaper editorial">
       <header>
         <picture>
-          <a href="/janmikula" class="">
-            <img src="https://cdn.kairly.com/media/users/janmikula.jpg" alt="Dojnice">
-          </a>
+          <nuxt-link :to="{name: 'author', params: {author: editor.id}}">
+            <img
+              :src="editor.picture"
+              :alt="editor.name"
+            />
+          </nuxt-link>
         </picture>
         <h3>
-          <a href="/janmikula" class="">Jan Mikula, editor</a>
+          <nuxt-link :to="{name: 'author', params: {author: editor.id}}">
+            {{ editor.name }}<span v-if="editor.medium">, {{editor.medium}}</span>
+          </nuxt-link>
         </h3>
         <section>
-          <button @click="save()" class="save">Save</button>
+          <button @click="save()" class="save">{{ $t('Save') }}</button>
         </section>
       </header>
 
@@ -19,7 +24,7 @@
         <input
           v-model="title"
           type="text"
-          placeholder="Title"
+          :placeholder="$t('Title')"
         />
         <medium-editor
           v-model="content"
@@ -36,7 +41,8 @@ export default {
   name: 'EditorialArticleEditor',
 
   props: {
-    editorial: Object
+    editorial: Object,
+    editor: Object
   },
 
   data() {
@@ -44,7 +50,7 @@ export default {
       title: this.editorial ? this.editorial.title : '',
       content: this.editorial ? this.editorial.content : '',
       options: {
-        placeholder: {text: 'Content', hideOnClick: false},
+        placeholder: {text: this.$t('Editorial'), hideOnClick: false},
       },
     }
   },
