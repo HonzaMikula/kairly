@@ -79,7 +79,6 @@ export default {
 .editorial-post
   display: grid
   grid-template-columns: 1fr 1fr 1fr
-  border: 1px solid #eee
   margin-bottom: $baseline / 2
 
   background: #f5f5f5
@@ -113,6 +112,9 @@ export default {
 
       timeline-post--tweet
         margin: 0
+
+        tweet-attachment-link-view
+          display: none //- TODO: refactor so it's not done over CSS
 
       timeline-post--article--content
         @media (max-width: $mobile)

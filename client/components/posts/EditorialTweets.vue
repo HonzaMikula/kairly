@@ -29,5 +29,5 @@ export default {
 </script>
 <style lang="sass">
 .editorial-post--editorial.many-tweets
-  align-self: start !important
+  align-self: start !important  
 </style>

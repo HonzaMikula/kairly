@@ -29,6 +29,7 @@
 
           <template slot="controls">
             <button-icon
+              v-if="log.post.type != 'tweet'"
               class="editorial"
               v-b-tooltip="$t('Add editorial')"
               tabindex="0"
@@ -43,37 +44,44 @@
               triggers="click blur"
             >
               <ul>
-                <template v-if="log.editorial || edit">
+                <template v-if="((log.editorial || edit)) && editorialEditors[log.post.id].position == 'right'">
                   <li tabindex="0" @click="changeEditorialPosition(log)">
-                    <h6>Display editorial before</h6>
-                    <p>On desktop in the left</p>
+                    <h6>{{ $t('Display editorial before') }}</h6>
+                    <p>{{ $t('On desktop in the left') }}</p>
+                  </li>
+                </template>
+
+                <template v-if="((log.editorial || edit)) && editorialEditors[log.post.id].position == 'left'">
+                  <li tabindex="0" @click="changeEditorialPosition(log)">
+                    <h6>{{ $t('Display editorial after') }}</h6>
+                    <p>{{ $t('On desktop in the right') }}</p>
                   </li>
                 </template>
 
                 <template v-if="log.editorial && !edit">
                   <li tabindex="0" @click="editEditorial(log)">
-                    <h6>Update editorial comment</h6>
-                    <p>Write short comment to the topic</p>
+                    <h6>{{ $t('Update editorial comment') }}</h6>
+                    <p>{{ $t('Write short comment to the topic') }}</p>
                   </li>
                   <li tabindex="0" @click="removeEditorial(log)">
-                    <h6>Remove editorial</h6>
-                    <p>Remove existing editorial</p>
+                    <h6>{{ $t('Remove editorial') }}</h6>
+                    <p>{{ $t('Remove existing editorial') }}</p>
                   </li>
                 </template>
                 <template v-if="edit">
                   <li tabindex="0" @click="cancelEditorialEdit(log)">
-                    <h6>Cancel edit</h6>
-                    <p>Your changes will be lost</p>
+                    <h6>{{ $t('Cancel edit') }}</h6>
+                    <p>{{ $t('Your changes will be lost') }}</p>
                   </li>
                 </template>
                 <template v-if="!log.editorial && !edit">
                   <li tabindex="0" @click="startEditorial('article', log.post.id)">
-                    <h6>Add editorial comment</h6>
-                    <p>Write short comment to the topic</p>
+                    <h6>{{ $t('Add editorial comment') }}</h6>
+                    <p>{{ $t('Write short comment to the topic') }}</p>
                   </li>
                   <li tabindex="0" @click="startEditorial('tweets', log.post.id)">
-                    <h6>Add editorial tweet(s)</h6>
-                    <p>Comment the topic using tweets</p>
+                    <h6>{{ $t('Add editorial tweet(s)') }}</h6>
+                    <p>{{ $t('Comment the topic using tweets') }}</p>
                   </li>
                 </template>
               </ul>
@@ -133,11 +141,11 @@
           <input
             type="url"
             v-model="externalLink"
-            placeholder="Paste URL of external article"
+            :placeholder="$t('Paste URL of external article')"
           />
           <button
             @click.prevent="addExternalLink">
-            Add article
+            {{ $t('Add article') }}
           </button>
         </div>
 
@@ -230,6 +238,7 @@ export default {
       }
 
       Vue.set(this.editorialEditors, postId, edit)
+      this.$root.$emit('bv::hide::popover')
     },
 
     editEditorial(log) {
@@ -285,6 +294,7 @@ export default {
       if (this.tweetsTarget === postId) {
         this.tweetsTarget = null
       }
+      this.$root.$emit('bv::hide::popover')
     },
 
     removeEditorial(log) {
@@ -292,6 +302,7 @@ export default {
         newspaperId: this.newspaper.fullName,
         postId: log.post.id,
       })
+      this.$root.$emit('bv::hide::popover')
     },
 
     changeEditorialPosition(log) {
@@ -306,6 +317,7 @@ export default {
           position: log.editorial.position === 'left' ? 'right': 'left'
         })
       }
+      this.$root.$emit('bv::hide::popover')
     },
 
     addTweetToEditorial({ post }) {
@@ -313,6 +325,7 @@ export default {
       const { tweets } = this.editorialEditors[this.tweetsTarget]
       tweets.push(post)
       this.saveTweetsEditorial(log, tweets)
+      this.$root.$emit('bv::hide::popover')
     },
 
     removeTweetFromEditorial(log, tweet) {
@@ -320,6 +333,7 @@ export default {
       const idx = tweets.indexOf(tweet)
       tweets.splice(idx, 1)
       this.saveTweetsEditorial(log, tweets)
+      this.$root.$emit('bv::hide::popover')
     },
 
     publish(log) {

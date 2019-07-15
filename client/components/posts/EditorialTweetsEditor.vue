@@ -32,7 +32,10 @@
       </PostTweet>
     </template>
     <template v-else>
-      Add tweets here.
+      <div class="editorial-post-tweet-editor--empty">
+        <h2>Add tweets here</h2>
+        <p>Check the right column and click on Add to Editorial.</p>
+      </div>
     </template>
   </div>
 </template>
@@ -64,10 +67,25 @@ export default {
 
   background: #F2ECEC
 
+  //- if many tweets, align to top
   &.many-tweets
     align-self: start !important
 
   .post.tweet
     background: #F2ECEC
+
+  tweet-attachment-link-view
+    display: none //- TODO: refactor so it's not done over CSS
+  
+//- If no tweets
+.editorial-post-tweet-editor--empty
+  padding: $baseline/2
+
+  color: #555
+
+  h2
+    font-size: $fs-1
+    font-weight: 600
+
   
 </style>

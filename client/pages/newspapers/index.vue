@@ -331,7 +331,7 @@ editor-newspapers-view
 
     display: grid
     grid-template-columns: 2fr auto 2fr
-    padding: $baseline 0
+    padding: $baseline/2 0
     text-align: center
 
     @media (max-width: 800px)
@@ -492,9 +492,10 @@ editor-newspapers--header--dropdown
 
   display: block
   margin-left: -200px
+  padding: $baseline/4 0
   width: 400px
 
-  +blur(10px)
+  +blur(30px)
   +box-shadow
 
   font-size: $fs--1
@@ -513,9 +514,7 @@ editor-newspapers--header--dropdown
     grid-template-areas: "newspaper-dd-picture newspaper-dd-title" "newspaper-dd-picture newspaper-dd-info"
     grid-template-columns: $baseline*3 auto
     grid-column-gap: $baseline / 2
-    padding: $baseline / 2
-
-    border-bottom: 1px solid #eee
+    padding: $baseline / 4 $baseline/2
 
     cursor: pointer
     text-align: left

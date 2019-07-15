@@ -2,134 +2,142 @@
   <AppLayout :name="$t('Newspaper detail')">
     <div class="newspaper-detail" itemtype="https://schema.org/Newspaper" itemscope>
       <header class="newspaper-detail--header">
-        <h1 itemprop="name"><nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</nuxt-link></h1>
-        <p>{{ newspaper.description }}</p>
+        <div>
+          <h1 itemprop="name">
+            <nuxt-link 
+              :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+              {{ newspaper.title }}
+            </nuxt-link>
+          </h1>
+          <p>{{ newspaper.description }}</p>
 
-        <picture itemprop="image">
-          <img
-            v-if="newspaper.picture"
-            :src="newspaper.picture"
-            :alt="newspaper.title"
-          />
-          <div v-else class="image-placeholder"></div>
-        </picture>
+          <picture itemprop="image">
+            <img
+              v-if="newspaper.picture"
+              :src="newspaper.picture"
+              :alt="newspaper.title"
+            />
+            <div v-else class="image-placeholder"></div>
+          </picture>
 
-        <div class="newspaper-detail--subscribe">
-          <NewspaperSubscription :newspaper="newspaper" />
+          <div class="newspaper-detail--subscribe">
+            <NewspaperSubscription :newspaper="newspaper" />
 
-          <p>{{ periodicity }}</p>
+            <p>{{ periodicity }}</p>
+          </div>
         </div>
       </header>
 
-      <template v-if="issue">
-        <nav class="newspaper-detail--navigation" v-if="links.prev || links.next">
-          <nuxt-link
-            v-if="links.prev"
-            :to="links.prev"
-            v-b-tooltip
-            :title="$t('Previous issue')"
-            class="previous"
-          />
+      <main>
+        <template v-if="issue">
+          <nav class="newspaper-detail--navigation" v-if="links.prev || links.next">
+            <nuxt-link
+              v-if="links.prev"
+              :to="links.prev"
+              v-b-tooltip
+              :title="$t('Previous issue')"
+              class="previous"
+            />
 
-          <nuxt-link
-            v-if="links.next"
-            :to="links.next"
-            v-b-tooltip
-            :title="$t('Next issue')"
-            class="next"
-          />
-        </nav>
+            <nuxt-link
+              v-if="links.next"
+              :to="links.next"
+              v-b-tooltip
+              :title="$t('Next issue')"
+              class="next"
+            />
+          </nav>
 
-        <div class="newspaper-detail--issue">
-          <IssueWrapper :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
-            <template slot="newspaperTitle">{{ $t('Issue from') }} <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY')}}</time></template>
-          </IssueWrapper>
+          <div class="newspaper-detail--issue">
+            <IssueWrapper :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
+              <template slot="newspaperTitle">{{ $t('Issue from') }} <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY')}}</time></template>
+            </IssueWrapper>
 
-          <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
-        </div>
-
-        <footer class="newspaper-detail--social-sharing">
-          <a
-            :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
-            target="_blank"
-            class="rss"
-            :aria-label="$t('Subscribe RSS')"
-            v-b-tooltip
-            :title="$t('Subscribe RSS')"
-            @click="$ga.event({
-              eventCategory: 'Subscribe RSS newspaper',
-              eventAction: newspaper.name,
-              eventLabel: newspaper.editor.id
-            })"
-          />
-
-          <a
-            :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${issue.id}`"
-            target="_blank"
-            class="share-fb"
-            :aria-label="$t('Share on Facebook')"
-            v-b-tooltip
-            :title="$t('Share on Facebook')"
-            @click="$ga.event({
-              eventCategory: 'Share newspaper FB',
-              eventAction: newspaper.name,
-              eventLabel: newspaper.editor.id
-            })"
-          />
-
-          <a
-            :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${issue.id}&text=${newspaper.title}`"
-            target="_blank"
-            class="share-twitter"
-            :aria-label="$t('Share on Twitter')"
-            v-b-tooltip
-            :title="$t('Share on Twitter')"
-            @click="$ga.event({
-              eventCategory: 'Share newspaper Twitter',
-              eventAction: newspaper.name,
-              eventLabel: newspaper.editor.id
-            })"
-          />
-
-          <!-- Begin Mailchimp Signup Form -->
-          <div id="mc_embed_signup" v-if="newspaper.newsletterSubscriptionUrl">
-            <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-              <div id="mc_embed_signup_scroll">
-                <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
-                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                <div style="position: absolute; left: -5000px;" aria-hidden="true">
-                  <input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value="">
-                  <input type="checkbox" :value="newspaper.newsletterSubscriptionUrl" :name="`group[84705][${newspaper.newsletterSubscriptionUrl}]`" checked />
-                </div>
-                <div class="clear">
-                  <input
-                    id="mc-embedded-subscribe"
-                    type="submit"
-                    :value="$t('Send newspaper by email')"
-                    name="subscribe"
-                    class="button"
-                    @click="$ga.event({
-                      eventCategory: 'Subscribe newspaper newsletter',
-                      eventAction: newspaper.name,
-                      eventLabel: newspaper.editor.id
-                    })"
-                  />
-                </div>
-              </div>
-            </form>
+            <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
           </div>
-          <!--End mc_embed_signup-->
-        </footer>
-      </template>
 
-      <div class="newspaper-detail--empty-newspaper" v-else>
-        <h2>{{ $t('No issue yet') }}</h2>
-        <p>
-          {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
-        </p>
-      </div>
+          <footer class="newspaper-detail--social-sharing">
+            <a
+              :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
+              target="_blank"
+              class="rss"
+              :aria-label="$t('Subscribe RSS')"
+              v-b-tooltip
+              :title="$t('Subscribe RSS')"
+              @click="$ga.event({
+                eventCategory: 'Subscribe RSS newspaper',
+                eventAction: newspaper.name,
+                eventLabel: newspaper.editor.id
+              })"
+            />
+
+            <a
+              :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${issue.id}`"
+              target="_blank"
+              class="share-fb"
+              :aria-label="$t('Share on Facebook')"
+              v-b-tooltip
+              :title="$t('Share on Facebook')"
+              @click="$ga.event({
+                eventCategory: 'Share newspaper FB',
+                eventAction: newspaper.name,
+                eventLabel: newspaper.editor.id
+              })"
+            />
+
+            <a
+              :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${issue.id}&text=${newspaper.title}`"
+              target="_blank"
+              class="share-twitter"
+              :aria-label="$t('Share on Twitter')"
+              v-b-tooltip
+              :title="$t('Share on Twitter')"
+              @click="$ga.event({
+                eventCategory: 'Share newspaper Twitter',
+                eventAction: newspaper.name,
+                eventLabel: newspaper.editor.id
+              })"
+            />
+
+            <!-- Begin Mailchimp Signup Form -->
+            <div id="mc_embed_signup" v-if="newspaper.newsletterSubscriptionUrl">
+              <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                  <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
+                  <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                  <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value="">
+                    <input type="checkbox" :value="newspaper.newsletterSubscriptionUrl" :name="`group[84705][${newspaper.newsletterSubscriptionUrl}]`" checked />
+                  </div>
+                  <div class="clear">
+                    <input
+                      id="mc-embedded-subscribe"
+                      type="submit"
+                      :value="$t('Send newspaper by email')"
+                      name="subscribe"
+                      class="button"
+                      @click="$ga.event({
+                        eventCategory: 'Subscribe newspaper newsletter',
+                        eventAction: newspaper.name,
+                        eventLabel: newspaper.editor.id
+                      })"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!--End mc_embed_signup-->
+          </footer>
+        </template>
+
+        <div class="newspaper-detail--empty-newspaper" v-else>
+          <h2>{{ $t('No issue yet') }}</h2>
+          <p>
+            {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
+          </p>
+        </div>
+      </main>
     </div>
-
     <KairlyPromo v-if="!loggedIn" />
 
     <FooterLinks v-if="!loggedIn" />
@@ -269,10 +277,11 @@ export default {
 
 .newspaper-detail
   position: relative
-
-  margin: 0 auto
-  max-width: 900px
   padding-bottom: $baseline
+
+  main
+    max-width: 900px
+    margin: 0 auto
 
 
 //- Header
@@ -281,79 +290,83 @@ export default {
   top: -1px
   z-index: 5
 
-  display: grid
-  grid-column-gap: $baseline / 2
-  grid-template-areas: "issue-header-image issue-header-title issue-header-subscription" "issue-header-image issue-header-description issue-header-subscription"
-  grid-template-columns: $baseline*7 auto $baseline*7
-  grid-template-rows: auto auto
-  padding: $baseline/4
-  margin: $baseline*0.75 (-$baseline/4)
-  overflow: hidden
-
   backdrop-filter: blur(10px) saturate(125%)
-
-  font-family: $ff-serif
 
   @supports not (backdrop-filter: blur(10px))
     background: rgba(250, 250, 250, 0.97)
 
-  @media (max-width: 850px)
-    grid-template-areas: "issue-header-title issue-header-subscription" "issue-header-description issue-header-subscription"
-    grid-template-columns: auto $baseline*7
-    padding-left: $baseline / 2
+  > div
+    display: grid
+    box-sizing: border-box
+    max-width: 900px
+    margin: $baseline*0.75 auto
+    grid-column-gap: $baseline / 2
+    grid-template-areas: "issue-header-image issue-header-title issue-header-subscription" "issue-header-image issue-header-description issue-header-subscription"
+    grid-template-columns: $baseline*7 auto $baseline*7
+    grid-template-rows: auto auto
+    padding: $baseline/4
+    overflow: hidden
 
-  @media (max-width: $mobile)
-    position: static
-
-    grid-template-areas: "issue-header-title" "issue-header-description" "issue-header-subscription"
-    grid-template-columns: 100%
-
-    padding-bottom: 0
-    margin: 0
-
-    backdrop-filter: none
-
-  //- Title
-  h1
-    grid-area: issue-header-title
-
-    font-size: $fs-4
-    font-weight: 600
-    line-height: $baseline * 1.5
-    text-align: center
-    text-shadow: 0 0 5px #fafafa
+    font-family: $ff-serif
 
     @media (max-width: 850px)
-      text-align: left
+      grid-template-areas: "issue-header-title issue-header-subscription" "issue-header-description issue-header-subscription"
+      grid-template-columns: auto $baseline*7
+      padding-left: $baseline / 2
 
     @media (max-width: $mobile)
-      font-size: $fs-3
+      position: static
 
-    a
-      color: #000
+      grid-template-areas: "issue-header-title" "issue-header-description" "issue-header-subscription"
+      grid-template-columns: 100%
 
-  //- Description
-  p
-    grid-area: issue-header-description
+      padding-bottom: 0
+      margin: 0
 
-    text-align: center
+      backdrop-filter: none
 
-    @media (max-width: 850px)
-      text-align: left
+    //- Title
+    h1
+      grid-area: issue-header-title
 
-  //- Picture
-  > picture
-    grid-area: issue-header-image
+      font-size: $fs-4
+      font-weight: 600
+      line-height: $baseline * 1.5
+      text-align: center
+      text-shadow: 0 0 5px #fafafa
 
-    @media (max-width: 850px)
-      display: none
+      @media (max-width: 850px)
+        text-align: left
 
-    img
-      display: block
-      height: $baseline * 3
-      width: 100%
+      @media (max-width: $mobile)
+        font-size: $fs-3
 
-      object-fit: cover
+      a
+        color: #000
+
+    //- Description
+    p
+      grid-area: issue-header-description
+
+      text-align: center
+      text-shadow: 0 0 2px #fff
+
+      @media (max-width: 850px)
+        text-align: left
+
+    //- Picture
+    > picture
+      grid-area: issue-header-image
+
+      @media (max-width: 850px)
+        display: none
+
+      img
+        display: block
+        height: $baseline * 3
+        width: 100%
+
+        object-fit: cover
 
 
 //- Subscribe

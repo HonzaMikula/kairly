@@ -123,7 +123,6 @@ export default {
 //- Post -//
 .post
   display: block
-  border-radius: 6px
   margin-bottom: $baseline / 2
   padding: $baseline / 2
 
