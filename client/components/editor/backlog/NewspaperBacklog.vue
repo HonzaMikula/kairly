@@ -44,14 +44,14 @@
               triggers="click blur"
             >
               <ul>
-                <template v-if="((log.editorial || edit)) && editorialEditors[log.post.id].position == 'right'">
+                <template v-if="((log.editorial || edit)) && (editorialEditors[log.post.id] && editorialEditors[log.post.id].position == 'right')">
                   <li tabindex="0" @click="changeEditorialPosition(log)">
                     <h6>{{ $t('Display editorial before') }}</h6>
                     <p>{{ $t('On desktop in the left') }}</p>
                   </li>
                 </template>
 
-                <template v-if="((log.editorial || edit)) && editorialEditors[log.post.id].position == 'left'">
+                <template v-if="((log.editorial || edit)) && (editorialEditors[log.post.id] && editorialEditors[log.post.id].position == 'left')">
                   <li tabindex="0" @click="changeEditorialPosition(log)">
                     <h6>{{ $t('Display editorial after') }}</h6>
                     <p>{{ $t('On desktop in the right') }}</p>
