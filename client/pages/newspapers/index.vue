@@ -69,16 +69,6 @@
               :title="$t('Edit newspaper')"
               v-b-tooltip>
             </nuxt-link>
-
-            <button-icon
-              v-if="selectedNewspaper.editor.id === user.id"
-              class="delete"
-              role="button"
-              tabindex="0"
-              :title="$t('Delete newspaper')"
-              v-b-tooltip
-              @click.prevent="confirmDeleteNewspaper">
-            </button-icon>
           </div>
 
           <div class="mobile-menu">
@@ -236,19 +226,6 @@ export default {
 
       if (process.client) {
         window.localStorage.setItem('manageNewspapers.selected', fullName)
-      }
-    },
-
-    confirmDeleteNewspaper() {
-      if (window.confirm("Are you sure?")) {
-        const { fullName } = this.selectedNewspaper
-        this.deleteNewspaper(this.selectedNewspaper)
-
-        if (this.newspapers.length) {
-          this.selectNewspaper(this.newspapers.find(e => e.fullName !== fullName))
-        } else {
-          this.selectNewspaper(null)
-        }
       }
     },
 
