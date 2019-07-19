@@ -141,6 +141,9 @@ export default {
   button
     +button(primary, medium)
     width: 100%
+    max-width: 200px
+    margin: 0 auto
+    display: table
 
 
   div
