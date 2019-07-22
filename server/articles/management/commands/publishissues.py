@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.db import transaction
 from django.db.models import Max
 
-from articles.models import Newspaper, Issue, Backlog, IssuePost
+from articles.models import Newspaper, Issue, Backlog, IssuePost, Editorial, EditorialTweet
 from articles.period import PeriodMixin
 
 
@@ -57,9 +57,16 @@ class Command(BaseCommand):
             if verbosity > 0:
                 self.stdout.write('Adding post {}'.format(backlog.post))
             if not dry_run:
-                IssuePost.objects.create(
-                    issue=issue, post=backlog.post, ordering=i)
                 backlog.delete()
+
+                editorial = backlog.editorial
+                if editorial and editorial.kind == Editorial.TWEETS and EditorialTweet.objects.filter(editorial=editorial).count() == 0:
+                    # ignore editorial with no tweets
+                    editorial.delete()
+                    editorial = None
+
+                IssuePost.objects.create(
+                    issue=issue, post=backlog.post, editorial=editorial, ordering=i)
 
     def get_now(self, hour=None):
         now = timezone.now().replace(minute=0, second=0, microsecond=0)

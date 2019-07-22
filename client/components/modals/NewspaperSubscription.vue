@@ -13,7 +13,8 @@
         <section class="newspaper-subscription--newspaper">
           <h3>{{ newspaper.title }}</h3>
           <picture>
-            <img :src="newspaper.picture" :alt="newspaper.title" />
+            <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
+            <div v-else class="image-placeholder"/>  
           </picture>
           <time>{{ getPeriodicityLabel(newspaper.periodicity) }}</time>
         </section>
@@ -177,6 +178,9 @@ modal-dialog.newspaper-subscription-dialog
         width: 100%
         object-fit: cover
 
+      .image-placeholder
+        height: 100%
+        background-image: radial-gradient(#fafafa, #aaa)
 
     h3
       grid-area: newspaper-name

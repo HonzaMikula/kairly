@@ -122,7 +122,7 @@ class Post(models.Model):
         return super().save(*args, **kwargs)
 
     def calculate_fair_price(self):
-        author_price = self.author.price
+        author_price = self.author.price if self.author else 0
         if author_price == 0:
             return Decimal(0)
 
@@ -180,21 +180,39 @@ class Post(models.Model):
         result = {
             'id': self.id,  # id is still used by backlog endpoints, TODO remove this
             'slug': self.slug,
-            'author': self.author.to_json(),
             'source': self.source,
             'type': self.kind,
             'time': datetime_isoformat_ecma262(self.published.astimezone(tzinfo)),
             'price': None if self.price is None else str(self.price),
         }
+        if self.author:
+            result['author'] = self.author.to_json()
+
         if self.draft:
             result['draft'] = True
 
         if self.kind == Post.TWEET:
+            attachments = json.loads(self.attachments) if self.attachments else None
             result['content'] = {
                 'content': self.content,
             }
-            if self.attachments:
-                result['content']['attachments'] = json.loads(self.attachments)
+            if self.author is None and attachments:
+                _attachments = []
+                for a in attachments:
+                    if a['type'] == 'author':
+                        result['author'] = {
+                           'id': 'twitter|' + a['screen_name'],
+                           'name': a['name'],
+                           'picture': a['profile_image_url_https'],
+                           'url': 'https://twitter.com/' + a['screen_name'],
+                           'kind': 'external',
+                        }
+                    else:
+                        _attachments.append(a)
+                attachments = _attachments
+
+            if attachments:
+                result['content']['attachments'] = attachments
         elif self.kind == Post.NEWSPAPER:
             if anonymous and self.protected:
                 result['timeRead'] = self.read_time
@@ -227,6 +245,48 @@ class Post(models.Model):
             if self.attachments:
                 result['content']['attachments'] = json.loads(self.attachments)
         return result
+
+
+class Editorial(models.Model):
+    ARTICLE = 'article'
+    TWEETS = 'tweets'
+
+    KIND_CHOICES = (
+        (ARTICLE, _('Article')),
+        (TWEETS, _('Tweets')),
+    )
+
+    title = models.CharField(max_length=160, null=True)
+    content = models.TextField(_("Content"), blank=True, null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
+    kind = models.CharField(max_length=60, choices=KIND_CHOICES)
+    position = models.CharField(max_length=32)
+
+    def __str__(self):
+        return self.title
+
+    def to_json(self):
+        data = {
+            'author': self.author.to_json(),
+            'type': self.kind,
+            'position': self.position,
+        }
+
+        if self.kind == 'article':
+            data['title'] = self.title
+            data['content'] = self.content
+        elif self.kind == 'tweets':
+            tweets = EditorialTweet.objects.filter(editorial=self).select_related('post').order_by('ordering')
+            data['tweets'] = [t.post.to_json() for t in tweets]
+        else:
+            raise ValueError
+        return data
+
+
+class EditorialTweet(models.Model):
+    editorial = models.ForeignKey(Editorial, models.CASCADE)
+    post = models.ForeignKey(Post, models.CASCADE)
+    ordering = models.IntegerField(null=True)
 
 
 class Newspaper(models.Model, PeriodMixin):
@@ -324,15 +384,21 @@ class Backlog(models.Model):
     post = models.ForeignKey(Post, models.CASCADE)
     publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
     ordering = models.IntegerField(null=True)
+    editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True)
 
     @classmethod
     def consider_post(cls, newspaper, post):
-        if cls.objects.filter(newspaper=newspaper, post=post).exists():
+        if isinstance(post, int):
+            post_id = post
+        else:
+            post_id = post.id
+
+        if cls.objects.filter(newspaper=newspaper, post_id=post_id).exists():
             return None
 
         return cls.objects.create(
             newspaper=newspaper,
-            post=post
+            post_id=post_id
         )
 
 
@@ -360,17 +426,18 @@ class Issue(models.Model):
         }
         result['id'] = '{}/{}'.format(result['newspaper']['fullName'], self.number)
         if posts:
-            result["posts"] = [
-                p.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo) for p in
-                self.posts.filter(draft=False, published__lt=timezone_now())
-                    .order_by('issuepost__ordering', '-published')
-            ]
+            query = IssuePost.objects.filter(issue=self).select_related('post', 'editorial').order_by('ordering', '-post__published')
+            result["posts"] = [{
+                'post': ip.post.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo),
+                'editorial': ip.editorial.to_json() if ip.editorial else None
+            } for ip in query]
         return result
 
 
 class IssuePost(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    editorial = models.ForeignKey(Editorial, on_delete=models.SET_NULL, null=True)
     ordering = models.IntegerField(default=1)
 
     def __str__(self):

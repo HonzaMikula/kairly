@@ -23,8 +23,6 @@ export default {
   async asyncData({ store, params, error }) {
     const fullName = `${params.author}/${params.newspaper}`
 
-    console.log('asdsad')
-
     if (store.state.auth.loggedIn) {
       await store.dispatch('getSubscriptions')
     }

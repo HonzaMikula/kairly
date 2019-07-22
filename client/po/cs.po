@@ -11,20 +11,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.3\n"
 
-#: components/editor/backlog/BacklogPost.vue:19 pages/posts/index.vue:13
+#: components/editor/backlog/BacklogPost.vue:28
+msgid "Add to editorial"
+msgstr "Přidat do komentáře"
+
+#: components/editor/backlog/BacklogPost.vue:31 pages/posts/index.vue:13
 msgid "Publish"
 msgstr "Publikovat"
 
-#: components/editor/backlog/BacklogPost.vue:24
+#: components/editor/backlog/BacklogPost.vue:36
 msgid "Remove post from considaration"
 msgstr "Přestat příspěvek zvažovat"
 
-#: components/editor/backlog/BacklogPost.vue:40
+#: components/editor/backlog/BacklogPost.vue:52
 #: components/posts/PostArticle.vue:14 components/posts/PostArticle.vue:25
 msgid "read"
 msgstr "čtení"
 
 #: components/editor/EditArticle.vue:6
+#: components/posts/EditorialArticleEditor.vue:27
 msgid "Title"
 msgstr "Titulek"
 
@@ -36,55 +41,9 @@ msgstr "Normální pohled"
 msgid "Column view"
 msgstr "Sloupcový pohled"
 
-#: components/editor/backlog/NewspaperBacklog.vue:14
-msgid "No posts for the upcoming issue!"
-msgstr "Nemáte žádný příspěvek pro nadcházející vydání!"
-
-#: components/editor/backlog/NewspaperBacklog.vue:16
-msgid ""
-"Drag articles and tweets from the right panel that you want to publish in "
-"next issue of the newspaper."
-msgstr ""
-"Přesunutím článků a tweetů z pravého sloupce je zařadíte do příštího vydání "
-"novin."
-
-#: components/editor/backlog/NewspaperBacklog.vue:36
-msgid "Move post up"
-msgstr "Posunout nahoru"
-
-#: components/editor/backlog/NewspaperBacklog.vue:46
-msgid "Move post down"
-msgstr "Posunout dolu"
-
-#: components/editor/backlog/NewspaperBacklog.vue:55
-msgid "Remove from issue"
-msgstr "Odstranit z vydání"
-
-#: components/editor/backlog/NewspaperBacklog.vue:79
-msgid "No considered posts!"
-msgstr "Nezvažujete žádné příspěvky!"
-
-#: components/editor/backlog/NewspaperBacklog.vue:81
-msgid ""
-"Go on your timeline and start adding interesting articles and tweets for "
-"considaration."
-msgstr "Jděte na hlavní stránku a začněte přidávat články a tweety ke zvážení."
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:5
-msgid "Issue"
-msgstr "Vydání novin"
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:6
-msgid "will be automatically published in"
-msgstr "bude automaticky publikováno"
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:14
-msgid "Revenue - Cost = Profit"
-msgstr "Příjmy - Náklady = Zisk"
-
-#: components/editor/backlog/NewspaperBacklogInfo.vue:35
-msgid "<strong>{backlogLength} posts</strong> are considered"
-msgstr "Zvažujete <strong>{backlogLength} příspěvků</strong>"
+#: components/editor/EditTweet.vue:9
+msgid "Tweet Content"
+msgstr "Tweet"
 
 #: components/editor/backlog/ProfitDropdown.vue:7
 msgid "Current Issue"
@@ -136,37 +95,31 @@ msgstr "Počet zbývajících vydání"
 msgid "Remaining profit"
 msgstr "Zbývající zisk"
 
-#: components/explore/ExploreModal.vue:43 components/layout/AppHeader.vue:22
-#: components/layout/AppHeader.vue:59 pages/index.vue:56 pages/explore.vue:2
-#: pages/subscription.vue:47
-msgid "Explore"
-msgstr "Objevujte"
-
-#: components/HomePage.vue:8 components/microsite/Footer.vue:7
-#: components/KairlyPromo.vue:8
+#: components/HomePage.vue:8 components/KairlyPromo.vue:8
+#: components/microsite/Footer.vue:7
 msgid "Stop be distracted."
 msgstr "Nenechte se rozptylovat."
 
-#: components/HomePage.vue:10 components/microsite/Footer.vue:9
-#: components/KairlyPromo.vue:27
+#: components/HomePage.vue:10 components/KairlyPromo.vue:27
+#: components/microsite/Footer.vue:9
 msgid "Grow healthy reading habits."
 msgstr "Vytvořte si dobré návyky při čtení."
 
-#: components/HomePage.vue:14
+#: components/HomePage.vue:14 pages/signup.vue:8
 msgid "No notifications. No endless scrolling. No addiction and FOMO."
 msgstr "Žádné notifikace. Žádné nekonečné skrolování. Žádná závislost."
 
-#: components/HomePage.vue:15
+#: components/HomePage.vue:15 pages/signup.vue:9
 msgid "Read your sources at regular time you want. E.g. every day at 9am."
 msgstr ""
 "Čtěte vaše zdroje v pravidelném čase, který zvolíte. Například každé ráno v "
 "9:00."
 
-#: components/HomePage.vue:16
+#: components/HomePage.vue:16 pages/signup.vue:10
 msgid "We update your timeline only every 3 hours. Because that's sane."
 msgstr "Timelinu vám aktualizujeme jen každé 3 hodiny. Tak je to rozumné."
 
-#: components/HomePage.vue:17
+#: components/HomePage.vue:17 pages/signup.vue:11
 msgid ""
 "No magic algorithms. The content is chosen by you and the professional "
 "editors you trust."
@@ -182,12 +135,12 @@ msgstr "Editoři novin by měli být lidé."
 msgid "Read recently published newspapers."
 msgstr "Koukněte na poslední výtisky novin."
 
-#: components/HomePage.vue:42 pages/_author/_newspaper/index.vue:48
+#: components/HomePage.vue:42 pages/_author/_newspaper/index.vue:56
 msgid "That's it. You read the whole issue."
 msgstr "Hotovo. Přečetli jste celý výtisk novin."
 
-#: components/HomePage.vue:44 components/IssueWrapper.vue:31
-#: pages/explore/_tab.vue:26
+#: components/HomePage.vue:44 components/IssueWrapper.vue:33
+#: components/IssueWrapperBeta.vue:106 pages/explore/_tab.vue:26
 msgid "Show more"
 msgstr "Zobrazit další"
 
@@ -255,11 +208,11 @@ msgstr ""
 "</p>"
 
 #: components/HomePage.vue:116 components/HomePage.vue:168
-#: pages/platform/journalists.vue:125 pages/platform/journalists.vue:82
-#: pages/platform/publishers.vue:104 pages/platform/publishers.vue:76
-#: pages/platform/readers.vue:137 pages/platform/readers.vue:90
-#: pages/platform/think-tanks.vue:116 pages/platform/think-tanks.vue:71
 #: pages/features/rss-reader.vue:137 pages/features/rss-reader.vue:90
+#: pages/platform/journalists.vue:125 pages/platform/journalists.vue:82
+#: pages/platform/think-tanks.vue:116 pages/platform/think-tanks.vue:71
+#: pages/platform/readers.vue:137 pages/platform/readers.vue:90
+#: pages/platform/publishers.vue:104 pages/platform/publishers.vue:76
 msgid "founder of Kairly"
 msgstr "zakladatel Kairly"
 
@@ -313,15 +266,15 @@ msgstr ""
 msgid "Check out some of our newspapers."
 msgstr "Prohlédněte si některé naše noviny."
 
-#: components/HomePage.vue:188 pages/platform/journalists.vue:23
-#: pages/platform/publishers.vue:30 pages/platform/readers.vue:24
-#: pages/platform/think-tanks.vue:24 pages/features/rss-reader.vue:24
+#: components/HomePage.vue:188 pages/features/rss-reader.vue:24
+#: pages/platform/journalists.vue:23 pages/platform/think-tanks.vue:24
+#: pages/platform/readers.vue:24 pages/platform/publishers.vue:30
 msgid "Was said about us."
 msgstr "Řekli o nás."
 
-#: components/HomePage.vue:191 pages/platform/journalists.vue:23
-#: pages/platform/publishers.vue:30 pages/platform/readers.vue:24
-#: pages/platform/think-tanks.vue:24 pages/features/rss-reader.vue:24
+#: components/HomePage.vue:191 pages/features/rss-reader.vue:24
+#: pages/platform/journalists.vue:23 pages/platform/think-tanks.vue:24
+#: pages/platform/readers.vue:24 pages/platform/publishers.vue:30
 msgid "@homepage/quote/zouzalik"
 msgstr ""
 "<p> \n"
@@ -336,9 +289,9 @@ msgstr ""
 "</p>"
 
 #: components/HomePage.vue:208 components/microsite/Quote.vue:11
-#: pages/platform/journalists.vue:39 pages/platform/publishers.vue:46
-#: pages/platform/readers.vue:40 pages/platform/think-tanks.vue:40
-#: pages/features/rss-reader.vue:40
+#: pages/features/rss-reader.vue:40 pages/platform/journalists.vue:39
+#: pages/platform/think-tanks.vue:40 pages/platform/readers.vue:40
+#: pages/platform/publishers.vue:46
 msgid "chairman of the Prague Syndicate of Journalists"
 msgstr "předseda Syndikátu novinářů Prahy a Středočeského kraje"
 
@@ -353,38 +306,6 @@ msgid ""
 msgstr ""
 "Nenechte se rozptylovat. Vytvořte si zdravé návyky při čtení. Naimportujte "
 "si vaše RSS kanály a Twitter a začněte číst zprávy zdravým způsobem."
-
-#: components/issues/IssueSuspendedAuthor.vue:24
-#: components/issues/IssueSuspendedNewspaper.vue:27
-msgid "Your susbscription were suspended."
-msgstr "Vaše předplatné bylo pozastaveno."
-
-#: components/issues/IssueSuspendedAuthor.vue:39
-#: components/issues/IssueSuspendedNewspaper.vue:45
-#: components/issues/IssueNewspaper.vue:42
-#: components/issues/IssueUnreleasedNewspaper.vue:45
-#: components/issues/IssueAuthor.vue:45
-msgid "6× per day"
-msgstr "6x denně"
-
-#: components/issues/IssueSuspendedAuthor.vue:40
-#: components/issues/IssueSuspendedNewspaper.vue:46
-#: components/issues/IssueNewspaper.vue:43
-#: components/issues/IssueUnreleasedNewspaper.vue:46
-#: components/issues/IssueAuthor.vue:46
-#: components/widgets/ChangePeriodicity.vue:14
-msgid "3× per day"
-msgstr "3x denně"
-
-#: components/issues/IssueSuspendedAuthor.vue:41
-#: components/issues/IssueAuthor.vue:47
-msgid "Daily summary"
-msgstr "Denní přehled"
-
-#: components/issues/IssueSuspendedAuthor.vue:42
-#: components/issues/IssueAuthor.vue:48
-msgid "Weekly summary"
-msgstr "Týdenní přehled"
 
 #: components/editor/NewspaperSettings.vue:3
 msgid "Newspaper settings"
@@ -469,7 +390,8 @@ msgstr "Přidat editora"
 msgid "Type username slug"
 msgstr "Napište slug editora"
 
-#: components/editor/NewspaperSettings.vue:130 pages/posts/_postId.vue:4
+#: components/editor/NewspaperSettings.vue:130
+#: components/posts/EditorialArticleEditor.vue:19 pages/posts/_postId.vue:4
 #: pages/posts/_postId.vue:5
 msgid "Save"
 msgstr "Uložit"
@@ -478,81 +400,274 @@ msgstr "Uložit"
 msgid "Create newspaper"
 msgstr "Vytvořit noviny"
 
-#: components/editor/NewspaperSettings.vue:227
+#: components/editor/NewspaperSettings.vue:135
+msgid "Delete this newspaper"
+msgstr "Smazat tyto noviny"
+
+#: components/editor/NewspaperSettings.vue:136
+msgid "Once you delete it, there is no way back. Be careful."
+msgstr "Když je smažete, už to nepůjde vrátit. Buďte opatrní."
+
+#: components/editor/NewspaperSettings.vue:140 pages/newspapers/index.vue:98
+msgid "Delete newspaper"
+msgstr "Smazat noviny"
+
+#: components/editor/NewspaperSettings.vue:238
 msgid "Title is empty"
 msgstr "Titulek je prázdný"
 
-#: components/editor/NewspaperSettings.vue:231
+#: components/editor/NewspaperSettings.vue:242
 msgid "Editorial is empty"
 msgstr "Editorial je prázdný"
 
-#: components/editor/NewspaperSettings.vue:235
+#: components/editor/NewspaperSettings.vue:246
 msgid "Periodicity is not selected"
 msgstr "Periodicita není vybraná"
 
-#: components/editor/EditTweet.vue:9
-msgid "Tweet Content"
-msgstr "Tweet"
+#: components/editor/NewspaperSettings.vue:305
+msgid "Do you really want to delete this newspaper?"
+msgstr "Opravdu chcete smazat tyto noviny?"
 
+#: components/explore/ExploreModal.vue:43 components/layout/AppHeader.vue:22
+#: components/layout/AppHeader.vue:59 pages/explore.vue:2 pages/index.vue:56
+#: pages/subscription.vue:47
+msgid "Explore"
+msgstr "Objevujte"
+
+#: components/issues/IssueAuthor.vue:45
+#: components/issues/IssueNewspaperBeta.vue:42
+#: components/issues/IssueSuspendedNewspaper.vue:45
+#: components/issues/IssueSuspendedAuthor.vue:39
+#: components/issues/IssueUnreleasedNewspaper.vue:45
+#: components/issues/IssueNewspaper.vue:42
+msgid "6× per day"
+msgstr "6x denně"
+
+#: components/issues/IssueAuthor.vue:46
+#: components/issues/IssueNewspaperBeta.vue:43
+#: components/issues/IssueSuspendedNewspaper.vue:46
+#: components/issues/IssueSuspendedAuthor.vue:40
+#: components/issues/IssueUnreleasedNewspaper.vue:46
+#: components/widgets/ChangePeriodicity.vue:14
+#: components/issues/IssueNewspaper.vue:43
+msgid "3× per day"
+msgstr "3x denně"
+
+#: components/issues/IssueAuthor.vue:47
+#: components/issues/IssueSuspendedAuthor.vue:41
+msgid "Daily summary"
+msgstr "Denní přehled"
+
+#: components/issues/IssueAuthor.vue:48
+#: components/issues/IssueSuspendedAuthor.vue:42
+msgid "Weekly summary"
+msgstr "Týdenní přehled"
+
+#: components/editor/backlog/NewspaperBacklogInfo.vue:5
+msgid "Issue"
+msgstr "Vydání novin"
+
+#: components/editor/backlog/NewspaperBacklogInfo.vue:6
+msgid "will be automatically published in"
+msgstr "bude automaticky publikováno"
+
+#: components/editor/backlog/NewspaperBacklogInfo.vue:14
+msgid "Revenue - Cost = Profit"
+msgstr "Příjmy - Náklady = Zisk"
+
+#: components/editor/backlog/NewspaperBacklogInfo.vue:35
+msgid "<strong>{backlogLength} posts</strong> are considered"
+msgstr "Zvažujete <strong>{backlogLength} příspěvků</strong>"
+
+#: components/issues/IssueNewspaperBeta.vue:44
 #: components/issues/IssueSuspendedNewspaper.vue:47
-#: components/issues/IssueNewspaper.vue:44
 #: components/issues/IssueUnreleasedNewspaper.vue:47
 #: components/widgets/ChangePeriodicity.vue:16
-#: components/widgets/PeriodWidget.vue:9 pages/subscription/authors.vue:48
+#: components/widgets/PeriodWidget.vue:9
+#: components/issues/IssueNewspaper.vue:44 pages/subscription/authors.vue:48
 msgid "Weekly"
 msgstr "Týdně"
 
+#: components/issues/IssueNewspaperBeta.vue:45
 #: components/issues/IssueSuspendedNewspaper.vue:48
-#: components/issues/IssueNewspaper.vue:45
 #: components/issues/IssueUnreleasedNewspaper.vue:48
 #: components/widgets/ChangePeriodicity.vue:15
-#: components/widgets/PeriodWidget.vue:8 pages/subscription/authors.vue:39
+#: components/widgets/PeriodWidget.vue:8
+#: components/issues/IssueNewspaper.vue:45 pages/subscription/authors.vue:39
 msgid "Daily"
 msgstr "denně"
 
-#: components/issues/IssueUnreleasedNewspaper.vue:27
-msgid "We are very sorry, but {editor} didn't prepare a new release for you."
-msgstr "Velmi se omlouváme, ale {editor} nepřichystal nové vydání novin."
+#: components/issues/IssueSuspendedNewspaper.vue:27
+#: components/issues/IssueSuspendedAuthor.vue:24
+msgid "Your susbscription were suspended."
+msgstr "Vaše předplatné bylo pozastaveno."
 
+#: components/editor/backlog/NewspaperBacklog.vue:14
+msgid "No posts for the upcoming issue!"
+msgstr "Nemáte žádný příspěvek pro nadcházející vydání!"
+
+#: components/editor/backlog/NewspaperBacklog.vue:16
+msgid ""
+"Drag articles and tweets from the right panel that you want to publish in "
+"next issue of the newspaper."
+msgstr ""
+"Přesunutím článků a tweetů z pravého sloupce je zařadíte do příštího vydání "
+"novin."
+
+#: components/editor/backlog/NewspaperBacklog.vue:34
+msgid "Add editorial"
+msgstr "Přidat komentář"
+
+#: components/editor/backlog/NewspaperBacklog.vue:49
+msgid "Display editorial before"
+msgstr "Zobrazit komentář před"
+
+#: components/editor/backlog/NewspaperBacklog.vue:50
+msgid "On desktop in the left"
+msgstr "Na desktopu vlevo"
+
+#: components/editor/backlog/NewspaperBacklog.vue:56
+msgid "Display editorial after"
+msgstr "Zobrazit komentář po"
+
+#: components/editor/backlog/NewspaperBacklog.vue:57
+msgid "On desktop in the right"
+msgstr "Na desktopu vpravo"
+
+#: components/editor/backlog/NewspaperBacklog.vue:63
+msgid "Update editorial comment"
+msgstr "Upravit komentář"
+
+#: components/editor/backlog/NewspaperBacklog.vue:64
+#: components/editor/backlog/NewspaperBacklog.vue:80
+msgid "Write short comment to the topic"
+msgstr "Napište krátký komentář"
+
+#: components/editor/backlog/NewspaperBacklog.vue:67
+msgid "Remove editorial"
+msgstr "Odstranit komentář"
+
+#: components/editor/backlog/NewspaperBacklog.vue:68
+msgid "Remove existing editorial"
+msgstr "Odstranit existující komentář"
+
+#: components/editor/backlog/NewspaperBacklog.vue:73
+msgid "Cancel edit"
+msgstr "Zrušit editaci"
+
+#: components/editor/backlog/NewspaperBacklog.vue:74
+msgid "Your changes will be lost"
+msgstr "Vaše změny budou ztraceny"
+
+#: components/editor/backlog/NewspaperBacklog.vue:79
+msgid "Add editorial comment"
+msgstr "Přidat komentář"
+
+#: components/editor/backlog/NewspaperBacklog.vue:83
+msgid "Add editorial tweet(s)"
+msgstr "Přidat komentující tweet(y)"
+
+#: components/editor/backlog/NewspaperBacklog.vue:84
+msgid "Comment the topic using tweets"
+msgstr "Komentuje téma pomocí tweetů"
+
+#: components/editor/backlog/NewspaperBacklog.vue:96
+msgid "Move post up"
+msgstr "Posunout nahoru"
+
+#: components/editor/backlog/NewspaperBacklog.vue:106
+msgid "Move post down"
+msgstr "Posunout dolu"
+
+#: components/editor/backlog/NewspaperBacklog.vue:115
+msgid "Remove from issue"
+msgstr "Odstranit z vydání"
+
+#: components/editor/backlog/NewspaperBacklog.vue:145
+msgid "Paste URL of external article"
+msgstr "Vložte URL externího článku"
+
+#: components/editor/backlog/NewspaperBacklog.vue:149
+msgid "Add article"
+msgstr "Přidat článek"
+
+#: components/editor/backlog/NewspaperBacklog.vue:157
+msgid "No considered posts!"
+msgstr "Nezvažujete žádné příspěvky!"
+
+#: components/editor/backlog/NewspaperBacklog.vue:159
+msgid ""
+"Go on your timeline and start adding interesting articles and tweets for "
+"considaration."
+msgstr "Jděte na hlavní stránku a začněte přidávat články a tweety ke zvážení."
+
+#: components/KairlyPromo.vue:14
+msgid "Import your RSS feeds."
+msgstr "Naimportujte vaše RSS kanály."
+
+#: components/KairlyPromo.vue:20
+msgid "Set when you want to read what content."
+msgstr "Nastavte si, kdy chcete číst jaký obsah."
+
+#: components/KairlyPromo.vue:33
+msgid "Learn more about the platform"
+msgstr "Více o platformě"
+
+#: components/layout/AppHeaderPublic.vue:48
 #: components/layout/AppHeaderPublic.vue:8
 msgid "About platform"
 msgstr "O platformě"
 
+#: components/layout/AppHeaderPublic.vue:49
 #: components/layout/AppHeaderPublic.vue:9
 msgid "Features"
 msgstr "Funkce"
 
 #: components/layout/AppHeaderPublic.vue:10
+#: components/layout/AppHeaderPublic.vue:50
 msgid "Our newspaper (blog)"
 msgstr "Naše noviny (blog)"
 
-#: components/layout/AppHeaderPublic.vue:15 components/modals/SignIn.vue:5
-msgid "Sign In"
+#: components/layout/AppHeaderPublic.vue:16
+msgid "Create account"
+msgstr "Vytvořit účet"
+
+#: components/layout/AppHeaderPublic.vue:17 components/modals/SignIn.vue:20
+msgid "Sign in"
 msgstr "Přihlásit se"
 
-#: components/layout/AppHeaderPublic.vue:21
+#: components/layout/AppHeaderPublic.vue:25
 msgid "For who?"
 msgstr "Pro koho?"
 
-#: components/layout/AppHeaderPublic.vue:24
+#: components/layout/AppHeaderPublic.vue:28
 msgid "Readers"
 msgstr "Čtenáře"
 
-#: components/layout/AppHeaderPublic.vue:25
+#: components/layout/AppHeaderPublic.vue:29
 msgid "Journalists and bloggers"
 msgstr "Novináře a blogery"
 
-#: components/layout/AppHeaderPublic.vue:26
+#: components/layout/AppHeaderPublic.vue:30
 msgid "Publishers"
 msgstr "Vydavatele"
 
-#: components/layout/AppHeaderPublic.vue:27
+#: components/layout/AppHeaderPublic.vue:31
 msgid "Think-tanks and NGOs"
 msgstr "Think tanky a neziskové oraganizace"
 
-#: components/layout/AppHeaderPublic.vue:33
+#: components/layout/AppHeaderPublic.vue:37
 msgid "RSS reader"
 msgstr "RSS čtečka"
+
+#: components/layout/AppHeaderPublic.vue:47 components/layout/AppHeader.vue:10
+#: components/layout/AppHeader.vue:53
+msgid "Home"
+msgstr "Hlavní stránka"
+
+#: components/issues/IssueUnreleasedNewspaper.vue:27
+msgid "We are very sorry, but {editor} didn't prepare a new release for you."
+msgstr "Velmi se omlouváme, ale {editor} nepřichystal nové vydání novin."
 
 #: components/layout/MyPosts.vue:2
 msgid "My posts"
@@ -574,74 +689,6 @@ msgstr "Vytvořit příspěvěk"
 #: pages/posts/create/tweet.vue:17 pages/posts/_postId.vue:23
 msgid "My Posts – Kairly"
 msgstr "Moje příspěvky – Kairly"
-
-#: components/microsite/Faq.vue:3
-msgid "@independent-journalists/faq"
-msgstr ""
-"<h2>Co je Kairly?</h2> \n"
-"<p> \n"
-"Kairly je vznikající platforma pro novináře a jejich čtenáře, která nabízí "
-"<strong>unikátní koncept placeného obsahu</strong>. \n"
-"</p> \n"
-"<h2>V čem jsme unikátní?</h2> \n"
-"<p> \n"
-"  Vracíme do žurnalistiky roli editorů. Editoři na Kairly vydávají noviny. "
-"Do nich zařazují nejlepší články a tweety od autorů napříč \n"
-"  celou platformou. <strong>Čtenáři platí za noviny předplatné</strong>. \n"
-"  <strong>Peníze jsou pak rozděleny mezi editora a autory</strong>, kteří "
-"se \n"
-"  ve vydáních novin objevili. \n"
-"</p> \n"
-"<h2>Co přinášíme čtenářům?</h2> \n"
-"<p> \n"
-"  Nemáme žádnou reklamu. Nikoho nesledujeme. U nás čtenáři neskrolují "
-"donekonečna. <strong>Čtou jen to, co opravdu chtějí číst a vždy v době, \n"
-"  kdy to chtějí číst</strong>. \n"
-"</p>"
-
-#: components/microsite/OfficialStart.vue:3
-msgid "We start officially"
-msgstr "Oficiálně startujeme"
-
-#: components/microsite/OfficialStart.vue:4
-msgid "3rd quarter 2019"
-msgstr "3. čtvrtletí 2019"
-
-#: components/microsite/OfficialStart.vue:5
-msgid ""
-"Participate in closed beta and be among the first to begin making money on "
-"it."
-msgstr ""
-"Zapojte se do uzavřené beta verze a buďte mezi prvními, kdo začne na ní "
-"vydělávat."
-
-#: components/microsite/OfficialStart.vue:17 components/modals/JoinUs.vue:81
-msgid "Request to join"
-msgstr "Zažádat o pozvánku"
-
-#: components/microsite/FooterLinks.vue:7
-msgid "Follow us on Facebook"
-msgstr "Sledujte nás na Facebooku"
-
-#: components/microsite/FooterLinks.vue:14
-msgid "Follow us on Twitter"
-msgstr "Sledujte nás na Twitteru"
-
-#: components/microsite/FooterLinks.vue:21
-msgid "Follow us on LinkedIn"
-msgstr "Sledujte nás na LinkedInu"
-
-#: components/microsite/FooterLinks.vue:27 components/modals/SignIn.vue:33
-msgid "Contact us on"
-msgstr "Zkontaktuje nás na"
-
-#: components/microsite/FooterLinks.vue:32
-msgid "Switch language"
-msgstr "Přepnout jazyk"
-
-#: components/layout/AppHeader.vue:10 components/layout/AppHeader.vue:53
-msgid "Home"
-msgstr "Hlavní stránka"
 
 #: components/layout/AppHeader.vue:16 components/layout/AppHeader.vue:58
 #: pages/index.vue:55 pages/subscription.vue:2
@@ -684,6 +731,50 @@ msgstr "Dejte nám zpětnou vazbu"
 msgid "Logout"
 msgstr "Odhlásit se"
 
+#: components/microsite/Faq.vue:3
+msgid "@independent-journalists/faq"
+msgstr ""
+"<h2>Co je Kairly?</h2> \n"
+"<p> \n"
+"Kairly je vznikající platforma pro novináře a jejich čtenáře, která nabízí "
+"<strong>unikátní koncept placeného obsahu</strong>. \n"
+"</p> \n"
+"<h2>V čem jsme unikátní?</h2> \n"
+"<p> \n"
+"  Vracíme do žurnalistiky roli editorů. Editoři na Kairly vydávají noviny. "
+"Do nich zařazují nejlepší články a tweety od autorů napříč \n"
+"  celou platformou. <strong>Čtenáři platí za noviny předplatné</strong>. \n"
+"  <strong>Peníze jsou pak rozděleny mezi editora a autory</strong>, kteří "
+"se \n"
+"  ve vydáních novin objevili. \n"
+"</p> \n"
+"<h2>Co přinášíme čtenářům?</h2> \n"
+"<p> \n"
+"  Nemáme žádnou reklamu. Nikoho nesledujeme. U nás čtenáři neskrolují "
+"donekonečna. <strong>Čtou jen to, co opravdu chtějí číst a vždy v době, \n"
+"  kdy to chtějí číst</strong>. \n"
+"</p>"
+
+#: components/microsite/FooterLinks.vue:7
+msgid "Follow us on Facebook"
+msgstr "Sledujte nás na Facebooku"
+
+#: components/microsite/FooterLinks.vue:14
+msgid "Follow us on Twitter"
+msgstr "Sledujte nás na Twitteru"
+
+#: components/microsite/FooterLinks.vue:21
+msgid "Follow us on LinkedIn"
+msgstr "Sledujte nás na LinkedInu"
+
+#: components/microsite/FooterLinks.vue:27 components/modals/SignIn.vue:33
+msgid "Contact us on"
+msgstr "Zkontaktuje nás na"
+
+#: components/microsite/FooterLinks.vue:32
+msgid "Switch language"
+msgstr "Přepnout jazyk"
+
 #: components/microsite/HowItWorks.vue:3
 msgid "How the platform works?"
 msgstr "Jak platforma funguje?"
@@ -697,27 +788,23 @@ msgid "We are opening the platform for first 125 beta testers."
 msgstr "Platformu otevíráme pro prvních 125 beta testerů."
 
 #: components/microsite/SignUpForm.vue:8 components/modals/SignIn.vue:11
-#: pages/join-and-read-with-kairly.vue:13
 msgid "Username"
 msgstr "Uživatelské jméno"
 
 #: components/microsite/SignUpForm.vue:12
-#: pages/join-and-read-with-kairly.vue:17
 msgid "Email"
 msgstr "Email"
 
 #: components/microsite/SignUpForm.vue:16 components/modals/SignIn.vue:16
-#: pages/join-and-read-with-kairly.vue:21 pages/user/settings.vue:51
+#: pages/user/settings.vue:51
 msgid "Password"
 msgstr "Heslo"
 
 #: components/microsite/SignUpForm.vue:18
-#: pages/join-and-read-with-kairly.vue:23
 msgid "At least 8 characters"
 msgstr "Alespoň 8 znaků"
 
-#: components/microsite/SignUpForm.vue:21
-#: pages/join-and-read-with-kairly.vue:26
+#: components/microsite/SignUpForm.vue:21 pages/signup.vue:34
 msgid "Sign Up"
 msgstr "Zaregistrovat se"
 
@@ -733,9 +820,9 @@ msgstr "Změnit či zrušit předplatné"
 #: components/modals/AuthorSubscription.vue:11
 #: components/modals/AuthorSubscription.vue:112
 #: components/modals/AuthorSubscription.vue:96
-#: components/modals/NewspaperSubscription.vue:66
+#: components/modals/NewspaperSubscription.vue:67
 #: components/modals/NewspaperSubscription.vue:7
-#: components/modals/NewspaperSubscription.vue:78
+#: components/modals/NewspaperSubscription.vue:79
 msgid "Renew subscription"
 msgstr "Obnovit odběr"
 
@@ -749,29 +836,29 @@ msgid "change periodicity"
 msgstr "změnit periodicitu"
 
 #: components/modals/AuthorSubscription.vue:38
-#: components/modals/NewspaperSubscription.vue:22
+#: components/modals/NewspaperSubscription.vue:23
 msgid "It will cost you"
 msgstr "Bude vás to stát"
 
 #: components/modals/AuthorSubscription.vue:39
-#: components/modals/NewspaperSubscription.vue:23
+#: components/modals/NewspaperSubscription.vue:24
 msgid "It costs you"
 msgstr "Stojí vás to"
 
 #: components/modals/AuthorSubscription.vue:40
-#: components/modals/NewspaperSubscription.vue:24
+#: components/modals/NewspaperSubscription.vue:25
 msgid "You were paying"
 msgstr "Platil jste"
 
 #: components/modals/AuthorSubscription.vue:41
-#: components/modals/NewspaperSubscription.vue:25
+#: components/modals/NewspaperSubscription.vue:26
 msgid "You should be paying"
 msgstr "Měl byste platit"
 
 #: components/modals/AuthorSubscription.vue:45
 #: components/modals/AuthorSubscription.vue:53
-#: components/modals/NewspaperSubscription.vue:27
-#: components/modals/NewspaperSubscription.vue:34
+#: components/modals/NewspaperSubscription.vue:28
+#: components/modals/NewspaperSubscription.vue:35
 msgid "Kč per month"
 msgstr "Kč měsíčně"
 
@@ -780,12 +867,12 @@ msgid "Support the author and donate more"
 msgstr "Podpořte autora a přispějte více"
 
 #: components/modals/AuthorSubscription.vue:52
-#: components/modals/NewspaperSubscription.vue:33
+#: components/modals/NewspaperSubscription.vue:34
 msgid "Your donation"
 msgstr "Váš dar"
 
 #: components/modals/AuthorSubscription.vue:60
-#: components/modals/NewspaperSubscription.vue:41
+#: components/modals/NewspaperSubscription.vue:42
 msgid "You don't have enough credit"
 msgstr "Nemáte dostatek kreditů"
 
@@ -794,7 +881,7 @@ msgid "Subscribe"
 msgstr "Odebírat"
 
 #: components/modals/AuthorSubscription.vue:71
-#: components/modals/NewspaperSubscription.vue:50
+#: components/modals/NewspaperSubscription.vue:51
 msgid "* You can cancel subscription any time"
 msgstr "* Předplatné můžete kdykoliv zrušit"
 
@@ -804,13 +891,13 @@ msgstr "Aktualizovat předplatné"
 
 #: components/modals/AuthorSubscription.vue:119
 #: components/modals/AuthorSubscription.vue:87
-#: components/modals/NewspaperSubscription.vue:60
-#: components/modals/NewspaperSubscription.vue:84
+#: components/modals/NewspaperSubscription.vue:61
+#: components/modals/NewspaperSubscription.vue:85
 msgid "Cancel subscription"
 msgstr "Zrušit odběr"
 
 #: components/modals/AuthorSubscription.vue:100
-#: components/modals/NewspaperSubscription.vue:70
+#: components/modals/NewspaperSubscription.vue:71
 msgid "You cancled the subscription. It expires on"
 msgstr "Zrušili jste předplatné. Vypřší"
 
@@ -819,64 +906,26 @@ msgid "Till then you will still see the author on the timeline."
 msgstr "Do té doby uvidíte autora na své timelině."
 
 #: components/modals/AuthorSubscription.vue:116
-#: components/modals/NewspaperSubscription.vue:81
+#: components/modals/NewspaperSubscription.vue:82
 msgid "Buy credits to renew a subscption"
 msgstr "Kupte si kredity k obnovení předplatného"
 
-#: components/modals/JoinUs.vue:9
-msgid "Are you interested in Kairly?"
-msgstr "Zajímá vás Kairly?"
+#: components/modals/NewspaperSubscription.vue:49
+#: components/modals/NewspaperSubscription.vue:5
+msgid "Subscribe newspaper"
+msgstr "Odebírat noviny"
 
-#: components/modals/JoinUs.vue:17
-msgid "Participate in user testing"
-msgstr "Zapojte se do uživatelského testování"
+#: components/modals/NewspaperSubscription.vue:32
+msgid "Support the newspaper and donate more"
+msgstr "Podpořte noviny a přispějte více"
 
-#: components/modals/JoinUs.vue:19
-msgid "@joinus/usertesting"
-msgstr ""
-"Otestujte s námi Kairly během 30 - 60 minutového uživatelské testování přes "
-"Skype (případně jiný komunikační nástroj)."
+#: components/modals/NewspaperSubscription.vue:57
+msgid "Update donation"
+msgstr "Aktualizujte dar"
 
-#: components/modals/JoinUs.vue:28
-msgid "Schedule user testing interview"
-msgstr "Naplánovat uživatelské testování"
-
-#: components/modals/JoinUs.vue:31 components/modals/JoinUs.vue:41
-msgid "Join Facebook group"
-msgstr "Přidejte se do Facebookové skupiny"
-
-#: components/modals/JoinUs.vue:33
-msgid "@joinus/joinfacebook"
-msgstr ""
-"V naší facebookové skupině pravidelně sdílíme, co je nového na Kairly, \n"
-"a co plánujeme pro příští týdny. Rádi zde uslyšíme i cennou zpětnou vazbu."
-
-#: components/modals/JoinUs.vue:44
-msgid "Follow us on social media"
-msgstr "Sledujte nás na sociálních sítích"
-
-#: components/modals/JoinUs.vue:65
-msgid "Join private beta"
-msgstr "Vyzkoušejte privátní beta verzi"
-
-#: components/modals/JoinUs.vue:67
-msgid "@joinus/joinprivatebeta"
-msgstr ""
-"Omezený počet uživatelů zveme do Kairly k získání zpětné vazby.\n"
-"Díky tomu neustále zlepšujeme aplikaci. Zapojte se také a \n"
-"můžete pomoci zlepšit současný stav žurnalistiky."
-
-#: components/modals/JoinUs.vue:78 pages/_author/_newspaper/index.vue:98
-msgid "email address"
-msgstr "emailová adresa"
-
-#: components/modals/TwitterApology.vue:9
-msgid "Twitter import is not ready yet"
-msgstr "Twitter import ještě není hotový"
-
-#: components/modals/TwitterApology.vue:18
-msgid "We are sorry, but we are still working on the integration with Twitter."
-msgstr "Velmi se omlouváme, ale na integraci s Tiwtterem stále pracujeme."
+#: components/modals/NewspaperSubscription.vue:73
+msgid "Till then you will still see the newspaper on the timeline."
+msgstr "Do té doby uvidíte noviny na své timelině."
 
 #: components/modals/PublishPost.vue:5
 msgid "Publish post"
@@ -918,10 +967,49 @@ msgstr "Zrušit plánování"
 msgid "Schedule for later"
 msgstr "Naplánuj na později"
 
-#: components/posts/PostBase.vue:41 components/posts/PostBase.vue:43
-#: pages/_author/_post.vue:65
-msgid "Consider for newspaper"
-msgstr "Zvážit pro noviny"
+#: components/microsite/OfficialStart.vue:3
+msgid "We start officially"
+msgstr "Oficiálně startujeme"
+
+#: components/microsite/OfficialStart.vue:4
+msgid "3rd quarter 2019"
+msgstr "3. čtvrtletí 2019"
+
+#: components/microsite/OfficialStart.vue:5
+msgid ""
+"Participate in closed beta and be among the first to begin making money on "
+"it."
+msgstr ""
+"Zapojte se do uzavřené beta verze a buďte mezi prvními, kdo začne na ní "
+"vydělávat."
+
+#: components/microsite/OfficialStart.vue:17
+msgid "Request to join"
+msgstr "Zažádat o pozvánku"
+
+#: components/modals/TwitterApology.vue:9
+msgid "Twitter import is not ready yet"
+msgstr "Twitter import ještě není hotový"
+
+#: components/modals/TwitterApology.vue:18
+msgid "We are sorry, but we are still working on the integration with Twitter."
+msgstr "Velmi se omlouváme, ale na integraci s Tiwtterem stále pracujeme."
+
+#: components/modals/SignIn.vue:5
+msgid "Sign In"
+msgstr "Přihlásit se"
+
+#: components/modals/SignIn.vue:23
+msgid "Wrong username or password"
+msgstr "Špatné uživatelské jméno nebo heslo"
+
+#: components/modals/SignIn.vue:29
+msgid "Forgot password?"
+msgstr "Zapomněli jste heslo?"
+
+#: components/posts/EditorialArticleEditor.vue:53
+msgid "Editorial"
+msgstr "Komentář"
 
 #: components/posts/PostArticle.vue:13
 msgid "Read the article"
@@ -935,21 +1023,26 @@ msgstr "Pokračovat ve čtení"
 msgid "Subscribe newspaper to continue reading"
 msgstr "Abyste si mohli přečíst celý článek, přihlaste se k odběru novin."
 
+#: components/posts/PostBase.vue:46 components/posts/PostBase.vue:48
+#: pages/_author/_post.vue:65
+msgid "Consider for newspaper"
+msgstr "Zvážit pro noviny"
+
+#: components/posts/EditorialTweetsEditor.vue:14
+msgid "Move tweet up"
+msgstr "Posunout tweet nahoru"
+
+#: components/posts/EditorialTweetsEditor.vue:21
+msgid "Move tweet down"
+msgstr "Posunout tweet dolů"
+
+#: components/posts/EditorialTweetsEditor.vue:28
+msgid "Remove tweet"
+msgstr "Odstranit tweet"
+
 #: components/posts/PostLink.vue:28
 msgid "Read article"
 msgstr "Číst článek"
-
-#: components/modals/SignIn.vue:20
-msgid "Sign in"
-msgstr "Přihlásit se"
-
-#: components/modals/SignIn.vue:23
-msgid "Wrong username or password"
-msgstr "Špatné uživatelské jméno nebo heslo"
-
-#: components/modals/SignIn.vue:29
-msgid "Forgot password?"
-msgstr "Zapomněli jste heslo?"
 
 #: components/posts/PostTweet.vue:25
 msgid "Original tweet"
@@ -962,38 +1055,6 @@ msgstr "Doporučená vydání"
 #: components/posts/PostRecommendations.vue:27
 msgid "Recommended posts"
 msgstr "Doporučené články"
-
-#: components/profile/ChangePassword.vue:9
-msgid "Change Password"
-msgstr "Změnit heslo"
-
-#: components/profile/ChangePassword.vue:23
-msgid "Old password"
-msgstr "Staré heslo"
-
-#: components/profile/ChangePassword.vue:32
-msgid "New password"
-msgstr "Nové heslo"
-
-#: components/profile/ChangePassword.vue:41
-msgid "New password again"
-msgstr "Zopakujte nové heslo"
-
-#: components/profile/ChangePassword.vue:51 pages/user/settings.vue:54
-msgid "Change password"
-msgstr "Změnit heslo"
-
-#: components/profile/ChangePassword.vue:71
-msgid "Change password - Kairly"
-msgstr "Změna hesla - Kairly"
-
-#: components/profile/ChangePassword.vue:92
-msgid "Password doesn't match"
-msgstr "Hesla se neshodují"
-
-#: components/profile/ChangePassword.vue:102
-msgid "Password has been updated."
-msgstr "Heslo bylo aktualizováno."
 
 #: components/WelcomePage.vue:3
 msgid "Welcome to Kairly!"
@@ -1047,8 +1108,8 @@ msgstr "Jako editor"
 msgid "Do you want to start a newspaper and pick the best content for others?"
 msgstr "Chcete založit noviny a vybírat ten nejlepší obsah pro ostatní?"
 
-#: components/WelcomePage.vue:70 pages/newspapers/index.vue:100
-#: pages/newspapers/index.vue:13 pages/newspapers/index.vue:19
+#: components/WelcomePage.vue:70 pages/newspapers/index.vue:13
+#: pages/newspapers/index.vue:19 pages/newspapers/index.vue:90
 #: pages/_author/index.vue:65
 msgid "Start a newspaper"
 msgstr "Vytvořte noviny"
@@ -1068,6 +1129,38 @@ msgstr "Napište první příspěvek"
 #: components/WelcomePage.vue:83
 msgid "Go Home to start reading"
 msgstr "Jděte na Hlavní stránku a začněte číst"
+
+#: components/profile/ChangePassword.vue:9
+msgid "Change Password"
+msgstr "Změnit heslo"
+
+#: components/profile/ChangePassword.vue:23
+msgid "Old password"
+msgstr "Staré heslo"
+
+#: components/profile/ChangePassword.vue:32
+msgid "New password"
+msgstr "Nové heslo"
+
+#: components/profile/ChangePassword.vue:41
+msgid "New password again"
+msgstr "Zopakujte nové heslo"
+
+#: components/profile/ChangePassword.vue:51 pages/user/settings.vue:54
+msgid "Change password"
+msgstr "Změnit heslo"
+
+#: components/profile/ChangePassword.vue:71
+msgid "Change password - Kairly"
+msgstr "Změna hesla - Kairly"
+
+#: components/profile/ChangePassword.vue:92
+msgid "Password doesn't match"
+msgstr "Hesla se neshodují"
+
+#: components/profile/ChangePassword.vue:102
+msgid "Password has been updated."
+msgstr "Heslo bylo aktualizováno."
 
 #: components/widgets/AuthorSubscription.vue:15
 #: components/widgets/NewspaperSubscription.vue:15
@@ -1095,17 +1188,54 @@ msgstr "Odebírané za {price}"
 msgid "Suspended"
 msgstr "Pozastavené"
 
-#: components/KairlyPromo.vue:14
-msgid "Import your RSS feeds."
-msgstr "Naimportujte vaše RSS kanály."
+#: components/widgets/ConsiderPost.vue:4
+msgid "For which newspaper?"
+msgstr "Pro které noviny?"
 
-#: components/KairlyPromo.vue:20
-msgid "Set when you want to read what content."
-msgstr "Nastavte si, kdy chcete číst jaký obsah."
+#: components/widgets/ConsiderPost.vue:8
+msgid "Article cost"
+msgstr "Cena článku"
 
-#: components/KairlyPromo.vue:33
-msgid "Learn more about the platform"
-msgstr "Více o platformě"
+#: components/widgets/IssueWidget.vue:29
+#: components/widgets/NewspaperWidget.vue:36
+msgid "subscribers"
+msgstr "čtenáři"
+
+#: components/widgets/JumpMenu.vue:21 components/widgets/JumpMenu.vue:5
+msgid "Jump to different time"
+msgstr "Přejít na jiný čas"
+
+#: components/widgets/JumpMenu.vue:30
+msgid "Beginning of the day"
+msgstr "Začátek dne"
+
+#: components/widgets/JumpMenu.vue:66 pages/index.vue:165
+msgid "Today"
+msgstr "Dnes"
+
+#: components/widgets/JumpMenu.vue:84
+msgid "Night"
+msgstr "Noc"
+
+#: components/widgets/JumpMenu.vue:85
+msgid "Evening"
+msgstr "Večer"
+
+#: components/widgets/JumpMenu.vue:86
+msgid "Afternoon"
+msgstr "Odpoledne"
+
+#: components/widgets/JumpMenu.vue:87
+msgid "Noon"
+msgstr "Poledne"
+
+#: components/widgets/JumpMenu.vue:88
+msgid "Morning"
+msgstr "Ráno"
+
+#: components/widgets/JumpMenu.vue:89
+msgid "Early morning"
+msgstr "Brzo ráno"
 
 #: components/widgets/ChangePeriodicity.vue:8
 msgid "How often do you want to read it?"
@@ -1186,10 +1316,11 @@ msgstr "Večer (18:00)"
 msgid "Night (21:00)"
 msgstr "V noci (21:00)"
 
-#: components/widgets/IssueWidget.vue:29
-#: components/widgets/NewspaperWidget.vue:36
-msgid "subscribers"
-msgstr "čtenáři"
+#: components/widgets/RecommendButtonIssue.vue:7
+#: components/widgets/RecommendButtonIssue.vue:8
+#: components/widgets/RecommendButtonPost.vue:6
+msgid "Recommend"
+msgstr "Doporučit"
 
 #: components/widgets/PeriodWidget.vue:4
 msgid "How often do you want to publish?"
@@ -1198,48 +1329,6 @@ msgstr "Jak často chcete publikovat?"
 #: components/widgets/PeriodWidget.vue:7 pages/subscription/authors.vue:30
 msgid "3x per day"
 msgstr "3x za den"
-
-#: components/widgets/JumpMenu.vue:21 components/widgets/JumpMenu.vue:5
-msgid "Jump to different time"
-msgstr "Přejít na jiný čas"
-
-#: components/widgets/JumpMenu.vue:30
-msgid "Beginning of the day"
-msgstr "Začátek dne"
-
-#: components/widgets/JumpMenu.vue:66 pages/index.vue:165
-msgid "Today"
-msgstr "Dnes"
-
-#: components/widgets/JumpMenu.vue:84
-msgid "Night"
-msgstr "Noc"
-
-#: components/widgets/JumpMenu.vue:85
-msgid "Evening"
-msgstr "Večer"
-
-#: components/widgets/JumpMenu.vue:86
-msgid "Afternoon"
-msgstr "Odpoledne"
-
-#: components/widgets/JumpMenu.vue:87
-msgid "Noon"
-msgstr "Poledne"
-
-#: components/widgets/JumpMenu.vue:88
-msgid "Morning"
-msgstr "Ráno"
-
-#: components/widgets/JumpMenu.vue:89
-msgid "Early morning"
-msgstr "Brzo ráno"
-
-#: components/widgets/RecommendButtonPost.vue:6
-#: components/widgets/RecommendButtonIssue.vue:7
-#: components/widgets/RecommendButtonIssue.vue:8
-msgid "Recommend"
-msgstr "Doporučit"
 
 #: pages/explore/recent.vue:4
 msgid "Recent Issues"
@@ -1257,87 +1346,61 @@ msgstr "Nedávné"
 msgid "Most Recent – Explore – Kairly"
 msgstr "Nedávné – Objevujte – Kairly"
 
-#: pages/index.vue:50
-msgid "No articles or tweets yet"
-msgstr "Zatím žádné články nebo tweety"
+#: pages/features/rss-reader.vue:183 pages/features/rss-reader.vue:7
+msgid "RSS reader that prevents distraction"
+msgstr "RSS čtečka, která vás nerozptyluje"
 
-#: pages/index.vue:52
+#: pages/features/rss-reader.vue:10
 msgid ""
-"Nothing was published for you yet. Check your subscriptions or explore more "
-"newspapers and authors."
+"Modern applications subconsciously create the urge to constantly check these "
+"applications."
 msgstr ""
-"Zatím pro vás nevyšla žádná publikace. Podívejte se na vaše Odběry nebo "
-"prozkoumejte další noviny a autory."
+"Moderní aplikace podvědomě vytváří nutkání neustále tyto aplikace "
+"kontrolovat."
 
-#: pages/index.vue:66
-msgid "That's it. You read the entire day."
-msgstr "Hotovo. Máte přečtený celý den."
+#: pages/features/rss-reader.vue:11
+msgid ""
+"We're doing things differently. We update the timeline only every 3 hours. "
+"That's reasonable."
+msgstr ""
+"My na to jdeme jinak. Timelinu vám aktualizujeme jen každé 3 hodiny. Tak je "
+"to rozumné."
 
-#: components/modals/NewspaperSubscription.vue:48
-#: components/modals/NewspaperSubscription.vue:5
-msgid "Subscribe newspaper"
-msgstr "Odebírat noviny"
+#: pages/features/rss-reader.vue:12
+msgid ""
+"Here you set when you want to read what. E.g. you will be receiving articles "
+"from your favorite news site every morning at 9:00 AM."
+msgstr ""
+"U nás si nastavíte, kdy chcete číst co. Např. váš oblíbený zpravodajský web "
+"budete dostávat každé ráno v 9:00."
 
-#: components/modals/NewspaperSubscription.vue:31
-msgid "Support the newspaper and donate more"
-msgstr "Podpořte noviny a přispějte více"
+#: pages/features/rss-reader.vue:50 pages/platform/readers.vue:50
+msgid ""
+"Read on the platform where there is only content that interests you and no "
+"one is disturbing you there."
+msgstr ""
+"Čtěte na platformě, kde je jen obsah, který vás zajímá a nikdo vás tam "
+"neruší."
 
-#: components/modals/NewspaperSubscription.vue:56
-msgid "Update donation"
-msgstr "Aktualizujte dar"
-
-#: components/modals/NewspaperSubscription.vue:72
-msgid "Till then you will still see the newspaper on the timeline."
-msgstr "Do té doby uvidíte noviny na své timelině."
-
-#: components/widgets/ConsiderPost.vue:4
-msgid "For which newspaper?"
-msgstr "Pro které noviny?"
-
-#: components/widgets/ConsiderPost.vue:8
-msgid "Article cost"
-msgstr "Cena článku"
-
-#: pages/platform/journalists.vue:7
-msgid "Are you independent journalist or blogger?"
-msgstr "Jste nezávislí novináři či blogeři?"
-
-#: pages/platform/journalists.vue:9
-msgid "Publish on a modern platform that you do not have to maintain."
-msgstr "Publikujte na moderní platformě, o kterou se nemusíte starat."
-
-#: pages/platform/journalists.vue:10
-msgid "Start earning with a unique concept of paid content."
-msgstr "Začnětě vydělávat s unikátním konceptem placeného obsahu."
-
-#: pages/platform/journalists.vue:11
-msgid "Become a truly independent author."
-msgstr "Staňte se skutečně nezávislým autorem."
-
-#: pages/platform/journalists.vue:49
-msgid "Publish on a modern platform that you do not have to worry about."
-msgstr "Publikujte na moderní platformě, o kterou se nemusíte starat."
-
-#: pages/platform/journalists.vue:51
-msgid "@independent-journalists/modern-platform"
+#: pages/features/rss-reader.vue:53 pages/platform/readers.vue:53
+msgid "@readers/modern-platform"
 msgstr ""
 "<p> \n"
-"  Tvoříme pro vás moderní digitální platformu, která je šita na míru "
-"novinářům a publicistům. \n"
-"  Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, "
-"mobil, tablet či v budoucnu elektronickou čtečku. \n"
-"</p> \n"
+"V dnešní době sociálních sítí a nespočtu aplikací, které se neustále "
+"dožadují vaší pozornosti, budujeme pro vás místo, kde můžete v klidu číst "
+"jen to, co vás zajímá.</p> \n"
+"<p>Nostalgicky vzpomínáme na papírové noviny, kde člověk nemusel donekonečna "
+"skrolovat. S každým otočením listu papíru dostal čtenář perfektně upravený "
+"obsah profesionálním editorem. Tohle nám na internetu chybí.</p> \n"
 "<p> \n"
-"  Jsme milovníci starých dobrých papírových novin a časopisů. Design "
-"platformy kombinuje to nejlepší z éry tištěných periodik \n"
-"  a moderní trendy UX ze současných mobilních a webových aplikací. \n"
-"</p> \n"
-"<p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou "
-"platit, budeme si účtovat 15 % z ceny předplatného.</p>"
+"Naše unikátní koncepce digitálních novin nabízí čtenářům vysoce "
+"personalizovaný obsah, který je ale zároveň profesionálně připravený. Naše "
+"aplikace nevede k závislosti, ale k vytváření prospěšných zvyků při čtení "
+"zpravodajství a publicistiky. </p>"
 
-#: pages/platform/journalists.vue:68 pages/platform/publishers.vue:62
-#: pages/platform/readers.vue:76 pages/platform/think-tanks.vue:57
-#: pages/features/rss-reader.vue:76
+#: pages/features/rss-reader.vue:76 pages/platform/journalists.vue:68
+#: pages/platform/think-tanks.vue:57 pages/platform/readers.vue:76
+#: pages/platform/publishers.vue:62
 msgid "@independent-journalists/quote/jan-mikula"
 msgstr ""
 "<p> \n"
@@ -1355,36 +1418,28 @@ msgstr ""
 "  koupili noviny a četli si je v autobuse měla něco do sebe. \n"
 "</p>"
 
-#: pages/platform/journalists.vue:91
-msgid "Start monetizing your content and become a truly independent author."
-msgstr ""
-"Začněte vydělávat na svém obsahu a staňte se skutečně nezávislým autorem."
+#: pages/features/rss-reader.vue:99 pages/platform/readers.vue:99
+msgid ""
+"By purchasing digital newspapers, you help good journalists and publicists."
+msgstr "Zakoupením digitálních novin pomáháte dobrým novinářům a publicistům."
 
-#: pages/platform/journalists.vue:93
-msgid "@independent-journalists/monetizing-content"
+#: pages/features/rss-reader.vue:101 pages/platform/readers.vue:101
+msgid "@readers/monetizing-content"
 msgstr ""
 "<p> \n"
-"  Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za "
-"kvalitní obsah. \n"
-"  Musíme na to chytře. Zapojte se do našeho unikátního systému placeného "
-"obsahu. \n"
-"</p> \n"
+"Reklama kvalitní novináře nezaplatí. Pokud budou novináři závislí převážně "
+"na reklamě, budou psát obsah, kterému jde především o počet prokliků. Nám "
+"jde o kvalitu, proto se u nás za obsah platí.</p> \n"
+"<p>Zakoupením předplatného digitálních novin podporujete editory, u kterých "
+"si ceníte jejich výběru článků a tweetů. Pomáháte i autorům, kteří se ve "
+"vámi předplacených novinách objevují.</p> \n"
 "<p> \n"
-"  Čtenáři si vás buď mohou předplatit napřímo, nebo si předplácí noviny od "
-"editorů, kteří \n"
-"  vaše články a tweety považují za kvalitní a zařazují je do svých vydání. "
-"Vy za to dostanete \n"
-"  spravedlivý podíl z peněz, které editoři vybrali za své noviny. \n"
-"</p> \n"
-"<p> \n"
-"  Pokud píšete mimořádně zajímavý obsah, čtenáři mají možnost vám poslat "
-"peníze nad \n"
-"  rámec běžného předplatného. \n"
-"</p>"
+"Vaše oblíbené autory, think-tanky či neziskové organizace můžete podpořit "
+"nad rámec běžného předplatného.</p>"
 
-#: pages/platform/journalists.vue:112 pages/platform/publishers.vue:91
-#: pages/platform/readers.vue:124 pages/platform/think-tanks.vue:103
-#: pages/features/rss-reader.vue:124
+#: pages/features/rss-reader.vue:124 pages/platform/journalists.vue:112
+#: pages/platform/think-tanks.vue:103 pages/platform/readers.vue:124
+#: pages/platform/publishers.vue:91
 msgid "@independent-journalists/quote/roman-krejcik"
 msgstr ""
 "<p> \n"
@@ -1402,17 +1457,70 @@ msgstr ""
 "obsahu. \n"
 "</p>"
 
-#: pages/platform/journalists.vue:170
-msgid "Digital Publishing Platform for Journalists and Bloggers"
-msgstr "Digitální publikační platforma pro novináře a blogery"
-
-#: pages/platform/journalists.vue:175
+#: pages/features/rss-reader.vue:184
 msgid ""
-"Kairly is a digital publishing platform for independent journalists and "
-"bloggers who wants to start earning money for writing good content."
+"Our RSS reader allows people to choose when they want to read what. That "
+"leads to a healthy reading habits."
 msgstr ""
-"Kairly je digitální publikační platforma pro nezávislé novináře a blogery, "
-"kteří si chtějí začít vydělávat psaním dobrého obsahu."
+"Naše RSS čtečka umožňuje lidem zvolit, kdy chtějí číst co. To jim pomůže při "
+"vytváření zdravých návyků při čtení."
+
+#: pages/newspapers/index.vue:7
+msgid "Start your first newspaper!"
+msgstr "Založte svoje první noviny!"
+
+#: pages/newspapers/index.vue:10
+msgid ""
+"Are you interested in specific topic? Found a newspaper and start providing "
+"selection of best articles and tweets to others."
+msgstr ""
+"Zajímá vás konkrétní téma? Založte noviny a začněte poskytovat výběr těch "
+"nejlepších článků a tweetů ostatním."
+
+#: pages/newspapers/index.vue:49
+msgid "is releasing in"
+msgstr "bude vydáno"
+
+#: pages/newspapers/index.vue:50
+msgid "with"
+msgstr "s"
+
+#: pages/newspapers/index.vue:51
+msgid "posts"
+msgstr "příspěvky"
+
+#: pages/newspapers/index.vue:61
+msgid "Go to newspaper detail"
+msgstr "Jít na detail novin"
+
+#: pages/newspapers/index.vue:69 pages/newspapers/index.vue:95
+#: pages/_author/_newspaper/settings.vue:2
+msgid "Edit newspaper"
+msgstr "Upravit noviny"
+
+#: pages/newspapers/index.vue:111
+msgid "Upcoming issue"
+msgstr "Nadcházející vydání"
+
+#: pages/newspapers/index.vue:118
+msgid "Considered posts"
+msgstr "Vybrané články"
+
+#: pages/index.vue:50
+msgid "No articles or tweets yet"
+msgstr "Zatím žádné články nebo tweety"
+
+#: pages/index.vue:52
+msgid ""
+"Nothing was published for you yet. Check your subscriptions or explore more "
+"newspapers and authors."
+msgstr ""
+"Zatím pro vás nevyšla žádná publikace. Podívejte se na vaše Odběry nebo "
+"prozkoumejte další noviny a autory."
+
+#: pages/index.vue:66
+msgid "That's it. You read the entire day."
+msgstr "Hotovo. Máte přečtený celý den."
 
 #: pages/newspapers/start.vue:2
 msgid "Start newspaper"
@@ -1497,164 +1605,85 @@ msgstr "Naimportujte kanály"
 msgid "Import RSS feeds – Kairly"
 msgstr "Import RSS kanálů – Kairly"
 
+#: pages/platform/journalists.vue:7
+msgid "Are you independent journalist or blogger?"
+msgstr "Jste nezávislí novináři či blogeři?"
+
+#: pages/platform/journalists.vue:9
+msgid "Publish on a modern platform that you do not have to maintain."
+msgstr "Publikujte na moderní platformě, o kterou se nemusíte starat."
+
+#: pages/platform/journalists.vue:10
+msgid "Start earning with a unique concept of paid content."
+msgstr "Začnětě vydělávat s unikátním konceptem placeného obsahu."
+
+#: pages/platform/journalists.vue:11
+msgid "Become a truly independent author."
+msgstr "Staňte se skutečně nezávislým autorem."
+
+#: pages/platform/journalists.vue:49
+msgid "Publish on a modern platform that you do not have to worry about."
+msgstr "Publikujte na moderní platformě, o kterou se nemusíte starat."
+
+#: pages/platform/journalists.vue:51
+msgid "@independent-journalists/modern-platform"
+msgstr ""
+"<p> \n"
+"  Tvoříme pro vás moderní digitální platformu, která je šita na míru "
+"novinářům a publicistům. \n"
+"  Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, "
+"mobil, tablet či v budoucnu elektronickou čtečku. \n"
+"</p> \n"
+"<p> \n"
+"  Jsme milovníci starých dobrých papírových novin a časopisů. Design "
+"platformy kombinuje to nejlepší z éry tištěných periodik \n"
+"  a moderní trendy UX ze současných mobilních a webových aplikací. \n"
+"</p> \n"
+"<p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou "
+"platit, budeme si účtovat 15 % z ceny předplatného.</p>"
+
+#: pages/platform/journalists.vue:91
+msgid "Start monetizing your content and become a truly independent author."
+msgstr ""
+"Začněte vydělávat na svém obsahu a staňte se skutečně nezávislým autorem."
+
+#: pages/platform/journalists.vue:93
+msgid "@independent-journalists/monetizing-content"
+msgstr ""
+"<p> \n"
+"  Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za "
+"kvalitní obsah. \n"
+"  Musíme na to chytře. Zapojte se do našeho unikátního systému placeného "
+"obsahu. \n"
+"</p> \n"
+"<p> \n"
+"  Čtenáři si vás buď mohou předplatit napřímo, nebo si předplácí noviny od "
+"editorů, kteří \n"
+"  vaše články a tweety považují za kvalitní a zařazují je do svých vydání. "
+"Vy za to dostanete \n"
+"  spravedlivý podíl z peněz, které editoři vybrali za své noviny. \n"
+"</p> \n"
+"<p> \n"
+"  Pokud píšete mimořádně zajímavý obsah, čtenáři mají možnost vám poslat "
+"peníze nad \n"
+"  rámec běžného předplatného. \n"
+"</p>"
+
+#: pages/platform/journalists.vue:170
+msgid "Digital Publishing Platform for Journalists and Bloggers"
+msgstr "Digitální publikační platforma pro novináře a blogery"
+
+#: pages/platform/journalists.vue:175
+msgid ""
+"Kairly is a digital publishing platform for independent journalists and "
+"bloggers who wants to start earning money for writing good content."
+msgstr ""
+"Kairly je digitální publikační platforma pro nezávislé novináře a blogery, "
+"kteří si chtějí začít vydělávat psaním dobrého obsahu."
+
 #: pages/posts/create/article.vue:3 pages/posts/create/tweet.vue:3
 msgid "Save a draft"
 msgstr "Uložit koncept"
-
-#: pages/platform/publishers.vue:7
-msgid "Are you an independent publisher?"
-msgstr "Jste nezávislé vydavatelství?"
-
-#: pages/platform/publishers.vue:16
-msgid "Publish your newspapers and magazines on a modern platform."
-msgstr "Publikujte vaše noviny a časopisy na moderní platformě."
-
-#: pages/platform/publishers.vue:17
-msgid ""
-"Start earning on your publications with a unique concept of paid content."
-msgstr ""
-"Začnětě vydělávat na svých titulech s unikátním konceptem placeného obsahu."
-
-#: pages/platform/publishers.vue:18
-msgid "Reach new audiences."
-msgstr "Oslovte zcela nové skupiny čtenářů."
-
-#: pages/platform/publishers.vue:56
-msgid ""
-"Publish your newspapers and magazines on a modern platform and reach out to "
-"new readers."
-msgstr ""
-"Publikujte vaše noviny a časopisy na moderní platformě a oslovte nové "
-"čtenáře."
-
-#: pages/platform/publishers.vue:58
-msgid "@publishers/modern-platform"
-msgstr ""
-"<p> \n"
-"Soustřeďte se na to, v čem jste dobří. Na vydávání obsahu. My se postaráme o "
-"to, aby se váš obsah dostal ke čtenářům v té nejlepší podobě, ať už jsou na "
-"počítači, mobilu, tabletu či elektronické čtečce knih.</p> \n"
-"<p> \n"
-"Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy "
-"kombinuje to nejlepší z éry tištěných periodik a moderní trendy UX ze "
-"současných mobilních a webových aplikací.</p> \n"
-"<p> \n"
-"Naše unikátní koncepce digitálních novin vám umožní oslovit nové čtenáře. "
-"Větší možnosti personalizace obsahu a zároveň jejich pravidelnost vydávání "
-"vede k vytváření návyku u čtenářů, a tím k větší loajálnosti k vaším "
-"publikacím.</p>"
-
-#: pages/platform/publishers.vue:85
-msgid "Make money on your publications with a unique concept of paid content."
-msgstr "Vydělávejte na svých titulech s unikátním konceptem placeného obsahu."
-
-#: pages/platform/publishers.vue:87
-msgid "@publishers/monetizing-content"
-msgstr ""
-"<p> \n"
-"Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za "
-"kvalitní obsah.Musíme na to chytře. Zapojte vaše vydavatelství do našeho "
-"unikátního systému placeného obsahu.</p> \n"
-"<p> \n"
-"Vydávejte vaše tituly skrz náš ojedinělý koncept digitálních novin a začněte "
-"jednodušše vydávati nové více zaměřené tituly, které vám pomohou díky "
-"personalizaci oslovit nové čtenáře a zvýšípravděpodobnost zakoupení "
-"měsíčního předplatného.</p> \n"
-"<p> \n"
-"Díky otevřenosti celé platformy se váš původní obsah může objevit i ve "
-"vydání novin ostatních editorů.Vy pak získáte spravedlivou peněžní odměnu z "
-"předplatného těchto novin, ve kterýchse váš článek objevil.</p>"
-
-#: pages/platform/publishers.vue:149
-msgid "Digital Publishing Platform for Publishers"
-msgstr "Digitální publikační platforma pro vydavatele"
-
-#: pages/platform/publishers.vue:154
-msgid ""
-"Kairly is a digital publishing platform for publishers that offers a unique "
-"concept of paid content."
-msgstr ""
-"Kairly je digitální publikační platforma pro vydavatele, která přináší "
-"unikátní koncept placeného obsahu."
-
-#: pages/platform/readers.vue:7
-msgid "Are you a news reader?"
-msgstr "Jste čtenáři zpravodajství a publicistiky?"
-
-#: pages/platform/readers.vue:10
-msgid ""
-"Stop endlessly scrolling without thinking. Read only what you really care "
-"about."
-msgstr ""
-"Přestaňte donekonečna bezmyšlenkovitě skrolovat. Čtěte jen to, co vás "
-"opravdu zajímá."
-
-#: pages/platform/readers.vue:11
-msgid ""
-"Don't be bothered by nonsense notifications. Read only when you want and "
-"when you're used to it."
-msgstr ""
-"Nenechte se otravovat nesmyslnými notifikacemi. Čtětě jen v době, kdy chtete "
-"a kdy jste na to zvýklí."
-
-#: pages/platform/readers.vue:12
-msgid "Support high-quality journalists by purchasing a subscription."
-msgstr "Podpořte kvalitní novináře zakoupením předplatného."
-
-#: pages/platform/readers.vue:50 pages/features/rss-reader.vue:50
-msgid ""
-"Read on the platform where there is only content that interests you and no "
-"one is disturbing you there."
-msgstr ""
-"Čtěte na platformě, kde je jen obsah, který vás zajímá a nikdo vás tam "
-"neruší."
-
-#: pages/platform/readers.vue:53 pages/features/rss-reader.vue:53
-msgid "@readers/modern-platform"
-msgstr ""
-"<p> \n"
-"V dnešní době sociálních sítí a nespočtu aplikací, které se neustále "
-"dožadují vaší pozornosti, budujeme pro vás místo, kde můžete v klidu číst "
-"jen to, co vás zajímá.</p> \n"
-"<p>Nostalgicky vzpomínáme na papírové noviny, kde člověk nemusel donekonečna "
-"skrolovat. S každým otočením listu papíru dostal čtenář perfektně upravený "
-"obsah profesionálním editorem. Tohle nám na internetu chybí.</p> \n"
-"<p> \n"
-"Naše unikátní koncepce digitálních novin nabízí čtenářům vysoce "
-"personalizovaný obsah, který je ale zároveň profesionálně připravený. Naše "
-"aplikace nevede k závislosti, ale k vytváření prospěšných zvyků při čtení "
-"zpravodajství a publicistiky. </p>"
-
-#: pages/platform/readers.vue:99 pages/features/rss-reader.vue:99
-msgid ""
-"By purchasing digital newspapers, you help good journalists and publicists."
-msgstr "Zakoupením digitálních novin pomáháte dobrým novinářům a publicistům."
-
-#: pages/platform/readers.vue:101 pages/features/rss-reader.vue:101
-msgid "@readers/monetizing-content"
-msgstr ""
-"<p> \n"
-"Reklama kvalitní novináře nezaplatí. Pokud budou novináři závislí převážně "
-"na reklamě, budou psát obsah, kterému jde především o počet prokliků. Nám "
-"jde o kvalitu, proto se u nás za obsah platí.</p> \n"
-"<p>Zakoupením předplatného digitálních novin podporujete editory, u kterých "
-"si ceníte jejich výběru článků a tweetů. Pomáháte i autorům, kteří se ve "
-"vámi předplacených novinách objevují.</p> \n"
-"<p> \n"
-"Vaše oblíbené autory, think-tanky či neziskové organizace můžete podpořit "
-"nad rámec běžného předplatného.</p>"
-
-#: pages/platform/readers.vue:182
-msgid "Media platform for readers"
-msgstr "Mediální platforma pro čtenáře"
-
-#: pages/platform/readers.vue:187
-msgid ""
-"Kairly is a media platform for pleasant reading without distraction and "
-"endless scrolling."
-msgstr ""
-"Kairly je mediální platforma, kde čtete bez neustálého rušení a nekonečného "
-"skrolování."
 
 #: pages/platform/think-tanks.vue:7
 msgid "Are you think-tank or NGO?"
@@ -1738,21 +1767,57 @@ msgstr "Editovat příspěvek"
 msgid "Delete post"
 msgstr "Smazat příspěvek"
 
-#: pages/posts/create.vue:5
-msgid "Write an article"
-msgstr "Napsat článek"
+#: pages/platform/readers.vue:7
+msgid "Are you a news reader?"
+msgstr "Jste čtenáři zpravodajství a publicistiky?"
 
-#: pages/posts/create.vue:6
-msgid "Write a tweet"
-msgstr "Napsat tweet"
+#: pages/platform/readers.vue:10
+msgid ""
+"Stop endlessly scrolling without thinking. Read only what you really care "
+"about."
+msgstr ""
+"Přestaňte donekonečna bezmyšlenkovitě skrolovat. Čtěte jen to, co vás "
+"opravdu zajímá."
 
-#: pages/join-and-read-with-kairly.vue:6
-msgid "Sign up to help with resurrection of exceptional journalism."
-msgstr "Zapojte se a pomozte nám tvořit vyjímečnou žurnalistiku."
+#: pages/platform/readers.vue:11
+msgid ""
+"Don't be bothered by nonsense notifications. Read only when you want and "
+"when you're used to it."
+msgstr ""
+"Nenechte se otravovat nesmyslnými notifikacemi. Čtětě jen v době, kdy chtete "
+"a kdy jste na to zvýklí."
+
+#: pages/platform/readers.vue:12
+msgid "Support high-quality journalists by purchasing a subscription."
+msgstr "Podpořte kvalitní novináře zakoupením předplatného."
+
+#: pages/platform/readers.vue:182
+msgid "Media platform for readers"
+msgstr "Mediální platforma pro čtenáře"
+
+#: pages/platform/readers.vue:187
+msgid ""
+"Kairly is a media platform for pleasant reading without distraction and "
+"endless scrolling."
+msgstr ""
+"Kairly je mediální platforma, kde čtete bez neustálého rušení a nekonečného "
+"skrolování."
+
+#: pages/signup.vue:36
+msgid ""
+"Kairly is platform which aims to improve environment for journalism. Sign up "
+"for beta version."
+msgstr ""
+"Kairly je platforma, která se snaží vytvořit lepší prostředí pro "
+"žurnalistiku. Zaregistrujte se do beta verze."
 
 #: pages/posts/_postId.vue:2
 msgid "Edit a post"
 msgstr "Editovat příspěvek"
+
+#: pages/posts/published.vue:20
+msgid "You didn't publish any post."
+msgstr "Nepublikoval jste zatím žádný článek."
 
 #: pages/subscription/authors.vue:6
 msgid "No authors"
@@ -1781,113 +1846,6 @@ msgstr "Transakce"
 #: pages/system.vue:67
 msgid "System Reports"
 msgstr "Systémový report"
-
-#: pages/newspapers/index.vue:7
-msgid "Start your first newspaper!"
-msgstr "Založte svoje první noviny!"
-
-#: pages/newspapers/index.vue:10
-msgid ""
-"Are you interested in specific topic? Found a newspaper and start providing "
-"selection of best articles and tweets to others."
-msgstr ""
-"Zajímá vás konkrétní téma? Založte noviny a začněte poskytovat výběr těch "
-"nejlepších článků a tweetů ostatním."
-
-#: pages/newspapers/index.vue:49
-msgid "is releasing in"
-msgstr "bude vydáno"
-
-#: pages/newspapers/index.vue:50
-msgid "with"
-msgstr "s"
-
-#: pages/newspapers/index.vue:51
-msgid "posts"
-msgstr "příspěvky"
-
-#: pages/newspapers/index.vue:61
-msgid "Go to newspaper detail"
-msgstr "Jít na detail novin"
-
-#: pages/newspapers/index.vue:105 pages/newspapers/index.vue:69
-#: pages/_author/_newspaper/settings.vue:2
-msgid "Edit newspaper"
-msgstr "Upravit noviny"
-
-#: pages/newspapers/index.vue:108 pages/newspapers/index.vue:78
-msgid "Delete newspaper"
-msgstr "Zrušit noviny"
-
-#: pages/newspapers/index.vue:121
-msgid "Upcoming issue"
-msgstr "Nadcházející vydání"
-
-#: pages/newspapers/index.vue:128
-msgid "Considered posts"
-msgstr "Vybrané články"
-
-#: pages/user/settings.vue:2 pages/user/settings.vue:4
-msgid "Account Settings"
-msgstr "Nastavení účtu"
-
-#: pages/user/settings.vue:24
-msgid "Personal"
-msgstr "Osobní údaje"
-
-#: pages/user/settings.vue:31
-msgid "Medium"
-msgstr "Médium"
-
-#: pages/user/settings.vue:33
-msgid "Are you writing articles or editing for some medium?"
-msgstr "Pracujete pro nějaké médium?"
-
-#: pages/user/settings.vue:42
-msgid "Timezone"
-msgstr "Časové pásmo"
-
-#: pages/user/settings.vue:47
-msgid ""
-"Tell us in which timezone are you living in, so we can deliver news at the "
-"right time."
-msgstr "V jaké časovém pásmu žijete?"
-
-#: pages/user/settings.vue:53
-msgid "Do you want to have different password?"
-msgstr "Chcete změnit heslo?"
-
-#: pages/user/settings.vue:57
-msgid "Integrations"
-msgstr "Integrace"
-
-#: pages/user/settings.vue:60
-msgid "Twitter username"
-msgstr "Uživatelské jméno na Twitteru"
-
-#: pages/user/settings.vue:62
-msgid ""
-"Provide us with your Twitter username and we will automatically publish your "
-"tweets on Kairly."
-msgstr ""
-"Dejte nám vaše uživatelské jméno na Twitteru a my budeme automaticky "
-"publikovat vaše Tweety."
-
-#: pages/user/settings.vue:65
-msgid "Publishing"
-msgstr "Publikování"
-
-#: pages/user/settings.vue:75
-msgid "Montly subscription price for my posts."
-msgstr "Měsíční předplatné za mé příspěvky."
-
-#: pages/user/settings.vue:78
-msgid "Save profile"
-msgstr "Uložit"
-
-#: pages/user/settings.vue:102
-msgid "Account Settings – Kairly"
-msgstr "Nastavení účtu – Kairly"
 
 #: pages/subscription.vue:5
 msgid "Newspapers"
@@ -1952,17 +1910,67 @@ msgstr "Datum a čas"
 msgid "Credit balance – Kairly"
 msgstr "Stav kreditů – Kairly"
 
-#: pages/user/transactions/upcoming.vue:5
-msgid "Newspaper / Author"
-msgstr "Noviny / Autor"
+#: pages/user/settings.vue:2 pages/user/settings.vue:4
+msgid "Account Settings"
+msgstr "Nastavení účtu"
 
-#: pages/user/transactions/upcoming.vue:6
-msgid "Date of upcoming payment"
-msgstr "Datum nadcházející platby"
+#: pages/user/settings.vue:24
+msgid "Personal"
+msgstr "Osobní údaje"
 
-#: pages/user/transactions/upcoming.vue:52 pages/user/transactions.vue:29
-msgid "Upcoming payments"
-msgstr "Nadcházející platby"
+#: pages/user/settings.vue:31
+msgid "Medium"
+msgstr "Médium"
+
+#: pages/user/settings.vue:33
+msgid "Are you writing articles or editing for some medium?"
+msgstr "Pracujete pro nějaké médium?"
+
+#: pages/user/settings.vue:42
+msgid "Timezone"
+msgstr "Časové pásmo"
+
+#: pages/user/settings.vue:47
+msgid ""
+"Tell us in which timezone are you living in, so we can deliver news at the "
+"right time."
+msgstr "V jaké časovém pásmu žijete?"
+
+#: pages/user/settings.vue:53
+msgid "Do you want to have different password?"
+msgstr "Chcete změnit heslo?"
+
+#: pages/user/settings.vue:57
+msgid "Integrations"
+msgstr "Integrace"
+
+#: pages/user/settings.vue:60
+msgid "Twitter username"
+msgstr "Uživatelské jméno na Twitteru"
+
+#: pages/user/settings.vue:62
+msgid ""
+"Provide us with your Twitter username and we will automatically publish your "
+"tweets on Kairly."
+msgstr ""
+"Dejte nám vaše uživatelské jméno na Twitteru a my budeme automaticky "
+"publikovat vaše Tweety."
+
+#: pages/user/settings.vue:65
+msgid "Publishing"
+msgstr "Publikování"
+
+#: pages/user/settings.vue:75
+msgid "Montly subscription price for my posts."
+msgstr "Měsíční předplatné za mé příspěvky."
+
+#: pages/user/settings.vue:78
+msgid "Save profile"
+msgstr "Uložit"
+
+#: pages/user/settings.vue:102
+msgid "Account Settings – Kairly"
+msgstr "Nastavení účtu – Kairly"
 
 #: pages/user/add-credits.vue:7
 msgid ""
@@ -1991,13 +1999,17 @@ msgstr "Prosím, dejte mi více."
 msgid "Don't be greedy."
 msgstr "Nebuďte chamtivý."
 
-#: pages/user/transactions.vue:5
-msgid "Credit balance"
-msgstr "Stav kreditů"
+#: pages/user/transactions/upcoming.vue:5
+msgid "Newspaper / Author"
+msgstr "Noviny / Autor"
 
-#: pages/user/transactions.vue:30
-msgid "Past payments"
-msgstr "Minulé platby"
+#: pages/user/transactions/upcoming.vue:6
+msgid "Date of upcoming payment"
+msgstr "Datum nadcházející platby"
+
+#: pages/user/transactions/upcoming.vue:52 pages/user/transactions.vue:29
+msgid "Upcoming payments"
+msgstr "Nadcházející platby"
 
 #: pages/_author/index.vue:2
 msgid "Author's profile"
@@ -2019,91 +2031,13 @@ msgstr "Uživatel nenapsal žádný článek ani nevytvořil žádné noviny."
 msgid "You didn't write any post and didn't start any newspaper."
 msgstr "Nenapsal jste žádný článek ani nevytvořil žádné noviny."
 
-#: pages/_author/_newspaper/index.vue:2
-msgid "Newspaper detail"
-msgstr "Detail novin"
+#: pages/user/transactions.vue:5
+msgid "Credit balance"
+msgstr "Stav kreditů"
 
-#: pages/_author/_newspaper/index.vue:30
-msgid "Previous issue"
-msgstr "Přechozí vydání"
-
-#: pages/_author/_newspaper/index.vue:38
-msgid "Next issue"
-msgstr "Následující vydání"
-
-#: pages/_author/_newspaper/index.vue:45
-msgid "Issue from"
-msgstr "Vydání z"
-
-#: pages/_author/_newspaper/index.vue:56 pages/_author/_newspaper/index.vue:58
-msgid "Subscribe RSS"
-msgstr "Odebírat RSS"
-
-#: pages/_author/_newspaper/index.vue:70 pages/_author/_newspaper/index.vue:72
-#: pages/_author/_post.vue:77
-msgid "Share on Facebook"
-msgstr "Sdílejte na Facebook"
-
-#: pages/_author/_newspaper/index.vue:84 pages/_author/_newspaper/index.vue:86
-#: pages/_author/_post.vue:85
-msgid "Share on Twitter"
-msgstr "Sdílejte na Twitter"
-
-#: pages/_author/_newspaper/index.vue:108
-msgid "Send newspaper by email"
-msgstr "Zasílat noviny emailem"
-
-#: pages/_author/_newspaper/index.vue:126
-msgid "No issue yet"
-msgstr "Zatím žádné vydání novin"
-
-#: pages/_author/_newspaper/index.vue:128
-msgid ""
-"Subscribe the newspaper and once it's published, we will show you on your "
-"timeline."
-msgstr ""
-"Přihlašte se k odběru novin a jakmile bude k dispozici nové číslozobrazíme "
-"vám ho na hlavní stránce."
-
-#: pages/features/rss-reader.vue:183 pages/features/rss-reader.vue:7
-msgid "RSS reader that prevents distraction"
-msgstr "RSS čtečka, která vás nerozptyluje"
-
-#: pages/features/rss-reader.vue:10
-msgid ""
-"Modern applications subconsciously create the urge to constantly check these "
-"applications."
-msgstr ""
-"Moderní aplikace podvědomě vytváří nutkání neustále tyto aplikace "
-"kontrolovat."
-
-#: pages/features/rss-reader.vue:11
-msgid ""
-"We're doing things differently. We update the timeline only every 3 hours. "
-"That's reasonable."
-msgstr ""
-"My na to jdeme jinak. Timelinu vám aktualizujeme jen každé 3 hodiny. Tak je "
-"to rozumné."
-
-#: pages/features/rss-reader.vue:12
-msgid ""
-"Here you set when you want to read what. E.g. you will be receiving articles "
-"from your favorite news site every morning at 9:00 AM."
-msgstr ""
-"U nás si nastavíte, kdy chcete číst co. Např. váš oblíbený zpravodajský web "
-"budete dostávat každé ráno v 9:00."
-
-#: pages/features/rss-reader.vue:184
-msgid ""
-"Our RSS reader allows people to choose when they want to read what. That "
-"leads to a healthy reading habits."
-msgstr ""
-"Naše RSS čtečka umožňuje lidem zvolit, kdy chtějí číst co. To jim pomůže při "
-"vytváření zdravých návyků při čtení."
-
-#: pages/posts/published.vue:20
-msgid "You didn't publish any post."
-msgstr "Nepublikoval jste zatím žádný článek."
+#: pages/user/transactions.vue:30
+msgid "Past payments"
+msgstr "Minulé platby"
 
 #: pages/subscription/newspapers.vue:6
 msgid "No newspapers"
@@ -2124,6 +2058,140 @@ msgstr "Objevujte noviny"
 #: pages/subscription/newspapers.vue:31
 msgid "Newspapers – My Subscription – Kairly"
 msgstr "Noviny – Moje odběry – Kairly"
+
+#: pages/_author/_newspaper/index.vue:2
+msgid "Newspaper detail"
+msgstr "Detail novin"
+
+#: pages/_author/_newspaper/index.vue:38
+msgid "Previous issue"
+msgstr "Přechozí vydání"
+
+#: pages/_author/_newspaper/index.vue:46
+msgid "Next issue"
+msgstr "Následující vydání"
+
+#: pages/_author/_newspaper/index.vue:53
+msgid "Issue from"
+msgstr "Vydání z"
+
+#: pages/_author/_newspaper/index.vue:64 pages/_author/_newspaper/index.vue:66
+msgid "Subscribe RSS"
+msgstr "Odebírat RSS"
+
+#: pages/_author/_newspaper/index.vue:78 pages/_author/_newspaper/index.vue:80
+#: pages/_author/_post.vue:77
+msgid "Share on Facebook"
+msgstr "Sdílejte na Facebook"
+
+#: pages/_author/_newspaper/index.vue:92 pages/_author/_newspaper/index.vue:94
+#: pages/_author/_post.vue:85
+msgid "Share on Twitter"
+msgstr "Sdílejte na Twitter"
+
+#: pages/_author/_newspaper/index.vue:106
+msgid "email address"
+msgstr "emailová adresa"
+
+#: pages/_author/_newspaper/index.vue:116
+msgid "Send newspaper by email"
+msgstr "Zasílat noviny emailem"
+
+#: pages/_author/_newspaper/index.vue:134
+msgid "No issue yet"
+msgstr "Zatím žádné vydání novin"
+
+#: pages/_author/_newspaper/index.vue:136
+msgid ""
+"Subscribe the newspaper and once it's published, we will show you on your "
+"timeline."
+msgstr ""
+"Přihlašte se k odběru novin a jakmile bude k dispozici nové číslozobrazíme "
+"vám ho na hlavní stránce."
+
+#: pages/posts/create.vue:5
+msgid "Write an article"
+msgstr "Napsat článek"
+
+#: pages/posts/create.vue:6
+msgid "Write a tweet"
+msgstr "Napsat tweet"
+
+#: pages/platform/publishers.vue:7
+msgid "Are you an independent publisher?"
+msgstr "Jste nezávislé vydavatelství?"
+
+#: pages/platform/publishers.vue:16
+msgid "Publish your newspapers and magazines on a modern platform."
+msgstr "Publikujte vaše noviny a časopisy na moderní platformě."
+
+#: pages/platform/publishers.vue:17
+msgid ""
+"Start earning on your publications with a unique concept of paid content."
+msgstr ""
+"Začnětě vydělávat na svých titulech s unikátním konceptem placeného obsahu."
+
+#: pages/platform/publishers.vue:18
+msgid "Reach new audiences."
+msgstr "Oslovte zcela nové skupiny čtenářů."
+
+#: pages/platform/publishers.vue:56
+msgid ""
+"Publish your newspapers and magazines on a modern platform and reach out to "
+"new readers."
+msgstr ""
+"Publikujte vaše noviny a časopisy na moderní platformě a oslovte nové "
+"čtenáře."
+
+#: pages/platform/publishers.vue:58
+msgid "@publishers/modern-platform"
+msgstr ""
+"<p> \n"
+"Soustřeďte se na to, v čem jste dobří. Na vydávání obsahu. My se postaráme o "
+"to, aby se váš obsah dostal ke čtenářům v té nejlepší podobě, ať už jsou na "
+"počítači, mobilu, tabletu či elektronické čtečce knih.</p> \n"
+"<p> \n"
+"Jsme milovníci starých dobrých papírových novin a časopisů. Design platformy "
+"kombinuje to nejlepší z éry tištěných periodik a moderní trendy UX ze "
+"současných mobilních a webových aplikací.</p> \n"
+"<p> \n"
+"Naše unikátní koncepce digitálních novin vám umožní oslovit nové čtenáře. "
+"Větší možnosti personalizace obsahu a zároveň jejich pravidelnost vydávání "
+"vede k vytváření návyku u čtenářů, a tím k větší loajálnosti k vaším "
+"publikacím.</p>"
+
+#: pages/platform/publishers.vue:85
+msgid "Make money on your publications with a unique concept of paid content."
+msgstr "Vydělávejte na svých titulech s unikátním konceptem placeného obsahu."
+
+#: pages/platform/publishers.vue:87
+msgid "@publishers/monetizing-content"
+msgstr ""
+"<p> \n"
+"Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za "
+"kvalitní obsah.Musíme na to chytře. Zapojte vaše vydavatelství do našeho "
+"unikátního systému placeného obsahu.</p> \n"
+"<p> \n"
+"Vydávejte vaše tituly skrz náš ojedinělý koncept digitálních novin a začněte "
+"jednodušše vydávati nové více zaměřené tituly, které vám pomohou díky "
+"personalizaci oslovit nové čtenáře a zvýšípravděpodobnost zakoupení "
+"měsíčního předplatného.</p> \n"
+"<p> \n"
+"Díky otevřenosti celé platformy se váš původní obsah může objevit i ve "
+"vydání novin ostatních editorů.Vy pak získáte spravedlivou peněžní odměnu z "
+"předplatného těchto novin, ve kterýchse váš článek objevil.</p>"
+
+#: pages/platform/publishers.vue:149
+msgid "Digital Publishing Platform for Publishers"
+msgstr "Digitální publikační platforma pro vydavatele"
+
+#: pages/platform/publishers.vue:154
+msgid ""
+"Kairly is a digital publishing platform for publishers that offers a unique "
+"concept of paid content."
+msgstr ""
+"Kairly je digitální publikační platforma pro vydavatele, která přináší "
+"unikátní koncept placeného obsahu."
 
 #: pages/_author/_post.vue:2
 msgid "Article"
@@ -2160,6 +2228,43 @@ msgstr "Denně v {at}"
 #: mixins/PeriodicityMixin.js:28
 msgid "Every {dow} at {at}"
 msgstr "Každé {dow} v {at}"
+
+#~ msgid "Are you interested in Kairly?"
+#~ msgstr "Zajímá vás Kairly?"
+
+#~ msgid "Participate in user testing"
+#~ msgstr "Zapojte se do uživatelského testování"
+
+#~ msgid "@joinus/usertesting"
+#~ msgstr ""
+#~ "Otestujte s námi Kairly během 30 - 60 minutového uživatelské testování "
+#~ "přes Skype (případně jiný komunikační nástroj)."
+
+#~ msgid "Schedule user testing interview"
+#~ msgstr "Naplánovat uživatelské testování"
+
+#~ msgid "Join Facebook group"
+#~ msgstr "Přidejte se do Facebookové skupiny"
+
+#~ msgid "@joinus/joinfacebook"
+#~ msgstr ""
+#~ "V naší facebookové skupině pravidelně sdílíme, co je nového na Kairly, \n"
+#~ "a co plánujeme pro příští týdny. Rádi zde uslyšíme i cennou zpětnou vazbu."
+
+#~ msgid "Follow us on social media"
+#~ msgstr "Sledujte nás na sociálních sítích"
+
+#~ msgid "Join private beta"
+#~ msgstr "Vyzkoušejte privátní beta verzi"
+
+#~ msgid "@joinus/joinprivatebeta"
+#~ msgstr ""
+#~ "Omezený počet uživatelů zveme do Kairly k získání zpětné vazby.\n"
+#~ "Díky tomu neustále zlepšujeme aplikaci. Zapojte se také a \n"
+#~ "můžete pomoci zlepšit současný stav žurnalistiky."
+
+#~ msgid "Sign up to help with resurrection of exceptional journalism."
+#~ msgstr "Zapojte se a pomozte nám tvořit vyjímečnou žurnalistiku."
 
 #~ msgid "Solution for"
 #~ msgstr "Řešení pro"

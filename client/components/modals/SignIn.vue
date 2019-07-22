@@ -44,7 +44,7 @@
 import DialogWindow from '@/components/modals/DialogWindow'
 
 export default {
-  name: 'JoinUsDialog',
+  name: 'SignInDialog',
 
   props: {
     closeModal: Function

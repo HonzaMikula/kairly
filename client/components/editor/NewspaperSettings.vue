@@ -129,6 +129,17 @@
     <footer>
       <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
     </footer>
+
+    <section class="newspaper-settings--delete">
+      <div>
+        <h2>{{ $t('Delete this newspaper') }}</h2>
+        <p>{{ $t('Once you delete it, there is no way back. Be careful.') }}</p>
+      </div>
+      <button
+        @click.prevent="confirmDeleteNewspaper">
+        {{ $t('Delete newspaper') }}
+      </button>
+    </section>
   </div>
 </template>
 
@@ -290,7 +301,15 @@ export default {
       this.$router.push('/newspapers')
     },
 
-    ...mapActions(["startNewspaper", "updateNewspaper"])
+    confirmDeleteNewspaper() {
+      if (window.confirm(this.$t('Do you really want to delete this newspaper?'))) {
+        this.deleteNewspaper(this.newspaper)
+        window.localStorage.setItem('manageNewspapers.selected', null)
+        this.$router.push('/newspapers')
+      }
+    },
+
+    ...mapActions(['deleteNewspaper', 'startNewspaper', 'updateNewspaper'])
   }
 };
 </script>
@@ -489,4 +508,26 @@ export default {
 
     border-radius: 0 5px 5px 0
     padding: 0 $baseline/2
+
+
+//- Delete newspapers
+.newspaper-settings--delete
+  display: flex
+  align-items: center
+  margin: $baseline*2 0
+  padding: $baseline
+
+  border: 1px dashed $c-red
+
+  div
+    margin-right: auto
+
+  button
+    +button
+
+    background: $c-red
+
+    &:hover,
+    &:focus
+      background: darken($c-red, 10%)
 </style>

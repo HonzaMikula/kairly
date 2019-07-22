@@ -12,7 +12,10 @@
       </nav>
 
       <nav class="app-header-public--controls">
-        <a href="" @click.prevent="openSignInModal()">{{ $t('Sign In') }}</a>
+        <ul>
+          <li><nuxt-link to="/signup">{{ $t('Create account') }}</nuxt-link></li>
+          <li><a href="" @click.prevent="openSignInModal()">{{ $t('Sign in') }}</a></li>
+        </ul>
         <button class="hamburger-menu" @click="openMobileMenu()"></button>
       </nav>
     </div>
@@ -56,7 +59,6 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import JoinUsModal from '@/components/modals/JoinUs'
 import SignInModal from '@/components/modals/SignIn'
 
 export default {
@@ -279,17 +281,35 @@ export default {
 //- Sign In
 .app-header-public--controls
   display: flex
-  align-items: center
   margin-left: auto
 
-  a
-    +button(secondary)
+  ul
+    display: flex
 
     @media (max-width: $mobile)
-      padding: 0 $baseline/2
-      font-size: $fs--1
+      display: none
 
-      white-space: nowrap
+  li 
+    list-style: none
+    a
+      display: block
+      border-radius: 5px
+      padding: 0 $baseline/2
+      margin-top: $baseline / 4
+      margin-right: $baseline / 4
+
+      color: #555
+
+      line-height: $baseline * 1.5
+      
+
+      &:focus,
+      &:hover,
+      &.nuxt-link-active
+        background: #eee
+
+    @media (max-width: $mobile)
+      margin-right: $baseline / 2
 
   //- hamburger menu for mobile
   .hamburger-menu    

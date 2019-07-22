@@ -15,9 +15,14 @@
         </picture>
 
         <h3>
-          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-            {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-          </nuxt-link>
+          <template v-if="post.author.kind == 'external'">
+            <a :href="post.author.url" target="_blank">{{ post.author.name }}</a>
+          </template>
+          <template v-else>
+            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+              {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+            </nuxt-link>
+          </template>
         </h3>
 
         <AuthorPopup
@@ -118,7 +123,6 @@ export default {
 //- Post -//
 .post
   display: block
-  border-radius: 6px
   margin-bottom: $baseline / 2
   padding: $baseline / 2
 
@@ -203,22 +207,28 @@ export default {
         background: #ddd
 
       &.tweet
-        +button-icon($fa-var-twitter, icon, brand, small) 
+        +button-icon($fa-var-twitter, icon, brand, small)
 
       &.external-link::before
         +button-icon($fa-var-external-link-square-alt, icon, solid, small)
 
       &.edit
-        +button-icon($fa-var-pencil-alt, icon, solid, small) 
+        +button-icon($fa-var-pencil-alt, icon, solid, small)
 
       &.up
         +button-icon($fa-var-arrow-up, icon, solid, small)
 
       &.down
-        +button-icon($fa-var-arrow-down, icon, solid, small) 
+        +button-icon($fa-var-arrow-down, icon, solid, small)
 
       &.remove
-        +button-icon($fa-var-times, icon, solid, small) 
+        +button-icon($fa-var-times, icon, solid, small)
+
+      &.editorial
+        +button-icon($fa-var-comment-dots, icon, solid, small)
+
+        &.is-active
+          background: $c-base
 
     > button
       +button(primary, small)
@@ -246,5 +256,27 @@ export default {
         line-height: $baseline
 
 
+//- Popover TODO: maybe move it somewhere else
+.popover-body
+  padding: 0
 
+  font-family: $ff-sans
+  font-size: $fs-0
+
+  li
+    padding: $baseline/4 $baseline/2
+
+    border-bottom: 1px solid #eee
+
+    cursor: pointer
+
+    &:last-of-type
+      border-bottom: 0
+
+    &:hover,
+    &:focus
+      background: #eee
+
+    h6
+      font-weight: 600
 </style>

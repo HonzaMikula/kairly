@@ -8,14 +8,26 @@
       </picture>
 
       <h3>
-        <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-          {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-        </nuxt-link>
+        <template v-if="post.author.kind == 'external'">
+          <a :href="post.author.url" target="_blank">{{ post.author.name }}</a>
+        </template>
+        <template v-else>
+          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+            {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+          </nuxt-link>
+        </template>
         •
         {{ post.time | moment('MMM D') }}
       </h3>
 
       <section>
+        <button
+          v-if="isTweersEditorialOpen && post.type == 'tweet'"
+          @click="$emit('addToEditorial')"
+        >
+          {{ $t('Add to editorial') }}
+        </button>
+
         <button @click="$emit('publish')">{{ $t('Publish') }}</button>
 
         <button-icon
@@ -24,8 +36,8 @@
           :title="$t('Remove post from considaration')"
           v-b-tooltip
           tabindex="0"
-          @click.prevent="$emit('remove')">
-        </button-icon>
+          @click.prevent="$emit('remove')"
+        />
       </section>
 
     </header>
@@ -55,6 +67,7 @@ export default {
 
   props: {
     post: Object,
+    isTweersEditorialOpen: Boolean,
     publish: Function,
     removePost: Function
   },
@@ -147,8 +160,8 @@ export default {
           +button-icon($fa-var-arrow-up, icon, solid, small)
 
         &.down
-          +button-icon($fa-var-arrow-down, icon, solid, small) 
+          +button-icon($fa-var-arrow-down, icon, solid, small)
 
         &.remove
-          +button-icon($fa-var-times, icon, solid, small) 
+          +button-icon($fa-var-times, icon, solid, small)
 </style>
