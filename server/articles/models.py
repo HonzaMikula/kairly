@@ -388,12 +388,17 @@ class Backlog(models.Model):
 
     @classmethod
     def consider_post(cls, newspaper, post):
-        if cls.objects.filter(newspaper=newspaper, post=post).exists():
+        if isinstance(post, int):
+            post_id = post
+        else:
+            post_id = post.id
+
+        if cls.objects.filter(newspaper=newspaper, post_id=post_id).exists():
             return None
 
         return cls.objects.create(
             newspaper=newspaper,
-            post=post
+            post_id=post_id
         )
 
 

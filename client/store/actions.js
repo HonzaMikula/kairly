@@ -141,6 +141,35 @@ export async function loadNewspaperBacklog({ commit, state, dispatch }, fullName
   })
 }
 
+export async function removeFromBacklogLocal({ commit, state}, {newspaper, post}) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const modifiedBacklog = [...postsBacklog]
+  modifiedBacklog.splice(modifiedBacklog.findIndex(log => log.post.id === post.id), 1)
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog: modifiedBacklog,
+    postsPublished,
+    currentMonthStats
+  })
+}
+
+export async function addToBacklogLocal({ commit, state}, {newspaper, post}) {
+  const { fullName } = newspaper
+  const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
+  const modifiedBacklog = [...postsBacklog]
+  modifiedBacklog.unshift({
+    post,
+    editorial: null
+  })
+  commit('newspaperBacklog', {
+    fullName,
+    postsBacklog: modifiedBacklog,
+    postsPublished,
+    currentMonthStats
+  })
+}
+
 export async function backlogPublish({ commit, state}, {newspaper, log}) {
   const { fullName } = newspaper
   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]

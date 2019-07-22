@@ -325,6 +325,11 @@ export default {
       const log = this.published.find(l => l.post.id === this.tweetsTarget)
       const { tweets } = this.editorialEditors[this.tweetsTarget]
       tweets.push(post)
+      // TODO this is hack
+      this.$store.dispatch('removeFromBacklogLocal', {
+        newspaper: this.newspaper,
+        post: post,
+      })
       this.saveTweetsEditorial(log, tweets)
       this.$root.$emit('bv::hide::popover')
     },
@@ -333,6 +338,11 @@ export default {
       const { tweets } = this.editorialEditors[this.tweetsTarget]
       const idx = tweets.indexOf(tweet)
       tweets.splice(idx, 1)
+      // TODO this is hack
+      this.$store.dispatch('addToBacklogLocal', {
+        newspaper: this.newspaper,
+        post: tweet,
+      })
       this.saveTweetsEditorial(log, tweets)
       this.$root.$emit('bv::hide::popover')
     },

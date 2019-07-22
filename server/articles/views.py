@@ -442,10 +442,12 @@ class EditorialsView(View):
                         et.save()
                 except ValueError:
                     et.delete()
+                    Backlog.consider_post(newspaper, et.post_id)
 
             for post_id in set(ids) - ids_in_db:
                 idx = ids.index(post_id)
                 EditorialTweet.objects.create(editorial=editorial, post_id=post_id, ordering=idx)
+                Backlog.objects.filter(newspaper=newspaper, post_id=post_id).delete()
 
         else:
             if kind_changed:
