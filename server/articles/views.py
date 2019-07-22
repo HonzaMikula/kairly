@@ -430,8 +430,9 @@ class EditorialsView(View):
         editorial.save()
 
         if kind == 'tweets':
-            tweets = list(Post.objects.filter(id__in=payload['tweets'], kind=Post.TWEET))
-            ids = [t.id for t in tweets]
+            ids = payload['tweets']
+            valid_tweet_ids = set(Post.objects.filter(id__in=payload['tweets'], kind=Post.TWEET).values_list('id', flat=True))
+            ids = [id for id in ids if id in valid_tweet_ids]
             ids_in_db = set()
             for et in EditorialTweet.objects.filter(editorial=editorial):
                 ids_in_db.add(et.post_id)

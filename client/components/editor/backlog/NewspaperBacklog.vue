@@ -131,6 +131,8 @@
             <EditorialTweetsEditor
               v-if="edit.type === 'tweets'"
               :tweets="edit.tweets"
+              @moveTweetDown="tweet => moveTweetDown(log, tweet)"
+              @moveTweetUp="tweet => moveTweetUp(log, tweet)"
               @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
             />
           </template>
@@ -343,6 +345,24 @@ export default {
         newspaper: this.newspaper,
         post: tweet,
       })
+      this.saveTweetsEditorial(log, tweets)
+      this.$root.$emit('bv::hide::popover')
+    },
+
+    moveTweetDown(log, tweet) {
+      const { tweets } = this.editorialEditors[this.tweetsTarget]
+      const idx = tweets.indexOf(tweet)
+      tweets[idx] = tweets[idx + 1]
+      tweets[idx + 1] = tweet
+      this.saveTweetsEditorial(log, tweets)
+      this.$root.$emit('bv::hide::popover')
+    },
+
+    moveTweetUp(log, tweet) {
+      const { tweets } = this.editorialEditors[this.tweetsTarget]
+      const idx = tweets.indexOf(tweet)
+      tweets[idx] = tweets[idx - 1]
+      tweets[idx - 1] = tweet
       this.saveTweetsEditorial(log, tweets)
       this.$root.$emit('bv::hide::popover')
     },
