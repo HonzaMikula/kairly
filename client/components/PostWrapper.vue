@@ -100,6 +100,14 @@ export default {
     timeline-post--article--content
       column-count: 2
 
+
+  .editorial-post-tweet-editor
+    article
+      margin: 0
+
+    timeline-post--tweet
+        margin: 0
+
   //- tweets
   .editorial-post--editorial
     align-self: center
