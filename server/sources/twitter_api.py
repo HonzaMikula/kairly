@@ -116,6 +116,8 @@ def _get_attachements(api, status):
     if quoted_status_item:
         attachments.append(quoted_status_item)
 
+    content = content.replace('\n', '<br/>')
+
     return content, attachments or None
 
 
