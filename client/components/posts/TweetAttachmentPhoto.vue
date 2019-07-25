@@ -25,7 +25,6 @@ export default {
   grid-column-gap: 2px
   grid-row-gap: 2px
   max-height: 383px
-  margin-bottom: -($baseline/2)
   margin-top: $baseline / 2
 
   &.gallery-1

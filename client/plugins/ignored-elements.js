@@ -77,8 +77,4 @@ Vue.config.ignoredElements = [
   'timeline-post--continue-reading',
   'timeline-post--tweet',
   'timeline-view',
-  'tweet-attachment-gallery',
-  'tweet-attachment-link-view',
-  'tweet-attachment-quote-view',
-  'tweet-attachment-video-view',
 ]

@@ -88,7 +88,8 @@ export default {
     grid-template-columns: 1fr
 
   //- main article
-  .newspaper
+  .newspaper,
+  .link
     grid-column: 1 / span 2
     grid-row: 1
     margin: 0
@@ -121,7 +122,7 @@ export default {
       timeline-post--tweet
         margin: 0
 
-        tweet-attachment-link-view
+        .tweet-attachment-link-view
           display: none //- TODO: refactor so it's not done over CSS
 
       timeline-post--article--content

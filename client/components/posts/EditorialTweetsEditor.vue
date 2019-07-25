@@ -78,7 +78,7 @@ export default {
   .post.tweet
     background: #F2ECEC
 
-  tweet-attachment-link-view
+  .tweet-attachment-link-view
     display: none //- TODO: refactor so it's not done over CSS
 
 //- If no tweets

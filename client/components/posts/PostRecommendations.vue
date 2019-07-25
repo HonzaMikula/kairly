@@ -11,7 +11,7 @@
         </h3>
 
         <p>
-          {{ item.ref.posts.map(post => post.content.title || post.author.name).filter(title => title).join(' • ')  }}
+          {{ item.ref.posts.map(({post}) => post.content.title || post.author.name).filter(title => title).join(' • ')  }}
         </p>
 
         <footer class="recommendations-post--author">
