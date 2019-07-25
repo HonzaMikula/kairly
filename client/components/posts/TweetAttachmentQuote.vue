@@ -28,10 +28,16 @@ export default {
   a
     color: $c-base
 
-  h4
-    margin-bottom: $baseline / 4
+  h4   
+    font-family: $ff-sans
+    font-size: $fs--1
+    font-weight: 600
+
+    a
+      color: #555
 
   p
+    font-size: $fs--1
     line-height: 1.58
 
 
