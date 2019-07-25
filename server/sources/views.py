@@ -117,7 +117,7 @@ def import_rss(request):
             return JsonResponse({'error': f"Resource is not valid feed"})
 
     uniq_id = hashlib.sha1(url.encode('utf-8')).hexdigest()[:12]
-    title = rss.feed.title or url.replace('https://', '').replace('http://')
+    title = getattr(rss.feed, 'title', None) or url.replace('https://', '').replace('http://')
     author = User.objects.create(
         username=f"feed-{uniq_id}",
         name=title,
