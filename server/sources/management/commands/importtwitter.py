@@ -81,7 +81,8 @@ class Command(BaseCommand):
                             self.stdout.write('Skipping {}. Already imported'.format(guid))
                         continue
 
-                    args = status_to_post_args(self.api, status)
+                    # provide screen name because it's not available due trim_user=True optimization
+                    args = status_to_post_args(self.api, status, screen_name=twitter_account)
                     args['author'] = user
 
                     if post is None:

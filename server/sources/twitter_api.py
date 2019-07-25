@@ -116,6 +116,8 @@ def _get_attachements(api, status):
     if quoted_status_item:
         attachments.append(quoted_status_item)
 
+    content = content.replace('\n', '<br/>')
+
     return content, attachments or None
 
 
@@ -123,11 +125,12 @@ def get_post_guid(status):
     return 'twitter|' + status.id_str
 
 
-def status_to_post_args(api, status, dump_attachments=True):
-    title = "{}: {}...".format(status.user.screen_name, status.full_text[:60].replace('\n', ' '))
+def status_to_post_args(api, status, *, screen_name=None, dump_attachments=True):
+    screen_name = screen_name or status.user.screen_name
+    title = "{}: {}...".format(screen_name, status.full_text[:60].replace('\n', ' '))
     content, attachments = _get_attachements(api, status)
 
-    source = "https://twitter.com/{}/status/{}".format(status.user.screen_name, status.id_str)
+    source = "https://twitter.com/{}/status/{}".format(screen_name, status.id_str)
 
     if dump_attachments:
         attachments = json.dumps(attachments) if attachments else None

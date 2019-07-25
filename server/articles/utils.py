@@ -8,19 +8,14 @@ from sources.parser.og import parse_og_tags
 from sources.twitter_api import get_api_connection, status_to_post_args
 from utils.url import fetch_url
 
-RE_TWITTER_URL = re.compile(r'https://twitter\.com/[^/]+/status/(\d+)')
+RE_TWITTER_URL = re.compile(r'https://twitter\.com/[^/]+/status/(\d+)(\?.*)?')
 
 
-def create_post_link(url, user, hidden=False, published=None, guid=None):
-    html, resolved_url = fetch_url(url)
-    existing_post = Post.find_by_source_url(resolved_url)
-    if existing_post:
-        return existing_post
-
-    m = RE_TWITTER_URL.fullmatch(resolved_url)
-    if m:
+def create_twitter_link(status_id):
+    try:
+        return Post.objects.get(guid=f'twitter|{status_id}', kind=Post.TWEET)
+    except Post.DoesNotExist:
         api = get_api_connection()
-        status_id = m.group(1)
         status = api.GetStatus(status_id)
         args = status_to_post_args(api, status, dump_attachments=False)
         attachments = args['attachments'] or []
@@ -33,6 +28,21 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         })
         args['attachments'] = json.dumps(attachments)
         return Post.objects.create(**args)
+
+
+def create_post_link(url, user, hidden=False, published=None, guid=None):
+    m = RE_TWITTER_URL.fullmatch(url)
+    if m:
+        return create_twitter_link(m.group(1))
+
+    html, resolved_url = fetch_url(url)
+    existing_post = Post.find_by_source_url(resolved_url)
+    if existing_post:
+        return existing_post
+
+    m = RE_TWITTER_URL.fullmatch(resolved_url)
+    if m:
+        return create_twitter_link(m.group(1))
 
     htmltree = lxml.html.fromstring(html)
     try:
