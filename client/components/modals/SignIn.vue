@@ -34,6 +34,10 @@
             <a href="mailto:info@kairly.com?subject=Zapomenuté heslo`&body=Vaše uživatelské jméno nebo email: [vyplňte]">info@kairly.com</a>.
           </p>
         </div>
+
+        <div class="login--signup">
+          Don't have account yet? <nuxt-link to="/signup">Sign up</nuxt-link> 
+        </div>
       </main>
     </modal-dialog>
   </DialogWindow>
@@ -109,10 +113,10 @@ export default {
 
 //- Styles -//
 modal-dialog.sign-in
-  background: #eee
+  background: #f5f5f5
 
   main
-    padding: $baseline
+    padding: $baseline $baseline 0 $baseline
 
   div
     margin-bottom: $baseline / 2
@@ -183,6 +187,23 @@ modal-dialog.sign-in
   p a
     color: $c-base
 
+    text-decoration: underline
+
+    &:hover,
+    &:focus
+      text-decoration: none
+
+//- Signup
+.login--signup
+  margin: 0 (-$baseline)
+  padding: $baseline/2 $baseline
+
+  background: #fff
+
+  text-align: center
+
+  a
+    color: $c-base
     text-decoration: underline
 
     &:hover,
