@@ -81,7 +81,6 @@ export default {
 <style lang="sass">
 timeline-post--tweet
   display: block
-  margin-bottom: $baseline / 2
 
   font-family: $ff-serif
   line-height: 1.58

@@ -58,7 +58,7 @@ timeline-post--article
   //- Title
   > h2
     display: block
-    margin-bottom: $baseline / 2
+    margin-bottom: $baseline / 4
 
     font-size: $fs-1
     font-weight: 600

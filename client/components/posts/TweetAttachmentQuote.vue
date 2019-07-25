@@ -1,10 +1,10 @@
 <template>
-  <tweet-attachment-quote-view>
+  <div class="tweet-attachment-quote-view">
     <div v-for="item in items" :key="item.user.url">
       <h4><a :href="item.user.url">{{ item.user.name }}</a></h4>
       <p v-html="item.content"></p>
     </div>
-  </tweet-attachment-quote-view>
+  </div>
 </template>
 
 <script>
@@ -16,10 +16,9 @@ export default {
 </script>
 
 <style lang="sass">
-tweet-attachment-quote-view
+.tweet-attachment-quote-view
   display: block
-  margin-top: $baseline / 2
-  margin-bottom: -($baseline/2)
+  margin-top: $baseline / 4
   padding: $baseline/4
 
   background: #fafafa

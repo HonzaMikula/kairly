@@ -1,5 +1,5 @@
 <template>
-  <tweet-attachment-gallery :class="'gallery-'+ items.length">
+  <div class="tweet-attachment-gallery" :class="'gallery-'+ items.length">
     <a
       :href="`${item.src}:large`"
       v-for="item in items"
@@ -8,7 +8,7 @@
       target="_blank">
       <img :src="`${item.src}:small`" :width="item.sizes.small.w" :height="item.sizes.small.h" />
     </a>
-  </tweet-attachment-gallery>
+  </div>
 </template>
 
 <script>
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="sass">
-tweet-attachment-gallery
+.tweet-attachment-gallery
   display: grid
   grid-column-gap: 2px
   grid-row-gap: 2px
@@ -38,7 +38,7 @@ tweet-attachment-gallery
 
   &.gallery-3
     grid-template-columns: 50% 50%
-    grid-template-rows: 50% 50%
+    grid-template-rows: minmax(auto, 191.5px) minmax(auto, 191.5px)
 
     a:nth-of-type(2)
       grid-column: 2 / span 1
@@ -46,7 +46,7 @@ tweet-attachment-gallery
 
   &.gallery-4
     grid-template-columns: 50% 50%
-    grid-template-rows: 50% 50%
+    grid-template-rows: minmax(auto, 191.5px) minmax(auto, 191.5px)
 
   img
     object-fit: cover
