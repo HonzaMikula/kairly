@@ -9,6 +9,7 @@ urlpatterns = [
     path('profile', views.ProfileView.as_view(), name='profile'),
     path('signup', views.signup, name='signup'),
     path('change-password', views.change_password, name='change_password'),
+    path('reset-password', views.reset_password, name='reset_password'),
 
     path('explore/<tab>', views.explore_tab),
 

@@ -2,6 +2,12 @@ from .settings_dev import *  # NOQA
 
 DEBUG = True
 
+# in local, if error mailing is tested, don't send mails to prod email account
+ADMINS = (
+    ('Roman Krejcik', 'farin1@gmail.com'),
+)
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -32,3 +38,9 @@ TWITTER_CONSUMER_KEY = 'vYuzgkErlgcU8hLSDG0yS8gry'
 TWITTER_CONSUMER_SECRET = 'U0hVZVDahNoC4r9imOPkyKLQCJE343h2YK6OcD5s47RD2tSUYK'
 TWITTER_ACCESS_TOKEN_KEY = '321647013-HGaOJzhg6hfrNYfWGj1NsV6ufNLgNb2fdUbeNi2j'
 TWITTER_ACCESS_TOKEN_SECRET = 'CchNp5KVcuzatUNzVZOZMOMh716CNTDoSsTGBTJg7XOhZ'
+
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": "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",
+}

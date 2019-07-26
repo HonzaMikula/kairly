@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'anymail',
     'dal',
     'dal_select2',
     'django.contrib.admin',

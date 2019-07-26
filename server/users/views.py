@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.core.mail import EmailMessage
 from django.core.validators import EmailValidator
 from django.db.models import Count, Q
 from django.db.utils import IntegrityError
@@ -186,6 +187,24 @@ def change_password(request):
     user.set_password(password)
     user.save()
     return JsonResponse(user.to_json())
+
+
+def reset_password(request):
+    message = EmailMessage(
+        subject=None,  # required for SendinBlue templates
+        body=None,  # required for SendinBlue templates
+        to=["farin@farin.cz"]  # single recipient...
+        # ...multiple to emails would all get the same message
+        # (and would all see each other's emails in the "to" header)
+    )
+
+    message.from_email = None  # required for SendinBlue templates
+    message.template_id = 1  # use this SendinBlue template
+    message.merge_global_data = {
+        'RESET_URL': "https://kairly.com/reset?key=foo",
+    }
+    message.send()
+    return JsonResponse({})
 
 
 def explore_tab(request, tab):
