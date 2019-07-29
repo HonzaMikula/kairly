@@ -1,6 +1,6 @@
 <template>
   <PostBase :post="post">
-    <timeline-post--tweet>
+    <div class="timeline-post--tweet">
       <!-- p tag is not allowed here because content can cointains other <p>
           (eg extrnal url). And it brokes hydrating server side rendered page-->
       <div class="tweet-content" v-html="post.content.content"></div>
@@ -12,7 +12,7 @@
         :key="post.id"
       />
 
-    </timeline-post--tweet>
+    </div>
 
     <template slot="extendedControls">
       <slot name="extendedControls">
@@ -79,14 +79,12 @@ export default {
 </script>
 
 <style lang="sass">
-timeline-post--tweet
+.timeline-post--tweet
   display: block
 
   font-family: $ff-serif
-  line-height: 1.58
-
-  @media (max-width: $mobile)
-    font-size: 15px
+  line-height: 1.7
+  font-size: 15px
 
   > .tweet-content a
     color: $c-base
