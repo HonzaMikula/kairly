@@ -23,6 +23,8 @@
         </div>
       </section>
 
+      <ExploreNewspapers />
+
       <Faq>
         <img src="~assets/microsite/kairly-random-21.jpg" alt="Kairly" />
       </Faq>
@@ -106,8 +108,6 @@
 
       <HowItWorks />
 
-      <OfficialStart />
-
       <Footer />
 
       <FooterLinks />
@@ -125,8 +125,8 @@ import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'
 import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
-import OfficialStart from '@/components/microsite/OfficialStart'
 import Faq from '@/components/microsite/Faq'
+import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
 
 export default {
   name: 'Publishers',
@@ -137,11 +137,11 @@ export default {
     AppLayout,
     Quote,
     HowItWorks,
-    OfficialStart,
     Footer,
     FooterLinks,
     Faq,
-    SignUpForm
+    SignUpForm,
+    ExploreNewspapers
   },
 
   head() {

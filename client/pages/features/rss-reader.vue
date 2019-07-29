@@ -139,8 +139,6 @@
 
       <HowItWorks />
 
-      <OfficialStart />
-
       <Footer />
 
       <FooterLinks />
@@ -158,7 +156,6 @@ import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'
 import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
-import OfficialStart from '@/components/microsite/OfficialStart'
 import Faq from '@/components/microsite/Faq'
 
 import ogImage from '@/assets/microsite/kairly-random-25.jpg';
@@ -172,7 +169,6 @@ export default {
     AppLayout,
     Quote,
     HowItWorks,
-    OfficialStart,
     Footer,
     FooterLinks,
     Faq,
