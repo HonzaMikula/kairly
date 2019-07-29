@@ -20,7 +20,7 @@
             <div v-else class="image-placeholder"></div>
           </picture>
 
-          <div class="newspaper-detail--subscribe">
+          <div class="newspaper-detail--subscribe" v-if="loggedIn">
             <NewspaperSubscription :newspaper="newspaper" />
 
             <p>{{ periodicity }}</p>
