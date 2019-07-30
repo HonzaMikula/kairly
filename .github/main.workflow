@@ -13,7 +13,7 @@ action "Create Release Notes" {
 }
 
 action "Upload Release Notes on Wiki" {
-  uses = "Decathlon/wiki-page-creator-action@master"
+  uses = "HonzaMikula/wiki-page-creator-action@master"
   needs = ["Create Release Notes"]
   secrets = [
     "GH_PAT",
