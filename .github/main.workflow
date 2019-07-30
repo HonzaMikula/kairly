@@ -6,4 +6,7 @@ workflow "On Milestone" {
 action "Create Release Notes" {
   uses = "Decathlon/release-notes-generator-action@master"
   secrets = ["GITHUB_TOKEN"]
+  env = {
+    USE_MILESTONE_TITLE = "true"
+  }
 }
