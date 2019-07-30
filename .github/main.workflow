@@ -16,8 +16,8 @@ action "Upload Release Notes on Wiki" {
   uses = "HonzaMikula/wiki-page-creator-action@master"
   needs = ["Create Release Notes"]
   secrets = [
-    "GH_PAT",
     "GITHUB_TOKEN",
+    "GH_PAT",
   ]
   env = {
     ACTION_MAIL = "jan.mikula@hotmail.com"
