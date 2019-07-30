@@ -83,7 +83,7 @@ export default {
   display: block
 
   font-family: $ff-serif
-  line-height: 1.7
+  line-height: 1.6
   font-size: 15px
 
   > .tweet-content a
