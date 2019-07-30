@@ -13,7 +13,7 @@ action "Create Release Notes" {
 }
 
 action "Upload Release Notes on Wiki" {
-  uses = "HonzaMikula/wiki-page-creator-action@master"
+  uses = "Decathlon/wiki-page-creator-action@master"
   needs = ["Create Release Notes"]
   secrets = [
     "GITHUB_TOKEN",
