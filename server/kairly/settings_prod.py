@@ -84,10 +84,13 @@ CACHES = {
     }
 }
 
+# error logs are sent using smtp backend
 EMAIL_HOST = 'smtp.rosti.cz'
 EMAIL_HOST_USER = '2648@rostiapp.cz'
 EMAIL_HOST_PASSWORD = '4c0e19fa5bae44c2bbf26b0a11ef11dd'
 
+# other mails are sent by SendInBlue
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
 
 # STATICFILES_DIRS = (
 #     '/srv/kairly/kairly-client/dist/static',

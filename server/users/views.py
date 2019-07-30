@@ -1,3 +1,4 @@
+import logging
 import time
 import urllib.error
 import urllib.request
@@ -9,6 +10,7 @@ from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
+from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.core.validators import EmailValidator
@@ -16,6 +18,7 @@ from django.db.models import Count, Q
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.utils.timezone import localdate
+from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -31,6 +34,8 @@ from utils.upload import file_from_data_uri
 from .models import Category, CategoryUser, User
 
 TOKEN_EXPIRATION = 30 * 86400
+
+logger = logging.getLogger(__name__)
 
 
 def issue_token(user):
@@ -170,12 +175,28 @@ def signup(request):
 
 
 @require_POST
-@ajax_login_required
 def change_password(request):
     payload = json.loads(request.body.decode('utf-8'))
     user = request.user
+    token = payload.get('token')
 
-    if not user.check_password(payload['oldPassword']):
+    if token:
+        signer = TimestampSigner(salt='v1')
+        try:
+            username = signer.unsign(token, max_age=settings.RESET_PASSWORD_TOKEN_MAX_AGE)
+            user = User.objects.get(username=username)
+        except SignatureExpired:
+            return JsonResponse({'error': 'Token is expired'}, status=400)
+        except (BadSignature, User.DoesNotExist):
+            return JsonResponse({'error': 'Invalid token'}, status=400)
+
+        if not cache.get(f'reset_password:{token}'):
+            return JsonResponse({'error': 'Token is used or expired'}, status=400)
+
+    if user.is_anonymous:
+        return HttpResponse(status=401)
+
+    if not token and not user.check_password(payload['oldPassword']):
         return JsonResponse({'error': 'Wrong old password.'}, status=400)
 
     password = payload['newPassword']
@@ -186,22 +207,40 @@ def change_password(request):
 
     user.set_password(password)
     user.save()
+
+    if token and not settings.RESET_PASSWORD_TOKEN_ALLOW_REUSE:
+        cache.delete(f'reset_password:{token}')
+
     return JsonResponse(user.to_json())
 
 
+@require_POST
 def reset_password(request):
+    payload = json.loads(request.body.decode('utf-8'))
+    try:
+        user = User.objects.get(email=payload.get('email'))
+    except User.DoesNotExist:
+        # fail silently
+        return JsonResponse({})
+
+    token = TimestampSigner(salt='v1').sign(user.username)
+    logging.info(f"Password reset token generated for {user.username}: {token}")
+
+    # use additional security level, even with compromised SECRET_KEY
+    # attacker can't simply reset password just by generating any valid token
+    # out of backend
+    cache.set(f'reset_password:{token}', 1, settings.RESET_PASSWORD_TOKEN_MAX_AGE)
+
     message = EmailMessage(
         subject=None,  # required for SendinBlue templates
         body=None,  # required for SendinBlue templates
-        to=["farin@farin.cz"]  # single recipient...
-        # ...multiple to emails would all get the same message
-        # (and would all see each other's emails in the "to" header)
+        to=[user.email]
     )
 
     message.from_email = None  # required for SendinBlue templates
     message.template_id = 1  # use this SendinBlue template
     message.merge_global_data = {
-        'RESET_URL': "https://kairly.com/reset?key=foo",
+        'RESET_URL': f"https://kairly.com/reset-password/{token}",
     }
     message.send()
     return JsonResponse({})
