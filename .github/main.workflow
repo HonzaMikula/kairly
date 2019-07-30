@@ -21,10 +21,10 @@ action "Upload Release Notes on Wiki" {
   ]
   env = {
     ACTION_MAIL = "jan.mikula@hotmail.com"
-    ACTION_NAME = "HonzaMikula"
-    OWNER = "HonzaMikula"
     REPO_NAME = "kairly"
     SKIP_MD = "README.md"
     MD_FOLDER = "temp_release_notes"
+    OWNER = "honzamikula"
+    ACTION_NAME = "honzamikula"
   }
 }
