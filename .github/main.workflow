@@ -23,7 +23,7 @@ action "Upload Release Notes on Wiki" {
     ACTION_MAIL = "jan.mikula@hotmail.com"
     REPO_NAME = "kairly"
     SKIP_MD = "README.md"
-    MD_FOLDER = "temp_release_notes"
+    MD_FOLDER = "Releases"
     OWNER = "honzamikula"
     ACTION_NAME = "Jan Mikula"
   }
