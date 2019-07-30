@@ -352,7 +352,7 @@ post-detail--title
   font-family: $ff-serif
   font-size: $fs-3
   font-weight: 600
-  line-height: 1.7
+  line-height: 1.8
 
   @media (max-width: $mobile)
     font-size: $fs-2
@@ -405,7 +405,7 @@ post-detail--perex
 
   font-family: $ff-serif
   font-size: $fs-1
-  line-height: 1.7
+  line-height: 1.8
 
   //- title
   h1
