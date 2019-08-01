@@ -1,14 +1,14 @@
 <template>
   <AppLayout :name="$t('Article')">
-    <post-detail role="article">
-      <post-detail--back-button
+    <div class="post-detail-view" role="article">
+      <div class="post-detail--back-button"
         :title="$t('Back')"
         v-b-tooltip
         @click="$router.go(-1)">
-      </post-detail--back-button>
+      </div>
 
       <main itemscope itemtype="https://schema.org/NewsArticle">
-        <post-detail--header>
+        <header class="post-detail--header">
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
             <img
               :src="post.author.picture"
@@ -18,36 +18,36 @@
           </nuxt-link>
 
           <a v-if="post.source" :href="post.source" class="external-link" :aria-label="$t('Original article')"></a>
-        </post-detail--header>
+        </header>
 
-        <post-detail--title id="start">
+        <div class="post-detail--title" id="start">
           <h1 itemprop="name headline mainEntityOfPage">{{post.content.title}}</h1>
-        </post-detail--title>
+        </div>
 
-        <post-detail--content v-html="post.content.perex" itemprop="articleBody" />
+        <div class="post-detail--content" v-html="post.content.perex" itemprop="articleBody" />
 
         <no-ssr>
-          <post-detail--continue-reading
+          <div class="post-detail--continue-reading"
             v-if="post.content.content && showContinueReading"
             id="continue"
           >
             {{ $t('continue reading') }}
-          </post-detail--continue-reading>
+          </div>
         </no-ssr>
 
         <div v-if="post.content.protected && post.source">
-          <post-detail--footer>
+          <footer div="post-detail--footer">
             <a :href="post.source" class="read-full-article">{{ $t('Read full article') }}</a>
-          </post-detail--footer>
+          </footer>
         </div>
 
         <div v-else>
-          <post-detail--content
+          <div class="post-detail--content"
             itemprop="articleBody"
             v-html="post.content.content"
           />
 
-          <post-detail--footer>
+          <div class="post-detail--footer">
             <recommend-button-post
               v-if="loggedIn"
               :post="post"
@@ -88,10 +88,10 @@
             <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">
               {{ post.time | moment('DD. MM. YYYY') }}
             </time>
-          </post-detail--footer>
+          </div>
         </div>
 
-        <post-detail--author itemprop="author" itemscope itemtype="https://schema.org/Person">
+        <div class="post-detail--author" itemprop="author" itemscope itemtype="https://schema.org/Person">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
               <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>
@@ -106,15 +106,41 @@
 
           <p itemprop="description">{{post.author.bio}}</p>
 
-          <post-detail--author--subscription v-if="loggedIn">
+          <div class="post-detail--author--subscription" v-if="loggedIn">
             <AuthorSubscription
               v-if="subscription"
               :subscription="subscription" :author="post.author"
             />
-          </post-detail--author--subscription>
-        </post-detail--author>
+          </div>
+        </div>
+
+        <section class="post-detail--editorial-comments">
+          <h2>Editorial comments</h2>
+
+          <div class="post-detail--editorial-comments--post">
+            <h3>Ústavní demokracie se nám drolí</h3>
+            <div>
+              Originally published in <a href="">Malostranské noviny (22. 6. 2019)</a>
+            </div>
+
+            <p>
+            Není to jen prezident Zeman, který odmítá odvolat ministra kultury a jmenovat nového. Ministerstva odmítají vydat informace o auditech senátní komisi. 
+            </p>
+            <p>
+            A můžeme pokračovat. Ústavní soud odmítl odebrat Ministerstvu školství možnost nepovolovat soukromé školy. Finanční správa se chová, jako by byla vrchním orgánem soudní moci.
+            </p>
+            <p>
+            Výkonná moc se utrhla z ústavního řetězu. Pouze Parlament má pravomoc vládu i prezidenta zkrotit. Najdou poslanci odvahu?
+            </p>
+
+            <footer>
+              <img src="https://cdn.kairly.com/media/users/janmikula.jpg" alt="Jan Mikula"/>
+              Jan Mikula
+            </footer>
+          </div>
+        </section>
       </main>
-    </post-detail>
+    </div>
 
     <KairlyPromo v-if="!loggedIn" />
 
@@ -257,8 +283,7 @@ export default {
 @import './styles/components/article-content'
 
 //- POST DETAIL -//
-
-post-detail
+.post-detail-view
   position: relative
 
   display: block
@@ -276,7 +301,7 @@ post-detail
 
 
 //- Back Button
-post-detail--back-button
+.post-detail--back-button
   position: sticky
   left: $baseline
   top: $baseline
@@ -312,7 +337,7 @@ post-detail--back-button
 
 
 //- Header
-post-detail--header
+.post-detail--header
   display: flex
   margin-bottom: $baseline / 2
   margin-top: -$baseline * 2
@@ -345,7 +370,7 @@ post-detail--header
     margin-left: auto
 
 //- Title
-post-detail--title
+.post-detail--title
   display: block
   margin-bottom: $baseline / 2
 
@@ -360,7 +385,7 @@ post-detail--title
 
 
 //- Continue Reading
-post-detail--continue-reading
+.post-detail--continue-reading
   position: relative
 
   display: block
@@ -399,8 +424,8 @@ post-detail--continue-reading
 
 
 //- Content
-post-detail--content,
-post-detail--perex
+.post-detail--content,
+.post-detail--perex
   display: block
 
   font-family: $ff-serif
@@ -417,8 +442,9 @@ post-detail--perex
   +article-content
 
 //- Post Footer
-post-detail--footer
+.post-detail--footer
   display: flex
+  align-items: center
   padding-bottom: $baseline / 4
   margin-bottom: $baseline / 2
   margin-top: $baseline
@@ -468,13 +494,13 @@ post-detail--footer
 
 
 //- Post Author
-post-detail--author
+.post-detail--author
   display: grid
   grid-template-areas: "post-detail-author-image post-detail-author-name post-detail-author-subscription" "post-detail-author-image post-detail-author-bio post-detail-author-bio"
   grid-template-columns: $baseline*3 1fr auto
   grid-template-rows: $baseline auto
   grid-gap: $baseline/4 $baseline/2
-  padding-bottom: $baseline * 5
+  margin-bottom: $baseline
 
   @media (max-width: $mobile)
     grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-subscription" "post-detail-author-image post-detail-author-bio"
@@ -510,7 +536,7 @@ post-detail--author
     line-height: 1.58
 
 //- Author subscription
-post-detail--author--subscription
+.post-detail--author--subscription
   position: relative
 
   .author-subscription-view
@@ -530,5 +556,53 @@ post-detail--author--subscription
     button.to-subscribe,
     button.is-canceled
       +button(secondary, medium)
+
+
+.post-detail--editorial-comments
+
+  h2
+    margin-bottom: $baseline / 2
+
+    font-weight: 600
+    font-size: $fs-2
+
+  > div
+    padding: $baseline / 2
+
+    background: #F2ECEC
+
+    font-family: $ff-serif
+
+    h3
+      font-weight: 600
+      font-size: $fs-1
+
+    h3 + div
+      margin-bottom: $baseline / 2
+
+      font-size: $fs--1
+      font-family: $ff-sans
+
+      a
+        color: $c-base
+
+    p
+      margin-bottom: $baseline
+
+      &:last-of-type //- TODO: P doesn't have to be the last item
+        margin-bottom: $baseline / 2
+
+    footer
+      display: flex
+      align-items: center
+
+      font-family: $ff-sans
+      font-weight: 600
+
+      img 
+        border-radius: 100%
+        height: $baseline
+        margin-right: $baseline / 2
+        width: $baseline
 
 </style>
