@@ -27,7 +27,8 @@ from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
 from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
-                     SubscriptionToAuthor, Editorial, EditorialTweet, round_fair_price)
+                     SubscriptionToAuthor, IssuePost, Editorial, EditorialTweet,
+                     round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
 from .utils import create_post_link
@@ -858,14 +859,26 @@ def publish_draft(request, post_id):
 
 def post(request, username, post_slug):
     post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False, published__lt=timezone.now())
+
     # Doesn't work, post can be part of multiple issues or just related to author
     # newspaper = Issue.objects.get(posts=post).newspaper
     # is_subscribed = Subscription.objects.filter(user=request.user, newspaper=newspaper).count() > 0
     # if not is_subscribed:
     #     return HttpResponse('402 Payment Required', status=402)
 
+    editorials = []
+    query = IssuePost.objects.filter(post=post, editorial__isnull=False) \
+        .select_related('editorial', 'issue__newspaper') \
+        .order_by('issue_id', 'ordering')
+    for issue_post in query:
+        item = issue_post.editorial.to_json()
+        item['issue'] = issue_post.issue.to_json(posts=False)
+        del item['position']
+        editorials.append(item)
+
     data = {
-        'post': post.to_json(anonymous=request.user.is_anonymous)
+        'post': post.to_json(anonymous=request.user.is_anonymous),
+        'editorials': editorials
     }
 
     if request.user.is_authenticated:

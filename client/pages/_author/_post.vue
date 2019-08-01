@@ -114,30 +114,43 @@
           </div>
         </div>
 
-        <section class="post-detail--editorial-comments">
+        <section
+          v-if="editorials.length"
+          class="post-detail--editorial-comments"
+        >
           <h2>Editorial comments</h2>
 
-          <div class="post-detail--editorial-comments--post">
-            <h3>Ústavní demokracie se nám drolí</h3>
-            <div>
-              Originally published in <a href="">Malostranské noviny (22. 6. 2019)</a>
+          <template v-for="(editorial, index) in editorials">
+            <div
+              v-if="editorial.type == 'article'"
+              :key="index"
+              class="post-detail--editorial-comments--post"
+            >
+              <h3>{{ editorial.title }}</h3>
+              <div>
+                Originally published in
+                <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
+                </nuxt-link>
+              </div>
+
+              <div v-html="editorial.content" />
+
+              <footer>
+                <nuxt-link :to="{name: 'author', params: {author: editorial.author.id}}" rel="author">
+                  <img :src="editorial.author.picture" :alt="editorial.author.name"/>
+                  {{ editorial.author.name }}
+                </nuxt-link>
+              </footer>
             </div>
-
-            <p>
-            Není to jen prezident Zeman, který odmítá odvolat ministra kultury a jmenovat nového. Ministerstva odmítají vydat informace o auditech senátní komisi. 
-            </p>
-            <p>
-            A můžeme pokračovat. Ústavní soud odmítl odebrat Ministerstvu školství možnost nepovolovat soukromé školy. Finanční správa se chová, jako by byla vrchním orgánem soudní moci.
-            </p>
-            <p>
-            Výkonná moc se utrhla z ústavního řetězu. Pouze Parlament má pravomoc vládu i prezidenta zkrotit. Najdou poslanci odvahu?
-            </p>
-
-            <footer>
-              <img src="https://cdn.kairly.com/media/users/janmikula.jpg" alt="Jan Mikula"/>
-              Jan Mikula
-            </footer>
-          </div>
+            <div
+              v-if="editorial.type == 'tweets'"
+              :key="index"
+              class="post-detail--editorial-comments--tweets"
+            >
+              <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
+            </div>
+          </template>
         </section>
       </main>
     </div>
@@ -158,6 +171,7 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
+import PostTweet from '@/components/posts/PostTweet'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
@@ -207,6 +221,7 @@ export default {
     KairlyPromo,
     FooterLinks,
     RecommendButtonPost,
+    PostTweet,
   },
 
   data() {
@@ -246,8 +261,8 @@ export default {
         await store.dispatch('getSubscriptions')
       }
 
-      const { post, recommended } = await app.$axios.$get(`/posts/${author}/${postSlug}`)
-      return { post, recommended }
+      // returns { post, editorials, recommended }
+      return await app.$axios.$get(`/posts/${author}/${postSlug}`)
     } catch (err) {
       error(errorToParams(err))
     }
@@ -599,7 +614,7 @@ export default {
       font-family: $ff-sans
       font-weight: 600
 
-      img 
+      img
         border-radius: 100%
         height: $baseline
         margin-right: $baseline / 2
