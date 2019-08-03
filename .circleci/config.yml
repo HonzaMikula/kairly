@@ -14,7 +14,7 @@ jobs:
       - checkout
 
       - restore_cache: # restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run
-          key: v1-pydeps-{{ checksum "server/requirements.txt" }}
+          key: v2-pydeps-{{ checksum "server/requirements.txt" }}
 
       - run: # install and activate virtual environment with pip
           command: |
@@ -24,7 +24,7 @@ jobs:
             pip install -r requirements.txt
 
       - save_cache: # special step to save dependency cache
-          key: v1-pydeps-{{ checksum "server/requirements.txt" }}
+          key: v2-pydeps-{{ checksum "server/requirements.txt" }}
           paths:
             - "server/venv"
 
