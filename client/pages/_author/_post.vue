@@ -1,14 +1,14 @@
 <template>
   <AppLayout :name="$t('Article')">
-    <post-detail role="article">
-      <post-detail--back-button
+    <div class="post-detail-view" role="article">
+      <div class="post-detail--back-button"
         :title="$t('Back')"
         v-b-tooltip
         @click="$router.go(-1)">
-      </post-detail--back-button>
+      </div>
 
       <main itemscope itemtype="https://schema.org/NewsArticle">
-        <post-detail--header>
+        <header class="post-detail--header">
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
             <img
               :src="post.author.picture"
@@ -18,36 +18,36 @@
           </nuxt-link>
 
           <a v-if="post.source" :href="post.source" class="external-link" :aria-label="$t('Original article')"></a>
-        </post-detail--header>
+        </header>
 
-        <post-detail--title id="start">
+        <div class="post-detail--title" id="start">
           <h1 itemprop="name headline mainEntityOfPage">{{post.content.title}}</h1>
-        </post-detail--title>
+        </div>
 
-        <post-detail--content v-html="post.content.perex" itemprop="articleBody" />
+        <div class="post-detail--content" v-html="post.content.perex" itemprop="articleBody" />
 
         <no-ssr>
-          <post-detail--continue-reading
+          <div class="post-detail--continue-reading"
             v-if="post.content.content && showContinueReading"
             id="continue"
           >
             {{ $t('continue reading') }}
-          </post-detail--continue-reading>
+          </div>
         </no-ssr>
 
         <div v-if="post.content.protected && post.source">
-          <post-detail--footer>
+          <footer div="post-detail--footer">
             <a :href="post.source" class="read-full-article">{{ $t('Read full article') }}</a>
-          </post-detail--footer>
+          </footer>
         </div>
 
         <div v-else>
-          <post-detail--content
+          <div class="post-detail--content"
             itemprop="articleBody"
             v-html="post.content.content"
           />
 
-          <post-detail--footer>
+          <div class="post-detail--footer">
             <recommend-button-post
               v-if="loggedIn"
               :post="post"
@@ -88,10 +88,10 @@
             <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">
               {{ post.time | moment('DD. MM. YYYY') }}
             </time>
-          </post-detail--footer>
+          </div>
         </div>
 
-        <post-detail--author itemprop="author" itemscope itemtype="https://schema.org/Person">
+        <div class="post-detail--author" itemprop="author" itemscope itemtype="https://schema.org/Person">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
               <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>
@@ -106,15 +106,60 @@
 
           <p itemprop="description">{{post.author.bio}}</p>
 
-          <post-detail--author--subscription v-if="loggedIn">
+          <div class="post-detail--author--subscription" v-if="loggedIn">
             <AuthorSubscription
               v-if="subscription"
               :subscription="subscription" :author="post.author"
             />
-          </post-detail--author--subscription>
-        </post-detail--author>
+          </div>
+        </div>
+
+        <section
+          v-if="editorials.length"
+          class="post-detail--editorial-comments"
+        >
+          <h2>{{ $t('Comments by editors') }}</h2>
+
+          <template v-for="(editorial, index) in editorials">
+            <div
+              v-if="editorial.type == 'article'"
+              :key="index"
+              class="post-detail--editorial-comments--post"
+            >
+              <h3>{{ editorial.title }}</h3>
+              <aside>
+                {{ $t('Originally published in') }}
+                <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
+                </nuxt-link>
+              </aside>
+
+              <div v-html="editorial.content" />
+
+              <footer>
+                <nuxt-link :to="{name: 'author', params: {author: editorial.author.id}}" rel="author">
+                  <img :src="editorial.author.picture" :alt="editorial.author.name"/>
+                  {{ editorial.author.name }}
+                </nuxt-link>
+              </footer>
+            </div>
+            <div
+              v-if="editorial.type == 'tweets'"
+              :key="index"
+              class="post-detail--editorial-comments--tweets"
+            >
+              <aside>
+                {{ $t('Originally published in') }}
+                <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
+                </nuxt-link>
+              </aside>  
+              <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
+            </div>
+          </template>
+        </section>
       </main>
-    </post-detail>
+    </div>
 
     <KairlyPromo v-if="!loggedIn" />
 
@@ -132,6 +177,7 @@ import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
+import PostTweet from '@/components/posts/PostTweet'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
@@ -181,6 +227,7 @@ export default {
     KairlyPromo,
     FooterLinks,
     RecommendButtonPost,
+    PostTweet,
   },
 
   data() {
@@ -220,8 +267,8 @@ export default {
         await store.dispatch('getSubscriptions')
       }
 
-      const { post, recommended } = await app.$axios.$get(`/posts/${author}/${postSlug}`)
-      return { post, recommended }
+      // returns { post, editorials, recommended }
+      return await app.$axios.$get(`/posts/${author}/${postSlug}`)
     } catch (err) {
       error(errorToParams(err))
     }
@@ -257,8 +304,7 @@ export default {
 @import './styles/components/article-content'
 
 //- POST DETAIL -//
-
-post-detail
+.post-detail-view
   position: relative
 
   display: block
@@ -268,7 +314,7 @@ post-detail
   background: #fff
 
   @media (max-width: $mobile)
-    padding: $mBaseline/2 $mBaseline $mBaseline *5 $mBaseline
+    padding: $mBaseline/2 $mBaseline $mBaseline $mBaseline
 
   main
     margin: 0 auto
@@ -276,7 +322,7 @@ post-detail
 
 
 //- Back Button
-post-detail--back-button
+.post-detail--back-button
   position: sticky
   left: $baseline
   top: $baseline
@@ -312,7 +358,7 @@ post-detail--back-button
 
 
 //- Header
-post-detail--header
+.post-detail--header
   display: flex
   margin-bottom: $baseline / 2
   margin-top: -$baseline * 2
@@ -345,7 +391,7 @@ post-detail--header
     margin-left: auto
 
 //- Title
-post-detail--title
+.post-detail--title
   display: block
   margin-bottom: $baseline / 2
 
@@ -360,7 +406,7 @@ post-detail--title
 
 
 //- Continue Reading
-post-detail--continue-reading
+.post-detail--continue-reading
   position: relative
 
   display: block
@@ -399,8 +445,8 @@ post-detail--continue-reading
 
 
 //- Content
-post-detail--content,
-post-detail--perex
+.post-detail--content,
+.post-detail--perex
   display: block
 
   font-family: $ff-serif
@@ -417,9 +463,10 @@ post-detail--perex
   +article-content
 
 //- Post Footer
-post-detail--footer
+.post-detail--footer
   display: flex
-  padding-bottom: $baseline / 4
+  align-items: center
+  padding-bottom: $baseline / 2
   margin-bottom: $baseline / 2
   margin-top: $baseline
 
@@ -468,13 +515,16 @@ post-detail--footer
 
 
 //- Post Author
-post-detail--author
+.post-detail--author
   display: grid
   grid-template-areas: "post-detail-author-image post-detail-author-name post-detail-author-subscription" "post-detail-author-image post-detail-author-bio post-detail-author-bio"
   grid-template-columns: $baseline*3 1fr auto
   grid-template-rows: $baseline auto
   grid-gap: $baseline/4 $baseline/2
-  padding-bottom: $baseline * 5
+  margin-bottom: $baseline
+  padding-bottom: $baseline / 2
+
+  border-bottom: 1px solid #eee
 
   @media (max-width: $mobile)
     grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-subscription" "post-detail-author-image post-detail-author-bio"
@@ -510,17 +560,17 @@ post-detail--author
     line-height: 1.58
 
 //- Author subscription
-post-detail--author--subscription
+.post-detail--author--subscription
   position: relative
 
   .author-subscription-view
     //- when newspaper is subscribed
     button.is-subscribed
-      +button(primary, medium)
+      +button(primary, small)
 
     //- when newspeper is suspended
     button.is-suspended
-      +button(secondary, medium)
+      +button(secondary, small)
 
       background: lighten($c-base, 10%)
       background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
@@ -529,6 +579,106 @@ post-detail--author--subscription
     //- when newspeper is canceled
     button.to-subscribe,
     button.is-canceled
-      +button(secondary, medium)
+      +button(secondary, small)
 
+
+//- Editorial Comments
+.post-detail--editorial-comments
+
+  > h2
+    margin-bottom: $baseline / 2
+
+    font-weight: 600
+    font-size: $fs-2
+
+//- Editorial post
+.post-detail--editorial-comments--post
+  padding: $baseline / 2
+  margin-bottom: $baseline / 2
+
+  background: #F2ECEC
+
+  font-family: $ff-serif
+
+  @media (max-width: $mobile)
+    margin-left: (-$mBaseline)
+    margin-right: (-$mBaseline)
+
+  > h3
+    font-weight: 600
+    font-size: $fs-1
+
+  //- originally published ...
+  aside
+    margin-bottom: $baseline / 2
+
+    font-size: $fs--1
+    font-family: $ff-sans
+    line-height: 1.42
+
+    a
+      color: $c-base
+
+  //- content
+  aside + div
+    p
+      margin-bottom: $baseline
+
+      &:last-of-type //- TODO: P doesn't have to be the last item
+        margin-bottom: $baseline / 2
+
+    h2, h3, h4, h5, h6
+      margin-bottom: $baseline / 4
+      font-weight: 600
+
+  footer
+    a
+      display: flex
+      align-items: center
+
+      font-family: $ff-sans
+      font-weight: 600
+
+      color: #000
+
+      img
+        border-radius: 100%
+        height: $baseline
+        margin-right: $baseline / 4
+        width: $baseline
+
+//- Editorial post
+.post-detail--editorial-comments--tweets
+  padding: $baseline / 2
+  margin-bottom: $baseline / 2
+
+  background: #F2ECEC
+
+  font-family: $ff-serif
+
+  @media (max-width: $mobile)
+    margin: 0 (-$mBaseline)
+
+  aside
+    margin-bottom: $baseline / 2
+
+    font-size: $fs--1
+    font-family: $ff-sans
+    line-height: 1.42
+
+    a
+      color: $c-base
+
+  > article.post.tweet
+    margin-bottom: $baseline
+    max-width: none
+    padding: 0
+
+    background: transparent
+
+    &:last-of-type
+      margin-bottom: 0
+
+    .timeline-post--tweet
+      font-size: $fs-0
 </style>
