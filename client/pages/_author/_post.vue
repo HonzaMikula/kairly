@@ -118,7 +118,7 @@
           v-if="editorials.length"
           class="post-detail--editorial-comments"
         >
-          <h2>Editorial comments</h2>
+          <h2>{{ $t('Comments by editors') }}</h2>
 
           <template v-for="(editorial, index) in editorials">
             <div
@@ -127,12 +127,12 @@
               class="post-detail--editorial-comments--post"
             >
               <h3>{{ editorial.title }}</h3>
-              <div>
-                Originally published in
+              <aside>
+                {{ $t('Originally published in') }}
                 <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
                   {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
                 </nuxt-link>
-              </div>
+              </aside>
 
               <div v-html="editorial.content" />
 
@@ -148,6 +148,12 @@
               :key="index"
               class="post-detail--editorial-comments--tweets"
             >
+              <aside>
+                {{ $t('Originally published in') }}
+                <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
+                </nuxt-link>
+              </aside>  
               <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
             </div>
           </template>
@@ -308,7 +314,7 @@ export default {
   background: #fff
 
   @media (max-width: $mobile)
-    padding: $mBaseline/2 $mBaseline $mBaseline *5 $mBaseline
+    padding: $mBaseline/2 $mBaseline $mBaseline $mBaseline
 
   main
     margin: 0 auto
@@ -460,7 +466,7 @@ export default {
 .post-detail--footer
   display: flex
   align-items: center
-  padding-bottom: $baseline / 4
+  padding-bottom: $baseline / 2
   margin-bottom: $baseline / 2
   margin-top: $baseline
 
@@ -516,6 +522,9 @@ export default {
   grid-template-rows: $baseline auto
   grid-gap: $baseline/4 $baseline/2
   margin-bottom: $baseline
+  padding-bottom: $baseline / 2
+
+  border-bottom: 1px solid #eee
 
   @media (max-width: $mobile)
     grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-subscription" "post-detail-author-image post-detail-author-bio"
@@ -557,11 +566,11 @@ export default {
   .author-subscription-view
     //- when newspaper is subscribed
     button.is-subscribed
-      +button(primary, medium)
+      +button(primary, small)
 
     //- when newspeper is suspended
     button.is-suspended
-      +button(secondary, medium)
+      +button(secondary, small)
 
       background: lighten($c-base, 10%)
       background: repeating-linear-gradient(135deg, lighten($c-base, 5%) 0px, lighten($c-base, 5%) 2px, lighten($c-base, 15%) 2px, lighten($c-base, 15%) 5px)
@@ -570,54 +579,106 @@ export default {
     //- when newspeper is canceled
     button.to-subscribe,
     button.is-canceled
-      +button(secondary, medium)
+      +button(secondary, small)
 
 
+//- Editorial Comments
 .post-detail--editorial-comments
 
-  h2
+  > h2
     margin-bottom: $baseline / 2
 
     font-weight: 600
     font-size: $fs-2
 
-  > div
-    padding: $baseline / 2
+//- Editorial post
+.post-detail--editorial-comments--post
+  padding: $baseline / 2
+  margin-bottom: $baseline / 2
 
-    background: #F2ECEC
+  background: #F2ECEC
 
-    font-family: $ff-serif
+  font-family: $ff-serif
 
-    h3
-      font-weight: 600
-      font-size: $fs-1
+  @media (max-width: $mobile)
+    margin-left: (-$mBaseline)
+    margin-right: (-$mBaseline)
 
-    h3 + div
-      margin-bottom: $baseline / 2
+  > h3
+    font-weight: 600
+    font-size: $fs-1
 
-      font-size: $fs--1
-      font-family: $ff-sans
+  //- originally published ...
+  aside
+    margin-bottom: $baseline / 2
 
-      a
-        color: $c-base
+    font-size: $fs--1
+    font-family: $ff-sans
+    line-height: 1.42
 
+    a
+      color: $c-base
+
+  //- content
+  aside + div
     p
       margin-bottom: $baseline
 
       &:last-of-type //- TODO: P doesn't have to be the last item
         margin-bottom: $baseline / 2
 
-    footer
+    h2, h3, h4, h5, h6
+      margin-bottom: $baseline / 4
+      font-weight: 600
+
+  footer
+    a
       display: flex
       align-items: center
 
       font-family: $ff-sans
       font-weight: 600
 
+      color: #000
+
       img
         border-radius: 100%
         height: $baseline
-        margin-right: $baseline / 2
+        margin-right: $baseline / 4
         width: $baseline
 
+//- Editorial post
+.post-detail--editorial-comments--tweets
+  padding: $baseline / 2
+  margin-bottom: $baseline / 2
+
+  background: #F2ECEC
+
+  font-family: $ff-serif
+
+  @media (max-width: $mobile)
+    margin: 0 (-$mBaseline)
+
+  aside
+    margin-bottom: $baseline / 2
+
+    font-size: $fs--1
+    font-family: $ff-sans
+    line-height: 1.42
+
+    a
+      color: $c-base
+
+  > article.post.tweet
+    margin-bottom: $baseline
+    max-width: none
+    padding: 0
+
+    background: transparent
+
+    &:last-of-type
+      margin-bottom: 0
+
+    .timeline-post--tweet
+      font-size: $fs-0
 </style>
