@@ -25,14 +25,7 @@
         </form>
 
         <div class="login--forgot-password">
-          <button @click="openForgotPassword()" v-if="!isForgotPasswordOpen">
-            {{ $t('Forgot password?') }}
-          </button>
-
-          <p v-else>
-            {{ $t('Contact us on') }} 
-            <a href="mailto:info@kairly.com?subject=Zapomenuté heslo`&body=Vaše uživatelské jméno nebo email: [vyplňte]">info@kairly.com</a>.
-          </p>
+          <nuxt-link to="reset-password">{{ $t('Forgot password?') }}</nuxt-link>
         </div>
 
         <div class="login--signup">
@@ -68,15 +61,6 @@ export default {
   },
 
   methods: {
-    openForgotPassword() {
-      this.isForgotPasswordOpen = true
-
-      this.$ga.event({
-        eventCategory: 'Authentication',
-        eventAction: 'Open forgot password'
-      })
-    },
-
     async login() {
       this.invalidCredentials = false
       const { username, password } = this
@@ -168,16 +152,10 @@ modal-dialog.sign-in
   text-align: center
 
   //- forgot password text button
-  button
-    +button-text
-
+  a
     color: #777
 
-    font-weight: 400
     text-decoration: underline
-
-    &::after
-      display: none
 
     &:hover,
     &:focus

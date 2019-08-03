@@ -42,8 +42,9 @@ def robots_txt(request):
     return HttpResponse("""Sitemap: https://www.kairly.com/sitemap.xml""")
 
 
-# def always_fail(request):
-#     raise ValueError("Calm down the endpoint always raise exception.")
+def always_fail(request):
+    raise ValueError("Calm down the endpoint always raises exception.")
+
 
 sitemaps = {
     'newspapers': NewspaperSitemap(),
@@ -61,8 +62,8 @@ urlpatterns = [
     path('api/', include('credits.urls')),
     path('api/', include('sources.urls')),
     path('cache/', include('remotecache.urls')),
-    path('<username>/<slug:newspapeper_slug>/rss', NewspaperFeed())
-    # path('api/fail', always_fail),
+    path('<username>/<slug:newspapeper_slug>/rss', NewspaperFeed()),
+    path('api/fail', always_fail),
 ]
 
 if settings.DEBUG:

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'anymail',
     'dal',
     'dal_select2',
     'django.contrib.admin',
@@ -170,6 +171,8 @@ ALLOWED_PRICE_LEVELS = [
     Decimal(175)
 ]
 
+RESET_PASSWORD_TOKEN_MAX_AGE = 48 * 3600
+
 try:
     from corsheaders.defaults import default_headers
 
@@ -184,3 +187,7 @@ except ImportError:
 REMOTE_CACHE_API_KEY = 'llV45alRPaHU'
 
 DEFAULT_USER_AGENT = 'Mozilla/5.0 Kairly'
+
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": "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",
+}

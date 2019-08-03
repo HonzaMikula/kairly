@@ -281,6 +281,7 @@ export default {
 //- Sign In
 .app-header-public--controls
   display: flex
+  align-items: center
   margin-left: auto
 
   ul

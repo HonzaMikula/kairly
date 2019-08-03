@@ -25,7 +25,7 @@ class KairlyUsernameValidator(validators.RegexValidator):
     min_length = 3
     reserved_names = {
         'login', 'logout', 'signin', 'signout',
-        'signup', 'register', 'join', 'invite',
+        'signup', 'register', 'join', 'invite', 'reset-password',
         'home', 'homepage', 'index', 'welcome', 'tutorial',
         'admin', 'pricing', 'timeline', 'about', 'help', 'settings',
         'site', 'page', 'app', 'post', 'action',
