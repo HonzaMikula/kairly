@@ -81,11 +81,11 @@ export default {
   grid-template-columns: 1fr 1fr 1fr
   margin-bottom: $baseline / 2
 
-  background: #f5f5f5
   background: #F2ECEC
 
   @media (max-width: $mobile)
-    grid-template-columns: 1fr
+    overflow: auto
+    grid-template-columns: calc(100vw - (#{$baseline} * 1.5)) 60vw
 
   //- main article
   .newspaper,
@@ -97,6 +97,7 @@ export default {
     @media (max-width: $mobile)
       grid-column: 1 / span 1
       grid-row: 1
+      
 
     timeline-post--article--content
       column-count: 2
@@ -125,13 +126,9 @@ export default {
         .tweet-attachment-link-view
           display: none //- TODO: refactor so it's not done over CSS
 
-      timeline-post--article--content
-        @media (max-width: $mobile)
-          column-count: 2 !important
-
     @media (max-width: $mobile)
-      grid-column: 1 / span 1
-      grid-row: 2
+      grid-column: 2   / span 1
+      grid-row: 1
 
   &.is-before
     .newspaper
