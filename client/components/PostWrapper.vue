@@ -84,8 +84,14 @@ export default {
   background: #F2ECEC
 
   @media (max-width: $mobile)
-    overflow: auto
     grid-template-columns: calc(100vw - (#{$baseline} * 1.5)) 60vw
+
+    overflow: auto
+    scroll-behavior: smooth
+    -webkit-overflow-scrolling: touch
+
+    &.is-before
+      grid-template-columns: 60vw calc(100vw - (#{$baseline} * 1.5))
 
   //- main article
   .newspaper,
@@ -98,10 +104,8 @@ export default {
       grid-column: 1 / span 1
       grid-row: 1
       
-
     timeline-post--article--content
       column-count: 2
-
 
   .editorial-post-tweet-editor
     article
@@ -127,7 +131,7 @@ export default {
           display: none //- TODO: refactor so it's not done over CSS
 
     @media (max-width: $mobile)
-      grid-column: 2   / span 1
+      grid-column: 2 / span 1
       grid-row: 1
 
   &.is-before
@@ -135,14 +139,11 @@ export default {
       grid-column: 2 / span 2
 
       @media (max-width: $mobile)
-        grid-column: 1
-        grid-row: 2
+        grid-column: 2 / span 1
+        grid-row: 1
 
     .editorial-post--editorial
       grid-column: 1 / span 1
 
-      @media (max-width: $mobile)
-        grid-column: 1
-        grid-row: 1
 </style>
 
