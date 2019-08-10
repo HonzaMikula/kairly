@@ -197,14 +197,17 @@ export default {
     }
 
     //- newspaper image
-    images = this.issue.posts
-      .map(({post}) => IMG_REGEXP.exec(post.content.perex))
+    if (this.$route.params.issue) {
+      images = this.issue.posts
+        .map(({post}) => IMG_REGEXP.exec(post.content.perex))
+        .filter(x => x)
+    }
 
-    if (images[0][1])
-      metaPicture = images[0][1]
-    else
+    if (images === undefined || images.length == 0)
       metaPicture = picture
-
+    else
+      metaPicture = images[0][1]
+    
     return {
       title: metaTitle,
       meta: [
