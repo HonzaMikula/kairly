@@ -163,6 +163,8 @@ import FooterLinks from '@/components/microsite/FooterLinks'
 import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
 import MoneyFormat from '@/components/widgets/MoneyFormat'
 
+const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
+
 export default {
   name: 'NewspaperDetail',
 
@@ -174,6 +176,8 @@ export default {
     let metaTitle
     let metaDescription
     let metaUrl
+    let metaPicture
+    let images
 
     //- act as an issue detail
     if (this.$route.params.issue) {
@@ -192,13 +196,22 @@ export default {
       metaUrl = `https://kairly.com/${editor.id}/${name}`
     }
 
+    //- newspaper image
+    images = this.issue.posts
+      .map(({post}) => IMG_REGEXP.exec(post.content.perex))
+
+    if (images[0][1])
+      metaPicture = images[0][1]
+    else
+      metaPicture = picture
+
     return {
       title: metaTitle,
       meta: [
         { hid: 'description', name: 'description', content: metaDescription },
         { hid: 'og:title', property: 'og:title', content: metaTitle },
         { hid: 'og:description', property: 'og:description', content: metaDescription },
-        { hid: 'og:image', property: 'og:image', content: picture },
+        { hid: 'og:image', property: 'og:image', content: metaPicture },
         { hid: 'og:image:alt', property: 'og:image:alt', content: title },
         { hid: 'og:type', property: 'og:type', content: 'product' },
         { hid: 'og:url', property: 'og:url', content: metaUrl },
@@ -206,7 +219,7 @@ export default {
         { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
         { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
-        { hid: 'twitter:image', property: 'twitter:image', content: picture },
+        { hid: 'twitter:image', property: 'twitter:image', content: metaPicture },
       ],
       link: [
         { rel: 'alternate', type: 'application/rss+xml', title:`${title} - RSS feed`,
