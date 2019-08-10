@@ -350,6 +350,9 @@ export default {
       font-size: $fs-1
       line-height: 1.42
 
+      &:last-of-type
+        margin-bottom: 0
+
       @media (max-width: $mobile)
         font-size: $fs-0
         line-height: 1.42

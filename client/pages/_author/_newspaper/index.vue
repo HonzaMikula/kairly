@@ -531,6 +531,9 @@ export default {
   #mc_embed_signup
     margin-left: auto
 
+    @media (max-width: $mobile)
+      display: none
+
     #mc_embed_signup_scroll
       display: flex
       justify-content: center

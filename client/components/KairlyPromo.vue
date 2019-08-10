@@ -1,38 +1,20 @@
 <template>
   <div class="kairly-promo">
     <div>
-      <section class="kairly-promo--info">
-        <h2><nuxt-link to="/">Kairly</nuxt-link></h2>
-        <p>
-          <nuxt-link to="/rss-reader">
+      <section>
+          <h1>
             {{ $t('Stop be distracted.') }}
-          </nuxt-link>
-        </p>
-
-        <p>
-          <nuxt-link to="/rss-reader">
-            {{ $t('Import your RSS feeds.') }}
-          </nuxt-link>
-        </p>
-        
-        <p>
-          <nuxt-link to="/rss-reader">
-            {{ $t('Set when you want to read what content.') }}
-            <!-- Nastavte si, kdy chcete číst jaký obsah. -->
-          </nuxt-link>
-        </p>
-        
-        <p>
-          <nuxt-link to="/rss-reader">
+            <br />
             {{ $t('Grow healthy reading habits.') }}
-            <!-- Vytvořte si dobré návyky při čtení. -->
-          </nuxt-link>
-        </p>
+          </h1>
 
-        <div class="kairly-promo--learn-more">
-          <nuxt-link to="/">{{ $t('Learn more about the platform') }}</nuxt-link>
-        </div>
-      </section>
+          <ul>
+            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
+            <li>{{ $t('Read your sources at regular time you want. E.g. every day at 9am.') }}</li>
+            <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
+            <li>{{ $t('No magic algorithms. The content is chosen by you and the professional editors you trust.') }}</li>
+          </ul>
+        </section>
 
       <SignUpForm></SignUpForm>
     </div>
@@ -67,6 +49,9 @@ export default {
 
   background: #eee
 
+  @media (max-width: $mobile)
+    padding: 0 $baseline / 2
+
   > div
     display: grid
     grid-template-columns: 2fr 1fr
@@ -76,55 +61,73 @@ export default {
       grid-template-columns: auto
       grid-row-gap: $baseline 
 
-.kairly-promo--info
-  color: #fff
+  section
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
 
-  font-family: $ff-serif
-  text-align: left
-  
-  h2
-    display: table
-    padding: 0 $baseline/2
-    margin-bottom: $baseline
+    h1
+      font-size: $fs-4
+      font-weight: 900
+      line-height: 1.42
+        
+      padding: 0
+      margin-bottom: $baseline * 2
 
-    background: #fff
-    color: #000
-    text-shadow: 0 0 3px #fff
+      @media (max-width: $mobile)
+        margin: $baseline 0
+        width: 100%
 
-    font-size: $fs-4
-    font-weight: 600
-    line-height: $baseline * 2
-    text-align: left
+        font-size: $fs-3
+        line-height: $baseline * 1.2
+        text-align: center
 
-    @media (max-width: $mobile)
-      font-size: $fs-3
-      line-height: $baseline * 1.5
 
-    a
-      color: #000
+    > p
+      font-size: $fs-0
+      text-align: center
 
-  p
-    display: table
-    padding: 0 $baseline/2
-    margin-bottom: $baseline
+    ul
+      padding: 0 $baseline 0 0
 
-    background: #fff
-    color: #000
-    text-shadow: 0 0 3px #fff
+      counter-reset: benefits
 
-    font-size: $fs-2
-    font-weight: 600
-    line-height: $baseline * 1.5
+      @media (max-width: $mobile)
+        padding: 0 $baseline/4
 
-    a
-      color: #000
+    li
+      display: flex
+      align-items: center
+      margin-bottom: $baseline / 2
 
-//- Learn more links
-.kairly-promo--learn-more
-  display: none
+      font-size: $fs-1
+      line-height: 1.42
 
-  a
-    +button(primary, medium)
+      @media (max-width: $mobile)
+        font-size: $fs-0
+        line-height: 1.42
+
+      &:last-of-type
+        margin-bottom: 0
+
+      &::before
+        display: inline-block
+        margin-right: $baseline / 2
+        border-radius: 100%
+        height: $baseline * 1.25
+        width: $baseline * 1.25
+        flex: 0 0 $baseline * 1.25
+
+        background: #fff
+
+        font-size: $fs-0
+        font-weight: 600
+        line-height: $baseline * 1.25
+        text-align: center
+
+        counter-increment: benefits
+        content: counter(benefits)
 
 
 </style>
