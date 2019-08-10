@@ -13,8 +13,8 @@
 
       <nav class="app-header-public--controls">
         <ul>
-          <li><nuxt-link to="/signup">{{ $t('Create account') }}</nuxt-link></li>
-          <li><a href="" @click.prevent="openSignInModal()">{{ $t('Sign in') }}</a></li>
+          <li class="signup"><nuxt-link to="/signup">{{ $t('Create account') }}</nuxt-link></li>
+          <li class="signin"><a href="" @click.prevent="openSignInModal()">{{ $t('Sign in') }}</a></li>
         </ul>
         <button class="hamburger-menu" @click="openMobileMenu()"></button>
       </nav>
@@ -48,6 +48,7 @@
         <li><nuxt-link to="/platform/readers">{{ $t('About platform') }}</nuxt-link></li>
         <li><nuxt-link to="/features/rss-reader">{{ $t('Features') }}</nuxt-link></li>
         <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)')}}</nuxt-link></li>
+        <li><nuxt-link to="/signup">{{ $t('Create account') }}</nuxt-link></li>
       </ul>
     </nav>
 
@@ -288,7 +289,16 @@ export default {
     display: flex
 
     @media (max-width: $mobile)
-      display: none
+      .signup
+        display: none
+  
+      .signin
+        margin-top: 0
+        margin-right: 0
+
+        a
+          margin-top: 0
+          margin-right: 0
 
   li 
     list-style: none

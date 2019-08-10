@@ -8,7 +8,7 @@
 
       <timeline-post--article--content>
         <div v-html="post.content.perex"></div>
-        <timeline-post--continue-reading v-if="post.timeRead && !post.draft">
+        <div class="timeline-post--continue-reading" v-if="post.timeRead && !post.draft">
           <template v-if="post.content.protected">
             <a :href="post.source" target="_blank">{{ $t('Read the article') }}</a>
             ({{ post.timeRead }} {{ $t('read') }})
@@ -24,7 +24,7 @@
             </div>
             ({{ post.timeRead }} {{ $t('read') }})
           </template>
-        </timeline-post--continue-reading>
+        </div>
       </timeline-post--article--content>
     </timeline-post--article>
 
@@ -97,9 +97,7 @@ timeline-post--article--content
 
 
 //- Continue Reading
-timeline-post--continue-reading
-  display: block
-
+.timeline-post--continue-reading
   color: #999
 
   font-family: $ff-sans
@@ -113,7 +111,7 @@ timeline-post--continue-reading
     border-radius: 15px
     clear: both
     margin: $baseline / 2 auto 0 auto
-    padding: 0 $baseline / 2
+    padding: 0 $baseline / 4
 
     border: 1px solid transparent
     color: $c-base
