@@ -101,6 +101,7 @@ export default {
     grid-column: 1 / span 2
     grid-row: 1
     margin: 0
+    max-width: none
 
     @media (max-width: $mobile)
       grid-column: 1 / span 1

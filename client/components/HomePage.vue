@@ -324,7 +324,7 @@ export default {
       margin-bottom: $baseline * 2
 
       @media (max-width: $mobile)
-        margin: $baseline 0
+        margin: $baseline/2 0
         width: 100%
 
         text-align: center
@@ -340,7 +340,7 @@ export default {
       counter-reset: benefits
 
       @media (max-width: $mobile)
-        padding: 0 $baseline/2
+        padding: 0 $baseline/2 $baseline/2 $baseline/2
 
     li
       display: flex
@@ -379,6 +379,9 @@ export default {
 .homepage--process
   background: #f5f5f5
   padding: $baseline
+
+  @media (max-width: $mobile)
+    display: none
 
   h2
     +heading
