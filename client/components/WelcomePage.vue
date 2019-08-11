@@ -2,9 +2,12 @@
   <div class="welcome-view">
     <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
-    <h2>{{ $t('Start with importing your favorite authors') }}</h2>
+    <ExploreNewspapers>
+      {{ $t('Subscribe to newspapers prepared by professional editors') }}
+    </ExploreNewspapers>
 
     <section class="welcome--import">
+      <h2>{{ $t('Or import your favorite authors') }}</h2>
       <div class="welcome--import--rss">
         <nuxt-link to="/import">{{  $t('Import RSS feeds')  }}</nuxt-link>
 
@@ -17,36 +20,6 @@
         </button>
 
         <p>{{ $t('Connect your Twitter account.') }}</p>
-      </div>
-    </section>
-
-    <section class="welcome--topics">
-      <h2>{{ $t('Or subscribe to newspapers') }}</h2>
-
-      <ul>
-        <li v-for="topic in topics" :key="topic.name">
-          <a href="" @click.stop.prevent="selectTopic(topic)" :class="{'is-active': selectedTopic === topic}">{{ topic.name }}</a>
-        </li>
-      </ul>
-    </section>
-
-    <section class="welcome--newspapers">
-      <div>
-        <template v-if="loading">
-          <div class="welcome--newspapers--loading" v-for="x in [1,2,3]" :key="x">
-            <div class="picture"></div>
-            <div class="title"></div>
-            <p>Daily at 9:00</p>
-            <div class="description"></div>
-            <div class="subscribe">Subscribe</div>
-          </div>
-        </template>
-        <NewspaperWidget
-          v-else
-          v-for="newspaper in newspapers"
-          :key="newspaper.fullName"
-          :newspaper="newspaper"
-        />
       </div>
     </section>
 
@@ -97,13 +70,15 @@ import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import TwitterApologyModal from '@/components/modals/TwitterApology'
+import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
 
 export default {
   name: 'Welcome',
 
   components: {
     NewspaperWidget,
-    TwitterApologyModal
+    TwitterApologyModal,
+    ExploreNewspapers
   },
 
   data() {
@@ -159,6 +134,8 @@ export default {
 .welcome-view
   display: block
   padding-bottom: $baseline
+  max-width: 900px
+  margin: 0 auto
 
   //- Welcome heading
   > h1
@@ -180,16 +157,47 @@ export default {
       font-weight: 600
       text-align: center
 
+  //- newspaper crossroad
+  .microsite-explore
+    > h2
+      margin-bottom: 0
+
+  .microsite-explore--crossroad
+    margin: 0
+    padding: $baseline 0 $baseline/2 0
+
 //- Import
 .welcome--import
-  display: flex
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-template-rows: auto auto
   justify-content: center
-  margin-bottom: $baseline * 2
+  padding: $baseline 0
+  margin-bottom: $baseline
+
+  background: #fff
+  border: 1px solid #eee
+
+  @media (max-width: $mobile)
+    grid-template-columns: auto
+    grid-template-rows: auto auto auto
+    grid-row-gap: $baseline / 2
+
+  > h2
+    grid-column: 1 / span 2
+    
+    @media (max-width: $mobile)
+      grid-column: 1
+      margin-bottom: 0 !important
 
   > div
+    grid-row: 2
     margin: 0 $baseline*2
 
     text-align: center
+
+    @media (max-width: $mobile)
+      grid-row: auto
 
   p
     font-size: $fs--1

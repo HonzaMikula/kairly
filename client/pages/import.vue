@@ -310,6 +310,8 @@ export default {
 
   @media (max-width: $mobile)
     padding: 0 $baseline / 2
+    grid-template-columns: auto
+    grid-row-gap: $baseline
 
   div
     > h1
@@ -356,6 +358,9 @@ export default {
   display: flex
   padding: $baseline 0
   margin: 0 $baseline*5
+
+  @media (max-width: $mobile)
+      margin: 0
 
   input
     border-radius: 5px

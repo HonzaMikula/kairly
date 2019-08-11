@@ -1,8 +1,14 @@
 <template>
-  <section class="microsite-explore">
-    <h2>{{ $t('We believe in human editors.') }} <br> {{ $t('Read recently published newspapers.') }}</h2>
+  <section class="explore-view">
+    <h2>
+      <slot>
+        {{ $t('We believe in human editors.') }}
+        <br>
+        {{ $t('Read recently published newspapers.') }}
+      </slot>
+    </h2>
 
-    <div class="microsite-explore--crossroad">
+    <div class="explore--crossroad">
       <div v-for="category in exploreNewspapers" :key="category.name">
         <h3>{{category.name}}</h3>
         <ul>
@@ -13,8 +19,34 @@
       </div>
     </div>
 
-    <div class="microsite-explore--issue" :class="{'is-expanded': expandNewspaper}">
-      <IssueWrapper v-if="issue" :issue="issue" showTail></IssueWrapper>
+    <div 
+      v-if="issue" 
+      class="explore--issue" 
+      :class="{'is-expanded': expandNewspaper}">
+      <nav class="explore--issue--navigation" v-if="links.prev || links.next">
+        <button
+          v-if="links.prev"
+          v-b-tooltip
+          :title="$t('Previous issue')"
+          class="previous"
+          @click="showNewspaper(selectedNewspaper, links.prev)"
+        ></button>
+
+        <button
+          v-if="links.next"
+          v-b-tooltip
+          :title="$t('Next issue')"
+          class="next"
+          @click="showNewspaper(selectedNewspaper, links.next)"
+        ></button>
+      </nav>
+
+      <IssueWrapper :issue="issue" showTail></IssueWrapper>
+
+      <div class="explore--issue--subscribe" v-if="loggedIn">
+        <NewspaperSubscription :newspaper="newspaper" />
+        <p>{{ periodicity }}</p>
+      </div>
 
       <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
 
@@ -25,20 +57,37 @@
 
 <script>
 import NEWSPAPERS from '@/topNewspapers'
+import { mapState } from 'vuex'
+import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import IssueWrapper from '@/components/IssueWrapper'
-
+import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
 export default {
   name: 'ExploreNewspapers',
 
   components: {
-    IssueWrapper
+    IssueWrapper,
+    NewspaperSubscription
+  },
+
+  mixins: [PeriodicityMixin],
+
+  computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
+    periodicity() {
+      return this.getPeriodicityLabel(this.newspaper.periodicity)
+    },
   },
 
   data() {
     return {
+      newspaper: null,
       newspapers: null,
       issue: null,
+      links: null,
       expandNewspaper: false,
       exploreNewspapers: NEWSPAPERS,
       selectedNewspaper: 'janmikula/malostranskenoviny'
@@ -46,8 +95,12 @@ export default {
   },
 
   methods: {
-    async showNewspaper(newspaperId) {
+    async showNewspaper(newspaperId, issueId) {
       this.selectedNewspaper = newspaperId
+
+      if (issueId) {
+        issueId = issueId.split('/').slice(-1)[0]
+      }
 
       this.$ga.event({
         eventCategory: 'Homepage',
@@ -56,9 +109,12 @@ export default {
       })
 
       const { newspaper, issue, links } = await this.$store.dispatch('getNewspaperDetail', {
-        newspaperId: newspaperId
+        newspaperId: newspaperId,
+        issue: issueId
       })
+      this.newspaper = newspaper
       this.issue = issue
+      this.links = links
     },
 
     showMore() {
@@ -77,7 +133,9 @@ export default {
       newspaperId: 'janmikula/malostranskenoviny'
     })
 
+    this.newspaper = newspaper
     this.issue = issue
+    this.links = links
   }
 
 }
@@ -88,7 +146,7 @@ export default {
 @import './styles/components/buttons'
 
 
-.microsite-explore
+.explore-view
   padding-bottom: $baseline * 2
 
   @media (max-width: $mobile)
@@ -105,7 +163,7 @@ export default {
       font-size: $fs-3
       line-height: $baseline * 1.2
 
-.microsite-explore--crossroad
+.explore--crossroad
   display: flex
   padding: $baseline $baseline*2
   margin: 0 (-$baseline*2)
@@ -149,7 +207,7 @@ export default {
       a
         color: #000
 
-.microsite-explore--issue
+.explore--issue
   position: relative
   max-height: 700px
   overflow: hidden
@@ -203,4 +261,80 @@ export default {
 
     padding-bottom: $baseline
     
+//- Navigation between issues
+.explore--issue--navigation
+  display: grid
+  grid-template-columns: min-content min-content
+  grid-template-areas: "prev-link next-link"
+  grid-column-gap: $baseline / 2
+  padding-top: $baseline / 2
+  margin-bottom: -($baseline * 2.375)
+
+  button
+    position: relative
+    z-index: 3
+
+    display: block
+    border-radius: 100%
+    height: $baseline * 1.5
+    width: $baseline * 1.5
+
+    background: #fff
+    border: 0
+    color: #000
+
+    cursor: pointer
+    line-height: $baseline * 1.5
+    text-align: center
+
+    &:hover,
+    &:focus
+      background: $c-base
+      color: #fff
+
+    &.is-disabled
+      opacity: 0.5
+
+      cursor: default
+      pointer-events: none
+
+      &:hover,
+      &:focus
+        background: #fff
+        color: #000
+
+    &::before
+      +fa-icon()
+      @extend .fas
+
+    &.previous
+      grid-area: prev-link
+
+      &::before
+        content: fa-content($fa-var-arrow-left)
+
+    &.next
+      grid-area: next-link
+
+      &::before
+        content: fa-content($fa-var-arrow-right)
+
+//- Subscribe
+.explore--issue--subscribe
+  position: absolute
+  top: $baseline
+  right: $baseline * 2
+
+  text-align: center
+
+  @media (max-width: $mobile)
+    position: static
+    margin: (-$baseline/2) 0 $baseline/2 0
+
+  //- periodicity
+  > p
+    color: #555
+
+    font-size: $fs--1
+  
 </style>
