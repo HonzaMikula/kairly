@@ -270,6 +270,10 @@ export default {
   padding-top: $baseline / 2
   margin-bottom: -($baseline * 2.375)
 
+  @media (max-width: $mobile)
+    grid-template-areas: "prev-link . next-link"
+    grid-template-columns: min-content 1fr min-content
+
   button
     position: relative
     z-index: 3
