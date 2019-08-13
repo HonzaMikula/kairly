@@ -29,11 +29,11 @@ export default {
 
   &.gallery-1
     grid-template-columns: 100%
-    grid-template-rows: 100%
+    grid-template-rows: minmax(auto, 383px)
 
   &.gallery-2
     grid-template-columns: 50% 50%
-    grid-template-rows: 100%
+    grid-template-rows: minmax(auto, 383px)
 
   &.gallery-3
     grid-template-columns: 50% 50%
