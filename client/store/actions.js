@@ -349,7 +349,8 @@ export async function subscribeNewspaper({ commit }, { fullName, donation, allow
       analytics: [
         ['event', {
           eventCategory: 'Subscribe newspaper',
-          eventAction: fullName
+          eventAction: fullName,
+          eventValue: credits
         }]
       ]
     }

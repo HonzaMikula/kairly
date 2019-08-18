@@ -130,7 +130,7 @@
       <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
     </footer>
 
-    <section class="newspaper-settings--delete">
+    <section class="newspaper-settings--delete" v-if="this.newspaper">
       <div>
         <h2>{{ $t('Delete this newspaper') }}</h2>
         <p>{{ $t('Once you delete it, there is no way back. Be careful.') }}</p>
@@ -168,7 +168,7 @@ export default {
   mixins: [PeriodicityMixin],
 
   props: {
-    newspaper: Object,
+    newspaper: Object
   },
 
   data() {
