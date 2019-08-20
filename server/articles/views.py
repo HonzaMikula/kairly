@@ -2,6 +2,7 @@ import html
 from collections import defaultdict
 from datetime import datetime
 from decimal import ConversionSyntax, Decimal
+from itertools import chain
 from operator import attrgetter
 
 import pytz
@@ -285,7 +286,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
         for log in query:
             result['backlog'].append({
                 'post': log.post.to_json(),
-                'publish_in': log.publish_in,
+                'publish': log.publish_in,
                 'editorial': log.editorial.to_json() if log.editorial else None
             })
 
@@ -305,6 +306,35 @@ def newspaper_backlog(request, username, newspapeper_slug):
 
         return JsonResponse(result)
 
+    if request.method == 'POST':
+        payload = json.loads(request.body.decode('utf-8'))
+        upcoming_ids = payload['publish'][0]
+        next_ids = payload['publish'][1]
+        consider_ids = payload['consider']
+
+        ordering = {}
+        for idx, id in enumerate(chain(upcoming_ids, next_ids, consider_ids)):
+            ordering[id] = idx
+
+        issues = {id: 1 for id in upcoming_ids}
+        issues.update({id: 2 for id in next_ids})
+        issues.update({id: None for id in consider_ids})
+
+        # after ordering is captured, convert lists to sets
+        upcoming_ids = set(upcoming_ids)
+        next_ids = set(next_ids)
+        consider_ids = set(consider_ids)
+
+        for log in Backlog.objects.filter(newspaper=newspaper).order_by(F('publish_in').asc(nulls_last=True), 'ordering'):
+            idx = ordering.get(log.post_id)
+            publish_in = issues.get(log.post_id)
+            if idx != log.ordering or publish_in != log.publish_in:
+                log.ordering = idx
+                log.publish_in = publish_in
+                log.save()
+
+        return HttpResponse(status=204)
+
     if request.method == 'PUT':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
@@ -322,30 +352,6 @@ def newspaper_backlog(request, username, newspapeper_slug):
         return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)
-
-
-@ajax_login_required
-@require_POST
-@transaction.atomic
-def backlog_publish(request, username, newspapeper_slug):
-    newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
-    if newspaper.editor_id != request.user.id:
-        if request.user not in newspaper.co_editors.all():
-            return HttpResponseForbidden()
-
-    post_ids = json.loads(request.body.decode('utf-8'))
-    for log in Backlog.objects.filter(newspaper=newspaper):
-        try:
-            idx = post_ids.index(log.post_id)
-            log.publish_in = Backlog.UPCOMING_ISSUE
-            log.ordering = idx + 1
-        except ValueError:
-            if log.publish_in is None:
-                continue
-            log.publish_in = None
-            log.ordering = None
-        log.save()
-    return HttpResponse(status=204)
 
 
 @ajax_login_required

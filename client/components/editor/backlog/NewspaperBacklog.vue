@@ -11,18 +11,24 @@
       title="Upcoming Issue"
       :newspaper="newspaper"
       :backlog="upcomingIssue"
+      :publishIssue="1"
+      :baseIndex="0"
     />
 
     <NewspaperBacklogPosts
       title="Next Issue"
       :newspaper="newspaper"
       :backlog="nextIssue"
+      :publishIssue="2"
+      :baseIndex="upcomingIssue.length"
     />
 
     <NewspaperBacklogPosts
       title="Considered posts"
       :newspaper="newspaper"
       :backlog="consideredPosts"
+      :publishIssue="null"
+      :baseIndex="upcomingIssue.length + nextIssue.length"
     />
 
     <div class="newspaper-backlog--backlog">
@@ -100,13 +106,13 @@ export default {
       return this.newspaperBacklog ? this.newspaperBacklog.backlog : []
     },
     upcomingIssue() {
-      return this.backlog.filter(log => log.publish_in === 1)
+      return this.backlog.filter(log => log.publish === 1)
     },
     nextIssue() {
-      return this.backlog.filter(log => log.publish_in === 2)
+      return this.backlog.filter(log => log.publish === 2)
     },
     consideredPosts() {
-      return this.backlog.filter(log => log.publish_in === null)
+      return this.backlog.filter(log => log.publish === null)
     },
     currentMonth() {
       return this.newspaperBacklog ? this.newspaperBacklog.currentMonthStats : []

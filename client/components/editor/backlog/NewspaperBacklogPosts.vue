@@ -87,7 +87,7 @@
           </b-popover>
 
           <button-icon
-            v-show="idx !== 0"
+            v-show="publishIssue !== 1 || idx !== 0"
             class="up"
             v-b-tooltip
             tabindex="0"
@@ -97,6 +97,7 @@
           />
 
           <button-icon
+            v-show="publishIssue !== null || idx < backlogWithEditor.length - 1"
             class="down"
             v-b-tooltip
             tabindex="0"
@@ -173,6 +174,8 @@ export default {
     newspaper: Object,
     title: String,
     backlog: Array,
+    publishIssue: Number,
+    baseIndex: Number,
   },
 
   computed: {
@@ -328,11 +331,33 @@ export default {
     // },
 
     moveUp(index) {
-      this.backlogMoveUp({newspaper: this.newspaper, index})
+      if (index === 0) {
+        this.backlogMoveTo({
+          newspaper: this.newspaper,
+          index: this.baseIndex + index,
+          publish: this.publishIssue === null ? 2 : this.publishIssue - 1
+        })
+      } else {
+        this.backlogMoveUp({
+          newspaper: this.newspaper,
+          index: this.baseIndex + index,
+        })
+      }
     },
 
     moveDown(index) {
-      this.backlogMoveDown({newspaper: this.newspaper, index})
+      if (index === this.backlog.length - 1) {
+        this.backlogMoveTo({
+          newspaper: this.newspaper,
+          index: this.baseIndex + index,
+          publish: this.publishIssue === 2 ? null : this.publishIssue + 1
+        })
+      } else {
+        this.backlogMoveDown({
+          newspaper: this.newspaper,
+          index: this.baseIndex + index
+        })
+      }
     },
 
     removePost(log) {
@@ -341,8 +366,7 @@ export default {
 
     ...mapActions([
       'removeFromNewspaperBacklog', 'addLinkToBacklog',
-      'backlogMoveDown', 'backlogMoveUp',
-      //'backlogPublish', 'backlogUndoPublish'
+      'backlogMoveDown', 'backlogMoveUp', 'backlogMoveTo'
     ]),
     ...mapMutations(['showError'])
   }

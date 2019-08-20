@@ -203,7 +203,17 @@ export async function addToBacklogLocal({ commit, state}, {newspaper, post}) {
 //   commit('backlogSetPostState', {newspaper: fullName, postId: log.post.id, val: 'C'})
 // }
 
-export async function backlogMoveUp({ commit, state}, {newspaper, index}) {
+async function _postBackLog(fullName, backlog) {
+  await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
+    publish: [
+      backlog.filter(log => log.publish === 1).map(log => log.post.id),
+      backlog.filter(log => log.publish === 2).map(log => log.post.id)
+    ],
+    consider: backlog.filter(log => log.publish === null).map(log => log.post.id)
+  })
+}
+
+export async function backlogMoveUp({ commit, state }, { newspaper, index }) {
   const { fullName } = newspaper
   const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
   const log = backlog[index]
@@ -215,11 +225,10 @@ export async function backlogMoveUp({ commit, state}, {newspaper, index}) {
     backlog: modified,
     currentMonthStats
   })
-  const postIds = modified.map(item => item.post.id)
-  await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
+  _postBackLog.call(this, fullName, modified)
 }
 
-export async function backlogMoveDown({ commit, state}, {newspaper, index}) {
+export async function backlogMoveDown({ commit, state}, { newspaper, index, publish }) {
   const { fullName } = newspaper
   const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
   const log = backlog[index]
@@ -231,8 +240,22 @@ export async function backlogMoveDown({ commit, state}, {newspaper, index}) {
     backlog: modified,
     currentMonthStats
   })
-  const postIds = modified.map(item => item.post.id)
-  await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
+  _postBackLog.call(this, fullName, modified)
+}
+
+export async function backlogMoveTo({ commit, state }, { newspaper, index, publish }) {
+  // TODO add support to move together with index change
+  const { fullName } = newspaper
+  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
+  const log = { ...backlog[index], publish }
+  const modified = [...backlog]
+  modified[index] = log
+  commit('newspaperBacklog', {
+    fullName,
+    backlog: modified,
+    currentMonthStats
+  })
+  _postBackLog.call(this, fullName, modified)
 }
 
 export async function removeFromNewspaperBacklog({ commit, state }, { newspaper, log }) {
