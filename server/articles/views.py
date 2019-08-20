@@ -11,7 +11,7 @@ from credits.utils import (get_user_credits, pay_author_subscription,
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.db import transaction
-from django.db.models import Q, Sum
+from django.db.models import F, Q, Sum
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden, HttpResponseNotFound)
 from django.shortcuts import get_object_or_404
@@ -278,22 +278,14 @@ def newspaper_backlog(request, username, newspapeper_slug):
             return HttpResponseForbidden()
 
     if request.method == 'GET':
-        result = {'backlog': [], 'publish': []}
+        result = {'backlog': []}
 
         query = Backlog.objects.filter(
-            newspaper=newspaper, publish_in__isnull=True).select_related('post')
+            newspaper=newspaper).select_related('post').order_by(F('publish_in').asc(nulls_last=True), 'ordering')
         for log in query:
             result['backlog'].append({
                 'post': log.post.to_json(),
-                'editorial': log.editorial.to_json() if log.editorial else None
-            })
-
-        query = Backlog.objects.filter(
-            newspaper=newspaper, publish_in__isnull=False)\
-            .order_by('ordering').select_related('post')
-        for log in query:
-            result['publish'].append({
-                'post': log.post.to_json(),
+                'publish_in': log.publish_in,
                 'editorial': log.editorial.to_json() if log.editorial else None
             })
 

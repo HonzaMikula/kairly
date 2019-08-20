@@ -31,9 +31,9 @@
       />
     </div>
 
-    <div>
+    <!--div>
       <p v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength})" />
-    </div>
+    </div-->
   </div>
 </template>
 
@@ -59,7 +59,7 @@ export default {
   props: {
     newspaper: Object,
     currentMonth: Object,
-    backlogLength: Number,
+    //backlogLength: Number,
     published: Array,
   },
 

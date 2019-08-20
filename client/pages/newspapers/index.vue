@@ -102,26 +102,9 @@
           </div>
         </editor-newspapers--header>
 
-        <editor-newspapers--mobile-switcher>
-          <nav>
-            <a
-              href=""
-              :class="{'is-active': mobileSwitcher == 1}"
-              @click.prevent="mobileSwitcher = 1">
-              {{ $t('Upcoming issue') }}
-            </a>
-
-            <a
-              href=""
-              :class="{'is-active': mobileSwitcher == 2}"
-              @click.prevent="mobileSwitcher = 2">
-              {{ $t('Considered posts') }}
-            </a>
-          </nav>
-        </editor-newspapers--mobile-switcher>
-
-        <editor-newspapers--board v-if="isBacklogLoaded"
-          :class="{'upcoming-issue': mobileSwitcher == 1, 'backlog': mobileSwitcher ==2}"
+        <editor-newspapers--board
+          v-if="isBacklogLoaded"
+          class="upcoming-issue"
         >
           <NewspaperBacklog
             v-if="selectedNewspaper"
@@ -168,7 +151,6 @@ export default {
     return {
       isSelectNewspaperOpen: false,
       isMobileMenuOpen: false,
-      mobileSwitcher: 1,
 
       selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
       isBacklogLoaded: false,
@@ -556,25 +538,4 @@ editor-newspapers--mobile-switcher
 
       &.is-active
         color: #000
-
-// Board
-editor-newspapers--board
-  @media (max-width: 1260px)
-    .newspaper-backlog--info
-      display: none
-
-    .newspaper-backlog-view > div
-        grid-template-columns: 1fr
-
-    //- if upcoming issue is opened
-    &.upcoming-issue
-      .newspaper-backlog--backlog
-        display: none
-
-    //- if backlog is opened
-    &.backlog
-      .newspaper-backlog--next-issue
-        display: none
-
-
 </style>
