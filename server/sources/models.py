@@ -201,5 +201,5 @@ def on_post_published(sender, post, **kwargs):
         Backlog.objects.create(
             newspaper_id=automation.newspaper_id,
             post=post,
-            publish_stamp=now()
+            publish_in=Backlog.UPCOMING_ISSUE,
         )

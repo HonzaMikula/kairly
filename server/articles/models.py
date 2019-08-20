@@ -380,9 +380,12 @@ class CoEditor(models.Model):
 
 
 class Backlog(models.Model):
+    UPCOMING_ISSUE = 1
+    NEXT_ISSUE = 2
+
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
     post = models.ForeignKey(Post, models.CASCADE)
-    publish_stamp = models.DateTimeField(_('Time when marked to publish'), null=True)
+    publish_in = models.SmallIntegerField(null=True, db_index=True)
     ordering = models.IntegerField(null=True)
     editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True)
 

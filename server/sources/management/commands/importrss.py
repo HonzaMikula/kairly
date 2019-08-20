@@ -118,7 +118,7 @@ class Command(BaseCommand):
                         Backlog.objects.create(
                             newspaper=newspaper,
                             post=post,
-                            publish_stamp=timezone.now(),
+                            publish_in=Backlog.UPCOMING_ISSUE,
                         )
                 except Exception:
                     self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {}".format(timezone.now(), getattr(entry, 'link', ''), channel.rss))

@@ -73,7 +73,7 @@ def user_backlog(request):
     backlog = defaultdict(dict)
     for bl in Backlog.objects.filter(newspaper__editor=request.user).select_related('newspaper'):
         full_name = "{}/{}".format(request.user.username, bl.newspaper.slug)
-        backlog[str(bl.post_id)][full_name] = 'C' if bl.publish_stamp is None else 'P'
+        backlog[str(bl.post_id)][full_name] = 'P' if bl.publish_in else 'C'
 
     return JsonResponse({
         "backlog": backlog
@@ -281,7 +281,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
         result = {'backlog': [], 'publish': []}
 
         query = Backlog.objects.filter(
-            newspaper=newspaper, publish_stamp__isnull=True).select_related('post')
+            newspaper=newspaper, publish_in__isnull=True).select_related('post')
         for log in query:
             result['backlog'].append({
                 'post': log.post.to_json(),
@@ -289,7 +289,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
             })
 
         query = Backlog.objects.filter(
-            newspaper=newspaper, publish_stamp__isnull=False)\
+            newspaper=newspaper, publish_in__isnull=False)\
             .order_by('ordering').select_related('post')
         for log in query:
             result['publish'].append({
@@ -342,16 +342,15 @@ def backlog_publish(request, username, newspapeper_slug):
             return HttpResponseForbidden()
 
     post_ids = json.loads(request.body.decode('utf-8'))
-    publish_stamp = timezone.now()
     for log in Backlog.objects.filter(newspaper=newspaper):
         try:
             idx = post_ids.index(log.post_id)
-            log.publish_stamp = publish_stamp
+            log.publish_in = Backlog.UPCOMING_ISSUE
             log.ordering = idx + 1
         except ValueError:
-            if log.publish_stamp is None:
+            if log.publish_in is None:
                 continue
-            log.publish_stamp = None
+            log.publish_in = None
             log.ordering = None
         log.save()
     return HttpResponse(status=204)

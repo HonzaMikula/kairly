@@ -40,33 +40,37 @@ class Command(BaseCommand):
         if verbosity > 0:
             self.stdout.write('Creating {} #{}'.format(newspaper, number))
 
-        if not dry_run:
-            issue = Issue.objects.create(
-                number=number,
-                published=now,
-                editor=newspaper.editor,
-                newspaper=newspaper
-            )
+        backlog_items = list(
+            Backlog.objects
+            .filter(newspaper=newspaper, publish_in=Backlog.UPCOMING_ISSUE)
+            .order_by('ordering', 'post__published')
+            .select_related('post'))
 
-        backlog_query = Backlog.objects\
-            .filter(newspaper=newspaper, publish_stamp__isnull=False)\
-            .order_by('ordering', 'post__published')\
-            .select_related('post')
-
-        for i, backlog in enumerate(backlog_query):
-            if verbosity > 0:
-                self.stdout.write('Adding post {}'.format(backlog.post))
+        if backlog_items:
             if not dry_run:
-                backlog.delete()
+                issue = Issue.objects.create(
+                    number=number,
+                    published=now,
+                    editor=newspaper.editor,
+                    newspaper=newspaper
+                )
 
-                editorial = backlog.editorial
-                if editorial and editorial.kind == Editorial.TWEETS and EditorialTweet.objects.filter(editorial=editorial).count() == 0:
-                    # ignore editorial with no tweets
-                    editorial.delete()
-                    editorial = None
+            for i, backlog in enumerate(backlog_items):
+                if verbosity > 0:
+                    self.stdout.write('Adding post {}'.format(backlog.post))
+                if not dry_run:
+                    backlog.delete()
 
-                IssuePost.objects.create(
-                    issue=issue, post=backlog.post, editorial=editorial, ordering=i)
+                    editorial = backlog.editorial
+                    if editorial and editorial.kind == Editorial.TWEETS and EditorialTweet.objects.filter(editorial=editorial).count() == 0:
+                        # ignore editorial with no tweets
+                        editorial.delete()
+                        editorial = None
+
+                    IssuePost.objects.create(
+                        issue=issue, post=backlog.post, editorial=editorial, ordering=i)
+
+        Backlog.objects.filter(newspaper=newspaper, publish_in=Backlog.NEXT_ISSUE).update(publish_in=Backlog.UPCOMING_ISSUE)
 
     def get_now(self, hour=None):
         now = timezone.now().replace(minute=0, second=0, microsecond=0)
@@ -96,7 +100,7 @@ class Command(BaseCommand):
             self.stdout.write('Serching for issues to be published at {}'.format(now))
 
         query = Newspaper.objects\
-            .filter(backlog__publish_stamp__isnull=False)\
+            .filter(backlog__publish_in__isnull=False)\
             .select_related('editor')\
             .distinct()
 
