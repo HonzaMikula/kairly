@@ -1,7 +1,7 @@
 <template>
   <AppLayout :name="$t('Manage newspapers')">
-    <editor-newspapers-view>
-      <editor-newspapers--empty
+    <div class="newspaper-editor-view">
+      <div class="newspaper-editor--empty"
         v-if="newspapers.length === 0">
 
         <h1>{{ $t('Start your first newspaper!') }}</h1>
@@ -11,10 +11,10 @@
         </p>
 
         <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
-      </editor-newspapers--empty>
+      </div>
 
       <template v-else>
-        <editor-newspapers--header>
+        <header class="newspaper-editor--header">
           <div class="create-newspaper">
             <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
           </div>
@@ -34,7 +34,7 @@
               tabindex="0" >
             </button-icon>
 
-            <editor-newspapers--header--dropdown
+            <div class="newspaper-editor--header--dropdown"
               v-if="isSelectNewspaperOpen"
               v-on-clickaway="() => isSelectNewspaperOpen = false">
               <div
@@ -51,7 +51,7 @@
                   <strong>{{ publishedPostCount(newspaper) }} {{ $t('posts') }}</strong>.
                 </p>
               </div>
-            </editor-newspapers--header--dropdown>
+            </div>
           </div>
 
           <div class="newspaper-controls" v-if="selectedNewspaper">
@@ -100,7 +100,7 @@
               </ul>
             </div>
           </div>
-        </editor-newspapers--header>
+        </header>
 
         <editor-newspapers--board
           v-if="isBacklogLoaded"
@@ -113,7 +113,7 @@
         </editor-newspapers--board>
         <loading-spinner v-else />
       </template>
-    </editor-newspapers-view>
+    </div>
   </AppLayout>
 </template>
 
@@ -249,35 +249,12 @@ export default {
 @import './styles/components/buttons'
 @import './styles/components/mixins'
 
-editor-newspapers--empty
-  display: block
-  max-width: 600px
-  margin: $baseline auto
-  padding: $baseline
-
-  background: #eee
-  border: 1px dashed #ccc
-
-  text-align: center
-
-  > h1
-    margin-bottom: $baseline
-
-    font-size: $fs-3
-    font-weight: 600
-
-  > p
-    margin-bottom: $baseline
-
-  > a
-    +button(primary, large)
-
-editor-newspapers-view
+.newspaper-editor-view
   position: relative
 
   display: block
   padding: 0 $baseline
-  max-width: 1600px
+  max-width: 900px
   margin: 0 auto
 
   @media (max-width: $mobile)
@@ -285,7 +262,7 @@ editor-newspapers-view
 
 
   //- Header
-  editor-newspapers--header
+  .newspaper-editor--header
     position: relative
 
     display: grid
@@ -442,8 +419,31 @@ editor-newspapers-view
           &:hover
             background: #fff
 
+//- When there is no posts
+.newspaper-editor--empty
+  display: block
+  max-width: 600px
+  margin: $baseline auto
+  padding: $baseline
 
-editor-newspapers--header--dropdown
+  background: #eee
+  border: 1px dashed #ccc
+
+  text-align: center
+
+  > h1
+    margin-bottom: $baseline
+
+    font-size: $fs-3
+    font-weight: 600
+
+  > p
+    margin-bottom: $baseline
+
+  > a
+    +button(primary, large)
+
+.newspaper-editor--header--dropdown
   position: absolute
   left: 50%
   top: $baseline * 3
@@ -514,7 +514,7 @@ editor-newspapers--header--dropdown
 
 
 //- Mobile switcher (upcoming release, considered posts)
-editor-newspapers--mobile-switcher
+.newspaper-editor--mobile-switcher
   display: none
 
   @media (max-width: 1260px)

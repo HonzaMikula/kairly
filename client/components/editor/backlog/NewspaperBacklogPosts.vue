@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div style="font-size: 24px; margin: 10px 0">
-      ------------- {{ title }} -----------------
+    <header class="newspaper-editor-backlog--heading">
+      <h2>{{ title }}</h2>
+
       <a href="#" @click.prevent="() => expanded = !expanded">{{ expanded ? 'VVVV' : '>>>>' }}</a>
-    </div>
+    </header>
 
     <div
       v-show="expanded"
@@ -376,6 +377,16 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
+
+.newspaper-editor-backlog--heading
+  h2
+    margin-top: $baseline
+    
+    color: #777
+    text-shadow: 0 0 1px #eee
+    font-size: $fs-2
+    text-align: center
+
 
 //- Next Issue
 .newspaper-backlog--next-issue
