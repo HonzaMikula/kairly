@@ -8,7 +8,7 @@
     />
 
     <NewspaperBacklogPosts
-      title="Upcoming Issue"
+      :title="'Issue #'+ newspaper.issues"
       :newspaper="newspaper"
       :backlog="upcomingIssue"
       :publishIssue="1"
@@ -16,7 +16,7 @@
     />
 
     <NewspaperBacklogPosts
-      title="Next Issue"
+      :title="'Issue #'+ (newspaper.issues + 1)"
       :newspaper="newspaper"
       :backlog="nextIssue"
       :publishIssue="2"

@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div class="newspaper-editor-backlog-section">
     <header class="newspaper-editor-backlog--heading">
       <h2>{{ title }}</h2>
 
-      <a href="#" @click.prevent="() => expanded = !expanded">{{ expanded ? 'VVVV' : '>>>>' }}</a>
+      <button @click="() => expanded = !expanded" :class="{'is-expanded': expanded}"></button>
+
     </header>
 
     <div
@@ -378,14 +379,32 @@ export default {
 @import './styles/components/buttons'
 @import './styles/components/mixins'
 
+.newspaper-editor-backlog-section
+  margin-bottom: $baseline * 2
+
 .newspaper-editor-backlog--heading
+  display: grid
+  grid-template-columns: 1fr $baseline*1.25 auto $baseline*1.25 1fr
+  grid-column-gap: $baseline / 2
+  margin: $baseline 0 $baseline/2 0
+
+  //- heading
   h2
-    margin-top: $baseline
-    
-    color: #777
-    text-shadow: 0 0 1px #eee
+    grid-column: 3
+
+    font-family: $ff-serif
     font-size: $fs-2
-    text-align: center
+    line-height: $baseline * 1.25
+
+  //- expand button
+  button
+    +button-icon($fa-var-plus, icon, solid)
+    grid-column: 4
+    background: #fafafa
+
+    &.is-expanded
+      +button-icon($fa-var-minus, icon, solid)
+      background: #fafafa
 
 
 //- Next Issue
