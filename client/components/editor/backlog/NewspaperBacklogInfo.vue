@@ -1,12 +1,6 @@
 <template>
   <div class="newspaper-backlog--info">
     <div>
-      <p>
-        {{ $t('Issue') }} <strong>#{{newspaper.issues + 1}}</strong>
-        {{ $t('will be automatically published in') }}
-        <strong :title="newspaper.nextRelease">{{ timeFrom(newspaper.nextRelease) }}</strong>
-      </p>
-
       <p class="newspaper-backlog--info--profit">
         <strong
           @click="openProfitDropdown = !openProfitDropdown"

@@ -1,14 +1,15 @@
 <template>
   <div class="newspaper-backlog-view">
 
-    <NewspaperBacklogInfo
+    <!-- <NewspaperBacklogInfo
       :newspaper="newspaper"
       :current-month="currentMonth"
       :published="upcomingIssue.map(log => log.post)"
-    />
+    /> -->
 
     <NewspaperBacklogPosts
       :title="'Issue #'+ newspaper.issues"
+      :description="'Issue will be published '+ timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
       :backlog="upcomingIssue"
       :publishIssue="1"
@@ -68,6 +69,7 @@
 
 <script>
 import Vue from 'vue'
+import moment from 'moment'
 import { mapActions, mapMutations } from 'vuex'
 import { BPopover } from 'bootstrap-vue'
 
@@ -120,6 +122,10 @@ export default {
   },
 
   methods: {
+    timeFrom(dt) {
+      return moment(dt).from()
+    },
+
     async addExternalLink() {
       const url = this.externalLink
       if (!url) {

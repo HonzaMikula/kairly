@@ -5,6 +5,8 @@
 
       <button @click="() => expanded = !expanded" :class="{'is-expanded': expanded}"></button>
 
+      <p>{{ description }}</p>
+
     </header>
 
     <div
@@ -42,7 +44,7 @@
           <b-popover
             :target="`editorial-button-${log.post.id}`"
             placement="auto"
-            triggers="click blur"
+            triggers="hover focus"
           >
             <ul>
               <template v-if="((log.editorial || edit)) && (editorialEditors[log.post.id] && editorialEditors[log.post.id].position == 'right')">
@@ -175,6 +177,7 @@ export default {
   props: {
     newspaper: Object,
     title: String,
+    description: String,
     backlog: Array,
     publishIssue: Number,
     baseIndex: Number,
@@ -384,7 +387,8 @@ export default {
 
 .newspaper-editor-backlog--heading
   display: grid
-  grid-template-columns: 1fr $baseline*1.25 auto $baseline*1.25 1fr
+  grid-template-columns: $baseline*1.25 1fr auto 1fr $baseline*1.25
+  grid-template-rows: auto auto
   grid-column-gap: $baseline / 2
   margin: $baseline 0 $baseline/2 0
 
@@ -399,13 +403,22 @@ export default {
   //- expand button
   button
     +button-icon($fa-var-plus, icon, solid)
-    grid-column: 4
+    grid-column: 1
+    grid-row: 1
     background: #fafafa
 
     &.is-expanded
       +button-icon($fa-var-minus, icon, solid)
       background: #fafafa
 
+  //- when issue will be published
+  p
+    grid-row: 2
+    grid-column: 1 / span 5
+    color: #999
+
+    font-family: $ff-serif
+    text-align: center
 
 //- Next Issue
 .newspaper-backlog--next-issue
