@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
@@ -80,7 +82,13 @@ class NewspaperFeed(Feed):
         titles = []
         for post in issue.posts.all():
             if post.kind == Post.TWEET:
-                name = post.author.name or post.author.username
+                if post.author:
+                    name = post.author.name or post.author.username
+                else:
+                    for attachment in json.loads(post.attachments):
+                        if attachment['type'] == 'author':
+                            name = attachment['screen_name']
+                            break
                 titles.append(name + "'s tweet")
             else:
                 titles.append(post.title)

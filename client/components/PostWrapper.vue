@@ -1,5 +1,5 @@
 <template>
-  <section 
+  <section
     :class="{'editorial-post': !!editorial, 'is-before': editorial && editorial.position === 'left'}"
     v-on:scroll.passive="onScroll">
     <component
@@ -66,10 +66,9 @@ export default {
       // if (this.editorial == 'article' || this.editorial == 'tweet') {
       //   return 'editorial'
       // }
-      if (this.post.type == 'newspaper') {
+      if (this.post.type === 'newspaper') {
         return 'article' // TODO: back to 'article'
-      }
-      else {
+      } else {
         return this.post.type
       }
     }
@@ -106,7 +105,7 @@ export default {
     @media (max-width: $mobile)
       grid-column: 1 / span 1
       grid-row: 1
-      
+
     timeline-post--article--content
       column-count: 2
 
