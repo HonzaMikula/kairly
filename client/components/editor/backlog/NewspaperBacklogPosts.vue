@@ -44,7 +44,7 @@
           <b-popover
             :target="`editorial-button-${log.post.id}`"
             placement="auto"
-            triggers="hover focus"
+            triggers="click blur"
           >
             <ul>
               <template v-if="((log.editorial || edit)) && (editorialEditors[log.post.id] && editorialEditors[log.post.id].position == 'right')">
@@ -139,6 +139,23 @@
             @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
           />
         </template>
+
+        <template slot="editorialControls" v-if="!log.editorial && !edit">
+          <div 
+            class="editorial-control is-before"
+            v-b-tooltip
+            title="Add editorial"
+            @click="startEditorial('crossroad', log.post.id, 'right')">
+          </div>
+
+          <div 
+            class="editorial-control is-after"
+            v-b-tooltip
+            title="Add editorial"
+            @click="startEditorial('crossroad', log.post.id, 'left')">
+          </div>
+        </template>
+        
       </PostWrapper>
     </div>
   </div>
@@ -159,11 +176,11 @@ export default {
   name: 'NewspaperBacklogPosts',
 
   components: {
-    BPopover,
     EditorialArticleEditor,
     EditorialTweetsEditor,
     PostWrapper,
     NewspaperBacklogInfo,
+    BPopover
   },
 
   data() {
@@ -190,10 +207,10 @@ export default {
   },
 
   methods: {
-    startEditorial(type, postId) {
+    startEditorial(type, postId, position) {
       const edit = {
         type,
-        position: 'right'
+        position: position
       }
       if (type === 'tweets') {
         this.tweetsTarget = postId
@@ -449,4 +466,23 @@ export default {
       font-size: $fs-4
       line-height: $baseline * 2
       text-align: center
+
+//- Editorial Controls
+.editorial-control
+  position: absolute
+  top: 0
+
+  height: 100%
+  width: $baseline / 2
+
+  cursor: pointer
+
+  &:hover
+    background: #eee
+
+  &.is-before
+    right: 0
+
+  &.is-after
+    left: 0
 </style>

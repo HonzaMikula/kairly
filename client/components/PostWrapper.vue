@@ -1,6 +1,6 @@
 <template>
   <section
-    :class="{'editorial-post': !!editorial, 'is-before': editorial && editorial.position === 'left'}"
+    :class="{'editorial-post': !!editorial, 'normal-post': !editorial, 'is-before': editorial && editorial.position === 'left'}"
     v-on:scroll.passive="onScroll">
     <component
       :is="'post-' + postType"
@@ -29,6 +29,10 @@
         :editorial="editorial"
       />
     </slot>
+
+    <slot name="editorialControls">
+
+    </slot>
   </section>
 </template>
 
@@ -39,6 +43,7 @@ import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
 import PostRecommendations from '@/components/posts/PostRecommendations'
 
+import EditorialCrossroad from '@/components/posts/EditorialCrossroad'
 import EditorialTweets from '@/components/posts/EditorialTweets'
 import EditorialArticle from '@/components/posts/EditorialArticle'
 
@@ -57,7 +62,8 @@ export default {
     PostPicture,
     PostRecommendations,
     EditorialTweets,
-    EditorialArticle
+    EditorialArticle,
+    EditorialCrossroad,
   },
 
   computed: {
@@ -78,6 +84,8 @@ export default {
 
 <style lang="sass">
 .editorial-post
+  position: relative
+
   display: grid
   grid-template-columns: 1fr 1fr 1fr
   margin-bottom: $baseline / 2
@@ -147,5 +155,9 @@ export default {
     .editorial-post--editorial
       grid-column: 1 / span 1
 
+
+//- Normal Post
+.normal-post
+  position: relative
 </style>
 

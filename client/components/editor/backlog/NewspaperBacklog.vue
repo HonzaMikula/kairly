@@ -71,7 +71,6 @@
 import Vue from 'vue'
 import moment from 'moment'
 import { mapActions, mapMutations } from 'vuex'
-import { BPopover } from 'bootstrap-vue'
 
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
@@ -87,7 +86,7 @@ export default {
   components: {
     //BacklogPost,
     NewspaperBacklogInfo,
-    NewspaperBacklogPosts,
+    NewspaperBacklogPosts
   },
 
   data() {
