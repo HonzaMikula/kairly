@@ -33,6 +33,10 @@
     <slot name="editorialControls">
 
     </slot>
+
+    <slot name="newspaperBacklogControls">
+
+    </slot>
   </section>
 </template>
 

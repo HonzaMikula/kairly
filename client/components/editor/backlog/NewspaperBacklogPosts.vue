@@ -14,7 +14,6 @@
       class="newspaper-backlog--next-issue"
     >
 
-
       <div v-if="backlogWithEditor.length == 0" class="no-post">
         <h2>{{ $t('No posts in backlog') }}</h2>
       </div>
@@ -25,6 +24,7 @@
         :isSubscribed="true"
         :key="log.post.id"
         :editorial="edit || log.editorial || null"
+        @click.native="toggleMobileControls(log.post.id)"
       >
         <template slot="extendedControls">
           <span class="price">{{ log.post.price }} Kč</span>
@@ -155,6 +155,21 @@
             @click="startEditorial('crossroad', log.post.id, 'left')">
           </div>
         </template>
+
+        <template slot="newspaperBacklogControls">
+          <div 
+            class="newspaper-backlog-controls"
+            :class="{'hide-mobile-controls': mobileControls[log.post.id]}">
+            <div class="newspaper-backlog-controls--arrows">
+              <button class="up"></button>
+              <button class="down"></button>
+            </div>
+
+            <div class="newspaper-backlog-controls--options">
+              <button class="menu"></button>
+            </div>
+          </div>
+        </template>
         
       </PostWrapper>
     </div>
@@ -188,6 +203,7 @@ export default {
       editorialEditors: {},
       tweetsTarget: null,
       expanded: true,
+      mobileControls: []
     }
   },
 
@@ -207,6 +223,11 @@ export default {
   },
 
   methods: {
+    toggleMobileControls(id) {
+      this.mobileControls[id] = !this.mobileControls[id]
+      this.$forceUpdate()
+    },
+
     startEditorial(type, postId, position) {
       const edit = {
         type,
@@ -485,4 +506,49 @@ export default {
 
   &.is-after
     left: 0
+
+//- Backlog controls
+.newspaper-backlog-controls.hide-mobile-controls
+  @media (max-width: $mobile)
+    display: none
+
+.newspaper-backlog-controls--arrows
+  position: absolute
+  left: (-$baseline * 1.5)
+  top: 0
+
+  display: grid
+  grid-template-row: auto auto
+  grid-row-gap: $baseline / 4
+
+  @media (max-width: $mobile)
+    left: $baseline/4
+    top: 40%
+
+  //- button up
+  .up
+    +button-icon($fa-var-arrow-up)
+
+  //- button down
+  .down
+    +button-icon($fa-var-arrow-down)
+
+.newspaper-backlog-controls--options
+  position: absolute
+  right: (-$baseline * 1.5)
+  top: 0
+
+  display: grid
+  grid-template-row: auto auto
+  grid-row-gap: $baseline / 4
+
+  @media (max-width: $mobile)
+    right: $baseline/4
+    top: 40%
+
+  //- button up
+  .menu
+    +button-icon($fa-var-ellipsis-v)
+  
+
 </style>
