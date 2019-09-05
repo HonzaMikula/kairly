@@ -31,7 +31,8 @@
         </template>
 
         <template slot="controls">
-          <button-icon
+          &nbsp;
+          <!-- <button-icon
             v-if="log.post.type != 'tweet'"
             class="editorial"
             v-b-tooltip="$t('Add editorial')"
@@ -88,27 +89,8 @@
                 </li>
               </template>
             </ul>
-          </b-popover>
-
-          <button-icon
-            v-show="publishIssue !== 1 || idx !== 0"
-            class="up"
-            v-b-tooltip
-            tabindex="0"
-            role="button"
-            :title="$t('Move post up')"
-            @click="moveUp(idx)"
-          />
-
-          <button-icon
-            v-show="publishIssue !== null || idx < backlogWithEditor.length - 1"
-            class="down"
-            v-b-tooltip
-            tabindex="0"
-            role="button"
-            :title="$t('Move post down')"
-            @click="moveDown(idx)"
-          />
+          </b-popover> -->
+<!-- 
 
           <button-icon
             class="remove"
@@ -117,7 +99,7 @@
             role="button"
             :title="$t('Remove from backlog')"
             @click.prevent="removePost(log)"
-          />
+          /> -->
         </template>
 
         <template
@@ -161,12 +143,128 @@
             class="newspaper-backlog-controls"
             :class="{'hide-mobile-controls': mobileControls[log.post.id]}">
             <div class="newspaper-backlog-controls--arrows">
-              <button class="up"></button>
-              <button class="down"></button>
+              <button
+                v-show="publishIssue !== 1 || idx !== 0"
+                class="up"
+                :id="`backlog-controls-up-${log.post.id}`"
+                @click="moveUp(idx)">
+              </button>
+              <button
+                v-show="publishIssue !== null || idx < backlogWithEditor.length - 1"
+                class="down"
+                :id="`backlog-controls-down-${log.post.id}`"
+                @click="moveDown(idx)">
+              </button>
+
+              <b-popover
+                :target="`backlog-controls-up-${log.post.id}`"
+                placement="leftbottom"
+                delay="500"
+                triggers="hover"
+                @click.stop
+              >
+                <ul>
+                  <li tabindex="0" @click="removePost(log)"> 
+                    <h6>Move to upcoming issue</h6>
+                    <p>Post won't be consider anymore</p>
+                  </li>
+                  <li>
+                    <h6>Move to next issue</h6>
+                    <p>Post won't be consider anymore</p>
+                  </li> 
+                  <li> 
+                    <h6>Move to backlog issue</h6>
+                    <p>Post won't be consider anymore</p>
+                  </li>
+                </ul>
+              </b-popover>
+
+              <b-popover
+                :target="`backlog-controls-down-${log.post.id}`"
+                placement="leftbottom"
+                delay="400"
+                triggers="hover"
+                @click.stop
+              >
+                <ul>
+                  <li tabindex="0" @click="removePost(log)"> 
+                    <h6>Move to upcoming issue</h6>
+                    <p>Post won't be consider anymore</p>
+                  </li>
+                  <li>
+                    <h6>Move to next issue</h6>
+                    <p>Post won't be consider anymore</p>
+                  </li> 
+                  <li> 
+                    <h6>Move to backlog issue</h6>
+                    <p>Post won't be consider anymore</p>
+                  </li>
+                </ul>
+              </b-popover>
             </div>
 
             <div class="newspaper-backlog-controls--options">
-              <button class="menu"></button>
+              <button 
+                class="menu"
+                :id="`backlog-controls-option-${log.post.id}`"
+                v-b-tooltip="'Options'"
+                @click.stop
+              ></button>
+
+              <b-popover
+                :target="`backlog-controls-option-${log.post.id}`"
+                placement="bottomleft"
+                triggers="click blur"
+                @click.stop
+              >
+                <ul>
+                  <template v-if="((log.editorial || edit)) && (editorialEditors[log.post.id] && editorialEditors[log.post.id].position == 'right')">
+                    <li tabindex="0" @click="changeEditorialPosition(log)">
+                      <h6>{{ $t('Display editorial before') }}</h6>
+                      <p>{{ $t('On desktop in the left') }}</p>
+                    </li>
+                  </template>
+
+                  <template v-if="((log.editorial || edit)) && (editorialEditors[log.post.id] && editorialEditors[log.post.id].position == 'left')">
+                    <li tabindex="0" @click="changeEditorialPosition(log)">
+                      <h6>{{ $t('Display editorial after') }}</h6>
+                      <p>{{ $t('On desktop in the right') }}</p>
+                    </li>
+                  </template>
+
+                  <template v-if="log.editorial && !edit">
+                    <li tabindex="0" @click="editEditorial(log)">
+                      <h6>{{ $t('Update editorial comment') }}</h6>
+                      <p>{{ $t('Write short comment to the topic') }}</p>
+                    </li>
+                    <li tabindex="0" @click="removeEditorial(log)">
+                      <h6>{{ $t('Remove editorial') }}</h6>
+                      <p>{{ $t('Remove existing editorial') }}</p>
+                    </li>
+                  </template>
+                  <template v-if="edit">
+                    <li tabindex="0" @click="cancelEditorialEdit(log)">
+                      <h6>{{ $t('Cancel edit') }}</h6>
+                      <p>{{ $t('Your changes will be lost') }}</p>
+                    </li>
+                  </template>
+                  <template v-if="!log.editorial && !edit">
+                    <li tabindex="0" @click="startEditorial('article', log.post.id)">
+                      <h6>{{ $t('Add editorial comment') }}</h6>
+                      <p>{{ $t('Write short comment to the topic') }}</p>
+                    </li>
+                    <li tabindex="0" @click="startEditorial('tweets', log.post.id)">
+                      <h6>{{ $t('Add editorial tweet(s)') }}</h6>
+                      <p>{{ $t('Comment the topic using tweets') }}</p>
+                    </li>
+                  </template>
+
+                  <li tabindex="0" @click="removePost(log)"> 
+                    <h6>Remove post</h6>
+                    <p>Post won't be consider anymore</p>
+                  </li>
+                </ul>
+              </b-popover>
             </div>
           </div>
         </template>
