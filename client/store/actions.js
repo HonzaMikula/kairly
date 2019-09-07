@@ -224,51 +224,47 @@ async function _postBackLog(fullName, backlog) {
   })
 }
 
-export async function backlogMoveUp({ commit, state }, { newspaper, index }) {
+export async function backlogMoveUp({ commit, state }, { newspaper, source, postId }) {
   const { fullName } = newspaper
-  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-  const log = backlog[index]
-  const modified = [...backlog]
-  modified[index] = backlog[index - 1]
-  modified[index - 1] = log
-  commit('newspaperBacklog', {
-    fullName,
-    backlog: modified,
-    currentMonthStats
-  })
-  _postBackLog.call(this, fullName, modified)
-
+  commit('backlogMoveUp', { fullName, source, postId})
+  // TODO _postBackLog.call(this, fullName, modified)
 }
 
-export async function backlogMoveDown({ commit, state}, { newspaper, index, publish }) {
+export async function backlogMoveDown({ commit, state }, { newspaper, source, postId }) {
   const { fullName } = newspaper
-  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-  const log = backlog[index]
-  const modified = [...backlog]
-  modified[index] = backlog[index + 1]
-  modified[index + 1] = log
-  commit('newspaperBacklog', {
-    fullName,
-    backlog: modified,
-    currentMonthStats
-  })
-  _postBackLog.call(this, fullName, modified)
+  commit('backlogMoveDown', { fullName, source, postId})
+  // TODO _postBackLog.call(this, fullName, modified)
 }
 
-export async function backlogMoveTo({ commit, state }, { newspaper, index, publish }) {
-  // TODO add support to move together with index change
-  const { fullName } = newspaper
-  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-  const log = { ...backlog[index], publish }
-  const modified = [...backlog]
-  modified[index] = log
-  commit('newspaperBacklog', {
-    fullName,
-    backlog: modified,
-    currentMonthStats
-  })
-  _postBackLog.call(this, fullName, modified)
-}
+// export async function backlogMoveDown({ commit, state}, { newspaper, index, publish }) {
+//   const { fullName } = newspaper
+//   const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
+//   const log = backlog[index]
+//   const modified = [...backlog]
+//   modified[index] = backlog[index + 1]
+//   modified[index + 1] = log
+//   commit('newspaperBacklog', {
+//     fullName,
+//     backlog: modified,
+//     currentMonthStats
+//   })
+//   _postBackLog.call(this, fullName, modified)
+// }
+
+// export async function backlogMoveTo({ commit, state }, { newspaper, index, publish }) {
+//   // TODO add support to move together with index change
+//   const { fullName } = newspaper
+//   const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
+//   const log = { ...backlog[index], publish }
+//   const modified = [...backlog]
+//   modified[index] = log
+//   commit('newspaperBacklog', {
+//     fullName,
+//     backlog: modified,
+//     currentMonthStats
+//   })
+//   _postBackLog.call(this, fullName, modified)
+// }
 
 export async function removeFromNewspaperBacklog({ commit, state }, { newspaper, log }) {
   const { fullName } = newspaper

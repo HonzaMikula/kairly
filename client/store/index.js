@@ -96,6 +96,36 @@ const createStore = () => {
           Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
         }
       },
+      backlogMoveUp(state, { fullName, source, postId }) {
+        const backlog = state.newspaperBacklog[fullName]
+        let posts = backlog[source]
+        const idx = posts.findIndex(log => log.post.id === postId)
+        const post = posts[idx]
+        if (idx === 0) {
+          const target = source === 'considered' ? 'next' : 'upcomming'
+          const targetPosts = backlog[target]
+          posts.shift()
+          targetPosts.push(post)
+        } else {
+          Vue.set(posts, idx, posts[idx - 1])
+          Vue.set(posts, idx - 1, post)
+        }
+      },
+      backlogMoveDown(state, { fullName, source, postId }) {
+        const backlog = state.newspaperBacklog[fullName]
+        let posts = backlog[source]
+        const idx = posts.findIndex(log => log.post.id === postId)
+        const post = posts[idx]
+        if (idx === posts.length - 1) {
+          const target = source == 'upcoming' ? 'next' : 'considered'
+          const targetPosts = backlog[target]
+          posts.shift()
+          targetPosts.push(post)
+        } else {
+          Vue.set(posts, idx, posts[idx + 1])
+          Vue.set(posts, idx + 1, post)
+        }
+      },
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
       },

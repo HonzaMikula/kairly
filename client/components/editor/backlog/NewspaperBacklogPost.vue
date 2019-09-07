@@ -60,13 +60,13 @@
             v-show="canMoveUp"
             class="up"
             :id="`backlog-controls-up-${log.post.id}`"
-            @click="moveUp(log.post.id)">
+            @click="moveUp(source, log.post.id)">
           </button>
           <button
             v-show="canMoveDown"
             class="down"
             :id="`backlog-controls-down-${log.post.id}`"
-            @click="moveDown(log.post.id)">
+            @click="moveDown(source, log.post.id)">
           </button>
 
           <b-popover
@@ -367,34 +367,44 @@ export default {
     //   this.backlogUndoPublish({newspaper: this.newspaper, log})
     // },
 
-    moveUp(index) {
-      if (index === 0) {
-        this.backlogMoveTo({
-          newspaper: this.newspaper,
-          index: this.baseIndex + index,
-          publish: this.publishIssue === null ? 2 : this.publishIssue - 1
-        })
-      } else {
-        this.backlogMoveUp({
-          newspaper: this.newspaper,
-          index: this.baseIndex + index,
-        })
-      }
+    moveUp(source, postId) {
+      this.backlogMoveUp({
+        newspaper: this.newspaper,
+        source,
+        postId
+      })
+      // if (index === 0) {
+      //   this.backlogMoveTo({
+      //     newspaper: this.newspaper,
+      //     index: this.baseIndex + index,
+      //     publish: this.publishIssue === null ? 2 : this.publishIssue - 1
+      //   })
+      // } else {
+      //   this.backlogMoveUp({
+      //     newspaper: this.newspaper,
+      //     index: this.baseIndex + index,
+      //   })
+      // }
     },
 
-    moveDown(index) {
-      if (index === this.backlog.length - 1) {
-        this.backlogMoveTo({
-          newspaper: this.newspaper,
-          index: this.baseIndex + index,
-          publish: this.publishIssue === 2 ? null : this.publishIssue + 1
-        })
-      } else {
-        this.backlogMoveDown({
-          newspaper: this.newspaper,
-          index: this.baseIndex + index
-        })
-      }
+    moveDown(source, postId) {
+      this.backlogMoveDown({
+        newspaper: this.newspaper,
+        source,
+        postId
+      })
+      // if (index === this.backlog.length - 1) {
+      //   this.backlogMoveTo({
+      //     newspaper: this.newspaper,
+      //     index: this.baseIndex + index,
+      //     publish: this.publishIssue === 2 ? null : this.publishIssue + 1
+      //   })
+      // } else {
+      //   this.backlogMoveDown({
+      //     newspaper: this.newspaper,
+      //     index: this.baseIndex + index
+      //   })
+      // }
     },
 
     removePost(log) {
@@ -403,7 +413,9 @@ export default {
 
     ...mapActions([
       'removeFromNewspaperBacklog', 'addLinkToBacklog',
-      'backlogMoveDown', 'backlogMoveUp', 'backlogMoveTo'
+      'backlogMoveDown', 'backlogMoveUp'
+      //, 'backlogMoveTo'
+
     ]),
     ...mapMutations(['showError'])
   }
