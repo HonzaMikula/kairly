@@ -8,28 +8,25 @@
     /> -->
 
     <NewspaperBacklogPosts
-      :title="'Issue #'+ newspaper.issues"
+      :title="'Issue #' + (newspaper.issues + 1)"
       :description="'Issue will be published '+ timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
-      :backlog="upcomingIssue"
-      :publishIssue="1"
-      :baseIndex="0"
+      :backlog="backlog.upcoming"
+      source="upcoming"
     />
 
     <NewspaperBacklogPosts
-      :title="'Issue #'+ (newspaper.issues + 1)"
+      :title="'Issue #'+ (newspaper.issues + 2)"
       :newspaper="newspaper"
-      :backlog="nextIssue"
-      :publishIssue="2"
-      :baseIndex="upcomingIssue.length"
+      :backlog="backlog.next"
+      source="next"
     />
 
     <NewspaperBacklogPosts
       title="Considered posts"
       :newspaper="newspaper"
-      :backlog="consideredPosts"
-      :publishIssue="null"
-      :baseIndex="upcomingIssue.length + nextIssue.length"
+      :backlog="backlog.considered"
+      source="considered"
     />
 
     <div class="newspaper-backlog--backlog">
@@ -44,25 +41,6 @@
           {{ $t('Add article') }}
         </button>
       </div>
-
-      <!--div
-        v-if="backlog.length == 0"
-        class="no-post"
-      >
-        <h2>{{ $t('No considered posts!') }}</h2>
-
-        <p>{{ $t('Go on your timeline and start adding interesting articles and tweets for considaration.') }}</p>
-      </div>
-
-      <BacklogPost
-        v-for="log in backlog"
-        :key="log.post.id"
-        :post="log.post"
-        :isTweersEditorialOpen="!!tweetsTarget"
-        @addToEditorial="addTweetToEditorial(log)"
-        @publish="publish(log)"
-        @remove="removePost(log)"
-      /-->
     </div>
   </div>
 </template>
@@ -73,19 +51,17 @@ import moment from 'moment'
 import { mapActions, mapMutations } from 'vuex'
 
 import PostWrapper from '@/components/PostWrapper'
-import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
+//import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
 import NewspaperBacklogPosts from '@/components/editor/backlog/NewspaperBacklogPosts'
 //import BacklogPost from '@/components/editor/backlog/BacklogPost'
-import EditorialArticleEditor from '@/components/posts/EditorialArticleEditor'
-import EditorialTweetsEditor from '@/components/posts/EditorialTweetsEditor'
-import PostWrapperVue from '../../PostWrapper.vue';
+
 
 export default {
   name: 'NewspaperBacklog',
 
   components: {
     //BacklogPost,
-    NewspaperBacklogInfo,
+    //NewspaperBacklogInfo,
     NewspaperBacklogPosts
   },
 
@@ -100,23 +76,11 @@ export default {
   },
 
   computed: {
-    newspaperBacklog() {
+    backlog() {
       return this.$store.state.newspaperBacklog[this.newspaper.fullName]
     },
-    backlog() {
-      return this.newspaperBacklog ? this.newspaperBacklog.backlog : []
-    },
-    upcomingIssue() {
-      return this.backlog.filter(log => log.publish === 1)
-    },
-    nextIssue() {
-      return this.backlog.filter(log => log.publish === 2)
-    },
-    consideredPosts() {
-      return this.backlog.filter(log => log.publish === null)
-    },
     currentMonth() {
-      return this.newspaperBacklog ? this.newspaperBacklog.currentMonthStats : []
+      return this.backlog ? this.backlog.currentMonthStats : []
     }
   },
 

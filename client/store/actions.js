@@ -136,11 +136,19 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
 
 export async function loadNewspaperBacklog({ commit, state, dispatch }, fullName) {
   const { backlog, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
-  commit('newspaperBacklog', {
-    fullName,
-    backlog,
-    currentMonthStats: currentMonth
+  let upcoming = []
+  let next = []
+  let considered = []
+  backlog.forEach(log => {
+    if (log.publish === 1) { upcoming.push(log) }
+    else if (log.publish === 2) { next.push(log) }
+    else { considered.push(log) }
   })
+
+  commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
+  commit('newspaperBacklogPosts', { fullName, section: 'upcoming', posts: upcoming})
+  commit('newspaperBacklogPosts', { fullName, section: 'next', posts: next })
+  commit('newspaperBacklogPosts', { fullName, section: 'considered', posts: considered })
 }
 
 export async function removeFromBacklogLocal({ commit, state}, {newspaper, post}) {
@@ -229,6 +237,7 @@ export async function backlogMoveUp({ commit, state }, { newspaper, index }) {
     currentMonthStats
   })
   _postBackLog.call(this, fullName, modified)
+
 }
 
 export async function backlogMoveDown({ commit, state}, { newspaper, index, publish }) {

@@ -82,8 +82,19 @@ const createStore = () => {
         }
         state.backlog = backlog
       },
-      newspaperBacklog( state, { fullName, backlog, currentMonthStats}) {
-        Vue.set(state.newspaperBacklog, fullName, { backlog, currentMonthStats })
+      newspaperBacklogPosts( state, { fullName, section, posts }) {
+        if (state.newspaperBacklog[fullName]) {
+          Vue.set(state.newspaperBacklog[fullName], section, posts)
+        } else {
+          Vue.set(state.newspaperBacklog, fullName, { [section]: posts })
+        }
+      },
+      newspaperBacklogStats( state, { fullName, currentMonthStats}) {
+        if (state.newspaperBacklog[fullName]) {
+          Vue.set(state.newspaperBacklog[fullName], 'currentMonthStats', currentMonthStats)
+        } else {
+          Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
+        }
       },
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
