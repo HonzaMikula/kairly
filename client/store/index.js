@@ -102,7 +102,7 @@ const createStore = () => {
         const idx = posts.findIndex(log => log.post.id === postId)
         const post = posts[idx]
         if (idx === 0) {
-          const target = source === 'considered' ? 'next' : 'upcomming'
+          const target = source === 'considered' ? 'next' : 'upcoming'
           const targetPosts = backlog[target]
           posts.shift()
           targetPosts.push(post)
@@ -119,8 +119,8 @@ const createStore = () => {
         if (idx === posts.length - 1) {
           const target = source == 'upcoming' ? 'next' : 'considered'
           const targetPosts = backlog[target]
-          posts.shift()
-          targetPosts.push(post)
+          posts.pop()
+          targetPosts.unshift(post)
         } else {
           Vue.set(posts, idx, posts[idx + 1])
           Vue.set(posts, idx + 1, post)

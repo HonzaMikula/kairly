@@ -214,26 +214,27 @@ export async function addToBacklogLocal({ commit, state}, {newspaper, post}) {
 //   commit('backlogSetPostState', {newspaper: fullName, postId: log.post.id, val: 'C'})
 // }
 
-async function _postBackLog(fullName, backlog) {
+async function _postBackLog(state, fullName) {
+  const backlog = state.newspaperBacklog[fullName]
   await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
     publish: [
-      backlog.filter(log => log.publish === 1).map(log => log.post.id),
-      backlog.filter(log => log.publish === 2).map(log => log.post.id)
+      backlog.upcoming.map(log => log.post.id),
+      backlog.next.map(log => log.post.id)
     ],
-    consider: backlog.filter(log => log.publish === null).map(log => log.post.id)
+    consider: backlog.considered.map(log => log.post.id)
   })
 }
 
 export async function backlogMoveUp({ commit, state }, { newspaper, source, postId }) {
   const { fullName } = newspaper
   commit('backlogMoveUp', { fullName, source, postId})
-  // TODO _postBackLog.call(this, fullName, modified)
+  _postBackLog.call(this, state, fullName)
 }
 
 export async function backlogMoveDown({ commit, state }, { newspaper, source, postId }) {
   const { fullName } = newspaper
   commit('backlogMoveDown', { fullName, source, postId})
-  // TODO _postBackLog.call(this, fullName, modified)
+  _postBackLog.call(this, state, fullName)
 }
 
 // export async function backlogMoveDown({ commit, state}, { newspaper, index, publish }) {
