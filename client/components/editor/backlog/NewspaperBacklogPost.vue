@@ -77,17 +77,20 @@
             @click.stop
           >
             <ul>
-              <li tabindex="0" @click="removePost(log)">
+              <li
+                v-if="source !== 'upcoming'"
+                tabindex="0"
+                @click="moveUp(source, log.post.id, 'upcoming')"
+              >
                 <h6>Move to upcoming issue</h6>
-                <p>Post won't be consider anymore</p>
+                <p></p>
               </li>
-              <li>
+              <li
+                v-if="source === 'considered'"
+                @click="moveUp(source, log.post.id, 'next')"
+              >
                 <h6>Move to next issue</h6>
-                <p>Post won't be consider anymore</p>
-              </li>
-              <li>
-                <h6>Move to backlog issue</h6>
-                <p>Post won't be consider anymore</p>
+                <p></p>
               </li>
             </ul>
           </b-popover>
@@ -100,17 +103,20 @@
             @click.stop
           >
             <ul>
-              <li tabindex="0" @click="removePost(log)">
-                <h6>Move to upcoming issue</h6>
-                <p>Post won't be consider anymore</p>
-              </li>
-              <li>
+              <li
+                v-if="source === 'upcoming'"
+                tabindex="0"
+                @click="moveDown(source, log.post.id, 'next')"
+              >
                 <h6>Move to next issue</h6>
-                <p>Post won't be consider anymore</p>
+                <p></p>
               </li>
-              <li>
+              <li
+                v-if="source !== 'considered'"
+                @click="moveDown(source, log.post.id, 'considered')"
+              >
                 <h6>Move to backlog issue</h6>
-                <p>Post won't be consider anymore</p>
+                <p></p>
               </li>
             </ul>
           </b-popover>
@@ -367,44 +373,22 @@ export default {
     //   this.backlogUndoPublish({newspaper: this.newspaper, log})
     // },
 
-    moveUp(source, postId) {
+    moveUp(source, postId, target=null) {
       this.backlogMoveUp({
         newspaper: this.newspaper,
         source,
-        postId
+        postId,
+        target
       })
-      // if (index === 0) {
-      //   this.backlogMoveTo({
-      //     newspaper: this.newspaper,
-      //     index: this.baseIndex + index,
-      //     publish: this.publishIssue === null ? 2 : this.publishIssue - 1
-      //   })
-      // } else {
-      //   this.backlogMoveUp({
-      //     newspaper: this.newspaper,
-      //     index: this.baseIndex + index,
-      //   })
-      // }
     },
 
-    moveDown(source, postId) {
+    moveDown(source, postId, target=null) {
       this.backlogMoveDown({
         newspaper: this.newspaper,
         source,
-        postId
+        postId,
+        target
       })
-      // if (index === this.backlog.length - 1) {
-      //   this.backlogMoveTo({
-      //     newspaper: this.newspaper,
-      //     index: this.baseIndex + index,
-      //     publish: this.publishIssue === 2 ? null : this.publishIssue + 1
-      //   })
-      // } else {
-      //   this.backlogMoveDown({
-      //     newspaper: this.newspaper,
-      //     index: this.baseIndex + index
-      //   })
-      // }
     },
 
     removePost(log) {

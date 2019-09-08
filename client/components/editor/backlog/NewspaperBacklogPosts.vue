@@ -23,7 +23,7 @@
         :key="log.post.id"
         :newspaper="newspaper"
         :log="log"
-        :canMoveUp="idx > 0 || source !== 'upcomming'"
+        :canMoveUp="idx > 0 || source !== 'upcoming'"
         :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
         :source="source"
       />

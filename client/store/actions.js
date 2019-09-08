@@ -225,15 +225,15 @@ async function _postBackLog(state, fullName) {
   })
 }
 
-export async function backlogMoveUp({ commit, state }, { newspaper, source, postId }) {
+export async function backlogMoveUp({ commit, state }, { newspaper, source, target, postId }) {
   const { fullName } = newspaper
-  commit('backlogMoveUp', { fullName, source, postId})
+  commit('backlogMoveUp', { fullName, source, target, postId})
   _postBackLog.call(this, state, fullName)
 }
 
-export async function backlogMoveDown({ commit, state }, { newspaper, source, postId }) {
+export async function backlogMoveDown({ commit, state }, { newspaper, source, target, postId }) {
   const { fullName } = newspaper
-  commit('backlogMoveDown', { fullName, source, postId})
+  commit('backlogMoveDown', { fullName, source, target, postId})
   _postBackLog.call(this, state, fullName)
 }
 

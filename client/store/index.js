@@ -96,30 +96,34 @@ const createStore = () => {
           Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
         }
       },
-      backlogMoveUp(state, { fullName, source, postId }) {
+      backlogMoveUp(state, { fullName, source, target, postId }) {
         const backlog = state.newspaperBacklog[fullName]
         let posts = backlog[source]
         const idx = posts.findIndex(log => log.post.id === postId)
         const post = posts[idx]
-        if (idx === 0) {
-          const target = source === 'considered' ? 'next' : 'upcoming'
+        if (idx === 0 || target !== null) {
+          if (target === null) {
+            target = (source === 'considered' ? 'next' : 'upcoming')
+          }
           const targetPosts = backlog[target]
-          posts.shift()
+          posts.splice(idx, 1)
           targetPosts.push(post)
         } else {
           Vue.set(posts, idx, posts[idx - 1])
           Vue.set(posts, idx - 1, post)
         }
       },
-      backlogMoveDown(state, { fullName, source, postId }) {
+      backlogMoveDown(state, { fullName, source, target, postId }) {
         const backlog = state.newspaperBacklog[fullName]
         let posts = backlog[source]
         const idx = posts.findIndex(log => log.post.id === postId)
         const post = posts[idx]
-        if (idx === posts.length - 1) {
-          const target = source == 'upcoming' ? 'next' : 'considered'
+        if (idx === posts.length - 1 || target !== null) {
+          if (target === null) {
+            target =  source == 'upcoming' ? 'next' : 'considered'
+          }
           const targetPosts = backlog[target]
-          posts.pop()
+          posts.splice(idx, 1)
           targetPosts.unshift(post)
         } else {
           Vue.set(posts, idx, posts[idx + 1])
