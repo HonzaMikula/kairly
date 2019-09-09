@@ -41,26 +41,32 @@
         <p>Check the right column and click on Add to Editorial.</p>
       </div>
     </template>
+
+    <portal to="modal">
+      <TweetsSelection :newspaper="newspaper"/>
+    </portal>
   </div>
 </template>
 
 <script>
-import PostTweet from './PostTweet'
+import PostTweet from '@/components/posts/PostTweet'
+import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
 
 export default {
   name: 'EditorialTweetsEditor',
 
   components: {
-    PostTweet
+    PostTweet,
+    TweetsSelection,
   },
 
   props: {
+    newspaper: Object,
     tweets: Array
   },
 
   methods: {
   }
-
 }
 </script>
 <style lang="sass">

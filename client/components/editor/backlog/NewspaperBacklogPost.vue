@@ -18,7 +18,6 @@
     <template #editorial>
       <EditorialCrossroad
         v-if="edit && edit.type === 'crossroad'"
-        :newspaper="newspaper"
         @select="ev => startEditorial(ev, edit.position)"
       />
 
@@ -31,6 +30,7 @@
 
       <EditorialTweetsEditor
         v-if="edit && edit.type === 'tweets'"
+        :newspaper="newspaper"
         :tweets="edit.tweets"
         @moveTweetDown="tweet => moveTweetDown(log, tweet)"
         @moveTweetUp="tweet => moveTweetUp(log, tweet)"
@@ -42,14 +42,14 @@
           class="editorial-control is-before"
           v-b-tooltip
           title="Add editorial"
-          @click="showCrossroad('crossroad', 'right')">
+          @click="showCrossroad('right')">
         </div>
 
         <div
           class="editorial-control is-after"
           v-b-tooltip
           title="Add editorial"
-          @click="showCrossroad('crossroad', 'left')">
+          @click="showCrossroad('left')">
         </div>
       </template>
 
@@ -140,14 +140,14 @@
             @click.stop
           >
             <ul>
-              <template v-if="(edit || log.editoria) && (edit || log.editoria).position == 'right'">
+              <template v-if="(edit || log.editorial) && (edit || log.editoria).position == 'right'">
                 <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial before') }}</h6>
                   <p>{{ $t('On desktop in the left') }}</p>
                 </li>
               </template>
 
-              <template v-if="(edit || log.editoria) && (edit || log.editoria).position == 'left'">
+              <template v-if="(edit || log.editorial) && (edit || log.editoria).position == 'left'">
                 <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial after') }}</h6>
                   <p>{{ $t('On desktop in the right') }}</p>
@@ -205,8 +205,8 @@ import { BPopover } from 'bootstrap-vue'
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
 import EditorialCrossroad from '@/components/editor/backlog/EditorialCrossroad'
-import EditorialArticleEditor from '@/components/posts/EditorialArticleEditor'
-import EditorialTweetsEditor from '@/components/posts/EditorialTweetsEditor'
+import EditorialArticleEditor from '@/components/editor/backlog/EditorialArticleEditor'
+import EditorialTweetsEditor from '@/components/editor/backlog/EditorialTweetsEditor'
 
 export default {
   name: 'NewspaperBacklogPost',
@@ -247,7 +247,7 @@ export default {
     startEditorial(type, position) {
       const edit = {
         type,
-        position: position
+        position
       }
       if (type === 'tweets') {
         edit.tweets = []
