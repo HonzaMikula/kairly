@@ -8,15 +8,15 @@
       :post="post"
       :isSubscribed="isSubscribed"
     >
-      <template slot="author">
+      <template #author>
         <slot name="author"></slot>
       </template>
 
-      <template slot="extendedControls">
-        <slot name="extendedControls"></slot>
+      <template #extended-controls>
+        <slot name="extended-controls"></slot>
       </template>
 
-      <template slot="controls">
+      <template #controls>
         <slot name="controls"></slot>
       </template>
     </component>
@@ -30,17 +30,9 @@
       />
     </slot>
 
-    <slot name="editorialControls">
+    <slot name="editorial-controls"/>
 
-    </slot>
-
-    <slot name="newspaperBacklogControls">
-
-    </slot>
-
-    <slot name="newspaperBacklogTweetsSelection">
-      
-    </slot>
+    <slot name="newspaper-backlog-controls"/>
   </section>
 </template>
 

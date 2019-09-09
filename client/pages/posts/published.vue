@@ -6,7 +6,7 @@
       :isSubscribed="true"
       :key="post.id"
     >
-      <template slot="controls">
+      <template #controls>
         <button-icon
           class="edit"
           v-b-tooltip

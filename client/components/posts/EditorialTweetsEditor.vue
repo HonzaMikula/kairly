@@ -4,8 +4,8 @@
     :class="{'many-tweets': tweets.length > 1}">
     <template v-if="tweets.length">
       <PostTweet v-for="(tweet, idx) in tweets" :key="tweet.id" :post="tweet">
-        <template slot="extendedControls">&nbsp;</template>
-        <template slot="controls">
+        <template #extended-controls>&nbsp;</template>
+        <template #controls>
           <button-icon
             v-if="idx > 0"
             class="up"

@@ -15,7 +15,7 @@
 import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
 
 export default {
-  name: 'EditorialArticle',
+  name: 'EditorialCrossroad',
 
   data() {
     return {

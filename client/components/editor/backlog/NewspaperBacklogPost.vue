@@ -7,17 +7,17 @@
     :editorial="edit || log.editorial || null"
     @click.native="toggleMobileControls"
   >
-    <template slot="extendedControls">
+    <template #extended-controls>
       <span class="price">{{ log.post.price }} Kč</span>
     </template>
 
-    <template slot="controls">
+    <template #controls>
       &nbsp;
     </template>
 
     <template
       v-if="edit"
-      slot="editorial"
+      #editorial
     >
       <EditorialArticleEditor
         v-if="edit.type === 'article'"
@@ -35,7 +35,10 @@
       />
     </template>
 
-    <template slot="editorialControls" v-if="!log.editorial && !edit">
+    <template
+      #editorial-controls
+      v-if="!log.editorial && !edit"
+    >
       <div
         class="editorial-control is-before"
         v-b-tooltip
@@ -51,7 +54,7 @@
       </div>
     </template>
 
-    <template slot="newspaperBacklogControls">
+    <template #newspaper-backlog-controls>
       <div
         class="newspaper-backlog-controls"
         :class="{'hide-mobile-controls': mobileControls[log.post.id]}">

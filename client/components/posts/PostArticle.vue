@@ -28,8 +28,8 @@
       </timeline-post--article--content>
     </timeline-post--article>
 
-    <template slot="controls"><slot name="controls"></slot></template>
-    <template slot="extendedControls"><slot name="extendedControls"></slot></template>
+    <template #controls><slot name="controls"></slot></template>
+    <template #extended-controls><slot name="extended-controls"></slot></template>
   </PostBase>
 </template>
 

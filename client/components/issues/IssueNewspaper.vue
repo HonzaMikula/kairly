@@ -3,7 +3,7 @@
     <header>
       <h1>
         <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
-          <slot name="newspaperTitle">{{ issue.newspaper.title }}</slot>
+          <slot name="newspaper-title">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
 

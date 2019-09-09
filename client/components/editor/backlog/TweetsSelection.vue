@@ -6,11 +6,11 @@
       <button>Done</button>
     </header>
     <PostTweet v-for="item in backlog" :post="item.post" :key="item.post.id">
-      <template slot="extendedControls">
+      <template #extended-controls>
         &nbsp;
       </template>
-      <template slot="controls">
-        <button 
+      <template #controls>
+        <button
           @click="selectTweet(item.post.id)"
           :class="{'add': !selectedTweets[item.post.id], 'remove': selectedTweets[item.post.id]}"
         >

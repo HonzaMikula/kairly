@@ -1,6 +1,6 @@
 <template>
   <PostBase :post="post">
-    <template slot="author">
+    <template #author>
       <picture>
         <span class="external-link"></span>
       </picture>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <template slot="controls"><slot name="controls"></slot></template>
+    <template #controls><slot name="controls"></slot></template>
   </PostBase>
 </template>
 

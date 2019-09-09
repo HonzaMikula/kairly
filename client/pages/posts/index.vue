@@ -9,7 +9,7 @@
         :post="post"
         :isSubscribed="true"
       >
-        <template slot="controls" v-if="post.draft">
+        <template #controls v-if="post.draft">
           <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
 
           <button-icon

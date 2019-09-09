@@ -5,8 +5,8 @@
     :issue="issue"
     :hideDate="hideDate">
 
-    <template slot="newspaperTitle">
-      <slot name="newspaperTitle"/>
+    <template #newspaper-title>
+      <slot name="newspaper-title"/>
     </template>
 
     <PostWrapper

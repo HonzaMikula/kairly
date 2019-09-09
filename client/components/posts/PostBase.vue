@@ -35,7 +35,7 @@
       </slot>
 
       <section>
-        <slot name="extendedControls"></slot>
+        <slot name="extended-controls"></slot>
         <slot name="controls">
           <span>
             <button

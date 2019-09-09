@@ -4,7 +4,7 @@
       <header class="newspaper-detail--header">
         <div>
           <h1 itemprop="name">
-            <nuxt-link 
+            <nuxt-link
               :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
               {{ newspaper.title }}
             </nuxt-link>
@@ -20,7 +20,10 @@
             <div v-else class="image-placeholder"></div>
           </picture>
 
-          <div class="newspaper-detail--subscribe" v-if="loggedIn">
+          <div
+            v-if="loggedIn"
+            class="newspaper-detail--subscribe"
+          >
             <NewspaperSubscription :newspaper="newspaper" />
 
             <p>{{ periodicity }}</p>
@@ -30,7 +33,10 @@
 
       <main>
         <template v-if="issue">
-          <nav class="newspaper-detail--navigation" v-if="links.prev || links.next">
+          <nav
+            v-if="links.prev || links.next"
+            class="newspaper-detail--navigation"
+          >
             <nuxt-link
               v-if="links.prev"
               :to="links.prev"
@@ -49,8 +55,16 @@
           </nav>
 
           <div class="newspaper-detail--issue">
-            <IssueWrapper :issue="issue" :subscription="newspaper.subscription" hideDate showTail>
-              <template slot="newspaperTitle">{{ $t('Issue from') }} <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY')}}</time></template>
+            <IssueWrapper
+              :issue="issue"
+              :subscription="newspaper.subscription"
+              hideDate
+              showTail
+            >
+              <template #newspaper-title>
+                {{ $t('Issue from') }}
+                <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY')}}</time>
+              </template>
             </IssueWrapper>
 
             <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
@@ -100,7 +114,10 @@
             />
 
             <!-- Begin Mailchimp Signup Form -->
-            <div id="mc_embed_signup" v-if="newspaper.newsletterSubscriptionUrl">
+            <div
+              v-if="newspaper.newsletterSubscriptionUrl"
+              id="mc_embed_signup"
+            >
               <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
                 <div id="mc_embed_signup_scroll">
                   <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
@@ -130,7 +147,10 @@
           </footer>
         </template>
 
-        <div class="newspaper-detail--empty-newspaper" v-else>
+        <div
+          v-else
+          class="newspaper-detail--empty-newspaper"
+        >
           <h2>{{ $t('No issue yet') }}</h2>
           <p>
             {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
@@ -207,7 +227,7 @@ export default {
       metaPicture = picture
     else
       metaPicture = images[0][1]
-    
+
     return {
       title: metaTitle,
       meta: [

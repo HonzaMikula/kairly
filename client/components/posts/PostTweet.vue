@@ -14,8 +14,8 @@
 
     </div>
 
-    <template slot="extendedControls">
-      <slot name="extendedControls">
+    <template #extended-controls>
+      <slot name="extended-controls">
         <a
           v-if="post.source"
           :href="post.source"
@@ -27,7 +27,7 @@
       </slot>
     </template>
 
-    <template slot="controls"><slot name="controls"></slot></template>
+    <template #controls><slot name="controls"></slot></template>
   </PostBase>
 </template>
 
