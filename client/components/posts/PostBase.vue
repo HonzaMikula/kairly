@@ -197,7 +197,8 @@ export default {
       margin-left: $baseline / 4
 
     > a,
-    > button-icon
+    > button-icon,
+    > button
       background: #eee
 
       transition: 0.15s background
@@ -223,6 +224,16 @@ export default {
 
       &.remove
         +button-icon($fa-var-times, icon, solid, small)
+
+      &.add
+        +button-icon($fa-var-plus, icon, solid, small)
+
+        background: $c-base
+        color: #fff
+
+        &:hover,
+        &:focus
+          background: darken($c-base, 10%)
 
       &.editorial
         +button-icon($fa-var-comment-dots, icon, solid, small)

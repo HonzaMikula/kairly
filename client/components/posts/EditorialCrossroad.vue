@@ -1,21 +1,36 @@
 <template>
   <div class="editorial-post--editorial crossroad">
     <h2>Editorials</h2>
-    <button>Select tweets</button>
+    <button @click="isTweetsSelectionOpened = !isTweetsSelectionOpened">Select tweets</button>
     <p>or</p>
     <button>Write editorial</button>
     <p>or</p>
     <button>Add articles</button>
+
+    <portal to="modal" v-if="isTweetsSelectionOpened">
+      <TweetsSelection></TweetsSelection>
+    </portal>
   </div>
 </template>
 
 <script>
+import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
 
 export default {
   name: 'EditorialArticle',
 
+  data() {
+    return {
+      isTweetsSelectionOpened: false
+    }
+  },
+
   props: {
     editorial: Object
+  },
+
+  components: {
+    TweetsSelection
   }
 }
 </script>

@@ -37,6 +37,10 @@
     <slot name="newspaperBacklogControls">
 
     </slot>
+
+    <slot name="newspaperBacklogTweetsSelection">
+      
+    </slot>
   </section>
 </template>
 

@@ -72,7 +72,7 @@
           <b-popover
             :target="`backlog-controls-up-${log.post.id}`"
             placement="leftbottom"
-            delay="500"
+            :delay="{ show: 400, hide: 100 }"
             triggers="hover"
             @click.stop
           >
@@ -95,7 +95,7 @@
           <b-popover
             :target="`backlog-controls-down-${log.post.id}`"
             placement="leftbottom"
-            delay="400"
+            :delay="{ show: 400, hide: 100 }"
             triggers="hover"
             @click.stop
           >
@@ -181,7 +181,6 @@
         </div>
       </div>
     </template>
-
   </PostWrapper>
 </template>
 
