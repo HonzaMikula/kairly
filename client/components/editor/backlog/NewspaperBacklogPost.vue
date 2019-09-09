@@ -72,7 +72,7 @@
           <b-popover
             :target="`backlog-controls-up-${log.post.id}`"
             placement="leftbottom"
-            delay="500"
+            :delay="{ show: 400, hide: 100 }"
             triggers="hover"
             @click.stop
           >
@@ -98,7 +98,7 @@
           <b-popover
             :target="`backlog-controls-down-${log.post.id}`"
             placement="leftbottom"
-            delay="400"
+            :delay="{ show: 400, hide: 100 }"
             triggers="hover"
             @click.stop
           >
@@ -168,13 +168,17 @@
                 </li>
               </template>
               <template v-if="!log.editorial && !edit">
-                <li tabindex="0" @click="startEditorial('article', log.post.id)">
+                <!-- <li tabindex="0" @click="startEditorial('article', log.post.id)">
                   <h6>{{ $t('Add editorial comment') }}</h6>
                   <p>{{ $t('Write short comment to the topic') }}</p>
                 </li>
                 <li tabindex="0" @click="startEditorial('tweets', log.post.id)">
                   <h6>{{ $t('Add editorial tweet(s)') }}</h6>
                   <p>{{ $t('Comment the topic using tweets') }}</p>
+                </li> -->
+                <li tabindex="0" @click="startEditorial('crossroad', log.post.id, 'right')">
+                  <h6>Add editorial</h6>
+                  <p>Either your comment or tweets</p>
                 </li>
               </template>
 
@@ -187,7 +191,6 @@
         </div>
       </div>
     </template>
-
   </PostWrapper>
 </template>
 
