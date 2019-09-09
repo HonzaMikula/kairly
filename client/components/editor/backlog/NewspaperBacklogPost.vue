@@ -19,6 +19,7 @@
       <EditorialCrossroad
         v-if="edit && edit.type === 'crossroad'"
         :newspaper="newspaper"
+        @select="ev => startEditorial(ev, edit.position)"
       />
 
       <EditorialArticleEditor
@@ -41,20 +42,20 @@
           class="editorial-control is-before"
           v-b-tooltip
           title="Add editorial"
-          @click="startEditorial('crossroad', log.post.id, 'right')">
+          @click="showCrossroad('crossroad', 'right')">
         </div>
 
         <div
           class="editorial-control is-after"
           v-b-tooltip
           title="Add editorial"
-          @click="startEditorial('crossroad', log.post.id, 'left')">
+          @click="showCrossroad('crossroad', 'left')">
         </div>
       </template>
 
       <div
-        class="newspaper-backlog-controls"
-        :class="{'hide-mobile-controls': mobileControls[log.post.id]}">
+        :class="{'newspaper-backlog-controls': true, 'hide-mobile-controls': mobileControls}"
+      >
         <div class="newspaper-backlog-controls--arrows">
           <button
             v-show="canMoveUp"
@@ -140,31 +141,31 @@
           >
             <ul>
               <template v-if="(edit || log.editoria) && (edit || log.editoria).position == 'right'">
-                <li tabindex="0" @click="changeEditorialPosition(log)">
+                <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial before') }}</h6>
                   <p>{{ $t('On desktop in the left') }}</p>
                 </li>
               </template>
 
               <template v-if="(edit || log.editoria) && (edit || log.editoria).position == 'left'">
-                <li tabindex="0" @click="changeEditorialPosition(log)">
+                <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial after') }}</h6>
                   <p>{{ $t('On desktop in the right') }}</p>
                 </li>
               </template>
 
               <template v-if="log.editorial && !edit">
-                <li tabindex="0" @click="editEditorial(log)">
+                <li tabindex="0" @click="editEditorial">
                   <h6>{{ $t('Update editorial comment') }}</h6>
                   <p>{{ $t('Write short comment to the topic') }}</p>
                 </li>
-                <li tabindex="0" @click="removeEditorial(log)">
+                <li tabindex="0" @click="removeEditorial">
                   <h6>{{ $t('Remove editorial') }}</h6>
                   <p>{{ $t('Remove existing editorial') }}</p>
                 </li>
               </template>
               <template v-if="edit">
-                <li tabindex="0" @click="cancelEditorialEdit(log)">
+                <li tabindex="0" @click="cancelEditorialEdit">
                   <h6>{{ $t('Cancel edit') }}</h6>
                   <p>{{ $t('Your changes will be lost') }}</p>
                 </li>
@@ -178,7 +179,7 @@
                   <h6>{{ $t('Add editorial tweet(s)') }}</h6>
                   <p>{{ $t('Comment the topic using tweets') }}</p>
                 </li> -->
-                <li tabindex="0" @click="startEditorial('crossroad', log.post.id, 'right')">
+                <li tabindex="0" @click="showCrossroad('right')">
                   <h6>Add editorial</h6>
                   <p>Either your comment or tweets</p>
                 </li>
@@ -222,7 +223,6 @@ export default {
   data() {
     return {
       edit: null,
-      //tweetsTarget: null, // TODO move this up
       mobileControls: false
     }
   },
@@ -240,13 +240,16 @@ export default {
       this.mobileControls = !this.mobileControls
     },
 
-    startEditorial(type, postId, position) {
+    showCrossroad(position) {
+      this.startEditorial('crossroad', position)
+    },
+
+    startEditorial(type, position) {
       const edit = {
         type,
         position: position
       }
       if (type === 'tweets') {
-        this.tweetsTarget = postId
         edit.tweets = []
       }
 
@@ -254,15 +257,13 @@ export default {
       this.$root.$emit('bv::hide::popover')
     },
 
-    editEditorial(log) {
-      const postId = log.post.id
-      const { type, position, tweets} = log.editorial
+    editEditorial() {
+      const { type, position, tweets} = this.log.editorial
       const edit = {
         type: type,
         position: position,
       }
       if (type === 'tweets') {
-        this.tweetsTarget = postId
         edit.tweets = [...tweets]
       }
       this.edit = edit
@@ -298,29 +299,27 @@ export default {
       edit.tweets = [...editorial.tweets]
     },
 
-    cancelEditorialEdit(log) {
+    cancelEditorialEdit() {
       this.edit = null
-      if (this.tweetsTarget === log.post.id) {
-        this.tweetsTarget = null
-      }
       this.$root.$emit('bv::hide::popover')
     },
 
-    removeEditorial(log) {
+    removeEditorial() {
       this.$store.dispatch('removeEditorial', {
         newspaperId: this.newspaper.fullName,
-        postId: log.post.id,
+        postId: this.log.post.id,
       })
       this.$root.$emit('bv::hide::popover')
     },
 
-    changeEditorialPosition(log) {
-      if (this.edit) {
-        this.edit.position = this.edit.position === 'left' ? 'right': 'left'
+    changeEditorialPosition() {
+      const { edit, log, newspaper } = this
+      if (edit) {
+        edit.position = edit.position === 'left' ? 'right': 'left'
       } else {
         // change existing editorial
         this.$store.dispatch('saveEditorialPosition', {
-          newspaperId: this.newspaper.fullName,
+          newspaperId: newspaper.fullName,
           postId: log.post.id,
           position: log.editorial.position === 'left' ? 'right': 'left'
         })
@@ -328,49 +327,49 @@ export default {
       this.$root.$emit('bv::hide::popover')
     },
 
-    addTweetToEditorial({ post }) {
-      const log = this.published.find(l => l.post.id === this.tweetsTarget)
-      const { tweets } = this.editorialEditors[this.tweetsTarget]
-      tweets.push(post)
-      // TODO this is hack
-      this.$store.dispatch('removeFromBacklogLocal', {
-        newspaper: this.newspaper,
-        post: post,
-      })
-      this.saveTweetsEditorial(log, tweets)
-      this.$root.$emit('bv::hide::popover')
-    },
+    // addTweetToEditorial({ post }) {
+    //   const log = this.published.find(l => l.post.id === this.tweetsTarget)
+    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
+    //   tweets.push(post)
+    //   // TODO this is hack
+    //   this.$store.dispatch('removeFromBacklogLocal', {
+    //     newspaper: this.newspaper,
+    //     post: post,
+    //   })
+    //   this.saveTweetsEditorial(log, tweets)
+    //   this.$root.$emit('bv::hide::popover')
+    // },
 
-    removeTweetFromEditorial(log, tweet) {
-      const { tweets } = this.editorialEditors[this.tweetsTarget]
-      const idx = tweets.indexOf(tweet)
-      tweets.splice(idx, 1)
-      // TODO this is hack
-      this.$store.dispatch('addToBacklogLocal', {
-        newspaper: this.newspaper,
-        post: tweet,
-      })
-      this.saveTweetsEditorial(log, tweets)
-      this.$root.$emit('bv::hide::popover')
-    },
+    // removeTweetFromEditorial(log, tweet) {
+    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
+    //   const idx = tweets.indexOf(tweet)
+    //   tweets.splice(idx, 1)
+    //   // TODO this is hack
+    //   this.$store.dispatch('addToBacklogLocal', {
+    //     newspaper: this.newspaper,
+    //     post: tweet,
+    //   })
+    //   this.saveTweetsEditorial(log, tweets)
+    //   this.$root.$emit('bv::hide::popover')
+    // },
 
-    moveTweetDown(log, tweet) {
-      const { tweets } = this.editorialEditors[this.tweetsTarget]
-      const idx = tweets.indexOf(tweet)
-      tweets[idx] = tweets[idx + 1]
-      tweets[idx + 1] = tweet
-      this.saveTweetsEditorial(log, tweets)
-      this.$root.$emit('bv::hide::popover')
-    },
+    // moveTweetDown(log, tweet) {
+    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
+    //   const idx = tweets.indexOf(tweet)
+    //   tweets[idx] = tweets[idx + 1]
+    //   tweets[idx + 1] = tweet
+    //   this.saveTweetsEditorial(log, tweets)
+    //   this.$root.$emit('bv::hide::popover')
+    // },
 
-    moveTweetUp(log, tweet) {
-      const { tweets } = this.editorialEditors[this.tweetsTarget]
-      const idx = tweets.indexOf(tweet)
-      tweets[idx] = tweets[idx - 1]
-      tweets[idx - 1] = tweet
-      this.saveTweetsEditorial(log, tweets)
-      this.$root.$emit('bv::hide::popover')
-    },
+    // moveTweetUp(log, tweet) {
+    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
+    //   const idx = tweets.indexOf(tweet)
+    //   tweets[idx] = tweets[idx - 1]
+    //   tweets[idx - 1] = tweet
+    //   this.saveTweetsEditorial(log, tweets)
+    //   this.$root.$emit('bv::hide::popover')
+    // },
 
     moveUp(source, postId, target=null) {
       this.backlogMoveUp({
@@ -401,8 +400,6 @@ export default {
     ...mapActions([
       'removeFromNewspaperBacklog', 'addLinkToBacklog',
       'backlogMoveDown', 'backlogMoveUp'
-      //, 'backlogMoveTo'
-
     ]),
     ...mapMutations(['showError'])
   }

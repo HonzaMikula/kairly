@@ -22,7 +22,6 @@
     </component>
 
     <slot name="editorial">
-      <!-- :is="'editorial-' + post.editorial.type" -->
       <component
         v-if="editorial"
         :is="'editorial-' + editorial.type"

@@ -1,9 +1,13 @@
 <template>
   <div class="editorial-post--editorial crossroad">
     <h2>Editorials</h2>
-    <button @click="isTweetsSelectionOpened = !isTweetsSelectionOpened">Select tweets</button>
+    <button
+      @click="isTweetsSelectionOpened = !isTweetsSelectionOpened"
+    >Select tweets</button>
     <p>or</p>
-    <button>Write editorial</button>
+    <button
+      @click="$emit('select', 'article')"
+    >Write editorial</button>
 
     <portal
       v-if="isTweetsSelectionOpened"
