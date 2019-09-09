@@ -68,20 +68,6 @@ const createStore = () => {
           [postId]: {...currNewspapers, [newspaperId]: val}
         }
       },
-      backlogRemove(state, { postId, newspaperId }) {
-        // TODO this would be nice move to utils function
-        // we need shallow copy with updated nested object
-        let currNewspapers = {...state.backlog[postId]}
-        delete currNewspapers[newspaperId]
-
-        const backlog = {...state.backlog}
-        if (Object.keys(currNewspapers).length) {
-          backlog[postId] = currNewspapers
-        } else {
-          delete backlog[postId]
-        }
-        state.backlog = backlog
-      },
       newspaperBacklogPosts( state, { fullName, section, posts }) {
         if (state.newspaperBacklog[fullName]) {
           Vue.set(state.newspaperBacklog[fullName], section, posts)
@@ -95,6 +81,12 @@ const createStore = () => {
         } else {
           Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
         }
+      },
+      backlogRemove(state, { fullName, source, postId }) {
+        const backlog = state.newspaperBacklog[fullName]
+        let posts = backlog[source]
+        const idx = posts.findIndex(log => log.post.id === postId)
+        posts.splice(idx, 1)
       },
       backlogMoveUp(state, { fullName, source, target, postId }) {
         const backlog = state.newspaperBacklog[fullName]

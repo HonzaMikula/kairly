@@ -70,6 +70,7 @@
           </button>
 
           <b-popover
+            v-if="source !== 'upcoming'"
             :target="`backlog-controls-up-${log.post.id}`"
             placement="leftbottom"
             :delay="{ show: 400, hide: 100 }"
@@ -96,6 +97,7 @@
           </b-popover>
 
           <b-popover
+            v-if="source !== 'considered'"
             :target="`backlog-controls-down-${log.post.id}`"
             placement="leftbottom"
             :delay="{ show: 400, hide: 100 }"
@@ -182,7 +184,7 @@
                 </li>
               </template>
 
-              <li tabindex="0" @click="removePost(log)">
+              <li tabindex="0" @click="removePost(source, log.post.id)">
                 <h6>Remove post</h6>
                 <p>Post won't be consider anymore</p>
               </li>
@@ -368,14 +370,6 @@ export default {
       this.$root.$emit('bv::hide::popover')
     },
 
-    // publish(log) {
-    //   this.backlogPublish({newspaper: this.newspaper, log})
-    // },
-
-    // undoPublish(log) {
-    //   this.backlogUndoPublish({newspaper: this.newspaper, log})
-    // },
-
     moveUp(source, postId, target=null) {
       this.backlogMoveUp({
         newspaper: this.newspaper,
@@ -394,8 +388,12 @@ export default {
       })
     },
 
-    removePost(log) {
-      this.removeFromNewspaperBacklog({newspaper: this.newspaper, log})
+    removePost(source, postId) {
+      this.removeFromNewspaperBacklog({
+        newspaper: this.newspaper,
+        source,
+        postId
+      })
     },
 
     ...mapActions([

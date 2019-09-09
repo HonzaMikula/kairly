@@ -237,62 +237,26 @@ export async function backlogMoveDown({ commit, state }, { newspaper, source, ta
   _postBackLog.call(this, state, fullName)
 }
 
-// export async function backlogMoveDown({ commit, state}, { newspaper, index, publish }) {
-//   const { fullName } = newspaper
-//   const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-//   const log = backlog[index]
-//   const modified = [...backlog]
-//   modified[index] = backlog[index + 1]
-//   modified[index + 1] = log
-//   commit('newspaperBacklog', {
-//     fullName,
-//     backlog: modified,
-//     currentMonthStats
-//   })
-//   _postBackLog.call(this, fullName, modified)
-// }
-
-// export async function backlogMoveTo({ commit, state }, { newspaper, index, publish }) {
-//   // TODO add support to move together with index change
-//   const { fullName } = newspaper
-//   const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-//   const log = { ...backlog[index], publish }
-//   const modified = [...backlog]
-//   modified[index] = log
-//   commit('newspaperBacklog', {
-//     fullName,
-//     backlog: modified,
-//     currentMonthStats
-//   })
-//   _postBackLog.call(this, fullName, modified)
-// }
-
-export async function removeFromNewspaperBacklog({ commit, state }, { newspaper, log }) {
+export async function removeFromNewspaperBacklog({ commit, state }, { newspaper, source, postId }) {
   const { fullName } = newspaper
-  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-  const modified = [...backlog]
-  modified.splice(modified.indexOf(log), 1)
-  commit('newspaperBacklog', {
-    fullName,
-    backlog: modified,
-    currentMonthStats
-  })
 
-  // TODO to have better user experience, post can be removed immediately
-  // and reverted when api call fails
-  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: log.post.id}})
   commit('backlogRemove', {
-    newspaperId: newspaper.fullName,
-    postId: log.post.id,
+    fullName,
+    source,
+    postId,
     meta: {
       analytics: [
         ['event', {
           eventCategory: 'Stop considering for newspaper',
-          eventAction: newspaper.fullName
+          eventAction: fullName
         }]
       ]
     }
   })
+
+  // TODO to have better user experience, post can be removed immediately
+  // and reverted when api call fails
+  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: postId}})
 }
 
 export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
