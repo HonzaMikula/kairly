@@ -4,8 +4,6 @@
     <button @click="isTweetsSelectionOpened = !isTweetsSelectionOpened">Select tweets</button>
     <p>or</p>
     <button>Write editorial</button>
-    <p>or</p>
-    <button>Add articles</button>
 
     <portal to="modal" v-if="isTweetsSelectionOpened">
       <TweetsSelection></TweetsSelection>
