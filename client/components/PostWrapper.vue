@@ -29,10 +29,6 @@
         :editorial="editorial"
       />
     </slot>
-
-    <slot name="editorial-controls"/>
-
-    <slot name="newspaper-backlog-controls"/>
   </section>
 </template>
 
@@ -43,7 +39,6 @@ import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
 import PostRecommendations from '@/components/posts/PostRecommendations'
 
-import EditorialCrossroad from '@/components/posts/EditorialCrossroad'
 import EditorialTweets from '@/components/posts/EditorialTweets'
 import EditorialArticle from '@/components/posts/EditorialArticle'
 
@@ -63,7 +58,6 @@ export default {
     PostRecommendations,
     EditorialTweets,
     EditorialArticle,
-    EditorialCrossroad,
   },
 
   computed: {

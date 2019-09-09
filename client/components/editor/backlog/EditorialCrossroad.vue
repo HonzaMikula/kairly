@@ -5,8 +5,11 @@
     <p>or</p>
     <button>Write editorial</button>
 
-    <portal to="modal" v-if="isTweetsSelectionOpened">
-      <TweetsSelection></TweetsSelection>
+    <portal
+      v-if="isTweetsSelectionOpened"
+      to="modal"
+    >
+      <TweetsSelection :newspaper="newspaper"/>
     </portal>
   </div>
 </template>
@@ -17,14 +20,14 @@ import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
 export default {
   name: 'EditorialCrossroad',
 
+  props: {
+    newspaper: Object,
+  },
+
   data() {
     return {
       isTweetsSelectionOpened: false
     }
-  },
-
-  props: {
-    editorial: Object
   },
 
   components: {

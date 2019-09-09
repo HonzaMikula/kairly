@@ -15,46 +15,43 @@
       &nbsp;
     </template>
 
-    <template
-      v-if="edit"
-      #editorial
-    >
+    <template #editorial>
+      <EditorialCrossroad
+        v-if="edit && edit.type === 'crossroad'"
+        :newspaper="newspaper"
+      />
+
       <EditorialArticleEditor
-        v-if="edit.type === 'article'"
+        v-if="edit && edit.type === 'article'"
         :editorial="log.editorial"
         :editor="newspaper.editor"
         @save="ev => saveArticleEditorial(log, ev)"
       />
 
       <EditorialTweetsEditor
-        v-if="edit.type === 'tweets'"
+        v-if="edit && edit.type === 'tweets'"
         :tweets="edit.tweets"
         @moveTweetDown="tweet => moveTweetDown(log, tweet)"
         @moveTweetUp="tweet => moveTweetUp(log, tweet)"
         @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
       />
-    </template>
 
-    <template
-      #editorial-controls
-      v-if="!log.editorial && !edit"
-    >
-      <div
-        class="editorial-control is-before"
-        v-b-tooltip
-        title="Add editorial"
-        @click="startEditorial('crossroad', log.post.id, 'right')">
-      </div>
+      <template v-if="!log.editorial && !edit">
+        <div
+          class="editorial-control is-before"
+          v-b-tooltip
+          title="Add editorial"
+          @click="startEditorial('crossroad', log.post.id, 'right')">
+        </div>
 
-      <div
-        class="editorial-control is-after"
-        v-b-tooltip
-        title="Add editorial"
-        @click="startEditorial('crossroad', log.post.id, 'left')">
-      </div>
-    </template>
+        <div
+          class="editorial-control is-after"
+          v-b-tooltip
+          title="Add editorial"
+          @click="startEditorial('crossroad', log.post.id, 'left')">
+        </div>
+      </template>
 
-    <template #newspaper-backlog-controls>
       <div
         class="newspaper-backlog-controls"
         :class="{'hide-mobile-controls': mobileControls[log.post.id]}">
@@ -206,6 +203,7 @@ import { BPopover } from 'bootstrap-vue'
 
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
+import EditorialCrossroad from '@/components/editor/backlog/EditorialCrossroad'
 import EditorialArticleEditor from '@/components/posts/EditorialArticleEditor'
 import EditorialTweetsEditor from '@/components/posts/EditorialTweetsEditor'
 
@@ -213,6 +211,7 @@ export default {
   name: 'NewspaperBacklogPost',
 
   components: {
+    EditorialCrossroad,
     EditorialArticleEditor,
     EditorialTweetsEditor,
     PostWrapper,

@@ -31,6 +31,10 @@ export default {
     PostTweet
   },
 
+  props: {
+    newspaper: Object,
+  },
+
   data() {
     return {
       selectedTweets: [],
@@ -39,10 +43,8 @@ export default {
 
   computed: {
     backlog() {
-      const result = this.$store.state.newspaperBacklog['janmikula/product-design-weekly'].considered.filter(obj => {
-        return obj.post.type === 'tweet'
-      })
-      return result
+      const { considered } = this.$store.state.newspaperBacklog[this.newspaper.fullName]
+      return considered.filter(log => log.post.type === 'tweet')
     },
   },
 
