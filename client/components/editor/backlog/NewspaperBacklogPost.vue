@@ -288,9 +288,9 @@ export default {
     },
 
     changeEditorialPosition() {
-      const { edit, log, newspaper } = this
-      if (edit) {
-        edit.position = edit.position === 'left' ? 'right': 'left'
+      const { editorPosition, log, newspaper } = this
+      if (editorPosition) {
+        this.editorPosition = editorPosition === 'left' ? 'right': 'left'
       } else {
         // change existing editorial
         this.$store.dispatch('saveEditorialPosition', {
