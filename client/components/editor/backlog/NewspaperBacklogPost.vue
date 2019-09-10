@@ -1,10 +1,9 @@
 <template>
-
   <PostWrapper
     :post="log.post"
     :isSubscribed="true"
     :key="log.post.id"
-    :editorial="edit || log.editorial || null"
+    :editorial="editorType ? {position: editorPosition} : log.editorial"
     @click.native="toggleMobileControls"
   >
     <template #extended-controls>
@@ -16,26 +15,25 @@
     </template>
 
     <template #editorial>
-      <template v-if="edit">
+      <template v-if="editorType">
         <EditorialCrossroad
-          v-if="edit && edit.type === 'crossroad'"
-          @select="ev => startEditorial(ev, edit.position)"
+          v-if="editorType === 'crossroad'"
+          @select="ev => startEditorial(ev, editorPosition)"
         />
 
         <EditorialArticleEditor
-          v-if="edit && edit.type === 'article'"
+          v-if="editorType === 'article'"
+          :newspaper="newspaper"
           :editorial="log.editorial"
-          :editor="newspaper.editor"
-          @save="ev => saveArticleEditorial(log, ev)"
+          @save="payload => { saveEditorial(payload); cancelEditorialEdit() }"
         />
 
         <EditorialTweetsEditor
-          v-if="edit && edit.type === 'tweets'"
+          v-if="editorType === 'tweets'"
           :newspaper="newspaper"
-          :tweets="edit.tweets"
-          @moveTweetDown="tweet => moveTweetDown(log, tweet)"
-          @moveTweetUp="tweet => moveTweetUp(log, tweet)"
-          @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
+          :editorial="log.editorial"
+          @save="payload => { saveEditorial(payload) }"
+          @done="cancelEditorialEdit"
         />
       </template>
       <template v-else>
@@ -46,7 +44,7 @@
         />
       </template>
 
-      <template v-if="!log.editorial && !edit">
+      <template v-if="!log.editorial && !editorType">
         <div
           class="editorial-control is-before"
           v-b-tooltip
@@ -149,21 +147,21 @@
             @click.stop
           >
             <ul>
-              <template v-if="(edit || log.editorial) && (edit || log.editorial).position === 'right'">
+              <template v-if="(editorPosition || (log.editorial && log.editorial.position)) === 'right'">
                 <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial before') }}</h6>
                   <p>{{ $t('On desktop in the left') }}</p>
                 </li>
               </template>
 
-              <template v-if="(edit || log.editorial) && (edit || log.editorial).position === 'left'">
+              <template v-if="(editorPosition || (log.editorial && log.editorial.position)) === 'left'">
                 <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial after') }}</h6>
                   <p>{{ $t('On desktop in the right') }}</p>
                 </li>
               </template>
 
-              <template v-if="log.editorial && !edit">
+              <template v-if="log.editorial && !editorType">
                 <li tabindex="0" @click="editEditorial">
                   <h6>{{ $t('Update editorial comment') }}</h6>
                   <p>{{ $t('Write short comment to the topic') }}</p>
@@ -173,21 +171,13 @@
                   <p>{{ $t('Remove existing editorial') }}</p>
                 </li>
               </template>
-              <template v-if="edit">
+              <template v-if="editorType">
                 <li tabindex="0" @click="cancelEditorialEdit">
                   <h6>{{ $t('Cancel edit') }}</h6>
                   <p>{{ $t('Your changes will be lost') }}</p>
                 </li>
               </template>
-              <template v-if="!log.editorial && !edit">
-                <!-- <li tabindex="0" @click="startEditorial('article', log.post.id)">
-                  <h6>{{ $t('Add editorial comment') }}</h6>
-                  <p>{{ $t('Write short comment to the topic') }}</p>
-                </li>
-                <li tabindex="0" @click="startEditorial('tweets', log.post.id)">
-                  <h6>{{ $t('Add editorial tweet(s)') }}</h6>
-                  <p>{{ $t('Comment the topic using tweets') }}</p>
-                </li> -->
+              <template v-if="!log.editorial && !editorType">
                 <li tabindex="0" @click="showCrossroad('right')">
                   <h6>Add editorial</h6>
                   <p>Either your comment or tweets</p>
@@ -235,7 +225,8 @@ export default {
 
   data() {
     return {
-      edit: null,
+      editorType: null,
+      editorPosition: null,
       mobileControls: false
     }
   },
@@ -258,64 +249,32 @@ export default {
     },
 
     startEditorial(type, position) {
-      const edit = {
-        type,
-        position
-      }
-      if (type === 'tweets') {
-        edit.tweets = []
-      }
-
-      this.edit = edit
+      this.editorType = type
+      this.editorPosition = position
       this.$root.$emit('bv::hide::popover')
     },
 
     editEditorial() {
-      const { type, position, tweets} = this.log.editorial
-      const edit = {
-        type: type,
-        position: position,
-      }
-      if (type === 'tweets') {
-        edit.tweets = [...tweets]
-      }
-      this.edit = edit
+      const { type, position} = this.log.editorial
+      this.editorType = type
+      this.editorPosition = position
     },
 
-    saveArticleEditorial(log, { title, content}) {
-      const postId = log.post.id
-      this.$store.dispatch('saveEditorial', {
+    async saveEditorial(payload) {
+      await this.$store.dispatch('saveEditorial', {
         newspaperId: this.newspaper.fullName,
         source: this.source,
-        postId: postId,
+        postId: this.log.post.id,
         editorial: {
-          type: 'article',
-          title: title,
-          content: content,
-          position: this.edit.position
+          ...payload,
+          position: this.editorPosition
         }
       })
-      this.edit = null
-    },
-
-    async saveTweetsEditorial(log, tweets) {
-      const postId = log.post.id
-      const editorial = await this.$store.dispatch('saveEditorial', {
-        newspaperId: this.newspaper.fullName,
-        postId: postId,
-        source: this.source,
-        editorial: {
-          type: 'tweets',
-          tweets: tweets.map(t => t.id),
-          position: this.edit.position
-        }
-      })
-      // update content with server side version
-      edit.tweets = [...editorial.tweets]
     },
 
     cancelEditorialEdit() {
-      this.edit = null
+      this.editorType = null
+      this.editorPosition = null
       this.$root.$emit('bv::hide::popover')
     },
 
@@ -343,50 +302,6 @@ export default {
       }
       this.$root.$emit('bv::hide::popover')
     },
-
-    // addTweetToEditorial({ post }) {
-    //   const log = this.published.find(l => l.post.id === this.tweetsTarget)
-    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
-    //   tweets.push(post)
-    //   // TODO this is hack
-    //   this.$store.dispatch('removeFromBacklogLocal', {
-    //     newspaper: this.newspaper,
-    //     post: post,
-    //   })
-    //   this.saveTweetsEditorial(log, tweets)
-    //   this.$root.$emit('bv::hide::popover')
-    // },
-
-    // removeTweetFromEditorial(log, tweet) {
-    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
-    //   const idx = tweets.indexOf(tweet)
-    //   tweets.splice(idx, 1)
-    //   // TODO this is hack
-    //   this.$store.dispatch('addToBacklogLocal', {
-    //     newspaper: this.newspaper,
-    //     post: tweet,
-    //   })
-    //   this.saveTweetsEditorial(log, tweets)
-    //   this.$root.$emit('bv::hide::popover')
-    // },
-
-    // moveTweetDown(log, tweet) {
-    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
-    //   const idx = tweets.indexOf(tweet)
-    //   tweets[idx] = tweets[idx + 1]
-    //   tweets[idx + 1] = tweet
-    //   this.saveTweetsEditorial(log, tweets)
-    //   this.$root.$emit('bv::hide::popover')
-    // },
-
-    // moveTweetUp(log, tweet) {
-    //   const { tweets } = this.editorialEditors[this.tweetsTarget]
-    //   const idx = tweets.indexOf(tweet)
-    //   tweets[idx] = tweets[idx - 1]
-    //   tweets[idx - 1] = tweet
-    //   this.saveTweetsEditorial(log, tweets)
-    //   this.$root.$emit('bv::hide::popover')
-    // },
 
     moveUp(source, postId, target=null) {
       this.backlogMoveUp({

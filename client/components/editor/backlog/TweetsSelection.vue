@@ -3,24 +3,33 @@
     <header>
       <h2>Select tweets</h2>
 
-      <button>Done</button>
+      <button
+        @click="$emit('done')"
+      >Done</button>
     </header>
-    <PostTweet v-for="item in backlog" :post="item.post" :key="item.post.id">
+    <PostTweet v-for="post in tweets" :post="post" :key="post.id">
       <template #extended-controls>
         &nbsp;
       </template>
       <template #controls>
         <button
-          @click="selectTweet(item.post.id)"
-          :class="{'add': !selectedTweets[item.post.id], 'remove': selectedTweets[item.post.id]}"
-        >
-        </button>
+          v-if="selected.indexOf(post.id) === -1"
+          class="add"
+          @click="$emit('add', post)"
+        />
+        <button
+          v-else
+          class="remove"
+          @click="$emit('remove', post)"
+        />
       </template>
     </PostTweet>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+
 import { mapActions, mapMutations } from 'vuex'
 import PostTweet from '@/components/posts/PostTweet'
 
@@ -33,27 +42,15 @@ export default {
 
   props: {
     newspaper: Object,
-  },
-
-  data() {
-    return {
-      selectedTweets: [],
-    }
+    selected: Array
   },
 
   computed: {
-    backlog() {
+    tweets() {
       const { considered } = this.$store.state.newspaperBacklog[this.newspaper.fullName]
-      return considered.filter(log => log.post.type === 'tweet')
+      return considered.map(log => log.post).filter(post => post.type === 'tweet')
     },
-  },
-
-  methods: {
-    selectTweet(id) {
-      this.selectedTweets[id] = !this.selectedTweets[id]
-      this.$forceUpdate()
-    }
-  },
+  }
 }
 </script>
 

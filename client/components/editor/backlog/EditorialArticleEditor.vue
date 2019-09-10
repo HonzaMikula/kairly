@@ -16,7 +16,10 @@
           </nuxt-link>
         </h3>
         <section>
-          <button @click="save()" class="save">{{ $t('Save') }}</button>
+          <button
+            class="save"
+            @click="saveEditorial"
+          >{{ $t('Save') }}</button>
         </section>
       </header>
 
@@ -36,13 +39,12 @@
 </template>
 
 <script>
-
 export default {
   name: 'EditorialArticleEditor',
 
   props: {
     editorial: Object,
-    editor: Object
+    newspaper: Object,
   },
 
   data() {
@@ -52,14 +54,16 @@ export default {
       options: {
         placeholder: {text: this.$t('Editorial'), hideOnClick: false},
       },
+      editor: this.editorial ? this.editorial.author : this.$store.state.auth.user
     }
   },
 
   methods: {
-    async save() {
+    saveEditorial() {
       this.$emit('save', {
+        type: 'article',
         title: this.title,
-        content: this.content,
+         content: this.content,
       })
     }
   }
@@ -97,7 +101,7 @@ export default {
 
     border: 0
     background: #f5f5f5
-    
+
     font-family: $ff-serif
     font-size: $fs-1
     font-weight: 600

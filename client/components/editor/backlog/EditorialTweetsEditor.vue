@@ -13,7 +13,7 @@
             tabindex="0"
             role="button"
             :title="$t('Move tweet up')"
-            @click="$emit('moveTweetUp', tweet)"
+            @click="moveTweetUp(idx)"
           />
           <button-icon
             v-if="idx < tweets.length - 1"
@@ -22,7 +22,7 @@
             tabindex="0"
             role="button"
             :title="$t('Move tweet down')"
-            @click="$emit('moveTweetDown', tweet)"
+            @click="moveTweetDown(idx)"
           />
           <button-icon
             class="remove"
@@ -30,7 +30,7 @@
             tabindex="0"
             role="button"
             :title="$t('Remove tweet')"
-            @click="$emit('removeTweet', tweet)"
+            @click="removeTweetFromEditorial(tweet)"
           />
         </template>
       </PostTweet>
@@ -43,12 +43,20 @@
     </template>
 
     <portal to="modal">
-      <TweetsSelection :newspaper="newspaper"/>
+      <TweetsSelection
+        :newspaper="newspaper"
+        :selected="tweets.map(post => post.id)"
+        @add="addTweetToEditorial"
+        @remove="removeTweetFromEditorial"
+        @done="$emit('done')"
+      />
     </portal>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+
 import PostTweet from '@/components/posts/PostTweet'
 import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
 
@@ -61,11 +69,62 @@ export default {
   },
 
   props: {
+    editorial: Object,
     newspaper: Object,
-    tweets: Array
+  },
+
+  data() {
+    return {
+      tweets: this.editorial ? [...this.editorial.tweets] : []
+    }
   },
 
   methods: {
+    addTweetToEditorial(post) {
+      this.tweets.push(post)
+      this.saveEditorial()
+      // TODO this is hack
+      // this.$store.dispatch('removeFromBacklogLocal', {
+      //   newspaper: this.newspaper,
+      //   post: post,
+      // })
+      // this.$root.$emit('bv::hide::popover')
+    },
+
+    removeTweetFromEditorial(post) {
+      const idx = this.tweets.findIndex(p => p.id === post.id)
+      this.tweets.splice(idx, 1)
+      this.saveEditorial()
+      // // TODO this is hack
+      // this.$store.dispatch('addToBacklogLocal', {
+      //   newspaper: this.newspaper,
+      //   post: tweet,
+      // })
+      // this.$root.$emit('bv::hide::popover')
+    },
+
+    moveTweetDown(idx) {
+      const { tweets } = this
+      const tweet = tweets[idx]
+      Vue.set(tweets, idx, tweets[idx + 1])
+      Vue.set(tweets, idx + 1, tweet)
+      this.saveEditorial()
+    },
+
+    moveTweetUp(idx) {
+      const { tweets } = this
+      const tweet = tweets[idx]
+      Vue.set(tweets, idx, tweets[idx - 1])
+      Vue.set(tweets, idx - 1, tweet)
+      this.saveEditorial()
+    },
+
+    saveEditorial() {
+      this.$emit('save', {
+        type: 'tweets',
+        tweets: this.tweets.map(t => t.id),
+      })
+    },
   }
 }
 </script>
