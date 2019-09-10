@@ -287,35 +287,21 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   }
 }
 
-function _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial) {
-  const { backlog, currentMonthStats } = state.newspaperBacklog[newspaperId]
-  const idx = backlog.findIndex(({ post }) => post.id === postId)
-  const log = backlog[idx]
-  const modified = [...backlog]
-  modified[idx] = { ...log, editorial }
-
-  commit('newspaperBacklog', {
-    fullName: newspaperId,
-    backlog: modified,
-    currentMonthStats
-  })
-}
-
-export async function saveEditorial({ commit, state }, { newspaperId, postId, editorial: payload}) {
+export async function saveEditorial({ commit, state }, { newspaperId, source, postId, editorial: payload}) {
   const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, payload)
-  _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial)
+  commit('updateEditorial', { fullName: newspaperId, source, postId, editorial })
   return editorial
 }
 
-export async function saveEditorialPosition({ commit, state }, { newspaperId, postId, position }) {
+export async function saveEditorialPosition({ commit, state }, { newspaperId, source, postId, position }) {
   const editorial = await this.$axios.$patch(`/newspapers/${newspaperId}/editorials/${postId}`, {position})
-  _updateNewspaperBacklog(commit, state, newspaperId, postId, editorial)
+  commit('updateEditorial', { fullName: newspaperId, source, postId, editorial })
   return editorial
 }
 
-export async function removeEditorial({ commit, state }, { newspaperId, postId}) {
+export async function removeEditorial({ commit, state }, { newspaperId, source, postId}) {
   await this.$axios.$delete(`/newspapers/${newspaperId}/editorials/${postId}`)
-  _updateNewspaperBacklog(commit, state, newspaperId, postId, null)
+  commit('updateEditorial', { fullName: newspaperId, source, postId, editorial: null })
 }
 
 

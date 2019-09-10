@@ -16,26 +16,35 @@
     </template>
 
     <template #editorial>
-      <EditorialCrossroad
-        v-if="edit && edit.type === 'crossroad'"
-        @select="ev => startEditorial(ev, edit.position)"
-      />
+      <template v-if="edit">
+        <EditorialCrossroad
+          v-if="edit && edit.type === 'crossroad'"
+          @select="ev => startEditorial(ev, edit.position)"
+        />
 
-      <EditorialArticleEditor
-        v-if="edit && edit.type === 'article'"
-        :editorial="log.editorial"
-        :editor="newspaper.editor"
-        @save="ev => saveArticleEditorial(log, ev)"
-      />
+        <EditorialArticleEditor
+          v-if="edit && edit.type === 'article'"
+          :editorial="log.editorial"
+          :editor="newspaper.editor"
+          @save="ev => saveArticleEditorial(log, ev)"
+        />
 
-      <EditorialTweetsEditor
-        v-if="edit && edit.type === 'tweets'"
-        :newspaper="newspaper"
-        :tweets="edit.tweets"
-        @moveTweetDown="tweet => moveTweetDown(log, tweet)"
-        @moveTweetUp="tweet => moveTweetUp(log, tweet)"
-        @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
-      />
+        <EditorialTweetsEditor
+          v-if="edit && edit.type === 'tweets'"
+          :newspaper="newspaper"
+          :tweets="edit.tweets"
+          @moveTweetDown="tweet => moveTweetDown(log, tweet)"
+          @moveTweetUp="tweet => moveTweetUp(log, tweet)"
+          @removeTweet="tweet => removeTweetFromEditorial(log, tweet)"
+        />
+      </template>
+      <template v-else>
+        <component
+          v-if="log.editorial"
+          :is="'editorial-' + log.editorial.type"
+          :editorial="log.editorial"
+        />
+      </template>
 
       <template v-if="!log.editorial && !edit">
         <div
@@ -140,14 +149,14 @@
             @click.stop
           >
             <ul>
-              <template v-if="(edit || log.editorial) && (edit || log.editoria).position == 'right'">
+              <template v-if="(edit || log.editorial) && (edit || log.editorial).position === 'right'">
                 <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial before') }}</h6>
                   <p>{{ $t('On desktop in the left') }}</p>
                 </li>
               </template>
 
-              <template v-if="(edit || log.editorial) && (edit || log.editoria).position == 'left'">
+              <template v-if="(edit || log.editorial) && (edit || log.editorial).position === 'left'">
                 <li tabindex="0" @click="changeEditorialPosition">
                   <h6>{{ $t('Display editorial after') }}</h6>
                   <p>{{ $t('On desktop in the right') }}</p>
@@ -205,7 +214,9 @@ import { BPopover } from 'bootstrap-vue'
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
 import EditorialCrossroad from '@/components/editor/backlog/EditorialCrossroad'
+import EditorialArticle from '@/components/posts/EditorialArticle'
 import EditorialArticleEditor from '@/components/editor/backlog/EditorialArticleEditor'
+import EditorialTweets from '@/components/posts/EditorialTweets'
 import EditorialTweetsEditor from '@/components/editor/backlog/EditorialTweetsEditor'
 
 export default {
@@ -213,7 +224,9 @@ export default {
 
   components: {
     EditorialCrossroad,
+    EditorialArticle,
     EditorialArticleEditor,
+    EditorialTweets,
     EditorialTweetsEditor,
     PostWrapper,
     NewspaperBacklogInfo,
@@ -273,6 +286,7 @@ export default {
       const postId = log.post.id
       this.$store.dispatch('saveEditorial', {
         newspaperId: this.newspaper.fullName,
+        source: this.source,
         postId: postId,
         editorial: {
           type: 'article',
@@ -289,6 +303,7 @@ export default {
       const editorial = await this.$store.dispatch('saveEditorial', {
         newspaperId: this.newspaper.fullName,
         postId: postId,
+        source: this.source,
         editorial: {
           type: 'tweets',
           tweets: tweets.map(t => t.id),
@@ -307,6 +322,7 @@ export default {
     removeEditorial() {
       this.$store.dispatch('removeEditorial', {
         newspaperId: this.newspaper.fullName,
+        source: this.source,
         postId: this.log.post.id,
       })
       this.$root.$emit('bv::hide::popover')
@@ -320,6 +336,7 @@ export default {
         // change existing editorial
         this.$store.dispatch('saveEditorialPosition', {
           newspaperId: newspaper.fullName,
+          source: this.source,
           postId: log.post.id,
           position: log.editorial.position === 'left' ? 'right': 'left'
         })

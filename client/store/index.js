@@ -82,6 +82,12 @@ const createStore = () => {
           Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
         }
       },
+      updateEditorial(state, { fullName, source, postId, editorial }) {
+        const backlog = state.newspaperBacklog[fullName]
+        let posts = backlog[source]
+        const idx = posts.findIndex(log => log.post.id === postId)
+        posts[idx].editorial = editorial
+      },
       backlogRemove(state, { fullName, source, postId }) {
         const backlog = state.newspaperBacklog[fullName]
         let posts = backlog[source]
