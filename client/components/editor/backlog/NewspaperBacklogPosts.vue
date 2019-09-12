@@ -3,14 +3,11 @@
     <header class="newspaper-editor-backlog--heading">
       <h2>{{ title }}</h2>
 
-      <button @click="() => expanded = !expanded" :class="{'is-expanded': expanded}"></button>
-
       <p>{{ description }}</p>
 
     </header>
 
     <div
-      v-show="expanded"
       class="newspaper-backlog--next-issue"
     >
 
@@ -45,12 +42,6 @@ export default {
     NewspaperBacklogPost,
   },
 
-  data() {
-    return {
-      expanded: true,
-    }
-  },
-
   props: {
     newspaper: Object,
     title: String,
@@ -82,17 +73,6 @@ export default {
     font-family: $ff-serif
     font-size: $fs-2
     line-height: $baseline * 1.25
-
-  //- expand button
-  button
-    +button-icon($fa-var-plus, icon, solid)
-    grid-column: 1
-    grid-row: 1
-    background: #fafafa
-
-    &.is-expanded
-      +button-icon($fa-var-minus, icon, solid)
-      background: #fafafa
 
   //- when issue will be published
   p

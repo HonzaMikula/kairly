@@ -68,14 +68,20 @@
             v-show="canMoveUp"
             class="up"
             :id="`backlog-controls-up-${log.post.id}`"
-            @click="moveUp(source, log.post.id)">
-          </button>
+            @click="moveUp(source, log.post.id)"
+          ></button>
+
           <button
             v-show="canMoveDown"
             class="down"
             :id="`backlog-controls-down-${log.post.id}`"
-            @click="moveDown(source, log.post.id)">
-          </button>
+            @click="moveDown(source, log.post.id)"
+          ></button>
+
+          <button
+            class="remove"
+            @click="removePost(source, log.post.id)"
+          ></button>
 
           <b-popover
             v-if="source !== 'upcoming'"
@@ -134,6 +140,12 @@
 
         <div class="newspaper-backlog-controls--options">
           <button
+            v-if="!log.editorial && !editorType"
+            class="add-editorial"
+            @click="showCrossroad('right')"
+          ></button>
+          <button
+            v-else
             class="menu"
             :id="`backlog-controls-option-${log.post.id}`"
             v-b-tooltip="'Options'"
@@ -177,17 +189,6 @@
                   <p>{{ $t('Your changes will be lost') }}</p>
                 </li>
               </template>
-              <template v-if="!log.editorial && !editorType">
-                <li tabindex="0" @click="showCrossroad('right')">
-                  <h6>Add editorial</h6>
-                  <p>Either your comment or tweets</p>
-                </li>
-              </template>
-
-              <li tabindex="0" @click="removePost(source, log.post.id)">
-                <h6>Remove post</h6>
-                <p>Post won't be consider anymore</p>
-              </li>
             </ul>
           </b-popover>
         </div>
@@ -387,6 +388,10 @@ export default {
   .down
     +button-icon($fa-var-arrow-down)
 
+  //- button down
+  .remove
+    +button-icon($fa-var-times)
+
 .newspaper-backlog-controls--options
   position: absolute
   right: (-$baseline * 1.5)
@@ -400,7 +405,11 @@ export default {
     right: $baseline/4
     top: 40%
 
-  //- button up
+  //- button add editorial
+  .add-editorial
+    +button-icon($fa-var-font)
+
+  //- button menu
   .menu
     +button-icon($fa-var-ellipsis-v)
 

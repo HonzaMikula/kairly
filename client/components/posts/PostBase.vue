@@ -290,4 +290,7 @@ export default {
 
     h6
       font-weight: 600
+
+    p
+      font-size: $fs--1
 </style>
