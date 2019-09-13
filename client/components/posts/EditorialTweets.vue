@@ -2,7 +2,9 @@
   <div
     class="editorial-post--editorial"
     :class="{'many-tweets': editorial.tweets.length > 1}">
-    <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
+    <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet">
+      <template #controls><slot name="controls"></slot></template>
+    </PostTweet>
   </div>
 </template>
 

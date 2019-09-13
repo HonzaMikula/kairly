@@ -109,6 +109,13 @@
 
     @media (max-width: $mobile)
       display: none
+
+  &:disabled
+    opacity: 0.3
+
+    &:hover,
+    &:focus
+      background: #eee
   
   //- large button
   @if $size == large

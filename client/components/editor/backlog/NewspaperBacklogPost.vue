@@ -40,8 +40,9 @@
         <component
           v-if="log.editorial"
           :is="'editorial-' + log.editorial.type"
-          :editorial="log.editorial"
-        />
+          :editorial="log.editorial">
+          <template #controls>&nbsp;</template>
+        </component>
       </template>
 
       <template v-if="!log.editorial && !editorType">
@@ -65,22 +66,24 @@
       >
         <div class="newspaper-backlog-controls--arrows">
           <button
-            v-show="canMoveUp"
             class="up"
             :id="`backlog-controls-up-${log.post.id}`"
             @click="moveUp(source, log.post.id)"
+            :disabled="!canMoveUp"
           ></button>
 
           <button
-            v-show="canMoveDown"
             class="down"
             :id="`backlog-controls-down-${log.post.id}`"
             @click="moveDown(source, log.post.id)"
+            :disabled="!canMoveDown"
           ></button>
 
           <button
             class="remove"
             @click="removePost(source, log.post.id)"
+            v-b-tooltip
+            title="Remove post"
           ></button>
 
           <b-popover
@@ -144,13 +147,20 @@
             class="add-editorial"
             @click="showCrossroad('right')"
           ></button>
-          <button
-            v-else
-            class="menu"
-            :id="`backlog-controls-option-${log.post.id}`"
-            v-b-tooltip="'Options'"
-            @click.stop
-          ></button>
+
+          <template v-else>
+            <button
+              class="change-position"
+              @click="changeEditorialPosition"
+            ></button>
+
+            <button
+              class="menu"
+              :id="`backlog-controls-option-${log.post.id}`"
+              v-b-tooltip="'Options'"
+              @click.stop
+            ></button>
+          </template>
 
           <b-popover
             :target="`backlog-controls-option-${log.post.id}`"
@@ -159,20 +169,6 @@
             @click.stop
           >
             <ul>
-              <template v-if="(editorPosition || (log.editorial && log.editorial.position)) === 'right'">
-                <li tabindex="0" @click="changeEditorialPosition">
-                  <h6>{{ $t('Display editorial before') }}</h6>
-                  <p>{{ $t('On desktop in the left') }}</p>
-                </li>
-              </template>
-
-              <template v-if="(editorPosition || (log.editorial && log.editorial.position)) === 'left'">
-                <li tabindex="0" @click="changeEditorialPosition">
-                  <h6>{{ $t('Display editorial after') }}</h6>
-                  <p>{{ $t('On desktop in the right') }}</p>
-                </li>
-              </template>
-
               <template v-if="log.editorial && !editorType">
                 <li tabindex="0" @click="editEditorial">
                   <h6>{{ $t('Update editorial comment') }}</h6>
@@ -412,6 +408,10 @@ export default {
   //- button menu
   .menu
     +button-icon($fa-var-ellipsis-v)
+
+  //- change position button
+  .change-position
+    +button-icon($fa-var-exchange-alt)
 
 
 </style>
