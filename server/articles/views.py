@@ -494,6 +494,10 @@ class EditorialsView(View):
         if not backlog.editorial:
             return HttpResponseNotFound()
 
+        for et in EditorialTweet.objects.filter(editorial=backlog.editorial):
+            # put back tweers to backlog
+            Backlog.consider_post(newspaper, et.post_id)
+
         backlog.editorial.delete()
         return HttpResponse(status=204)
 
