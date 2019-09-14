@@ -59,16 +59,16 @@
               class="detail"
               :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
               :title="$t('Go to newspaper detail')"
-              v-b-tooltip>
-            </nuxt-link>
+              v-b-tooltip
+            />
 
             <nuxt-link
               v-if="selectedNewspaper.editor.id === user.id"
               class="settings"
               :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
               :title="$t('Edit newspaper')"
-              v-b-tooltip>
-            </nuxt-link>
+              v-b-tooltip
+            />
           </div>
 
           <div class="mobile-menu">
@@ -119,6 +119,7 @@
 
 
 <script>
+import Vue from 'vue'
 import moment from 'moment'
 
 import { directive as onClickaway } from '@/lib/vue-clickaway'
@@ -231,13 +232,12 @@ export default {
     await store.dispatch('getNewspapers', newspaperIds)
   },
 
-  created() {
+  mounted() {
+    // do select in mounted() to do it only on client side (no SSR)
     if (this.newspapers.length) {
       let selectedNewspaper = null
-      if (process.client) {
-        let selectedFullName = window.localStorage.getItem('manageNewspapers.selected')
-        selectedNewspaper = this.newspapers.find(n => n.fullName === selectedFullName)
-      }
+      let selectedFullName = window.localStorage.getItem('manageNewspapers.selected')
+      selectedNewspaper = this.newspapers.find(n => n.fullName === selectedFullName)
       this.selectNewspaper(selectedNewspaper || this.newspapers[0])
     }
   },
