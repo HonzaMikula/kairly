@@ -7,23 +7,26 @@
         @click="$emit('done')"
       >Done</button>
     </header>
-    <PostTweet v-for="post in tweets" :post="post" :key="post.id">
-      <template #extended-controls>
-        &nbsp;
-      </template>
-      <template #controls>
-        <button
-          v-if="selected.indexOf(post.id) === -1"
-          class="add"
-          @click="$emit('add', post)"
-        />
-        <button
-          v-else
-          class="remove"
-          @click="$emit('remove', post)"
-        />
-      </template>
-    </PostTweet>
+
+    <main>
+      <PostTweet v-for="post in tweets" :post="post" :key="post.id">
+        <template #extended-controls>
+          &nbsp;
+        </template>
+        <template #controls>
+          <button
+            v-if="selected.indexOf(post.id) === -1"
+            class="add"
+            @click="$emit('add', post)"
+          />
+          <button
+            v-else
+            class="remove"
+            @click="$emit('remove', post)"
+          />
+        </template>
+      </PostTweet>
+    </main>
   </div>
 </template>
 
@@ -62,6 +65,8 @@ export default {
   right: $baseline
   top: 10vh
 
+  display: grid
+  grid-template-rows: $baseline * 1.5 1fr
   max-height: 80vh
   overflow: auto
   width: 300px
@@ -69,11 +74,15 @@ export default {
   background: #fff
   box-shadow: 0 0 7px rgba(0,0,0,0.5)
 
+  @media (max-width: 1500px)
+    right: 50%
+    transform: translateX(45%)  
+
   //- Header
   > header
     display: grid
     grid-template-columns: auto min-content
-    padding: $baseline/4
+    padding: $baseline/4 $baseline/2
 
     border-bottom: 1px solid #eee
 
@@ -84,4 +93,8 @@ export default {
     //- done button
     button
       +button(primary, small)
+
+  //- Main
+  main
+    overflow: auto
 </style>

@@ -45,7 +45,7 @@
         </component>
       </template>
 
-      <template v-if="!log.editorial && !editorType">
+      <template v-if="!log.editorial && !editorType && log.post.type != 'tweet'">
         <div
           class="editorial-control is-before"
           v-b-tooltip
@@ -141,7 +141,9 @@
           </b-popover>
         </div>
 
-        <div class="newspaper-backlog-controls--options">
+        <div
+          v-if="log.post.type != 'tweet'"
+          class="newspaper-backlog-controls--options">
           <button
             v-if="!log.editorial && !editorType"
             class="add-editorial"
