@@ -1,7 +1,6 @@
 <template>
   <section
-    :class="{'editorial-post': !!editorial, 'normal-post': !editorial, 'is-before': editorial && editorial.position === 'left'}"
-    v-on:scroll.passive="onScroll">
+    :class="{'editorial-post': !!editorial, 'normal-post': !editorial, 'is-before': editorial && editorial.position === 'left'}">
     <component
       :is="'post-' + postType"
       :key="post.id"
