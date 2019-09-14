@@ -157,43 +157,43 @@
             <button
               class="menu"
               :id="`backlog-controls-option-${log.post.id}`"
-              v-b-tooltip="'Options'"
               @click.stop
             ></button>
-          </template>
+          
 
-          <b-popover
-            :target="`backlog-controls-option-${log.post.id}`"
-            placement="bottomleft"
-            triggers="click blur"
-            @click.stop
-          >
-            <ul>
-              <li
-                v-show="!editorType"
-                tabindex="0"
-                @click="editEditorial"
-              >
-                <h6>{{ $t('Update editorial comment') }}</h6>
-                <p>{{ $t('Write short comment to the topic') }}</p>
-              </li>
-              <li
-                tabindex="0"
-                @click="removeEditorial"
-              >
-                <h6>{{ $t('Remove editorial') }}</h6>
-                <p>{{ $t('Remove existing editorial') }}</p>
-              </li>
-              <li
-                v-show="editorType"
-                tabindex="0"
-                @click="cancelEditorialEdit"
-              >
-                <h6>{{ $t('Cancel edit') }}</h6>
-                <p>{{ $t('Your changes will be lost') }}</p>
-              </li>
-            </ul>
-          </b-popover>
+            <b-popover
+              :target="`backlog-controls-option-${log.post.id}`"
+              placement="bottomleft"
+              triggers="click blur"
+              @click.stop
+            >
+              <ul>
+                <li
+                  v-show="!editorType"
+                  tabindex="0"
+                  @click="editEditorial"
+                >
+                  <h6>{{ $t('Update editorial comment') }}</h6>
+                  <p>{{ $t('Write short comment to the topic') }}</p>
+                </li>
+                <li
+                  tabindex="0"
+                  @click="removeEditorial"
+                >
+                  <h6>{{ $t('Remove editorial') }}</h6>
+                  <p>{{ $t('Remove existing editorial') }}</p>
+                </li>
+                <li
+                  v-show="editorType"
+                  tabindex="0"
+                  @click="cancelEditorialEdit"
+                >
+                  <h6>{{ $t('Cancel edit') }}</h6>
+                  <p>{{ $t('Your changes will be lost') }}</p>
+                </li>
+              </ul>
+            </b-popover>
+          </template>
         </div>
       </div>
     </template>
