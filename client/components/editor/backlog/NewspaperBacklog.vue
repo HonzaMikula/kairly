@@ -113,11 +113,6 @@ export default {
       }
     },
 
-    // ...mapActions([
-    //     'removeFromNewspaperBacklog', 'addLinkToBacklog',
-    //     'backlogMoveDown', 'backlogMoveUp',
-    //     'backlogPublish', 'backlogUndoPublish'
-    // ]),
     ...mapMutations(['showError'])
   }
 }

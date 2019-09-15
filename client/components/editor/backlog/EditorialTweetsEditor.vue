@@ -83,24 +83,22 @@ export default {
     addTweetToEditorial(post) {
       this.tweets.push(post)
       this.saveEditorial()
-      // TODO this is hack
-      // this.$store.dispatch('removeFromBacklogLocal', {
-      //   newspaper: this.newspaper,
-      //   post: post,
-      // })
-      // this.$root.$emit('bv::hide::popover')
+      this.$store.commit('backlogRemove', {
+        fullName: this.newspaper.fullName,
+        source: 'considered',
+        postId: post.id,
+      })
     },
 
     removeTweetFromEditorial(post) {
       const idx = this.tweets.findIndex(p => p.id === post.id)
       this.tweets.splice(idx, 1)
       this.saveEditorial()
-      // // TODO this is hack
-      // this.$store.dispatch('addToBacklogLocal', {
-      //   newspaper: this.newspaper,
-      //   post: tweet,
-      // })
-      // this.$root.$emit('bv::hide::popover')
+      this.$store.commit('backlogAppend', {
+        fullName: this.newspaper.fullName,
+        source: 'considered',
+        post: {post, editorial: null, publish: null},
+      })
     },
 
     moveTweetDown(idx) {

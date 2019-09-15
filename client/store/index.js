@@ -94,6 +94,10 @@ const createStore = () => {
         const idx = posts.findIndex(log => log.post.id === postId)
         posts.splice(idx, 1)
       },
+      backlogAppend(state, { fullName, source, post }) {
+        const backlog = state.newspaperBacklog[fullName]
+        backlog[source].push(post)
+      },
       backlogMoveUp(state, { fullName, source, target, postId }) {
         const backlog = state.newspaperBacklog[fullName]
         let posts = backlog[source]

@@ -17,12 +17,12 @@
           <button
             v-if="selected.indexOf(post.id) === -1"
             class="add"
-            @click="$emit('add', post)"
+            @click="add(post)"
           />
           <button
             v-else
             class="remove"
-            @click="$emit('remove', post)"
+            @click="remove(post)"
           />
         </template>
       </PostTweet>
@@ -48,11 +48,45 @@ export default {
     selected: Array
   },
 
+  data() {
+    const { considered } = this.$store.state.newspaperBacklog[this.newspaper.fullName]
+    const tweets = considered.map(log => log.post).filter(post => post.type === 'tweet')
+    return {
+      alwaysDisplayTweets: tweets
+    }
+  },
+
   computed: {
     tweets() {
+      // do not remove from tweets when tweet is moved from baclog to editorial
+      // but add tweet to list when moved from editoril back to backlog
       const { considered } = this.$store.state.newspaperBacklog[this.newspaper.fullName]
-      return considered.map(log => log.post).filter(post => post.type === 'tweet')
+      const backlogTweets = considered.map(log => log.post).filter(post => post.type === 'tweet')
+
+      const ids = {}
+      this.alwaysDisplayTweets.forEach(p => { ids[p.id] = true })
+
+      const tweets = [...this.alwaysDisplayTweets]
+
+      backlogTweets.forEach(p => {
+        if (!ids[p.id]) {
+          tweets.push(p)
+          this.alwaysDisplayTweets.push(p)
+        }
+      })
+
+      return tweets
+    }
+  },
+
+  methods: {
+    add(post) {
+      this.$emit('add', post)
     },
+
+    remove(post) {
+      this.$emit('remove', post)
+    }
   }
 }
 </script>
@@ -76,7 +110,7 @@ export default {
 
   @media (max-width: 1500px)
     right: 50%
-    transform: translateX(45%)  
+    transform: translateX(45%)
 
   //- Header
   > header

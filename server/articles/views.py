@@ -282,7 +282,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
         result = {'backlog': []}
 
         query = Backlog.objects.filter(
-            newspaper=newspaper).select_related('post').order_by(F('publish_in').asc(nulls_last=True), 'ordering')
+            newspaper=newspaper).select_related('post').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
         for log in query:
             result['backlog'].append({
                 'post': log.post.to_json(),
