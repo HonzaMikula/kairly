@@ -217,11 +217,9 @@ export async function addToBacklogLocal({ commit, state}, {newspaper, post}) {
 async function _postBackLog(state, fullName) {
   const backlog = state.newspaperBacklog[fullName]
   await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
-    publish: [
-      backlog.upcoming.map(log => log.post.id),
-      backlog.next.map(log => log.post.id)
-    ],
-    consider: backlog.considered.map(log => log.post.id)
+    upcoming: backlog.upcoming.map(log => log.post.id),
+    next: backlog.next.map(log => log.post.id),
+    considered: backlog.considered.map(log => log.post.id)
   })
 }
 

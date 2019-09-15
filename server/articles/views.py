@@ -308,9 +308,9 @@ def newspaper_backlog(request, username, newspapeper_slug):
 
     if request.method == 'POST':
         payload = json.loads(request.body.decode('utf-8'))
-        upcoming_ids = payload['publish'][0]
-        next_ids = payload['publish'][1]
-        consider_ids = payload['consider']
+        upcoming_ids = payload['upcoming']
+        next_ids = payload['next']
+        consider_ids = payload['considered']
 
         ordering = {}
         for idx, id in enumerate(chain(upcoming_ids, next_ids, consider_ids)):

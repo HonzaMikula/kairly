@@ -240,28 +240,22 @@ export default {
   },
 
   mounted() {
-    if (process.client) {
-      if (this.cursor === 0) {
-        this.loadPosts()
-      }
+    if (this.cursor === 0) {
+      this.loadPosts()
+    }
 
-      window.addEventListener('resize', this.onResize)
+    window.addEventListener('resize', this.onResize)
 
-      this.onResize() // and recompute for initial page
+    this.onResize() // and recompute for initial page
 
-      if (this.loggedIn) {
-        this.$store.dispatch('getUserBacklog')
-      }
+    if (this.loggedIn) {
+      this.$store.dispatch('getUserBacklog')
     }
   },
 
   beforeDestroy() {
-    if (process.client) {
-      window.removeEventListener('resize', this.onResize)
-    }
+    window.removeEventListener('resize', this.onResize)
   }
-
-
 };
 </script>
 

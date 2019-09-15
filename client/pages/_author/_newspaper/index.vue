@@ -303,7 +303,13 @@ export default {
     } catch (err) {
       error(errorToParams(err))
     }
-  }
+  },
+
+  async mounted() {
+    if (this.loggedIn) {
+      await this.$store.dispatch('getUserBacklog')
+    }
+  },
 }
 </script>
 

@@ -153,7 +153,7 @@
                 <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
                   {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
                 </nuxt-link>
-              </aside>  
+              </aside>
               <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
             </div>
           </template>
@@ -278,8 +278,10 @@ export default {
     if(this.$route.hash == '#continue') {
       this.showContinueReading = true
     }
+  },
 
-    if (process.client && this.loggedIn) {
+  async mounted() {
+    if (this.loggedIn) {
       await this.$store.dispatch('getUserBacklog')
     }
   },

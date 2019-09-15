@@ -56,17 +56,11 @@ const createStore = () => {
       },
       backlogAdd(state, { postId, newspaperId }) {
         const currNewspapers = state.backlog[postId] || {}
-        state.backlog = {
-          ...state.backlog,
-          [postId]: {...currNewspapers, [newspaperId]: 'C'}
-        }
+        Vue.set(state.backlog, postId, {...currNewspapers, [newspaperId]: 'C'})
       },
       backlogSetPostState(state, { postId, newspaperId, val }) {
         const currNewspapers = state.backlog[postId] || {}
-        state.backlog = {
-          ...state.backlog,
-          [postId]: {...currNewspapers, [newspaperId]: val}
-        }
+        Vue.set(state.backlog, postId, {...currNewspapers, [newspaperId]: val})
       },
       newspaperBacklogPosts( state, { fullName, section, posts }) {
         if (state.newspaperBacklog[fullName]) {
