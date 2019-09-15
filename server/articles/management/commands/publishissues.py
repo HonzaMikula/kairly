@@ -70,7 +70,8 @@ class Command(BaseCommand):
                     IssuePost.objects.create(
                         issue=issue, post=backlog.post, editorial=editorial, ordering=i)
 
-        Backlog.objects.filter(newspaper=newspaper, publish_in=Backlog.NEXT_ISSUE).update(publish_in=Backlog.UPCOMING_ISSUE)
+        if not dry_run:
+            Backlog.objects.filter(newspaper=newspaper, publish_in=Backlog.NEXT_ISSUE).update(publish_in=Backlog.UPCOMING_ISSUE)
 
     def get_now(self, hour=None):
         now = timezone.now().replace(minute=0, second=0, microsecond=0)
