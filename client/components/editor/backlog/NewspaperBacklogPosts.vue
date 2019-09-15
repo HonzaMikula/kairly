@@ -7,31 +7,34 @@
 
     </header>
 
-    <div
-      class="newspaper-backlog--next-issue"
-    >
+    <div class="newspaper-backlog--next-issue">
 
-      <div v-if="!backlog.length" class="no-post">
+      <div v-show="!backlog.length" class="no-post">
         <h2>{{ $t('No posts in backlog') }}</h2>
       </div>
 
-      <NewspaperBacklogPost
-        v-for="(log, idx) in backlog"
-        :key="log.post.id"
-        :newspaper="newspaper"
-        :log="log"
-        :canMoveUp="idx > 0 || source !== 'upcoming'"
-        :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
-        :source="source"
-      />
+      <draggable
+        v-model="items"
+        group="backlog-posts"
+      >
+        <NewspaperBacklogPost
+          v-for="(log, idx) in items"
+          :key="log.post.id"
+          :newspaper="newspaper"
+          :log="log"
+          :canMoveUp="idx > 0 || source !== 'upcoming'"
+          :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
+          :source="source"
+        />
+      </draggable>
     </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import { mapActions, mapMutations } from 'vuex'
-
+import { mapActions } from 'vuex'
+import draggable from 'vuedraggable'
 
 import NewspaperBacklogPost from '@/components/editor/backlog/NewspaperBacklogPost'
 
@@ -39,6 +42,7 @@ export default {
   name: 'NewspaperBacklogPosts',
 
   components: {
+    draggable,
     NewspaperBacklogPost,
   },
 
@@ -48,7 +52,27 @@ export default {
     description: String,
     backlog: Array,
     source: String,
-  }
+  },
+
+  computed: {
+    items: {
+      get() {
+        return this.backlog
+      },
+
+      set(value) {
+        this.backlogReorder({
+          newspaper: this.newspaper,
+          source: this.source,
+          posts: value,
+        })
+      }
+    }
+  },
+
+  methods: mapActions([
+      'backlogReorder'
+  ]),
 }
 </script>
 

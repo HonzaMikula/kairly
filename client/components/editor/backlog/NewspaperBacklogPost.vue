@@ -68,20 +68,20 @@
           <button
             class="up"
             :id="`backlog-controls-up-${log.post.id}`"
-            @click="moveUp(source, log.post.id)"
+            @click="moveUp(log.post.id)"
             :disabled="!canMoveUp"
           ></button>
 
           <button
             class="down"
             :id="`backlog-controls-down-${log.post.id}`"
-            @click="moveDown(source, log.post.id)"
+            @click="moveDown(log.post.id)"
             :disabled="!canMoveDown"
           ></button>
 
           <button
             class="remove"
-            @click="removePost(source, log.post.id)"
+            @click="removePost(log.post.id)"
             v-b-tooltip
             title="Remove post"
           ></button>
@@ -98,14 +98,14 @@
               <li
                 v-if="source !== 'upcoming'"
                 tabindex="0"
-                @click="moveUp(source, log.post.id, 'upcoming')"
+                @click="moveUp(log.post.id, 'upcoming')"
               >
                 <h6>Move to upcoming issue</h6>
                 <p></p>
               </li>
               <li
                 v-if="source === 'considered'"
-                @click="moveUp(source, log.post.id, 'next')"
+                @click="moveUp(log.post.id, 'next')"
               >
                 <h6>Move to next issue</h6>
                 <p></p>
@@ -125,14 +125,14 @@
               <li
                 v-if="source === 'upcoming'"
                 tabindex="0"
-                @click="moveDown(source, log.post.id, 'next')"
+                @click="moveDown(log.post.id, 'next')"
               >
                 <h6>Move to next issue</h6>
                 <p></p>
               </li>
               <li
                 v-if="source !== 'considered'"
-                @click="moveDown(source, log.post.id, 'considered')"
+                @click="moveDown(log.post.id, 'considered')"
               >
                 <h6>Move to backlog issue</h6>
                 <p></p>
@@ -161,7 +161,7 @@
               :id="`backlog-controls-option-${log.post.id}`"
               @click.stop
             ></button>
-          
+
 
             <b-popover
               :target="`backlog-controls-option-${log.post.id}`"
@@ -309,28 +309,28 @@ export default {
       this.$root.$emit('bv::hide::popover')
     },
 
-    moveUp(source, postId, target=null) {
+    moveUp(postId, target=null) {
       this.backlogMoveUp({
         newspaper: this.newspaper,
-        source,
+        source: this.source,
         postId,
         target
       })
     },
 
-    moveDown(source, postId, target=null) {
+    moveDown(postId, target=null) {
       this.backlogMoveDown({
         newspaper: this.newspaper,
-        source,
+        source: this.source,
         postId,
         target
       })
     },
 
-    removePost(source, postId) {
+    removePost(postId) {
       this.removeFromNewspaperBacklog({
         newspaper: this.newspaper,
-        source,
+        source: this.source,
         postId
       })
     },

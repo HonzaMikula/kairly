@@ -1,4 +1,4 @@
-
+import Vue from 'vue'
 
 // function onError(err, commit) {
 //   commit('showError', (err + '') || 'Request failed')
@@ -178,42 +178,6 @@ export async function addToBacklogLocal({ commit, state}, {newspaper, post}) {
   })
 }
 
-// export async function backlogPublish({ commit, state}, {newspaper, log}) {
-//   const { fullName } = newspaper
-//   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
-//   const modifiedBacklog = [...postsBacklog]
-//   const modifiedPublished = [...postsPublished]
-//   modifiedBacklog.splice(modifiedBacklog.indexOf(log), 1)
-//   modifiedPublished.push(log)
-//   commit('newspaperBacklog', {
-//     fullName,
-//     postsBacklog: modifiedBacklog,
-//     postsPublished: modifiedPublished,
-//     currentMonthStats
-//   })
-//   const postIds = modifiedPublished.map(item => item.post.id)
-//   await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
-//   commit('backlogSetPostState', {newspaper: fullName, postId: log.post.id, val: 'P'})
-// }
-
-// export async function backlogUndoPublish({ commit, state}, {newspaper, log}) {
-//   const { fullName } = newspaper
-//   const { postsBacklog, postsPublished, currentMonthStats } = state.newspaperBacklog[fullName]
-//   const modifiedBacklog = [...postsBacklog]
-//   const modifiedPublished = [...postsPublished]
-//   modifiedBacklog.push(log)
-//   modifiedPublished.splice(modifiedPublished.indexOf(log), 1)
-//   commit('newspaperBacklog', {
-//     fullName,
-//     postsBacklog: modifiedBacklog,
-//     postsPublished: modifiedPublished,
-//     currentMonthStats
-//   })
-//   const postIds = modifiedPublished.map(item => item.post.id)
-//   await this.$axios.$post(`/newspapers/${fullName}/backlog/publish`, postIds)
-//   commit('backlogSetPostState', {newspaper: fullName, postId: log.post.id, val: 'C'})
-// }
-
 async function _postBackLog(state, fullName) {
   const backlog = state.newspaperBacklog[fullName]
   await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
@@ -235,7 +199,21 @@ export async function backlogMoveDown({ commit, state }, { newspaper, source, ta
   _postBackLog.call(this, state, fullName)
 }
 
-export async function removeFromNewspaperBacklog({ commit, state }, { newspaper, source, postId }) {
+let reorderPostScheduled = false
+
+export async function backlogReorder({ commit, state }, { newspaper, source, posts }) {
+  const { fullName } = newspaper
+  commit('backlogReorder', { fullName, source, posts})
+  if (!reorderPostScheduled) {
+    reorderPostScheduled = true
+    Vue.nextTick(() => {
+      reorderPostScheduled = false
+      _postBackLog.call(this, state, fullName)
+    })
+  }
+}
+
+export async function removeFromNewspaperBacklog({ commit }, { newspaper, source, postId }) {
   const { fullName } = newspaper
 
   commit('backlogRemove', {

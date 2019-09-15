@@ -126,6 +126,10 @@ const createStore = () => {
           Vue.set(posts, idx + 1, post)
         }
       },
+      backlogReorder(state, { fullName, source, posts }) {
+        const backlog = state.newspaperBacklog[fullName]
+        backlog[source] = posts
+      },
       subscriptions(state, subscriptions) {
         state.subscriptions = subscriptions
       },
