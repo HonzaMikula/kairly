@@ -7,6 +7,7 @@
 
     </header>
 
+
     <div class="newspaper-backlog--next-issue">
 
       <div v-show="!backlog.length" class="no-post">
@@ -16,16 +17,26 @@
       <draggable
         v-model="items"
         group="backlog-posts"
+        animation="200"
+        handle=".post-content"
+        @start="drag = true"
+        @end="drag = false"
       >
-        <NewspaperBacklogPost
-          v-for="(log, idx) in items"
-          :key="log.post.id"
-          :newspaper="newspaper"
-          :log="log"
-          :canMoveUp="idx > 0 || source !== 'upcoming'"
-          :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
-          :source="source"
-        />
+        <transition-group
+          type="transition"
+          tag="div"
+          :name="!drag ? 'flip-list' : null"
+        >
+          <NewspaperBacklogPost
+            v-for="(log, idx) in items"
+            :key="log.post.id"
+            :newspaper="newspaper"
+            :log="log"
+            :canMoveUp="idx > 0 || source !== 'upcoming'"
+            :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
+            :source="source"
+          />
+        </transition-group>
       </draggable>
     </div>
   </div>
@@ -54,6 +65,12 @@ export default {
     source: String,
   },
 
+  data() {
+    return {
+      drag: false,
+    }
+  },
+
   computed: {
     items: {
       get() {
@@ -79,6 +96,10 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
+
+
+.flip-list-move
+  transition: transform 0.5s
 
 .newspaper-editor-backlog-section
   margin-bottom: $baseline * 2

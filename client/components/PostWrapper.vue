@@ -4,6 +4,7 @@
     <component
       :is="'post-' + postType"
       :key="post.id"
+      class="post-content"
       :post="post"
       :isSubscribed="isSubscribed"
     >

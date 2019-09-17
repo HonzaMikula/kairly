@@ -423,4 +423,8 @@ export default {
     +button-icon($fa-var-exchange-alt)
 
 
+.sortable-drag
+  .newspaper-backlog-controls
+    display: none
+
 </style>
