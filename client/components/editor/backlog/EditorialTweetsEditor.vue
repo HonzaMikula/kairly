@@ -37,8 +37,7 @@
     </template>
     <template v-else>
       <div class="editorial-post-tweet-editor--empty">
-        <h2>Add tweets here</h2>
-        <p>Check the right column and click on Add to Editorial.</p>
+        <h2>{{ $t('Add tweets here') }}</h2>
       </div>
     </template>
 

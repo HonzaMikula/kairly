@@ -1,11 +1,11 @@
 <template>
   <div class="tweets-selection-view">
     <header>
-      <h2>Select tweets</h2>
+      <h2>{{ $t('Select tweets') }}</h2>
 
-      <button
-        @click="$emit('done')"
-      >Done</button>
+      <button @click="$emit('done')">
+        {{ $t('Done') }}
+      </button>
     </header>
 
     <main>

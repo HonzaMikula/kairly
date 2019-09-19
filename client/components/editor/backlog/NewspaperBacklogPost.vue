@@ -100,14 +100,14 @@
                 tabindex="0"
                 @click="moveUp(log.post.id, 'upcoming')"
               >
-                <h6>Move to upcoming issue</h6>
+                <h6>{{ $t('Move to upcoming issue') }}</h6>
                 <p></p>
               </li>
               <li
                 v-if="source === 'considered'"
                 @click="moveUp(log.post.id, 'next')"
               >
-                <h6>Move to next issue</h6>
+                <h6>{{ $t('Move to next issue') }}</h6>
                 <p></p>
               </li>
             </ul>
@@ -127,14 +127,14 @@
                 tabindex="0"
                 @click="moveDown(log.post.id, 'next')"
               >
-                <h6>Move to next issue</h6>
+                <h6>{{ $t('Move to next issue') }}</h6>
                 <p></p>
               </li>
               <li
                 v-if="source !== 'considered'"
                 @click="moveDown(log.post.id, 'considered')"
               >
-                <h6>Move to backlog issue</h6>
+                <h6>{{ $t('Move to backlog issue') }}</h6>
                 <p></p>
               </li>
             </ul>
@@ -154,14 +154,17 @@
             <button
               class="change-position"
               @click="changeEditorialPosition"
+              v-b-tooltip
+              :title="$t('Change position')"
             ></button>
 
             <button
               class="menu"
               :id="`backlog-controls-option-${log.post.id}`"
               @click.stop
+              v-b-tooltip
+              :title="$t('Editorial menu')"
             ></button>
-
 
             <b-popover
               :target="`backlog-controls-option-${log.post.id}`"

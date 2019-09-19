@@ -1,16 +1,16 @@
 <template>
   <div class="editorial-post--editorial crossroad">
-    <h2>Editorials</h2>
+    <h2>{{ $t('Editorials') }}</h2>
     <button
       @click="$emit('select', 'tweets')"
     >
-      Select tweets
+      {{ $t('Select tweets') }}
     </button>
-    <p>or</p>
+    <p>{{ $t('or') }}</p>
     <button
       @click="$emit('select', 'article')"
     >
-      Write editorial
+      {{ $t('Write editorial') }}
     </button>
   </div>
 </template>

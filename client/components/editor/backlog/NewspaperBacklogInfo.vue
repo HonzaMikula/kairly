@@ -24,10 +24,6 @@
         v-on-clickaway="() => openProfitDropdown = false"
       />
     </div>
-
-    <!--div>
-      <p v-html="$t('<strong>{backlogLength} posts</strong> are considered', {backlogLength})" />
-    </div-->
   </div>
 </template>
 

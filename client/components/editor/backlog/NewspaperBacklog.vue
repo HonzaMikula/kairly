@@ -1,29 +1,23 @@
 <template>
   <div class="newspaper-backlog-view">
 
-    <!-- <NewspaperBacklogInfo
-      :newspaper="newspaper"
-      :current-month="currentMonth"
-      :published="upcomingIssue.map(log => log.post)"
-    /> -->
-
     <NewspaperBacklogPosts
-      :title="'Issue #' + (newspaper.issues + 1)"
-      :description="'Issue will be published '+ timeFrom(newspaper.nextRelease)"
+      :title="$t('Issue #') + (newspaper.issues + 1)"
+      :description="$t('Issue will be published ') + timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
       :backlog="backlog.upcoming"
       source="upcoming"
     />
 
     <NewspaperBacklogPosts
-      :title="'Issue #'+ (newspaper.issues + 2)"
+      :title="$t('Issue #') + (newspaper.issues + 2)"
       :newspaper="newspaper"
       :backlog="backlog.next"
       source="next"
     />
 
     <NewspaperBacklogPosts
-      title="Considered posts"
+      :title="$t('Considered posts')"
       :newspaper="newspaper"
       :backlog="backlog.considered"
       source="considered"
@@ -51,17 +45,12 @@ import moment from 'moment'
 import { mapActions, mapMutations } from 'vuex'
 
 import PostWrapper from '@/components/PostWrapper'
-//import NewspaperBacklogInfo from '@/components/editor/backlog/NewspaperBacklogInfo'
 import NewspaperBacklogPosts from '@/components/editor/backlog/NewspaperBacklogPosts'
-//import BacklogPost from '@/components/editor/backlog/BacklogPost'
-
 
 export default {
   name: 'NewspaperBacklog',
 
   components: {
-    //BacklogPost,
-    //NewspaperBacklogInfo,
     NewspaperBacklogPosts
   },
 
@@ -121,12 +110,6 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
-
-// .newspaper-backlog-view
-//   > div
-//     display: grid
-//     grid-template-columns: 970px auto
-//     grid-column-gap: $baseline
 
 p.newspaper-backlog--info--profit
   strong
