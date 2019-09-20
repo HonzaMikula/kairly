@@ -18,7 +18,7 @@
         v-model="items"
         group="backlog-posts"
         animation="200"
-        handle=".post-content"
+        handle=".post-content > header"
         @start="drag = true"
         @end="drag = false"
       >
