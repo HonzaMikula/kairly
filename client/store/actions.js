@@ -1,17 +1,22 @@
 import Vue from 'vue'
 
-// function onError(err, commit) {
-//   commit('showError', (err + '') || 'Request failed')
-//   // eslint-disable-next-line no-console
-//   console.log(err)
-// }
-
-
 export async function getUserBacklog({ commit, state }) {
   if (state.backlog) {
     return state.backlog
   }
   const { backlog } = await this.$axios.$get('/backlog')
+  Object.entries(backlog).forEach(([postId, newspapers]) => {
+    Object.entries(newspapers).forEach(([newspaperId, value]) => {
+      if (value === 1) {
+        backlog[postId][newspaperId] = 'next'
+      } else if (value === 2) {
+        backlog[postId][newspaperId] = 'upcoming'
+      } else {
+        backlog[postId][newspaperId] = 'considered'
+      }
+    })
+  })
+
   commit('backlog', backlog)
   return backlog
 }
@@ -151,33 +156,6 @@ export async function loadNewspaperBacklog({ commit, state, dispatch }, fullName
   commit('newspaperBacklogPosts', { fullName, section: 'considered', posts: considered })
 }
 
-export async function removeFromBacklogLocal({ commit, state}, {newspaper, post}) {
-  const { fullName } = newspaper
-  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-  const modifiedBacklog = [...backlog]
-  modifiedBacklog.splice(modifiedBacklog.findIndex(log => log.post.id === post.id), 1)
-  commit('newspaperBacklog', {
-    fullName,
-    backlog: modifiedBacklog,
-    currentMonthStats
-  })
-}
-
-export async function addToBacklogLocal({ commit, state}, {newspaper, post}) {
-  const { fullName } = newspaper
-  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
-  const modifiedBacklog = [...backlog]
-  modifiedBacklog.unshift({
-    post,
-    editorial: null
-  })
-  commit('newspaperBacklog', {
-    fullName,
-    backlog: modifiedBacklog,
-    currentMonthStats
-  })
-}
-
 async function _postBackLog(state, fullName) {
   const backlog = state.newspaperBacklog[fullName]
   await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
@@ -236,15 +214,10 @@ export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   const { fullName } = newspaper
   const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
   if (resp.post) {
-    commit('backlogAppend', {
+    commit('backlogAdd', {
       fullName,
       source: 'considered',
-      post: { post: resp.post, editorial: null }
-    })
-
-    commit('backlogAdd', {
-      newspaperId: fullName,
-      postId: resp.post.id,
+      post: resp.post
     })
 
     this.$ga.event({
@@ -429,13 +402,14 @@ export async function deleteNewspaper({ commit }, newspaper) {
   })
 }
 
-export async function addToBacklog({ commit }, { newspaper, post }) {
+export async function addToBacklog({ commit }, { newspaper, post, source }) {
   // TODO to have better user experience, post can be added immediately
   // and reverted when api call fails
   await this.$axios.put(`/newspapers/${newspaper.fullName}/backlog`, {post: post.id})
   commit('backlogAdd', {
-    newspaperId: newspaper.fullName,
-    postId: post.id,
+    fullName: newspaper.fullName,
+    post,
+    source
   })
 
   this.$ga.event({
@@ -445,22 +419,18 @@ export async function addToBacklog({ commit }, { newspaper, post }) {
 }
 
 export async function removeFromBacklog({ commit }, { newspaper, post }) {
-  try {
-    // TODO to have better user experience, post can be removed immediately
-    // and reverted when api call fails
-    await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: { post: post.id } })
-    commit('backlogRemove', {
-      newspaperId: newspaper.fullName,
-      postId: post.id,
-    })
+  // TODO to have better user experience, post can be removed immediately
+  // and reverted when api call fails
+  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: { post: post.id } })
+  commit('backlogRemove', {
+    fullName: newspaper.fullName,
+    postId: post.id,
+  })
 
-    this.$ga.event({
-      eventCategory: 'Stop considering for newspaper',
-      eventAction: newspaper.fullName
-    })
-  } catch (err) {
-    onError(err, commit)
-  }
+  this.$ga.event({
+    eventCategory: 'Stop considering for newspaper',
+    eventAction: newspaper.fullName
+  })
 }
 
 export const newspaperUpdated = ({ commit }, newspaper) => {

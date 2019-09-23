@@ -54,10 +54,6 @@ const createStore = () => {
       backlog(state, backlog) {
         state.backlog = backlog
       },
-      backlogAdd(state, { postId, newspaperId }) {
-        const currNewspapers = state.backlog[postId] || {}
-        Vue.set(state.backlog, postId, {...currNewspapers, [newspaperId]: 'C'})
-      },
       backlogSetPostState(state, { postId, newspaperId, val }) {
         const currNewspapers = state.backlog[postId] || {}
         Vue.set(state.backlog, postId, {...currNewspapers, [newspaperId]: val})
@@ -83,14 +79,25 @@ const createStore = () => {
         posts[idx].editorial = editorial
       },
       backlogRemove(state, { fullName, source, postId }) {
-        const backlog = state.newspaperBacklog[fullName]
-        let posts = backlog[source]
-        const idx = posts.findIndex(log => log.post.id === postId)
-        posts.splice(idx, 1)
+        const postBacklog = state.backlog[postId] || {}
+        delete postBacklog[fullName]
+        Vue.set(state.backlog, postId, {...postBacklog})
+
+        const newspaperBacklog = state.newspaperBacklog[fullName]
+        if (newspaperBacklog) {
+          let posts = newspaperBacklog[source]
+          const idx = posts.findIndex(log => log.post.id === postId)
+          posts.splice(idx, 1)
+        }
       },
-      backlogAppend(state, { fullName, source, post }) {
-        const backlog = state.newspaperBacklog[fullName]
-        backlog[source].push(post)
+      backlogAdd(state, { fullName, source, post }) {
+        const postBacklog = state.backlog[post.id] || {}
+        Vue.set(state.backlog, post.id, { ...postBacklog, [fullName]: source })
+
+        const newspaperBacklog = state.newspaperBacklog[fullName]
+        if (newspaperBacklog) {
+          newspaperBacklog[source].push({ post: post, editorial: null })
+        }
       },
       backlogMoveUp(state, { fullName, source, target, postId }) {
         const backlog = state.newspaperBacklog[fullName]

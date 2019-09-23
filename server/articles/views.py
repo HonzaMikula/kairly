@@ -72,9 +72,12 @@ def subscriptions(request):
 @ajax_login_required
 def user_backlog(request):
     backlog = defaultdict(dict)
-    for bl in Backlog.objects.filter(newspaper__editor=request.user).select_related('newspaper'):
-        full_name = "{}/{}".format(request.user.username, bl.newspaper.slug)
-        backlog[str(bl.post_id)][full_name] = 'P' if bl.publish_in else 'C'
+    query = Backlog.objects.filter(
+        Q(newspaper__editor=request.user) |
+        Q(newspaper__coeditor__editor=request.user)).select_related('newspaper')
+    for bl in query:
+        full_name = "{}/{}".format(bl.newspaper.editor.username, bl.newspaper.slug)
+        backlog[str(bl.post_id)][full_name] = bl.publish_in or 0
 
     return JsonResponse({
         "backlog": backlog

@@ -12,7 +12,7 @@
 
     <section>
       <ul>
-        <li v-for="ed in userNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in containedIn}">
+        <li v-for="ed in userNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in postBacklog}">
           <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
         </li>
       </ul>
@@ -48,7 +48,7 @@ export default {
 
     ...mapGetters(['userNewspapers']),
 
-    containedIn() {
+    postBacklog() {
       return this.backlog ? ( this.backlog[this.post.id] || {} ) : {}
     }
   },
@@ -59,10 +59,19 @@ export default {
     },
 
     toggle(newspaper, ev) {
-      if (newspaper.fullName in this.containedIn) {
-        this.removeFromBacklog({newspaper, post: this.post})
+      const source = this.postBacklog[newspaper.fullName]
+      if (source !== undefined) {
+        this.removeFromBacklog({
+          newspaper,
+          post: this.post,
+          source
+        })
       } else {
-        this.addToBacklog({newspaper, post: this.post})
+        this.addToBacklog({
+          newspaper,
+          post: this.post,
+          source: 'considered'
+        })
       }
       document.activeElement.blur()
     },
