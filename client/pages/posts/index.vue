@@ -45,8 +45,9 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
+import ErrorHandler from '@/mixins/ErrorHandler'
 import MyPosts from '@/components/layout/MyPosts'
 import PostWrapper from '@/components/PostWrapper'
 import PublishPostDialog from '@/components/modals/PublishPost'
@@ -59,6 +60,8 @@ export default {
     PostWrapper,
     PublishPostDialog
   },
+
+  mixins: [ErrorHandler],
 
   data() {
     return {
@@ -75,8 +78,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showError']),
-
     closePublishDialog() {
       this.isPublishPostDialogOpen = false
     },
@@ -113,11 +114,7 @@ export default {
         const idx = this.posts.findIndex(p => p.id === post.id)
         this.posts.splice(idx, 1, publishedPost)
       } catch (err) {
-        if (err.response && err.response.status === 400) {
-          this.showError(err.response.data.error)
-        } else {
-          this.showError((err + '') || 'Request failed')
-        }
+        this.handleError(err)
       }
     }
   },

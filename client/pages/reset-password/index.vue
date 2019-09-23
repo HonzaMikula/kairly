@@ -8,7 +8,7 @@
         <li>{{ $t('Open the link and set your new password.') }}</li>
       </ol>
       <template v-if="step === 'form'">
-        <form 
+        <form
            v-if="step === 'form'"
           @submit.prevent="submit">
           <label for="email">{{ $t('Your email') }}</label>
@@ -32,9 +32,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 import AppLayout from '@/components/layout/AppLayout'
+import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'ResetPassword',
@@ -44,6 +43,8 @@ export default {
   components: {
     AppLayout,
   },
+
+  mixins: [ErrorHandler],
 
   head() {
     return {
@@ -59,8 +60,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showError']),
-
     async submit() {
       try {
         const res = await this.$axios.post('/reset-password', {
@@ -68,11 +67,7 @@ export default {
         })
         this.step = 'submit'
       } catch (err) {
-        if (err.response.status === 400) {
-          this.showError(err.response.data.error)
-        } else {
-          this.showError((err + '') || 'Request failed')
-        }
+        this.handleError(err)
       }
     }
   }
@@ -108,7 +103,7 @@ export default {
 
   //- Form
   form
-  
+
     label
       display: table
       font-weight: 600
@@ -145,8 +140,8 @@ export default {
     margin-bottom: $baseline / 4
 
     font-weight: 600
-  
+
   p
     font-size: $fs--1
-  
+
 </style>

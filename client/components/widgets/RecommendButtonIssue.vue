@@ -12,12 +12,16 @@
 <script>
 import { mapMutations } from 'vuex'
 
+import ErrorHandler from '@/mixins/ErrorHandler'
+
 export default {
   name: 'RecommnendButtonIssue',
 
   props: {
     issue: Object,
   },
+
+  mixins: [ErrorHandler],
 
   computed: {
     recommended() {
@@ -26,7 +30,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showError', 'showSuccess', 'recommendedIssue']),
+    ...mapMutations(['recommendedIssue']),
 
     async recommend() {
       try {
@@ -39,11 +43,7 @@ export default {
           this.recommendedIssue({id, value: true})
         }
       } catch (err) {
-        if (err.response.status === 400) {
-          this.showError(err.response.data.error)
-        } else {
-          this.showError((err + '') || 'Request failed')
-        }
+        this.handleError(err)
       }
     }
   }

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'RecommnendButtonPost',
@@ -18,9 +18,9 @@ export default {
     recommended: Boolean,
   },
 
-  methods: {
-    ...mapMutations(['showError', 'showSuccess']),
+  mixins: [ErrorHandler],
 
+  methods: {
     async recommend() {
       const { author, slug } = this.post
 
@@ -43,11 +43,7 @@ export default {
           })
         }
       } catch (err) {
-        if (err.response.status === 400) {
-          this.showError(err.response.data.error)
-        } else {
-          this.showError((err + '') || 'Request failed')
-        }
+        this.handleError(err)
       }
     }
   }

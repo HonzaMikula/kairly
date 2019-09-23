@@ -7,8 +7,6 @@
 <script>
 import { mapActions, mapState } from "vuex";
 
-import { errorToParams } from "@/utils/errors"
-
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperSettings from '@/components/editor/NewspaperSettings'
 

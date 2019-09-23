@@ -220,14 +220,11 @@ export async function removeFromNewspaperBacklog({ commit }, { newspaper, source
     fullName,
     source,
     postId,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Stop considering for newspaper',
-          eventAction: fullName
-        }]
-      ]
-    }
+  })
+
+  this.$ga.event({
+    eventCategory: 'Stop considering for newspaper',
+    eventAction: fullName
   })
 
   // TODO to have better user experience, post can be removed immediately
@@ -237,28 +234,22 @@ export async function removeFromNewspaperBacklog({ commit }, { newspaper, source
 
 export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   const { fullName } = newspaper
-  const { backlog, currentMonthStats } = state.newspaperBacklog[fullName]
   const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
   if (resp.post) {
-    const modified = [...backlog]
-    modified.unshift({ post: resp.post, editorial: null })
-    commit('newspaperBacklog', {
+    commit('backlogAppend', {
       fullName,
-      backlog: modified,
-      currentMonthStats
+      source: 'considered',
+      post: { post: resp.post, editorial: null }
     })
 
     commit('backlogAdd', {
-      newspaperId: newspaper.fullName,
+      newspaperId: fullName,
       postId: resp.post.id,
-      meta: {
-        analytics: [
-          ['event', {
-            eventCategory: 'Consider for newspaper',
-            eventAction: newspaper.fullName
-          }]
-        ]
-      }
+    })
+
+    this.$ga.event({
+      eventCategory: 'Consider for newspaper',
+      eventAction: fullName
     })
   }
 }
@@ -295,16 +286,14 @@ export async function subscribeNewspaper({ commit }, { fullName, donation, allow
   commit('newspaperSubscription', {
     fullName,
     subscription,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Subscribe newspaper',
-          eventAction: fullName,
-          eventValue: credits
-        }]
-      ]
-    }
   })
+
+  this.$ga.event({
+    eventCategory: 'Subscribe newspaper',
+    eventAction: fullName,
+    eventValue: credits
+  })
+
   return subscription
 }
 
@@ -349,15 +338,13 @@ export async function unsubscribeNewspaper({ commit }, { fullName }) {
   commit('newspaperSubscription', {
     fullName,
     subscription,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Unsubscribe newspaper',
-          eventAction: fullName
-        }]
-      ]
-    }
   })
+
+  this.$ga.event({
+    eventCategory: 'Unsubscribe newspaper',
+    eventAction: fullName
+  })
+
   return subscription
 }
 
@@ -377,16 +364,14 @@ export async function subscribeAuthor({ commit }, { author, donation, periodicit
   commit('authorSubscription', {
     authorId: author.id,
     subscription,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Subscribe author',
-          eventAction: periodicity ? periodicity.frequency : 'renewal',
-          eventLabel: author.id
-        }]
-      ]
-    }
   })
+
+  this.$ga.event({
+    eventCategory: 'Subscribe author',
+    eventAction: periodicity ? periodicity.frequency : 'renewal',
+    eventLabel: author.id
+  })
+
   return subscription
 }
 
@@ -397,15 +382,13 @@ export async function unsubscribeAuthor({ commit }, { author }) {
   commit('authorSubscription', {
     authorId: author.id,
     subscription,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Subscribe author',
-          eventAction: author.id
-        }]
-      ]
-    }
   })
+
+  this.$ga.event({
+    eventCategory: 'Subscribe author',
+    eventAction: author.id
+  })
+
   return subscription
 }
 
@@ -414,46 +397,35 @@ export async function startNewspaper({ commit }, { authorId, newspaper: postData
   commit('newspaper', { newspaper })
   commit('appendOwnedNewspaper', {
     newspaper,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Start newspaper',
-          eventAction: newspaper.fullName
-        }]
-      ]
-    }
   })
+
+  this.$ga.event({
+    eventCategory: 'Start newspaper',
+    eventAction: newspaper.fullName
+  })
+
   return newspaper
 }
 
 export async function updateNewspaper({ commit }, { fullName, fields }) {
   const { newspaper } = await this.$axios.$patch(`/newspapers/${fullName}`, fields)
-  commit('newspaper', {
-    newspaper,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Update newspaper',
-          eventAction: newspaper.fullName
-        }]
-      ]
-    }
+  commit('newspaper', { newspaper })
+
+  this.$ga.event({
+    eventCategory: 'Update newspaper',
+    eventAction: newspaper.fullName
   })
+
   return newspaper
 }
 
 export async function deleteNewspaper({ commit }, newspaper) {
   await this.$axios.delete(`/newspapers/${newspaper.fullName}`)
-  commit('removeNewspaper', {
-    newspaper,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Delete newspaper',
-          eventAction: newspaper.fullName
-        }]
-      ]
-    }
+  commit('removeNewspaper', { newspaper })
+
+  this.$ga.event({
+    eventCategory: 'Delete newspaper',
+    eventAction: newspaper.fullName
   })
 }
 
@@ -464,14 +436,11 @@ export async function addToBacklog({ commit }, { newspaper, post }) {
   commit('backlogAdd', {
     newspaperId: newspaper.fullName,
     postId: post.id,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Consider for newspaper',
-          eventAction: newspaper.fullName
-        }]
-      ]
-    }
+  })
+
+  this.$ga.event({
+    eventCategory: 'Consider for newspaper',
+    eventAction: newspaper.fullName
   })
 }
 
@@ -483,14 +452,11 @@ export async function removeFromBacklog({ commit }, { newspaper, post }) {
     commit('backlogRemove', {
       newspaperId: newspaper.fullName,
       postId: post.id,
-      meta: {
-        analytics: [
-          ['event', {
-            eventCategory: 'Stop considering for newspaper',
-            eventAction: newspaper.fullName
-          }]
-        ]
-      }
+    })
+
+    this.$ga.event({
+      eventCategory: 'Stop considering for newspaper',
+      eventAction: newspaper.fullName
     })
   } catch (err) {
     onError(err, commit)
@@ -502,16 +468,11 @@ export const newspaperUpdated = ({ commit }, newspaper) => {
 }
 
 export const expandIssue = ({ commit }, issueId) => {
-  commit('expandIssue', {
-    issueId,
-    meta: {
-      analytics: [
-        ['event', {
-          eventCategory: 'Show more (issue)',
-          eventAction: issueId
-        }]
-      ]
-    }
+  commit('expandIssue', { issueId })
+
+  this.$ga.event({
+    eventCategory: 'Show more (issue)',
+    eventAction: issueId
   })
 }
 

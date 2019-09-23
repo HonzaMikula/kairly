@@ -187,7 +187,7 @@
           <strong>Marek Zouzalík</strong> <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
         </footer>
       </blockquote>
-    </section>  
+    </section>
 
     <!-- <OfficialStart /> -->
 
@@ -201,8 +201,6 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-
-import { errorToParams } from '@/utils/errors'
 
 import SignUpForm from '@/components/microsite/SignUpForm'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
@@ -422,7 +420,7 @@ export default {
       text-align: center
 
       background: #fff
-    
+
     a
       color: #000
 

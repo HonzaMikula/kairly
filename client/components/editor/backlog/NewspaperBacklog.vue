@@ -42,8 +42,9 @@
 <script>
 import Vue from 'vue'
 import moment from 'moment'
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
+import ErrorHandler from '@/mixins/ErrorHandler'
 import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogPosts from '@/components/editor/backlog/NewspaperBacklogPosts'
 
@@ -53,6 +54,8 @@ export default {
   components: {
     NewspaperBacklogPosts
   },
+
+  mixins: [ErrorHandler],
 
   data() {
     return {
@@ -94,15 +97,11 @@ export default {
         await this.addLinkToBacklog({newspaper: this.newspaper, url})
         this.externalLink = ''
       } catch (err) {
-        if (err.response.status >= 400) {
-          this.showError(err.response.data.error)
-        } else {
-          this.showError((err + '') || 'Request failed')
-        }
+        this.handleError(err)
       }
     },
 
-    ...mapMutations(['showError'])
+    ...mapActions(['addLinkToBacklog'])
   }
 }
 </script>

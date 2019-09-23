@@ -34,6 +34,7 @@
 import { mapMutations } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
+import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'ResetPasswordForm',
@@ -43,6 +44,8 @@ export default {
   components: {
     AppLayout,
   },
+
+  mixins: [ErrorHandler],
 
   head() {
     return {
@@ -74,11 +77,7 @@ export default {
         })
         this.showSuccess(this.$t("Password has been updated."))
       } catch (err) {
-        if (err.response && err.response.status === 400) {
-          this.showError(err.response.data.error)
-        } else {
-          this.showError((err + '') || 'Request failed')
-        }
+        this.handleError(err)
       }
     }
   }
