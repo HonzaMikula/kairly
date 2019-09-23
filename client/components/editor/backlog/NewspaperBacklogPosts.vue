@@ -19,6 +19,7 @@
         group="backlog-posts"
         animation="200"
         handle=".post-content > header"
+        :disabled="isTouchDevice"
         @start="drag = true"
         @end="drag = false"
       >
@@ -48,6 +49,7 @@ import { mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 
 import NewspaperBacklogPost from '@/components/editor/backlog/NewspaperBacklogPost'
+import { isTouchDevice } from '@/utils/browser'
 
 export default {
   name: 'NewspaperBacklogPosts',
@@ -68,6 +70,7 @@ export default {
   data() {
     return {
       drag: false,
+      isTouchDevice: false
     }
   },
 
@@ -90,6 +93,10 @@ export default {
   methods: mapActions([
       'backlogReorder'
   ]),
+
+  mounted() {
+    this.isTouchDevice = isTouchDevice()
+  }
 }
 </script>
 
