@@ -52,7 +52,11 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     ['@nuxtjs/google-analytics', {
-      id: 'UA-114180015-2'
+      id: 'UA-114180015-2',
+      debug: {
+        enabled: true,
+        sendHitTask: true
+      }
     }],
     ['@nuxtjs/style-resources'],
     ['bootstrap-vue/nuxt'],
