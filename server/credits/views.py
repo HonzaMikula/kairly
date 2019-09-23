@@ -1,15 +1,19 @@
+from dateutil.relativedelta import relativedelta
 from django.db.models import Q
 from django.http import HttpResponseForbidden
+from django.utils import timezone
+
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
-
 from .models import Transaction
 from .utils import clear_credits_cache, get_platform_credits, get_user_credits
 
 
 @ajax_login_required
 def get_transactions(request):
+    limit = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0) - relativedelta(months=1)
     transactions = list(Transaction.objects.filter(Q(from_user=request.user) | Q(to_user=request.user))
+                        .filter(created__gt=limit)
                         .order_by('-created'))
 
     newspapers = {}
@@ -31,7 +35,9 @@ def get_platform_transactions(request):
     if not request.user.is_superuser:
         return HttpResponseForbidden()
 
+    limit = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0) - relativedelta(months=1)
     transactions = list(Transaction.objects.filter(Q(from_platform=True) | Q(to_platform=True))
+                        .filter(created__gt=limit)
                         .order_by('-created'))
 
     return JsonResponse({
