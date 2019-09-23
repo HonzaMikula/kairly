@@ -191,11 +191,30 @@ export async function backlogReorder({ commit, state }, { newspaper, source, pos
   }
 }
 
-export async function removeFromNewspaperBacklog({ commit }, { newspaper, source, postId }) {
+export async function addToBacklog({ commit }, { newspaper, post, source }) {
+  // TODO to have better user experience, post can be added immediately
+  // and reverted when api call fails
+  await this.$axios.put(`/newspapers/${newspaper.fullName}/backlog`, {post: post.id})
+  commit('backlogPrepend', {
+    fullName: newspaper.fullName,
+    post,
+    source
+  })
+
+  this.$ga.event({
+    eventCategory: 'Consider for newspaper',
+    eventAction: newspaper.fullName
+  })
+}
+
+export async function removeFromBacklog({ commit }, { newspaper, source, postId }) {
+  // TODO to have better user experience, post can be removed immediately
+  // and reverted when api call fails
   const { fullName } = newspaper
+  await this.$axios.delete(`/newspapers/${fullName}/backlog`, { data: { post: postId } })
 
   commit('backlogRemove', {
-    fullName,
+    fullName: fullName,
     source,
     postId,
   })
@@ -204,17 +223,13 @@ export async function removeFromNewspaperBacklog({ commit }, { newspaper, source
     eventCategory: 'Stop considering for newspaper',
     eventAction: fullName
   })
-
-  // TODO to have better user experience, post can be removed immediately
-  // and reverted when api call fails
-  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: {post: postId}})
 }
 
 export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
   const { fullName } = newspaper
   const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
   if (resp.post) {
-    commit('backlogAdd', {
+    commit('backlogAppend', {
       fullName,
       source: 'considered',
       post: resp.post
@@ -398,37 +413,6 @@ export async function deleteNewspaper({ commit }, newspaper) {
 
   this.$ga.event({
     eventCategory: 'Delete newspaper',
-    eventAction: newspaper.fullName
-  })
-}
-
-export async function addToBacklog({ commit }, { newspaper, post, source }) {
-  // TODO to have better user experience, post can be added immediately
-  // and reverted when api call fails
-  await this.$axios.put(`/newspapers/${newspaper.fullName}/backlog`, {post: post.id})
-  commit('backlogAdd', {
-    fullName: newspaper.fullName,
-    post,
-    source
-  })
-
-  this.$ga.event({
-    eventCategory: 'Consider for newspaper',
-    eventAction: newspaper.fullName
-  })
-}
-
-export async function removeFromBacklog({ commit }, { newspaper, post }) {
-  // TODO to have better user experience, post can be removed immediately
-  // and reverted when api call fails
-  await this.$axios.delete(`/newspapers/${newspaper.fullName}/backlog`, { data: { post: post.id } })
-  commit('backlogRemove', {
-    fullName: newspaper.fullName,
-    postId: post.id,
-  })
-
-  this.$ga.event({
-    eventCategory: 'Stop considering for newspaper',
     eventAction: newspaper.fullName
   })
 }

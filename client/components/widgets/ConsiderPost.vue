@@ -63,8 +63,8 @@ export default {
       if (source !== undefined) {
         this.removeFromBacklog({
           newspaper,
-          post: this.post,
-          source
+          source,
+          postId: this.post.id
         })
       } else {
         this.addToBacklog({

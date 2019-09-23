@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -390,7 +390,15 @@ class Backlog(models.Model):
     editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True)
 
     @classmethod
-    def consider_post(cls, newspaper, post):
+    def append_post(cls, newspaper, post):
+        cls._consider_post(newspaper, post, prepend=False)
+
+    @classmethod
+    def prepend_post(cls, newspaper, post):
+        cls._consider_post(newspaper, post, prepend=True)
+
+    @classmethod
+    def _consider_post(cls, newspaper, post, prepend):
         if isinstance(post, int):
             post_id = post
         else:
@@ -399,9 +407,13 @@ class Backlog(models.Model):
         if cls.objects.filter(newspaper=newspaper, post_id=post_id).exists():
             return None
 
+        if prepend:
+            cls.objects.filter(newspaper=newspaper, publish_in__isnull=True).update(ordering=F('ordering') + 1)
+
         return cls.objects.create(
             newspaper=newspaper,
-            post_id=post_id
+            post_id=post_id,
+            ordering=0 if prepend else None
         )
 
 

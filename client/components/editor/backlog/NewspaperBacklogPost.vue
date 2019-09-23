@@ -331,7 +331,7 @@ export default {
     },
 
     removePost(postId) {
-      this.removeFromNewspaperBacklog({
+      this.removeFromBacklog({
         newspaper: this.newspaper,
         source: this.source,
         postId
@@ -339,7 +339,7 @@ export default {
     },
 
     ...mapActions([
-      'removeFromNewspaperBacklog', 'addLinkToBacklog',
+      'removeFromBacklog', 'addLinkToBacklog',
       'backlogMoveDown', 'backlogMoveUp'
     ]),
     ...mapMutations(['showError'])

@@ -90,13 +90,22 @@ const createStore = () => {
           posts.splice(idx, 1)
         }
       },
-      backlogAdd(state, { fullName, source, post }) {
+      backlogAppend(state, { fullName, source, post }) {
         const postBacklog = state.backlog[post.id] || {}
         Vue.set(state.backlog, post.id, { ...postBacklog, [fullName]: source })
 
         const newspaperBacklog = state.newspaperBacklog[fullName]
         if (newspaperBacklog) {
           newspaperBacklog[source].push({ post: post, editorial: null })
+        }
+      },
+      backlogPrepend(state, { fullName, source, post }) {
+        const postBacklog = state.backlog[post.id] || {}
+        Vue.set(state.backlog, post.id, { ...postBacklog, [fullName]: source })
+
+        const newspaperBacklog = state.newspaperBacklog[fullName]
+        if (newspaperBacklog) {
+          newspaperBacklog[source].unshift({ post: post, editorial: null })
         }
       },
       backlogMoveUp(state, { fullName, source, target, postId }) {

@@ -72,9 +72,9 @@ def subscriptions(request):
 @ajax_login_required
 def user_backlog(request):
     backlog = defaultdict(dict)
-    query = Backlog.objects.filter(
-        Q(newspaper__editor=request.user) |
-        Q(newspaper__coeditor__editor=request.user)).select_related('newspaper')
+    query = Backlog.objects \
+        .filter(Q(newspaper__editor=request.user) | Q(newspaper__coeditor__editor=request.user)) \
+        .select_related('newspaper')
     for bl in query:
         full_name = "{}/{}".format(bl.newspaper.editor.username, bl.newspaper.slug)
         backlog[str(bl.post_id)][full_name] = bl.publish_in or 0
@@ -341,7 +341,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
     if request.method == 'PUT':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
-        created = Backlog.consider_post(newspaper, post)
+        created = Backlog.prepend_post(newspaper, post)
         return HttpResponse(status=201 if created else 204)
 
     if request.method == 'DELETE':
@@ -379,7 +379,7 @@ def create_link(request, username, newspapeper_slug):
             'error': str(e)
         }, status=409)
 
-    created = Backlog.consider_post(newspaper, post)
+    created = Backlog.append_post(newspaper, post)
     return JsonResponse({
         'post': post.to_json() if created else None
     })
@@ -444,7 +444,7 @@ class EditorialsView(View):
                         et.save()
                 except ValueError:
                     et.delete()
-                    Backlog.consider_post(newspaper, et.post_id)
+                    Backlog.append_post(newspaper, et.post_id)
 
             for post_id in set(ids) - ids_in_db:
                 idx = ids.index(post_id)
@@ -499,7 +499,7 @@ class EditorialsView(View):
 
         for et in EditorialTweet.objects.filter(editorial=backlog.editorial):
             # put back tweers to backlog
-            Backlog.consider_post(newspaper, et.post_id)
+            Backlog.append_post(newspaper, et.post_id)
 
         backlog.editorial.delete()
         return HttpResponse(status=204)
