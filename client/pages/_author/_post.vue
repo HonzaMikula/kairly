@@ -36,7 +36,7 @@
         </no-ssr>
 
         <div v-if="post.content.protected && post.source">
-          <footer div="post-detail--footer">
+          <footer class="post-detail--footer">
             <a :href="post.source" class="read-full-article">{{ $t('Read full article') }}</a>
           </footer>
         </div>
