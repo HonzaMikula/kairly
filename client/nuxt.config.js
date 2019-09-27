@@ -29,10 +29,6 @@ module.exports = {
     }
     return h
   },
-  css: [
-    'medium-editor/dist/css/medium-editor.min.css',
-    'medium-editor/dist/css/themes/default.min.css',
-  ],
   /*
   ** Customize the progress bar color
   */
@@ -42,8 +38,8 @@ module.exports = {
   plugins: [
     '~/plugins/ignored-elements',
     '~/plugins/portal-vue',
-    {src: '~/plugins/vue-infinite-scroll', ssr: false},
-    {src: '~/plugins/medium-editor', ssr: false },
+    { src: '~/plugins/vue-infinite-scroll', ssr: false},
+    { src: '~/plugins/rich-editor', ssr: false },
     '~/plugins/vue-moment',
     '~/plugins/axios',
     '~/plugins/i18n.js',

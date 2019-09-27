@@ -13,13 +13,18 @@ ALLOWED_TAGS = [
     'a', 'abbr', 'acronym', 'b', 'br', 'blockquote', 'code', 'div', 'em',
     'h2', 'h3', 'h4',
     'i', 'img',
-    'li', 'ol', 'p', 'span', 'strong', 'u', 'ul'
+    'li', 'ol', 'p', 'span', 'strong', 'u', 'ul',
+    'figure',
+    'table', 'tbody', 'tr', 'td',
+    'oembed'
 ]
 ALLOWED_ATTRIBUTES = {
     'a': ['href', 'title'],
     'abbr': ['title'],
     'acronym': ['title'],
-    'img': ['src', 'alt', 'title', 'width', 'height']
+    'img': ['src', 'alt', 'title', 'width', 'height'],
+    'figure': ['class'],
+    'oembed': ['url']
 }
 # allow data URIs
 ALLOWED_PROTOCOLS = ['http', 'https', 'data']

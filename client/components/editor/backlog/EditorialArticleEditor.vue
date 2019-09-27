@@ -29,7 +29,7 @@
           type="text"
           :placeholder="$t('Title')"
         />
-        <medium-editor
+        <rich-editor
           v-model="content"
           :options="options"
         />
@@ -52,7 +52,7 @@ export default {
       title: this.editorial ? this.editorial.title : '',
       content: this.editorial ? this.editorial.content : '',
       options: {
-        placeholder: {text: this.$t('Editorial'), hideOnClick: false},
+        placeholder: this.$t('Editorial'),
       },
       editor: this.editorial ? this.editorial.author : this.$store.state.auth.user
     }
