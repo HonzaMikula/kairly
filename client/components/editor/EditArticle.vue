@@ -28,14 +28,14 @@
         </button-icon>
       </div>
 
-      <medium-editor
+      <rich-editor
         v-model="perex"
         :options="perexOptions"
        />
     </div>
 
     <div class="edit-article--content">
-      <medium-editor
+      <rich-editor
         v-model="content"
         :options="contentOptions"
       />
@@ -67,10 +67,10 @@ export default {
       perex: this.post ? this.post.content.perex : '',
       content: this.post ? this.post.content.content : '',
       perexOptions: {
-        placeholder: {text: 'Perex', hideOnClick: false},
+        placeholder: 'Perex',
       },
       contentOptions: {
-        placeholder: {text: 'Content', hideOnClick: false},
+        placeholder: 'Content',
       },
       normalPerexView: true
     }
