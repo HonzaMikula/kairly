@@ -12,8 +12,14 @@
 
 <script>
 import CKEditor from '@ckeditor/ckeditor5-vue';
-import BalloonBlockEditor from '@ckeditor/ckeditor5-build-balloon-block';
+import BalloonEditor from '@ckeditor/ckeditor5-editor-balloon/src/ballooneditor';
 
+import EssentialsPlugin from '@ckeditor/ckeditor5-essentials/src/essentials';
+import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
+import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
+import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+//import Base64UploadAdapter from '@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter';
 
 // const defaultOptions = {
 //   toolbar: {
@@ -24,7 +30,26 @@ import BalloonBlockEditor from '@ckeditor/ckeditor5-build-balloon-block';
 //   }
 // }
 
-const defaultOptions = {}
+const defaultOptions = {
+  plugins: [
+    EssentialsPlugin,
+    BoldPlugin,
+    ItalicPlugin,
+    LinkPlugin,
+    ParagraphPlugin
+    //Base64UploadAdapter
+  ],
+
+  toolbar: {
+    items: [
+        'bold',
+        'italic',
+        'link',
+        'undo',
+        'redo'
+    ]
+  }
+}
 
 export default {
   name: 'rich-editor',
@@ -43,7 +68,7 @@ export default {
 
   data() {
     return {
-      editor: BalloonBlockEditor,
+      editor: BalloonEditor,
       //content: this.value,
       editorConfig: {...defaultOptions, ...this.options},
       content: '',
