@@ -19,11 +19,6 @@ def JwtAuthenticationMiddleware(get_response):
             User = get_user_model()
             try:
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            except ExpiredSignatureError:
-                # TEMPORARY HACK, ACCEPT EXPIRED TOKENS
-                # BACAUSE OLD CLIENT MAKES INFINITE REDIRECT FOR SUCH TOKENS
-                logging.error("HACK: Expired token accepted")
-                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'], verify=False)
             except PyJWTError as e:
                 logging.error(str(e))
                 payload = None
