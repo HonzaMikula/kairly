@@ -249,7 +249,7 @@ export default {
     this.onResize() // and recompute for initial page
 
     if (this.loggedIn) {
-      this.$store.dispatch('getUserBacklog')
+      this.$store.dispatch('backlog/loadUserBacklog')
     }
   },
 

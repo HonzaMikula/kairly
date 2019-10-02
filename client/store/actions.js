@@ -1,26 +1,3 @@
-import Vue from 'vue'
-
-export async function getUserBacklog({ commit, state }) {
-  if (state.backlog) {
-    return state.backlog
-  }
-  const { backlog } = await this.$axios.$get('/backlog')
-  Object.entries(backlog).forEach(([postId, newspapers]) => {
-    Object.entries(newspapers).forEach(([newspaperId, value]) => {
-      if (value === 1) {
-        backlog[postId][newspaperId] = 'next'
-      } else if (value === 2) {
-        backlog[postId][newspaperId] = 'upcoming'
-      } else {
-        backlog[postId][newspaperId] = 'considered'
-      }
-    })
-  })
-
-  commit('backlog', backlog)
-  return backlog
-}
-
 export async function getSubscriptions({ commit, state }) {
   if (state.subscriptions) {
     return state.subscriptions
@@ -45,75 +22,7 @@ export async function getTransactions({ commit, state }) {
   return transactions
 }
 
-export async function loadTimeline({ commit, state }, { date, cachedOnly=false}) {
-  let cacheKey = date
-  // TODO check not only valid to but also change of hour or too old timeline
-  // but this is not important now
-  if (!cacheKey && state.today && state.today.validTo > (Date.now() / 1000)) {
-    // if today is requested (no date arg) then lookup to helper structure which
-    // keeps current value of "today" (mind that "today" may not match real today)
-    cacheKey = state.today.date
-  }
 
-  if (state.timeline[cacheKey]) {
-    return cacheKey
-  }
-
-  if (cachedOnly) {
-    return null
-  }
-
-  const { status, data } = await this.$axios.get('/timeline', {params: {date}})
-
-  if (status === 204) {
-    commit('timelineHasNoActiveSubscriptions')
-    return null
-  }
-
-  // group recommendations
-  data.issues.forEach(issue => {
-    const posts = []
-    const recommendedPosts = []
-    const recommendedIssues = []
-    issue.posts.forEach(log => {
-      if (log.post.type === 'recommendation-post') {
-        recommendedPosts.push(log.post)
-      } else if (log.post.type === 'recommendation-issue') {
-        recommendedIssues.push(log.post)
-      } else {
-        posts.push(log)
-      }
-    })
-    if (recommendedPosts.length || recommendedIssues.length) {
-      const sample = recommendedPosts.length ? recommendedPosts[0] : recommendedIssues[0]
-      posts.push({
-        post: {
-          author: sample.author,
-          id: `wrapper-${sample.id}`,
-          type: 'recommendations',
-          posts: recommendedPosts,
-          issues: recommendedIssues,
-        },
-        editorial: null
-      })
-      issue.posts = posts
-    }
-  })
-
-  if (data.recommended) {
-    data.recommended.forEach(id => commit('recommendedIssue', {id, value: true}))
-  }
-
-  if (!date) {
-    commit('today', {date: data.date, validTo: data.validTo})
-  }
-  commit('timelineReceived', data)
-  return data.date
-}
-
-export const invalidateTimeline = ({ commit }) => {
-  commit('invalidateTimeline')
-}
 
 export async function getNewspaperDetail({ commit }, { newspaperId, issue }) {
   const data = await this.$axios.$get(`/newspapers/${newspaperId}`, { params: {issue} })
@@ -139,129 +48,8 @@ export async function getAuthor({ commit, state, dispatch }, authorId) {
   return data
 }
 
-export async function loadNewspaperBacklog({ commit, state, dispatch }, fullName) {
-  const { backlog, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
-  let upcoming = []
-  let next = []
-  let considered = []
-  backlog.forEach(log => {
-    if (log.publish === 1) { upcoming.push(log) }
-    else if (log.publish === 2) { next.push(log) }
-    else { considered.push(log) }
-  })
-
-  commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
-  commit('newspaperBacklogPosts', { fullName, section: 'upcoming', posts: upcoming})
-  commit('newspaperBacklogPosts', { fullName, section: 'next', posts: next })
-  commit('newspaperBacklogPosts', { fullName, section: 'considered', posts: considered })
-}
-
-async function _postBackLog(state, fullName) {
-  const backlog = state.newspaperBacklog[fullName]
-  await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
-    upcoming: backlog.upcoming.map(log => log.post.id),
-    next: backlog.next.map(log => log.post.id),
-    considered: backlog.considered.map(log => log.post.id)
-  })
-}
-
-export async function backlogMoveUp({ commit, state }, { newspaper, source, target, postId }) {
-  const { fullName } = newspaper
-  commit('backlogMoveUp', { fullName, source, target, postId})
-  _postBackLog.call(this, state, fullName)
-}
-
-export async function backlogMoveDown({ commit, state }, { newspaper, source, target, postId }) {
-  const { fullName } = newspaper
-  commit('backlogMoveDown', { fullName, source, target, postId})
-  _postBackLog.call(this, state, fullName)
-}
-
-let reorderPostScheduled = false
-
-export async function backlogReorder({ commit, state }, { newspaper, source, posts }) {
-  const { fullName } = newspaper
-  commit('backlogReorder', { fullName, source, posts})
-  if (!reorderPostScheduled) {
-    reorderPostScheduled = true
-    Vue.nextTick(() => {
-      reorderPostScheduled = false
-      _postBackLog.call(this, state, fullName)
-    })
-  }
-}
-
-export async function addToBacklog({ commit }, { newspaper, post, source }) {
-  // TODO to have better user experience, post can be added immediately
-  // and reverted when api call fails
-  await this.$axios.put(`/newspapers/${newspaper.fullName}/backlog`, {post: post.id})
-  commit('backlogPrepend', {
-    fullName: newspaper.fullName,
-    post,
-    source
-  })
-
-  this.$ga.event({
-    eventCategory: 'Consider for newspaper',
-    eventAction: newspaper.fullName
-  })
-}
-
-export async function removeFromBacklog({ commit }, { newspaper, source, postId }) {
-  // TODO to have better user experience, post can be removed immediately
-  // and reverted when api call fails
-  const { fullName } = newspaper
-  await this.$axios.delete(`/newspapers/${fullName}/backlog`, { data: { post: postId } })
-
-  commit('backlogRemove', {
-    fullName: fullName,
-    source,
-    postId,
-  })
-
-  this.$ga.event({
-    eventCategory: 'Stop considering for newspaper',
-    eventAction: fullName
-  })
-}
-
-export async function addLinkToBacklog({ commit, state }, { newspaper, url }) {
-  const { fullName } = newspaper
-  const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
-  if (resp.post) {
-    commit('backlogAppend', {
-      fullName,
-      source: 'considered',
-      post: resp.post
-    })
-
-    this.$ga.event({
-      eventCategory: 'Consider for newspaper',
-      eventAction: fullName
-    })
-  }
-}
-
-export async function saveEditorial({ commit, state }, { newspaperId, source, postId, editorial: payload}) {
-  const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, payload)
-  commit('updateEditorial', { fullName: newspaperId, source, postId, editorial })
-  return editorial
-}
-
-export async function saveEditorialPosition({ commit, state }, { newspaperId, source, postId, position }) {
-  const editorial = await this.$axios.$patch(`/newspapers/${newspaperId}/editorials/${postId}`, {position})
-  commit('updateEditorial', { fullName: newspaperId, source, postId, editorial })
-  return editorial
-}
-
-export async function removeEditorial({ commit, state }, { newspaperId, source, postId}) {
-  await this.$axios.$delete(`/newspapers/${newspaperId}/editorials/${postId}`)
-  commit('updateEditorial', { fullName: newspaperId, source, postId, editorial: null })
-}
-
-
 export async function subscribeNewspaper({ commit }, { fullName, donation, allowSuspended=false }) {
-  commit('invalidateTimeline')
+  commit('timeline/invalidate')
 
   const body = {
     donation
@@ -320,7 +108,7 @@ export async function loadAuthorPosts({ commit }, { authorId, cursor: requestedC
 }
 
 export async function unsubscribeNewspaper({ commit }, { fullName }) {
-  commit('invalidateTimeline')
+  commit('timeline/invalidate')
 
   const { subscription } = await this.$axios.$delete(`/newspapers/${fullName}/subscription`)
   commit('newspaperSubscription', {
@@ -337,7 +125,7 @@ export async function unsubscribeNewspaper({ commit }, { fullName }) {
 }
 
 export async function subscribeAuthor({ commit }, { author, donation, periodicity, keepStatus=false, allowSuspended=false }) {
-  commit('invalidateTimeline')
+  commit('timeline/invalidate')
 
   const body = { periodicity, donation }
   if (keepStatus) {
@@ -364,7 +152,7 @@ export async function subscribeAuthor({ commit }, { author, donation, periodicit
 }
 
 export async function unsubscribeAuthor({ commit }, { author }) {
-  commit('invalidateTimeline')
+  commit('timeline/invalidate')
 
   const { subscription } = await this.$axios.$delete(`/authors/${author.id}/subscription`)
   commit('authorSubscription', {
@@ -421,15 +209,9 @@ export const newspaperUpdated = ({ commit }, newspaper) => {
   commit('newspaper', { newspaper })
 }
 
-export const expandIssue = ({ commit }, issueId) => {
-  commit('expandIssue', { issueId })
-
-  this.$ga.event({
-    eventCategory: 'Show more (issue)',
-    eventAction: issueId
-  })
-}
 
 export const afterLogout = ({ commit }) => {
+  commit('backlog/resetState')
+  commit('timeline/resetState')
   commit('resetState')
 }

@@ -126,7 +126,7 @@ export default {
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn,
-      expandedIssues: state => state.timelineExpandedIssues
+      expandedIssues: state => state.timeline.expandedIssues
     }),
 
     loading() {
@@ -136,7 +136,7 @@ export default {
     timeSlots() {
       if (this.loading) { return [] }
 
-      const { issues } = this.$store.state.timeline[this.date]
+      const { issues } = this.$store.state.timeline.timeline[this.date]
       const timeSlots = []
       let slot = null
 
@@ -154,7 +154,7 @@ export default {
     links() {
       if (this.loading) { return {} }
 
-      return this.$store.state.timeline[this.date].links
+      return this.$store.state.timeline.timeline[this.date].links
     },
 
     dayTitle() {
@@ -171,7 +171,7 @@ export default {
     loggedIn(value) {
       if (value) {
         this.loadTimeline()
-        this.$store.dispatch('getUserBacklog')
+        this.$store.dispatch('backlog/loadUserBacklog')
       } else {
         this.date = null
         this.showWelcome = false
@@ -190,12 +190,12 @@ export default {
 
   methods: {
     async loadTimeline() {
-      if (this.loggedIn && !this.$store.state.timelineHasNoActiveSubscriptions) {
+      if (this.loggedIn && !this.$store.state.timeline.hasNoActiveSubscriptions) {
         // TODO load timeline and backlog in parallel
 
         const { date } = this.$route.params
 
-        this.date = await this.$store.dispatch('loadTimeline', { date })
+        this.date = await this.$store.dispatch('timeline/load', { date })
         if (this.date === null) {
           this.showWelcome = true
         }
@@ -215,7 +215,7 @@ export default {
       }
     }
 
-    if (state.timelineHasNoActiveSubscriptions) {
+    if (state.timeline.hasNoActiveSubscriptions) {
       return {
         showWelcome: true, // don't change this when user subscribe on Welcome page
         date: null
@@ -232,7 +232,7 @@ export default {
     */
     return {
       showWelcome: false,
-      date: await store.dispatch('loadTimeline', { date, cachedOnly: true })
+      date: await store.dispatch('timeline/load', { date, cachedOnly: true })
     }
   },
 
@@ -242,7 +242,7 @@ export default {
         this.loadTimeline()
       }
       if (this.loggedIn) {
-        this.$store.dispatch('getUserBacklog')
+        this.$store.dispatch('backlog/loadUserBacklog')
       }
     }
   },

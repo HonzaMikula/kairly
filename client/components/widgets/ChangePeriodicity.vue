@@ -76,7 +76,9 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showError']),
+    ...mapMutations({
+      showError: 'messages/error',
+    }),
 
     changePeriodicity() {
       this.$emit('changePeriodicity', this.frequency, this.dow, this.time)

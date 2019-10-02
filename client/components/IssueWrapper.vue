@@ -97,7 +97,7 @@ export default {
         return true
       }
       else {
-        return !!this.$store.state.timelineExpandedIssues[this.issue.id]
+        return !!this.$store.state.timeline.expandedIssues[this.issue.id]
       }
     },
 
@@ -117,7 +117,7 @@ export default {
 
   methods: {
     expandIssue() {
-      this.$store.dispatch('expandIssue', this.issue.id)
+      this.$store.dispatch('timeline/expandIssue', this.issue.id)
     }
   }
 }

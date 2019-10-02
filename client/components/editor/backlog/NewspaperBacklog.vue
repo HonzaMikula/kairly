@@ -69,7 +69,7 @@ export default {
 
   computed: {
     backlog() {
-      return this.$store.state.newspaperBacklog[this.newspaper.fullName]
+      return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
     },
     currentMonth() {
       return this.backlog ? this.backlog.currentMonthStats : []
@@ -101,7 +101,9 @@ export default {
       }
     },
 
-    ...mapActions(['addLinkToBacklog'])
+    ...mapActions({
+      addLinkToBacklog: 'backlog/addLink'
+    })
   }
 }
 </script>

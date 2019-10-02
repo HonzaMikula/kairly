@@ -61,7 +61,10 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showError', 'showSuccess']),
+    ...mapMutations({
+      showError: 'messages/error',
+      showSuccess: 'messages/success'
+    }),
 
     async submit() {
       if (this.newPassword1 != this.newPassword2) {

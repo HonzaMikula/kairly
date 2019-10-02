@@ -288,7 +288,7 @@ export default {
       this.progress += 1
 
       this.$store.commit('updateCredits', credits)
-      this.$store.commit('invalidateTimeline')
+      this.$store.commit('timeline/invalidate')
       this.$store.commit('invalidateSubscriptions')
       this.$router.push("/")
     }

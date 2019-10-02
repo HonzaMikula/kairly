@@ -17,7 +17,9 @@ export default {
   },
 
   methods: {
-     ...mapMutations(['showError']),
+    ...mapMutations({
+      showError: 'messages/error',
+    }),
 
     importOpml(ev) {
       const f = event.target.files[0]
