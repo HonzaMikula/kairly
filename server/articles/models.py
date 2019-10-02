@@ -391,11 +391,11 @@ class Backlog(models.Model):
 
     @classmethod
     def append_post(cls, newspaper, post):
-        cls._consider_post(newspaper, post, prepend=False)
+        return cls._consider_post(newspaper, post, prepend=False)
 
     @classmethod
     def prepend_post(cls, newspaper, post):
-        cls._consider_post(newspaper, post, prepend=True)
+        return cls._consider_post(newspaper, post, prepend=True)
 
     @classmethod
     def _consider_post(cls, newspaper, post, prepend):

@@ -82,7 +82,7 @@ export default {
     addTweetToEditorial(post) {
       this.tweets.push(post)
       this.saveEditorial()
-      this.$store.commit('backlogRemove', {
+      this.$store.commit('backlog/remove', {
         fullName: this.newspaper.fullName,
         source: 'considered',
         postId: post.id,
@@ -93,7 +93,7 @@ export default {
       const idx = this.tweets.findIndex(p => p.id === post.id)
       this.tweets.splice(idx, 1)
       this.saveEditorial()
-      this.$store.commit('backlogAppend', {
+      this.$store.commit('backlog/append', {
         fullName: this.newspaper.fullName,
         source: 'considered',
         post: {post, editorial: null, publish: null},

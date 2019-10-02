@@ -270,7 +270,7 @@ export default {
     },
 
     async saveEditorial(payload) {
-      await this.$store.dispatch('saveEditorial', {
+      await this.$store.dispatch('backlog/saveEditorial', {
         newspaperId: this.newspaper.fullName,
         source: this.source,
         postId: this.log.post.id,
@@ -288,7 +288,7 @@ export default {
     },
 
     removeEditorial() {
-      this.$store.dispatch('removeEditorial', {
+      this.$store.dispatch('backlog/removeEditorial', {
         newspaperId: this.newspaper.fullName,
         source: this.source,
         postId: this.log.post.id,
@@ -302,7 +302,7 @@ export default {
         this.editorPosition = editorPosition === 'left' ? 'right': 'left'
       } else {
         // change existing editorial
-        this.$store.dispatch('saveEditorialPosition', {
+        this.$store.dispatch('backlog/saveEditorialPosition', {
           newspaperId: newspaper.fullName,
           source: this.source,
           postId: log.post.id,
@@ -338,11 +338,15 @@ export default {
       })
     },
 
-    ...mapActions([
-      'removeFromBacklog', 'addLinkToBacklog',
-      'backlogMoveDown', 'backlogMoveUp'
-    ]),
-    ...mapMutations(['showError'])
+    ...mapActions({
+      removeFromBacklog: 'backlog/remove',
+      addLinkToBacklog: 'backlog/addLink',
+      backlogMoveDown: 'backlog/moveDown',
+      backlogMoveUp: 'backlog/moveUp'
+    }),
+    ...mapMutations({
+      showError: 'messages/error'
+    })
   }
 }
 </script>

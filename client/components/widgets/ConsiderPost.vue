@@ -43,7 +43,7 @@ export default {
 
   computed: {
     ...mapState({
-      backlog: state => state.backlog
+      backlog: state => state.backlog.userBacklog
     }),
 
     ...mapGetters(['userNewspapers']),
@@ -76,7 +76,10 @@ export default {
       document.activeElement.blur()
     },
 
-    ...mapActions(['addToBacklog', 'removeFromBacklog'])
+    ...mapActions({
+      addToBacklog: 'backlog/add',
+      removeFromBacklog: 'backlog/remove'
+    })
   }
 }
 </script>

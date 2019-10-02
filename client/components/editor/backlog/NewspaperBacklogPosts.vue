@@ -90,9 +90,9 @@ export default {
     }
   },
 
-  methods: mapActions([
-      'backlogReorder'
-  ]),
+  methods: mapActions({
+    backlogReorder: 'backlog/reorder'
+  }),
 
   mounted() {
     this.isTouchDevice = isTouchDevice()

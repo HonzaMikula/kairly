@@ -307,7 +307,7 @@ export default {
 
   async mounted() {
     if (this.loggedIn) {
-      await this.$store.dispatch('getUserBacklog')
+      await this.$store.dispatch('backlog/loadUserBacklog')
     }
   },
 }

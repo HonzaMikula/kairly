@@ -1,274 +1,122 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 
 import * as actions from './actions'
-import { analyticsMiddleware } from 'vue-analytics'
 
-// TODO use Immer for state manipulation. Or better, modular state from Nuxt
-
-const createStore = () => {
-  return new Vuex.Store({
-    state: {
-      subscriptions: null,
-      backlog: null,
-      newspapers: {},
-      newspaperBacklog: {},
-      authors: {},
-      today: null,
-      timelineHasNoActiveSubscriptions: false,
-      timelineExpandedIssues: {},
-      timeline: {
-        // of date : [ issues ]
-      },
-      recommendedIssues: {},
-      messages: {
-        error: null,
-        success: null,
-      },
-      locale: null,
-    },
-
-    mutations: {
-      resetState(state) {
-          state.subscriptions = null
-          state.backlog = null
-          state.newspapers = {}
-          state.authors = {}
-          state.today = null
-          state.timelineHasNoActiveSubscriptions = false
-          state.timelineExpandedIssues = {}
-          state.timeline = {}
-          state.recommendedIssues = {}
-      },
-      invalidateTimeline(state) {
-        state.timelineHasNoActiveSubscriptions = false
-        state.timeline = {}
-      },
-      invalidateSubscriptions(state) {
-        state.subscriptions = null
-      },
-
-      updateCredits(state, credits) {
-        state.auth.user.credits = credits
-      },
-      backlog(state, backlog) {
-        state.backlog = backlog
-      },
-      backlogSetPostState(state, { postId, newspaperId, val }) {
-        const currNewspapers = state.backlog[postId] || {}
-        Vue.set(state.backlog, postId, {...currNewspapers, [newspaperId]: val})
-      },
-      newspaperBacklogPosts( state, { fullName, section, posts }) {
-        if (state.newspaperBacklog[fullName]) {
-          Vue.set(state.newspaperBacklog[fullName], section, posts)
-        } else {
-          Vue.set(state.newspaperBacklog, fullName, { [section]: posts })
-        }
-      },
-      newspaperBacklogStats( state, { fullName, currentMonthStats}) {
-        if (state.newspaperBacklog[fullName]) {
-          Vue.set(state.newspaperBacklog[fullName], 'currentMonthStats', currentMonthStats)
-        } else {
-          Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
-        }
-      },
-      updateEditorial(state, { fullName, source, postId, editorial }) {
-        const backlog = state.newspaperBacklog[fullName]
-        let posts = backlog[source]
-        const idx = posts.findIndex(log => log.post.id === postId)
-        posts[idx].editorial = editorial
-      },
-      backlogRemove(state, { fullName, source, postId }) {
-        const postBacklog = state.backlog[postId] || {}
-        delete postBacklog[fullName]
-        Vue.set(state.backlog, postId, {...postBacklog})
-
-        const newspaperBacklog = state.newspaperBacklog[fullName]
-        if (newspaperBacklog) {
-          let posts = newspaperBacklog[source]
-          const idx = posts.findIndex(log => log.post.id === postId)
-          posts.splice(idx, 1)
-        }
-      },
-      backlogAppend(state, { fullName, source, post }) {
-        const postBacklog = state.backlog[post.id] || {}
-        Vue.set(state.backlog, post.id, { ...postBacklog, [fullName]: source })
-
-        const newspaperBacklog = state.newspaperBacklog[fullName]
-        if (newspaperBacklog) {
-          newspaperBacklog[source].push({ post: post, editorial: null })
-        }
-      },
-      backlogPrepend(state, { fullName, source, post }) {
-        const postBacklog = state.backlog[post.id] || {}
-        Vue.set(state.backlog, post.id, { ...postBacklog, [fullName]: source })
-
-        const newspaperBacklog = state.newspaperBacklog[fullName]
-        if (newspaperBacklog) {
-          newspaperBacklog[source].unshift({ post: post, editorial: null })
-        }
-      },
-      backlogMoveUp(state, { fullName, source, target, postId }) {
-        const backlog = state.newspaperBacklog[fullName]
-        let posts = backlog[source]
-        const idx = posts.findIndex(log => log.post.id === postId)
-        const post = posts[idx]
-        if (idx === 0 || target !== null) {
-          if (target === null) {
-            target = (source === 'considered' ? 'next' : 'upcoming')
-          }
-          const targetPosts = backlog[target]
-          posts.splice(idx, 1)
-          targetPosts.push(post)
-        } else {
-          Vue.set(posts, idx, posts[idx - 1])
-          Vue.set(posts, idx - 1, post)
-        }
-      },
-      backlogMoveDown(state, { fullName, source, target, postId }) {
-        const backlog = state.newspaperBacklog[fullName]
-        let posts = backlog[source]
-        const idx = posts.findIndex(log => log.post.id === postId)
-        const post = posts[idx]
-        if (idx === posts.length - 1 || target !== null) {
-          if (target === null) {
-            target =  source == 'upcoming' ? 'next' : 'considered'
-          }
-          const targetPosts = backlog[target]
-          posts.splice(idx, 1)
-          targetPosts.unshift(post)
-        } else {
-          Vue.set(posts, idx, posts[idx + 1])
-          Vue.set(posts, idx + 1, post)
-        }
-      },
-      backlogReorder(state, { fullName, source, posts }) {
-        const backlog = state.newspaperBacklog[fullName]
-        backlog[source] = posts
-      },
-      subscriptions(state, subscriptions) {
-        state.subscriptions = subscriptions
-      },
-      newspaperSubscription(state, {subscription, fullName}) {
-        if (state.subscriptions) {
-          if (subscription) {
-            state.subscriptions = {
-              ...state.subscriptions,
-              newspapers: {...state.subscriptions.newspapers, ...subscription}
-            }
-          } else {
-              Vue.delete(state.subscriptions.newspapers, fullName)
-          }
-        }
-      },
-      authorSubscription(state, { subscription, authorId}) {
-        if (state.subscriptions) {
-          if (subscription) {
-            state.subscriptions = {
-              ...state.subscriptions,
-              authors: {...state.subscriptions.authors, ...subscription}
-            }
-          } else {
-              Vue.delete(state.subscriptions.authors, authorId)
-          }
-        }
-      },
-      appendOwnedNewspaper(state, { newspaper }) {
-        state.auth.user.newspapers.push(newspaper)
-      },
-      removeNewspaper(state, { newspaper }) {
-        // remove from owned
-        let idx = state.auth.user.newspapers.findIndex(n => n.fullName === newspaper.fullName)
-        if (idx !== -1) {
-          state.auth.user.newspapers.splice(idx, 1)
-        }
-        // remove from subscribed if loaded
-        if (state.subscriptions && state.subscriptions.newspapers[newspaper.fullName]) {
-          Vue.delete(state.subscriptions.newspapers, newspaper.fullName)
-        }
-
-        Vue.delete(state.newspapers, newspaper.fullName)
-      },
-      newspaper(state, { newspaper }) {
-        state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
-      },
-      timelineReceived(state, { date, issues, links }) {
-        Vue.set(state.timeline, date, { issues, links })
-      },
-      timelineHasNoActiveSubscriptions(state) {
-        state.timelineHasNoActiveSubscriptions = true
-      },
-      today(state, value) {
-        state.today = value
-      },
-      recommendedIssue(state, { id, value }) {
-        Vue.set(state.recommendedIssues, id, value)
-      },
-      expandIssue(state, { issueId }) {
-        state.timelineExpandedIssues = {
-          ...state.timelineExpandedIssues,
-          [issueId]: true
-        }
-      },
-      showError(state, msg) {
-        state.messages = {...state.messages, error: msg }
-      },
-      showSuccess(state, msg) {
-        state.messages = {...state.messages, success: msg }
-      },
-      setLang (state, locale) {
-        state.locale = locale
-      }
-    },
-
-    getters: {
-      // user: state => state.auth.user,
-      userNewspapers: state => state.auth.user ? state.auth.user.newspapers : [],
-      newspaper: state => id => state.newspapers[id],
-      // getNewspaperBacklog: state => fullName => state.newspaperBacklog[fullName],
-      getNewspaperSubscription: state => newspaper => state.subscriptions === null ? false : state.subscriptions.newspapers[newspaper.fullName],
-      getAuthorSubscription: state => author => {
-        if (state.subscriptions === null) {
-          return null
-        }
-        return state.subscriptions.authors[author.id]
-      },
-      monthSpending: state => {
-        if (!state.subscriptions) return null
-        let cents = 0
-        Object.entries(state.subscriptions.newspapers).forEach(([fullName, s]) => {
-          const newspaper = state.newspapers[fullName]
-          cents += Math.round(parseFloat(newspaper.price) * 100)
-          if (s.donation) {
-            cents += Math.round(parseFloat(s.donation) * 100)
-          }
-        })
-        Object.values(state.subscriptions.authors).forEach(s => {
-          cents += Math.round(parseFloat(s.author.price) * 100)
-          if (s.donation) {
-            cents += Math.round(parseFloat(s.donation) * 100)
-          }
-        })
-        const mod = cents % 100
-        return ~~(cents / 100) + "." + (mod < 10 ? "0" : "") + mod
-      },
-      hasSuspendedSubscription: state => {
-        if (!state.subscriptions) {
-          return false
-        }
-        return !!(
-          Object.values(state.subscriptions.newspapers).find(s => s.state === 'suspended') ||
-          Object.values(state.subscriptions.authors).find(s => s.state === 'suspended')
-        )
-      }
-    },
-
-    actions,
-    strict: process.env.NODE_ENV !== 'production',
-    plugins: [
-      analyticsMiddleware
-    ]
-  })
+export const state = () => {
+  return {
+    subscriptions: null,
+    newspapers: {},
+    authors: {},
+    recommendedIssues: {},
+    locale: null,
+  }
 }
 
-export default createStore
+export const mutations = {
+  resetState(state) {
+    state.subscriptions = null
+    state.newspapers = {}
+    state.authors = {}
+    state.recommendedIssues = {}
+  },
+  updateCredits(state, credits) {
+    state.auth.user.credits = credits
+  },
+  subscriptions(state, subscriptions) {
+    state.subscriptions = subscriptions
+  },
+  invalidateSubscriptions(state) {
+    state.subscriptions = null
+  },
+  newspaperSubscription(state, {subscription, fullName}) {
+    if (state.subscriptions) {
+      if (subscription) {
+        state.subscriptions = {
+          ...state.subscriptions,
+          newspapers: {...state.subscriptions.newspapers, ...subscription}
+        }
+      } else {
+        Vue.delete(state.subscriptions.newspapers, fullName)
+      }
+    }
+  },
+  authorSubscription(state, { subscription, authorId}) {
+    if (state.subscriptions) {
+      if (subscription) {
+        state.subscriptions = {
+          ...state.subscriptions,
+          authors: {...state.subscriptions.authors, ...subscription}
+        }
+      } else {
+        Vue.delete(state.subscriptions.authors, authorId)
+      }
+    }
+  },
+  appendOwnedNewspaper(state, { newspaper }) {
+    state.auth.user.newspapers.push(newspaper)
+  },
+  removeNewspaper(state, { newspaper }) {
+    // remove from owned
+    let idx = state.auth.user.newspapers.findIndex(n => n.fullName === newspaper.fullName)
+    if (idx !== -1) {
+      state.auth.user.newspapers.splice(idx, 1)
+    }
+    // remove from subscribed if loaded
+    if (state.subscriptions && state.subscriptions.newspapers[newspaper.fullName]) {
+      Vue.delete(state.subscriptions.newspapers, newspaper.fullName)
+    }
+
+    Vue.delete(state.newspapers, newspaper.fullName)
+  },
+  newspaper(state, { newspaper }) {
+    state.newspapers = {...state.newspapers, [newspaper.fullName]: newspaper}
+  },
+  recommendedIssue(state, { id, value }) {
+    Vue.set(state.recommendedIssues, id, value)
+  },
+  setLang (state, locale) {
+    state.locale = locale
+  }
+}
+
+export const getters = {
+  // user: state => state.auth.user,
+  userNewspapers: state => state.auth.user ? state.auth.user.newspapers : [],
+  newspaper: state => id => state.newspapers[id],
+  // getNewspaperBacklog: state => fullName => state.newspaperBacklog[fullName],
+  getNewspaperSubscription: state => newspaper => state.subscriptions === null ? false : state.subscriptions.newspapers[newspaper.fullName],
+  getAuthorSubscription: state => author => {
+    if (state.subscriptions === null) {
+      return null
+    }
+    return state.subscriptions.authors[author.id]
+  },
+  monthSpending: state => {
+    if (!state.subscriptions) return null
+    let cents = 0
+    Object.entries(state.subscriptions.newspapers).forEach(([fullName, s]) => {
+      const newspaper = state.newspapers[fullName]
+      cents += Math.round(parseFloat(newspaper.price) * 100)
+      if (s.donation) {
+        cents += Math.round(parseFloat(s.donation) * 100)
+      }
+    })
+    Object.values(state.subscriptions.authors).forEach(s => {
+      cents += Math.round(parseFloat(s.author.price) * 100)
+      if (s.donation) {
+        cents += Math.round(parseFloat(s.donation) * 100)
+      }
+    })
+    const mod = cents % 100
+    return ~~(cents / 100) + "." + (mod < 10 ? "0" : "") + mod
+  },
+  hasSuspendedSubscription: state => {
+    if (!state.subscriptions) {
+      return false
+    }
+    return !!(
+      Object.values(state.subscriptions.newspapers).find(s => s.state === 'suspended') ||
+      Object.values(state.subscriptions.authors).find(s => s.state === 'suspended')
+    )
+  }
+}

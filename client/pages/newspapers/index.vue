@@ -172,7 +172,7 @@ export default {
     },
 
     ...mapState({
-      backlog: state => state.backlog,
+      backlog: state => state.backlog.userBacklog,
       user: state => state.auth.user
     })
   },
@@ -220,13 +220,16 @@ export default {
       this.selectNewspaper(newspaper)
     },
 
-    ...mapActions(['deleteNewspaper', 'loadNewspaperBacklog'])
+    ...mapActions({
+      deleteNewspaper: 'deleteNewspaper',
+      loadNewspaperBacklog: 'backlog/loadNewspaperBacklog'
+    })
   },
 
   async fetch({ store, redirect }) {
     const { user } = store.state.auth
 
-    await store.dispatch('getUserBacklog')
+    await store.dispatch('backlog/loadUserBacklog')
 
     const newspaperIds = user.newspapers.map(newspaper => newspaper.fullName)
     await store.dispatch('getNewspapers', newspaperIds)

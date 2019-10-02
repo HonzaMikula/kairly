@@ -42,12 +42,13 @@ export default {
 
   watch: {
     '$route' (to, from) {
-      this.showError(null)
-      this.showSuccess(null)
+      this.clearMessages()
     }
   },
 
-  methods: mapMutations(['showError', 'showSuccess']),
+  methods: mapMutations({
+    clearMessages: 'messages/clear',
+  })
 }
 </script>
 
