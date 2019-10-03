@@ -1,7 +1,7 @@
 import logging
 
 import jwt
-from jwt.exceptions import PyJWTError, ExpiredSignatureError
+from jwt.exceptions import PyJWTError
 
 
 from pytz import timezone, UnknownTimeZoneError
@@ -15,13 +15,16 @@ def JwtAuthenticationMiddleware(get_response):
     def middleware(request):
         user = None
         if 'HTTP_AUTHORIZATION' in request.META:
-            bearer, token = request.META['HTTP_AUTHORIZATION'].split(' ', maxsplit=1)
-            User = get_user_model()
             try:
+                bearer, token = request.META['HTTP_AUTHORIZATION'].split(' ', maxsplit=1)
+                User = get_user_model()
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             except PyJWTError as e:
                 logging.error(str(e))
                 payload = None
+            except ValueError:
+                # wrong header, can't split
+                payload - None
 
             if payload:
                 try:
