@@ -14,8 +14,8 @@ ALLOWED_TAGS = [
     'h2', 'h3', 'h4',
     'i', 'img',
     'li', 'ol', 'p', 'span', 'strong', 'u', 'ul',
-    'figure',
-    'table', 'tbody', 'tr', 'td',
+    'figure', 'figcaption',
+    'table', 'tbody', 'thead', 'tr', 'td', 'th',
     'oembed'
 ]
 ALLOWED_ATTRIBUTES = {
