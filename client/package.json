@@ -36,25 +36,25 @@
     "jwt-decode": "^2.2.0",
     "medium-editor": "^5.23.3",
     "npm": "^6.11.3",
-    "nuxt": "^2.9.2",
+    "nuxt": "^2.10.0",
     "portal-vue": "^2.1.6",
     "vue-i18n": "^8.14.1",
     "vue-infinite-scroll": "^2.0.2",
     "vue-moment": "^4.0.0",
     "vue-moment-jalaali": "^2.0.0",
     "vue-picture-input": "^2.1.6",
-    "vuedraggable": "^2.23.1"
+    "vuedraggable": "^2.23.2"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
     "babel-eslint": "^10.0.3",
-    "eslint": "^5.16.0",
-    "eslint-loader": "^2.2.1",
+    "eslint": "^6.5.1",
+    "eslint-loader": "^3.0.2",
     "eslint-plugin-vue": "^5.2.3",
     "gettext-vue": "^0.3.1",
     "node-reset-scss": "^1.0.1",
     "node-sass": "^4.12.0",
-    "sass-loader": "^7.2.0",
+    "sass-loader": "^8.0.0",
     "xgettext-template": "^3.4.2"
   }
 }
