@@ -12,16 +12,88 @@
           </li>
 
           <li class="subscription">
-            <nuxt-link :to="{name: 'subscription-newspapers'}" title="Subscriptions">
+            <nuxt-link 
+              :to="{name: 'subscription-newspapers'}"
+              :class="{'is-active': isSubscriptionRoute}"
+              title="Subscriptions">
               <span>{{ $t('Subscriptions') }}{{ hasSuspendedSubscription ? '*' : ''}}</span>
             </nuxt-link>
           </li>
 
           <li class="explore">
-            <nuxt-link :to="{name: 'explore-tab'}" title="Explore">
+            <nuxt-link 
+              :to="{name: 'explore-tab'}"
+              title="Explore">
               <span>{{ $t('Explore') }}</span>
             </nuxt-link>
           </li>
+
+          <li class="posts-newspapers">
+            <nuxt-link 
+              to="/newspapers"
+              :class="{'is-active': isNewspapersPostsRoute}"
+              title="Newspapers & Posts">
+              <span>{{ $t('Newspapers & Posts') }}</span>
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
+
+      <nav 
+        v-if="isSubscriptionRoute || isNewspapersPostsRoute"
+        class="app-header--sub-navigation">
+        <ul>
+          <template v-if="isSubscriptionRoute">
+            <li>
+              <nuxt-link to="/subscription/newspapers">
+                {{ $t('Newspapers') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/subscription/authors">
+                {{ $t('Authors') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/import">
+                {{ $t('Import RSS') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/user/transactions/upcoming">
+                {{ $t('Credits') }}
+              </nuxt-link>
+            </li>
+          </template>
+
+          <template v-if="isNewspapersPostsRoute">
+            <li>
+              <nuxt-link to="/newspapers">
+                {{ $t('Newspapers') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/posts/create/article">
+                {{ $t('Write a post') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/posts">
+                {{ $t('Draft posts') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/posts/published">
+                {{ $t('Published posts') }}
+              </nuxt-link>
+            </li>
+          </template>
         </ul>
       </nav>
 
@@ -126,7 +198,24 @@ export default {
       currentLocale: state => state.locale || 'en'
     }),
 
-    ...mapGetters(['hasSuspendedSubscription'])
+    ...mapGetters(['hasSuspendedSubscription']),
+
+    topRoute() {
+      const routes = this.$route.path.split('/')
+      
+      if (routes[1] == '') {
+        return '/'
+      }
+      return routes[1]
+    },
+
+    isSubscriptionRoute() {
+      return ['subscription', 'import', 'user'].includes(this.topRoute)
+    },
+
+    isNewspapersPostsRoute() {
+      return ['posts', 'newspapers'].includes(this.topRoute)
+    }
   },
 
   methods: {
@@ -168,7 +257,6 @@ export default {
 //- HEADER -//
 .app-header
   display: block
-  height: $baseline * 2
   padding: 0 $baseline
 
   background: #fff
@@ -186,6 +274,7 @@ export default {
 
     display: grid
     grid-template-columns: auto 1fr max-content
+    grid-template-rows: auto auto
     margin: 0 auto
     max-width: 900px
 
@@ -216,7 +305,8 @@ export default {
 
     &:focus,
     &:hover,
-    &.nuxt-link-active
+    &.nuxt-link-active,
+    &.is-active
       background: #eee
 
     @media (max-width: 850px)
@@ -261,7 +351,56 @@ export default {
       font-size: $fs-2
       margin-right: 0
 
+//- Submenu
+.app-header--sub-navigation
+  grid-column: 1 / span 3
+  grid-row: 2
 
+  @media (max-width: $mobile)
+    padding: 0
+
+  > span
+    margin-right: $baseline
+
+    @media (max-width: $mobile)
+      display: none
+
+  ul
+    display: inline-block
+
+    font-style: normal
+
+    @media (max-width: $mobile)
+      display: block
+
+      white-space: nowrap
+      overflow-x: auto
+      -webkit-overflow-scrolling: touch
+
+    li
+      display: inline-block
+      margin-right: $baseline
+
+      @media (max-width: $mobile)
+        margin-right: $baseline / 2
+
+    a
+      display: block
+
+      color: #777
+
+      line-height: $baseline * 1.5
+
+      &:hover,
+      &:focus,
+        color: #000
+
+      &.nuxt-link-exact-active
+        color: #000
+
+        font-weight: 600
+
+//- Logo
 .app-header--logo
   margin-right: $baseline
 
