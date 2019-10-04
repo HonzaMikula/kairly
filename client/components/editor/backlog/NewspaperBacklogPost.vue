@@ -52,20 +52,20 @@
           <button
             class="up"
             :id="`backlog-controls-up-${log.post.id}`"
-            @click="moveUp(log.post.id)"
+            @click.stop="moveUp(log.post.id)"
             :disabled="!canMoveUp"
           ></button>
 
           <button
             class="down"
             :id="`backlog-controls-down-${log.post.id}`"
-            @click="moveDown(log.post.id)"
+            @click.stop="moveDown(log.post.id)"
             :disabled="!canMoveDown"
           ></button>
 
           <button
             class="remove"
-            @click="removePost(log.post.id)"
+            @click.stop="removePost(log.post.id)"
             v-b-tooltip
             title="Remove post"
           ></button>
