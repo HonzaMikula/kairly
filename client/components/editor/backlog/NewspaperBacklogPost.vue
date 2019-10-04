@@ -45,22 +45,6 @@
         </component>
       </template>
 
-      <template v-if="!log.editorial && !editorType && log.post.type != 'tweet'">
-        <div
-          class="editorial-control is-before"
-          v-b-tooltip
-          title="Add editorial"
-          @click="showCrossroad('right')">
-        </div>
-
-        <div
-          class="editorial-control is-after"
-          v-b-tooltip
-          title="Add editorial"
-          @click="showCrossroad('left')">
-        </div>
-      </template>
-
       <div
         :class="{'newspaper-backlog-controls': true, 'hide-mobile-controls': mobileControls}"
       >
@@ -354,25 +338,6 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
-
-//- Editorial Controls
-.editorial-control
-  position: absolute
-  top: 0
-
-  height: 100%
-  width: $baseline / 2
-
-  cursor: pointer
-
-  &:hover
-    background: #eee
-
-  &.is-before
-    right: 0
-
-  &.is-after
-    left: 0
 
 //- Backlog controls
 .newspaper-backlog-controls.hide-mobile-controls

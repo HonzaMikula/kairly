@@ -124,6 +124,9 @@ p.newspaper-backlog--info--profit
     &:focus
       darken($c-base, 10%)
 
+.newspaper-backlog-view .post > header
+  cursor: move
+
 //- Backlog
 .newspaper-backlog--backlog
   .no-post

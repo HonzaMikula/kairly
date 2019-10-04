@@ -146,7 +146,6 @@ export default {
   margin-bottom: $baseline / 4
 
   font-family: $ff-sans
-  cursor: move
 
   //-- author image
   picture img
