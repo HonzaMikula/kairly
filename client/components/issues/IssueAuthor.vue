@@ -1,22 +1,21 @@
 <template>
   <timeline-newspaper>
     <header>
-      <h1 :id="`issue-author-${randomId}`">
+      <h1 :id="`issue-author-${_uid}`">
         <nuxt-link :to="{name: 'author', params: {author: issue.author.id}}">
-          <img v-if="issue.author.picture" :src="issue.author.picture" :alt="issue.author.name" />
+          <img
+            v-if="issue.author.picture"
+            :src="issue.author.picture"
+            :alt="issue.author.name"
+          />
           {{ issue.author.name }}
         </nuxt-link>
       </h1>
 
-      <b-popover
-        :target="`issue-author-${randomId}`"
-        placement="bottom"
-        :delay="{ show: 400, hide: 100 }"
-        triggers="hover"
-        @click.stop
-      >
-        <AuthorPopup :author="issue.author" />
-      </b-popover>
+      <AuthorPopup
+        :target="`issue-author-${_uid}`"
+        :author="issue.author"
+      />
 
       <p>
         {{ localizedTitle() }}
@@ -36,7 +35,6 @@
 </template>
 
 <script>
-import { BPopover } from 'bootstrap-vue'
 import PostIssue from '@/components/posts/PostIssue'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 
@@ -47,15 +45,8 @@ export default {
   },
 
   components: {
+    AuthorPopup,
     PostIssue,
-    BPopover,
-    AuthorPopup
-  },
-
-  computed: {
-    randomId() {
-      return Math.floor(Math.random() * 10000000)
-    }
   },
 
   methods: {

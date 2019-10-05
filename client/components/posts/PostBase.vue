@@ -25,21 +25,16 @@
           </template>
         </h3>
 
-        <b-popover
+        <AuthorPopup
           :target="`post-author-${post.id}`"
-          placement="bottom"
-          :delay="{ show: 400, hide: 100 }"
-          triggers="hover"
-          @click.stop
-        >
-          <AuthorPopup :author="post.author" />
-        </b-popover>
+          :author="post.author"
+        />
 
         <time>{{ post.time | moment('MMM D') }}</time>
       </slot>
 
       <section>
-        <slot name="extended-controls"></slot>
+        <slot name="extended-controls"/>
         <slot name="controls">
           <span>
             <button
@@ -60,15 +55,13 @@
     </header>
 
     <slot/>
-
-    <slot name="buttons"></slot>
+    <slot name="buttons"/>
   </article>
 </template>
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapGetters } from 'vuex'
-import { BPopover } from 'bootstrap-vue'
 
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
@@ -80,7 +73,6 @@ export default {
   components: {
     AuthorPopup,
     ConsiderPost,
-    BPopover
   },
 
   directives: {

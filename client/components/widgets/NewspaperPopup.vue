@@ -1,48 +1,56 @@
 <template>
-  <div class="newspaper-widget-view">
-    <picture>
-      <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
-        <img
-          v-if="newspaper.picture"
-          :src="newspaper.picture"
-          :alt="newspaper.title"
-        />
-        <div
-          v-else
-          class="image-placeholder"
-        />
-      </nuxt-link>
-    </picture>
+  <b-popover
+    :target="target"
+    placement="bottom"
+    :delay="{ show: 400, hide: 100 }"
+    triggers="hover"
+    @click.stop
+  >
+    <div class="newspaper-widget-view">
+      <picture>
+        <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+          <img
+            v-if="newspaper.picture"
+            :src="newspaper.picture"
+            :alt="newspaper.title"
+          />
+          <div
+            v-else
+            class="image-placeholder"
+          />
+        </nuxt-link>
+      </picture>
 
-    <h2>
-      <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</nuxt-link>
-    </h2>
+      <h2>
+        <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">{{ newspaper.title }}</nuxt-link>
+      </h2>
 
-    <time>{{ periodicity }}</time>
-
-    <p>
-      {{ newspaper.description }}
-    </p>
-
-    <div class="newspaper-widget--author">
-      <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
-      <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
-    </div>
-
-    <div class="newspaper-widget--subscribe" v-if="loggedIn">
-      <NewspaperSubscription :newspaper="newspaper" />
+      <time>{{ periodicity }}</time>
 
       <p>
-        {{ newspaper.likes }} {{ $t('subscribers') }}
+        {{ newspaper.description }}
       </p>
+
+      <div class="newspaper-widget--author">
+        <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
+        <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
+      </div>
+
+      <div class="newspaper-widget--subscribe" v-if="loggedIn">
+        <NewspaperSubscription :newspaper="newspaper" />
+
+        <p>
+          {{ newspaper.likes }} {{ $t('subscribers') }}
+        </p>
+      </div>
     </div>
-  </div>
+  </b-popover>
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
 
+import { BPopover } from 'bootstrap-vue'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
 
@@ -54,7 +62,8 @@ export default {
   },
 
   components: {
-    NewspaperSubscription
+    BPopover,
+    NewspaperSubscription,
   },
 
   mixins: [PeriodicityMixin],
