@@ -166,6 +166,7 @@
                   <p>{{ $t('Write short comment to the topic') }}</p>
                 </li>
                 <li
+                  v-show="!editorType"
                   tabindex="0"
                   @click="removeEditorial"
                 >

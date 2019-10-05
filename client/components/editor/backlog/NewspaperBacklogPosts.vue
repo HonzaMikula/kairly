@@ -106,7 +106,7 @@ export default {
 
 
 .flip-list-move
-  transition: transform 0.5s
+  transition: transform 0.25s
 
 .newspaper-editor-backlog-section
   margin-bottom: $baseline * 2
