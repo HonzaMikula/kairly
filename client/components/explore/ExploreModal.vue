@@ -1,5 +1,5 @@
 <template>
-  <DialogWindow :closeModal="closeModal">
+  <DialogWindow @close="closeModal">
     <modal-dialog
       role="dialog"
       class="explore"

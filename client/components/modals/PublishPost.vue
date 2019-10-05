@@ -1,5 +1,5 @@
 <template>
-  <DialogWindow :closeModal="closeModal">
+  <DialogWindow @close="closeModal">
     <modal-dialog role="dialog" @click.stop class="publish-post-dialog">
       <header>
         <h1>{{ $t('Publish post') }}</h1>

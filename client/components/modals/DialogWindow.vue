@@ -1,5 +1,5 @@
 <template>
-  <modal-window @click="close">
+  <modal-window @click="onClick">
     <slot></slot>
   </modal-window>
 </template>
@@ -9,30 +9,33 @@
 export default {
   name: 'DialogWindow',
 
-  props: {
-    closeModal: Function,
-    cancelClosingOnBackground: Boolean
-  },
+  // props: {
+  //   // active: Boolean
+  //   //closeModal: Function,
+  //   //cancelClosingOnBackground: Boolean
+  // },
 
   methods: {
-    close() {
-      if(!this.cancelClosingOnBackground) {
-        this.closeModal()
-      }
+    onClick(event) {
+      this.$emit('close', event)
+      // if(!this.cancelClosingOnBackground) {
+      //   this.closeModal()
+      // }
     },
 
-    onEscapeKeyUp (event) {
+    onKeyUp(event) {
       if (event.which === 27) {
-        this.closeModal()
+        this.$emit('close', event)
       }
     },
   },
 
   beforeMount() {
-    window.addEventListener('keyup', this.onEscapeKeyUp);
+    window.addEventListener('keyup', this.onKeyUp);
   },
+
   beforeDestroy () {
-    window.removeEventListener('keyup', this.onEscapeKeyUp)
+    window.removeEventListener('keyup', this.onKeyUp)
   },
 }
 </script>

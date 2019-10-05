@@ -1,5 +1,5 @@
 <template>
-  <DialogWindow :closeModal="closeModal" :cancelClosingOnBackground="true">
+  <DialogWindow @close="onCloseReceived">
     <modal-dialog role="dialog" @click.stop class="sign-in">
       <header>
         <h1>{{ $t('Sign In') }}</h1>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="login--signup">
-          Don't have account yet? <nuxt-link to="/signup">Sign up</nuxt-link> 
+          Don't have account yet? <nuxt-link to="/signup">Sign up</nuxt-link>
         </div>
       </main>
     </modal-dialog>
@@ -61,6 +61,13 @@ export default {
   },
 
   methods: {
+    onCloseReceived(ev) {
+      // ignore click on background
+      if (ev instanceof KeyboardEvent) {
+        this.closeModal()
+      }
+    },
+
     async login() {
       this.invalidCredentials = false
       const { username, password } = this
@@ -77,7 +84,7 @@ export default {
         })
 
         this.$ga.set('dimension1', 'yes')
-        
+
       } catch (e) {
         this.invalidCredentials = true
         this.$ga.event({
@@ -161,7 +168,7 @@ modal-dialog.sign-in
     &:focus
       color: #333
       text-decoration: none
-  
+
   p a
     color: $c-base
 

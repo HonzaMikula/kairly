@@ -89,10 +89,12 @@ export const getters = {
     if (state.subscriptions === null) {
       return null
     }
-    return state.subscriptions.authors[author.id]
+    return state.subscriptions.authors[author.id] || null
   },
   monthSpending: state => {
-    if (!state.subscriptions) return null
+    if (!state.subscriptions) {
+      return null
+    }
     let cents = 0
     Object.entries(state.subscriptions.newspapers).forEach(([fullName, s]) => {
       const newspaper = state.newspapers[fullName]

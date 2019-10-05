@@ -58,7 +58,8 @@ export default {
   name: 'NewspaperPopup',
 
   props: {
-    newspaper: Object
+    newspaper: Object,
+    target: String,
   },
 
   components: {

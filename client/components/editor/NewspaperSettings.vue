@@ -152,7 +152,6 @@ import AppLayout from '@/components/layout/AppLayout'
 import EditorCard from '@/components/editor/EditorCard'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
-import DialogWindow from '@/components/modals/DialogWindow'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
 
@@ -164,7 +163,6 @@ export default {
     EditorCard,
     PeriodWidget,
     PictureInput,
-    DialogWindow
   },
 
   mixins: [PeriodicityMixin],
@@ -372,7 +370,7 @@ export default {
 
   //- form fields
   section > div
-    
+
     //- label
     label
       display: table
@@ -470,7 +468,7 @@ export default {
     picture
       display: block
       width: 100%
-      
+
     button
       margin-top: $baseline / 4
       padding: 0
@@ -478,7 +476,7 @@ export default {
       background: transparent
       border: 0
       color: $c-base
-      
+
       cursor: pointer
 
       &:hover,
