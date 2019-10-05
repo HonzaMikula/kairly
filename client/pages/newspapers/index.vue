@@ -83,15 +83,16 @@
               v-on-clickaway="() => isMobileMenuOpen = false">
               <ul>
                 <li>
-                  <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
+                  <nuxt-link
+                    :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
+                  >
+                    {{ $t('Newspaper detail') }}
+                  </nuxt-link>
                 </li>
                 <li v-if="selectedNewspaper.editor.id === user.id">
                   <nuxt-link
                     :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
                   >{{ $t('Edit newspaper') }}</nuxt-link>
-                </li>
-                <li v-if="selectedNewspaper.editor.id === user.id">
-                  <a href="" @click.prevent="confirmDeleteNewspaper">{{ $t('Delete newspaper') }}</a>
                 </li>
               </ul>
             </div>
