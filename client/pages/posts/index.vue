@@ -1,54 +1,56 @@
 <template>
-  <MyPosts>
-    <div class="my-posts--empty" v-if="posts.length == 0">
-      {{ $t('No drafts') }}
+  <AppLayout :name="$t('Draft posts')">
+    <div class="draft-posts-view">
+      <div class="my-posts--empty" v-if="posts.length == 0">
+        {{ $t('No drafts') }}
+      </div>
+
+      <div v-for="post in posts" :key="post.id">
+        <PostWrapper
+          :post="post"
+          :isSubscribed="true"
+        >
+          <template #controls v-if="post.draft">
+            <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
+
+            <button-icon
+              class="edit"
+              v-b-tooltip
+              :title="$t('Edit post')"
+              tabindex="0"
+              role="button"
+              @click.prevent="$router.push(`/posts/${post.id}`)"
+            />
+
+            <button-icon
+              class="remove"
+              v-b-tooltip
+              :title="$t('Delete post')"
+              tabindex="0"
+              role="button"
+              @click.prevent="deletePost(post)"
+            />
+
+          </template>
+        </PostWrapper>
+      </div>
+
+      <portal to="modal" v-if="isPublishPostDialogOpen">
+        <PublishPostDialog
+          :post="modalPost"
+          :price="modalPrice"
+          @publish="publishPost">
+        </PublishPostDialog>
+      </portal>
     </div>
-
-    <div v-for="post in posts" :key="post.id">
-      <PostWrapper
-        :post="post"
-        :isSubscribed="true"
-      >
-        <template #controls v-if="post.draft">
-          <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
-
-          <button-icon
-            class="edit"
-            v-b-tooltip
-            :title="$t('Edit post')"
-            tabindex="0"
-            role="button"
-            @click.prevent="$router.push(`/posts/${post.id}`)"
-          />
-
-          <button-icon
-            class="remove"
-            v-b-tooltip
-            :title="$t('Delete post')"
-            tabindex="0"
-            role="button"
-            @click.prevent="deletePost(post)"
-          />
-
-        </template>
-      </PostWrapper>
-    </div>
-
-    <portal to="modal" v-if="isPublishPostDialogOpen">
-      <PublishPostDialog
-        :post="modalPost"
-        :price="modalPrice"
-        @publish="publishPost">
-      </PublishPostDialog>
-    </portal>
-  </MyPosts>
+  </AppLayout>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
 import ErrorHandler from '@/mixins/ErrorHandler'
-import MyPosts from '@/components/layout/MyPosts'
+import AppLayout from '@/components/layout/AppLayout'
 import PostWrapper from '@/components/PostWrapper'
 import PublishPostDialog from '@/components/modals/PublishPost'
 
@@ -56,7 +58,7 @@ export default {
   name: 'Drafts',
 
   components: {
-    MyPosts,
+    AppLayout,
     PostWrapper,
     PublishPostDialog
   },
@@ -129,6 +131,10 @@ export default {
 </script>
 
 <style lang="sass">
+
+.draft-posts-view
+  max-width: 900px
+  margin: $baseline auto
 
 //- Empty placeholder
 .my-posts--empty

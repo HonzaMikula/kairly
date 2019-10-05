@@ -1,6 +1,8 @@
 <template>
   <div class="newspaper-settings-view">
-    <h1>{{ $t('Newspaper settings') }}</h1>
+    <h1>
+      {{ this.newspaper ? $t('Newspaper settings') : $t('Start a newspaper') }}
+    </h1>
 
     <main>
       <section class="newspaper-settings--general">

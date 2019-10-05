@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <EditTweet :buttonTitle="$t('Save a draft')" @submit="createPost" />
-  </div>
+  <AppLayout :name="$t('Write tweet')">
+    <div class="write-tweet-view">
+      <EditTweet :buttonTitle="$t('Save a draft')" @submit="createPost" />
+    </div>
+  </AppLayout>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-
+import AppLayout from '@/components/layout/AppLayout'
 import EditTweet from '@/components/editor/EditTweet'
 
 export default {
@@ -19,6 +21,7 @@ export default {
   },
 
   components: {
+    AppLayout,
     EditTweet
   },
 
@@ -32,4 +35,7 @@ export default {
 </script>
 
 <style lang="sass">
+.write-tweet-view
+  max-width: 900px
+  margin: $baseline auto
 </style>

@@ -15,10 +15,6 @@
 
       <template v-else>
         <header class="newspaper-editor--header">
-          <div class="create-newspaper">
-            <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
-          </div>
-
           <div class="title">
             <h1
               v-if="selectedNewspaper"
@@ -269,7 +265,7 @@ export default {
     position: relative
 
     display: grid
-    grid-template-columns: 2fr auto 2fr
+    grid-template-columns: auto 2fr
     padding: $baseline/2 0
     text-align: center
 
@@ -320,18 +316,6 @@ export default {
 
         &::before
           content: fa-content($fa-var-chevron-down)
-
-    .create-newspaper
-      align-self: center
-      justify-self: start
-
-      @media (max-width: 800px)
-        display: none
-
-      a
-        +button(secondary, medium)
-
-        margin-left: $baseline / 4
 
     .newspaper-controls
       align-self: center
@@ -448,12 +432,11 @@ export default {
 
 .newspaper-editor--header--dropdown
   position: absolute
-  left: 50%
+  left: 0
   top: $baseline * 3
   z-index: 1
 
   display: block
-  margin-left: -200px
   padding: $baseline/4 0
   width: 400px
 

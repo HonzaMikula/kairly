@@ -1,7 +1,11 @@
 <template>
   <header class="app-header">
     <div :class="{'has-submenu': isSubscriptionRoute || isNewspapersPostsRoute}">
-      <h1 class="app-header--logo" :class="{'show': pageTitle == null}"><nuxt-link :to="{name: 'index'}" exact>Kairly</nuxt-link></h1>
+      <h1 class="app-header--logo" :class="{'show': pageTitle == null}">
+        <nuxt-link :to="{name: 'index'}" exact>
+          Kairly
+        </nuxt-link>
+      </h1>
 
       <nav class="app-header--navigation">
         <ul v-if="user">
@@ -28,12 +32,21 @@
             </nuxt-link>
           </li>
 
-          <li class="posts-newspapers">
+          <li class="newspapers">
             <nuxt-link 
               to="/newspapers"
-              :class="{'is-active': isNewspapersPostsRoute}"
-              title="Newspapers & posts">
-              <span>{{ $t('Newspapers & posts') }}</span>
+              :class="{'is-active': isNewspapersRoute}"
+              title="Newspapers">
+              <span>{{ $t('Newspapers') }}</span>
+            </nuxt-link>
+          </li>
+
+          <li class="posts">
+            <nuxt-link 
+              to="/posts"
+              :class="{'is-active': isPostsRoute}"
+              title="Posts">
+              <span>{{ $t('Posts') }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -57,14 +70,20 @@
 
           <li>
             <nuxt-link to="/newspapers">
-              {{ $t('Newspapers & posts') }}
+              {{ $t('Newspapers') }}
+            </nuxt-link>
+          </li>
+
+          <li>
+            <nuxt-link to="/posts">
+              {{ $t('Posts') }}
             </nuxt-link>
           </li>
         </ul>
       </nav>
 
       <nav 
-        v-if="isSubscriptionRoute || isNewspapersPostsRoute"
+        v-if="isSubscriptionRoute || isNewspapersRoute || isPostsRoute"
         class="app-header--sub-navigation">
         <ul>
           <template v-if="isSubscriptionRoute">
@@ -93,7 +112,7 @@
             </li>
           </template>
 
-          <template v-if="isNewspapersPostsRoute">
+          <template v-if="isNewspapersRoute">
             <li>
               <nuxt-link to="/newspapers">
                 {{ $t('Newspapers') }}
@@ -101,11 +120,13 @@
             </li>
 
             <li>
-              <nuxt-link to="/posts/create/article">
-                {{ $t('Write a post') }}
+              <nuxt-link to="/newspapers/start">
+                {{ $t('Start a newspapers') }}
               </nuxt-link>
             </li>
+          </template>
 
+          <template v-if="isPostsRoute">
             <li>
               <nuxt-link to="/posts">
                 {{ $t('Draft posts') }}
@@ -115,6 +136,18 @@
             <li>
               <nuxt-link to="/posts/published">
                 {{ $t('Published posts') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/posts/create/article">
+                {{ $t('Write article') }}
+              </nuxt-link>
+            </li>
+
+            <li>
+              <nuxt-link to="/posts/create/tweet">
+                {{ $t('Write tweet') }}
               </nuxt-link>
             </li>
           </template>
@@ -127,13 +160,6 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
-        <nuxt-link
-          to="/user/transactions/upcoming"
-          class="credits"
-          v-b-tooltip
-          :title="$t('Available credits')">
-          <MoneyFormat :value="user.credits" currency="Kč" :short="true"/>
-        </nuxt-link>
         <img v-if="user.picture" :src="user.picture" :alt="user.name" />
         <img v-else src="~assets/user.png" :alt="user.name"/>
         <button-icon
@@ -230,8 +256,12 @@ export default {
       return ['subscription', 'import', 'user'].includes(this.topRoute)
     },
 
-    isNewspapersPostsRoute() {
-      return ['posts', 'newspapers'].includes(this.topRoute)
+    isNewspapersRoute() {
+      return ['newspapers'].includes(this.topRoute)
+    },
+
+    isPostsRoute() {
+      return ['posts'].includes(this.topRoute)
     }
   },
 
@@ -332,14 +362,14 @@ export default {
         display: none
 
 
-  li a::before
+  li a::after
     +fa-icon()
     @extend .fas
 
     font-size: $fs-1
     text-align: center
 
-  li.home a::before
+  li.home a::after
     content: fa-content($fa-var-home)
     display: none
 
@@ -347,27 +377,44 @@ export default {
       display: inline-block
 
 
-  li.subscription a::before
+  li.subscription a::after
     content: fa-content($fa-var-calendar)
     display: none
 
     @media (max-width: 850px)
       display: inline-block
 
-  li.explore a::before
+  li.explore a::after
     content: fa-content($fa-var-hashtag)
     display: none
 
     @media (max-width: 850px)
       display: inline-block
 
+
   @media (max-width: $mobile)
-    li a::before
+    li a::after
       position: relative
       top: 5px
 
       font-size: $fs-2
       margin-right: 0
+
+  li.newspapers a::before
+    +fa-icon()
+    @extend .fas
+
+    margin-right: $baseline / 4
+
+    content: fa-content($fa-var-newspaper)
+
+  li.posts a::before
+    +fa-icon()
+    @extend .fas
+
+    margin-right: $baseline / 4
+
+    content: fa-content($fa-var-edit)
 
 //- Submenu
 .app-header--sub-navigation
