@@ -5,13 +5,18 @@
           (eg extrnal url). And it brokes hydrating server side rendered page-->
       <div class="tweet-content" v-html="post.content.content"></div>
 
-      <component
-        v-if="post.content.attachments"
-        :is="'tweet-attachment-' + attachmentType"
-        :items="post.content.attachments"
-        :key="post.id"
-      />
-
+      <template v-if="photoAttachments">
+        <TweetAttachmentPhoto :items="photoAttachments" />
+      </template>
+      
+      <template v-if="otherAttachments">
+        <component
+          v-for="attachment in otherAttachments"
+          :is="'tweet-attachment-' + attachmentType(attachment.type)"
+          :item="attachment"
+          :key="attachment.id"
+        />
+      </template>
     </div>
 
     <template #extended-controls>
@@ -55,8 +60,31 @@ export default {
   },
 
   computed: {
-    attachmentType() {
-      switch (this.post.content.attachments[0].type) {
+    photoAttachments() {
+      if (this.post.content.attachments) {
+        const photoAttachments = this.post.content.attachments.filter(attachment => attachment.type == 'media.photo')
+        
+        if (photoAttachments.length > 0)
+          return photoAttachments
+      }
+      return false
+    },
+
+    otherAttachments() {
+      if (this.post.content.attachments) {
+        const otherAttachments = this.post.content.attachments.filter(attachment => attachment.type != 'media.photo')
+
+        if (otherAttachments.length > 0)
+          return otherAttachments
+      }
+      return false
+    }
+  },
+
+  methods: {
+    attachmentType(x) {
+      console.log(x)
+      switch (x) {
         case "media.photo":
           return "photo"
           break
