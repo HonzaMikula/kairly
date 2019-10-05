@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState } from "vuex"
 
 import AppLayout from '@/components/layout/AppLayout'
 import EditorCard from '@/components/editor/EditorCard'

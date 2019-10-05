@@ -122,9 +122,11 @@ export default {
     }
   },
 
-  computed: mapState({
-    user: state => state.auth.user
-  }),
+  computed: {
+    ...mapState({
+      user: state => state.auth.user,
+    })
+  },
 
   methods: {
     updateComponentData({ name, medium, bio, timezone, price, integrations: { twitter }}) {
@@ -155,7 +157,10 @@ export default {
       this.updateProfile({ name, medium, bio, timezone, price, integrations: { twitter }})
     },
 
-    ...mapMutations({ showSuccess: 'showSuccess'}),
+    ...mapMutations({
+      showError: 'messages/error',
+      showSuccess: 'messages/success'
+    }),
 
     closeChangePassword() {
       this.isChangePasswordOpen = false

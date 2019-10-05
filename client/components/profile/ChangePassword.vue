@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import DialogWindow from '@/components/modals/DialogWindow'
 import ErrorHandler from '@/mixins/ErrorHandler'
 
