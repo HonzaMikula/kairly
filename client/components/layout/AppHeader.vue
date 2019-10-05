@@ -40,6 +40,30 @@
       </nav>
 
       <nav 
+        v-if="topRoute == '/'"
+        class="app-header--sub-navigation is-mobile">
+        <ul>
+          <li>
+            <nuxt-link to="/subscription/newspapers">
+              {{ $t('Subscriptions') }}
+            </nuxt-link>
+          </li>
+
+          <li>
+            <nuxt-link to="/explore">
+              {{ $t('Explore') }}
+            </nuxt-link>
+          </li>
+
+          <li>
+            <nuxt-link to="/newspapers">
+              {{ $t('Newspapers & posts') }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
+
+      <nav 
         v-if="isSubscriptionRoute || isNewspapersPostsRoute"
         class="app-header--sub-navigation">
         <ul>
@@ -125,13 +149,6 @@
           <li class="home"><nuxt-link :to="{name: 'index'}">{{ $t('Home') }}</nuxt-link></li>
           <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ $t('Profile') }}</nuxt-link></li>
           <li><nuxt-link :to="{name: 'user-settings'}"><span>{{ $t('Settings') }}</span></nuxt-link></li>
-          <li class="divider"></li>
-          <li class="rss"><nuxt-link to="/import">{{ $t('Add RSS source') }}</nuxt-link></li>
-          <li class="my-subscription"><nuxt-link :to="{name: 'subscription-newspapers'}"><span>{{ $t('Subscriptions') }}</span></nuxt-link></li>
-          <li class="explore"><nuxt-link :to="{name: 'explore-tab'}"><span>{{ $t('Explore') }}</span></nuxt-link></li>
-          <li class="divider"></li>
-          <li class="my-newspapers"><nuxt-link :to="{name: 'newspapers'}"><span>{{ $t('Manage newspapers') }}</span></nuxt-link></li>
-          <li><nuxt-link to="/posts">{{ $t('Write a post') }}</nuxt-link></li>
           <li class="divider"></li>
           <li class="language">
             {{ $t('Language') }}
@@ -246,8 +263,6 @@ export default {
       this.$store.dispatch('getSubscriptions')
     }
   }
-
-
 }
 </script>
 
@@ -360,7 +375,13 @@ export default {
   grid-row: 2
 
   @media (max-width: $mobile)
-    padding: 0
+    padding: 0 $baseline/2
+
+  &.is-mobile
+    display: none
+
+    @media (max-width: $mobile)
+      display: block
 
   > span
     margin-right: $baseline
