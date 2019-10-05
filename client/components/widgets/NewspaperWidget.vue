@@ -1,5 +1,5 @@
 <template>
-  <newspaper-widget-view>
+  <div class="newspaper-widget-view">
     <picture>
       <nuxt-link :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
         <img
@@ -24,20 +24,19 @@
       {{ newspaper.description }}
     </p>
 
-    <newspaper-widget--author>
+    <div class="newspaper-widget--author">
       <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
       <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
-    </newspaper-widget--author>
+    </div>
 
-    <newspaper-widget--subscribe v-if="loggedIn">
+    <div class="newspaper-widget--subscribe" v-if="loggedIn">
       <NewspaperSubscription :newspaper="newspaper" />
 
       <p>
         {{ newspaper.likes }} {{ $t('subscribers') }}
       </p>
-    </newspaper-widget--subscribe>
-
-  </newspaper-widget-view>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -73,7 +72,7 @@ export default {
 </script>
 
 <style lang="sass">
-newspaper-widget-view
+.newspaper-widget-view
   position: relative
 
   display: flex
@@ -139,7 +138,7 @@ newspaper-widget-view
     line-height: $baseline * 0.8
 
 //- Author + Periodicity
-newspaper-widget--author
+.newspaper-widget--author
   order: 2
   margin: $baseline/2 0
 
@@ -160,7 +159,7 @@ newspaper-widget--author
 
 
 //- Subscribe Newspaper
-newspaper-widget--subscribe
+.newspaper-widget--subscribe
   display: block
   padding: $baseline / 2 0 0 0
   order: 6

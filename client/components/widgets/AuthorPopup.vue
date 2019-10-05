@@ -35,7 +35,7 @@
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 
 export default {
-  name: 'AuthorWidget',
+  name: 'AuthorPopup',
 
   props: {
     author: Object

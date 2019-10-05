@@ -1,25 +1,27 @@
 <template>
   <timeline-newspaper>
     <header>
-      <h1 :id="`issue-newpaper-${randomId}`">
+      <h1 :id="`issue-newspaper-${randomId}`">
         <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
           <slot name="newspaper-title">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
 
       <b-popover
-        :target="`issue-newpaper-${randomId}`"
+        :target="`issue-newspaper-${randomId}`"
         placement="bottom"
         :delay="{ show: 400, hide: 100 }"
         triggers="hover"
         @click.stop
       >
-        <AuthorWidget :author="newspaper.editor" />
+        <NewspaperPopup :newspaper="newspaper" />
       </b-popover>
 
       <p>
         <timeline-newspaper--editor>
-          <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
+          <nuxt-link 
+            :to="{name: 'author', params: {author: newspaper.editor.id}}"
+            :id="`issue-newspaper-author-${randomId}`">
             <img
               v-if="issue.newspaper.editor.picture"
               :src="newspaper.editor.picture"
@@ -31,6 +33,15 @@
         <span>• {{ frequencyLabel }}</span>
         <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
+      <b-popover
+        :target="`issue-newspaper-author-${randomId}`"
+        placement="bottom"
+        :delay="{ show: 400, hide: 100 }"
+        triggers="hover"
+        @click.stop
+      >
+        <AuthorPopup :author="newspaper.editor" />
+      </b-popover>
     </header>
     <slot/>
   </timeline-newspaper>
@@ -39,6 +50,7 @@
 <script>
 import { BPopover } from 'bootstrap-vue'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
+import NewspaperPopup from '@/components/widgets/NewspaperPopup'
 
 export default {
   name: 'IssueNewspaper',
@@ -46,7 +58,8 @@ export default {
 
   components: {
     BPopover,
-    AuthorPopup
+    AuthorPopup,
+    NewspaperPopup
   },
 
   computed: {
