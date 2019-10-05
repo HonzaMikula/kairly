@@ -32,8 +32,8 @@
             <nuxt-link 
               to="/newspapers"
               :class="{'is-active': isNewspapersPostsRoute}"
-              title="Newspapers & Posts">
-              <span>{{ $t('Newspapers & Posts') }}</span>
+              title="Newspapers & posts">
+              <span>{{ $t('Newspapers & posts') }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -382,6 +382,7 @@ export default {
 
     @media (max-width: $mobile)
       display: block
+      padding: 0 $baseline/4
 
   > span
     margin-right: $baseline
