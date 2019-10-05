@@ -1,6 +1,6 @@
 <template>
   <header class="app-header">
-    <div>
+    <div :class="{'has-submenu': isSubscriptionRoute || isNewspapersPostsRoute}">
       <h1 class="app-header--logo" :class="{'show': pageTitle == null}"><nuxt-link :to="{name: 'index'}" exact>Kairly</nuxt-link></h1>
 
       <nav class="app-header--navigation">
@@ -274,9 +274,12 @@ export default {
 
     display: grid
     grid-template-columns: auto 1fr max-content
-    grid-template-rows: auto auto
+    grid-template-rows: auto
     margin: 0 auto
     max-width: 900px
+
+    &.has-submenu 
+      grid-template-rows: auto $baseline*1.5
 
     @media (max-width: $mobile)
       grid-template-columns: minmax(100px, min-content) 1fr
@@ -366,9 +369,8 @@ export default {
       display: none
 
   ul
-    display: inline-block
-
     font-style: normal
+    line-height: $baseline * 1.5
 
     @media (max-width: $mobile)
       display: block
