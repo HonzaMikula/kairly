@@ -1,11 +1,9 @@
 <template>
   <div class="tweet-attachment-link-view">
-    <div v-for="item in items" :key="item.href">
-      <a :href="item.href">
-        <h4>{{ item.title }}</h4>
-        <p>{{ item.host }}</p>
-      </a>
-    </div>
+    <a :href="item.href">
+      <h4>{{ item.title }}</h4>
+      <p>{{ item.host }}</p>
+    </a>
   </div>
 </template>
 
@@ -13,7 +11,7 @@
 export default {
   name: 'tweet-attachment-link',
 
-  props: ["items"]
+  props: ["item"]
 }
 </script>
 

@@ -1,9 +1,7 @@
 <template>
   <div class="tweet-attachment-quote-view">
-    <div v-for="item in items" :key="item.user.url">
-      <h4><a :href="item.user.url">{{ item.user.name }}</a></h4>
-      <p v-html="item.content"></p>
-    </div>
+    <h4><a :href="item.user.url">{{ item.user.name }}</a></h4>
+    <p v-html="item.content"></p>
   </div>
 </template>
 
@@ -11,7 +9,7 @@
 export default {
   name: 'tweet-attachment-quote',
 
-  props: ["items"]
+  props: ["item"]
 }
 </script>
 

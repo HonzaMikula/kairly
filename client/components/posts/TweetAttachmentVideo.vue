@@ -1,6 +1,6 @@
 <template>
   <div class="tweet-attachment-video-view">
-    <video v-for="item in items" :key="item.src" :poster="item.src" :width="item.sizes.small.w" controls>
+    <video :poster="item.src" :width="item.sizes.small.w" controls>
       <source
         :src="item.video_info.variants[0].url"
         :type="item.video_info.variants[0].content_type" />
@@ -12,7 +12,7 @@
 export default {
   name: 'tweet-attachment-video',
 
-  props: ["items"],
+  props: ["item"],
 }
 </script>
 
