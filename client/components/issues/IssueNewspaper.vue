@@ -1,14 +1,14 @@
 <template>
   <timeline-newspaper>
     <header>
-      <h1 :id="`issue-newspaper-${_uid}`">
+      <h1 :id="`issue-newspaper-${$_uid}`">
         <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
           <slot name="newspaper-title">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
 
       <NewspaperPopup
-        :target="`issue-newspaper-${_uid}`"
+        :target="`issue-newspaper-${$_uid}`"
         :newspaper="newspaper"
       />
 
@@ -16,7 +16,7 @@
         <timeline-newspaper--editor>
           <nuxt-link
             :to="{name: 'author', params: {author: newspaper.editor.id}}"
-            :id="`issue-newspaper-author-${_uid}`">
+            :id="`issue-newspaper-author-${$_uid}`">
             <img
               v-if="issue.newspaper.editor.picture"
               :src="newspaper.editor.picture"
@@ -30,7 +30,7 @@
       </p>
 
       <AuthorPopup
-        :target="`issue-newspaper-author-${_uid}`"
+        :target="`issue-newspaper-author-${$_uid}`"
         :author="newspaper.editor"
       />
 

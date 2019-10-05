@@ -1,7 +1,7 @@
 <template>
   <timeline-newspaper>
     <header>
-      <h1 :id="`issue-author-${_uid}`">
+      <h1 :id="`issue-author-${$_uid}`">
         <nuxt-link :to="{name: 'author', params: {author: issue.author.id}}">
           <img
             v-if="issue.author.picture"
@@ -13,7 +13,7 @@
       </h1>
 
       <AuthorPopup
-        :target="`issue-author-${_uid}`"
+        :target="`issue-author-${$_uid}`"
         :author="issue.author"
       />
 
