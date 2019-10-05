@@ -337,6 +337,9 @@ export default {
   @supports not (backdrop-filter: blur(10px))
     background: rgba(250, 250, 250, 0.97)
 
+  @media (max-width: $mobile)
+    position: static
+
   > div
     display: grid
     box-sizing: border-box
