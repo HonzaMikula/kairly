@@ -14,7 +14,7 @@
           </nuxt-link>
         </picture>
 
-        <h3>
+        <h3 :id="`post-author-${post.id}`">
           <template v-if="post.author.kind == 'external'">
             <a :href="post.author.url" target="_blank">{{ post.author.name }}</a>
           </template>
@@ -25,11 +25,15 @@
           </template>
         </h3>
 
-        <AuthorPopup
-          v-if="isAuthorWidgetOpen"
-          :author="post.author"
-          @authorwidgetclose="closeAuthorWidget"
-        />
+        <b-popover
+          :target="`post-author-${post.id}`"
+          placement="bottom"
+          :delay="{ show: 400, hide: 100 }"
+          triggers="hover"
+          @click.stop
+        >
+          <AuthorPopup :author="post.author" />
+        </b-popover>
 
         <time>{{ post.time | moment('MMM D') }}</time>
       </slot>
@@ -64,6 +68,7 @@
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapGetters } from 'vuex'
+import { BPopover } from 'bootstrap-vue'
 
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
@@ -74,7 +79,8 @@ export default {
 
   components: {
     AuthorPopup,
-    ConsiderPost
+    ConsiderPost,
+    BPopover
   },
 
   directives: {

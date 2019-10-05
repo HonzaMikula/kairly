@@ -82,9 +82,8 @@ export default {
   },
 
   methods: {
-    attachmentType(x) {
-      console.log(x)
-      switch (x) {
+    attachmentType(type) {
+      switch (type) {
         case "media.photo":
           return "photo"
           break

@@ -1,11 +1,21 @@
 <template>
   <timeline-newspaper>
     <header>
-      <h1>
+      <h1 :id="`issue-newpaper-${randomId}`">
         <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
           <slot name="newspaper-title">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
+
+      <b-popover
+        :target="`issue-newpaper-${randomId}`"
+        placement="bottom"
+        :delay="{ show: 400, hide: 100 }"
+        triggers="hover"
+        @click.stop
+      >
+        <AuthorWidget :author="newspaper.editor" />
+      </b-popover>
 
       <p>
         <timeline-newspaper--editor>
@@ -27,14 +37,25 @@
 </template>
 
 <script>
+import { BPopover } from 'bootstrap-vue'
+import AuthorPopup from '@/components/widgets/AuthorPopup'
 
 export default {
   name: 'IssueNewspaper',
   props: ['issue', 'hideDate'],
 
+  components: {
+    BPopover,
+    AuthorPopup
+  },
+
   computed: {
     newspaper() {
       return this.issue.newspaper
+    },
+
+    randomId() {
+      return Math.floor(Math.random() * 10000000)
     },
 
     frequencyLabel() {
