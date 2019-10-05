@@ -15,7 +15,7 @@
         triggers="hover"
         @click.stop
       >
-        <AuthorWidget :author="issue.author" />
+        <AuthorPopup :author="issue.author" />
       </b-popover>
 
       <p>
