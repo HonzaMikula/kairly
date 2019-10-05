@@ -120,4 +120,7 @@ export default {
 
     +article-perex
 
+    .ck-content
+      height: 100%
+
 </style>

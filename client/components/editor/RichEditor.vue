@@ -65,6 +65,9 @@ export default {
   font-size: $fs-0
   line-height: 1.58
 
+  .ck-content
+    height: 100%
+
 
 .medium-editor-placeholder::after
   font-style: normal

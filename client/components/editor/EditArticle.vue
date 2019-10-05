@@ -160,6 +160,9 @@ export default {
     width: 100%
     min-height: 260px
 
+    .ck-content
+      min-height: 260px
+
 
 //- Footer
 .edit-article--footer
