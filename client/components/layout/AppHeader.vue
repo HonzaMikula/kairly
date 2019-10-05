@@ -1,6 +1,6 @@
 <template>
   <header class="app-header">
-    <div :class="{'has-submenu': isSubscriptionRoute || isNewspapersPostsRoute}">
+    <div :class="{'has-submenu': isSubscriptionRoute || isNewspapersRoute || isPostsRoute}">
       <h1 class="app-header--logo" :class="{'show': pageTitle == null}">
         <nuxt-link :to="{name: 'index'}" exact>
           Kairly
@@ -16,7 +16,7 @@
           </li>
 
           <li class="subscription">
-            <nuxt-link 
+            <nuxt-link
               :to="{name: 'subscription-newspapers'}"
               :class="{'is-active': isSubscriptionRoute}"
               title="Subscriptions">
@@ -25,7 +25,7 @@
           </li>
 
           <li class="explore">
-            <nuxt-link 
+            <nuxt-link
               :to="{name: 'explore-tab'}"
               title="Explore">
               <span>{{ $t('Explore') }}</span>
@@ -33,7 +33,7 @@
           </li>
 
           <li class="newspapers">
-            <nuxt-link 
+            <nuxt-link
               to="/newspapers"
               :class="{'is-active': isNewspapersRoute}"
               title="Newspapers">
@@ -42,7 +42,7 @@
           </li>
 
           <li class="posts">
-            <nuxt-link 
+            <nuxt-link
               to="/posts"
               :class="{'is-active': isPostsRoute}"
               title="Posts">
@@ -52,7 +52,7 @@
         </ul>
       </nav>
 
-      <nav 
+      <nav
         v-if="topRoute == '/'"
         class="app-header--sub-navigation is-mobile">
         <ul>
@@ -82,7 +82,7 @@
         </ul>
       </nav>
 
-      <nav 
+      <nav
         v-if="isSubscriptionRoute || isNewspapersRoute || isPostsRoute"
         class="app-header--sub-navigation">
         <ul>
@@ -245,7 +245,7 @@ export default {
 
     topRoute() {
       const routes = this.$route.path.split('/')
-      
+
       if (routes[1] == '') {
         return '/'
       }
@@ -323,7 +323,7 @@ export default {
     margin: 0 auto
     max-width: 900px
 
-    &.has-submenu 
+    &.has-submenu
       grid-template-rows: auto $baseline*1.5
 
     @media (max-width: $mobile)
