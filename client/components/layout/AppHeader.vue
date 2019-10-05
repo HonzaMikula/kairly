@@ -431,6 +431,9 @@ export default {
       display: block
       padding: 0 $baseline/4
 
+      ul
+        text-align: center
+
   > span
     margin-right: $baseline
 
