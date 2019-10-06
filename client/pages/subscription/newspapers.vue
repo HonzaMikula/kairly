@@ -1,12 +1,12 @@
 <template>
-  <my-newspapers-view>
-    <my-newspapers--empty
+  <div class="my-newspapers-view">
+    <div class="my-newspapers--empty"
       v-if="newspapers.length === 0"
     >
       <h1>{{ $t('No newspapers') }}</h1>
       <p>{{ $t('You haven\'t subscribe to any newspapers yet. On Explore page you can find newspapers you might like.') }}</p>
       <nuxt-link to="/explore">{{ $t('Explore newspapers') }}</nuxt-link>
-    </my-newspapers--empty>
+    </div>
 
     <template v-else>
       <NewspaperWidget
@@ -15,7 +15,7 @@
         :newspaper="newspaper"
       />
     </template>
-  </my-newspapers-view>
+  </div>
 </template>
 
 <script>
@@ -61,7 +61,7 @@ export default {
 //- Imports
 @import './styles/components/buttons'
 
-my-newspapers-view
+.my-newspapers-view
   display: grid
   grid-row-gap: $baseline
   grid-template-columns: 1fr 1fr
@@ -72,7 +72,7 @@ my-newspapers-view
     grid-template-columns: 1fr 1fr
     grid-column-gap: $baseline / 4
 
-my-newspapers--empty
+.my-newspapers--empty
   grid-column: 1 / span 3
 
   padding: $baseline

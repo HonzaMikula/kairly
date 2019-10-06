@@ -640,8 +640,8 @@ export default {
       overflow-x: auto
       -webkit-overflow-scrolling: touch
 
-      newspaper-widget-view,
-      issue-widget-view
+      .newspaper-widget-view,
+      .issue-widget-view
         min-width: 200px
 
 </style>

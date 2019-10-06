@@ -266,7 +266,7 @@ export default {
       overflow-x: auto
       -webkit-overflow-scrolling: touch
 
-      newspaper-widget-view
+      .newspaper-widget-view
         min-width: 200px
 
 //- Illustration on newspaper widget

@@ -1,6 +1,6 @@
 <template>
   <main>
-    <explore--top-newspapers>
+    <div class="explore--top-newspapers">
       <div>
         <NewspaperWidget
           v-for="newspaper in newspapers"
@@ -9,7 +9,7 @@
         />
       </div>
 
-    </explore--top-newspapers>
+    </div>
 
     <section :class="`explore-${index}`" v-for="(category, index) in categories" :key="index">
       <h2>{{ category.name }}</h2>

@@ -1,11 +1,6 @@
 <template>
   <AppLayout :name="$t('Import RSS feeds')">
     <div class="import-rss-view">
-      <header>
-        <h1>{{ $t('Add RSS source(s)') }}</h1>
-        <ImportOpmlButton :text="$t('Upload OPML file')" @loaded="addOpml" />
-      </header>
-
       <section class="import-rss--add-source">
         <input
           type="text"
@@ -14,6 +9,10 @@
           @keyup.enter="addRssSource"
         />
         <button @click="addRssSource">{{ $t('Add RSS feed') }}</button>
+      </section>
+
+      <section class="import-rss--opml">
+        <ImportOpmlButton :text="$t('Upload OPML file')" @loaded="addOpml" />
       </section>
 
       <section v-if="sources.length === 0" class="import-rss-empty-view">
@@ -300,6 +299,15 @@ export default {
 @import './styles/components/buttons'
 @import './styles/components/mixins'
 
+//- Import RSS
+.import-rss-view
+  margin: $baseline auto
+  max-width: 900px
+
+  @media (max-width: $mobile)
+    padding: 0 $baseline / 2
+
+
 //- Import RSS Empty view
 .import-rss-empty-view
   display: grid
@@ -356,7 +364,7 @@ export default {
 //- Add source
 .import-rss--add-source
   display: flex
-  padding: $baseline 0
+  padding-bottom: $baseline / 4
   margin: 0 $baseline*5
 
   @media (max-width: $mobile)
@@ -389,31 +397,18 @@ export default {
     &:focus
       background: darken($c-base, 10%)
 
+//- Import OPML
+.import-rss--opml
+  margin-bottom: $baseline * 2
+  text-align: center
 
-//- Import RSS
-.import-rss-view
-  margin: $baseline auto
-  max-width: 900px
+  label
+    text-decoration: underline
+    cursor: pointer
 
-  @media (max-width: $mobile)
-    padding: 0 $baseline / 2
-
-  //- Header
-  > header
-    display: flex
-
-    //- heading
-    > h1
-      flex: 1
-      margin-bottom: $baseline / 2
-
-      font-size: $fs-2
-      font-weight: 600
-
-    //- upload opml button
-    .import-opml-button
-      label
-        +button
+    &:hover,
+    &:focus
+      text-decoration: none
 
 //- Table
 .import-rss--table

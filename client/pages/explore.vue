@@ -140,7 +140,7 @@ explore-view
     &.explore-recent
       grid-area: explore-recent
 
-explore--top-newspapers
+.explore--top-newspapers
   grid-area: explore-top-newspapers
 
   > h2
@@ -160,8 +160,8 @@ explore--top-newspapers
       overflow-x: auto
       -webkit-overflow-scrolling: touch
 
-      newspaper-widget-view,
-      issue-widget-view
+      .newspaper-widget-view,
+      .issue-widget-view
         min-width: 200px
 
 </style>

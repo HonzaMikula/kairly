@@ -1,11 +1,6 @@
 <template>
   <AppLayout :name="$t('Subscriptions')">
     <div class="my-subscription-view">
-      <nav>
-        <nuxt-link :to="{name: 'subscription-newspapers'}">{{ $t('Newspapers') }}</nuxt-link>
-        <nuxt-link :to="{name: 'subscription-authors'}">{{ $t('Authors') }}</nuxt-link>
-      </nav>
-
       <main>
         <nuxt-child/>
       </main>
@@ -155,33 +150,6 @@ export default {
   @media (max-width: $mobile)
     padding: 0 $baseline/4
     margin: $baseline/2 auto
-
-  //- Switcher
-  > nav
-    grid-area: subscription-nav
-    margin-bottom: $baseline
-
-    font-size: $fs-3
-
-    @media (max-width: $mobile)
-      margin-bottom: $baseline / 2
-
-      font-size: $fs-2
-
-    a
-      display: inline-block
-      margin-right: $baseline
-
-      color: $c-base
-
-      font-weight: 600
-
-      @media (max-width: $mobile)
-        margin-right: $baseline / 2
-
-      &.nuxt-link-active
-        border-bottom: 2px solid #000
-        color: #000
 
   //- Main view
   > main

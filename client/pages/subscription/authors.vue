@@ -1,12 +1,12 @@
 <template>
   <div class="myauthors-view">
     <template>
-      <my-authors--empty
+      <div class="my-authors--empty"
         v-if="!subscriptionExists">
         <h1>{{ $t('No authors') }}</h1>
         <p>{{ $t("You haven't subscribe to any author yet. On Explore page you can find authors you might like.") }}</p>
         <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
-      </my-authors--empty>
+      </div>
 
       <template v-if="authors['suspended'].length">
         <h2>{{ $t('Suspended') }}</h2>
@@ -133,10 +133,10 @@ export default {
     &:first-of-type
       margin-top: 0
 
-my-newspapers-view .author-widget-view
+.my-newspapers-view .author-widget-view
   width: 576px
 
-my-authors--empty
+.my-authors--empty
   display: block
   padding: $baseline
 

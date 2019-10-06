@@ -1,6 +1,6 @@
 <template>
   <main>
-    <explore--top-newspapers>
+    <div class="explore--top-newspapers">
       <h2>{{ $t('Recent Issues') }}</h2>
 
       <div>
@@ -11,7 +11,7 @@
         />
       </div>
 
-    </explore--top-newspapers>
+    </div>
 
     <section class="explore-recent">
       <h2>{{ $t('Recent Posts') }}</h2>
