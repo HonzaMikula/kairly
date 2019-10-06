@@ -1,5 +1,8 @@
 <template>
-  <DialogWindow @close="closeModal">
+  <DialogWindow
+    v-if="active"
+    @close="closeModal"
+  >
     <modal-dialog
       role="dialog"
       class="explore"
@@ -26,14 +29,14 @@
 </template>
 
 <script>
-import DialogWindow from '@/components/modals/DialogWindow'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
+import DialogWindow from '@/components/modals/DialogWindow'
+import ModalMixin from '@/mixins/ModalMixin'
 
 export default {
   name: 'ExploreModal',
 
   props: {
-    closeModal: Function,
     category: Object,
     limit: Number
   },
@@ -47,7 +50,9 @@ export default {
   components: {
     DialogWindow,
     AuthorWidget
-  }
+  },
+
+  mixins: [ModalMixin]
 }
 </script>
 

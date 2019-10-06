@@ -56,10 +56,9 @@
       <a href="" @click.prevent="$router.go({path:'/', force: true})">{{ $t('Go Home to start reading') }}</a>
     </section>
 
-    <portal to="modal" v-if="isTwitterApologyModalOpen">
-      <TwitterApologyModal :closeModal="closeTwitterApology"></TwitterApologyModal>
-    </portal>
-
+    <TwitterApologyModal
+      :active.sync="isTwitterApologyModalOpen"
+    />
   </div>
 </template>
 
@@ -69,7 +68,7 @@ import { mapState, mapGetters } from 'vuex'
 import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import TwitterApologyModal from '@/components/modals/TwitterApology'
+import TwitterApologyModal from '@/components/modals/TwitterApologyModal'
 import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
 
 export default {
@@ -185,7 +184,7 @@ export default {
 
   > h2
     grid-column: 1 / span 2
-    
+
     @media (max-width: $mobile)
       grid-column: 1
       margin-bottom: 0 !important

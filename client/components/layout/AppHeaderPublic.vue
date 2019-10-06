@@ -52,15 +52,15 @@
       </ul>
     </nav>
 
-    <portal to="modal" v-if="isSignInModalOpen">
-      <SignInModal :closeModal="closeModals"></SignInModal>
-    </portal>
+    <SignInModal
+      :active.sync="isSignInModalOpen"
+    />
   </header>
 </template>
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import SignInModal from '@/components/modals/SignIn'
+import SignInModal from '@/components/modals/SignInModal'
 
 export default {
   name: 'AppHeaderPublic',
@@ -75,15 +75,15 @@ export default {
 
   data() {
     return {
-      isMobileMenuOpen: null,
-      isSignInModalOpen: null
+      isSignInModalOpen: false,
+      isMobileMenuOpen: false,
     }
   },
 
   computed: {
     topRoute() {
       const routes = this.$route.path.split('/')
-      
+
       if (routes[1] == '') {
         return '/'
       }
@@ -102,11 +102,6 @@ export default {
 
     openMobileMenu() {
       this.isMobileMenuOpen = !this.isMobileMenuOpen
-    },
-
-    closeModals() {
-      this.isDropdownOpen = null
-      this.isSignInModalOpen = null
     }
   }
 }
@@ -168,7 +163,7 @@ export default {
       @media (max-width: $mobile)
         display: none
 
-    li 
+    li
       list-style: none
       a
         display: block
@@ -180,7 +175,7 @@ export default {
         color: #555
 
         line-height: $baseline * 1.5
-        
+
 
         &:focus,
         &:hover,
@@ -223,7 +218,7 @@ export default {
   li:first-of-type a.nuxt-link-active
       color: $c-base
       font-weight: 400
-      
+
 
 
 .app-header-public--submenu
@@ -291,7 +286,7 @@ export default {
     @media (max-width: $mobile)
       .signup
         display: none
-  
+
       .signin
         margin-top: 0
         margin-right: 0
@@ -300,7 +295,7 @@ export default {
           margin-top: 0
           margin-right: 0
 
-  li 
+  li
     list-style: none
     a
       display: block
@@ -312,7 +307,7 @@ export default {
       color: #555
 
       line-height: $baseline * 1.5
-      
+
 
       &:focus,
       &:hover,
@@ -323,7 +318,7 @@ export default {
       margin-right: $baseline / 2
 
   //- hamburger menu for mobile
-  .hamburger-menu    
+  .hamburger-menu
     +button-icon($fa-var-bars)
     display: none
     margin-left: $baseline / 4

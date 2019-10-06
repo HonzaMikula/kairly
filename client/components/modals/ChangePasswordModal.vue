@@ -1,5 +1,8 @@
 <template>
-  <DialogWindow @close="closeModal">
+  <DialogWindow
+    v-if="active"
+    @close="closeModal"
+  >
     <modal-dialog
       role="dialog"
       class="change-password-dialog"
@@ -58,13 +61,10 @@
 import { mapMutations } from 'vuex'
 import DialogWindow from '@/components/modals/DialogWindow'
 import ErrorHandler from '@/mixins/ErrorHandler'
+import ModalMixin from '@/mixins/ModalMixin'
 
 export default {
-  name: 'ChangePassword',
-
-  props: {
-    closeModal: Function
-  },
+  name: 'ChangePasswordModal',
 
   head() {
     return {
@@ -76,7 +76,7 @@ export default {
     DialogWindow
   },
 
-  mixins: [ErrorHandler],
+  mixins: [ErrorHandler, ModalMixin],
 
   data() {
     return {

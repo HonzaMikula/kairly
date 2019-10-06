@@ -35,13 +35,12 @@
         </PostWrapper>
       </div>
 
-      <portal to="modal" v-if="isPublishPostDialogOpen">
-        <PublishPostDialog
-          :post="modalPost"
-          :price="modalPrice"
-          @publish="publishPost">
-        </PublishPostDialog>
-      </portal>
+      <PublishPostModal
+        :active.sync="isPublishPostDialogOpen"
+        :post="modalPost"
+        :price="modalPrice"
+        @publish="publishPost"
+      />
     </div>
   </AppLayout>
 </template>
@@ -52,7 +51,7 @@ import { mapState } from 'vuex'
 import ErrorHandler from '@/mixins/ErrorHandler'
 import AppLayout from '@/components/layout/AppLayout'
 import PostWrapper from '@/components/PostWrapper'
-import PublishPostDialog from '@/components/modals/PublishPost'
+import PublishPostModal from '@/components/modals/PublishPostModal'
 
 export default {
   name: 'Drafts',
@@ -60,7 +59,7 @@ export default {
   components: {
     AppLayout,
     PostWrapper,
-    PublishPostDialog
+    PublishPostModal
   },
 
   mixins: [ErrorHandler],
@@ -80,10 +79,6 @@ export default {
   },
 
   methods: {
-    closePublishDialog() {
-      this.isPublishPostDialogOpen = false
-    },
-
     async deletePost(post) {
       if (confirm("Are you sure?")) {
         await this.$axios.$delete(`/drafts/${post.id}`)
@@ -104,17 +99,10 @@ export default {
 
     async publishPost(price) {
       const post = this.modalPost
-      this.isPublishPostDialogOpen = false
-
       try {
-        if (price === null) {
-          // user cancels
-          return
-        }
-
-        const { post: publishedPost } = await this.$axios.$post(`/drafts/${post.id}/publish`, { price })
+        await this.$axios.$post(`/drafts/${post.id}/publish`, { price })
         const idx = this.posts.findIndex(p => p.id === post.id)
-        this.posts.splice(idx, 1, publishedPost)
+        this.posts.splice(idx, 1)
       } catch (err) {
         this.handleError(err)
       }

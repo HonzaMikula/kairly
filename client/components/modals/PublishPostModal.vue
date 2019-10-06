@@ -1,10 +1,13 @@
 <template>
-  <DialogWindow @close="closeModal">
+  <DialogWindow
+    v-if="active"
+    @close="closeModal"
+  >
     <modal-dialog role="dialog" @click.stop class="publish-post-dialog">
       <header>
         <h1>{{ $t('Publish post') }}</h1>
 
-        <button-close tabindex="0" role="button" @keydown.esc="closeModal" @click="closeModal"></button-close>
+        <button-close tabindex="0" role="button" @click="closeModal" />
       </header>
 
       <main>
@@ -43,10 +46,10 @@
 import { mapState } from 'vuex'
 
 import DialogWindow from '@/components/modals/DialogWindow'
-import PeriodicityMixin from '@/mixins/PeriodicityMixin'
+import ModalMixin from '@/mixins/ModalMixin'
 
 export default {
-  name: 'PublishPostDialog',
+  name: 'PublishPostModal',
 
   components: {
     DialogWindow
@@ -57,6 +60,8 @@ export default {
     price: String
   },
 
+  mixins: [ModalMixin],
+
   data() {
     return {
       postPrice: this.price ? this.price : '0.00',
@@ -65,12 +70,9 @@ export default {
   },
 
   methods: {
-    closeModal() {
-      this.$emit('publish', null)
-    },
-
     submit() {
       this.$emit('publish', this.price)
+      this.closeModal()
     }
   }
 }

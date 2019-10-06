@@ -1,5 +1,9 @@
 <template>
-  <DialogWindow @close="onCloseReceived">
+  <DialogWindow
+    v-if="active"
+    ignoreBackgroundClick
+    @close="closeModal"
+  >
     <modal-dialog role="dialog" @click.stop class="sign-in">
       <header>
         <h1>{{ $t('Sign In') }}</h1>
@@ -39,17 +43,16 @@
 
 <script>
 import DialogWindow from '@/components/modals/DialogWindow'
+import ModalMixin from '@/mixins/ModalMixin'
 
 export default {
-  name: 'SignInDialog',
-
-  props: {
-    closeModal: Function
-  },
+  name: 'SignInModal',
 
   components: {
     DialogWindow
   },
+
+  mixins: [ModalMixin],
 
   data() {
     return {
@@ -61,13 +64,6 @@ export default {
   },
 
   methods: {
-    onCloseReceived(ev) {
-      // ignore click on background
-      if (ev instanceof KeyboardEvent) {
-        this.closeModal()
-      }
-    },
-
     async login() {
       this.invalidCredentials = false
       const { username, password } = this

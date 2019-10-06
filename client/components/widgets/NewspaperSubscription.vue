@@ -25,21 +25,18 @@
       </template>
     </button>
 
-    <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
-      <NewspaperSubscriptionDialog
-        :newspaper="newspaper"
-        :subscription="subscription"
-        :closeModal="closeModal"
-      >
-      </NewspaperSubscriptionDialog>
-    </portal>
+    <NewspaperSubscriptionModal
+      :active.sync="isSubscriptionConfirmationModalOpen"
+      :newspaper="newspaper"
+      :subscription="subscription"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-import NewspaperSubscriptionDialog from '@/components/modals/NewspaperSubscription'
+import NewspaperSubscriptionModal from '@/components/modals/NewspaperSubscriptionModal'
 
 export default {
   name: 'NewspaperSubscription',
@@ -49,7 +46,7 @@ export default {
   },
 
   components: {
-    NewspaperSubscriptionDialog
+    NewspaperSubscriptionModal
   },
 
   computed: {

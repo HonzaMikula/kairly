@@ -26,13 +26,11 @@
       </template>
     </button>
 
-    <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
-      <AuthorSubscriptionModal
-        :author="author"
-        :subscription="subscription"
-        :closeModal="closeModal"
-      />
-    </portal>
+    <AuthorSubscriptionModal
+      :active.sync="isSubscriptionConfirmationModalOpen"
+      :author="author"
+      :subscription="subscription"
+    />
   </div>
 </template>
 

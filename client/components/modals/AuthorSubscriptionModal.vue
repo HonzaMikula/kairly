@@ -1,9 +1,12 @@
 <template>
-  <DialogWindow @close="closeModal">
+  <DialogWindow
+    v-if="active"
+    @close="closeModal"
+  >
     <modal-dialog
       class="author-subscription-dialog"
       role="dialog"
-      @click.stop="closeChangePeriodicityDialog()"
+      @click.stop="closeChangePeriodicityDialog"
     >
       <header>
         <h1 v-if="!state">{{ $t('Subscribe to author') }}</h1>
@@ -14,7 +17,7 @@
         <button-close
           tabindex="0"
           role="button"
-          @click="closeModal()"
+          @click="closeModal"
         />
       </header>
       <main>
@@ -128,6 +131,7 @@ import { mapState } from 'vuex'
 
 import DialogWindow from '@/components/modals/DialogWindow'
 import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
+import ModalMixin from '@/mixins/ModalMixin'
 import MoneyFormat from '@/components/widgets/MoneyFormat'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
@@ -137,7 +141,6 @@ export default {
   props: {
     author: Object,
     subscription: Object,
-    closeModal: Function
   },
 
   components: {
@@ -146,7 +149,7 @@ export default {
     MoneyFormat,
   },
 
-  mixins: [PeriodicityMixin],
+  mixins: [ModalMixin, PeriodicityMixin],
 
   data() {
     return {

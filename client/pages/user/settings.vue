@@ -79,9 +79,9 @@
         </div>
       </div>
 
-      <portal to="modal" v-if="isChangePasswordOpen">
-        <ChangePassword :closeModal="closeChangePassword" />
-      </portal>
+      <ChangePasswordModal
+        :active.sync="isChangePasswordOpen"
+      />
     </div>
   </AppLayout>
 </template>
@@ -91,7 +91,7 @@ import { mapState, mapMutations } from 'vuex'
 
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import AppLayout from '@/components/layout/AppLayout'
-import ChangePassword from '@/components/profile/ChangePassword'
+import ChangePasswordModal from '@/components/modals/ChangePasswordModal'
 import InfoMessage from '@/components/InfoMessage'
 
 export default {
@@ -106,7 +106,7 @@ export default {
   components: {
     AppLayout,
     PictureInput,
-    ChangePassword,
+    ChangePasswordModal,
     InfoMessage
   },
 

@@ -29,13 +29,12 @@
 
     <portal to="explore-header">{{ tab.name }}</portal>
 
-    <portal to="modal" v-if="showCaregoryInModal">
-      <ExploreModal
-        :closeModal="closeCategoryModal"
-        :category="showCaregoryInModal"
-        :limit="LIMIT"
-       />
-    </portal>
+    <ExploreModal
+      :active.sync="isModalOpen"
+      :category="modalCategory"
+      :limit="LIMIT"
+    />
+
   </main>
 </template>
 
@@ -44,7 +43,7 @@ import TABS from '@/exploreTabs'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import AuthorWidget from '@/components/widgets/AuthorWidget'
-import ExploreModal from '@/components/explore/ExploreModal'
+import ExploreModal from '@/components/modals/ExploreModal'
 
 export default {
   name: 'ExploreTab',
@@ -66,17 +65,15 @@ export default {
   data() {
     return {
       LIMIT: 7,
-      showCaregoryInModal: null
+      modalCategory: null,
+      isModalOpen: false
     }
   },
 
   methods: {
     openCategoryModal(category) {
-      this.showCaregoryInModal = category
-    },
-
-    closeCategoryModal() {
-      this.showCaregoryInModal = null
+      this.modalCategory = category
+      this.isModalOpen = true
     }
   },
 

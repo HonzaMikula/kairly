@@ -1,7 +1,9 @@
 <template>
-  <modal-window @click="onClick">
-    <slot></slot>
-  </modal-window>
+  <portal to="modal">
+    <modal-window @click="onBackgroundClick">
+      <slot/>
+    </modal-window>
+  </portal>
 </template>
 
 <script>
@@ -9,23 +11,20 @@
 export default {
   name: 'DialogWindow',
 
-  // props: {
-  //   // active: Boolean
-  //   //closeModal: Function,
-  //   //cancelClosingOnBackground: Boolean
-  // },
+  props: {
+    ignoreBackgroundClick: Boolean
+  },
 
   methods: {
-    onClick(event) {
-      this.$emit('close', event)
-      // if(!this.cancelClosingOnBackground) {
-      //   this.closeModal()
-      // }
+    onBackgroundClick(event) {
+      if (!this.ignoreBackgroundClick) {
+        this.$emit('close')
+      }
     },
 
     onKeyUp(event) {
       if (event.which === 27) {
-        this.$emit('close', event)
+        this.$emit('close')
       }
     },
   },
@@ -34,7 +33,7 @@ export default {
     window.addEventListener('keyup', this.onKeyUp);
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     window.removeEventListener('keyup', this.onKeyUp)
   },
 }

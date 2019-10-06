@@ -1,5 +1,8 @@
 <template>
-  <DialogWindow @close="closeModal">
+  <DialogWindow
+    v-if="active"
+    @close="closeModal"
+  >
     <modal-dialog
       role="dialog"
       class="twitter-apology"
@@ -24,13 +27,10 @@
 
 <script>
 import DialogWindow from '@/components/modals/DialogWindow'
+import ModalMixin from '@/mixins/ModalMixin'
 
 export default {
-  name: 'TwitterApologyDialog',
-
-  props: {
-    closeModal: Function
-  },
+  name: 'TwitterApologyModal',
 
   components: {
     DialogWindow
