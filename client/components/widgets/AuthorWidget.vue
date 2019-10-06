@@ -22,7 +22,7 @@
       </h3>
 
       <section>
-        <AuthorSubscription :author="author" />
+        <AuthorSubscriptionButton :author="author" />
       </section>
     </header>
 
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
 
 export default {
   name: 'AuthorWidget',
@@ -41,7 +41,7 @@ export default {
   },
 
   components: {
-    AuthorSubscription
+    AuthorSubscriptionButton
   },
 
   computed: {

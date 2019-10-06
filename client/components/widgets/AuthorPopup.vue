@@ -1,5 +1,6 @@
 <template>
   <b-popover
+    ref="popover"
     :target="target"
     placement="bottom"
     :delay="{ show: 400, hide: 100 }"
@@ -32,16 +33,20 @@
 
       <p>{{ author.bio }}</p>
 
-      <section>
-        <AuthorSubscription :author="author" />
+      <section v-if="loggedIn">
+        <AuthorSubscriptionButton
+          :author="author"
+          @click="() => $refs.popover.$emit('close')"
+        />
       </section>
     </div>
   </b-popover>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { BPopover } from 'bootstrap-vue'
-import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
 
 export default {
   name: 'AuthorPopup',
@@ -52,16 +57,13 @@ export default {
   },
 
   components: {
-    AuthorSubscription,
+    AuthorSubscriptionButton,
     BPopover
   },
 
-  computed: {
-    subscription() {
-      return this.$store.getters.getAuthorSubscription(this.author)
-    },
-    canceled() { return this.subscription && this.subscription.state == 'canceled'}
-  }
+  computed: mapState({
+    loggedIn: state => state.auth.loggedIn
+  })
 }
 </script>
 

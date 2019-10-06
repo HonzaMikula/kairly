@@ -30,7 +30,7 @@
     </div>
 
     <div class="newspaper-widget--subscribe" v-if="loggedIn">
-      <NewspaperSubscription :newspaper="newspaper" />
+      <NewspaperSubscriptionButton :newspaper="newspaper" />
 
       <p>
         {{ newspaper.likes }} {{ $t('subscribers') }}
@@ -44,7 +44,7 @@
 import { mapState } from 'vuex'
 
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
-import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
 export default {
   name: 'NewspaperWidget',
@@ -54,7 +54,7 @@ export default {
   },
 
   components: {
-    NewspaperSubscription
+    NewspaperSubscriptionButton
   },
 
   mixins: [PeriodicityMixin],

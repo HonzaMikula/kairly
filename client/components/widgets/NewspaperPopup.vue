@@ -1,5 +1,6 @@
 <template>
   <b-popover
+    ref="popover"
     :target="target"
     placement="bottom"
     :delay="{ show: 400, hide: 100 }"
@@ -37,7 +38,10 @@
       </div>
 
       <div class="newspaper-widget--subscribe" v-if="loggedIn">
-        <NewspaperSubscription :newspaper="newspaper" />
+        <NewspaperSubscriptionButton
+          :newspaper="newspaper"
+          @click="() => $refs.popover.$emit('close')"
+        />
 
         <p>
           {{ newspaper.likes }} {{ $t('subscribers') }}
@@ -52,7 +56,7 @@ import { mapState } from 'vuex'
 
 import { BPopover } from 'bootstrap-vue'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
-import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
 export default {
   name: 'NewspaperPopup',
@@ -64,7 +68,7 @@ export default {
 
   components: {
     BPopover,
-    NewspaperSubscription,
+    NewspaperSubscriptionButton,
   },
 
   mixins: [PeriodicityMixin],

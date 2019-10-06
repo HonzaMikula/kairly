@@ -107,10 +107,7 @@
           <p itemprop="description">{{post.author.bio}}</p>
 
           <div class="post-detail--author--subscription" v-if="loggedIn">
-            <AuthorSubscription
-              v-if="subscription"
-              :subscription="subscription" :author="post.author"
-            />
+            <AuthorSubscriptionButton :author="post.author" />
           </div>
         </div>
 
@@ -173,7 +170,7 @@ import { mapGetters, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
-import AuthorSubscription from '@/components/widgets/AuthorSubscription'
+import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
 import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
@@ -223,7 +220,7 @@ export default {
   components: {
     AppLayout,
     ConsiderPost,
-    AuthorSubscription,
+    AuthorSubscriptionButton,
     KairlyPromo,
     FooterLinks,
     RecommendButtonPost,
@@ -254,10 +251,6 @@ export default {
     }),
 
     ...mapGetters(['userNewspapers']),
-
-    subscription() {
-      return this.$store.getters.getAuthorSubscription(this.post.author)
-    }
   },
 
   async asyncData({ app, store, params, error }) {

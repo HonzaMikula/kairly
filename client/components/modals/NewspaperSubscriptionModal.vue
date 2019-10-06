@@ -97,7 +97,7 @@ import ModalMixin from '@/mixins/ModalMixin'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 
 export default {
-  name: 'NewspaperSubscription',
+  name: 'NewspaperSubscriptionModal',
 
   props: {
     newspaper: Object,

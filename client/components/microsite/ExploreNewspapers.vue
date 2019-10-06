@@ -19,9 +19,9 @@
       </div>
     </div>
 
-    <div 
-      v-if="issue" 
-      class="explore--issue" 
+    <div
+      v-if="issue"
+      class="explore--issue"
       :class="{'is-expanded': expandNewspaper}">
       <nav class="explore--issue--navigation" v-if="links.prev || links.next">
         <button
@@ -44,13 +44,13 @@
       <IssueWrapper :issue="issue" showTail></IssueWrapper>
 
       <div class="explore--issue--subscribe" v-if="loggedIn">
-        <NewspaperSubscription :newspaper="newspaper" />
+        <NewspaperSubscriptionButton :newspaper="newspaper" />
         <p>{{ periodicity }}</p>
       </div>
 
       <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
 
-      <button v-if="!expandNewspaper" @click="showMore()">{{ $t('Show more') }}</button>  
+      <button v-if="!expandNewspaper" @click="showMore()">{{ $t('Show more') }}</button>
     </div>
   </section>
 </template>
@@ -60,14 +60,14 @@ import NEWSPAPERS from '@/topNewspapers'
 import { mapState } from 'vuex'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import IssueWrapper from '@/components/IssueWrapper'
-import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
 export default {
   name: 'ExploreNewspapers',
 
   components: {
     IssueWrapper,
-    NewspaperSubscription
+    NewspaperSubscriptionButton
   },
 
   mixins: [PeriodicityMixin],
@@ -186,7 +186,7 @@ export default {
 
     @media (max-width: $mobile)
       min-width: 200px
-      
+
 
   h3
     margin-bottom: $baseline / 2
@@ -260,7 +260,7 @@ export default {
     text-align: center
 
     padding-bottom: $baseline
-    
+
 //- Navigation between issues
 .explore--issue--navigation
   display: grid
@@ -340,5 +340,5 @@ export default {
     color: #555
 
     font-size: $fs--1
-  
+
 </style>

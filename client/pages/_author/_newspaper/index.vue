@@ -24,7 +24,7 @@
             v-if="loggedIn"
             class="newspaper-detail--subscribe"
           >
-            <NewspaperSubscription :newspaper="newspaper" />
+            <NewspaperSubscriptionButton :newspaper="newspaper" />
 
             <p>{{ periodicity }}</p>
           </div>
@@ -177,7 +177,7 @@ import { errorToParams } from '@/utils/errors'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
-import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
@@ -254,7 +254,7 @@ export default {
   components: {
     AppLayout,
     IssueWrapper,
-    NewspaperSubscription,
+    NewspaperSubscriptionButton,
     KairlyPromo,
     FooterLinks,
     RecommendButtonIssue,

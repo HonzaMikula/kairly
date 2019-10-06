@@ -17,7 +17,7 @@
             </nuxt-link>
           </td>
           <td>{{ fmtTime(t.to) }}</td>
-          <td><AuthorSubscription :author="t.author" /></td>
+          <td><AuthorSubscriptionButton :author="t.author" /></td>
         </template>
         <template v-if="t.newspaper">
           <td class="newspaper">
@@ -28,7 +28,7 @@
           </td>
           <td>{{ fmtTime(t.to) }}</td>
           <td>
-            <NewspaperSubscription :newspaper="t.newspaper" />
+            <NewspaperSubscriptionButton :newspaper="t.newspaper" />
           </td>
         </template>
       </tr>
@@ -41,8 +41,8 @@ import moment from 'moment'
 
 import { sortBy } from '@/utils/array'
 
-import AuthorSubscription from '@/components/widgets/AuthorSubscription'
-import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
+import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
 export default {
   name: 'UpcomingTransactions',
@@ -54,8 +54,8 @@ export default {
   },
 
   components: {
-    AuthorSubscription,
-    NewspaperSubscription
+    AuthorSubscriptionButton,
+    NewspaperSubscriptionButton,
   },
 
   computed: {

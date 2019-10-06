@@ -9,7 +9,7 @@
     }"
     v-b-tooltip
     :title="buttonTitle"
-    @click="(ev) => $emit('click', ev)"
+    @click="(ev) => { openModal(); $emit('click', ev)}"
   >
     <template v-if="!subscription || state === 'canceled'">
       {{ price === 0 ? $t('Subscribe for free') : $t('Subscribe for {price}', { price: priceWithCurrency }) }}
@@ -69,6 +69,13 @@ export default {
 
     priceWithCurrency() {
       return `${this.price} Kč`
+    }
+  },
+
+  methods: {
+    openModal() {
+      document.activeElement.blur()
+      this.$store.commit('modals/newspaperSubscription', this.newspaper)
     }
   }
 }

@@ -7,6 +7,18 @@
 
       <InfoMessage v-if="errorMessage" type="error">{{ errorMessage }}</InfoMessage>
       <InfoMessage v-if="successMessage" type="success">{{ successMessage }}</InfoMessage>
+
+      <AuthorSubscriptionModal
+        v-if="$store.state.modals.authorSubscription !== null"
+        :author="$store.state.modals.authorSubscription"
+        @close="$store.commit('modals/authorSubscription', null)"
+      />
+
+      <NewspaperSubscriptionModal
+        v-if="$store.state.modals.newspaperSubscription !== null"
+        :newspaper="$store.state.modals.newspaperSubscription"
+        @close="$store.commit('modals/newspaperSubscription', null)"
+      />
     </template>
   </div>
 </template>
@@ -14,7 +26,9 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 
+import AuthorSubscriptionModal from '@/components/modals/AuthorSubscriptionModal'
 import InfoMessage from '@/components/InfoMessage'
+import NewspaperSubscriptionModal from '@/components/modals/NewspaperSubscriptionModal'
 
 export default {
   name: 'app',
@@ -22,7 +36,9 @@ export default {
   middleware: ['auth'],
 
   components: {
-    InfoMessage
+    AuthorSubscriptionModal,
+    InfoMessage,
+    NewspaperSubscriptionModal
   },
 
   computed: mapState({

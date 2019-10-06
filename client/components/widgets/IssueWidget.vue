@@ -23,7 +23,7 @@
     </ul>
 
     <issue-widget--subscribe>
-      <NewspaperSubscription :newspaper="issue.newspaper" />
+      <NewspaperSubscriptionButton :newspaper="issue.newspaper" />
 
       <p>
         {{ issue.newspaper.likes }} {{ $t('subscribers') }}
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import NewspaperSubscription from '@/components/widgets/NewspaperSubscription'
+import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
 export default {
   name: 'IssueWidget',
@@ -44,7 +44,7 @@ export default {
   },
 
   components: {
-    NewspaperSubscription
+    NewspaperSubscriptionButton
   }
 }
 </script>

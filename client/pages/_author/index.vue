@@ -27,7 +27,9 @@
         </section>
 
         <author-detail--subscribe v-if="loggedIn">
-          <AuthorSubscription if="subscription" :author="author" :subscription="subscription"/>
+          <AuthorSubscriptionButton
+            :author="author"
+          />
         </author-detail--subscribe>
       </author-detail--header>
 
@@ -79,7 +81,7 @@ import { errorToParams } from "@/utils/errors"
 import AppLayout from "@/components/layout/AppLayout"
 import NewspaperWidget from "@/components/widgets/NewspaperWidget"
 import PostWrapper from "@/components/PostWrapper"
-import AuthorSubscription from "@/components/widgets/AuthorSubscription"
+import AuthorSubscriptionButton from "@/components/widgets/AuthorSubscriptionButton"
 
 export default {
   name: "AuthorDetail",
@@ -126,7 +128,7 @@ export default {
     AppLayout,
     NewspaperWidget,
     PostWrapper,
-    AuthorSubscription
+    AuthorSubscriptionButton,
   },
 
   data() {
@@ -146,10 +148,6 @@ export default {
         ? this.newspapers
         : this.newspapers.slice(0, 3);
     },
-
-    subscription() {
-      return this.$store.getters.getAuthorSubscription(this.author);
-    }
   },
 
   methods: {
