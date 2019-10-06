@@ -1,27 +1,22 @@
 <template>
   <timeline-newspaper>
     <header>
-      <h1 :id="`issue-newspaper-${randomId}`">
+      <h1 :id="`issue-newspaper-${$_uid}`">
         <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
           <slot name="newspaper-title">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
 
-      <b-popover
-        :target="`issue-newspaper-${randomId}`"
-        placement="bottom"
-        :delay="{ show: 400, hide: 100 }"
-        triggers="hover"
-        @click.stop
-      >
-        <NewspaperPopup :newspaper="newspaper" />
-      </b-popover>
+      <NewspaperPopup
+        :target="`issue-newspaper-${$_uid}`"
+        :newspaper="newspaper"
+      />
 
       <p>
         <timeline-newspaper--editor>
-          <nuxt-link 
+          <nuxt-link
             :to="{name: 'author', params: {author: newspaper.editor.id}}"
-            :id="`issue-newspaper-author-${randomId}`">
+            :id="`issue-newspaper-author-${$_uid}`">
             <img
               v-if="issue.newspaper.editor.picture"
               :src="newspaper.editor.picture"
@@ -33,22 +28,19 @@
         <span>• {{ frequencyLabel }}</span>
         <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
-      <b-popover
-        :target="`issue-newspaper-author-${randomId}`"
-        placement="bottom"
-        :delay="{ show: 400, hide: 100 }"
-        triggers="hover"
-        @click.stop
-      >
-        <AuthorPopup :author="newspaper.editor" />
-      </b-popover>
+
+      <AuthorPopup
+        :target="`issue-newspaper-author-${$_uid}`"
+        :author="newspaper.editor"
+      />
+
     </header>
     <slot/>
   </timeline-newspaper>
 </template>
 
 <script>
-import { BPopover } from 'bootstrap-vue'
+
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 import NewspaperPopup from '@/components/widgets/NewspaperPopup'
 
@@ -57,18 +49,13 @@ export default {
   props: ['issue', 'hideDate'],
 
   components: {
-    BPopover,
     AuthorPopup,
-    NewspaperPopup
+    NewspaperPopup,
   },
 
   computed: {
     newspaper() {
       return this.issue.newspaper
-    },
-
-    randomId() {
-      return Math.floor(Math.random() * 10000000)
     },
 
     frequencyLabel() {

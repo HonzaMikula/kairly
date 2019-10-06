@@ -1,48 +1,59 @@
 <template>
-  <div class="author-popup-view">
-    <header>
-      <picture>
-        <nuxt-link :to="{name: 'author', params: {author: author.id}}">
-          <img
-            v-if="author.picture"
-            :src="author.picture"
-            :alt="author.name"
-          />
-          <img
-            v-else
-            src="~assets/user.png"
-            :alt="author.name"
-          />
-        </nuxt-link>
-      </picture>
-      <h3>
-        <nuxt-link :to="{name: 'author', params: {author: author.id}}">
-          {{ author.name }}
-        </nuxt-link>
-      </h3>
-      <p v-if="author.medium">{{ author.medium }}</p>
-    </header>
+  <b-popover
+    :target="target"
+    placement="bottom"
+    :delay="{ show: 400, hide: 100 }"
+    triggers="hover"
+    @click.stop
+  >
+    <div class="author-popup-view">
+      <header>
+        <picture>
+          <nuxt-link :to="{name: 'author', params: {author: author.id}}">
+            <img
+              v-if="author.picture"
+              :src="author.picture"
+              :alt="author.name"
+            />
+            <img
+              v-else
+              src="~assets/user.png"
+              :alt="author.name"
+            />
+          </nuxt-link>
+        </picture>
+        <h3>
+          <nuxt-link :to="{name: 'author', params: {author: author.id}}">
+            {{ author.name }}
+          </nuxt-link>
+        </h3>
+        <p v-if="author.medium">{{ author.medium }}</p>
+      </header>
 
-    <p>{{ author.bio }}</p>
+      <p>{{ author.bio }}</p>
 
-    <section>
-      <AuthorSubscription :author="author" />
-    </section>
-  </div>
+      <section>
+        <AuthorSubscription :author="author" />
+      </section>
+    </div>
+  </b-popover>
 </template>
 
 <script>
+import { BPopover } from 'bootstrap-vue'
 import AuthorSubscription from '@/components/widgets/AuthorSubscription'
 
 export default {
   name: 'AuthorPopup',
 
   props: {
+    target: String,
     author: Object
   },
 
   components: {
-    AuthorSubscription
+    AuthorSubscription,
+    BPopover
   },
 
   computed: {
@@ -106,7 +117,7 @@ export default {
 
       font-size: $fs--1
       line-height: $baseline * 0.75
-      
+
   //- bio
   > p
     margin-bottom: $baseline / 2

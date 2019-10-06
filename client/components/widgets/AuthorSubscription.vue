@@ -2,42 +2,43 @@
   <div class="author-subscription-view">
     <button
       :class="{
-        'to-subscribe': subscription === false,
-        'is-subscribed': subscription.state === 'active',
-        'is-canceled': subscription.state === 'canceled',
-        'is-suspended': subscription.state === 'suspended',
+        'to-subscribe': !subscription,
+        'is-subscribed': state === 'active',
+        'is-canceled': state === 'canceled',
+        'is-suspended': state === 'suspended',
       }"
       v-b-tooltip
       :title="buttonTitle"
       @click="openModal"
     >
-      <template v-if="subscription === false || subscription.state === 'canceled'">
-        {{ price === 0 ? $t('Subscribe for free') : $t('Subscribe for {price}', { price: priceWithCurrency }) }}<template v-if="subscription.state === 'canceled'">*</template>
+      <template v-if="!subscription || state === 'canceled'">
+        {{ price === 0 ? $t('Subscribe for free') : $t('Subscribe for {price}', { price: priceWithCurrency }) }}
+        <template v-if="state === 'canceled'">*</template>
       </template>
 
-      <template v-else-if="subscription.state === 'active'">
-        {{ price === 0 ? $t('Subscribed for free') : $t('Subscribed for {price}', { price: priceWithCurrency }) }}<template v-if="subscription.donation > 0">*</template>
+      <template v-else-if="state === 'active'">
+        {{ price === 0 ? $t('Subscribed for free') : $t('Subscribed for {price}', { price: priceWithCurrency }) }}
+        <template v-if="subscription.donation > 0">*</template>
       </template>
 
-      <template v-else-if="subscription.state === 'suspended'">
+      <template v-else-if="state === 'suspended'">
         {{ $t('Suspended') }}
       </template>
     </button>
 
     <portal to="modal" v-if="isSubscriptionConfirmationModalOpen">
-      <AuthorSubscriptionDialog
+      <AuthorSubscriptionModal
         :author="author"
         :subscription="subscription"
         :closeModal="closeModal"
-      >
-      </AuthorSubscriptionDialog>
+      />
     </portal>
   </div>
 </template>
 
 <script>
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
-import AuthorSubscriptionDialog from '@/components/modals/AuthorSubscription'
+import AuthorSubscriptionModal from '@/components/modals/AuthorSubscriptionModal'
 
 export default {
   name: 'AuthorSubscription',
@@ -47,40 +48,37 @@ export default {
   },
 
   components: {
-    AuthorSubscriptionDialog
+    AuthorSubscriptionModal
   },
 
   mixins: [PeriodicityMixin],
 
   computed: {
-    frequency() { return this.subscription && this.subscription.periodicity.frequency },
-    dow() { return this.subscription && this.subscription.periodicity.dow },
-    time() { return this.subscription && this.subscription.periodicity.time },
-
     subscription() {
-      const subscription = this.$store.getters.getAuthorSubscription(this.author)
-      return subscription ? subscription : false
+      return this.$store.getters.getAuthorSubscription(this.author)
+    },
+
+    state() {
+      return this.subscription ? this.subscription.state : null
     },
 
     buttonTitle() {
-      if (this.subscription.state === 'active') {
+      if (this.state === 'active') {
         return 'Change subscription'
       }
-      else if (this.subscription.state === 'canceled') {
+      if (this.state === 'canceled') {
         return 'Renew subscription'
       }
-      else if (this.subscription.state === 'suspended') {
+      if (this.state === 'suspended') {
         return 'Not enough credits, resolve it'
       }
-      else {
-        return false
-      }
+      return false
     },
 
     price() {
       // todo use decimal types
       let price =  ~~this.author.price.split('.')[0]
-      if (this.subscription.donation) {
+      if (this.subscription && this.subscription.donation) {
         price += ~~this.subscription.donation.split('.')[0]
       }
       return price
@@ -104,7 +102,7 @@ export default {
     },
 
     closeModal() {
-      this.isSubscriptionConfirmationModalOpen = null
+      this.isSubscriptionConfirmationModalOpen = false
     }
   }
 }
@@ -117,7 +115,7 @@ export default {
 .author-subscription-view
   button
     white-space: nowrap
-    
+
   //- when newspaper is subscribed
   button.is-subscribed
     +button(primary, small)

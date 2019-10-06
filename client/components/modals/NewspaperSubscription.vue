@@ -1,5 +1,5 @@
 <template>
-  <DialogWindow :closeModal="closeModal">
+  <DialogWindow @close="closeModal">
     <modal-dialog role="dialog" @click.stop class="newspaper-subscription-dialog">
       <header>
         <h1 v-if="!subscription.state">{{ $t('Subscribe newspaper') }}</h1>
@@ -14,7 +14,7 @@
           <h3>{{ newspaper.title }}</h3>
           <picture>
             <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
-            <div v-else class="image-placeholder"/>  
+            <div v-else class="image-placeholder"/>
           </picture>
           <time>{{ getPeriodicityLabel(newspaper.periodicity) }}</time>
         </section>

@@ -41,6 +41,7 @@ module.exports = {
     { src: '~/plugins/vue-infinite-scroll', ssr: false},
     { src: '~/plugins/rich-editor', ssr: false },
     '~/plugins/vue-moment',
+    '~/plugins/vue-uid',
     '~/plugins/axios',
     '~/plugins/i18n.js',
   ],
