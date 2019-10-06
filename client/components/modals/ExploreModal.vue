@@ -1,30 +1,18 @@
 <template>
   <DialogWindow
     v-if="active"
+    custom-class="explore-modal"
     @close="closeModal"
   >
-    <modal-dialog
-      role="dialog"
-      class="explore"
-      @click.stop
-    >
-      <header>
-        <h1>{{ category.name }}</h1>
-        <button-close
-          tabindex="0"
-          role="button"
-          @click="closeModal"
-        />
-      </header>
+    <template #header>
+      <h1>{{ category.name }}</h1>
+    </template>
 
-      <explore-modal-view>
-        <AuthorWidget
-          v-for="author in category.authors.slice(limit)"
-          :key="author.id"
-          :author="author"
-        />
-      </explore-modal-view>
-    </modal-dialog>
+    <AuthorWidget
+      v-for="author in category.authors.slice(limit)"
+      :key="author.id"
+      :author="author"
+    />
   </DialogWindow>
 </template>
 
@@ -57,10 +45,10 @@ export default {
 </script>
 
 <style lang="sass">
-modal-dialog.explore
+.explore-modal .modal-dialog
   max-width: auto
 
-explore-modal-view
+.explore-modal main
   position: relative
 
   padding: $baseline $baseline * 3/4

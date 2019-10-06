@@ -1,128 +1,117 @@
 <template>
   <DialogWindow
     v-if="active"
+    custom-class="author-subscription-dialog"
     @close="closeModal"
   >
-    <modal-dialog
-      class="author-subscription-dialog"
-      role="dialog"
-      @click.stop="closeChangePeriodicityDialog"
-    >
-      <header>
-        <h1 v-if="!state">{{ $t('Subscribe to author') }}</h1>
-        <h1 v-else-if="state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
-        <h1 v-else-if="state === 'canceled'">{{ $t('Renew subscription') }}</h1>
-        <h1 v-else-if="state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
+    <template #header>
+      <h1 v-if="!state">{{ $t('Subscribe to author') }}</h1>
+      <h1 v-else-if="state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
+      <h1 v-else-if="state === 'canceled'">{{ $t('Renew subscription') }}</h1>
+      <h1 v-else-if="state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
+    </template>
 
-        <button-close
-          tabindex="0"
-          role="button"
-          @click="closeModal"
-        />
-      </header>
-      <main>
-        <section class="author-subscription--author">
-          <h3>{{ author.name }}</h3>
-          <picture>
-            <img v-if="author.picture" :src="author.picture" :alt="author.name" />
-            <img v-else src="~assets/user.png" :alt="author.name"/>
-          </picture>
+    <section class="author-subscription--author">
+      <h3>{{ author.name }}</h3>
+      <picture>
+        <img v-if="author.picture" :src="author.picture" :alt="author.name" />
+        <img v-else src="~assets/user.png" :alt="author.name"/>
+      </picture>
 
-          <time>{{ getPeriodicityLabel(periodicity) }}</time>
-          <a href="" @click.prevent.stop="showChangePeriodicityDialog = !showChangePeriodicityDialog">{{ $t('change periodicity') }}</a>
-        </section>
+      <time>{{ getPeriodicityLabel(periodicity) }}</time>
+      <a href="" @click.prevent.stop="showChangePeriodicityDialog = !showChangePeriodicityDialog">{{ $t('change periodicity') }}</a>
+    </section>
 
-        <ChangePeriodicity
-          v-if="showChangePeriodicityDialog"
-          @changePeriodicity="changePeriodicity"
-        />
+    <ChangePeriodicity
+      v-if="showChangePeriodicityDialog"
+      @changePeriodicity="changePeriodicity"
+    />
 
-        <section class="author-subscription--price">
-          <h2 v-if="!state">{{ $t('It will cost you') }}</h2>
-          <h2 v-else-if="state === 'active'">{{ $t('It costs you') }}</h2>
-          <h2 v-else-if="state === 'canceled'">{{ $t('You were paying') }}</h2>
-          <h2 v-else-if="state === 'suspended'">{{ $t('You should be paying') }}</h2>
+    <section class="author-subscription--price">
+      <h2 v-if="!state">{{ $t('It will cost you') }}</h2>
+      <h2 v-else-if="state === 'active'">{{ $t('It costs you') }}</h2>
+      <h2 v-else-if="state === 'canceled'">{{ $t('You were paying') }}</h2>
+      <h2 v-else-if="state === 'suspended'">{{ $t('You should be paying') }}</h2>
 
-          <p>
-            <MoneyFormat :value="author.price" :short="true" />
-            {{ $t('Kč per month') }}
-          </p>
-        </section>
+      <p>
+        <MoneyFormat :value="author.price" :short="true" />
+        {{ $t('Kč per month') }}
+      </p>
+    </section>
 
-        <section class="author-subscription--donations">
-          <h2>{{ $t('Support the author and donate more') }}</h2>
-          <div>
-            <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000"/>
-            {{ $t('Kč per month') }}
-          </div>
-        </section>
-      </main>
-      <footer class="author-subscription--footer">
-        <template v-if="!state">
-          <div
-            :title="!canPay && $t('You don\'t have enough credit')"
-            v-b-tooltip
-          >
-            <button
-              class="confirm"
-              :disabled="!canPay"
-              @click="subscribe()"
-            >
-              {{ $t('Subscribe') }}
-            </button>
+    <section class="author-subscription--donations">
+      <h2>{{ $t('Support the author and donate more') }}</h2>
+      <div>
+        <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000"/>
+        {{ $t('Kč per month') }}
+      </div>
+    </section>
 
-            <p>{{ $t('* You can cancel subscription any time') }}</p>
-          </div>
-        </template>
-
-        <template v-else-if="state === 'active'">
+    <template #footer>
+      <template v-if="!state">
+        <div
+          :title="!canPay && $t('You don\'t have enough credit')"
+          v-b-tooltip
+        >
           <button
             class="confirm"
+            :disabled="!canPay"
             @click="subscribe()"
           >
-            {{ $t('Update subscription') }}
+            {{ $t('Subscribe') }}
           </button>
 
-          <button
-            class="cancel"
-            @click="unsubscribe()"
-          >
-            {{ $t('Cancel subscription') }}
-          </button>
-        </template>
+          <p>{{ $t('* You can cancel subscription any time') }}</p>
+        </div>
+      </template>
 
-        <template v-else-if="state === 'canceled'">
-          <button
-            class="confirm"
-            @click="subscribe()"
-          >
-            {{ $t('Renew subscription') }}
-          </button>
+      <template v-else-if="state === 'active'">
+        <button
+          class="confirm"
+          @click="subscribe()"
+        >
+          {{ $t('Update subscription') }}
+        </button>
 
-          <p>
-            {{ $t('You cancled the subscription. It expires on') }}
-            <strong>{{ subscription.to|moment('calendar') }}</strong>.
-            {{ $t('Till then you will still see the author on the timeline.') }}
-          </p>
-        </template>
+        <button
+          class="cancel"
+          @click="unsubscribe()"
+        >
+          {{ $t('Cancel subscription') }}
+        </button>
+      </template>
 
-        <template v-else-if="state === 'suspended'">
-          <button
-            v-if="canPay"
-            class="confirm"
-            @click="subscribe()"
-          >
-            {{ $t('Renew subscription') }}
-          </button>
+      <template v-else-if="state === 'canceled'">
+        <button
+          class="confirm"
+          @click="subscribe()"
+        >
+          {{ $t('Renew subscription') }}
+        </button>
 
-          <nuxt-link v-else to="/user/add-credits">
-            {{ $t('Buy credits to renew a subscption') }}
-          </nuxt-link>
+        <p>
+          {{ $t('You cancled the subscription. It expires on') }}
+          <strong>{{ subscription.to|moment('calendar') }}</strong>.
+          {{ $t('Till then you will still see the author on the timeline.') }}
+        </p>
+      </template>
 
-          <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
-        </template>
-      </footer>
-    </modal-dialog>
+      <template v-else-if="state === 'suspended'">
+        <button
+          v-if="canPay"
+          class="confirm"
+          @click="subscribe()"
+        >
+          {{ $t('Renew subscription') }}
+        </button>
+
+        <nuxt-link v-else to="/user/add-credits">
+          {{ $t('Buy credits to renew a subscption') }}
+        </nuxt-link>
+
+        <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
+      </template>
+    </template>
   </DialogWindow>
 </template>
 
@@ -220,7 +209,7 @@ export default {
 @import './styles/components/buttons'
 
 //- AUTHOR SUBSCRIPTION DIALOG -//
-modal-dialog.author-subscription-dialog
+.modal-dialog.author-subscription-dialog
   display: block
   max-width: 360px
 
@@ -316,7 +305,7 @@ modal-dialog.author-subscription-dialog
       font-size: $fs--1
 
   //- Footer with buttons
-  .author-subscription--footer
+  footer
 
     //- confirm button
     button.confirm

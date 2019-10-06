@@ -1,5 +1,5 @@
 <template>
-  <app-main>
+  <div>
     <AppHeader
       v-if="loggedIn"
       :pageTitle="name"
@@ -7,7 +7,7 @@
     <AppHeaderPublic v-else />
 
     <slot></slot>
-  </app-main>
+  </div>
 </template>
 
 <script>

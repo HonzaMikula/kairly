@@ -1,5 +1,5 @@
 <template>
-  <app-view>
+  <div class="app-view">
     <template>
       <nuxt></nuxt>
 
@@ -8,7 +8,7 @@
       <InfoMessage v-if="errorMessage" type="error">{{ errorMessage }}</InfoMessage>
       <InfoMessage v-if="successMessage" type="success">{{ successMessage }}</InfoMessage>
     </template>
-  </app-view>
+  </div>
 </template>
 
 <script>

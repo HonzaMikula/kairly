@@ -1,59 +1,44 @@
 <template>
   <DialogWindow
     v-if="active"
+    custom-class="change-password-dialog"
     @close="closeModal"
   >
-    <modal-dialog
-      role="dialog"
-      class="change-password-dialog"
-      @click.stop
-    >
-      <header>
-        <h1>{{ $t('Change Password') }}</h1>
+    <template #header>
+      <h1>{{ $t('Change Password') }}</h1>
+    </template>
 
-        <button-close
-          tabindex="0"
-          role="button"
-          @click="closeModal"
-        />
-      </header>
+    <div>
+      <label for="oldPassword">{{ $t('Old password') }}</label>
+      <input
+        id="oldPassword"
+        v-model="oldPassword"
+        type="password"
+      />
+    </div>
 
-      <change-password-view
-        role="dialog"
-        @click.stop
-      >
-        <div>
-          <label for="oldPassword">{{ $t('Old password') }}</label>
-          <input
-            id="oldPassword"
-            v-model="oldPassword"
-            type="password"
-          />
-        </div>
+    <div>
+      <label for="newPassword">{{ $t('New password') }}</label>
+      <input
+        id="newPassword"
+        v-model="newPassword1"
+        type="password"
+      />
+    </div>
 
-        <div>
-          <label for="newPassword">{{ $t('New password') }}</label>
-          <input
-            id="newPassword"
-            v-model="newPassword1"
-            type="password"
-          />
-        </div>
+    <div>
+      <label for="newPassword2">{{ $t('New password again') }}</label>
+      <input
+        id="newPassword2"
+        v-model="newPassword2"
+        type="password"
+      />
+    </div>
 
-        <div>
-          <label for="newPassword2">{{ $t('New password again') }}</label>
-          <input
-            id="newPassword2"
-            v-model="newPassword2"
-            type="password"
-          />
-        </div>
-      </change-password-view>
+    <template #footer>
+      <button @click="submit">{{ $t('Change password') }}</button>
+    </template>
 
-      <footer>
-        <button @click="submit">{{ $t('Change password') }}</button>
-      </footer>
-    </modal-dialog>
   </DialogWindow>
 </template>
 
@@ -125,7 +110,7 @@ export default {
       padding: 0 $baseline
 
 
-change-password-view
+.change-password-dialog main
   position: relative
 
   padding: $baseline

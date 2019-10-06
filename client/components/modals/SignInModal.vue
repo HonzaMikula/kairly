@@ -1,42 +1,39 @@
 <template>
   <DialogWindow
     v-if="active"
+    custom-class="sign-in"
     ignoreBackgroundClick
     @close="closeModal"
   >
-    <modal-dialog role="dialog" @click.stop class="sign-in">
-      <header>
-        <h1>{{ $t('Sign In') }}</h1>
-        <button-close tabindex="0" role="button" @click="closeModal()"></button-close>
-      </header>
-      <main>
-        <form @submit.prevent="login">
-          <div>
-            <label for="username">{{ $t('Username') }}</label>
-            <input name="username" id="username" v-model="username" />
-          </div>
+    <template #header>
+      <h1>{{ $t('Sign In') }}</h1>
+    </template>
 
-          <div>
-            <label for="password">{{ $t('Password') }}</label>
-            <input name="password" id="password" type="password" v-model="password" />
-          </div>
+    <form @submit.prevent="login">
+      <div>
+        <label for="username">{{ $t('Username') }}</label>
+        <input name="username" id="username" v-model="username" />
+      </div>
 
-          <button type="submit">{{ $t('Sign in') }}</button>
+      <div>
+        <label for="password">{{ $t('Password') }}</label>
+        <input name="password" id="password" type="password" v-model="password" />
+      </div>
 
-          <div class="login--error-message" v-if="invalidCredentials">
-            {{ $t('Wrong username or password') }}
-          </div>
-        </form>
+      <button type="submit">{{ $t('Sign in') }}</button>
 
-        <div class="login--forgot-password">
-          <nuxt-link to="reset-password">{{ $t('Forgot password?') }}</nuxt-link>
-        </div>
+      <div class="login--error-message" v-if="invalidCredentials">
+        {{ $t('Wrong username or password') }}
+      </div>
+    </form>
 
-        <div class="login--signup">
-          Don't have account yet? <nuxt-link to="/signup">Sign up</nuxt-link>
-        </div>
-      </main>
-    </modal-dialog>
+    <div class="login--forgot-password">
+      <nuxt-link to="reset-password">{{ $t('Forgot password?') }}</nuxt-link>
+    </div>
+
+    <div class="login--signup">
+      Don't have account yet? <nuxt-link to="/signup">Sign up</nuxt-link>
+    </div>
   </DialogWindow>
 </template>
 
@@ -99,7 +96,7 @@ export default {
 @import './styles/components/buttons'
 
 //- Styles -//
-modal-dialog.sign-in
+.modal-dialog.sign-in
   background: #f5f5f5
 
   main

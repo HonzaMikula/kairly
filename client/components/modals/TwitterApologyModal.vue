@@ -1,27 +1,16 @@
 <template>
   <DialogWindow
     v-if="active"
+    custom-class="twitter-apology"
     @close="closeModal"
   >
-    <modal-dialog
-      role="dialog"
-      class="twitter-apology"
-      @click.stop
-    >
-      <header>
-        <h1>{{ $t('Twitter import is not ready yet') }}</h1>
-        <button-close
-          tabindex="0"
-          role="button"
-          @click="closeModal"
-        />
-      </header>
-      <main>
-        <p>
-          {{ $t('We are sorry, but we are still working on the integration with Twitter.') }}
-        </p>
-      </main>
-    </modal-dialog>
+    <template #header>
+      <h1>{{ $t('Twitter import is not ready yet') }}</h1>
+    </template>
+
+    <p>
+      {{ $t('We are sorry, but we are still working on the integration with Twitter.') }}
+    </p>
   </DialogWindow>
 </template>
 
@@ -34,7 +23,9 @@ export default {
 
   components: {
     DialogWindow
-  }
+  },
+
+  mixins: [ModalMixin]
 }
 </script>
 
@@ -42,7 +33,7 @@ export default {
 //- Imports
 @import './styles/components/buttons'
 
-modal-dialog.twitter-apology
+.modal-dialog.twitter-apology
   max-width: 600px
 
   > header h1

@@ -1,8 +1,34 @@
 <template>
   <portal to="modal">
-    <modal-window @click="onBackgroundClick">
-      <slot/>
-    </modal-window>
+    <div
+      class="modal-window"
+      @click="onBackgroundClick"
+    >
+      <div
+        class="modal-dialog"
+        :class="customClass"
+        role="dialog"
+        @click.stop
+      >
+        <header>
+          <slot name="header"/>
+          <div
+            class="button-close"
+            tabindex="0"
+            role="button"
+            @click="close"
+          />
+        </header>
+
+        <main>
+          <slot/>
+        </main>
+
+        <footer v-if="!!this.$slots['footer']">
+          <slot name="footer"/>
+        </footer>
+      </div>
+    </div>
   </portal>
 </template>
 
@@ -12,19 +38,24 @@ export default {
   name: 'DialogWindow',
 
   props: {
+    customClass: String,
     ignoreBackgroundClick: Boolean
   },
 
   methods: {
+    close() {
+      this.$emit('close')
+    },
+
     onBackgroundClick(event) {
       if (!this.ignoreBackgroundClick) {
-        this.$emit('close')
+        this.close()
       }
     },
 
     onKeyUp(event) {
       if (event.which === 27) {
-        this.$emit('close')
+        this.close()
       }
     },
   },
@@ -44,7 +75,7 @@ export default {
 @import './styles/components/buttons'
 @import './styles/components/mixins'
 
-modal-window
+.modal-window
   position: fixed
   top: 0
   left: 0
@@ -64,7 +95,7 @@ modal-window
     background: rgba(0, 0, 0, 0.3)
 
 //- Dialog Window
-modal-dialog
+.modal-dialog
   position: relative
   z-index: 99999999999
 
@@ -95,7 +126,7 @@ modal-dialog
       padding: 0 $baseline/2
 
     //- Close button
-    button-close
+    .button-close
       height: $baseline * 2
       width: $baseline * 2
 

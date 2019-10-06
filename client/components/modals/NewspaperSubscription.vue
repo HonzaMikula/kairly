@@ -1,94 +1,91 @@
 <template>
   <DialogWindow
     v-if="active"
+    custom-class="newspaper-subscription-dialog"
     @close="closeModal"
   >
-    <modal-dialog role="dialog" @click.stop class="newspaper-subscription-dialog">
-      <header>
-        <h1 v-if="!subscription.state">{{ $t('Subscribe newspaper') }}</h1>
-        <h1 v-else-if="subscription.state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
-        <h1 v-else-if="subscription.state === 'canceled'">{{ $t('Renew subscription') }}</h1>
-        <h1 v-else-if="subscription.state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
+    <template #header>
+      <h1 v-if="!subscription.state">{{ $t('Subscribe newspaper') }}</h1>
+      <h1 v-else-if="subscription.state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
+      <h1 v-else-if="subscription.state === 'canceled'">{{ $t('Renew subscription') }}</h1>
+      <h1 v-else-if="subscription.state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
+    </template>
 
-        <button-close tabindex="0" role="button" @click="closeModal" />
-      </header>
-      <main>
-        <section class="newspaper-subscription--newspaper">
-          <h3>{{ newspaper.title }}</h3>
-          <picture>
-            <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
-            <div v-else class="image-placeholder"/>
-          </picture>
-          <time>{{ getPeriodicityLabel(newspaper.periodicity) }}</time>
-        </section>
+    <section class="newspaper-subscription--newspaper">
+      <h3>{{ newspaper.title }}</h3>
+      <picture>
+        <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
+        <div v-else class="image-placeholder"/>
+      </picture>
+      <time>{{ getPeriodicityLabel(newspaper.periodicity) }}</time>
+    </section>
 
-        <section class="newspaper-subscription--price">
-          <h2 v-if="!subscription.state">{{ $t('It will cost you') }}</h2>
-          <h2 v-else-if="subscription.state === 'active'">{{ $t('It costs you') }}</h2>
-          <h2 v-else-if="subscription.state === 'canceled'">{{ $t('You were paying') }}</h2>
-          <h2 v-else-if="subscription.state === 'suspended'">{{ $t('You should be paying') }}</h2>
+    <section class="newspaper-subscription--price">
+      <h2 v-if="!subscription.state">{{ $t('It will cost you') }}</h2>
+      <h2 v-else-if="subscription.state === 'active'">{{ $t('It costs you') }}</h2>
+      <h2 v-else-if="subscription.state === 'canceled'">{{ $t('You were paying') }}</h2>
+      <h2 v-else-if="subscription.state === 'suspended'">{{ $t('You should be paying') }}</h2>
 
-          <p>{{ newspaper.price.split('.')[0] }} {{ $t('Kč per month') }}</p>
-        </section>
+      <p>{{ newspaper.price.split('.')[0] }} {{ $t('Kč per month') }}</p>
+    </section>
 
-        <section class="newspaper-subscription--donations">
-          <h2>{{ $t('Support the newspaper and donate more') }}</h2>
-          <div>
-            <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000"/>
-            {{ $t('Kč per month') }}
-          </div>
-        </section>
-      </main>
-      <footer class="newspaper-subscription--footer">
-        <template v-if="!subscription.state">
-          <div
-            :title="!canPay && $t('You don\'t have enough credit')"
-            v-b-tooltip>
-            <button
-              @click="subscribe()"
-              :disabled="!canPay"
-              class="confirm"
-            >
-              {{ $t('Subscribe newspaper') }}
-            </button>
-            <p>{{ $t('* You can cancel subscription any time') }}</p>
-          </div>
-        </template>
+    <section class="newspaper-subscription--donations">
+      <h2>{{ $t('Support the newspaper and donate more') }}</h2>
+      <div>
+        <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000"/>
+        {{ $t('Kč per month') }}
+      </div>
+    </section>
 
-        <template v-else-if="subscription.state === 'active'">
-          <button @click="subscribe()" class="confirm">
-            {{ $t('Update donation') }}
+    <template #footer>
+      <template v-if="!subscription.state">
+        <div
+          :title="!canPay && $t('You don\'t have enough credit')"
+          v-b-tooltip>
+          <button
+            @click="subscribe()"
+            :disabled="!canPay"
+            class="confirm"
+          >
+            {{ $t('Subscribe newspaper') }}
           </button>
+          <p>{{ $t('* You can cancel subscription any time') }}</p>
+        </div>
+      </template>
 
-          <button class="cancel" @click="unsubscribe()">
-            {{ $t('Cancel subscription') }}
-          </button>
-        </template>
+      <template v-else-if="subscription.state === 'active'">
+        <button @click="subscribe()" class="confirm">
+          {{ $t('Update donation') }}
+        </button>
 
-        <template v-else-if="subscription.state === 'canceled'">
-          <button class="confirm" @click="subscribe()">
-            {{ $t('Renew subscription') }}
-          </button>
+        <button class="cancel" @click="unsubscribe()">
+          {{ $t('Cancel subscription') }}
+        </button>
+      </template>
 
-          <p>
-            {{ $t('You cancled the subscription. It expires on') }}
-            <strong>{{ subscription.to|moment('calendar') }}</strong>.
-            {{ $t('Till then you will still see the newspaper on the timeline.') }}
-          </p>
-        </template>
+      <template v-else-if="subscription.state === 'canceled'">
+        <button class="confirm" @click="subscribe()">
+          {{ $t('Renew subscription') }}
+        </button>
 
-        <template v-else-if="subscription.state === 'suspended'">
-          <button class="confirm" v-if="canPay" @click="subscribe()">
-            {{ $t('Renew subscription') }}
-          </button>
-          <nuxt-link v-else to="/user/add-credits">
-            {{ $t('Buy credits to renew a subscption') }}
-          </nuxt-link>
+        <p>
+          {{ $t('You cancled the subscription. It expires on') }}
+          <strong>{{ subscription.to|moment('calendar') }}</strong>.
+          {{ $t('Till then you will still see the newspaper on the timeline.') }}
+        </p>
+      </template>
 
-          <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
-        </template>
-      </footer>
-    </modal-dialog>
+      <template v-else-if="subscription.state === 'suspended'">
+        <button class="confirm" v-if="canPay" @click="subscribe()">
+          {{ $t('Renew subscription') }}
+        </button>
+        <nuxt-link v-else to="/user/add-credits">
+          {{ $t('Buy credits to renew a subscption') }}
+        </nuxt-link>
+
+        <button class="cancel" @click="unsubscribe()">{{ $t('Cancel subscription') }}</button>
+      </template>
+    </template>
   </DialogWindow>
 </template>
 
@@ -157,7 +154,7 @@ export default {
 @import './styles/components/buttons'
 
 //- NEWSPAPER SUBSCRIPTION DIALOG -//
-modal-dialog.newspaper-subscription-dialog
+.modal-dialog.newspaper-subscription-dialog
   display: block
   max-width: 360px
 
@@ -245,7 +242,7 @@ modal-dialog.newspaper-subscription-dialog
       font-size: $fs--1
 
   //- Footer with buttons
-  .newspaper-subscription--footer
+  footer
 
     //- confirm button
     button.confirm

@@ -1,44 +1,39 @@
 <template>
   <DialogWindow
     v-if="active"
+    custom-class="publish-post-dialog"
     @close="closeModal"
   >
-    <modal-dialog role="dialog" @click.stop class="publish-post-dialog">
-      <header>
-        <h1>{{ $t('Publish post') }}</h1>
+    <template #header>
+      <h1>{{ $t('Publish post') }}</h1>
+    </template>
 
-        <button-close tabindex="0" role="button" @click="closeModal" />
-      </header>
+    <h2>{{ post.content.title ? post.content.title : post.content.content }}</h2>
 
-      <main>
-        <h2>{{ post.content.title ? post.content.title : post.content.content }}</h2>
+    <section class="publish-post--price">
+      <h2>{{ $t('Set price of the article for editors') }}</h2>
+      <div>
+        <input v-model="postPrice" step="0.01" type="number" min="0.00" max="100000.00"/>
+        {{ $t('Kč per subscriber') }}
+      </div>
+      <p v-html="$t('You will recieve <strong>{price} Kč</strong> from each subscriber from newspaper where your post will appear.', { price: postPrice })">
+      </p>
+    </section>
 
-        <section class="publish-post--price">
-          <h2>{{ $t('Set price of the article for editors') }}</h2>
-          <div>
-            <input v-model="postPrice" step="0.01" type="number" min="0.00" max="100000.00"/>
-            {{ $t('Kč per subscriber') }}
-          </div>
-          <p v-html="$t('You will recieve <strong>{price} Kč</strong> from each subscriber from newspaper where your post will appear.', { price: postPrice })">
-          </p>
-        </section>
+    <section class="publish-post--scheduling" v-if="showSchedule">
+      <h2>{{ $t('Schedule a time to publish') }}</h2>
+      <input type="datetime-local" />
+    </section>
 
-        <section class="publish-post--scheduling" v-if="showSchedule">
-          <h2>{{ $t('Schedule a time to publish') }}</h2>
-          <input type="datetime-local" />
-        </section>
-      </main>
-
-      <footer class="publish-post--footer">
-        <button @click="submit" class="publish-now">
-          {{ showSchedule ? $t('Schedule post') : $t('Publish now') }}
-        </button>
+    <template #footer>
+      <button @click="submit" class="publish-now">
+        {{ showSchedule ? $t('Schedule post') : $t('Publish now') }}
+      </button>
 
         <!--button class="schedule" @click="showSchedule = !showSchedule">
           {{ showSchedule ? $t('Cancel scheduling') : $t('Schedule for later') }}
         </button-->
-      </footer>
-    </modal-dialog>
+    </template>
   </DialogWindow>
 </template>
 
@@ -83,7 +78,7 @@ export default {
 @import './styles/components/buttons'
 
 //- NEWSPAPER SUBSCRIPTION DIALOG -//
-modal-dialog.publish-post-dialog
+.modal-dialog.publish-post-dialog
   display: block
   max-width: 360px
 
@@ -136,7 +131,7 @@ modal-dialog.publish-post-dialog
     font-family: $ff-sans
 
 //- Footer with buttons
-.publish-post--footer
+.publish-post-dialog footer
 
   //- publish button
   button.publish-now
