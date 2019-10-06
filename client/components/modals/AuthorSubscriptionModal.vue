@@ -129,7 +129,6 @@ export default {
 
   props: {
     author: Object,
-    subscription: Object,
   },
 
   components: {
@@ -141,9 +140,11 @@ export default {
   mixins: [ModalMixin, PeriodicityMixin],
 
   data() {
+    const subscription = this.$store.getters.getAuthorSubscription(this.author)
     return {
-      donation: this.subscription ? this.subscription.donation : 0,
-      periodicity: (this.subscription && this.subscription.periodicity) || {frequency: '6x_per_day'},
+      subscription: subscription,
+      donation: subscription ? parseInt(subscription.donation) : 0,
+      periodicity: (subscription && subscription.periodicity) || {frequency: '6x_per_day'},
       showChangePeriodicityDialog: false
     }
   },

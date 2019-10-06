@@ -101,7 +101,6 @@ export default {
 
   props: {
     newspaper: Object,
-    subscription: Object,
   },
 
   components: {
@@ -111,8 +110,10 @@ export default {
   mixins: [ModalMixin, PeriodicityMixin],
 
   data() {
+    const subscription = this.$store.getters.getNewspaperSubscription(this.newspaper)
     return {
-      donation: this.subscription.donation
+      subscription: subscription,
+      donation: subscription ? parseInt(subscription.donation) : 0
     }
   },
 
