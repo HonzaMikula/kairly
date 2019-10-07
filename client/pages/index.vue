@@ -130,13 +130,13 @@ export default {
     }),
 
     loading() {
-      return !this.showWelcome && !this.date
+      return !this.showWelcome && this.timeline === null
     },
 
     timeSlots() {
       if (this.loading) { return [] }
 
-      const { issues } = this.$store.state.timeline.timeline[this.date]
+      const { issues } = this.timeline
       const timeSlots = []
       let slot = null
 
@@ -152,9 +152,10 @@ export default {
     },
 
     links() {
-      if (this.loading) { return {} }
-
-      return this.$store.state.timeline.timeline[this.date].links
+      if (this.loading) {
+        return {}
+      }
+      return this.timeline.links
     },
 
     dayTitle() {
@@ -174,6 +175,7 @@ export default {
         this.$store.dispatch('backlog/loadUserBacklog')
       } else {
         this.date = null
+        this.timeline = null
         this.showWelcome = false
       }
     },
@@ -192,12 +194,13 @@ export default {
     async loadTimeline() {
       if (this.loggedIn && !this.$store.state.timeline.hasNoActiveSubscriptions) {
         // TODO load timeline and backlog in parallel
-
         const { date } = this.$route.params
-
-        this.date = await this.$store.dispatch('timeline/load', { date })
-        if (this.date === null) {
+        const timeline  = await this.$store.dispatch('timeline/load', { date })
+        if (timeline === null) {
           this.showWelcome = true
+        } else {
+          this.date = timeline.date
+          this.timeline = timeline
         }
       }
     }
@@ -211,14 +214,16 @@ export default {
     if (!state.auth.loggedIn) {
       return {
         showWelcome: false,
-        date: null
+        date: null,
+        timeline: null
       }
     }
 
     if (state.timeline.hasNoActiveSubscriptions) {
       return {
         showWelcome: true, // don't change this when user subscribe on Welcome page
-        date: null
+        date: null,
+        timeline: null
       }
     }
 
@@ -230,15 +235,18 @@ export default {
       on the other hand, when data is not available, make fast transtion
       as possible and keep loading wheel dispayed inside page
     */
+    const timeline = await store.dispatch('timeline/load', { date, cachedOnly: true })
+
     return {
       showWelcome: false,
-      date: await store.dispatch('timeline/load', { date, cachedOnly: true })
+      date: timeline ? timeline.date: null,
+      timeline: timeline
     }
   },
 
   created() {
     if (process.client) {
-      if (!this.date) {
+      if (this.date === null) {
         this.loadTimeline()
       }
       if (this.loggedIn) {

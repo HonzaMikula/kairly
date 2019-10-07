@@ -21,7 +21,7 @@ export const actions = {
     }
 
     if (state.timeline[cacheKey]) {
-      return cacheKey
+      return state.timeline[cacheKey]
     }
 
     if (cachedOnly) {
@@ -72,8 +72,9 @@ export const actions = {
     if (!date) {
       commit('today', {date: data.date, validTo: data.validTo})
     }
+
     commit('received', data)
-    return data.date
+    return data
   },
 
   expandIssue({ commit }, issueId) {
@@ -98,7 +99,6 @@ export const mutations = {
     state.hasNoActiveSubscriptions = false
     state.timeline = {}
   },
-
   received(state, { date, issues, links }) {
     Vue.set(state.timeline, date, { issues, links })
   },

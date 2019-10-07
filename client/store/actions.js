@@ -121,7 +121,7 @@ export async function unsubscribeNewspaper({ commit }, { fullName }) {
     eventAction: fullName
   })
 
-  return subscription[fullName]
+  return subscription ? subscription[fullName] : null
 }
 
 export async function subscribeAuthor({ commit }, { author, donation, periodicity, keepStatus=false, allowSuspended=false }) {
@@ -165,7 +165,7 @@ export async function unsubscribeAuthor({ commit }, { author }) {
     eventAction: author.id
   })
 
-  return subscription[author.id]
+  return subscription ? subscription[author.id] : null
 }
 
 export async function startNewspaper({ commit }, { authorId, newspaper: postData }) {
