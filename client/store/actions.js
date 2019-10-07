@@ -70,7 +70,7 @@ export async function subscribeNewspaper({ commit }, { fullName, donation, allow
     eventValue: credits
   })
 
-  return subscription
+  return subscription[fullName]
 }
 
 export async function loadAuthorPosts({ commit }, { authorId, cursor: requestedCursor }) {
@@ -121,7 +121,7 @@ export async function unsubscribeNewspaper({ commit }, { fullName }) {
     eventAction: fullName
   })
 
-  return subscription
+  return subscription[fullName]
 }
 
 export async function subscribeAuthor({ commit }, { author, donation, periodicity, keepStatus=false, allowSuspended=false }) {
@@ -148,7 +148,7 @@ export async function subscribeAuthor({ commit }, { author, donation, periodicit
     eventLabel: author.id
   })
 
-  return subscription
+  return subscription[author.id]
 }
 
 export async function unsubscribeAuthor({ commit }, { author }) {
@@ -165,7 +165,7 @@ export async function unsubscribeAuthor({ commit }, { author }) {
     eventAction: author.id
   })
 
-  return subscription
+  return subscription[author.id]
 }
 
 export async function startNewspaper({ commit }, { authorId, newspaper: postData }) {

@@ -5,10 +5,10 @@
     @close="closeModal"
   >
     <template #header>
-      <h1 v-if="!subscription.state">{{ $t('Subscribe newspaper') }}</h1>
-      <h1 v-else-if="subscription.state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
-      <h1 v-else-if="subscription.state === 'canceled'">{{ $t('Renew subscription') }}</h1>
-      <h1 v-else-if="subscription.state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
+      <h1 v-if="!state">{{ $t('Subscribe newspaper') }}</h1>
+      <h1 v-else-if="state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
+      <h1 v-else-if="state === 'canceled'">{{ $t('Renew subscription') }}</h1>
+      <h1 v-else-if="state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
     </template>
 
     <section class="newspaper-subscription--newspaper">
@@ -21,10 +21,10 @@
     </section>
 
     <section class="newspaper-subscription--price">
-      <h2 v-if="!subscription.state">{{ $t('It will cost you') }}</h2>
-      <h2 v-else-if="subscription.state === 'active'">{{ $t('It costs you') }}</h2>
-      <h2 v-else-if="subscription.state === 'canceled'">{{ $t('You were paying') }}</h2>
-      <h2 v-else-if="subscription.state === 'suspended'">{{ $t('You should be paying') }}</h2>
+      <h2 v-if="!state">{{ $t('It will cost you') }}</h2>
+      <h2 v-else-if="state === 'active'">{{ $t('It costs you') }}</h2>
+      <h2 v-else-if="state === 'canceled'">{{ $t('You were paying') }}</h2>
+      <h2 v-else-if="state === 'suspended'">{{ $t('You should be paying') }}</h2>
 
       <p>{{ newspaper.price.split('.')[0] }} {{ $t('Kč per month') }}</p>
     </section>
@@ -38,7 +38,7 @@
     </section>
 
     <template #footer>
-      <template v-if="!subscription.state">
+      <template v-if="!state">
         <div
           :title="!canPay && $t('You don\'t have enough credit')"
           v-b-tooltip>
@@ -53,7 +53,7 @@
         </div>
       </template>
 
-      <template v-else-if="subscription.state === 'active'">
+      <template v-else-if="state === 'active'">
         <button @click="subscribe()" class="confirm">
           {{ $t('Update donation') }}
         </button>
@@ -63,7 +63,7 @@
         </button>
       </template>
 
-      <template v-else-if="subscription.state === 'canceled'">
+      <template v-else-if="state === 'canceled'">
         <button class="confirm" @click="subscribe()">
           {{ $t('Renew subscription') }}
         </button>
@@ -75,7 +75,7 @@
         </p>
       </template>
 
-      <template v-else-if="subscription.state === 'suspended'">
+      <template v-else-if="state === 'suspended'">
         <button class="confirm" v-if="canPay" @click="subscribe()">
           {{ $t('Renew subscription') }}
         </button>
@@ -122,6 +122,10 @@ export default {
       user: state => state.auth.user
     }),
 
+    state() {
+      return this.subscription ? this.subscription.state : null
+    },
+
     canPay() {
       if (this.user) {
         const price = this.newspaper.price.split('.').map(v => ~~v)
@@ -141,10 +145,11 @@ export default {
       this.closeModal()
     },
 
-    unsubscribe() {
-      this.$store.dispatch('unsubscribeNewspaper', {
+    async unsubscribe() {
+      this.subscription = await this.$store.dispatch('unsubscribeNewspaper', {
         fullName: this.newspaper.fullName
       })
+      console.log(this.subscription)
     }
   }
 }

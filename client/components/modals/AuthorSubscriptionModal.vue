@@ -196,8 +196,8 @@ export default {
       this.closeModal()
     },
 
-    unsubscribe() {
-      this.$store.dispatch('unsubscribeAuthor', {
+    async unsubscribe() {
+      this.subscription = await this.$store.dispatch('unsubscribeAuthor', {
         author: this.author,
       })
     }
