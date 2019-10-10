@@ -69,29 +69,16 @@
               <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
             </span>
 
-            <!-- <a
-              :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${post.author.id}/${post.slug}`"
-              target="_blank"
-              class="share-fb"
-              v-b-tooltip
-              :title="$t('Share on Facebook')">
-            </a>
-
-            <a
-              :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${post.author.id}/${post.slug}&text=${post.content.title}`"
-              target="_blank"
-              class="share-twitter"
-              v-b-tooltip
-              :title="$t('Share on Twitter')">
-            </a> -->
-
             <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">
               {{ post.time | moment('DD. MM. YYYY') }}
             </time>
           </div>
         </div>
 
-        <div class="post-detail--author" itemprop="author" itemscope itemtype="https://schema.org/Person">
+        <div 
+          class="post-detail--author"
+          itemprop="author" 
+          itemscope itemtype="https://schema.org/Person">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
               <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>
@@ -126,7 +113,10 @@
               <h3>{{ editorial.title }}</h3>
               <aside>
                 {{ $t('Originally published in') }}
-                <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
+                <nuxt-link 
+                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
+                  :id="`post-editorial-newspaper-${index}`"
+                >
                   {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
                 </nuxt-link>
               </aside>
@@ -147,12 +137,20 @@
             >
               <aside>
                 {{ $t('Originally published in') }}
-                <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}">
+                <nuxt-link 
+                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
+                  :id="`post-editorial-newspaper-${index}`"
+                >
                   {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
                 </nuxt-link>
               </aside>
               <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
             </div>
+            <NewspaperPopup
+              :key="index"
+              :target="`post-editorial-newspaper-${index}`"
+              :newspaper="editorial.issue.newspaper"
+            />
           </template>
         </section>
       </main>
@@ -175,6 +173,8 @@ import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import PostTweet from '@/components/posts/PostTweet'
+import NewspaperPopup from '@/components/widgets/NewspaperPopup'
+
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
@@ -225,6 +225,7 @@ export default {
     FooterLinks,
     RecommendButtonPost,
     PostTweet,
+    NewspaperPopup,
   },
 
   data() {
