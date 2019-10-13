@@ -1,8 +1,11 @@
 <template>
   <timeline-newspaper>
     <header>
-      <h1 :id="`issue-newspaper-${$_uid}`">
-        <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}">
+      <h1>
+        <nuxt-link 
+          :id="`issue-newspaper-${$_uid}`"
+          :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}"
+        >
           <slot name="newspaper-title">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
@@ -16,7 +19,8 @@
         <timeline-newspaper--editor>
           <nuxt-link
             :to="{name: 'author', params: {author: newspaper.editor.id}}"
-            :id="`issue-newspaper-author-${$_uid}`">
+            :id="`issue-newspaper-author-${$_uid}`"
+          >
             <img
               v-if="issue.newspaper.editor.picture"
               :src="newspaper.editor.picture"

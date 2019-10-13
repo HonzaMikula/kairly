@@ -2,14 +2,25 @@
   <timeline-newspaper class="issue-unreleased">
     <header>
       <h1>
-        <nuxt-link :to="`/${newspaper.editor.id}/${newspaper.name}`">
+        <nuxt-link
+          :id="`issue-newspaper-${$_uid}`"
+          :to="`/${newspaper.editor.id}/${newspaper.name}`"
+        >
           <slot name="newspaper-title">{{ issue.newspaper.title }}</slot>
         </nuxt-link>
       </h1>
 
+      <NewspaperPopup
+        :target="`issue-newspaper-${$_uid}`"
+        :newspaper="newspaper"
+      />
+
       <p>
         <timeline-newspaper--editor>
-          <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">
+          <nuxt-link 
+            :id="`issue-newspaper-author-${$_uid}`"
+            :to="{name: 'author', params: {author: newspaper.editor.id}}"
+          >
             <img
               v-if="issue.newspaper.editor.picture"
               :src="newspaper.editor.picture"
@@ -21,6 +32,11 @@
         <span>• {{ frequencyLabel }}</span>
         <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
+
+      <AuthorPopup
+        :target="`issue-newspaper-author-${$_uid}`"
+        :author="newspaper.editor"
+      />
     </header>
 
     <article>
@@ -31,9 +47,17 @@
 </template>
 
 <script>
+import AuthorPopup from '@/components/widgets/AuthorPopup'
+import NewspaperPopup from '@/components/widgets/NewspaperPopup'
+
 export default {
   name: 'IssueSuspendedNewspaper',
   props: ['issue', 'hideDate'],
+
+  components: {
+    AuthorPopup,
+    NewspaperPopup,
+  },
 
   computed: {
     newspaper() {
