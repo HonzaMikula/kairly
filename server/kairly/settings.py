@@ -87,7 +87,8 @@ WSGI_APPLICATION = 'kairly.wsgi.application'
 
 SERVER_EMAIL = 'info@kairly.com'
 ADMINS = (
-    ('Kairly', 'info@kairly.com'),
+    ('Roman Krejcik', 'farin1@gmail.com'),
+    ('Jan Mikula', 'jan.mikula@hotmail.com'),
 )
 
 SITE_ID = 1
