@@ -243,6 +243,8 @@ export default {
         { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: metaPicture },
+        { hid: `og:article:published_time`, property: 'og:article:published_time', content: this.issue.time},
+        { hid: 'author', name: 'author', content: editor.name},
       ],
       link: [
         { rel: 'alternate', type: 'application/rss+xml', title:`${title} - RSS feed`,

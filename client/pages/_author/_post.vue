@@ -186,14 +186,14 @@ export default {
 
   head() {
     const { title, perex }  = this.post.content
-    const { author, id } = this.post
+    const { author, id, time } = this.post
     const description = perex ? perex.replace(ELEMENTS_REGEXP, ' ').substring(0,350) : ''
 
     const meta = [
       { hid: 'description', name: 'description', content: description},
       { hid: `og:title`, property: 'og:title', content: `${title} – ${author.name} – Kairly`},
       { hid: `og:description`, property: 'og:description', content: description},
-
+      { hid: `og:article:published_time`, property: 'og:article:published_time', content: time},
 
       { hid: `og:type`, property: 'og:type', content: 'article'},
       { hid: `og:url`, property: 'og:url', content: `https://www.kairly.com/${id}`},
@@ -201,6 +201,7 @@ export default {
       { hid: `twitter:site`, property: 'twitter:site', content: '@kairlynews'},
       { hid: `twitter:title`, property: 'twitter:title', content: `${title} – ${author.name} – Kairly`},
       { hid: `twitter:description`, property: 'twitter:description', content: description},
+      { hid: 'author', name: 'author', content: author.name},
     ]
 
     const matches =  IMG_REGEXP.exec(perex)
