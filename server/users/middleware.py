@@ -24,7 +24,7 @@ def JwtAuthenticationMiddleware(get_response):
                 payload = None
             except ValueError:
                 # wrong header, can't split
-                payload - None
+                payload = None
 
             if payload:
                 try:
