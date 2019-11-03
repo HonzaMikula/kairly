@@ -4,30 +4,154 @@
       <section class="journalists--hero">
         <div>
           <section>
-            <h1>{{ $t('Are you an independent publisher?') }}</h1>
-            <!-- <h1>Jste nezávislé vydavatelství?</h1>
-            <ul>
-              <li>Publikujte vaše noviny a časopisy na moderní platformě.</li>
-              <li>Začnětě vydělávat na svých titulech s unikátním konceptem placeného obsahu.</li>
-              <li>Oslovte zcela nové skupiny čtenářů.</li>
-            </ul> -->
+            <!-- <h1>{{ $t('Are you an independent publisher?') }}</h1> -->
+            <h1>Jste nezávislé vydavatelství?</h1>
+            <p>Publikujte moderní newslettery a umožněte čtenářům přispívat na váš obsah.</p>
 
             <ul>
-              <li>{{ $t('Publish your newspapers and magazines on a modern platform.') }}</li>
-              <li>{{ $t('Start earning on your publications with a unique concept of paid content.') }}</li>
-              <li>{{ $t('Reach new audiences.') }}</li>
+              <li><span><strong>Budujte si základnu pravidelných čtenářů</strong> zasíláním denních, týdenních či měsíčních newsletterů.</span></li>
+              <li><span><strong>Umožněte čtenářům konzumovat obsah, jak jim to vyhovuje.</strong> Newslettery můžeme zasílat na email, do RSS čtečky, na Kindle nebo čtenáři mohou používat moderní mobilní a webovou aplikaci.</span></li>
+              <li><span><strong>Získejte dodatečné příjmy</strong> zpoplatněním newsletteru či z dobrovolných příspěvků.</span></li>
             </ul>
+
+            <div class="journalists--hero--call-to-action">
+              <button>Poptat demo</button>
+              <a href="/downloads/kairly-brozura.pdf">Stáhnout PDF brožuru</a>
+            </div>
+            
           </section>
 
-          <SignUpForm></SignUpForm>
+          <picture>
+            <img src="~assets/microsite/newsletter-illustration3.png" alt="Newsletter illustration" />
+          </picture>
         </div>
       </section>
 
-      <ExploreNewspapers />
+      <section class="microsite--section">
+        <picture>
+          <img src="~assets/microsite/kairly-random-25.jpg" />
+        </picture>
 
-      <Faq>
-        <img src="~assets/microsite/kairly-random-21.jpg" alt="Kairly" />
-      </Faq>
+        <div>
+          <h2>Proč u nás publikovat pravidelné newslettery pro vaše čtenáře?</h2>
+
+          <div>
+            <p>
+              Ve věku sociálních médiích je těžké si udržet věrné čtenáře. Pravidelné 
+              newslettery v moderním provedením jsou způsobem, jak si vytvořit věrnou 
+              čtenářskou základnu.
+            </p>
+
+            <p>
+              Naše newslettery se inspirují papírovými novinami s krásnou typografií a 
+              layoutem a kombinují je s moderními formáty internetu, jako jsou například tweety.
+            </p>
+
+            <p>
+              Profesionální placený obsah je na vzestupu. Podívejte se na HBO Go, Spotify a další.
+              Kvalitně připravené newslettery se zajímavým obsahem je způsob, jak čtenáře naučit znovu platit
+              za zpravodajství a publicistiku. Cílem naší platformy je být Netflixem v oblasti zpravodajství.
+            </p>
+
+            <p>
+              Papírové noviny a časopisy . My se snažíme alespoň část jejich kouzla dostat na 
+              všechny moderní kanály. Distribuujeme newslettery na emaily, RSS čtečky, 
+              Kindle a jiné ebooky. Máme i moderní desktopovou a mobilní aplikaci.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <ExploreNewspapers>
+        Příklady newsletterů vycházející<br /> na naší platformě
+      </ExploreNewspapers>
+
+      <section class="microsite--newsletters-are-in">
+        <h2>Newslettery jsou populární</h2>
+
+        <div class="microsite--newsletters-are-in--quotes">
+          <blockquote class="quote-lupa">
+            <p>
+              „Mohli byste namítnout, že e-mail vyšel z módy, ale třeba pro starší diváky 
+              je to důležitý kanál. Máme velký úspěch s nejrůznějšími newslettery pod 
+              značkou CNN a neustále přemýšlíme nad tím, jaké další by šly ještě 
+              připravit,“ tvrdí digitální editor CNN Nick Thomson.
+            </p>
+            
+            <footer>
+              <a href="" target="_blank">
+                Když web a mobil nestačí. CNN v Praze ukázala, že chce být úplně všude<br />
+                — Filip Rožánek, Lupa.cz
+              </a>
+            </footer>
+          </blockquote>
+
+          <blockquote class="quote-finmag">
+            <p>
+              Vydavatelé už před několika lety pochopili, že závislost na distribuci 
+              obsahu přes Facebook a Google je časem přivede na mizinu, a tak pro 
+              podporu čtenosti, zapojení a utužování čtenářské komunity začali 
+              experimentovat se (staro)novými distribučními platformami včetně 
+              newsletterů. New York Times v současnosti nabízejí přes 60 
+              nejrůznějších tematických newsletterů, od denních zpravodajských 
+              shrnutí přes týdenní specializované newslettery.
+            </p>
+
+            <p>
+              Podle webu Digiday měly NYT už v roce 2017 přes 13 milionů odběratelů svých 
+              newsletterů, za tři roky se jejich počet víc než zdvojnásobil. I další 
+              mediální domy nabízejí obrovské množství newsletterů (jen Washington Post 
+              jich má přes 70) a vedle nich existuje a stále se rozrůstá mnohem širší a 
+              zajímavější scéna individuálních newsletterů celebrit, novinářů, umělců, 
+              nezávislých publicistů i podivínů všeho druhu
+            </p>
+
+            <footer>
+              <a href="https://finmag.penize.cz/kaleidoskop/410091-rekneme-vam-co-cist-usvit-newsletteru" target="_blank">
+                Řekneme vám, co číst. Úsvit newsletterů<br />
+                — Matouš Hrdina, Finmag
+              </a>
+            </footer>
+          </blockquote>
+
+          <blockquote class="quote-missionorg">
+            <p>
+              In an age where attention spans are shorter than ever and digital distractions 
+              have never been more rampant, it may seem strange that a relic from the 
+              internet’s early years has come back stronger than before but it 
+              actually makes perfect sense the deeper you look into it.
+            </p>
+
+            <footer>
+              <a href="" target="_blank">
+                How On Earth Did Email Newsletters Become Popular Again?
+                <br />
+                — Richard Bertin, Mission.org
+              </a>
+            </footer>
+          </blockquote>
+        </div>
+
+        <div class="microsite--newsletters-are-in--examples">
+          <h3>Kdo například spoléhá na newslettery?</h3>
+
+          <a href="https://www.nytimes.com/newsletters" target="_blank">
+            <img src="~assets/microsite/new-york-times-logo.png" alt="New York Times"/>
+          </a>
+          
+          <a href="https://subscribe.washingtonpost.com/newsletters/#/newsletters" target="_blank">
+            <img src="~assets/microsite/washington-post-logo.svg" alt="The Washington Post"/>
+          </a>
+
+          <a href="https://edition.cnn.com/email/subscription" target="_blank">
+            <img src="~assets/microsite/cnn-logo.png" alt="CNN"/>
+          </a>
+
+          <a href="https://finmag.penize.cz/newsletter" target="_blank">
+            <img src="~assets/microsite/finmag-logo.svg" alt="FinMag"/>
+          </a>
+        </div>
+      </section>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
         <!--
@@ -48,67 +172,33 @@
         <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
       </Quote>
 
+      <section class="microsite--newsletter-benefits">
+        <h2>Publikujte s námi moderní newslettery</h2>
 
-      <section class="microsite--section">
-        <picture>
-          <img src="~assets/microsite/kairly-random-25.jpg" />
-        </picture>
+        <ul>
+          <li>
+            Dokážeme se jednoduše napojit na vaše současné CMS.
+          </li>
+          <li>
+            Newslettery můžeme zpřístupnit na vaší doméně. 
+            Například newslettery.vasedomena.cz.
+          </li>
+          <li>
+            Newslettery můžeme zasílat i na ebooky, 
+            případně připravit obrandovanou mobilní aplikaci.
+          </li>
+          <li>
+            Newslettery můžete u nás zpoplatnit nebo požádat 
+            čtenáře o dobrovolný příspěvek a získat tím nové příjmy.
+          </li>
+        </ul>
+       
+       <div>
+        <button>Poptat demo</button>
+        <a href="/downloads/kairly-brozura.pdf">Stáhnout PDF brožuru</a>
+       </div>
 
-        <div>
-          <h2>{{ $t('Publish your newspapers and magazines on a modern platform and reach out to new readers.') }}</h2>
-
-          <div v-html="$t('@publishers/modern-platform')" />
-        </div>
       </section>
-
-      <Quote :quote="$t('@independent-journalists/quote/jan-mikula')">
-        <!-- <p>
-            Pro novináře, publicisty a blogery tvoříme otevřenou platformu po vzoru sociálních sítí,
-            kde autoři budou férově soutěžit, kdo dokáže nejlépe a nejzajímavěji informovat čtenáře.
-            A dostávat za to zaslouženě zaplaceno.
-          </p>
-
-          <p>
-            V dnešní době plné nekonečného proudu nedůležitých informací a neustáleho vyrušování notifikacemi vytváříme pro čtenáře prostor,
-            kde mohou nerušeně číst, to co opravdu chtějí číst a v době, kdy jsou na to zvyklý. Zkrátka doba, kdy jsme si cestou do práce
-            koupili noviny a četli si je autobuse měla něco do sebe.
-          </p> -->
-
-        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
-        <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
-      </Quote>
-
-      <section class="microsite--section">
-        <picture>
-          <img src="~assets/microsite/kairly-random-15.jpg" />
-        </picture>
-
-        <div>
-          <h2>{{ $t('Make money on your publications with a unique concept of paid content.') }}</h2>
-
-          <div v-html="$t('@publishers/monetizing-content')"></div>
-        </div>
-      </section>
-
-      <Quote :quote="$t('@independent-journalists/quote/roman-krejcik')">
-        <!-- <p>
-            Reklama kvalitní novinářskou a publicistickou tvorbu nezaplatí. Speciálně, když tu máme duopol Googlu a Facebooku.
-            Placený obsah se vrací. Jde to ale z těžka. Většina současných pokusů není příliš úspěšných. Musíme na to chytřeji.
-          </p>
-
-          <p>
-            Využijme toho, co udělalo sociální sítě tak úspěšné. Kairly využívá absolutní otevřenosti a síťového efektu,
-            díky kterému mohou čtenáři číst opravdu jen to, co chtějí a to od autorů na příč celou platformou.
-            Tato vysoká personalizace obsahu je klíč k úspěšněmu modelu placeného obsahu.
-          </p> -->
-
-        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
-        <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
-      </Quote>
-
-      <HowItWorks />
-
-      <Footer />
 
       <FooterLinks />
 
@@ -217,55 +307,80 @@ export default {
     align-items: flex-start
     justify-content: center
 
-  h1
-    +heading
-    padding: 0
-    margin-bottom: $baseline * 2
+    h1
+      +heading
+      padding: 0
+      margin-bottom: $baseline
 
-    @media (max-width: $mobile)
-      margin: $baseline $baseline/2
+      @media (max-width: $mobile)
+        margin: $baseline $baseline/2
+        width: 100%
+
+    > p
+      margin-bottom: $baseline
+
+      font-size: $fs-3
+      line-height: 1.42
+
+    ul
+      padding: 0 $baseline 0 0
+
+      counter-reset: benefits
+
+      @media (max-width: $mobile)
+        padding: 0 $baseline/2
+
+    li
+      display: flex
+      align-items: center
+      margin-bottom: $baseline / 2
+
+      font-size: $fs-1
+
+      @media (max-width: $mobile)
+        font-size: $fs-1
+
+      &::before
+        display: inline-block
+        margin-right: $baseline / 2
+        border-radius: 100%
+        height: $baseline * 1.25
+        width: $baseline * 1.25
+        flex: 0 0 $baseline * 1.25
+
+        background: #fff
+
+        font-size: $fs-0
+        font-weight: 600
+        line-height: $baseline * 1.25
+        text-align: center
+
+        counter-increment: benefits
+        content: counter(benefits)
+
+  picture
+    width: 100%
+
+    img
       width: 100%
 
 
-  > p
-    font-size: $fs-0
-    text-align: center
+.journalists--hero--call-to-action
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-self: center
 
-  ul
-    padding: 0 $baseline 0 0
+  text-align: center
 
-    counter-reset: benefits
+  button
+    +button(primary, large)
 
-    @media (max-width: $mobile)
-      padding: 0 $baseline/2
+  a
+    font-size: $fs--1
 
-  li
-    display: flex
-    align-items: center
-    margin-bottom: $baseline / 2
-
-    font-size: $fs-1
-
-    @media (max-width: $mobile)
-      font-size: $fs-1
-
-    &::before
-      display: inline-block
-      margin-right: $baseline / 2
-      border-radius: 100%
-      height: $baseline * 1.25
-      width: $baseline * 1.25
-      flex: 0 0 $baseline * 1.25
-
-      background: #fff
-
-      font-size: $fs-0
-      font-weight: 600
-      line-height: $baseline * 1.25
-      text-align: center
-
-      counter-increment: benefits
-      content: counter(benefits)
+    color: $c-base
+      
 
 //- Section
 .microsite--section
@@ -340,6 +455,111 @@ export default {
         @media (max-width: $mobile)
           content: none
 
+//- Newsletter are in
+.microsite--newsletters-are-in
+
+  h2
+    +heading
+
+    margin-bottom: $baseline
+
+  blockquote
+    line-height: 1.42  
+
+    p
+      font-family: $ff-serif
+      font-size: $fs-0
+      padding: $baseline/2 $baseline/2 0 $baseline/2
+
+    p + p
+      padding-top: $baseline
+
+    footer
+      padding: $baseline / 2
+
+      color: #555
+
+      font-weight: 600
+
+      a
+        color: #555
+
+.microsite--newsletters-are-in--quotes
+  display: grid
+  align-items: center
+  grid-template-columns: 1fr 1fr
+  grid-template-rows: auto auto
+  grid-column-gap: $baseline
+  margin-bottom: $baseline
+
+
+  > blockquote
+    > *
+      background: lighten(#EFE1C1, 8%)
+
+  .quote-lupa
+    grid-column: 1 / span 1
+    grid-row: 1 / span 1
+
+  .quote-finmag
+    grid-column: 2 / span 1
+    grid-row: 1 / span 2
+
+  .quote-missionorg
+    grid-column: 1 / span 1
+    grid-row: 2 / span 1
+    
+
+.microsite--newsletters-are-in--examples
+  padding-bottom: $baseline
+  
+  h3
+    margin-bottom: $baseline
+
+    font-size: $fs-2
+    font-weight: 600
+
+  img
+    height: 40px
+    margin-right: $baseline
+
+.microsite--newsletter-benefits
+  border-bottom: 1px solid #eee
+
+
+  h2
+    +heading
+
+    margin-bottom: $baseline
+
+    text-align: center
+
+  ul
+    display: table
+    max-width: 480px
+    margin: 0 auto $baseline auto
+
+  li
+    margin-bottom: $baseline / 2
+    margin-left: $baseline
+    list-style: disc
+
+    font-size: $fs-1
+
+  > div
+    display: table
+    margin: 0 auto $baseline auto
+
+    button
+      +button(primary, large)
+
+    a
+      display: table
+      margin: 0 auto
+
+      color: $c-base
+
+      font-size: $fs--1
 
 //- Benefits
 .journalists--benefits
@@ -362,7 +582,6 @@ export default {
       margin-bottom: $baseline
 
       font-size: $fs-1
-
 
     li
       margin-left: $baseline / 2
