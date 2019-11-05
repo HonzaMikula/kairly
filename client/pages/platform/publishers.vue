@@ -212,10 +212,7 @@ import { mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
-import HowItWorks from '@/components/microsite/HowItWorks'
-import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
-import Faq from '@/components/microsite/Faq'
 import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
 import RequestSolutionModal from '@/components/modals/RequestSolution'
 
@@ -227,10 +224,7 @@ export default {
   components: {
     AppLayout,
     Quote,
-    HowItWorks,
-    Footer,
     FooterLinks,
-    Faq,
     ExploreNewspapers,
     RequestSolutionModal
   },
