@@ -4,21 +4,20 @@
       <section class="journalists--hero">
         <div>
           <section>
-            <!-- <h1>{{ $t('Are you an independent publisher?') }}</h1> -->
-            <h1>Jste nezávislé vydavatelství?</h1>
-            <p>Publikujte moderní newslettery a umožněte čtenářům přispívat na váš obsah.</p>
-
+            <h1>{{ $t('Are you an independent publisher?') }}</h1>
+           
+            <p>{{ $t('Publish modern newsletters and allow readers to contribute you for your content.') }}</p>
+           
             <ul>
-              <li><span><strong>Budujte si základnu pravidelných čtenářů</strong> zasíláním denních, týdenních či měsíčních newsletterů.</span></li>
-              <li><span><strong>Umožněte čtenářům konzumovat obsah, jak jim to vyhovuje.</strong> Newslettery můžeme zasílat na email, do RSS čtečky, na Kindle nebo čtenáři mohou používat moderní mobilní a webovou aplikaci.</span></li>
-              <li><span><strong>Získejte dodatečné příjmy</strong> zpoplatněním newsletteru či z dobrovolných příspěvků.</span></li>
+              <li><span v-html="$t('<strong>Build a base of regular readers </strong> by sending daily, weekly, or monthly newsletters.')"></span></li>
+              <li><span v-html="$t('<strong>Let readers consume content as they like. </strong> We can send newsletters to email, RSS readers, Kindle or readers can use modern mobile and web applications.')"></span></li>
+              <li><span v-html="$t('<strong>Earn additional revenues </strong> by charging a newsletter or voluntary donations.')"></span></li>
             </ul>
 
             <div class="journalists--hero--call-to-action">
-              <button @click="openRequestSolutionModal()">Poptat demo</button>
-              <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">Stáhnout PDF brožuru</a>
+              <button @click="openRequestSolutionModal()">{{ $t('Request demo') }}</button>
+              <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">{{ $t('Download PDF brochure') }}</a>
             </div>
-            
           </section>
 
           <picture>
@@ -33,10 +32,10 @@
         </picture>
 
         <div>
-          <h2>Proč u nás publikovat pravidelné newslettery pro vaše čtenáře?</h2>
+          <h2>{{ $t('Why you should publish regular newsletters for your readers?') }}</h2>
 
-          <div>
-            <p>
+          <div v-html="$t('@publishers/why-newsletters')"></div>
+            <!-- <p>
               Ve věku sociálních médiích je těžké si udržet věrné čtenáře. Pravidelné 
               newslettery v moderním provedením jsou způsobem, jak si vytvořit věrnou 
               čtenářskou základnu.
@@ -54,20 +53,19 @@
             </p>
 
             <p>
-              Papírové noviny a časopisy . My se snažíme alespoň část jejich kouzla dostat na 
+              Papírové noviny a časopisy jsou věčné. My se snažíme alespoň část jejich kouzla dostat na 
               všechny moderní kanály. Distribuujeme newslettery na emaily, RSS čtečky, 
               Kindle a jiné ebooky. Máme i moderní desktopovou a mobilní aplikaci.
-            </p>
-          </div>
+            </p> -->
         </div>
       </section>
 
       <ExploreNewspapers>
-        Příklady newsletterů vycházející<br /> na naší platformě
+        <div v-html="$t('Few examples of newsletters <br /> that are published on our platform')"></div>
       </ExploreNewspapers>
 
       <section class="microsite--newsletters-are-in">
-        <h2>Newslettery jsou populární</h2>
+        <h2>{{ $t('Newsletters are popular') }}</h2>
 
         <div class="microsite--newsletters-are-in--quotes">
           <blockquote class="quote-lupa">
@@ -79,7 +77,7 @@
             </p>
             
             <footer>
-              <a href="" target="_blank">
+              <a href="https://www.lupa.cz/clanky/kdyz-web-a-mobil-nestaci-cnn-v-praze-ukazala-ze-chce-byt-uplne-vsude/" target="_blank">
                 <strong>
                   Když web a mobil nestačí. CNN v Praze ukázala, že chce být úplně všude
                 </strong>
@@ -125,7 +123,7 @@
             </p>
 
             <footer>
-              <a href="" target="_blank">
+              <a href="https://medium.com/the-mission/how-on-earth-did-email-newsletters-become-popular-again-3fcee1addc7e" target="_blank">
                 <strong>How On Earth Did Email Newsletters Become Popular Again?</strong>
                 — Richard Bertin, Mission.org
               </a>
@@ -134,7 +132,7 @@
         </div>
 
         <div class="microsite--newsletters-are-in--examples">
-          <h3>Kdo například spoléhá na newslettery?</h3>
+          <h3>{{ $t('Who for example relies on newsletters?') }}</h3>
 
           <a href="https://www.nytimes.com/newsletters" target="_blank">
             <img src="~assets/microsite/new-york-times-logo.png" alt="New York Times"/>
@@ -174,29 +172,27 @@
       </Quote>
 
       <section class="microsite--newsletter-benefits">
-        <h2>Publikujte s námi moderní newslettery</h2>
+        <!-- <h2>Publikujte s námi moderní newslettery</h2> -->
+        <h2>{{ $t('Publish modern newsletters with us') }}</h2>
 
         <ul>
           <li>
-            Dokážeme se jednoduše napojit na vaše současné CMS.
+            {{ $t('We can easily connect to your current CMS.') }}
           </li>
           <li>
-            Newslettery můžeme zpřístupnit na vaší doméně. 
-            Například newslettery.vasedomena.cz.
+            {{ $t('We can make newsletters available on your domain. Example. newsletters.yourdomain.com.') }}
           </li>
           <li>
-            Newslettery můžeme zasílat i na ebooky, 
-            případně připravit obrandovanou mobilní aplikaci.
+            {{ $t('We can also send newsletters to ebooks, eventually prepare a branded mobile app.') }}
           </li>
           <li>
-            Newslettery můžete u nás zpoplatnit nebo požádat 
-            čtenáře o dobrovolný příspěvek a získat tím nové příjmy.
+            {{ $t('With us you can charge newsletters or ask readers for a voluntary contribution to get new income.') }}
           </li>
         </ul>
        
        <div>
-        <button @click="openRequestSolutionModal()">Poptat demo</button>
-        <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">Stáhnout PDF brožuru</a>
+        <button @click="openRequestSolutionModal()">{{ $t('Request solution') }}</button>
+        <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">{{ $t('Download PDF brochure') }}</a>
        </div>
 
       </section>
@@ -262,7 +258,7 @@ export default {
       this.isRequestSolutionModalOpen = true
 
       this.$ga.event({
-        eventCategory: 'Request for demo form',
+        eventCategory: 'Request for solution form',
         eventAction: 'Publisher'
       })
     },
