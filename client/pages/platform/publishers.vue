@@ -15,14 +15,14 @@
             </ul>
 
             <div class="journalists--hero--call-to-action">
-              <button>Poptat demo</button>
-              <a href="/downloads/kairly-brozura.pdf">Stáhnout PDF brožuru</a>
+              <button @click="openRequestSolutionModal()">Poptat demo</button>
+              <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">Stáhnout PDF brožuru</a>
             </div>
             
           </section>
 
           <picture>
-            <img src="~assets/microsite/newsletter-illustration3.png" alt="Newsletter illustration" />
+            <img src="~assets/microsite/newsletter-illustration4.png" alt="Newsletter illustration" />
           </picture>
         </div>
       </section>
@@ -80,7 +80,9 @@
             
             <footer>
               <a href="" target="_blank">
-                Když web a mobil nestačí. CNN v Praze ukázala, že chce být úplně všude<br />
+                <strong>
+                  Když web a mobil nestačí. CNN v Praze ukázala, že chce být úplně všude
+                </strong>
                 — Filip Rožánek, Lupa.cz
               </a>
             </footer>
@@ -108,7 +110,7 @@
 
             <footer>
               <a href="https://finmag.penize.cz/kaleidoskop/410091-rekneme-vam-co-cist-usvit-newsletteru" target="_blank">
-                Řekneme vám, co číst. Úsvit newsletterů<br />
+                <strong>Řekneme vám, co číst. Úsvit newsletterů</strong>
                 — Matouš Hrdina, Finmag
               </a>
             </footer>
@@ -124,8 +126,7 @@
 
             <footer>
               <a href="" target="_blank">
-                How On Earth Did Email Newsletters Become Popular Again?
-                <br />
+                <strong>How On Earth Did Email Newsletters Become Popular Again?</strong>
                 — Richard Bertin, Mission.org
               </a>
             </footer>
@@ -194,13 +195,17 @@
         </ul>
        
        <div>
-        <button>Poptat demo</button>
-        <a href="/downloads/kairly-brozura.pdf">Stáhnout PDF brožuru</a>
+        <button @click="openRequestSolutionModal()">Poptat demo</button>
+        <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">Stáhnout PDF brožuru</a>
        </div>
 
       </section>
 
       <FooterLinks />
+
+      <RequestSolutionModal
+        :active.sync="isRequestSolutionModalOpen"
+      />
 
     </div>
   </AppLayout>
@@ -209,7 +214,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
 import HowItWorks from '@/components/microsite/HowItWorks'
@@ -217,6 +221,7 @@ import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import Faq from '@/components/microsite/Faq'
 import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
+import RequestSolutionModal from '@/components/modals/RequestSolution'
 
 export default {
   name: 'Publishers',
@@ -230,8 +235,8 @@ export default {
     Footer,
     FooterLinks,
     Faq,
-    SignUpForm,
-    ExploreNewspapers
+    ExploreNewspapers,
+    RequestSolutionModal
   },
 
   head() {
@@ -243,6 +248,30 @@ export default {
           name: 'description',
           content: this.$t('Kairly is a digital publishing platform for publishers that offers a unique concept of paid content.') },
       ]
+    }
+  },
+
+  data() {
+    return {
+      isRequestSolutionModalOpen: false,
+    }
+  },
+
+  methods: {
+    openRequestSolutionModal() {
+      this.isRequestSolutionModalOpen = true
+
+      this.$ga.event({
+        eventCategory: 'Request for demo form',
+        eventAction: 'Publisher'
+      })
+    },
+
+    downloadPDF() {
+      this.$ga.event({
+        eventCategory: 'Download PDF brochure',
+        eventAction: 'Publisher'
+      })
     }
   }
 }
@@ -321,6 +350,11 @@ export default {
 
       font-size: $fs-3
       line-height: 1.42
+
+      @media (max-width: $mobile)
+        padding: 0 $baseline/2
+
+        font-size: $fs-2
 
     ul
       padding: 0 $baseline 0 0
@@ -457,32 +491,16 @@ export default {
 
 //- Newsletter are in
 .microsite--newsletters-are-in
+  @media (max-width: $mobile)
+    margin-top: $baseline
 
   h2
     +heading
 
     margin-bottom: $baseline
 
-  blockquote
-    line-height: 1.42  
-
-    p
-      font-family: $ff-serif
-      font-size: $fs-0
-      padding: $baseline/2 $baseline/2 0 $baseline/2
-
-    p + p
-      padding-top: $baseline
-
-    footer
-      padding: $baseline / 2
-
-      color: #555
-
-      font-weight: 600
-
-      a
-        color: #555
+    @media (max-width: $mobile)
+      margin: 0 $baseline/2 $baseline/2 $baseline/2
 
 .microsite--newsletters-are-in--quotes
   display: grid
@@ -492,32 +510,78 @@ export default {
   grid-column-gap: $baseline
   margin-bottom: $baseline
 
+  @media (max-width: $mobile)
+    grid-template-columns: 1fr
+    grid-template-rows: auto auto auto
+    grid-row-gap: $baseline/2
 
   > blockquote
     > *
       background: lighten(#EFE1C1, 8%)
 
+    p
+      padding: $baseline/2 $baseline/2 0 $baseline/2
+
+      font-family: $ff-serif
+      font-size: $fs-0
+      line-height: 1.6  
+      
+    p + p
+      padding-top: $baseline
+
+    footer
+      padding: $baseline / 2
+
+      color: #555
+
+      line-height: 1.42
+
+      strong
+        display: block
+        font-weight: 600
+
+      a
+        color: #555
+
   .quote-lupa
     grid-column: 1 / span 1
     grid-row: 1 / span 1
+
+    @media (max-width: $mobile)
+      grid-column: 1 / span 1
+      grid-row: 1 / span 1
 
   .quote-finmag
     grid-column: 2 / span 1
     grid-row: 1 / span 2
 
+    @media (max-width: $mobile)
+      grid-column: 1 / span 1
+      grid-row: 2 / span 1
+
   .quote-missionorg
     grid-column: 1 / span 1
     grid-row: 2 / span 1
+
+    @media (max-width: $mobile)
+      grid-column: 1 / span 1
+      grid-row: 3 / span 1
     
 
 .microsite--newsletters-are-in--examples
   padding-bottom: $baseline
+
+  @media (max-width: $mobile)
+    padding: 0 $baseline/2 $baseline/2 $baseline/2
   
   h3
     margin-bottom: $baseline
 
     font-size: $fs-2
     font-weight: 600
+
+    @media (max-width: $mobile)
+      font-size: $fs-1
 
   img
     height: 40px
@@ -526,13 +590,15 @@ export default {
 .microsite--newsletter-benefits
   border-bottom: 1px solid #eee
 
-
   h2
     +heading
 
     margin-bottom: $baseline
 
     text-align: center
+
+    @media (max-width: $mobile)
+      margin: $baseline/2
 
   ul
     display: table
