@@ -194,6 +194,14 @@ Use regular expression to modify perex/content.
 replace document 'koleje' 'poleje'
 ```
 
+#### Video
+
+Define selector for video poster.
+Post will be set to video type.
+```
+video poster 'p img'
+``
+
 ## Management commands
 
 ### addfreecredits
