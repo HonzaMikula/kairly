@@ -1,5 +1,6 @@
 from os.path import dirname
 from urllib.parse import urlsplit, urlunsplit
+import rapidjson as json
 
 import feedparser
 import requests
@@ -9,7 +10,6 @@ import lxml.html
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from django.utils.timezone import now
 from django.db.models import Q
 from django.dispatch import receiver
 
@@ -17,7 +17,7 @@ from sources.parser import ArticleParser, split_article_to_perex_and_content, va
 from sources.directives import validate_directives, parse as parse_directives
 from utils.url import clean_url, fetch_url
 
-from articles.models import Backlog
+from articles.models import Backlog, Post
 from articles.signals import post_publish
 
 
@@ -70,11 +70,49 @@ class Channel(models.Model):
         return feedparser.parse(self.rss, **kwargs)
 
     def parse_entry(self, entry, *, usecache=False):
-        fragments, resolved_url = self.parse_article_from_entry(entry, usecache=usecache)
-        perex, content = split_article_to_perex_and_content(fragments, [500, 950])
-        return perex, content, resolved_url
+        htmltree, resolved_url = self.parse_html_root(entry, usecache=usecache)
+        attachments = None
 
-    def parse_article_from_entry(self, entry, *, usecache=False):
+        video_directives = self.get_directives('video', 'poster')
+        if video_directives:
+            directive = video_directives[-1]
+            kind = Post.VIDEO
+            try:
+                poster = htmltree.cssselect(directive.value)[0]
+                src = poster.attrib.get('src')
+                if src:
+                    attachments = json.dumps([
+                        {
+                            'type': 'video-poster',
+                            'src': src
+                        }
+                    ])
+            except IndexError:
+                pass
+
+        else:
+            kind = Post.NEWSPAPER
+
+        parser = ArticleParser(self.parser)
+        fragments = parser.parse(htmltree)
+        fragments = parser.normalize(fragments)
+
+        perex, content = split_article_to_perex_and_content(fragments, [500, 950])
+
+        replacements = self.get_directives('replace', 'document')
+        for replacement in replacements:
+            perex = replacement.replace(perex)
+            content = replacement.replace(content)
+
+        return {
+            'kind': kind,
+            'perex': perex,
+            'content': content,
+            'source': resolved_url,
+            'attachments': attachments
+        }
+
+    def parse_html_root(self, entry, *, usecache=False):
         parsed_url = urlsplit(entry.link)
         url = urlunsplit(parsed_url[:-1] + ("",))  # strip fragment
         html = None
@@ -120,14 +158,10 @@ class Channel(models.Model):
         if entry.link:
             self.fix_relative_links(htmltree, parsed_url)
 
-        parser = ArticleParser(self.parser)
-        fragments = parser.parse(htmltree)
-        fragments = parser.normalize(fragments)
-
         if resolved_url:
             resolved_url = clean_url(resolved_url)
 
-        return fragments, resolved_url
+        return htmltree, resolved_url
 
     def is_url_valid(self, url):
         domains = [d.value for d in self.get_directives('skip', 'domain')]

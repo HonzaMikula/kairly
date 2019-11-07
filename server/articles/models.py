@@ -41,12 +41,14 @@ class Post(models.Model):
     TWEET = 'tweet'
     RECOMMENDATION = 'recommendation'
     LINK = 'link'
+    VIDEO = 'video'
 
     KIND_CHOICES = (
         (NEWSPAPER, _('Newspaper')),
         (TWEET, _('Tweet')),
         (RECOMMENDATION, _('Recommendation')),
         (LINK, _('Link')),
+        (VIDEO, _('Video')),
     )
 
     READ_TIME_CACHE_KEY = 'read_time_{id}'
@@ -191,8 +193,9 @@ class Post(models.Model):
         if self.draft:
             result['draft'] = True
 
+        attachments = json.loads(self.attachments) if self.attachments else None
+
         if self.kind == Post.TWEET:
-            attachments = json.loads(self.attachments) if self.attachments else None
             result['content'] = {
                 'content': self.content,
             }
@@ -211,6 +214,14 @@ class Post(models.Model):
                         _attachments.append(a)
                 attachments = _attachments
 
+            if attachments:
+                result['content']['attachments'] = attachments
+        elif self.kind == Post.VIDEO:
+            result['content'] = {
+                'title': self.title,
+                'perex': self.perex,
+                'protected': self.protected
+            }
             if attachments:
                 result['content']['attachments'] = attachments
         elif self.kind == Post.NEWSPAPER:

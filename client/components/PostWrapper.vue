@@ -36,6 +36,7 @@ import PostArticle from '@/components/posts/PostArticle'
 import PostLink from '@/components/posts/PostLink'
 import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
+import PostVideo from '@/components/posts/PostVideo'
 import PostRecommendations from '@/components/posts/PostRecommendations'
 
 import EditorialTweets from '@/components/posts/EditorialTweets'
@@ -54,6 +55,7 @@ export default {
     PostLink,
     PostTweet,
     PostPicture,
+    PostVideo,
     PostRecommendations,
     EditorialTweets,
     EditorialArticle,

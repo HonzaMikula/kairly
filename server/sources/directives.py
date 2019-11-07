@@ -36,9 +36,23 @@ class ReplaceDirective:
         return self.pattern.sub(self.replacement, title)
 
 
+class VideoDirective:
+    """Usage: video poster <selector>"""
+    name = 'video'
+
+    def __init__(self, target=None, value=None):
+        if target != 'poster':
+            raise ValueError("Target must be 'poster'. " + self.__doc__)
+        if value is None:
+            raise ValueError("Selector must be set." + self.__doc__)
+        self.target = target
+        self.value = value
+
+
 DIRECTIVES = {
     SkipDirective.name: SkipDirective,
     ReplaceDirective.name: ReplaceDirective,
+    VideoDirective.name: VideoDirective,
 }
 
 

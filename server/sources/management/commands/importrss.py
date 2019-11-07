@@ -219,29 +219,20 @@ def _import_post(channel, entry, stdout, verbosity, force, only_url, draft):
         )
         return recommendation, True
 
-    perex, content, resolved_url = channel.parse_entry(entry, usecache=False)
+    args = channel.parse_entry(entry, usecache=False)
 
-    replacements = [d for d in channel.get_directives('replace', 'title')]
+    title_directives = channel.get_directives('replace', 'title')
     title = _get_title_from_entry(entry)
-    for replacement in replacements:
-        title = replacement.replace(title)
+    for directive in title_directives:
+        title = directive.replace(title)
 
-    replacements = [d for d in channel.get_directives('replace', 'document')]
-    for replacement in replacements:
-        perex = replacement.replace(perex)
-        content = replacement.replace(content)
-
-    args = dict(
-        kind=Post.NEWSPAPER,
+    args.update(dict(
         published=published,
         draft=draft,
         guid=guid,
-        source=resolved_url,
         title=title,
-        perex=perex,
-        content=content,
-        author=channel.author
-    )
+        author=channel.author,
+    ))
 
     if post is None:
         post = Post.objects.create(**args)
