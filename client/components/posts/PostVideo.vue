@@ -3,14 +3,21 @@
     <div class="timeline-post--video">
       <h2>
         <span v-if="post.draft">{{ post.content.title }}</span>
-        <nuxt-link v-else :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link>
+        <a :href="post.source" target="_blank">{{ post.content.title }}</a>
       </h2>
 
       <div class="timeline-post--video--content">
-        <div v-html="post.content.perex"></div>
-        <div v-if="poster">
-          <img :src="poster.src" />
+        <div
+          v-if="poster"
+          class="timeline-post--video--content--player"
+        >
+          <a :href="post.source" target="_blank">
+            <img :src="poster.src" />
+          </a>
         </div>
+
+        <div v-html="post.content.perex"></div>
+        
       </div>
     </div>
 
@@ -71,23 +78,16 @@ export default {
 
 //- Content
 .timeline-post--video--content
-  position: relative
-
-  column-count: 3
-  column-rule: 1px dotted #ddd
-  column-gap: $baseline
-  display: block
-
-  line-height: 1.58
-  hyphens: auto
+  display: grid
+  grid-template-columns: 2fr 1fr
+  grid-column-gap: $baseline
 
   @media (max-width: $mobile)
-    column-count: 2
-    column-gap: $baseline / 2
-
-    font-size: 15px
-    line-height: 1.58
+    grid-template-columns: 1fr
 
 
-  +article-perex
+.timeline-post--video--content--player
+  img
+    height: auto
+    width: 100%
 </style>
