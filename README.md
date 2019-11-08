@@ -200,7 +200,7 @@ Define selector for video poster.
 Post will be set to video type.
 ```
 video poster 'p img'
-``
+```
 
 ## Management commands
 
