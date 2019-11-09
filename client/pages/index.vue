@@ -244,14 +244,12 @@ export default {
     }
   },
 
-  created() {
-    if (process.client) {
-      if (this.date === null) {
-        this.loadTimeline()
-      }
-      if (this.loggedIn) {
-        this.$store.dispatch('backlog/loadUserBacklog')
-      }
+  mounted() {
+    if (this.date === null) {
+      this.loadTimeline()
+    }
+    if (this.loggedIn) {
+      this.$store.dispatch('backlog/loadUserBacklog')
     }
   },
 
