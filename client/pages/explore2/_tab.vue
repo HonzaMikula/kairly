@@ -85,7 +85,8 @@ export default {
 
   methods: {
     async loadTimeline() {
-      const timeline  = await this.$store.dispatch('timeline/load', { date: null })
+      const endpoint = `/explore-timeline/${this.tab.slug}`
+      const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date: null })
       this.timeline = timeline
       this.loading = false
     }

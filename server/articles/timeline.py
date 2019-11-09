@@ -13,7 +13,7 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 
 from .models import Issue, Post, Subscription, SubscriptionToAuthor
-from users.models import User
+from users.models import User, Category, CategoryUser
 
 DAY_START_HOUR = 6
 
@@ -99,6 +99,42 @@ def timeline(request):
         'validTo': cache_valid_to,
         'recommended': recommended_public_ids,
     })
+
+
+def explore_timeline(request, tab):
+    # categories = []
+    # for category in Category.objects.filter(explore_tab=tab):
+    #     cat_authors = CategoryUser.objects.filter(category=category).select_related('user').order_by('ordering', 'user__name')
+    #     categories.append({
+    #         'name': category.name,
+    #         'authors': [cu.user.to_json() for cu in cat_authors],
+    #     })
+
+    # if tab == 'Best of Kairly':
+    #     categories.append({
+    #         'name': 'New Authors',
+    #         'authors': [
+    #             u.to_json() for u in
+    #             User.objects.exclude(kind=User.FEED)
+    #                 .annotate(post_count=Count('post'))
+    #                 .filter(post_count__gt=1)
+    #                 .order_by('-date_joined')[:14]  # fill list + modal, each 7 items
+    #         ]
+    #     })
+
+    # return JsonResponse({
+    #     'categories': categories
+    # })
+
+    return JsonResponse({
+        'date': 'explore/' + tab,  # hack for now, used as
+        'issues': [],
+        'links': [],
+        'validTo': None,  # send correct vailidity
+        'recommended': [],
+    })
+
+
 
 
 def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
