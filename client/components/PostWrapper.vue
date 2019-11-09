@@ -99,7 +99,8 @@ export default {
 
   //- main article
   .newspaper,
-  .link
+  .link,
+  .video
     grid-column: 1 / span 2
     grid-row: 1
     margin: 0
@@ -111,6 +112,14 @@ export default {
 
     timeline-post--article--content
       column-count: 2
+
+    .timeline-post--video--content
+      grid-template-columns: 1fr
+
+  .video + .editorial-post--editorial
+
+    .tweet-attachment-link-view
+      display: none
 
   .editorial-post-tweet-editor
     article
@@ -146,6 +155,10 @@ export default {
       @media (max-width: $mobile)
         grid-column: 2 / span 1
         grid-row: 1
+
+    .video
+      grid-column: 2 / span 2
+      grid-row: 1
 
     .editorial-post--editorial
       grid-column: 1 / span 1
