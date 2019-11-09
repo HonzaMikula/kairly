@@ -76,6 +76,10 @@ def timeline(request):
         except KeyError:
             pass
 
+    # find which issues wad recommented by used and which not
+    # this allows showing recommend button in proper state
+    # TODO should be this keeps as part of timeline endpoint
+    #      can we load it independently and spedd up timeline rendering
     recommendations_query = Post.objects.filter(
         author=request.user, kind=Post.RECOMMENDATION,
         ref_issue_id__in=newspaper_issue_ids).values_list('ref_issue_id', flat=True)
@@ -133,8 +137,6 @@ def explore_timeline(request, tab):
         'validTo': None,  # send correct vailidity
         'recommended': [],
     })
-
-
 
 
 def get_newspaper_issues(request, now, tzinfo, start_dt, end_dt, cache_valid_to):
