@@ -22,11 +22,13 @@
     </component>
 
     <slot name="editorial">
+      <aside>
       <component
         v-if="editorial"
         :is="'editorial-' + editorial.type"
         :editorial="editorial"
       />
+      </aside>
     </slot>
   </section>
 </template>
@@ -96,6 +98,13 @@ export default {
 
     &.is-before
       grid-template-columns: 60vw calc(100vw - (#{$baseline} * 1.5))
+
+  > aside > div
+    @media (max-width: $mobile)
+      position: absolute
+      height: 100%
+      width: 100%
+      overflow-y: auto
 
   //- main article
   .newspaper,
