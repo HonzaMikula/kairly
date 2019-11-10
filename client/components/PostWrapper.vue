@@ -150,8 +150,8 @@ export default {
       timeline-post--tweet
         margin: 0
 
-        .tweet-attachment-link-view
-          display: none //- TODO: refactor so it's not done over CSS
+      .tweet-attachment-link-view
+        display: none //- TODO: refactor so it's not done over CSS
 
     @media (max-width: $mobile)
       grid-column: 2 / span 1
