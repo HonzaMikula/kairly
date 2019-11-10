@@ -2,10 +2,6 @@ import axiosRetry from 'axios-retry';
 import jwtDecode from 'jwt-decode';
 
 export default function({ app, $axios, redirect }) {
-  axiosRetry($axios, {
-    retryDelay: axiosRetry.exponentialDelay
-  })
-
   $axios.onError(async (err) => {
     const code = parseInt(err.response && err.response.status)
     if (code === 401) {
