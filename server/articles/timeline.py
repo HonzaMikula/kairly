@@ -15,7 +15,7 @@ from more_itertools import peekable
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 
-from .models import Issue, Post, Subscription, SubscriptionToAuthor
+from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper
 from users.models import User, Category, CategoryUser
 
 DAY_START_HOUR = 6
@@ -39,7 +39,7 @@ class TimelinePeriod:
 
 class BaseTimelineView(View):
 
-    def get_timeline(self, request):
+    def get_timeline(self, request, ctx):
         # Group author issues by period defined by client local zone
         # It means that timeline for same user may differ when user is in different
         # timezone.
@@ -51,8 +51,8 @@ class BaseTimelineView(View):
         if period.start > now:
             raise ValueError("Invalid date.")
 
-        newspaper_issues, newspaper_subscription_exists = self.get_newspaper_issues(request, now, period)
-        author_issues, author_subscription_exists = self.get_author_issues(request, now, period)
+        newspaper_issues, newspaper_subscription_exists = self.get_newspaper_issues(request, ctx, now, period)
+        author_issues, author_subscription_exists = self.get_author_issues(request, ctx, now, period)
 
         if not newspaper_subscription_exists and not author_subscription_exists:
             # no subscription exists
@@ -76,10 +76,10 @@ class BaseTimelineView(View):
             'recommended': recommended_public_ids,
         }
 
-    def get_newspaper_subscriptions(self, request, now):
+    def get_newspaper_subscriptions(self, request, ctx, now):
         raise NotImplementedError
 
-    def get_author_subscriptions(self, request, now):
+    def get_author_subscriptions(self, request, ctx, now):
         raise NotImplementedError
 
     def get_timeline_period(self, request, now, tzinfo):
@@ -140,8 +140,8 @@ class BaseTimelineView(View):
 
         return recommended_public_ids
 
-    def get_newspaper_issues(self, request, now, period):
-        subscriptions = self.get_newspaper_subscriptions(request, now)
+    def get_newspaper_issues(self, request, ctx, now, period):
+        subscriptions = self.get_newspaper_subscriptions(request, ctx, now)
 
         issues = []
         subscription_exists = False
@@ -206,8 +206,8 @@ class BaseTimelineView(View):
         cache.set(cache_key, json.dumps(issues), period.timeout)
         return issues
 
-    def get_author_issues(self, request, now, period):
-        subscriptions = self.get_author_subscriptions(request, now)
+    def get_author_issues(self, request, ctx, now, period):
+        subscriptions = self.get_author_subscriptions(request, ctx, now)
 
         issues = []
         subscription_exists = False
@@ -309,7 +309,7 @@ class TimelineView(BaseTimelineView):
     @ajax_login_required
     def get(self, request):
         try:
-            timeline = self.get_timeline(request)
+            timeline = self.get_timeline(request, None)
             if timeline is None:
                 return HttpResponse(status=204)
             else:
@@ -317,24 +317,29 @@ class TimelineView(BaseTimelineView):
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
-    def get_newspaper_subscriptions(self, request, now):
+    def get_newspaper_subscriptions(self, request, ctx, now):
         return Subscription.objects.filter(
             Q(valid_to__gt=now) | Q(renewal=True) | Q(suspended=True),
             user=request.user,
         ).select_related('newspaper', 'newspaper__editor')
 
-    def get_author_subscriptions(self, request, now):
+    def get_author_subscriptions(self, request, ctx, now):
         return SubscriptionToAuthor.objects.filter(
             Q(valid_to__gt=now) | Q(renewal=True) | Q(suspended=True),
             user=request.user
         ).select_related('author')
 
 
+@dataclass
+class SubscriptionMock:
+    newspaper: Newspaper
+
+
 class ExploreTimelineView(BaseTimelineView):
 
     def get(self, request, tab):
         try:
-            timeline = self.get_timeline(request)
+            timeline = self.get_timeline(request, tab)
             if timeline is None:
                 return HttpResponse(status=204)
             else:
@@ -346,8 +351,15 @@ class ExploreTimelineView(BaseTimelineView):
     def get_links(self, period):
         return []
 
-    def get_newspaper_subscriptions(self, request, now):
+    def get_newspaper_subscriptions(self, request, tab, now):
+        if tab == 'news':
+            return [
+                SubscriptionMock(Newspaper.objects.get(editor__username='janmikul', slug='malostranskenoviny'))
+            ]
+            #'janmikula/malostranskenoviny',
+            #'farin/nej-novinari-na-twitteru',
+            #'rozhlas/zpravy-z-domova'
         return []
 
-    def get_author_subscriptions(self, request, now):
+    def get_author_subscriptions(self, request, tab, now):
         return []
