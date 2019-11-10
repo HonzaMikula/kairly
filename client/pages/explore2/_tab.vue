@@ -3,7 +3,7 @@
     <loading-spinner v-if="loading"></loading-spinner>
 
     <div
-      v-else
+      v-else-if="timeline"
       class="timeline-view"
     >
       <template v-for="timeSlot in timeSlots">
@@ -54,16 +54,17 @@ export default {
   },
 
   data() {
-    const tab = TABS.find(t => t.slug === this.$route.params.tab)
-
     return {
       loading: true,
       timeline: null,
-      tab,
     }
   },
 
   computed: {
+    tab() {
+      return TABS.find(t => t.slug === this.$route.params.tab)
+    },
+
     timeSlots() {
       if (this.loading) { return [] }
 
@@ -83,8 +84,15 @@ export default {
     },
   },
 
+  watch:{
+    $route (to, from){
+      this.loadTimeline()
+    }
+  },
+
   methods: {
     async loadTimeline() {
+      this.loading = true
       const endpoint = `/explore-timeline/${this.tab.slug}`
       const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date: null })
       this.timeline = timeline

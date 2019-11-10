@@ -4,8 +4,8 @@ from . import views
 from . import timeline
 
 urlpatterns = [
-    path('timeline', timeline.timeline, name='timeline'),
-    path('explore-timeline/<tab>', timeline.explore_timeline, name="explore_timeline"),
+    path('timeline', timeline.TimelineView.as_view(), name='timeline'),
+    path('explore-timeline/<tab>', timeline.ExploreTimelineView.as_view(), name="explore_timeline"),
 
     path('backlog', views.user_backlog, name='user_backlog'),
     path('subscriptions', views.subscriptions, name='subscriptions'),
