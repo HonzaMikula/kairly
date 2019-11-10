@@ -8,6 +8,7 @@
         <picture>
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
             <img
+              v-if="post.author.picture"
               :src="post.author.picture"
               :alt="post.author.name"
             />

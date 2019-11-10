@@ -25,7 +25,11 @@
     </p>
 
     <div class="newspaper-widget--author">
-      <img :src="newspaper.editor.picture" :alt="newspaper.editor.name"/>
+      <img 
+        v-if="newspaper.editor.picture"
+        :src="newspaper.editor.picture"
+        :alt="newspaper.editor.name"
+      />
       <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
     </div>
 
@@ -145,7 +149,8 @@ export default {
   @media (max-width: $mobile)
     margin: $baseline/4 0
 
-  img
+  img,
+  .image-placeholder
     border-radius: 100%
     float: left
     height: $baseline

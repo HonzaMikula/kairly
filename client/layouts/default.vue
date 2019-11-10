@@ -83,4 +83,5 @@ export default {
 //- Components
 @import 'styles/components/loading-spinner'
 @import 'styles/components/tooltip'
+@import 'styles/components/image-placeholder'
 </style>
