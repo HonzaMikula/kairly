@@ -55,7 +55,7 @@ def fetch_url(url, *, usecache=False, user_agent=None):
                     html = ud.unicode_markup
 
         if html is None:
-            html = resp.content.decode(resp.encoding)
+            html = resp.content.decode(resp.encoding, errors='ignore')
 
         resolved_url = resp.url
 

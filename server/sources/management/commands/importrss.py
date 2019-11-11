@@ -185,7 +185,7 @@ def _import_post(channel, entry, stdout, verbosity, force, only_url, draft):
         h.update(entry.description.encode('utf-8'))
         h.update(entry.published.encode('utf-8'))
         entry_id = h.hexdigest()
-    guid = "{}|{}".format(channel.provider, entry_id)
+    guid = "{}|{}".format(channel.provider, entry_id)[:255]  # trim to field's max length
 
     try:
         post = Post.objects.get(guid=guid)
