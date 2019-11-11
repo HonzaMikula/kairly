@@ -347,24 +347,33 @@ class ExploreTimelineView(BaseTimelineView):
             if timeline is None:
                 return HttpResponse(status=204)
             else:
-                timeline['data'] = 'explore/' + tab,  # hack for now, used as
+                # timeline['data'] = 'explore/' + tab,  # hack for now, used as
                 return JsonResponse(timeline)
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
-    # def get_links(self, period):
-    #     return []
 
     def get_newspaper_subscriptions(self, request, tab, now):
-        if tab == 'news':
-            return [
-                SubscriptionMock(Newspaper.objects.get(editor__username='janmikula', slug='malostranskenoviny')),
-                SubscriptionMock(Newspaper.objects.get(editor__username='farin', slug='nej-novinari-na-twitteru'))
-            ]
-            #'janmikula/malostranskenoviny',
-            #'farin/nej-novinari-na-twitteru',
-            #'rozhlas/zpravy-z-domova'
-        return []
+        if tab == 'news' or tab == 'politics':
+            q = Q(editor__username='janmikula', slug='malostranskenoviny') | \
+                Q(editor__username='farin', slug='nej-novinari-na-twitteru') | \
+                Q(editor__username='rozhlas', slug='zpravy-z-domova')
+        elif tab == 'sport':
+            q = Q(editor__username='aktualnecz', slug='sport') | \
+                Q(editor__username='rozhlas', slug='sport')
+        elif tab == 'technology':
+            q = Q(editor__username='janmikula', slug='technologicky-denik') | \
+                Q(editor__username='janmikula', slug='product-design-weekly') | \
+                Q(editor__username='farin', slug='elektromobilita')
+        elif tab == 'life':
+            q = Q(editor__username='janmikula', slug='tydenik-skola-hrou') | \
+                Q(editor__username='janmikula', slug='parodicky-denicek') | \
+                Q(editor__username='dvtv', slug='dvtv-rozhovory-tydne')
+        else:
+            return []
+
+        return [SubscriptionMock(n) for n in Newspaper.objects.filter(q)]
+
 
     def get_author_subscriptions(self, request, tab, now):
         return []

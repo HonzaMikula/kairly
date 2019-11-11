@@ -1,28 +1,25 @@
 import Vue from 'vue'
 
 export const state = () => ({
-  today: null,
+  today: {
+    // of endpoint
+  },
   hasNoActiveSubscriptions: false,
   expandedIssues: {},
   timeline: {
-    // of date : [ issues ]
+    // of `endpoint|date` : [ issues ]
   },
 })
 
 export const actions = {
   async load({ commit, state }, { endpoint='/timeline', date, cachedOnly=false}) {
-    let cacheKey
-    if (endpoint === '/timeline') {
-      cacheKey = date
-      // TODO check not only valid to but also change of hour or too old timeline
-      // but this is not important now
-      if (!cacheKey && state.today && state.today.validTo > (Date.now() / 1000)) {
-        // if today is requested (no date arg) then lookup to helper structure which
-        // keeps current value of "today" (mind that "today" may not match real today)
-        cacheKey = state.today.date
-      }
-    } else {
-      cacheKey = endpoint
+    let cacheKey = date ? `${endpoint}|${data}` : null
+    // TODO check not only valid to but also change of hour or too old timeline
+    // but this is not important now
+    if (!cacheKey && state.today[endpoint] && state.today[endpoint].validTo > (Date.now() / 1000)) {
+      // if today is requested (no date arg) then lookup to helper structure which
+      // keeps current value of "today" (mind that "today" may not match real today)
+      cacheKey = state.today[endpoint].date
     }
 
     if (state.timeline[cacheKey]) {
@@ -75,10 +72,10 @@ export const actions = {
     }
 
     if (endpoint === '/timeline' && !date) {
-      commit('today', {date: data.date, validTo: data.validTo})
+      commit('today', {endpoint, date: data.date, validTo: data.validTo})
     }
 
-    commit('received', data)
+    commit('received', {endpoint, data})
     return data
   },
 
@@ -90,7 +87,6 @@ export const actions = {
       eventAction: issueId
     })
   }
-
 }
 
 export const mutations = {
@@ -104,14 +100,14 @@ export const mutations = {
     state.hasNoActiveSubscriptions = false
     state.timeline = {}
   },
-  received(state, { date, issues, links }) {
-    Vue.set(state.timeline, date, { issues, links })
+  received(state, { endpoint, data: { date, issues, links }}) {
+    Vue.set(state.timeline, `${endpoint}|${date}`, { issues, links })
   },
   hasNoActiveSubscriptions(state) {
     state.hasNoActiveSubscriptions = true
   },
-  today(state, value) {
-    state.today = value
+  today(state, {endpoint, date, validTo}) {
+    Vue.set(state.today, endpoint, { date, validTo })
   },
   expandIssue(state, { issueId }) {
     state.expandedIssues = {

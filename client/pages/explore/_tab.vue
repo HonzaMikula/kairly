@@ -93,8 +93,11 @@ export default {
   methods: {
     async loadTimeline() {
       this.loading = true
+
+      // TODO support historical timelines
+      const { date } = this.$route.params
       const endpoint = `/explore-timeline/${this.tab.slug}`
-      const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date: null })
+      const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date })
       this.timeline = timeline
       this.loading = false
     }
