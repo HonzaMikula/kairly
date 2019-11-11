@@ -16,6 +16,7 @@ from utils.decorators import ajax_login_required
 from utils.json import JsonResponse, datetime_isoformat_ecma262
 
 from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper
+from .period import PeriodMixin
 from users.models import User, Category, CategoryUser
 
 DAY_START_HOUR = 6
@@ -339,6 +340,18 @@ class SubscriptionMock:
         return False
 
 
+@dataclass
+class SubscriptionToAuthorMock(PeriodMixin):
+    author: User
+    period: str
+    period_time: object
+    period_dow: int
+
+    @property
+    def suspended(self):
+        return False
+
+
 class ExploreTimelineView(BaseTimelineView):
 
     def get(self, request, tab):
@@ -352,9 +365,12 @@ class ExploreTimelineView(BaseTimelineView):
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
-
     def get_newspaper_subscriptions(self, request, tab, now):
-        if tab == 'news' or tab == 'politics':
+        if tab == 'best-of-kairly':
+            q = Q(editor__username='janmikula', slug='malostranskenoviny') | \
+                Q(editor__username='farin', slug='nej-novinari-na-twitteru') | \
+                Q(editor__username='janmikula', slug='technologicky-denik')
+        elif tab == 'news' or tab == 'politics':
             q = Q(editor__username='janmikula', slug='malostranskenoviny') | \
                 Q(editor__username='farin', slug='nej-novinari-na-twitteru') | \
                 Q(editor__username='rozhlas', slug='zpravy-z-domova')
@@ -374,6 +390,12 @@ class ExploreTimelineView(BaseTimelineView):
 
         return [SubscriptionMock(n) for n in Newspaper.objects.filter(q)]
 
-
     def get_author_subscriptions(self, request, tab, now):
-        return []
+        subscriptions = []
+        users = set()
+        cat_authors = CategoryUser.objects.filter(category__explore_tab=tab).select_related('user').order_by('ordering', 'user__name')
+        for cu in cat_authors:
+            if cu.user.id not in users:
+                subscriptions.append(SubscriptionToAuthorMock(cu.user, PeriodMixin.X6_PER_DAY, None, None))
+                users.add(cu.user.id)
+        return subscriptions
