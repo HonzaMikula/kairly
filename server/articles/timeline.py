@@ -334,6 +334,10 @@ class TimelineView(BaseTimelineView):
 class SubscriptionMock:
     newspaper: Newspaper
 
+    @property
+    def suspended(self):
+        return False
+
 
 class ExploreTimelineView(BaseTimelineView):
 
@@ -348,13 +352,14 @@ class ExploreTimelineView(BaseTimelineView):
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
-    def get_links(self, period):
-        return []
+    # def get_links(self, period):
+    #     return []
 
     def get_newspaper_subscriptions(self, request, tab, now):
         if tab == 'news':
             return [
-                SubscriptionMock(Newspaper.objects.get(editor__username='janmikul', slug='malostranskenoviny'))
+                SubscriptionMock(Newspaper.objects.get(editor__username='janmikula', slug='malostranskenoviny')),
+                SubscriptionMock(Newspaper.objects.get(editor__username='farin', slug='nej-novinari-na-twitteru'))
             ]
             #'janmikula/malostranskenoviny',
             #'farin/nej-novinari-na-twitteru',

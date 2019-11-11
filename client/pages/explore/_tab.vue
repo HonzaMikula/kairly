@@ -1,49 +1,38 @@
 <template>
   <main>
-    <div class="explore--top-newspapers">
-      <div>
-        <NewspaperWidget
-          v-for="newspaper in newspapers"
-          :key="newspaper.fullName"
-          :newspaper="newspaper"
-        />
-      </div>
+    <loading-spinner v-if="loading"></loading-spinner>
 
+    <div
+      v-else-if="timeline"
+      class="timeline-view"
+    >
+      <template v-for="timeSlot in timeSlots">
+        <JumpMenu
+          :key="timeSlot.time"
+          :datetime="timeSlot.time"
+          :timeSlots="timeSlots"
+        />
+
+        <IssueWrapper
+          v-for="issue in timeSlot.issues"
+          :key="issue.id"
+          :issue="issue"
+          :subscription="true"
+        />
+      </template>
     </div>
-
-    <section :class="`explore-${index}`" v-for="(category, index) in categories" :key="index">
-      <h2>{{ category.name }}</h2>
-        <AuthorWidget
-          v-for="author in category.authors.slice(0, LIMIT)"
-          :key="author.id"
-          :author="author"
-        />
-
-        <button
-          v-if="category.authors.length > LIMIT"
-          @click="openCategoryModal(category)"
-        >
-          {{ $t('Show more') }}
-        </button>
-    </section>
-
-    <portal to="explore-header">{{ tab.name }}</portal>
-
-    <ExploreModal
-      :active.sync="isModalOpen"
-      :category="modalCategory"
-      :limit="LIMIT"
-    />
-
   </main>
 </template>
 
 <script>
 import TABS from '@/exploreTabs'
 
-import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import AuthorWidget from '@/components/widgets/AuthorWidget'
-import ExploreModal from '@/components/modals/ExploreModal'
+//import NewspaperWidget from '@/components/widgets/NewspaperWidget'
+//import AuthorWidget from '@/components/widgets/AuthorWidget'
+
+import IssueWrapper from '@/components/IssueWrapper'
+import JumpMenu from '@/components/widgets/JumpMenu'
+//import ExploreModal from '@/components/modals/ExploreModal'
 
 export default {
   name: 'ExploreTab',
@@ -51,9 +40,11 @@ export default {
   //auth: false,
 
   components: {
-    NewspaperWidget,
-    AuthorWidget,
-    ExploreModal
+    IssueWrapper,
+    JumpMenu
+    //NewspaperWidget,
+    //AuthorWidget,
+    //ExploreModal
   },
 
   head() {
@@ -64,35 +55,68 @@ export default {
 
   data() {
     return {
-      LIMIT: 7,
-      modalCategory: null,
-      isModalOpen: false
+      loading: true,
+      timeline: null,
+    }
+  },
+
+  computed: {
+    tab() {
+      return TABS.find(t => t.slug === this.$route.params.tab)
+    },
+
+    timeSlots() {
+      if (this.loading) { return [] }
+
+      const { issues } = this.timeline
+      const timeSlots = []
+      let slot = null
+
+      issues.forEach(issue => {
+        if (slot === null || slot.time !== issue.time) {
+          slot = { time: issue.time, issues: []}
+          timeSlots.push(slot)
+        }
+        slot.issues.push(issue)
+      })
+
+      return timeSlots
+    },
+  },
+
+  watch:{
+    $route (to, from){
+      this.loadTimeline()
     }
   },
 
   methods: {
-    openCategoryModal(category) {
-      this.modalCategory = category
-      this.isModalOpen = true
+    async loadTimeline() {
+      this.loading = true
+      const endpoint = `/explore-timeline/${this.tab.slug}`
+      const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date: null })
+      this.timeline = timeline
+      this.loading = false
     }
   },
 
-  async asyncData({ app, store, params }) {
-    const tab = TABS.find(t => t.slug === params.tab)
-    const [newspapers, { categories }] = await Promise.all([
-      store.dispatch('getNewspapers', tab.newspapers.slice(0, 3)),
-      app.$axios.$get(`/explore/${tab.name}`)
-    ])
-    return {
-      tab,
-      newspapers,
-      categories
-    }
+  mounted() {
+    this.loadTimeline()
   }
 }
 </script>
 
 <style lang="sass">
+// copies from index
+.timeline-view
+  display: block
+  padding: $baseline $baseline 0 $baseline
+  margin: 0 auto
+  max-width: 900px
+
+  @media (max-width: $mobile)
+    padding: $baseline/2 0 0 0
+
 explore-view
   section button
     display: table
