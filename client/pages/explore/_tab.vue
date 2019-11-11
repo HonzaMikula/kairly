@@ -6,6 +6,26 @@
       v-else-if="timeline"
       class="timeline-view"
     >
+      <header
+          v-if="!loading"
+          class="timeline--header"
+        >
+          <nuxt-link
+            :to="`/explore/${tab.slug}/${links.prev}`"
+            v-b-tooltip
+            :title="'Previous day ('+ links.prev +')'"
+            class="previous"
+          />
+
+          <nuxt-link
+            v-if="links.next"
+            :to="`/explore/${tab.slug}/${links.next}`"
+            v-b-tooltip
+            :title="'Next day ('+ links.next +')'"
+            :class="['next', {'is-disabled': !links.next}]"
+          />
+        </header>
+
       <template v-for="timeSlot in timeSlots">
         <JumpMenu
           :key="timeSlot.time"
@@ -63,6 +83,13 @@ export default {
   computed: {
     tab() {
       return TABS.find(t => t.slug === this.$route.params.tab)
+    },
+
+    links() {
+      if (this.loading) {
+        return {}
+      }
+      return this.timeline.links
     },
 
     timeSlots() {

@@ -26,7 +26,7 @@
 
           <li class="explore">
             <nuxt-link
-              :to="{name: 'explore-tab'}"
+              to="/explore"
               title="Explore">
               <span>{{ $t('Explore') }}</span>
             </nuxt-link>

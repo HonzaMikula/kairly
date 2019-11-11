@@ -8,7 +8,7 @@
         <nav>
           <ul>
             <li v-for="tab in tabs" :key="tab.slug">
-              <nuxt-link :to="tab.slug ? '/explore/' + tab.slug : '/explore'" exact>{{ tab.name }}</nuxt-link>
+              <nuxt-link :to="'/explore/' + tab.slug" exact>{{ tab.name }}</nuxt-link>
             </li>
             <li>
               <nuxt-link to="/explore/recent" exact>{{ $t('Most Recent') }}</nuxt-link>
@@ -41,6 +41,7 @@ export default {
   },
 
   async fetch({ store }) {
+
     if (store.state.auth.loggedIn) {
       await store.dispatch('getSubscriptions')
     }

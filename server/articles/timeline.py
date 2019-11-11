@@ -17,7 +17,7 @@ from utils.json import JsonResponse, datetime_isoformat_ecma262
 
 from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper
 from .period import PeriodMixin
-from users.models import User, Category, CategoryUser
+from users.models import User, CategoryUser
 
 DAY_START_HOUR = 6
 
@@ -391,9 +391,18 @@ class ExploreTimelineView(BaseTimelineView):
         return [SubscriptionMock(n) for n in Newspaper.objects.filter(q)]
 
     def get_author_subscriptions(self, request, tab, now):
+        slug_to_tab = {
+            'best-of-kairly': 'Best of Kairly',
+            'news': 'News',
+            'politics': 'Politics',
+            'sport': 'Sport',
+            'technology': 'Technology',
+            'life': 'Life'
+        }
+
         subscriptions = []
         users = set()
-        cat_authors = CategoryUser.objects.filter(category__explore_tab=tab).select_related('user').order_by('ordering', 'user__name')
+        cat_authors = CategoryUser.objects.filter(category__explore_tab=slug_to_tab.get(tab)).select_related('user').order_by('ordering', 'user__name')
         for cu in cat_authors:
             if cu.user.id not in users:
                 subscriptions.append(SubscriptionToAuthorMock(cu.user, PeriodMixin.X6_PER_DAY, None, None))

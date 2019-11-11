@@ -127,6 +127,8 @@ module.exports = {
       // make sure that author/post is before author/newspaper
       const postRouteIdx = routes.findIndex(r => r.name === 'author-post')
       const postRoute = routes.splice(postRouteIdx, 1)[0]
+      const exploreRoute = routes.find(r => r.path === '/explore')
+
       postRoute.path = '/:author/:post([-\\w]*\\-\\-[0-9a-f]{9})'
       routes.unshift(postRoute)
 
@@ -136,6 +138,10 @@ module.exports = {
         component: resolve(__dirname, 'pages/index.vue'),
         chunkName: 'pages/index'
       })
+
+      const exploreWithDate = { ...exploreRoute.children.find(r => r.path === ':tab')}
+      exploreWithDate.path = ":tab/:date(\\d{4}-\\d{2}-\\d{2})"
+      exploreRoute.children.unshift(exploreWithDate)
 
       routes.push({
         name: 'author-newspaper-issue',

@@ -1,7 +1,7 @@
 export default [
     {
       name: 'Best of Kairly',
-      slug: undefined,
+      slug: 'best-of-kairly',
       newspapersTitle: 'Top newspapers',
       newspapers: [
         'janmikula/malostranskenoviny',
