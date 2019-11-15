@@ -11,7 +11,7 @@ from django.utils.timezone import localdate, now as timezone_now
 
 from dal import autocomplete
 
-from .models import User, Category, CategoryUser
+from .models import User, Category, CategoryUser, ExploreTimeline
 from articles.models import Subscription
 from credits.utils import get_author_retained_credits, get_user_credits
 
@@ -145,3 +145,9 @@ class CategoryAdmin(admin.ModelAdmin):
     inlines = [
         CategoryUserInline,
     ]
+
+
+@admin.register(ExploreTimeline)
+class ExploreTimelineAdmin(admin.ModelAdmin):
+    list_display = ('slug', )
+    search_fields = ('slug',)

@@ -2,6 +2,7 @@ import re
 import pytz
 from decimal import Decimal
 
+import oyaml as yaml
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core import validators
@@ -186,3 +187,33 @@ class CategoryUser(models.Model):
 
     class Meta:
         ordering = ('ordering',)
+
+
+class ExploreTimeline(models.Model):
+    slug = models.SlugField(_('Slug'), max_length=190, null=True)
+    yaml_content = models.TextField(_("Authors and Newspapers"), help_text='YAML')
+
+    @property
+    def content(self):
+        if not hasattr(self, '_content'):
+            self._content = yaml.load(self.yaml_content)
+        return self._content
+
+    @content.setter
+    def content(self, value):
+        self._validate_content(value)
+        self.yaml_content = yaml.dump(value, default_flow_style=False)
+        try:
+            del self._content
+        except AttributeError:
+            pass
+
+    def _validate_content(self, value):
+        if 'authors' not in value:
+            raise ValueError('missing key authors')
+        if 'newspapers' not in value:
+            raise ValueError('missing key newspapers')
+
+    def save(self, *args, **kwargs):
+        self._validate_content(self.content)
+        return super().save(*args, **kwargs)
