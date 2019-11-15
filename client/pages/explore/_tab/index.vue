@@ -6,6 +6,11 @@
       v-else-if="timeline"
       class="timeline-view"
     >
+      <nuxt-link :to="`/explore/${tab.slug}/newspapers-authors`">Explore list of newspapers & authors</nuxt-link>
+      <br>
+      Show: <a href="" @click.prevent="mode = 'all'">Nespapers & Authors</a> | <a href=""  @click.prevent="mode = 'newspapers'">Nespapers only</a>
+
+
       <header
           v-if="!loading"
           class="timeline--header"
@@ -61,8 +66,9 @@ export default {
   },
 
   head() {
+    const title = this.tab[this.$i18n.locale || 'en']
     return {
-      title: this.tab ? `${this.tab.name} – Explore – Kairly` : 'Explore – Kairly',
+      title:  `${title} – Explore – Kairly`
     }
   },
 
@@ -70,6 +76,7 @@ export default {
     return {
       loading: true,
       timeline: null,
+      mode: 'all',
     }
   },
 
@@ -88,11 +95,15 @@ export default {
     timeSlots() {
       if (this.loading) { return [] }
 
+      const { mode } = this
       const { issues } = this.timeline
       const timeSlots = []
       let slot = null
 
       issues.forEach(issue => {
+        if (mode === 'newspapers' && issue.type === 'author') {
+          return
+        }
         if (slot === null || slot.time !== issue.time) {
           slot = { time: issue.time, issues: []}
           timeSlots.push(slot)

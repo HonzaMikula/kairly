@@ -167,6 +167,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return result
 
 
+# TODO drop after merge
 class Category(models.Model):
     name = models.CharField(_("Name"), max_length=160)
     explore_tab = models.CharField(_("Explore Tab"), max_length=160)
@@ -180,6 +181,7 @@ class Category(models.Model):
         return '{} > {}'.format(self.explore_tab, self.name)
 
 
+# TODO drop after merge
 class CategoryUser(models.Model):
     category = models.ForeignKey(Category, models.CASCADE)
     user = models.ForeignKey(User, models.CASCADE)

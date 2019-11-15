@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django import forms
 from django.db.models import Count, Q
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
@@ -9,9 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.utils.timezone import localdate, now as timezone_now
 
-from dal import autocomplete
-
-from .models import User, Category, CategoryUser, ExploreTimeline
+from .models import User, ExploreTimeline
 from articles.models import Subscription
 from credits.utils import get_author_retained_credits, get_user_credits
 
@@ -118,33 +115,6 @@ class UserAdmin(OriginalUserAdmin):
         return super().change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
-
-
-class CategoryUserForm(forms.ModelForm):
-    user = forms.ModelChoiceField(
-        queryset=User.objects.all(),
-        widget=autocomplete.ModelSelect2(url='user-autocomplete')
-    )
-
-    class Meta:
-        model = CategoryUser
-        fields = ('user', 'ordering')
-
-
-class CategoryUserInline(admin.TabularInline):
-    model = CategoryUser
-    form = CategoryUserForm
-    extra = 0
-
-
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'explore_tab', 'ordering')
-    search_fields = ('name',)
-
-    inlines = [
-        CategoryUserInline,
-    ]
 
 
 @admin.register(ExploreTimeline)

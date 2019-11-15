@@ -97,27 +97,27 @@ main.explore--recent
     &.explore-recent
       grid-area: explore-recent
 
-.explore--top-newspapers
-  grid-area: explore-top-newspapers
+  .explore--top-newspapers
+    grid-area: explore-top-newspapers
 
-  > h2
-    font-size: $fs-2
-    font-weight: 600
-    line-height: $baseline * 2
+    > h2
+      font-size: $fs-2
+      font-weight: 600
+      line-height: $baseline * 2
 
-  //-- wrapper
-  > div
-    display: grid
-    grid-row-gap: $baseline
-    grid-template-columns: 1fr 1fr 1fr
-    grid-column-gap: $baseline / 2
+    //-- wrapper
+    > div
+      display: grid
+      grid-row-gap: $baseline
+      grid-template-columns: 1fr 1fr 1fr
+      grid-column-gap: $baseline / 2
 
-    @media (max-width: $mobile)
-      grid-column-gap: $baseline / 4
-      overflow-x: auto
-      -webkit-overflow-scrolling: touch
+      @media (max-width: $mobile)
+        grid-column-gap: $baseline / 4
+        overflow-x: auto
+        -webkit-overflow-scrolling: touch
 
-      .newspaper-widget-view,
-      .issue-widget-view
-        min-width: 200px
+        .newspaper-widget-view,
+        .issue-widget-view
+          min-width: 200px
 </style>

@@ -141,6 +141,7 @@ module.exports = {
 
       const exploreWithDate = { ...exploreRoute.children.find(r => r.path === ':tab')}
       exploreWithDate.path = ":tab/:date(\\d{4}-\\d{2}-\\d{2})"
+      exploreWithDate.name = "explore-tab-date"
       exploreRoute.children.unshift(exploreWithDate)
 
       routes.push({

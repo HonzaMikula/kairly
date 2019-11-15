@@ -14,7 +14,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.core.validators import EmailValidator
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.utils.timezone import localdate
@@ -22,6 +22,7 @@ from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
 from libgravatar import Gravatar
 from pytz import UnknownTimeZoneError, timezone
 
@@ -31,7 +32,7 @@ from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse
 from utils.upload import file_from_data_uri
-from .models import Category, CategoryUser, User
+from .models import User, ExploreTimeline
 
 TOKEN_EXPIRATION = 30 * 86400
 
@@ -247,15 +248,25 @@ def reset_password(request):
 
 
 def explore_tab(request, tab):
+    explore = get_object_or_404(ExploreTimeline, slug=tab)
+    ids = set()
+    for cat in explore.content['authors']:
+        for author_id in cat['authors']:
+            ids.add(author_id)
+
+    users = {}
+    for user in User.objects.filter(username__in=list(ids)):
+        users[user.username] = user
+
     categories = []
-    for category in Category.objects.filter(explore_tab=tab):
-        cat_authors = CategoryUser.objects.filter(category=category).select_related('user').order_by('ordering', 'user__name')
+    for cat in explore.content['authors']:
         categories.append({
-            'name': category.name,
-            'authors': [cu.user.to_json() for cu in cat_authors],
+            'name': cat['en'],
+            'authors': [users[username].to_json() for username in cat['authors']],
         })
 
     return JsonResponse({
+        'newspapers': explore.content['newspapers'],
         'categories': categories
     })
 

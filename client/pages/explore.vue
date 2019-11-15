@@ -8,7 +8,7 @@
         <nav>
           <ul>
             <li v-for="tab in tabs" :key="tab.slug">
-              <nuxt-link :to="'/explore/' + tab.slug" exact>{{ tab[$i18n.locale] || tab.en }}</nuxt-link>
+              <nuxt-link :to="{name: 'explore-tab', params: {tab: tab.slug}}">{{ tab[$i18n.locale] || tab.en }}</nuxt-link>
             </li>
             <li>
               <nuxt-link to="/explore/recent" exact>{{ $t('Most Recent') }}</nuxt-link>
