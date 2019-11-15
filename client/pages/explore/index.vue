@@ -1,7 +1,7 @@
 <script>
 export default {
   async fetch({ redirect }) {
-    redirect('/explore/best-of-kairly')
+    redirect('/explore/news')
   }
 }
 </script>

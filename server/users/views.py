@@ -255,18 +255,6 @@ def explore_tab(request, tab):
             'authors': [cu.user.to_json() for cu in cat_authors],
         })
 
-    if tab == 'Best of Kairly':
-        categories.append({
-            'name': 'New Authors',
-            'authors': [
-                u.to_json() for u in
-                User.objects.exclude(kind=User.FEED)
-                    .annotate(post_count=Count('post'))
-                    .filter(post_count__gt=1)
-                    .order_by('-date_joined')[:14]  # fill list + modal, each 7 items
-            ]
-        })
-
     return JsonResponse({
         'categories': categories
     })

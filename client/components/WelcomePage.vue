@@ -81,13 +81,8 @@ export default {
   },
 
   data() {
-    const topics = TABS.map(t => ({
-      name: t.name === 'Best of Kairly' ? 'All topics' : t.name,
-      newspapers: t.newspapers
-    }))
-
     return {
-      topics,
+      topics: TABS,
       selectedTopic: topics[0],
       loading: true,
       newspapers: [],

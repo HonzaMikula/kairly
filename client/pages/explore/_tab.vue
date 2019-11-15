@@ -47,12 +47,8 @@
 <script>
 import TABS from '@/exploreTabs'
 
-//import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-//import AuthorWidget from '@/components/widgets/AuthorWidget'
-
 import IssueWrapper from '@/components/IssueWrapper'
 import JumpMenu from '@/components/widgets/JumpMenu'
-//import ExploreModal from '@/components/modals/ExploreModal'
 
 export default {
   name: 'ExploreTab',
@@ -62,9 +58,6 @@ export default {
   components: {
     IssueWrapper,
     JumpMenu
-    //NewspaperWidget,
-    //AuthorWidget,
-    //ExploreModal
   },
 
   head() {

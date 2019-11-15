@@ -1,67 +1,27 @@
 export default [
     {
-      name: 'Best of Kairly',
-      slug: 'best-of-kairly',
-      newspapersTitle: 'Top newspapers',
-      newspapers: [
-        'janmikula/malostranskenoviny',
-        'farin/nej-novinari-na-twitteru',
-        'janmikula/technologicky-denik'
-      ]
-    },
-    {
-      name: 'News',
+      en: 'News',
+      cs: 'Zprávy',
       slug: 'news',
-      newspapersTitle: 'Top newspapers',
-      newspapers: [
-        'janmikula/malostranskenoviny',
-        'farin/nej-novinari-na-twitteru',
-        'rozhlas/zpravy-z-domova'
-      ]
     },
     {
-      name: 'Politics',
+      en: 'Politics',
+      cs: 'Politika',
       slug: 'politics',
-      newspapersTitle: 'Politics newpapers',
-      newspapers: [
-        'janmikula/malostranskenoviny',
-        'farin/nej-novinari-na-twitteru',
-        'rozhlas/zpravy-z-domova'
-      ]
     },
     {
-      name: 'Sport',
+      en: 'Sport',
+      cs: 'Sport',
       slug: 'sport',
-      newspapersTitle: 'Sport newspapers',
-      newspapers: [
-        'aktualnecz/sport',
-        'rozhlas/sport',
-        'idnescz/sport'
-      ]
     },
     {
-      name: 'Technology',
+      en: 'Technology',
+      cs: 'Technologie',
       slug: 'technology',
-      newspapersTitle: 'Technology newspapers',
-      newspapers: [
-        'janmikula/technologicky-denik',
-        'farin/elektromobilita',
-        'janmikula/product-design-weekly'
-      ]
     },
     {
-      name: 'Life',
+      en: 'Life',
+      cs: 'Lifestyle',
       slug: 'life',
-      newspapersTitle: 'Life newspapers',
-      newspapers: [
-        'janmikula/tydenik-skola-hrou',
-        'farin/moucnikove-tipy-na-vikend',
-        'janmikula/parodicky-denicek'
-      ]
     }
-    // },
-    // {
-    //   name: 'Most Recent',
-    //   slug: 'recent',
-    // }
 ]
