@@ -10,6 +10,7 @@ import rapidjson as json
 from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404
 from django.views import View
 from more_itertools import peekable
 from utils.decorators import ajax_login_required
@@ -17,7 +18,7 @@ from utils.json import JsonResponse, datetime_isoformat_ecma262
 
 from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper
 from .period import PeriodMixin
-from users.models import User, CategoryUser
+from users.models import User, ExploreTimeline
 
 DAY_START_HOUR = 6
 
@@ -356,7 +357,8 @@ class ExploreTimelineView(BaseTimelineView):
 
     def get(self, request, tab):
         try:
-            timeline = self.get_timeline(request, tab)
+            explore = get_object_or_404(ExploreTimeline, slug=tab)
+            timeline = self.get_timeline(request, explore)
             if timeline is None:
                 return HttpResponse(status=204)
             else:
@@ -365,46 +367,26 @@ class ExploreTimelineView(BaseTimelineView):
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
-    def get_newspaper_subscriptions(self, request, tab, now):
-        if tab == 'best-of-kairly':
-            q = Q(editor__username='janmikula', slug='malostranskenoviny') | \
-                Q(editor__username='farin', slug='nej-novinari-na-twitteru') | \
-                Q(editor__username='janmikula', slug='technologicky-denik')
-        elif tab == 'news' or tab == 'politics':
-            q = Q(editor__username='janmikula', slug='malostranskenoviny') | \
-                Q(editor__username='farin', slug='nej-novinari-na-twitteru') | \
-                Q(editor__username='rozhlas', slug='zpravy-z-domova')
-        elif tab == 'sport':
-            q = Q(editor__username='aktualnecz', slug='sport') | \
-                Q(editor__username='rozhlas', slug='sport')
-        elif tab == 'technology':
-            q = Q(editor__username='janmikula', slug='technologicky-denik') | \
-                Q(editor__username='janmikula', slug='product-design-weekly') | \
-                Q(editor__username='farin', slug='elektromobilita')
-        elif tab == 'life':
-            q = Q(editor__username='janmikula', slug='tydenik-skola-hrou') | \
-                Q(editor__username='janmikula', slug='parodicky-denicek') | \
-                Q(editor__username='dvtv', slug='dvtv-rozhovory-tydne')
-        else:
+    def get_newspaper_subscriptions(self, request, explore, now):
+        q = None
+        for newspaper_id in explore.content['newspapers']:
+            username, slug = newspaper_id.split('/')
+            _q = Q(editor__username=username, slug=slug)
+            q = _q if q is None else q | _q
+
+        if q is None:
             return []
 
         return [SubscriptionMock(n) for n in Newspaper.objects.filter(q)]
 
-    def get_author_subscriptions(self, request, tab, now):
-        slug_to_tab = {
-            'best-of-kairly': 'Best of Kairly',
-            'news': 'News',
-            'politics': 'Politics',
-            'sport': 'Sport',
-            'technology': 'Technology',
-            'life': 'Life'
-        }
+    def get_author_subscriptions(self, request, explore, now):
+        ids = set()
+        for cat in explore.content['authors']:
+            for author_id in cat['authors']:
+                ids.add(author_id)
 
         subscriptions = []
-        users = set()
-        cat_authors = CategoryUser.objects.filter(category__explore_tab=slug_to_tab.get(tab)).select_related('user').order_by('ordering', 'user__name')
-        for cu in cat_authors:
-            if cu.user.id not in users:
-                subscriptions.append(SubscriptionToAuthorMock(cu.user, PeriodMixin.X6_PER_DAY, None, None))
-                users.add(cu.user.id)
+        for user in User.objects.filter(username__in=list(ids)):
+            subscriptions.append(SubscriptionToAuthorMock(user, PeriodMixin.X6_PER_DAY, None, None))
+
         return subscriptions
