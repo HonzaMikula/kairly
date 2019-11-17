@@ -4,13 +4,28 @@
 
     <div
       v-else-if="timeline"
-      class="timeline-view"
+      class="timeline-view explore-timeline-view"
     >
-      <nuxt-link :to="`/explore/${tab.slug}/newspapers-authors`">Explore list of newspapers & authors</nuxt-link>
-      <br>
-      Show: <a href="" @click.prevent="mode = 'all'">Nespapers & Authors</a> | <a href=""  @click.prevent="mode = 'newspapers'">Nespapers only</a>
+      <header class="explore--controls">
+        <nuxt-link :to="`/explore/${tab.slug}/newspapers-authors`">
+          {{ $t('See all authors') }}
+        </nuxt-link>
 
-
+        <div>
+          <label for="onlyNewspapers">{{ $t('Only newspapers') }}</label>
+          <label class="switch">
+            <input 
+              type="checkbox" 
+              v-model="mode"
+              true-value="all"
+              false-value="newspapers"
+              id="onlyNewspapers"
+            />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </header>
+      
       <header
           v-if="!loading"
           class="timeline--header"
@@ -141,8 +156,10 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/buttons'
+
 // copies from index
-.timeline-view
+.explore-timeline-view
   display: block
   padding: $baseline $baseline 0 $baseline
   margin: 0 auto
@@ -151,26 +168,75 @@ export default {
   @media (max-width: $mobile)
     padding: $baseline/2 0 0 0
 
-explore-view
-  section button
-    display: table
-    border-radius: $baseline
-    height: $baseline * 1.25
-    padding: 0 $baseline
-    margin: 0 auto
 
-    background: $c-base
-    border: 0
-    color: #fff
+//- Controls
+.explore--controls
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding-bottom: $baseline
 
-    font-family: $ff-sans
-    font-size: $fs-0
-    line-height: $baseline * 1.25
-    cursor: pointer
+  @media (max-width: $mobile)
+    padding: 0 $baseline/4 $baseline $baseline/4
+  
+  a
+    +button-icon($fa-var-clipboard-list, icon-text)
 
-    &:hover,
-    &:focus
-      background: darken($c-base, 10%)
+    background: #fff
+    color: #555
 
+    &:focus,
+    &:hover
+      background: #ddd
+      color: #000
+
+
+  //- Toggle
+  .switch
+    position: relative
+    display: inline-block
+    width: $baseline * 2
+    height: $baseline
+
+    input
+      opacity: 0
+      width: 0
+      height: 0
+
+    .slider
+      position: absolute
+      cursor: pointer
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      background-color: #ccc
+      transition: .4s
+
+    .slider:before 
+      position: absolute
+      content: ""
+      height: ($baseline - 4px)
+      width: ($baseline - 4px)
+      left: 2px
+      bottom: 2px
+      background-color: white
+      transition: .4s
+    
+    input:checked + .slider
+      background-color: $c-base
+
+    input:focus + .slider
+      box-shadow: 0 0 1px $c-base
+
+    input:checked + .slider:before
+      transform: translateX(($baseline))
+
+    /* Rounded sliders */
+    .slider.round 
+      border-radius: $baseline
+
+    .slider.round:before
+      border-radius: 50%
 
 </style>

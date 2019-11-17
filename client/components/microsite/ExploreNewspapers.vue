@@ -149,9 +149,6 @@ export default {
 .explore-view
   padding-bottom: $baseline * 2
 
-  @media (max-width: $mobile)
-    padding: $baseline/2 $baseline/2
-
   > h2
     margin-bottom: $baseline / 2
 
