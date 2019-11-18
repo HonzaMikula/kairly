@@ -65,8 +65,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import TABS from '@/exploreTabs'
-
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import TwitterApologyModal from '@/components/modals/TwitterApologyModal'
 import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
@@ -82,22 +80,11 @@ export default {
 
   data() {
     return {
-      topics: TABS,
-      selectedTopic: topics[0],
-      loading: true,
-      newspapers: [],
       isTwitterApologyModalOpen: false
     }
   },
 
   methods: {
-    async selectTopic(topic) {
-      this.selectedTopic = topic
-      this.loading = true
-      this.newspapers = await this.$store.dispatch('getNewspapers', topic.newspapers)
-      this.loading = false
-    },
-
     importTwitter() {
       this.isTwitterApologyModalOpen = true
 
@@ -111,11 +98,6 @@ export default {
     closeTwitterApology() {
       this.isTwitterApologyModalOpen = false
     }
-  },
-
-  async created() {
-    this.newspapers = await this.$store.dispatch('getNewspapers', this.selectedTopic.newspapers)
-    this.loading = false
   }
 }
 </script>
@@ -204,118 +186,6 @@ export default {
     a
       +button-icon($fa-var-rss, icon-text, solid)
 
-//- Topics
-.welcome--topics
-  margin-bottom: 0
-
-  ul
-    display: flex
-    justify-content: center
-    margin-bottom: $baseline / 2
-    padding: 0 $baseline/4
-
-    @media (max-width: $mobile)
-      display: block
-
-      white-space: nowrap
-      overflow-x: auto
-      -webkit-overflow-scrolling: touch
-
-  li
-    display: inline-block
-    margin-right: $baseline / 2
-
-  a
-    display: block
-    border-radius: 5px
-
-    color: $c-base
-
-    font-weight: 600
-    font-size: $fs-1
-
-    &:hover,
-    &:focus
-      color: darken($c-base, 10%)
-
-    &.is-active
-      color: #000
-
-//- Newspapers
-.welcome--newspapers
-  margin-bottom: $baseline * 2
-  padding: 0 $baseline/4
-
-  @media (max-width: $mobile)
-    margin-bottom: $baseline
-
-  > div
-    display: grid
-    grid-row-gap: $baseline / 2
-    grid-template-columns: 1fr 1fr 1fr
-    grid-column-gap: $baseline / 2
-
-    @media (max-width: $mobile)
-      grid-column-gap: $baseline / 4
-      overflow-x: auto
-      -webkit-overflow-scrolling: touch
-
-      .newspaper-widget-view
-        min-width: 200px
-
-//- Illustration on newspaper widget
-.welcome--newspapers--loading
-  border-radius: 5px
-  padding: $baseline / 4
-
-  background: #fff
-  border: 1px solid #eee
-
-  text-align: center
-
-  //- picture
-  .picture
-    height: 120px
-    margin-bottom: $baseline / 2
-    background: #eee
-
-  //- title
-  .title
-    height: $baseline / 2
-    margin-bottom: $baseline / 4
-    width: 75%
-    background: #eee
-
-  p
-    margin-bottom: $baseline / 2
-    color: #999
-    font-family: $ff-sans
-    font-size: $fs--1
-    font-weight: 600
-    line-height: $baseline * 0.8
-    text-align: left
-
-  //- description
-  .description
-    &::after,
-    &::before
-      display: block
-      height: $baseline / 4
-      margin-bottom: $baseline / 4
-      border-bottom: $baseline / 4 solid #eee
-      border-top: $baseline / 4 solid #eee
-      content: ''
-
-  //- subscribe
-  .subscribe
-    display: inline-block
-    border-radius: $baseline
-    margin: 0 auto
-    padding: 0 $baseline/2
-    border: 1px solid #eee
-    color: #999
-    font-family: $ff-sans
-    font-size: $fs--1
 
 //- Roles
 .welcome--roles

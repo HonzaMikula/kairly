@@ -5,7 +5,7 @@ export default [
       {
         id: 'janmikula/malostranskenoviny',
         name: 'Malostranský deník'
-      }, 
+      },
       {
         id: 'farin/nej-novinari-na-twitteru',
         name: 'Nej novináři na Twitteru'
@@ -23,7 +23,7 @@ export default [
       {
         id: 'janmikula/technologicky-denik',
         name: 'Technologický deník'
-      }, 
+      },
       {
         id: 'farin/elektromobilita',
         name: 'Elektromobilita'
@@ -41,17 +41,17 @@ export default [
       {
         id: 'janmikula/tydenik-skola-hrou',
         name: 'Týdeník škola hrou'
-      }, 
+      },
       {
         id: 'janmikula/parodicky-denicek',
         name: 'Parodický deníček'
       },
       {
-        id: 'farin/moucnikove-tipy-na-vikend',
-        name: 'Moučníkové tipy na víkend'
+        id: 'dvtv/dvtv-rozhovory-tydne',
+        name: 'DVTV: Rozhovory týdne'
       }
     ]
   }
 
-    
+
 ]
