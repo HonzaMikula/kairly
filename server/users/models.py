@@ -167,30 +167,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return result
 
 
-# TODO drop after merge
-class Category(models.Model):
-    name = models.CharField(_("Name"), max_length=160)
-    explore_tab = models.CharField(_("Explore Tab"), max_length=160)
-    ordering = models.IntegerField(_("Ordering"))
-
-    class Meta:
-        ordering = ('explore_tab', 'ordering')
-        verbose_name_plural = _('Categories')
-
-    def __str__(self):
-        return '{} > {}'.format(self.explore_tab, self.name)
-
-
-# TODO drop after merge
-class CategoryUser(models.Model):
-    category = models.ForeignKey(Category, models.CASCADE)
-    user = models.ForeignKey(User, models.CASCADE)
-    ordering = models.IntegerField(_("Ordering"), default=999)
-
-    class Meta:
-        ordering = ('ordering',)
-
-
 class ExploreTimeline(models.Model):
     slug = models.SlugField(_('Slug'), max_length=190, null=True)
     yaml_content = models.TextField(_("Authors and Newspapers"), help_text='YAML')
