@@ -117,11 +117,11 @@ export default {
   },
 
   async asyncData({ app }) {
-    const [issues, best_of] = await Promise.all([
+    const [issues, newAuthors] = await Promise.all([
       app.$axios.$get('/recent/issues?count=5'),
-      app.$axios.$get('/explore/Best of Kairly')  // hack using best of tab, which contains new authors
+      app.$axios.$get('/explore/new-authors')
     ])
-    const authors = best_of.categories[1].authors.slice(0, 5)
+    const authors = newAuthors.authors.slice(0, 5)
     return { issues, authors }
   }
 }

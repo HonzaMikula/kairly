@@ -14,7 +14,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.core.validators import EmailValidator
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.utils.timezone import localdate
@@ -268,6 +268,17 @@ def explore_tab(request, tab):
     return JsonResponse({
         'newspapers': explore.content['newspapers'],
         'categories': categories
+    })
+
+
+def explore_new_authors(request):
+    authors = User.objects.exclude(kind=User.FEED) \
+        .annotate(post_count=Count('post')) \
+        .filter(post_count__gt=1) \
+        .order_by('-date_joined')[:14]
+
+    return JsonResponse({
+        'authors': [u.to_json() for u in authors]
     })
 
 

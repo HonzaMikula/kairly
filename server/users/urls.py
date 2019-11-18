@@ -11,6 +11,7 @@ urlpatterns = [
     path('change-password', views.change_password, name='change_password'),
     path('reset-password', views.reset_password, name='reset_password'),
 
+    path('explore/new-authors', views.explore_new_authors),
     path('explore/<tab>', views.explore_tab),
 
     path('autocomplete/user/', views.UserAutocomplete.as_view(), name='user-autocomplete'),
