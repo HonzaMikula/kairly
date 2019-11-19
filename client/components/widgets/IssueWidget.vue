@@ -22,7 +22,7 @@
       </li>
     </ul>
 
-    <issue-widget--subscribe>
+    <issue-widget--subscribe v-if="loggedIn">
       <NewspaperSubscriptionButton :newspaper="issue.newspaper" />
 
       <p>
@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
 export default {
@@ -45,6 +47,12 @@ export default {
 
   components: {
     NewspaperSubscriptionButton
+  },
+
+  computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    })
   }
 }
 </script>

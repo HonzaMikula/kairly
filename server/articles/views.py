@@ -84,7 +84,6 @@ def user_backlog(request):
     })
 
 
-@ajax_login_required
 def recent_issues(request):
     count = int(request.GET.get('count', 3))
     if count < 1 or count > 10:
@@ -106,7 +105,6 @@ def recent_issues(request):
     return JsonResponse(resp)
 
 
-@ajax_login_required
 def recent_posts(request):
     tzinfo = request.user.tzinfo
     posts = Post.objects.filter(draft=False, published__lt=timezone.now())\

@@ -25,7 +25,7 @@
     </p>
 
     <div class="newspaper-widget--author">
-      <img 
+      <img
         v-if="newspaper.editor.picture"
         :src="newspaper.editor.picture"
         :alt="newspaper.editor.name"
@@ -44,7 +44,6 @@
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
 
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'

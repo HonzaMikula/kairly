@@ -65,7 +65,10 @@ class BaseTimelineView(View):
             key=itemgetter('time'), reverse=True))
 
         # get recommended iss before stripping internal keys
-        recommended_public_ids = self.get_recommended_public_ids(request, newspaper_issues)
+        if request.user.is_authenticated:
+            recommended_public_ids = self.get_recommended_public_ids(request, newspaper_issues)
+        else:
+            recommended_public_ids = None
 
         for issue in issues:
             issue.pop('$', None)  # strip internal keys

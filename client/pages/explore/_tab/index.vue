@@ -14,18 +14,18 @@
         <div>
           <label for="onlyNewspapers">{{ $t('Only newspapers') }}</label>
           <label class="switch">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               v-model="mode"
-              true-value="all"
-              false-value="newspapers"
+              true-value="newspapers"
+              false-value="all"
               id="onlyNewspapers"
             />
             <span class="slider round"></span>
           </label>
         </div>
       </header>
-      
+
       <header
           v-if="!loading"
           class="timeline--header"
@@ -73,7 +73,7 @@ import JumpMenu from '@/components/widgets/JumpMenu'
 export default {
   name: 'ExploreTab',
 
-  //auth: false,
+  auth: false,
 
   components: {
     IssueWrapper,
@@ -178,7 +178,7 @@ export default {
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4 $baseline $baseline/4
-  
+
   a
     +button-icon($fa-var-clipboard-list, icon-text)
 
@@ -216,7 +216,7 @@ export default {
       background-color: #ccc
       transition: .4s
 
-    .slider:before 
+    .slider:before
       position: absolute
       content: ""
       height: ($baseline - 4px)
@@ -225,7 +225,7 @@ export default {
       bottom: 2px
       background-color: white
       transition: .4s
-    
+
     input:checked + .slider
       background-color: $c-base
 
@@ -236,7 +236,7 @@ export default {
       transform: translateX(($baseline))
 
     /* Rounded sliders */
-    .slider.round 
+    .slider.round
       border-radius: $baseline
 
     .slider.round:before

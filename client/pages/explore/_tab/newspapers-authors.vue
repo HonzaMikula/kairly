@@ -48,7 +48,7 @@ import ExploreModal from '@/components/modals/ExploreModal'
 export default {
   name: 'ExploreTabNewspapersAuthors',
 
-  //auth: false,
+  auth: false,
 
   components: {
     NewspaperWidget,
@@ -82,7 +82,18 @@ export default {
     const tab = TABS.find(t => t.slug === params.tab)
 
     const { newspapers: newspapersIds, categories } = await app.$axios.$get(`/explore/${tab.slug}`)
-    const newspapers = await store.dispatch('getNewspapers', newspapersIds)
+    let newspapers
+    try {
+      newspapers = await store.dispatch('getNewspapers', newspapersIds)
+    } catch (err) {
+      const statusCode = err.response && err.response.status
+      if (statusCode === 404) {
+        console.error(err)
+        newspapers = []
+      } else {
+        throw err
+      }
+    }
 
     return {
       tab,

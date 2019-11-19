@@ -36,7 +36,7 @@ import PostWrapper from '@/components/PostWrapper'
 export default {
   name: 'ExploreRecentTab',
 
-  //auth: false,
+  auth: false,
 
   components: {
     IssueWidget,
