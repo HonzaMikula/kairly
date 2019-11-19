@@ -185,6 +185,9 @@ export default {
     background: #fff
     color: #555
 
+    @media (max-width: $mobile)
+      padding-right: $baseline / 2
+
     &:focus,
     &:hover
       background: #ddd
