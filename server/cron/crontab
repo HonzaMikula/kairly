@@ -1,5 +1,5 @@
 7,17,27,37,47,57 * * * * /srv/kairly/server/cron/importrss.sh >> /srv/logs/importrss.log 2>&1
-13,32,43,52 * * * * /srv/kairly/server/cron/importtwitter.sh >> /srv/logs/importtwitter.log 2>&1
+43 5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 * * * /srv/kairly/server/cron/importtwitter.sh >> /srv/logs/importtwitter.log 2>&1
 0 * * * * /srv/kairly/server/cron/publishissues.sh >> /srv/logs/publishissues.log 2>&1
 1,6,11,16,21,26,31,36,41,46,51,56 * * * * /srv/kairly/server/cron/renewsubscriptions.sh >> /srv/logs/renewsubscriptions.log 2>&1
 0 0 1 * * /srv/kairly/server/cron/addfreecredits.sh >> /srv/logs/addfreecredits.log 2>&1

@@ -1,5 +1,6 @@
 import re
 import rapidjson as json
+from datetime import datetime
 from urllib.parse import urlsplit
 
 import bs4
@@ -12,10 +13,14 @@ from articles.models import Post
 
 
 def get_api_connection():
-    return twitter.Api(consumer_key=settings.TWITTER_CONSUMER_KEY,
-                       consumer_secret=settings.TWITTER_CONSUMER_SECRET,
-                       access_token_key=settings.TWITTER_ACCESS_TOKEN_KEY,
-                       access_token_secret=settings.TWITTER_ACCESS_TOKEN_SECRET,
+    if not settings.TWITTER_KEYS:
+        raise ValueError("Twitter keys are not set")
+
+    key_set = settings.TWITTER_KEYS[datetime.now().hour % len(settings.TWITTER_KEYS)]
+    return twitter.Api(consumer_key=key_set['CONSUMER_KEY'],
+                       consumer_secret=key_set['CONSUMER_SECRET'],
+                       access_token_key=key_set['ACCESS_TOKEN_KEY'],
+                       access_token_secret=key_set['ACCESS_TOKEN_SECRET'],
                        tweet_mode='extended')
 
 
