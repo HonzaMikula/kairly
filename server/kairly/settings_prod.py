@@ -108,11 +108,18 @@ MEDIA_ROOT = '/srv/kairly/server/media'
 # CSRF_COOKIE_SECURE = True
 
 TWITTER_KEYS = [
-    # farin_cz / Kairly https://developer.twitter.com/en/apps/15312678
+    # @farin_cz / Kairly https://developer.twitter.com/en/apps/15312678
     {
         'CONSUMER_KEY': 'vYuzgkErlgcU8hLSDG0yS8gry',
         'CONSUMER_SECRET': 'U0hVZVDahNoC4r9imOPkyKLQCJE343h2YK6OcD5s47RD2tSUYK',
         'ACCESS_TOKEN_KEY': '321647013-HGaOJzhg6hfrNYfWGj1NsV6ufNLgNb2fdUbeNi2j',
         'ACCESS_TOKEN_SECRET': 'CchNp5KVcuzatUNzVZOZMOMh716CNTDoSsTGBTJg7XOhZ',
+    },
+    # @kairlynews / Kairlynews https://developer.twitter.com/en/apps/17021016
+    {
+        'CONSUMER_KEY': 'KNNsMVhbTahCaRs3TzyAgrijS',
+        'CONSUMER_SECRET': 'DN47XloABrJnApXk66DhH7krOVB0tyj2aesrnPPWfDKY63aVtX',
+        'ACCESS_TOKEN_KEY': '984133985965105153-Ef2djAy5SGHlZWKZV1uNAo8ju9PuQrY',
+        'ACCESS_TOKEN_SECRET': '6UIoN4FkOTazX00CxKkiGNUErm9UiKRDYuAftYPoyiBMt',
     }
 ]

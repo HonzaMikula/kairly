@@ -35,7 +35,7 @@ CACHES = {
 }
 
 TWITTER_KEYS = [
-    # farin_cz / Kairly https://developer.twitter.com/en/apps/15312678
+    # @farin_cz / Kairly https://developer.twitter.com/en/apps/15312678
     {
         'CONSUMER_KEY': 'vYuzgkErlgcU8hLSDG0yS8gry',
         'CONSUMER_SECRET': 'U0hVZVDahNoC4r9imOPkyKLQCJE343h2YK6OcD5s47RD2tSUYK',
