@@ -13,9 +13,11 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 from django.views import View
 from more_itertools import peekable
+from pytz import timezone
+
+
 from utils.decorators import ajax_login_required
 from utils.json import JsonResponse, datetime_isoformat_ecma262
-
 from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper
 from .period import PeriodMixin
 from users.models import User, ExploreTimeline
@@ -45,7 +47,11 @@ class BaseTimelineView(View):
         # Group author issues by period defined by client local zone
         # It means that timeline for same user may differ when user is in different
         # timezone.
-        tzinfo = request.user.tzinfo
+        # tzinfo = request.user.tzinfo
+
+        # HACK for now use CET timezone to all users, until UI is improved to handle users in diferent zones
+        tzinfo = timezone('Europe/Prague')
+
         now = datetime.now(tzinfo)
 
         period = self.get_timeline_period(request, now, tzinfo)

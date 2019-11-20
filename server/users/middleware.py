@@ -51,7 +51,7 @@ def AnonymousUserTimeZoneMiddleware(get_response):
             try:
                 tzinfo = timezone(name)
             except UnknownTimeZoneError:
-                tzinfo = timezone('GMT')
+                tzinfo = timezone('Europe/Prague')
             request.user.tzinfo = tzinfo
         return get_response(request)
     return middleware
