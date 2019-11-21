@@ -13,7 +13,7 @@ export const state = () => ({
 
 export const actions = {
   async load({ commit, state }, { endpoint='/timeline', date, cachedOnly=false}) {
-    let cacheKey = date ? `${endpoint}|${data}` : null
+    let cacheKey = date ? `${endpoint}|${date}` : null
     // TODO check not only valid to but also change of hour or too old timeline
     // but this is not important now
     if (!cacheKey && state.today[endpoint] && state.today[endpoint].validTo > (Date.now() / 1000)) {
