@@ -13,6 +13,9 @@ from articles.models import Post, Newspaper, Backlog, IssuePost
 from articles.signals import post_publish
 from articles.utils import create_post_link
 from sources.models import Channel, EntryHasNoContentException
+from articles.models import SubscriptionToAuthor
+from users.models import User
+
 
 
 # additional timezones which are not recognized byt dateutil.parser by default
@@ -41,6 +44,12 @@ class Command(BaseCommand):
             action='store',
             dest='provider',
             help='Import just selected provider',
+        )
+        parser.add_argument(
+            '--subscriptions-of',
+            action='store',
+            dest='subscriptions-of',
+            help='Import just providers subscribed by given user',
         )
         parser.add_argument(
             '--force',
@@ -78,6 +87,12 @@ class Command(BaseCommand):
         channels = Channel.objects.filter(enabled=True).exclude(author__isnull=True)
         if options.get('provider'):
             channels = channels.filter(provider=options['provider'])
+        elif options.get('subscriptions-of'):
+            user = User.objects.get(username=options['subscriptions-of'])
+            authors = []
+            for subscription in SubscriptionToAuthor.objects.filter(user=user).select_related('author'):
+                authors.append(subscription.author_id)
+            channels = channels.filter(author_id__in=authors)
 
         for channel in channels:
             if verbosity > 0:
