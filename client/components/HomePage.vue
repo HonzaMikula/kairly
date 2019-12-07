@@ -25,7 +25,7 @@
 
     <ExploreNewspapers />
 
-    <section class="homepage--process">
+    <!-- <section class="homepage--process">
 
       <ul>
         <li class="rss">
@@ -41,7 +41,7 @@
         </li>
       </ul>
 
-    </section>
+    </section> -->
 
     <section class="homepage--readers">
       <picture>
@@ -191,8 +191,6 @@
     <!-- <OfficialStart /> -->
 
     <div itemprop="author" itemscope itemtype="http://schema.org/Organization">
-      <Footer />
-
       <FooterLinks />
     </div>
   </div>
