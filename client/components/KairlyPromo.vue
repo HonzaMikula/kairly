@@ -3,16 +3,17 @@
     <div>
       <section>
           <h1>
-            {{ $t('Stop be distracted.') }}
+            {{ $t('Modern news platform')}}
             <br />
-            {{ $t('Grow healthy reading habits.') }}
+            {{ $t('for demanding readers') }}
           </h1>
 
+          <p>{{ $t('Subscribe to thematic newsletters prepared by professional editors.') }}</p>
+
           <ul>
-            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
             <li>{{ $t('Read your sources at regular time you want. E.g. every day at 9am.') }}</li>
             <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
-            <li>{{ $t('No magic algorithms. The content is chosen by you and the professional editors you trust.') }}</li>
+            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
           </ul>
         </section>
 
@@ -73,7 +74,7 @@ export default {
       line-height: 1.42
         
       padding: 0
-      margin-bottom: $baseline * 2
+      margin-bottom: $baseline
 
       @media (max-width: $mobile)
         margin: $baseline 0
@@ -81,12 +82,18 @@ export default {
 
         font-size: $fs-3
         line-height: $baseline * 1.2
-        text-align: center
 
+        br
+          display: none
 
     > p
-      font-size: $fs-0
-      text-align: center
+      margin-bottom: $baseline
+
+      font-size: $fs-3
+      line-height: 1.42
+
+      @media (max-width: $mobile)
+        font-size: $fs-1
 
     ul
       padding: 0 $baseline 0 0

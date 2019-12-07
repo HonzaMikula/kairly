@@ -48,6 +48,7 @@
         <li><nuxt-link to="/">{{ $t('Home') }}</nuxt-link></li>
         <li><nuxt-link to="/platform/readers">{{ $t('About platform') }}</nuxt-link></li>
         <li><nuxt-link to="/features/rss-reader">{{ $t('Features') }}</nuxt-link></li>
+        <li><nuxt-link to="/explore/news">{{ $t('Explore') }}</nuxt-link></li>
         <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)')}}</nuxt-link></li>
         <li><nuxt-link to="/signup">{{ $t('Create account') }}</nuxt-link></li>
       </ul>
