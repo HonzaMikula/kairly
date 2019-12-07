@@ -5,16 +5,17 @@
       <div>
         <section>
           <h1>
-            {{ $t('Stop be distracted.') }}
+            {{ $t('Modern news platform')}}
             <br />
-            {{ $t('Grow healthy reading habits.') }}
+            {{ $t('for demanding readers') }}
           </h1>
 
+          <p>{{ $t('Subscribe to thematic newsletters prepared by professional editors.') }}</p>
+
           <ul>
-            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
             <li>{{ $t('Read your sources at regular time you want. E.g. every day at 9am.') }}</li>
             <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
-            <li>{{ $t('No magic algorithms. The content is chosen by you and the professional editors you trust.') }}</li>
+            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
           </ul>
         </section>
 
@@ -25,8 +26,6 @@
     <ExploreNewspapers />
 
     <section class="homepage--process">
-
-      <h2>How to start?</h2>
 
       <ul>
         <li class="rss">
@@ -226,8 +225,8 @@ export default {
   },
 
   head() {
-    const metaTitle = this.$t('Kairly – Stop be distracted. Grow healthy reading habits.')
-    const metaDescription = this.$t('Stop the distraction. Grow healthy reading habits with us. Import your RSS feed and Twitter and start reading the content in healthy way.')
+    const metaTitle = 'Kairly – '+ this.$t('Modern news platform for demanding readers')
+    const metaDescription = this.$t('Subscribe to thematic newsletters prepared by professional editors.')
     const metaUrl = 'https://kairly.com/'
     const baseUrl = 'https://kairly.com'
 
@@ -319,18 +318,26 @@ export default {
     h1
       +heading
       padding: 0
-      margin-bottom: $baseline * 2
+      margin-bottom: $baseline
 
       @media (max-width: $mobile)
-        margin: $baseline/2 0
+        margin: $baseline/2
         width: 100%
 
-        text-align: center
+        br
+          display: none
 
 
     > p
-      font-size: $fs-0
-      text-align: center
+      margin-bottom: $baseline
+
+      font-size: $fs-3
+      line-height: 1.42
+
+      @media (max-width: $mobile)
+        padding: 0 $baseline/2
+
+        font-size: $fs-2
 
     ul
       padding: 0 $baseline 0 0

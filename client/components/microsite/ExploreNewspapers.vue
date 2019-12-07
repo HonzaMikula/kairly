@@ -4,7 +4,7 @@
       <slot>
         {{ $t('We believe in human editors.') }}
         <br>
-        {{ $t('Read recently published newspapers.') }}
+        {{ $t('Read recently published newsletters.') }}
       </slot>
     </h2>
 
@@ -21,8 +21,7 @@
 
     <div
       v-if="issue"
-      class="explore--issue"
-      :class="{'is-expanded': expandNewspaper}">
+      class="explore--issue">
       <nav class="explore--issue--navigation" v-if="links.prev || links.next">
         <button
           v-if="links.prev"
@@ -48,10 +47,7 @@
         <p>{{ periodicity }}</p>
       </div>
 
-      <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
-
-      <button v-if="!expandNewspaper" @click="showMore()">{{ $t('Show more') }}</button>
-    </div>
+     </div>
   </section>
 </template>
 
@@ -147,9 +143,16 @@ export default {
 
 
 .explore-view
+  display: grid
+  grid-template-columns: 7fr 3fr
+  grid-template-rows: auto
   padding-bottom: $baseline * 2
 
+  @media (max-width: $mobile)
+    grid-template-columns: 10fr
+
   > h2
+    grid-column: 1 / span 2
     margin-bottom: $baseline / 2
 
     font-size: $fs-4
@@ -157,13 +160,18 @@ export default {
     line-height: 1.42
 
     @media (max-width: $mobile)
+      margin: $baseline / 2
       font-size: $fs-3
       line-height: $baseline * 1.2
 
 .explore--crossroad
-  display: flex
-  padding: $baseline $baseline*2
-  margin: 0 (-$baseline*2)
+  z-index: 1
+  grid-column: 2
+  grid-row: 2
+  padding: $baseline $baseline
+
+  @media (max-width: $mobile)
+    display: none
 
   background: #fafafa
   border-bottom: 1px solid #eee
@@ -176,10 +184,7 @@ export default {
 
   > div
     flex: 1
-    margin-right: $baseline / 2
-
-    &:last-of-type
-      margin-right: 0
+    margin-bottom: $baseline / 2
 
     @media (max-width: $mobile)
       min-width: 200px
@@ -188,7 +193,7 @@ export default {
   h3
     margin-bottom: $baseline / 2
 
-    font-size: $fs-2
+    font-size: $fs-1
     font-weight: 600
 
     @media (max-width: $mobile)
@@ -206,6 +211,9 @@ export default {
 
 .explore--issue
   position: relative
+
+  grid-column: 1 / span 2
+  grid-row: 2
   max-height: 700px
   overflow: hidden
   margin: 0 (-$baseline*2)
@@ -214,11 +222,16 @@ export default {
   background: #fafafa
 
   @media (max-width: $mobile)
-    margin: 0 (-$baseline/2)
+    margin: 0
     padding: 0
 
   timeline-newspaper
     margin-top: $baseline
+    transform: scale(0.7)
+    transform-origin: top left
+
+    @media (max-width: $mobile)
+      transform: none
 
   &.is-expanded
     max-height: none
