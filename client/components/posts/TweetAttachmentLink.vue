@@ -20,6 +20,8 @@ export default {
   display: block
   margin-top: $baseline / 2
 
+  box-shadow: 3px 3px 3px #eee
+
   font-size: $fs-0
 
   a

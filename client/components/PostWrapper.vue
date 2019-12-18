@@ -88,6 +88,7 @@ export default {
   margin-bottom: $baseline / 2
 
   background: #F2ECEC
+  box-shadow: 3px 3px 3px #eee
 
   @media (max-width: $mobile)
     grid-template-columns: calc(100vw - (#{$baseline} * 1.5)) 60vw
@@ -176,5 +177,8 @@ export default {
 //- Normal Post
 .normal-post
   position: relative
+
+  .post
+    box-shadow: 3px 3px 3px #eee
 </style>
 

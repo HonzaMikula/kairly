@@ -75,6 +75,7 @@
 =button-icon($icon, $type: icon, $collection: solid, $size: medium)
   display: inline-flex
   border-radius: $baseline * 1.25/2
+  box-sizing: border-box
 
   background: #eee
   border: 0
@@ -161,11 +162,16 @@
   //- only icon
   @if $type == icon
     padding: 0
+    border: 1px solid #ddd
+    box-shadow: 1px 1px 2px #ccc
 
   //- icon with text
   @else if $type == icon-text
     padding: 0 $baseline 0 $baseline/4
     width: auto
+
+    border: 1px solid #ccc
+    box-shadow: 0 3px 3px #ddd
 
     @media (max-width: $mobile)
       padding: 0

@@ -262,6 +262,7 @@ export default {
 
       background: transparent
       border: 0
+      box-shadow: none
       color: $c-red
 
       &:hover,
