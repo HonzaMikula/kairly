@@ -120,6 +120,11 @@ Fetch & import specific source
 pipenv run ./manage.py importrss --provider=idnescz
 ```
 
+Fetch & import sources from timeline of specific user
+```
+pipenv run ./manage.py importrss --subscriptions-of farin
+```
+
 ## Import RSS Rules
 
 ### Exclude tag
