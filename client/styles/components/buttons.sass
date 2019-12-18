@@ -2,7 +2,7 @@
 
 //- Button Mixin
 =button($type: primary, $size: medium)
-  box-sizing: border-box
+  //box-sizing: border-box
   display: inline-block
   border: 0
 
@@ -12,6 +12,8 @@
   //- primary button
   @if $type == primary
     background: $c-base
+    border: 1px solid darken($c-base, 10%)
+    box-shadow: 0 3px 3px #ccc
     color: #fff
 
     &:hover,
@@ -22,6 +24,7 @@
   @else if $type == secondary
     background: #fff
     border: 1px solid $c-base
+    box-shadow: 0 3px 3px #ccc
     color: #000
 
     &:hover,
@@ -33,7 +36,7 @@
   //- large button
   @if $size == large
     border-radius: $baseline * 0.75
-    height: $baseline * 1.5
+    height: $baseline * 1.5 + 2px
     padding: 0 $baseline*1.5
 
     font-size: $fs-1

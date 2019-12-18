@@ -1,5 +1,5 @@
 <template>
-  <section class="explore-view">
+  <section class="explore-widget-view">
     <h2>
       <slot>
         {{ $t('We believe in human editors.') }}
@@ -8,7 +8,7 @@
       </slot>
     </h2>
 
-    <div class="explore--crossroad">
+    <div class="explore-widget--crossroad">
       <div v-for="category in exploreNewspapers" :key="category.name">
         <h3>{{category.name}}</h3>
         <ul>
@@ -21,8 +21,8 @@
 
     <div
       v-if="issue"
-      class="explore--issue">
-      <nav class="explore--issue--navigation" v-if="links.prev || links.next">
+      class="explore-widget--issue">
+      <nav class="explore-widget--issue--navigation" v-if="links.prev || links.next">
         <button
           v-if="links.prev"
           v-b-tooltip
@@ -42,7 +42,7 @@
 
       <IssueWrapper :issue="issue" showTail></IssueWrapper>
 
-      <div class="explore--issue--subscribe" v-if="loggedIn">
+      <div class="explore-widget--issue--subscribe" v-if="loggedIn">
         <NewspaperSubscriptionButton :newspaper="newspaper" />
         <p>{{ periodicity }}</p>
       </div>
@@ -142,7 +142,7 @@ export default {
 @import './styles/components/buttons'
 
 
-.explore-view
+.explore-widget-view
   display: grid
   grid-template-columns: 7fr 3fr
   grid-template-rows: auto
@@ -164,7 +164,7 @@ export default {
       font-size: $fs-3
       line-height: $baseline * 1.2
 
-.explore--crossroad
+.explore-widget--crossroad
   z-index: 1
   grid-column: 2
   grid-row: 2
@@ -209,7 +209,7 @@ export default {
       a
         color: #000
 
-.explore--issue
+.explore-widget--issue
   position: relative
 
   grid-column: 1 / span 2
@@ -272,7 +272,7 @@ export default {
     padding-bottom: $baseline
 
 //- Navigation between issues
-.explore--issue--navigation
+.explore-widget--issue--navigation
   display: grid
   grid-template-columns: min-content min-content
   grid-template-areas: "prev-link next-link"
@@ -334,7 +334,7 @@ export default {
         content: fa-content($fa-var-arrow-right)
 
 //- Subscribe
-.explore--issue--subscribe
+.explore-widget--issue--subscribe
   position: absolute
   top: $baseline
   right: $baseline * 2

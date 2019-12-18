@@ -97,7 +97,7 @@ export default {
   overflow: hidden
 
   background: #fff
-  border: 1px solid #eee
+  border: 1px solid #ddd
 
   text-align: left
 

@@ -86,7 +86,8 @@ export default {
   overflow: hidden
 
   background: #fff
-  border: 1px solid #eee
+  border: 1px solid #ddd
+  box-shadow: 3px 3px 3px #eee
 
   text-align: left
 
