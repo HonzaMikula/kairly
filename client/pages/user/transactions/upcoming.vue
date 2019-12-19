@@ -59,9 +59,29 @@ export default {
   },
 
   computed: {
+    authorSubscriptions() {
+      const { authors } = this.$store.state.subscriptions
+      return Object.values(authors).map(s => {
+        return {
+          ...s,
+          author: this.$store.getters['entities/denormalize'](s.author, 'Author'),
+        }
+      })
+    },
+
+    newspaperSubscriptions() {
+      const { newspapers } = this.$store.state.subscriptions
+      return Object.entries(newspapers).map(([id, s]) => {
+        return {
+          ...s,
+          newspaper: this.$store.getters['entities/denormalize'](id, 'Newspaper'),
+        }
+      })
+    },
+
     transactions() {
       const { authors, newspapers } = this.$store.state.subscriptions
-      const transactions = Object.values(authors)
+      const transactions = this.authorSubscriptions
         .filter(sub => {
           if (sub.state !== 'active') return false
           if (sub.donation !== null &&  parseFloat(sub.donation) > 0) return true
@@ -69,12 +89,7 @@ export default {
           return false
         })
 
-      Object.entries(newspapers)
-        .map(([id, sub]) => {
-          const newspaper = this.$store.getters.newspaper(id)
-          return {newspaper, ...sub}
-        })
-        .filter(sub => {
+      this.newspaperSubscriptions.filter(sub => {
           if (sub.state !== 'active') return false
           if (sub.donation !== null &&  parseFloat(sub.donation) > 0) return true
           if (parseFloat(sub.newspaper.price) > 0) return true

@@ -4,34 +4,28 @@ from django.http import HttpResponseForbidden
 from django.utils import timezone
 
 from utils.decorators import ajax_login_required
-from utils.json import JsonResponse
+from utils.json import JsonResponse, entities_json_response
 from .models import Transaction
 from .utils import clear_credits_cache, get_platform_credits, get_user_credits
 
 
 @ajax_login_required
-def get_transactions(request):
+@entities_json_response
+def get_transactions(request, entities):
     limit = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0) - relativedelta(months=1)
     transactions = list(Transaction.objects.filter(Q(from_user=request.user) | Q(to_user=request.user))
                         .filter(created__gt=limit)
                         .order_by('-created'))
 
-    newspapers = {}
-    for t in transactions:
-        if t.from_newspaper and t.from_newspaper.full_name not in newspapers:
-            newspapers[t.from_newspaper.full_name] = t.from_newspaper.to_json(request.user.tzinfo)
-        if t.to_newspaper and t.to_newspaper.full_name not in newspapers:
-            newspapers[t.to_newspaper.full_name] = t.to_newspaper.to_json(request.user.tzinfo)
-
-    return JsonResponse({
-        "newspapers": newspapers,
+    return {
         "credits": str(get_user_credits(request.user.id)),
-        "transactions": [t.to_json(reversed=bool(t.from_user_id)) for t in transactions]
-    })
+        "transactions": [t.to_json(entities, reversed=bool(t.from_user_id)) for t in transactions]
+    }
 
 
 @ajax_login_required
-def get_platform_transactions(request):
+@entities_json_response
+def get_platform_transactions(request, entities):
     if not request.user.is_superuser:
         return HttpResponseForbidden()
 
@@ -40,10 +34,10 @@ def get_platform_transactions(request):
                         .filter(created__gt=limit)
                         .order_by('-created'))
 
-    return JsonResponse({
+    return {
         "credits": str(get_platform_credits()),
-        "transactions": [t.to_json(reversed=bool(t.from_platform)) for t in transactions]
-    })
+        "transactions": [t.to_json(entities, reversed=bool(t.from_platform)) for t in transactions]
+    }
 
 
 @ajax_login_required

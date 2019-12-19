@@ -17,6 +17,7 @@ from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden, HttpResponseNotFound)
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
 from django.views import View
@@ -25,11 +26,11 @@ from django.views.decorators.http import require_POST
 from users.models import User
 from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
-from utils.json import JsonResponse
+from utils.json import JsonResponse, entities_json_response
 from utils.upload import file_from_data_uri
 from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
                      SubscriptionToAuthor, IssuePost, Editorial, EditorialTweet,
-                     round_fair_price)
+                     round_fair_price, get_newspaper_full_name)
 from .period import parse_periodicity
 from .signals import post_publish
 from .utils import create_post_link
@@ -38,7 +39,8 @@ AUTOR_POSTS_PAGE_SIZE = 20
 
 
 @ajax_login_required
-def subscriptions(request):
+@entities_json_response
+def subscriptions(request, entities):
     now = datetime.now(request.user.tzinfo)
     subscribed_authors = {}
     query = SubscriptionToAuthor.objects.filter(
@@ -47,26 +49,25 @@ def subscriptions(request):
     ).select_related('author')
 
     for s in query:
-        subscribed_authors.update(s.to_json())
+        data = s.to_json(entities)
+        subscribed_authors[data['author']] = data
 
     subscribed_newspapers = {}
-    newspapers = []
     query = Subscription.objects.filter(
         Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user
-    ).select_related('newspaper', 'newspaper__editor')
+    )
 
     for s in query:
-        newspapers.append(s.newspaper.to_json(request.user.tzinfo))
-        subscribed_newspapers.update(s.to_json())
+        entities.add(Newspaper, s.newspaper_id)
+        subscribed_newspapers[get_newspaper_full_name(s.newspaper_id)] = s.to_json(entities)
 
-    return JsonResponse({
-        "newspapers": newspapers,
-        "subscriptions": {
+    return {
+        'subscriptions': {
             "authors": subscribed_authors,
             "newspapers": subscribed_newspapers,
         }
-    })
+    }
 
 
 @ajax_login_required
@@ -74,9 +75,9 @@ def user_backlog(request):
     backlog = defaultdict(dict)
     query = Backlog.objects \
         .filter(Q(newspaper__editor=request.user) | Q(newspaper__coeditor__editor=request.user)) \
-        .select_related('newspaper')
+
     for bl in query:
-        full_name = "{}/{}".format(bl.newspaper.editor.username, bl.newspaper.slug)
+        full_name = get_newspaper_full_name(bl.newspaper_id)
         backlog[str(bl.post_id)][full_name] = bl.publish_in or 0
 
     return JsonResponse({
@@ -84,12 +85,12 @@ def user_backlog(request):
     })
 
 
-def recent_issues(request):
+@entities_json_response
+def recent_issues(request, entities):
     count = int(request.GET.get('count', 3))
     if count < 1 or count > 10:
         return HttpResponse('Invalid count.', status=400)
 
-    tzinfo = request.user.tzinfo
     issues = list(Issue.objects.all().order_by('-published')[:count])
     newspaper_ids = [issue.newspaper_id for issue in issues]
     newspapers = {
@@ -97,20 +98,25 @@ def recent_issues(request):
         Newspaper.objects.filter(id__in=newspaper_ids)
     }
 
-    resp = []
+    resp = {
+        'issues': []
+    }
     for issue in issues:
         issue.newspaper = newspapers[issue.newspaper_id]
-        resp.append(issue.to_json(posts=True, tzinfo=tzinfo))
+        resp['issues'].append(issue.to_json(entities, posts=True))
 
-    return JsonResponse(resp)
+    return resp
 
 
-def recent_posts(request):
-    tzinfo = request.user.tzinfo
+@entities_json_response
+def recent_posts(request, entities):
     posts = Post.objects.filter(draft=False, published__lt=timezone.now())\
         .exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])\
         .select_related('author').order_by('-published')[:12]
-    return JsonResponse([post.to_json(tzinfo=tzinfo) for post in posts])
+
+    return {
+        'posts': [post.to_json(entities) for post in posts]
+    }
 
 
 def delete_newspaper(request, newspaper):
@@ -121,8 +127,8 @@ def delete_newspaper(request, newspaper):
 
 
 class NewspaperView(View):
-    def get(self, request, username, newspapeper_slug):
-        tzinfo = request.user.tzinfo
+    @method_decorator(entities_json_response)
+    def get(self, request, entities, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
         issue_no = request.GET.get('issue')
@@ -138,38 +144,40 @@ class NewspaperView(View):
             except IndexError:
                 issue = None
 
-        data = {
-            'newspaper': newspaper.to_json(tzinfo, co_editors=newspaper.editor == request.user),
+        entities.add(Newspaper, newspaper)
+
+        resp = {
+            'newspaper': newspaper.full_name,
             'issue': None,
             'links': {}
         }
 
         if issue:
-            data['issue'] = issue.to_json(anonymous=request.user.is_anonymous)
+            resp['issue'] = issue.to_json(entities)
 
             try:
                 prev_num = Issue.objects.filter(newspaper=newspaper, number__lt=issue.number).order_by('-number').values_list('number', flat=True)[0]
-                data['links']['prev'] = '/{}/{}'.format(newspaper.full_name, prev_num)
+                resp['links']['prev'] = '/{}/{}'.format(newspaper.full_name, prev_num)
             except IndexError:
                 pass
             try:
                 next_num = Issue.objects.filter(newspaper=newspaper, number__gt=issue.number).order_by('number').values_list('number', flat=True)[0]
-                data['links']['next'] = '/{}/{}'.format(newspaper.full_name, next_num)
+                resp['links']['next'] = '/{}/{}'.format(newspaper.full_name, next_num)
             except IndexError:
                 pass
 
             if request.user.is_authenticated:
                 if Post.objects.filter(author=request.user, kind=Post.RECOMMENDATION, ref_issue=issue).exists():
-                    data['recommended'] = [data['issue']['id']]  # pylint: disable=unsubscriptable-object
+                    resp['recommended'] = [resp['issue']['id']]  # pylint: disable=unsubscriptable-object
                 else:
-                    data['recommended'] = []
+                    resp['recommended'] = []
 
-        return JsonResponse(data)
+        return resp
 
     @ajax_login_required
     @transaction.atomic
-    def patch(self, request, username, newspapeper_slug):
-        tzinfo = request.user.tzinfo
+    @method_decorator(entities_json_response)
+    def patch(self, request, entities, username, newspapeper_slug):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         payload = json.loads(request.body.decode('utf-8'))
 
@@ -217,9 +225,9 @@ class NewspaperView(View):
 
         newspaper.save()
 
-        return JsonResponse({
-            'newspaper': newspaper.to_json(tzinfo),
-        })
+        return {
+            'newspaper': newspaper.to_json(entities),
+        }
 
     @ajax_login_required
     @transaction.atomic
@@ -233,19 +241,29 @@ class NewspaperView(View):
         return HttpResponse(status=204)
 
 
-def author_detail(request, username):
-    tzinfo = request.user.tzinfo
+@entities_json_response
+def author_detail(request, entities, username):
     author = get_object_or_404(User, username=username)
+
+    entities.add(User, author)
 
     newspapers = list(Newspaper.objects.filter(editor=author))
     newspapers.sort(key=attrgetter('likes'), reverse=True)
-    return JsonResponse({
-        'author': author.to_json(),
-        'newspapers': [n.to_json(tzinfo) for n in newspapers],
-    })
+
+    resp = {
+        'author': author.username,
+        'newspapers': []
+    }
+
+    for newspaper in newspapers:
+        entities.add(Newspaper, newspaper)
+        resp['newspapers'].append(newspaper.full_name)
+
+    return resp
 
 
-def author_posts(request, username):
+@entities_json_response
+def author_posts(request, entities, username):
     try:
         offset = int(request.GET.get('cursor', 0))
     except ValueError:
@@ -264,16 +282,17 @@ def author_posts(request, username):
         posts_query = posts_query.exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
 
-    posts = [post.to_json(short=True, anonymous=request.user.is_anonymous) for post in posts_query]
-    return JsonResponse({
+    posts = [post.to_json(entities, short=True) for post in posts_query]
+    return {
         'posts': posts,
         'cursor': offset + AUTOR_POSTS_PAGE_SIZE if len(posts) == AUTOR_POSTS_PAGE_SIZE else None
-    })
+    }
 
 
 @ajax_login_required
 @transaction.atomic
-def newspaper_backlog(request, username, newspapeper_slug):
+@entities_json_response
+def newspaper_backlog(request, entities, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
         if request.user not in newspaper.co_editors.all():
@@ -286,9 +305,9 @@ def newspaper_backlog(request, username, newspapeper_slug):
             newspaper=newspaper).select_related('post').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
         for log in query:
             result['backlog'].append({
-                'post': log.post.to_json(),
+                'post': log.post.to_json(entities),
                 'publish': log.publish_in,
-                'editorial': log.editorial.to_json() if log.editorial else None
+                'editorial': log.editorial.to_json(entities) if log.editorial else None
             })
 
         editor_tz = pytz.timezone(newspaper.editor.timezone)
@@ -304,8 +323,7 @@ def newspaper_backlog(request, username, newspapeper_slug):
             'priorIssuesCost': str(cost),
             'upcommingIssues': len(newspaper.current_month_upcomming_issues())
         }
-
-        return JsonResponse(result)
+        return result
 
     if request.method == 'POST':
         payload = json.loads(request.body.decode('utf-8'))
@@ -358,7 +376,8 @@ def newspaper_backlog(request, username, newspapeper_slug):
 @ajax_login_required
 @require_POST
 @transaction.atomic
-def create_link(request, username, newspapeper_slug):
+@entities_json_response
+def create_link(request, entities, username, newspapeper_slug):
     newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
     if newspaper.editor_id != request.user.id:
         if request.user not in newspaper.co_editors.all():
@@ -378,16 +397,17 @@ def create_link(request, username, newspapeper_slug):
         }, status=409)
 
     created = Backlog.append_post(newspaper, post)
-    return JsonResponse({
-        'post': post.to_json() if created else None
-    })
+    return {
+        'post': post.to_json(entities) if created else None
+    }
 
 
 class EditorialsView(View):
 
     @ajax_login_required
     @transaction.atomic
-    def post(self, request, username, newspapeper_slug, post_id):
+    @method_decorator(entities_json_response)
+    def post(self, request, entities, username, newspapeper_slug, post_id):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         if newspaper.editor_id != request.user.id:
             if request.user not in newspaper.co_editors.all():
@@ -456,11 +476,12 @@ class EditorialsView(View):
         if not backlog.editorial:
             Backlog.objects.filter(id=backlog.id).update(editorial=editorial)
 
-        return JsonResponse(editorial.to_json())
+        return editorial.to_json(entities)
 
     @ajax_login_required
     @transaction.atomic
-    def patch(self, request, username, newspapeper_slug, post_id):
+    @method_decorator(entities_json_response)
+    def patch(self, request, entities, username, newspapeper_slug, post_id):
         """Update editorial position"""
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         if newspaper.editor_id != request.user.id:
@@ -481,7 +502,7 @@ class EditorialsView(View):
         editorial.position = position
         editorial.save()
 
-        return JsonResponse(editorial.to_json())
+        return editorial.to_json(entities)
 
     @ajax_login_required
     @transaction.atomic
@@ -507,7 +528,8 @@ class NewspaperSubscriptionView(View):
 
     @ajax_login_required
     @transaction.atomic
-    def post(self, request, username, newspapeper_slug):
+    @method_decorator(entities_json_response)
+    def post(self, request, entities, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
@@ -563,14 +585,15 @@ class NewspaperSubscriptionView(View):
                 credits -= newspaper.price + donation
                 pay_newspaper_subscription(subscription)
 
-        return JsonResponse({
+        return {
             'credits': str(credits),
-            'subscription': subscription.to_json()
-        })
+            'subscription': subscription.to_json(entities)
+        }
 
     @ajax_login_required
     @transaction.atomic
-    def delete(self, request, username, newspapeper_slug):
+    @method_decorator(entities_json_response)
+    def delete(self, request, entities, username, newspapeper_slug):
         now = datetime.now(request.user.tzinfo)
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
 
@@ -584,21 +607,25 @@ class NewspaperSubscriptionView(View):
 
         if newspaper.price == 0:
             subscription.delete()
-            return JsonResponse({'subscription': None})
+            return {
+                'subscription': None
+            }
 
         subscription.renewal = False
         subscription.suspended = False
         subscription.save()
-        return JsonResponse({
-            'subscription': subscription.to_json() if subscription.valid_to > now else None
-        })
+
+        return {
+            'subscription': subscription.to_json(entities) if subscription.valid_to > now else None
+        }
 
 
 class AuthorSubscriptionView(View):
 
     @ajax_login_required
     @transaction.atomic
-    def post(self, request, username):
+    @method_decorator(entities_json_response)
+    def post(self, request, entities, username):
         now = datetime.now(request.user.tzinfo)
         author = get_object_or_404(User, username=username)
         payload = json.loads(request.body.decode('utf-8'))
@@ -679,14 +706,15 @@ class AuthorSubscriptionView(View):
                 pay_author_subscription(subscription)
                 credits -= author.price + donation
 
-        return JsonResponse({
+        return {
             'credits': str(credits),
-            'subscription': subscription.to_json()
-        })
+            'subscription': subscription.to_json(entities)
+        }
 
     @ajax_login_required
     @transaction.atomic
-    def delete(self, request, username):
+    @method_decorator(entities_json_response)
+    def delete(self, request, entities, username):
         author = get_object_or_404(User, username=username)
         now = datetime.now(request.user.tzinfo)
 
@@ -700,15 +728,17 @@ class AuthorSubscriptionView(View):
 
         if author.price == 0:
             subscription.delete()
-            return JsonResponse({'subscription': None})
+            return {
+                'subscription': None
+            }
 
         subscription.renewal = False
         subscription.suspended = False
         subscription.save()
 
-        return JsonResponse({
-            'subscription': subscription.to_json() if subscription.valid_to > now else None
-        })
+        return {
+            'subscription': subscription.to_json(entities) if subscription.valid_to > now else None
+        }
 
 
 def validate_post_attributes(request, payload, draft):
@@ -750,14 +780,16 @@ def validate_post_attributes(request, payload, draft):
 
 class DraftsView(View):
     @ajax_login_required
-    def get(self, request):
+    @method_decorator(entities_json_response)
+    def get(self, request, entities):
         posts = Post.objects.filter(author=request.user, draft=True).order_by('-published')
-        return JsonResponse({
-            'posts': [post.to_json() for post in posts]
-        })
+        return{
+            'posts': [post.to_json(entities) for post in posts]
+        }
 
     @ajax_login_required
-    def post(self, request):
+    @method_decorator(entities_json_response)
+    def post(self, request, entities):
         payload = json.loads(request.body.decode('utf-8'))
 
         try:
@@ -772,23 +804,25 @@ class DraftsView(View):
             **attrs
         )
 
-        return JsonResponse({
-            'post': post.to_json()
-        })
+        return {
+            'post': post.to_json(entities)
+        }
 
 
 class DraftDetailView(View):
 
     @ajax_login_required
-    def get(self, request, post_id):
+    @method_decorator(entities_json_response)
+    def get(self, request, entities, post_id):
         # user can get (and patch) also published posts
         post = get_object_or_404(Post, author=request.user, id=post_id)
-        return JsonResponse({
-            'post': post.to_json()
-        })
+        return {
+            'post': post.to_json(entities)
+        }
 
     @ajax_login_required
-    def patch(self, request, post_id):
+    @method_decorator(entities_json_response)
+    def patch(self, request, entities, post_id):
         """User can patch published posts and such use case is handled
         also by this view despite its name."""
         post = get_object_or_404(Post, author=request.user, id=post_id)
@@ -802,9 +836,9 @@ class DraftDetailView(View):
         post.__dict__.update(attrs)
         post.save(recalculate_weight=True)
 
-        return JsonResponse({
-            'post': post.to_json()
-        })
+        return {
+            'post': post.to_json(entities)
+        }
 
     @ajax_login_required
     def delete(self, request, post_id):
@@ -829,7 +863,8 @@ def draft_fair_price(request, post_id):
 @ajax_login_required
 @require_POST
 @transaction.atomic
-def publish_draft(request, post_id):
+@entities_json_response
+def publish_draft(request, entities, post_id):
     post = get_object_or_404(Post, author=request.user, id=post_id, draft=True)
     payload = json.loads(request.body.decode('utf-8'))
 
@@ -854,12 +889,13 @@ def publish_draft(request, post_id):
 
     post_publish.send(sender=publish_draft, post=post)
 
-    return JsonResponse({
-        'post': post.to_json()
-    })
+    return {
+        'post': post.to_json(entities)
+    }
 
 
-def post(request, username, post_slug):
+@entities_json_response
+def post(request, entities, username, post_slug):
     post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False, published__lt=timezone.now())
 
     # Doesn't work, post can be part of multiple issues or just related to author
@@ -872,22 +908,23 @@ def post(request, username, post_slug):
     query = IssuePost.objects.filter(post=post, editorial__isnull=False) \
         .select_related('editorial', 'issue__newspaper') \
         .order_by('issue_id', 'ordering')
+
     for issue_post in query:
-        item = issue_post.editorial.to_json()
-        item['issue'] = issue_post.issue.to_json(posts=False)
+        item = issue_post.editorial.to_json(entities)
+        item['issue'] = issue_post.issue.to_json(entities, posts=False)
         del item['position']
         editorials.append(item)
 
-    data = {
-        'post': post.to_json(anonymous=request.user.is_anonymous),
+    resp = {
+        'post': post.to_json(entities),
         'editorials': editorials
     }
 
     if request.user.is_authenticated:
-        data['recommended'] = Post.objects.filter(
+        resp['recommended'] = Post.objects.filter(
             author=request.user, kind=Post.RECOMMENDATION, ref_post=post).exists()
 
-    return JsonResponse(data)
+    return resp
 
 
 def get_type_from_data_uri(data):
@@ -897,8 +934,8 @@ def get_type_from_data_uri(data):
 @ajax_login_required
 @require_POST
 @transaction.atomic
-def start_newspaper(request, username):
-    tzinfo = request.user.tzinfo
+@entities_json_response
+def start_newspaper(request, entities, username):
     author = get_object_or_404(User, username=username)
     payload = json.loads(request.body.decode('utf-8'))
 
@@ -947,16 +984,18 @@ def start_newspaper(request, username):
         ]
     )
 
-    return JsonResponse({
-        'newspaper': newspaper.to_json(tzinfo)
-    })
+    entities.add(Newspaper, newspaper)
+    return {
+        'newspaper': newspaper.full_name
+    }
 
 
 class PostRecommendationView(View):
 
     @ajax_login_required
     @transaction.atomic
-    def post(self, request, username, post_slug):
+    @method_decorator(entities_json_response)
+    def post(self, request, entities, username, post_slug):
         post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False)
 
         if post.kind == Post.RECOMMENDATION:
@@ -973,9 +1012,9 @@ class PostRecommendationView(View):
             protected=False
         )
 
-        return JsonResponse({
-            'post': recommendation.to_json()
-        })
+        return {
+            'post': recommendation.to_json(entities)
+        }
 
     @ajax_login_required
     @transaction.atomic
@@ -991,7 +1030,8 @@ class IssueRecommendationView(View):
 
     @ajax_login_required
     @transaction.atomic
-    def post(self, request, username, newspapeper_slug, issue_number):
+    @method_decorator(entities_json_response)
+    def post(self, request, entities, username, newspapeper_slug, issue_number):
         newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
         issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_number)
 
@@ -1006,9 +1046,9 @@ class IssueRecommendationView(View):
             protected=False
         )
 
-        return JsonResponse({
-            'post': recommendation.to_json()
-        })
+        return {
+            'post': recommendation.to_json(entities)
+        }
 
     @ajax_login_required
     @transaction.atomic

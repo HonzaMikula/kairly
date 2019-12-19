@@ -30,7 +30,7 @@
             <td v-if="t.source.newspaper">
               <!-- Monthly reward for newspaper editor -->
               <img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name" />
-              {{ t.source.newspaper}}
+              {{ t.source.newspaper.name}}
             </td>
             <td v-else-if="t.source.author">
               <!-- Monthly reward for author -->
@@ -80,12 +80,9 @@ export default {
     }
   },
 
-  async asyncData({ app, store, params }) {
-    const { credits, transactions } = await app.$axios.$get(`/platform-transactions`)
-
-    return {
-      credits, transactions
-    }
+  async asyncData({ store, params }) {
+    const { credits, transactions } = await store.dispatch(`getPlatformTransactions`)
+    return { credits, transactions }
   },
 }
 </script>

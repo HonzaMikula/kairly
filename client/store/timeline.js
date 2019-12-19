@@ -11,6 +11,35 @@ export const state = () => ({
   },
 })
 
+export const mutations = {
+  resetState(state) {
+    state.today = {}
+    state.hasNoActiveSubscriptions = false
+    state.expandedIssues = {}
+    state.timeline = {}
+  },
+  invalidate(state) {
+    state.hasNoActiveSubscriptions = false
+    state.timeline = {}
+  },
+  received(state, { endpoint, data: { date, issues, links } }) {
+    Vue.set(state.timeline, `${endpoint}|${date}`, { issues, links })
+  },
+  hasNoActiveSubscriptions(state) {
+    state.hasNoActiveSubscriptions = true
+  },
+  today(state, { endpoint, date, validTo }) {
+    Vue.set(state.today, endpoint, { date, validTo })
+  },
+  expandIssue(state, { issueId }) {
+    state.expandedIssues = {
+      ...state.expandedIssues,
+      [issueId]: true
+    }
+  },
+}
+
+
 export const actions = {
   async load({ commit, state }, { endpoint='/timeline', date, cachedOnly=false}) {
     let cacheKey = date ? `${endpoint}|${date}` : null
@@ -75,7 +104,11 @@ export const actions = {
       commit('today', {endpoint, date: data.date, validTo: data.validTo})
     }
 
+    delete data.authors
+    delete data.newspapers
+
     commit('received', {endpoint, data})
+
     return data
   },
 
@@ -89,30 +122,3 @@ export const actions = {
   }
 }
 
-export const mutations = {
-  resetState(state) {
-    state.today = null
-    state.hasNoActiveSubscriptions = false
-    state.expandedIssues = {}
-    state.timeline = {}
-  },
-  invalidate(state) {
-    state.hasNoActiveSubscriptions = false
-    state.timeline = {}
-  },
-  received(state, { endpoint, data: { date, issues, links }}) {
-    Vue.set(state.timeline, `${endpoint}|${date}`, { issues, links })
-  },
-  hasNoActiveSubscriptions(state) {
-    state.hasNoActiveSubscriptions = true
-  },
-  today(state, {endpoint, date, validTo}) {
-    Vue.set(state.today, endpoint, { date, validTo })
-  },
-  expandIssue(state, { issueId }) {
-    state.expandedIssues = {
-      ...state.expandedIssues,
-      [issueId]: true
-    }
-  },
-}

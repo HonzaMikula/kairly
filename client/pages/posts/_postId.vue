@@ -41,10 +41,9 @@ export default {
     }
   },
 
-  async asyncData({ app, store, params }) {
-    const { post } = await app.$axios.$get(`/drafts/${params.postId}`)
+  async asyncData({ store, params }) {
     return {
-      post
+      post: await store.dispatch('getPostDraft', params.postId)
     }
   }
 }

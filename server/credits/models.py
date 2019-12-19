@@ -1,8 +1,9 @@
-from articles.models import Newspaper
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+
+from articles.models import Newspaper, get_newspaper_full_name
 from users.models import User
 from utils.json import datetime_isoformat_ecma262
 
@@ -34,22 +35,28 @@ class Transaction(models.Model):
     credits = models.DecimalField(_('Credits'), max_digits=11, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
 
-    def to_json(self, reversed=False):
+    def to_json(self, entities, reversed=False):
         source = {}
-        if self.from_user:
-            source['user'] = self.from_user.to_json()
-        elif self.from_author:
-            source['author'] = self.from_author.to_json()
-        elif self.from_newspaper:
-            source['newspaper'] = self.from_newspaper.full_name
+        if self.from_user_id:
+            entities.add(User, self.from_user)
+            source['user'] = self.from_user.username
+        elif self.from_author_id:
+            entities.add(User, self.from_author)
+            source['author'] = self.from_author.username
+        elif self.from_newspaper_id:
+            entities.add(Newspaper, self.from_newspaper_id)
+            source['newspaper'] = get_newspaper_full_name(self.from_newspaper_id)
 
         target = {}
-        if self.to_user:
-            target['user'] = self.to_user.to_json()
-        elif self.to_author:
-            target['author'] = self.to_author.to_json()
-        elif self.to_newspaper:
-            target['newspaper'] = self.to_newspaper.full_name
+        if self.to_user_id:
+            entities.add(User, self.to_user)
+            target['user'] = self.to_user.username
+        elif self.to_author_id:
+            entities.add(User, self.to_author)
+            target['author'] = self.to_author.username
+        elif self.to_newspaper_id:
+            entities.add(Newspaper, self.to_newspaper_id)
+            source['newspaper'] = get_newspaper_full_name(self.to_newspaper_id)
 
         return {
             'source': source,

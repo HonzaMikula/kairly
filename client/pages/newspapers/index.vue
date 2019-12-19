@@ -158,7 +158,7 @@ export default {
   computed: {
     newspapers() {
       const ids = this.$store.state.auth.user.newspapers.map(newspaper => newspaper.fullName)
-      const newspapers = ids.map(id => this.$store.getters.newspaper(id))
+      const newspapers = ids.map(id => this.$store.getters['entities/getNewspaper'](id))
       newspapers.sort(({nextRelease: a}, {nextRelease: b}) => a < b ? -1 : (a > b ? 1 : 0))
       return newspapers
     },

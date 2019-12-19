@@ -1,4 +1,5 @@
 import time
+import pickle
 from datetime import datetime, date, timedelta
 from datetime import tzinfo as t_tzinfo
 from itertools import chain
@@ -6,19 +7,18 @@ from operator import itemgetter
 from dataclasses import dataclass
 
 import dateutil.parser
-import rapidjson as json
 from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views import View
 from more_itertools import peekable
 from pytz import timezone
 
-
 from utils.decorators import ajax_login_required
-from utils.json import JsonResponse, datetime_isoformat_ecma262
-from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper
+from utils.json import datetime_isoformat_ecma262, Entities, entities_json_response
+from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper, get_newspaper_full_name
 from .period import PeriodMixin
 from users.models import User, ExploreTimeline
 
@@ -43,7 +43,7 @@ class TimelinePeriod:
 
 class BaseTimelineView(View):
 
-    def get_timeline(self, request, ctx):
+    def get_timeline(self, request, entities, timeline_ctx):
         # Group author issues by period defined by client local zone
         # It means that timeline for same user may differ when user is in different
         # timezone.
@@ -51,6 +51,7 @@ class BaseTimelineView(View):
 
         # HACK for now use CET timezone to all users, until UI is improved to handle users in diferent zones
         tzinfo = timezone('Europe/Prague')
+        entities.tzinfo = tzinfo
 
         now = datetime.now(tzinfo)
 
@@ -59,8 +60,8 @@ class BaseTimelineView(View):
         if period.start > now:
             raise ValueError("Invalid date.")
 
-        newspaper_issues, newspaper_subscription_exists = self.get_newspaper_issues(request, ctx, now, period)
-        author_issues, author_subscription_exists = self.get_author_issues(request, ctx, now, period)
+        newspaper_issues, newspaper_subscription_exists = self.get_newspaper_issues(request, timeline_ctx, now, period, entities)
+        author_issues, author_subscription_exists = self.get_author_issues(request, timeline_ctx, now, period, entities)
 
         if not newspaper_subscription_exists and not author_subscription_exists:
             # no subscription exists
@@ -87,10 +88,10 @@ class BaseTimelineView(View):
             'recommended': recommended_public_ids,
         }
 
-    def get_newspaper_subscriptions(self, request, ctx, now):
+    def get_newspaper_subscriptions(self, request, timeline_ctx, now):
         raise NotImplementedError
 
-    def get_author_subscriptions(self, request, ctx, now):
+    def get_author_subscriptions(self, request, timeline_ctx, now):
         raise NotImplementedError
 
     def get_timeline_period(self, request, now, tzinfo):
@@ -151,14 +152,14 @@ class BaseTimelineView(View):
 
         return recommended_public_ids
 
-    def get_newspaper_issues(self, request, ctx, now, period):
-        subscriptions = self.get_newspaper_subscriptions(request, ctx, now)
+    def get_newspaper_issues(self, request, timeline_ctx, now, period, entities):
+        subscriptions = self.get_newspaper_subscriptions(request, timeline_ctx, now)
 
         issues = []
         subscription_exists = False
         for sub in subscriptions:
             subscription_exists = True
-            newspaper_issues = self.get_newspaper_subscription_issues(sub, period)
+            newspaper_issues = self.get_newspaper_subscription_issues(sub, period, entities)
 
             if sub.suspended:
                 for issue in newspaper_issues:
@@ -170,7 +171,7 @@ class BaseTimelineView(View):
 
         return issues, subscription_exists
 
-    def get_newspaper_subscription_issues(self, sub, period):
+    def get_newspaper_subscription_issues(self, sub, period, entities):
         newspaper_name = "{}/{}".format(sub.newspaper.editor.username, sub.newspaper.slug)
         cache_key = "newspaper_issues_{}_{}-{}".format(
             newspaper_name,
@@ -178,9 +179,11 @@ class BaseTimelineView(View):
             int(period.end.timestamp() if period.cache_valid_to is None else period.cache_valid_to)
         )
 
-        cached_issues = cache.get(cache_key)
-        if cached_issues:
-            return json.loads(cached_issues)
+        cached = cache.get(cache_key)
+        if cached:
+            issue_entities, cached_issues = pickle.loads(cached)
+            entities.update(issue_entities)
+            return cached_issues
 
         expected_issues = set()
         dt = period.start
@@ -190,6 +193,7 @@ class BaseTimelineView(View):
                 expected_issues.add(newspaper_period.end)
             dt = newspaper_period.end
 
+        issue_entities = Entities(user=entities.user, tzinfo=entities.tzinfo)
         query = Issue.objects.filter(
             published__gte=period.start, published__lt=period.end,
             newspaper=sub.newspaper
@@ -197,7 +201,7 @@ class BaseTimelineView(View):
 
         issues = []
         for issue in query:
-            issue_json = issue.to_json(newspaper=sub.newspaper, tzinfo=period.tzinfo)
+            issue_json = issue.to_json(issue_entities)
             issue_json['$'] = {'id': issue.id}  # internal keys, we want to cache it but it will be stripped on response
             issues.append(issue_json)
             try:
@@ -206,19 +210,21 @@ class BaseTimelineView(View):
                 pass
 
         for missing in expected_issues:
+            issue_entities.add(Newspaper, sub.newspaper_id)
             issues.append({
-                "id": '{}/{}.unreleased'.format(sub.newspaper.full_name, int(missing.timestamp())),
+                "id": '{}/{}.unreleased'.format(get_newspaper_full_name(sub.newspaper_id), int(missing.timestamp())),
                 "type": 'unreleased-newspaper',
-                "newspaper": sub.newspaper.to_json(period.tzinfo),  # TODO return newspapers separately, as done alredy for subscriptions
+                "newspaper": get_newspaper_full_name(sub.newspaper_id),
                 "time": datetime_isoformat_ecma262(missing.astimezone(period.tzinfo)),
                 "posts": []
             })
 
-        cache.set(cache_key, json.dumps(issues), period.timeout)
+        cache.set(cache_key, pickle.dumps([issue_entities, issues]), period.timeout)
+        entities.update(issue_entities)
         return issues
 
-    def get_author_issues(self, request, ctx, now, period):
-        subscriptions = self.get_author_subscriptions(request, ctx, now)
+    def get_author_issues(self, request, timeline_ctx, now, period, entities):
+        subscriptions = self.get_author_subscriptions(request, timeline_ctx, now)
 
         issues = []
         subscription_exists = False
@@ -226,12 +232,12 @@ class BaseTimelineView(View):
         for sub in subscriptions:
             subscription_exists = True
             issues.extend(
-                self.get_author_subscription_issues(sub, period)
+                self.get_author_subscription_issues(sub, period, entities)
             )
 
         return issues, subscription_exists
 
-    def get_author_subscription_issues(self, sub, period):
+    def get_author_subscription_issues(self, sub, period, entities):
         cache_key = "author_issues_{}_{}_{}-{}".format(
             sub.author,
             sub.get_period_uid(),
@@ -244,9 +250,11 @@ class BaseTimelineView(View):
             # suspended placeholder instead
 
             # there is still place to improve it using get_many or redis directly
-            cached_issues = cache.get(cache_key)
-            if cached_issues:
-                return json.loads(cached_issues)
+            cached = cache.get(cache_key)
+            if cached:
+                issue_entities, cached_issues = pickle.loads(cached)
+                entities.update(issue_entities)
+                return cached_issues
 
         dt = period.start
         intervals = []
@@ -264,12 +272,13 @@ class BaseTimelineView(View):
         if sub.suspended:
             interval = intervals[0]
             isodate = datetime_isoformat_ecma262(interval.end)
+            entities.add(User, sub.author_id)
             return [{
                 "id": '{}/${}/{}.suspended'.format(sub.author.username, sub.period, int(interval.end.timestamp())),
                 "type": 'suspended-author',
                 'title': interval.title,
                 'time': isodate,
-                'author': sub.author.to_json(),
+                'author': sub.author.username,
                 "posts": []
             }]
 
@@ -282,12 +291,13 @@ class BaseTimelineView(View):
         ).select_related('author')
 
         posts = peekable(posts_query.order_by('published'))
+        issue_entities = Entities(user=entities.user, tzinfo=period.tzinfo)
 
         def post_to_json(author, post):
             if author.kind == User.FEED and post.kind == Post.RECOMMENDATION and post.ref_post:
-                return post.ref_post.to_json(short=True, tzinfo=period.tzinfo)
+                return post.ref_post.to_json(issue_entities, short=True)
             return {
-                'post': post.to_json(short=True, tzinfo=period.tzinfo),
+                'post': post.to_json(issue_entities, short=True),
                 'editorial': None
             }
 
@@ -302,39 +312,42 @@ class BaseTimelineView(View):
 
             if interval_posts:
                 isodate = datetime_isoformat_ecma262(interval.end)
+                issue_entities.add(User, sub.author_id)
                 issues.append({
                     'id': '{}/${}/{}'.format(sub.author.username, sub.period, int(interval.end.timestamp())),
                     'type': 'author',
                     'title': interval.title,
                     'time': isodate,
-                    'author': sub.author.to_json(),
+                    'author': sub.author.username,
                     'posts': [post_to_json(sub.author, p) for p in interval_posts],
                 })
 
-        cache.set(cache_key, json.dumps(issues), period.timeout)
+        cache.set(cache_key, pickle.dumps([issue_entities, issues]), period.timeout)
+        entities.update(issue_entities)
         return issues
 
 
 class TimelineView(BaseTimelineView):
 
     @ajax_login_required
-    def get(self, request):
+    @method_decorator(entities_json_response)
+    def get(self, request, entities):
         try:
-            timeline = self.get_timeline(request, None)
+            timeline = self.get_timeline(request, entities, None)
             if timeline is None:
                 return HttpResponse(status=204)
             else:
-                return JsonResponse(timeline)
+                return timeline
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 
-    def get_newspaper_subscriptions(self, request, ctx, now):
+    def get_newspaper_subscriptions(self, request, timeline_ctx, now):
         return Subscription.objects.filter(
             Q(valid_to__gt=now) | Q(renewal=True) | Q(suspended=True),
             user=request.user,
         ).select_related('newspaper', 'newspaper__editor')
 
-    def get_author_subscriptions(self, request, ctx, now):
+    def get_author_subscriptions(self, request, timeline_ctx, now):
         return SubscriptionToAuthor.objects.filter(
             Q(valid_to__gt=now) | Q(renewal=True) | Q(suspended=True),
             user=request.user
@@ -349,6 +362,10 @@ class SubscriptionMock:
     def suspended(self):
         return False
 
+    @property
+    def newspaper_id(self):
+        return self.newspaper.id
+
 
 @dataclass
 class SubscriptionToAuthorMock(PeriodMixin):
@@ -361,18 +378,22 @@ class SubscriptionToAuthorMock(PeriodMixin):
     def suspended(self):
         return False
 
+    @property
+    def author_id(self):
+        return self.author.id
+
 
 class ExploreTimelineView(BaseTimelineView):
 
-    def get(self, request, tab):
+    @method_decorator(entities_json_response)
+    def get(self, request, entities, tab):
         try:
             explore = get_object_or_404(ExploreTimeline, slug=tab)
-            timeline = self.get_timeline(request, explore)
+            timeline = self.get_timeline(request, entities, explore)
             if timeline is None:
                 return HttpResponse(status=204)
             else:
-                # timeline['data'] = 'explore/' + tab,  # hack for now, used as
-                return JsonResponse(timeline)
+                return timeline
         except ValueError as e:
             return HttpResponseBadRequest(str(e))
 

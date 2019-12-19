@@ -19,8 +19,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 
 export default {
@@ -37,12 +35,13 @@ export default {
   },
 
   async asyncData({ store }) {
-    const {newspapers: newspaperSubscriptions} = await store.dispatch('getSubscriptions')
-    const newspapers = await store.dispatch('getNewspapers', Object.keys(newspaperSubscriptions))
+    const {newspapers: subscriptions} = await store.dispatch('getSubscriptions')
+    const newspapers = Object.keys(subscriptions).map(fullName => store.getters['entities/getNewspaper'](fullName))
+
     newspapers.sort(
       (a, b) => {
-        const aSuspended = newspaperSubscriptions[a.fullName].state === 'suspended'
-        const bSuspended = newspaperSubscriptions[b.fullName].state === 'suspended'
+        const aSuspended = subscriptions[a.fullName].state === 'suspended'
+        const bSuspended = subscriptions[b.fullName].state === 'suspended'
         if (aSuspended && !bSuspended) return -1
         if (!aSuspended && bSuspended) return 1
         const aTitle = a.title.toLowerCase()
@@ -50,9 +49,7 @@ export default {
         return aTitle < bTitle ? -1 : (aTitle > bTitle ? 1 : 0)
       }
     )
-    return {
-      newspapers
-    }
+    return { newspapers }
   }
 }
 </script>

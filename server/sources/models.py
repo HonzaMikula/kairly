@@ -17,7 +17,7 @@ from sources.parser import ArticleParser, split_article_to_perex_and_content, va
 from sources.directives import validate_directives, parse as parse_directives
 from utils.url import clean_url, fetch_url
 
-from articles.models import Backlog, Post
+from articles.models import Backlog, Post, get_newspaper_full_name
 from articles.signals import post_publish
 
 
@@ -202,7 +202,7 @@ class Automation(models.Model):
     newspaper = models.ForeignKey('articles.Newspaper', models.CASCADE)
 
     def __str__(self):
-        return self.newspaper.full_name
+        return get_newspaper_full_name(self.newspaper_id)
 
 
 class AutomationItem(models.Model):

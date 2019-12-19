@@ -19,6 +19,7 @@ from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.utils.timezone import localdate
 from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -26,11 +27,11 @@ from django.shortcuts import get_object_or_404
 from libgravatar import Gravatar
 from pytz import UnknownTimeZoneError, timezone
 
-from articles.models import Newspaper
+from articles.models import Newspaper, get_newspaper_full_name
 from credits.utils import get_user_credits
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
-from utils.json import JsonResponse
+from utils.json import JsonResponse, entities_json_response
 from utils.upload import file_from_data_uri
 from .models import User, ExploreTimeline
 
@@ -72,12 +73,12 @@ def refresh_token(request):
 
 class ProfileView(View):
     @ajax_login_required
-    def get(self, request):
+    @method_decorator(entities_json_response)
+    def get(self, request, entities):
         newspapers = []
-        for newspaper in Newspaper.objects.filter(Q(editor=request.user) | Q(co_editors=request.user)).values_list('id', 'editor__username', 'slug', 'title', named=True):
-            full_name = '{}/{}'.format(newspaper.editor__username, newspaper.slug)
+        for newspaper in Newspaper.objects.filter(Q(editor=request.user) | Q(co_editors=request.user)).values_list('id', 'title', named=True):
             newspapers.append({
-                'fullName': full_name,
+                'fullName': get_newspaper_full_name(newspaper.id),
                 'title': newspaper.title,
             })
 
@@ -92,16 +93,18 @@ class ProfileView(View):
             request.user.activity_history = history
             request.user.save()
 
-        user = request.user.to_json(owner=True)
+        # TODO don't enrigh user with custom props
+        user = request.user.to_json(entities)
         user['newspapers'] = newspapers
         user['credits'] = str(get_user_credits(request.user.id))
 
-        return JsonResponse({
+        return {
             "user": user
-        })
+        }
 
     @ajax_login_required
-    def patch(self, request):
+    @method_decorator(entities_json_response)
+    def patch(self, request, entities):
         payload = json.loads(request.body.decode('utf-8'))
         user = request.user
         fields = ['name', 'bio', 'medium', 'timezone']
@@ -125,12 +128,13 @@ class ProfileView(View):
             user.picture = picture
 
         user.save()
-        return JsonResponse(user.to_json(owner=True))
+        return user.to_json(entities)
 
 
 # TODO enable CSRF protection
 @require_POST
-def signup(request):
+@entities_json_response
+def signup(request, entities):
     payload = json.loads(request.body.decode('utf-8'))
 
     username = payload['username']
@@ -172,11 +176,13 @@ def signup(request):
         if name == 'username':
             return JsonResponse({'error': 'Username is already taken.'}, status=400)
         raise
-    return JsonResponse(user.to_json())
+
+    return user.to_json(entities)
 
 
 @require_POST
-def change_password(request):
+@entities_json_response
+def change_password(request, entities):
     payload = json.loads(request.body.decode('utf-8'))
     user = request.user
     token = payload.get('token')
@@ -212,7 +218,7 @@ def change_password(request):
     if token and not settings.RESET_PASSWORD_TOKEN_ALLOW_REUSE:
         cache.delete(f'reset_password:{token}')
 
-    return JsonResponse(user.to_json())
+    return user.to_json(entities)
 
 
 @require_POST
@@ -247,7 +253,8 @@ def reset_password(request):
     return JsonResponse({})
 
 
-def explore_tab(request, tab):
+@entities_json_response
+def explore_tab(request, entities, tab):
     explore = get_object_or_404(ExploreTimeline, slug=tab)
     ids = set()
     for cat in explore.content['authors']:
@@ -262,24 +269,32 @@ def explore_tab(request, tab):
     for cat in explore.content['authors']:
         categories.append({
             'name': cat['en'],
-            'authors': [users[username].to_json() for username in cat['authors']],
+            'authors': [users[username].to_json(entities) for username in cat['authors']],
         })
 
-    return JsonResponse({
+    return {
         'newspapers': explore.content['newspapers'],
         'categories': categories
-    })
+    }
 
 
-def explore_new_authors(request):
+@entities_json_response
+def explore_new_authors(request, entities):
+    count = int(request.GET.get('count', 14))
+    if count < 1 or count > 20:
+        return HttpResponse('Invalid count.', status=400)
+
     authors = User.objects.exclude(kind=User.FEED) \
         .annotate(post_count=Count('post')) \
         .filter(post_count__gt=1) \
-        .order_by('-date_joined')[:14]
+        .order_by('-date_joined')[:count]
 
-    return JsonResponse({
-        'authors': [u.to_json() for u in authors]
-    })
+    resp = {'authors': []}
+    for author in authors:
+        entities.add(User, author)
+        resp['authors'].append(author.username)
+
+    return resp
 
 
 class UserAutocomplete(autocomplete.Select2QuerySetView):

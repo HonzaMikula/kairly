@@ -1,7 +1,16 @@
 import axiosRetry from 'axios-retry';
 import jwtDecode from 'jwt-decode';
 
-export default function({ app, $axios, redirect }) {
+export default function({ app, $axios, store, redirect }) {
+  $axios.onResponse(({ data }) => {
+    if (data.$authors) {
+      Object.values(data.$authors).forEach(author => store.commit('entities/author', { author }))
+    }
+    if (data.$newspapers) {
+      Object.values(data.$newspapers).forEach(newspaper => store.commit('entities/newspaper', { newspaper }))
+    }
+  })
+
   $axios.onError(async (err) => {
     const code = parseInt(err.response && err.response.status)
     if (code === 401) {

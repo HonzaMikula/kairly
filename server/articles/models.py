@@ -1,8 +1,9 @@
 import hashlib
 import math
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from decimal import Decimal
+from functools import lru_cache
 
 import pytz
 import rapidjson as json
@@ -17,11 +18,12 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
 from django.utils.translation import ugettext_lazy as _
-from utils.json import datetime_isoformat_ecma262
+from utils.json import datetime_isoformat_ecma262, entities_key
 from utils.url import clean_url
 
 from .period import PeriodMixin, periodicity_to_json
 from .weight import calculate_post_weight
+from users.models import User
 
 
 def round_fair_price(price):
@@ -33,6 +35,11 @@ def round_fair_price(price):
         # round to 0.5
         return (price * 2).quantize(Decimal(0)) / 2
     return price.quantize(Decimal(0))
+
+
+@lru_cache(maxsize=256)
+def get_newspaper_full_name(newspaper_id):
+    return Newspaper.objects.get(id=newspaper_id).full_name
 
 
 class Post(models.Model):
@@ -178,17 +185,18 @@ class Post(models.Model):
             cache.set(cache_key, value, None)
         return '{} min'.format(max(1, value))
 
-    def to_json(self, short=False, anonymous=False, tzinfo=timezone.utc):
+    def to_json(self, entities, short=False):
         result = {
             'id': self.id,  # id is still used by backlog endpoints, TODO remove this
             'slug': self.slug,
             'source': self.source,
             'type': self.kind,
-            'time': datetime_isoformat_ecma262(self.published.astimezone(tzinfo)),
+            'time': datetime_isoformat_ecma262(self.published.astimezone(entities.tzinfo)),
             'price': None if self.price is None else str(self.price),
         }
-        if self.author:
-            result['author'] = self.author.to_json()
+        if self.author_id:
+            entities.add(User, self.author_id)
+            result['author'] = self.author.username
 
         if self.draft:
             result['draft'] = True
@@ -203,13 +211,15 @@ class Post(models.Model):
                 _attachments = []
                 for a in attachments:
                     if a['type'] == 'author':
-                        result['author'] = {
-                           'id': 'twitter|' + a['screen_name'],
+                        author_íd = 'twitter|' + a['screen_name']
+                        entities.add_json(User, {
+                           'id': author_íd,
                            'name': a['name'],
                            'picture': a['profile_image_url_https'],
                            'url': 'https://twitter.com/' + a['screen_name'],
                            'kind': 'external',
-                        }
+                        })
+                        result['author'] = author_íd
                     else:
                         _attachments.append(a)
                 attachments = _attachments
@@ -225,7 +235,7 @@ class Post(models.Model):
             if attachments:
                 result['content']['attachments'] = attachments
         elif self.kind == Post.NEWSPAPER:
-            if anonymous and self.protected:
+            if entities.user.is_anonymous and self.protected:
                 result['timeRead'] = self.read_time
                 result['content'] = {
                     'title': self.title,
@@ -244,10 +254,10 @@ class Post(models.Model):
         elif self.kind == Post.RECOMMENDATION:
             if self.ref_post:
                 result['type'] += '-post'
-                result['ref'] = self.ref_post.to_json(short, anonymous, tzinfo)
+                result['ref'] = self.ref_post.to_json(entities, short)
             else:
                 result['type'] += '-issue'
-                result['ref'] = self.ref_issue.to_json(tzinfo=tzinfo)
+                result['ref'] = self.ref_issue.to_json(entities)
         elif self.kind == Post.LINK:
             result['content'] = {
                 'title': self.title,
@@ -276,9 +286,10 @@ class Editorial(models.Model):
     def __str__(self):
         return self.title
 
-    def to_json(self):
+    def to_json(self, entities):
+        entities.add(User, self.author_id)
         data = {
-            'author': self.author.to_json(),
+            'author': self.author.username,
             'type': self.kind,
             'position': self.position,
         }
@@ -288,7 +299,7 @@ class Editorial(models.Model):
             data['content'] = self.content
         elif self.kind == 'tweets':
             tweets = EditorialTweet.objects.filter(editorial=self).select_related('post').order_by('ordering')
-            data['tweets'] = [t.post.to_json() for t in tweets]
+            data['tweets'] = [t.post.to_json(entities) for t in tweets]
         else:
             raise ValueError
         return data
@@ -300,6 +311,7 @@ class EditorialTweet(models.Model):
     ordering = models.IntegerField(null=True)
 
 
+@entities_key("newspapers", 1)
 class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
     slug = models.SlugField(_('Slug'))
@@ -322,6 +334,11 @@ class Newspaper(models.Model, PeriodMixin):
 
     def __str__(self):
         return self.title
+
+    @property
+    def public_id(self):
+        # use lru cached method to avoid need to load editor
+        return get_newspaper_full_name(self.id)
 
     @property
     def issues(self):
@@ -361,22 +378,27 @@ class Newspaper(models.Model, PeriodMixin):
     def full_name(self):
         return "{}/{}".format(self.editor.username, self.slug)
 
-    def to_json(self, tzinfo, co_editors=False):
+    def to_json(self, entities):
+        entities.add(User, self.editor)
         data = {
             "name": self.slug,
             "fullName": self.full_name,
             "title": self.title,
             "picture": settings.MEDIA_SITE + self.image.url if self.image else None,
             "description": self.description,
-            "editor": self.editor.to_json(),
+            "editor": self.editor.username,
             "periodicity": periodicity_to_json(self),
-            "nextRelease": datetime_isoformat_ecma262(self.next_release.astimezone(tzinfo)),
+            "nextRelease": datetime_isoformat_ecma262(self.next_release.astimezone(entities.tzinfo)),
             "issues": self.issues,
             "likes": self.likes,
             "price": str(self.price),
         }
-        if co_editors:
-            data['coEditors'] = [ce.to_json() for ce in self.co_editors.all().order_by('username')]
+        if entities.user.id == self.editor_id:
+            data['coEditors'] = []
+            for ce in self.co_editors.all().order_by('username'):
+                entities.add(User, ce)
+                data['coEditors'].append(ce.username)
+
         if self.newsletter_subscription_url:
             data['newsletterSubscriptionUrl'] = self.newsletter_subscription_url
         return data
@@ -441,21 +463,21 @@ class Issue(models.Model):
     def __str__(self):
         return "{} #{}".format(self.newspaper.title, self.number)
 
-    def to_json(self, posts=True, newspaper=None, anonymous=False, tzinfo=timezone.utc):
-        if newspaper is None:
-            newspaper = self.newspaper
+    def to_json(self, entities, posts=True):
+        entities.add(Newspaper, self.newspaper_id)
+        newspaper_full_name = get_newspaper_full_name(self.newspaper_id)
         result = {
             "number": self.number,
             "type": 'newspaper',
-            "newspaper": newspaper.to_json(tzinfo),  # TODO return newspapers separately, as done alredy for subscriptions
-            "time": datetime_isoformat_ecma262(self.published.astimezone(tzinfo))
+            "newspaper": newspaper_full_name,
+            "time": datetime_isoformat_ecma262(self.published.astimezone(entities.tzinfo))
         }
-        result['id'] = '{}/{}'.format(result['newspaper']['fullName'], self.number)
+        result['id'] = '{}/{}'.format(newspaper_full_name, self.number)
         if posts:
             query = IssuePost.objects.filter(issue=self).select_related('post', 'editorial').order_by('ordering', '-post__published')
             result["posts"] = [{
-                'post': ip.post.to_json(short=True, anonymous=anonymous, tzinfo=tzinfo),
-                'editorial': ip.editorial.to_json() if ip.editorial else None
+                'post': ip.post.to_json(entities, short=True),
+                'editorial': ip.editorial.to_json(entities) if ip.editorial else None
             } for ip in query]
         return result
 
@@ -480,9 +502,9 @@ class Subscription(models.Model):
     donation = models.DecimalField(_('Donation'), max_digits=11, decimal_places=2, default=Decimal(0))
 
     def __str__(self):
-        return "Subscription to {}}".format(self.newspaper.full_name)
+        return "Subscription to {}}".format(get_newspaper_full_name(self.newspaper_id))
 
-    def to_json(self):
+    def to_json(self, entities):
         if self.suspended:
             state = 'suspended'
         elif self.renewal:
@@ -490,14 +512,12 @@ class Subscription(models.Model):
         else:
             state = 'canceled'
 
-        data = {}
-        data[self.newspaper.full_name] = {
+        return {
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
             'state': state,
             'donation': str(self.donation) if self.donation != 0 else None,
         }
-        return data
 
 
 class SubscriptionToAuthor(models.Model, PeriodMixin):
@@ -517,7 +537,7 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         title = self.author.username
         return "SubscriptionToAuthor to {}".format(title)
 
-    def to_json(self):
+    def to_json(self, entities):
         if self.suspended:
             state = 'suspended'
         elif self.renewal:
@@ -525,17 +545,16 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
         else:
             state = 'canceled'
 
-        author_json = self.author.to_json()
-        data = {}
-        data[author_json['id']] = {
-            'author': author_json,  # is this needed?
+        entities.add(User, self.author)
+
+        return {
+            'author': self.author.username,
             'periodicity': periodicity_to_json(self),
             'from': datetime_isoformat_ecma262(self.valid_from),
             'to': datetime_isoformat_ecma262(self.valid_to),
             'state': state,
             'donation': str(self.donation) if self.donation != 0 else None,
         }
-        return data
 
 
 @receiver(post_save, sender=Post)

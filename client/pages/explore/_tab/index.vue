@@ -66,6 +66,7 @@
 
 <script>
 import TABS from '@/exploreTabs'
+import { mapGetters } from 'vuex'
 
 import IssueWrapper from '@/components/IssueWrapper'
 import JumpMenu from '@/components/widgets/JumpMenu'
@@ -96,6 +97,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      denormalize: 'entities/denormalize',
+    }),
+
     tab() {
       return TABS.find(t => t.slug === this.$route.params.tab)
     },
@@ -123,7 +128,8 @@ export default {
           slot = { time: issue.time, issues: []}
           timeSlots.push(slot)
         }
-        slot.issues.push(issue)
+
+        slot.issues.push(this.denormalize(issue, 'Issue'))
       })
 
       return timeSlots

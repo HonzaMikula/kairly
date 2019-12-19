@@ -64,12 +64,11 @@ export default {
       this.loadingPosts = true
 
       const params = {
+        authorId: this.user.id,
         cursor: this.cursor,
         skipRecommendations: 1
       }
-      const { posts, cursor } = await this.$axios.$get(
-        `/authors/${this.user.id}/posts`, {params})
-
+      const { posts, cursor } = await this.$store.dispatch('getAuthorPosts', params)
       posts.forEach(post => this.posts.push(post))
       this.cursor = cursor
       this.loadingPosts = false

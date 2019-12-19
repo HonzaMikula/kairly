@@ -212,12 +212,8 @@ export default {
     }
 
     try {
-      const { author, newspapers } = await store.dispatch("getAuthor", authorId);
-
-      const data = {
-        author,
-        newspapers
-      };
+      // data is { author, newspapers } pbject
+      const data = await store.dispatch("getAuthor", authorId);
 
       if (process.server) {
         const { posts, cursor } = await store.dispatch('loadAuthorPosts', { authorId, cursor: 0})

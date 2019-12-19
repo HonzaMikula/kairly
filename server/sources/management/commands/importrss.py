@@ -17,7 +17,6 @@ from articles.models import SubscriptionToAuthor
 from users.models import User
 
 
-
 # additional timezones which are not recognized byt dateutil.parser by default
 TZ_INFOS = {
     'PST': dateutil.tz.gettz('US/Pacific'),

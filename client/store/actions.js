@@ -2,50 +2,97 @@ export async function getSubscriptions({ commit, state }) {
   if (state.subscriptions) {
     return state.subscriptions
   }
-  const { newspapers, subscriptions } = await this.$axios.$get('/subscriptions')
-  newspapers.forEach(newspaper => commit('newspaper', { newspaper }))
+  const { subscriptions } = await this.$axios.$get('/subscriptions')
   commit('subscriptions', subscriptions)
   return subscriptions
 }
 
-export async function getTransactions({ commit, state }) {
-  const { credits, transactions, newspapers } = await this.$axios.$get(`/transactions`)
-
-  transactions.forEach(t => {
-    if (t.source.newspaper) t.source.newspaper = newspapers[t.source.newspaper]
-    if (t.target.newspaper) t.target.newspaper = newspapers[t.target.newspaper]
-  })
-
+export async function getTransactions({ commit, getters }) {
+  const { credits, transactions } = await this.$axios.$get(`/transactions`)
   commit('updateCredits', credits)
-  Object.keys(newspapers).forEach(newspaper => commit('newspaper', { newspaper }))
-
-  return transactions
+  return {
+    credits,
+    transactions: getters['entities/denormalize'](transactions, 'Transaction')
+  }
 }
 
+export async function getPlatformTransactions({ getters }) {
+  const { credits, transactions } = await this.$axios.$get(`/platform-transactions`)
+  return {
+    credits,
+    transactions: getters['entities/denormalize'](transactions, 'Transaction')
+  }
+}
 
-
-export async function getNewspaperDetail({ commit }, { newspaperId, issue }) {
+export async function getNewspaperDetail({ commit, getters }, { newspaperId, issue }) {
   const data = await this.$axios.$get(`/newspapers/${newspaperId}`, { params: {issue} })
-  commit('newspaper', { newspaper: data.newspaper })
   if (data.recommended) {
     data.recommended.forEach(id => commit('recommendedIssue', {id, value: true}))
   }
+
+  data.newspaper = getters['entities/denormalize'](data.newspaper, 'Newspaper')
+  data.issue = getters['entities/denormalize'](data.issue, 'Issue')
   return data
 }
 
 export async function getNewspapers(store, newspaperIds) {
-  const missing = newspaperIds.filter(id => !(id in store.state.newspapers))
+  const missing = newspaperIds.filter(id => !(id in store.state.entities.newspapers))
   if (missing.length) {
     const promises = missing.map(id => getNewspaperDetail.call(this, store, { newspaperId: id }))
     await Promise.all(promises)
   }
-  return newspaperIds.map(id => store.state.newspapers[id])
+  return newspaperIds.map(id => store.state.entities.newspapers[id])
 }
 
-export async function getAuthor({ commit, state, dispatch }, authorId) {
-  const data = await this.$axios.$get(`/authors/${authorId}`)
-  data.newspapers.forEach(n => dispatch('newspaperUpdated', n))
-  return data
+export async function getAuthor({ getters }, authorId) {
+  const { author, newspapers } = await this.$axios.$get(`/authors/${authorId}`)
+  return {
+    author: getters['entities/denormalize'](author, 'Author'),
+    newspapers: getters['entities/denormalize'](newspapers, 'Newspaper'),
+  }
+}
+
+export async function getAuthorPosts({ getters }, { authorId, cursor, skipRecommendations }) {
+  const params = { cursor, skipRecommendations }
+  const resp = await this.$axios.$get(`/authors/${authorId}/posts`, { params })
+  return {
+    posts: getters['entities/denormalize'](resp.posts, 'Post'),
+    cursor: resp.cursor
+  }
+}
+
+export async function getPost({ getters }, postId) {
+  const { post, editorials, recommended } = await this.$axios.$get(`/posts/${postId}`)
+  return {
+    post: getters['entities/denormalize'](post, 'Post'),
+    editorials: getters['entities/denormalize'](editorials, 'EditorialRef'),
+    recommended,
+  }
+}
+
+export async function getDrafts({ getters }) {
+  const { posts } = await this.$axios.$get(`/drafts`)
+  return getters['entities/denormalize'](posts, 'Post')
+}
+
+export async function getPostDraft({ getters }, postId) {
+  const { post } = await this.$axios.$get(`/drafts/${postId}`)
+  return getters['entities/denormalize'](post, 'Post')
+}
+
+export async function getRecentIssues({ getters }, count) {
+  const { issues } = await this.$axios.$get(`/recent/issues?count=${count}`)
+  return getters['entities/denormalize'](issues, 'Issue')
+}
+
+export async function getRecentPosts({ getters }) {
+  const { posts } = await this.$axios.$get('/recent/posts')
+  return getters['entities/denormalize'](posts, 'Post')
+}
+
+export async function getNewAuthors({ getters }, count) {
+  const { authors } = await this.$axios.$get(`/explore/new-authors?count=${count}`)
+  return getters['entities/denormalize'](authors, 'Author')
 }
 
 export async function subscribeNewspaper({ commit }, { fullName, donation, allowSuspended=false }) {
@@ -73,7 +120,7 @@ export async function subscribeNewspaper({ commit }, { fullName, donation, allow
   return subscription[fullName]
 }
 
-export async function loadAuthorPosts({ commit }, { authorId, cursor: requestedCursor }) {
+export async function loadAuthorPosts({ getters }, { authorId, cursor: requestedCursor }) {
   const { posts, cursor } = await this.$axios.$get(
     `/authors/${authorId}/posts`,
     { params: { cursor: requestedCursor } }
@@ -83,6 +130,8 @@ export async function loadAuthorPosts({ commit }, { authorId, cursor: requestedC
   const mappedPosts = []
 
   posts.forEach(post => {
+    post = getters['entities/denormalize'](post, 'Post')
+
     if (post.type == 'recommendation-post' || post.type == 'recommendation-issue') {
       if (prevRecommendation === null) {
         prevRecommendation = {
@@ -104,6 +153,7 @@ export async function loadAuthorPosts({ commit }, { authorId, cursor: requestedC
       mappedPosts.push(post)
     }
   });
+
   return { posts: mappedPosts, cursor }
 }
 
@@ -168,9 +218,9 @@ export async function unsubscribeAuthor({ commit }, { author }) {
   return subscription ? subscription[author.id] : null
 }
 
-export async function startNewspaper({ commit }, { authorId, newspaper: postData }) {
-  const { newspaper } = await this.$axios.$post(`/authors/${authorId}/start-newspaper`, postData)
-  commit('newspaper', { newspaper })
+export async function startNewspaper({ commit, getters }, { authorId, newspaper: postData }) {
+  const data = await this.$axios.$post(`/authors/${authorId}/start-newspaper`, postData)
+  const newspaper = getters['entities/denormalize'](data.newspaper, 'Newspaper')
   commit('appendOwnedNewspaper', {
     newspaper,
   })
@@ -185,7 +235,7 @@ export async function startNewspaper({ commit }, { authorId, newspaper: postData
 
 export async function updateNewspaper({ commit }, { fullName, fields }) {
   const { newspaper } = await this.$axios.$patch(`/newspapers/${fullName}`, fields)
-  commit('newspaper', { newspaper })
+  commit('entities/newspaper', { newspaper })
 
   this.$ga.event({
     eventCategory: 'Update newspaper',
@@ -205,13 +255,9 @@ export async function deleteNewspaper({ commit }, newspaper) {
   })
 }
 
-export const newspaperUpdated = ({ commit }, newspaper) => {
-  commit('newspaper', { newspaper })
-}
-
-
 export const afterLogout = ({ commit }) => {
   commit('backlog/resetState')
   commit('timeline/resetState')
+  commit('entities/resetState')
   commit('resetState')
 }

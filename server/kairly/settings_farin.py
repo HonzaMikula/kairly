@@ -34,6 +34,12 @@ CACHES = {
     }
 }
 
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#     }
+# }
+
 TWITTER_KEYS = [
     # @farin_cz / Kairly https://developer.twitter.com/en/apps/15312678
     {

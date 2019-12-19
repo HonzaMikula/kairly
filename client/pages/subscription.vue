@@ -34,9 +34,7 @@
           <button @click="importTwitter()">{{ $t('Connect to your Twitter') }}</button>
         </section>
 
-        <portal to="modal" v-if="isTwitterApologyModalOpen">
-          <TwitterApologyModal :closeModal="closeTwitterApology"></TwitterApologyModal>
-        </portal>
+        <TwitterApologyModal :active.sync="isTwitterApologyModalOpen" />
 
         <section>
           <h2><nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link></h2>
@@ -109,19 +107,14 @@ export default {
         eventAction: 'Import Twitter',
         eventLabel: 'Subscription page'
       })
-    },
-
-    closeTwitterApology() {
-      this.isTwitterApologyModalOpen = false
     }
   },
 
-  async asyncData({ app }) {
-    const [issues, newAuthors] = await Promise.all([
-      app.$axios.$get('/recent/issues?count=5'),
-      app.$axios.$get('/explore/new-authors')
+  async asyncData({ app, store }) {
+    const [issues, authors] = await Promise.all([
+      store.dispatch('getRecentIssues', 5),
+      store.dispatch('getNewAuthors', 5),
     ])
-    const authors = newAuthors.authors.slice(0, 5)
     return { issues, authors }
   }
 }

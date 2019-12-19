@@ -220,12 +220,14 @@ export default {
       }
 
       try {
-        const { author: editor } = await this.$store.dispatch("getAuthor", slug)
+        let { author: editor } = await this.$store.dispatch("getAuthor", slug)
+
         if (editor.id != this.editor.id && !this.coEditors.find(item => item.id === editor.id)) {
           this.coEditors.push(editor)
         }
         this.coEditorSlug = ''
       } catch (e) {
+        console.log(e)
         return
       }
     },

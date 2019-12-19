@@ -13,6 +13,8 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.deconstruct import deconstructible
 
+from utils.json import entities_key
+
 
 @deconstructible
 class KairlyUsernameValidator(validators.RegexValidator):
@@ -51,6 +53,7 @@ class KairlyUsernameValidator(validators.RegexValidator):
         return super().__call__(value)
 
 
+@entities_key("authors", 2)
 class User(AbstractBaseUser, PermissionsMixin):
     username_validator = KairlyUsernameValidator()
 
@@ -118,6 +121,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     @property
+    def public_id(self):
+        return self.username
+
+    @property
     def picture_url(self):
         if not self.picture:
             return ''
@@ -143,7 +150,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.name
 
-    def to_json(self, owner=False):
+    def to_json(self, entities):
         result = {
             'id': self.username,
             'name': self.name or self.username,
@@ -154,7 +161,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             "price": str(self.price),
         }
 
-        if owner:
+        if entities.user == self:
             result.update({
                 'timezone': self.timezone,
                 'integrations': {

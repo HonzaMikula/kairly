@@ -109,10 +109,9 @@ export default {
     }
   },
 
-  async asyncData({ app, store, params }) {
-    const { posts } = await app.$axios.$get(`/drafts`)
+  async asyncData({ store }) {
     return {
-      posts
+      posts: await store.dispatch('getDrafts')
     }
   }
 }

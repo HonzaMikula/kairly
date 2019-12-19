@@ -91,7 +91,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 
 import HomePage from '@/components/HomePage'
@@ -129,6 +129,10 @@ export default {
       expandedIssues: state => state.timeline.expandedIssues
     }),
 
+    ...mapGetters({
+      denormalize: 'entities/denormalize',
+    }),
+
     loading() {
       return !this.showWelcome && this.timeline === null
     },
@@ -145,7 +149,8 @@ export default {
           slot = { time: issue.time, issues: []}
           timeSlots.push(slot)
         }
-        slot.issues.push(issue)
+
+        slot.issues.push(this.denormalize(issue, 'Issue'))
       })
 
       return timeSlots

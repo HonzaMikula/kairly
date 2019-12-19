@@ -51,7 +51,7 @@
             <h3>{{ $t('Password') }}</h3>
             <p>
               {{ $t('Do you want to have different password?') }}
-              <a href="" @click.prevent="isChangePasswordOpen=true">{{ $t('Change password') }}</a>.</p>
+              <a href="" @click.prevent="isChangePasswordOpen = true">{{ $t('Change password') }}</a>.</p>
           </div>
 
           <h2>{{ $t('Integrations') }}</h2>
@@ -160,11 +160,7 @@ export default {
     ...mapMutations({
       showError: 'messages/error',
       showSuccess: 'messages/success'
-    }),
-
-    closeChangePassword() {
-      this.isChangePasswordOpen = false
-    }
+    })
   },
 
   beforeMount() {

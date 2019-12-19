@@ -8,46 +8,46 @@
         <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
       </div>
 
-      <template v-if="authors['suspended'].length">
+      <template v-if="sections['suspended'].length">
         <h2>{{ $t('Suspended') }}</h2>
         <AuthorWidget
-          v-for="author in authors['suspended']"
+          v-for="author in sections['suspended']"
           :key="author.slug"
           :author="author"
         />
       </template>
 
-      <template v-if="authors['6x_per_day'].length">
+      <template v-if="sections['6x_per_day'].length">
         <h2>{{ $t('Every 3 hours') }}</h2>
         <AuthorWidget
-          v-for="author in authors['6x_per_day']"
+          v-for="author in sections['6x_per_day']"
           :key="author.slug"
           :author="author"
         />
       </template>
 
-      <template v-if="authors['3x_per_day'].length">
+      <template v-if="sections['3x_per_day'].length">
         <h2>{{ $t('3x per day') }}</h2>
         <AuthorWidget
-          v-for="author in authors['3x_per_day']"
+          v-for="author in sections['3x_per_day']"
           :key="author.slug"
           :author="author"
         />
       </template>
 
-      <template v-if="authors['daily'].length">
+      <template v-if="sections['daily'].length">
         <h2>{{ $t('Daily') }}</h2>
         <AuthorWidget
-          v-for="author in authors['daily']"
+          v-for="author in sections['daily']"
           :key="author.slug"
           :author="author"
         />
       </template>
 
-      <template v-if="authors['weekly'].length">
+      <template v-if="sections['weekly'].length">
         <h2>{{ $t('Weekly') }}</h2>
         <AuthorWidget
-          v-for="author in authors['weekly']"
+          v-for="author in sections['weekly']"
           :key="author.slug"
           :author="author"
         />
@@ -62,8 +62,8 @@ import { mapState, mapGetters } from 'vuex'
 
 import AuthorWidget from '@/components/widgets/AuthorWidget'
 
-function sortByAuthorName(a, b) {
-  const aName = a.author.name.toLowerCase(), bName = b.author.name.toLowerCase()
+function sortAuthors(a, b) {
+  const aName = a.name.toLowerCase(), bName = b.name.toLowerCase()
   return aName < bName ? -1 : (aName > bName ? 1 : 0)
 }
 
@@ -80,13 +80,22 @@ export default {
     AuthorWidget
   },
 
-  computed: mapState({
-    subscriptionExists: state => {
-      return Object.keys(state.subscriptions.authors).length > 0
+  computed: {
+    subscriptions() {
+      const { authors } = this.$store.state.subscriptions
+      return Object.values(authors).map(s => {
+        return {
+          ...s,
+          author: this.$store.getters['entities/denormalize'](s.author, 'Author'),
+        }
+      })
     },
 
-    authors: state => {
-      const subscriptions = state.subscriptions.authors
+    subscriptionExists() {
+      return this.subscriptions.length > 0
+    },
+
+    sections() {
       const sections = {
         'suspended': [],
         '6x_per_day': [],
@@ -94,8 +103,7 @@ export default {
         'daily': [],
         'weekly': []
       }
-      Object.keys(subscriptions).forEach(id => {
-        const subscription = subscriptions[id]
+      this.subscriptions.forEach(subscription => {
         if (subscription.state === 'suspended') {
           sections.suspended.push(subscription)
         } else {
@@ -104,15 +112,15 @@ export default {
       })
 
       Object.keys(sections).forEach(key => {
-          sections[key].sort(sortByAuthorName)
-          sections[key] = sections[key].map(s => s.author)
+        sections[key] = sections[key].map(s => s.author)
+        sections[key].sort(sortAuthors)
       })
 
       return sections
     }
-  }),
+  },
 
-  async fetch({ store, redirect }) {
+  async fetch({ store }) {
     await store.dispatch('getSubscriptions')
   }
 }

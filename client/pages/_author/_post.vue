@@ -75,9 +75,9 @@
           </div>
         </div>
 
-        <div 
+        <div
           class="post-detail--author"
-          itemprop="author" 
+          itemprop="author"
           itemscope itemtype="https://schema.org/Person">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
@@ -113,7 +113,7 @@
               <h3>{{ editorial.title }}</h3>
               <aside>
                 {{ $t('Originally published in') }}
-                <nuxt-link 
+                <nuxt-link
                   :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
                   :id="`post-editorial-newspaper-${index}`"
                 >
@@ -137,7 +137,7 @@
             >
               <aside>
                 {{ $t('Originally published in') }}
-                <nuxt-link 
+                <nuxt-link
                   :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
                   :id="`post-editorial-newspaper-${index}`"
                 >
@@ -252,18 +252,20 @@ export default {
       loggedIn: state => state.auth.loggedIn
     }),
 
-    ...mapGetters(['userNewspapers']),
+    ...mapGetters({
+      userNewspapers: 'userNewspapers',
+    }),
   },
 
-  async asyncData({ app, store, params, error }) {
+  async asyncData({ store, params, error }) {
     const { author, post: postSlug } = params
     try {
       if (store.state.auth.loggedIn) {
         await store.dispatch('getSubscriptions')
       }
 
-      // returns { post, editorials, recommended }
-      return await app.$axios.$get(`/posts/${author}/${postSlug}`)
+      // { post, eitorials, recommended }
+      return await store.dispatch('getPost', `${author}/${postSlug}`)
     } catch (err) {
       error(errorToParams(err))
     }

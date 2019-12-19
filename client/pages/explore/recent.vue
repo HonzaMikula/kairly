@@ -49,10 +49,10 @@ export default {
     }
   },
 
-  async asyncData({ app }) {
+  async asyncData({ store }) {
     const [issues, posts] = await Promise.all([
-      app.$axios.$get('/recent/issues?count=3'),
-      app.$axios.$get('/recent/posts')
+      store.dispatch('getRecentIssues', 3),
+      store.dispatch('getRecentPosts')
     ])
     return { issues, posts }
   }

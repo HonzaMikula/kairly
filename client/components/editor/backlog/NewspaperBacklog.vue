@@ -69,8 +69,10 @@ export default {
 
   computed: {
     backlog() {
-      return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
+      const backlog = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
+      return this.$store.getters['entities/denormalize'](backlog, 'NewspaperBacklog')
     },
+
     currentMonth() {
       return this.backlog ? this.backlog.currentMonthStats : []
     }

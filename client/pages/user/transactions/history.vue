@@ -86,11 +86,8 @@ export default {
   },
 
   async asyncData({ app, store, params }) {
-    const transactions = await store.dispatch('getTransactions')
-
-    return {
-      transactions
-    }
+    const { transactions } = await store.dispatch('getTransactions')
+    return { transactions }
   }
 }
 </script>
