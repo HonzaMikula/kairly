@@ -12,7 +12,7 @@
     </h2>
 
     <issue-widget--author>
-      <img :src="issue.newspaper.editor.picture" :alt="issue.newspaper.editor.name"/>
+      <AuthorPicture :author="issue.newspaper.editor" />
       <nuxt-link :to="{name: 'author', params: {author: issue.newspaper.editor.id}}">{{ issue.newspaper.editor.name }}</nuxt-link>
     </issue-widget--author>
 
@@ -36,6 +36,7 @@
 <script>
 import { mapState } from 'vuex'
 
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
 export default {
@@ -46,6 +47,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     NewspaperSubscriptionButton
   },
 

@@ -29,7 +29,7 @@
         <td v-else-if="t.target.author" class="author">
           <!-- Author subscription -->
           <nuxt-link :to="{name: 'author', params: {author: t.target.author.id}}">
-            <img :src="t.target.author.picture" :alt="t.target.author.name" />
+            <AuthorPicture :author="t.target.author" />
             {{ t.target.author.name }}
             <template v-if="t.kind === 'DO'"> – donation</template>
           </nuxt-link>
@@ -57,6 +57,7 @@ import moment from 'moment'
 
 import { mapState, mapGetters } from 'vuex'
 
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 export default {
@@ -69,6 +70,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     MoneyFormat
   },
 

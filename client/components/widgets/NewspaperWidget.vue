@@ -25,11 +25,7 @@
     </p>
 
     <div class="newspaper-widget--author">
-      <img
-        v-if="newspaper.editor.picture"
-        :src="newspaper.editor.picture"
-        :alt="newspaper.editor.name"
-      />
+      <AuthorPicture :author="newspaper.editor" />
       <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
     </div>
 
@@ -46,6 +42,7 @@
 <script>
 import { mapState } from 'vuex'
 
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
@@ -57,6 +54,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     NewspaperSubscriptionButton
   },
 

@@ -6,11 +6,7 @@
           :id="`issue-author-${$_uid}`"
           :to="{name: 'author', params: {author: issue.author.id}}"
         >
-          <img
-            v-if="issue.author.picture"
-            :src="issue.author.picture"
-            :alt="issue.author.name"
-          />
+          <AuthorPicture :author="issue.author" />
           {{ issue.author.name }}
         </nuxt-link>
       </h1>
@@ -38,8 +34,9 @@
 </template>
 
 <script>
-import PostIssue from '@/components/posts/PostIssue'
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
+import PostIssue from '@/components/posts/PostIssue'
 
 export default {
   name: 'IssueAuthor',
@@ -48,6 +45,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     AuthorPopup,
     PostIssue,
   },

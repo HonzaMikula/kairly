@@ -10,10 +10,7 @@
       <main itemscope itemtype="https://schema.org/NewsArticle">
         <header class="post-detail--header">
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
-            <img
-              :src="post.author.picture"
-              :alt="post.author.name"
-            />
+            <AuthorPicture :author="post.author" />
             {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
           </nuxt-link>
 
@@ -81,7 +78,7 @@
           itemscope itemtype="https://schema.org/Person">
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
-              <img itemprop="image" :src="post.author.picture" :alt="post.author.name"/>
+              <AuthorPicture itemprop="image" :author="post.author" />
             </nuxt-link>
           </picture>
 
@@ -125,7 +122,7 @@
 
               <footer>
                 <nuxt-link :to="{name: 'author', params: {author: editorial.author.id}}" rel="author">
-                  <img :src="editorial.author.picture" :alt="editorial.author.name"/>
+                  <AuthorPicture :author="editorial.author" />
                   {{ editorial.author.name }}
                 </nuxt-link>
               </footer>
@@ -167,13 +164,14 @@ import { errorToParams } from '@/utils/errors'
 import { mapGetters, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
-import ConsiderPost from '@/components/widgets/ConsiderPost'
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
-import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
-import KairlyPromo from '@/components/KairlyPromo'
+import ConsiderPost from '@/components/widgets/ConsiderPost'
 import FooterLinks from '@/components/microsite/FooterLinks'
-import PostTweet from '@/components/posts/PostTweet'
+import KairlyPromo from '@/components/KairlyPromo'
 import NewspaperPopup from '@/components/widgets/NewspaperPopup'
+import PostTweet from '@/components/posts/PostTweet'
+import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
 
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
@@ -220,13 +218,14 @@ export default {
 
   components: {
     AppLayout,
-    ConsiderPost,
+    AuthorPicture,
     AuthorSubscriptionButton,
-    KairlyPromo,
+    ConsiderPost,
     FooterLinks,
-    RecommendButtonPost,
-    PostTweet,
     NewspaperPopup,
+    KairlyPromo,
+    PostTweet,
+    RecommendButtonPost,
   },
 
   data() {

@@ -7,11 +7,7 @@
       <slot name="author">
         <picture>
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-            <img
-              v-if="post.author.picture"
-              :src="post.author.picture"
-              :alt="post.author.name"
-            />
+            <AuthorPicture :author="post.author" />
           </nuxt-link>
         </picture>
 
@@ -64,6 +60,7 @@
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapGetters } from 'vuex'
 
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 
@@ -72,6 +69,7 @@ export default {
   props: ["post", "isSubscribed"],
 
   components: {
+    AuthorPicture,
     AuthorPopup,
     ConsiderPost,
   },

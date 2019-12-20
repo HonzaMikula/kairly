@@ -9,16 +9,7 @@
     >
       <author-detail--header>
         <picture>
-          <img
-            v-if="author.picture"
-            itemprop="image"
-            :src="author.picture"
-            :alt="author.name"
-          >
-          <img v-else
-            src="~assets/user.png"
-            :alt="author.name"
-          >
+           <AuthorPicture itemprop="image" size="big" :author="author" />
         </picture>
 
         <section>
@@ -79,9 +70,10 @@ import { mapMutations, mapState } from "vuex"
 import { errorToParams } from "@/utils/errors"
 
 import AppLayout from "@/components/layout/AppLayout"
+import AuthorPicture from '@/components/widgets/AuthorPicture'
+import AuthorSubscriptionButton from "@/components/widgets/AuthorSubscriptionButton"
 import NewspaperWidget from "@/components/widgets/NewspaperWidget"
 import PostWrapper from "@/components/PostWrapper"
-import AuthorSubscriptionButton from "@/components/widgets/AuthorSubscriptionButton"
 
 export default {
   name: "AuthorDetail",
@@ -126,9 +118,10 @@ export default {
 
   components: {
     AppLayout,
+    AuthorPicture,
+    AuthorSubscriptionButton,
     NewspaperWidget,
     PostWrapper,
-    AuthorSubscriptionButton,
   },
 
   data() {

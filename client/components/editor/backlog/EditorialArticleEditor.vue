@@ -4,10 +4,7 @@
       <header>
         <picture>
           <nuxt-link :to="{name: 'author', params: {author: editor.id}}">
-            <img
-              :src="editor.picture"
-              :alt="editor.name"
-            />
+            <AuthorPicture :author="editor" />
           </nuxt-link>
         </picture>
         <h3>
@@ -39,12 +36,18 @@
 </template>
 
 <script>
+import AuthorPicture from '@/components/widgets/AuthorPicture'
+
 export default {
   name: 'EditorialArticleEditor',
 
   props: {
     editorial: Object,
     newspaper: Object,
+  },
+
+  components: {
+    AuthorPicture
   },
 
   data() {

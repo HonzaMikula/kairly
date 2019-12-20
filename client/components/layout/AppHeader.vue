@@ -160,8 +160,7 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
-        <img v-if="user.picture" :src="user.picture" :alt="user.name" />
-        <img v-else src="~assets/user.png" :alt="user.name"/>
+        <AuthorPicture :author="user" />
         <button-icon
           @click="isDropDownMenuOpen = true"
           :class="{'is-active': isDropDownMenuOpen}"
@@ -210,6 +209,7 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import store from '@/store'
 
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 export default {
@@ -224,6 +224,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     MoneyFormat
   },
 

@@ -12,6 +12,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.deconstruct import deconstructible
+from sorl.thumbnail import ImageField, get_thumbnail
 
 from utils.json import entities_key
 
@@ -96,7 +97,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     kind = models.CharField(max_length=60, choices=KIND_CHOICES, default=PERSONAL)
 
     medium = models.CharField(_("Medium"), max_length=160, blank=True)
-    picture = models.ImageField(upload_to='users', null=True, blank=True)
+    picture = ImageField(upload_to='users', null=True, blank=True)
     bio = models.TextField(_("Bio"), blank=True)
     timezone = models.CharField(_("Timezone"), max_length=160, default="GMT")
 
@@ -124,14 +125,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     def public_id(self):
         return self.username
 
-    @property
-    def picture_url(self):
+    def get_picture_url(self, size):
         if not self.picture:
             return ''
+
         value = str(self.picture)
         if value.startswith('http://') or value.startswith('https://'):
             return value
-        return settings.MEDIA_SITE + self.picture.url
+
+        im = get_thumbnail(self.picture, size)
+        if im:
+            return settings.MEDIA_SITE + im.url
+        else:
+            return settings.MEDIA_SITE + self.picture.url
 
     @property
     def tzinfo(self):
@@ -154,12 +160,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         result = {
             'id': self.username,
             'name': self.name or self.username,
-            'picture': self.picture_url,
             'kind': self.kind,
             'medium': self.medium,
             'bio': self.bio,
             "price": str(self.price),
         }
+
+        if self.picture:
+            result['pictures'] = {
+                'small': self.get_picture_url('26x26'),
+                'big': self.get_picture_url('104x104'),
+            }
+        else:
+            result['pictures'] = None
 
         if entities.user == self:
             result.update({

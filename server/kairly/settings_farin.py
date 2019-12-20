@@ -34,6 +34,8 @@ CACHES = {
     }
 }
 
+THUMBNAIL_REDIS_DB = 6
+
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',

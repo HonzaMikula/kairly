@@ -8,6 +8,10 @@ from django.core.files.temp import NamedTemporaryFile
 
 
 def forwards_func(apps, schema_editor):
+    pass
+    """
+    Migtations is no longer valid
+
     User = apps.get_model("users", "User")
     for user in User.objects.filter(picture__isnull=True):
         if not user.picture_url:
@@ -31,6 +35,7 @@ def forwards_func(apps, schema_editor):
             fname = "{}.{}".format(user.username, img_suffix)
             user.picture.save(fname, File(img_temp), save=True)
             user.save()
+    """
 
 
 def reverse_func(apps, schema_editor):

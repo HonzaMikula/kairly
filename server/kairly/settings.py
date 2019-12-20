@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'corsheaders',
+    'sorl.thumbnail',
     'articles',
     'credits',
     'sources',
@@ -194,3 +195,6 @@ ANYMAIL = {
 }
 
 RESET_PASSWORD_TOKEN_ALLOW_REUSE = False
+
+THUMBNAIL_PRESERVE_FORMAT = True
+THUMBNAIL_UPSCALE = False

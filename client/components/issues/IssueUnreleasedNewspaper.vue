@@ -21,11 +21,7 @@
             :id="`issue-newspaper-author-${$_uid}`"
             :to="{name: 'author', params: {author: newspaper.editor.id}}"
           >
-            <img
-              v-if="issue.newspaper.editor.picture"
-              :src="newspaper.editor.picture"
-              :alt="newspaper.editor.name"
-            />
+            <AuthorPicture :author="newspaper.editor" />
             {{ newspaper.editor.name }}
           </nuxt-link>
         </timeline-newspaper--editor>
@@ -47,6 +43,7 @@
 </template>
 
 <script>
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 import NewspaperPopup from '@/components/widgets/NewspaperPopup'
 
@@ -55,6 +52,7 @@ export default {
   props: ['issue', 'hideDate'],
 
   components: {
+    AuthorPicture,
     AuthorPopup,
     NewspaperPopup,
   },

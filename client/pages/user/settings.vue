@@ -12,7 +12,7 @@
             accept="image/jpeg,image/png"
             size="10"
             buttonClass="btn"
-            :prefill="this.user.picture"
+            :prefill="user.pictures && user.pictures.big"
             :customStrings="{
               drag: $t('Upload image')
             }"

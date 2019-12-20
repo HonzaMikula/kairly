@@ -21,4 +21,5 @@ pytest==5.2.0
 bleach==3.1.0
 python-rapidjson==0.8.0
 nltk==3.4.5
-sqlparse==0.3.0
+sqlparse==0.3.
+sorl-thumbnail==12.5.0

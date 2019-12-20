@@ -2,7 +2,7 @@
   <timeline-newspaper>
     <header>
       <h1>
-        <nuxt-link 
+        <nuxt-link
           :id="`issue-newspaper-${$_uid}`"
           :to="{name: 'author-newspaper-issue', params: {author: newspaper.editor.id, newspaper: newspaper.name, issue: issue.number}}"
         >
@@ -21,11 +21,7 @@
             :to="{name: 'author', params: {author: newspaper.editor.id}}"
             :id="`issue-newspaper-author-${$_uid}`"
           >
-            <img
-              v-if="issue.newspaper.editor.picture"
-              :src="newspaper.editor.picture"
-              :alt="newspaper.editor.name"
-            />
+            <AuthorPicture :author="newspaper.editor" />
             {{ newspaper.editor.name }}
           </nuxt-link>
         </timeline-newspaper--editor>
@@ -44,7 +40,7 @@
 </template>
 
 <script>
-
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
 import NewspaperPopup from '@/components/widgets/NewspaperPopup'
 
@@ -53,6 +49,7 @@ export default {
   props: ['issue', 'hideDate'],
 
   components: {
+    AuthorPicture,
     AuthorPopup,
     NewspaperPopup,
   },

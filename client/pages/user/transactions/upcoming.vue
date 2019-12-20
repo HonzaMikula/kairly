@@ -12,7 +12,7 @@
         <template v-if="t.author">
           <td class="author">
             <nuxt-link :to="{name: 'author', params: {author: t.author.id}}">
-              <img :src="t.author.picture" :alt="t.author.name" />
+              <AuthorPicture :author="t.author" />
               {{ t.author.name }}
             </nuxt-link>
           </td>
@@ -41,6 +41,7 @@ import moment from 'moment'
 
 import { sortBy } from '@/utils/array'
 
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
 import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 
@@ -54,6 +55,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     AuthorSubscriptionButton,
     NewspaperSubscriptionButton,
   },

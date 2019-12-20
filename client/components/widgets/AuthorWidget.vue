@@ -3,16 +3,7 @@
     <header>
       <picture>
         <nuxt-link :to="{name: 'author', params: {author: author.id}}">
-          <img
-            v-if="author.picture"
-            :src="author.picture"
-            :alt="author.name"
-          />
-          <img
-            v-else
-            src="~assets/user.png"
-            :alt="author.name"
-          />
+          <AuthorPicture :author="author" />
         </nuxt-link>
       </picture>
       <h3>
@@ -31,6 +22,7 @@
 </template>
 
 <script>
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
 
 export default {
@@ -41,6 +33,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     AuthorSubscriptionButton
   },
 

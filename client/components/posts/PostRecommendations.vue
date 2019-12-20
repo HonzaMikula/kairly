@@ -16,7 +16,7 @@
 
         <footer class="recommendations-post--author">
           <nuxt-link :to="{name: 'author', params: {author: item.ref.newspaper.editor.id}}">
-            <img :src="item.ref.newspaper.editor.picture" :alt="item.ref.newspaper.editor.name" />
+            <AuthorPicture :author="item.ref.newspaper.editor" />
             {{ item.ref.newspaper.editor.name }}
           </nuxt-link>
         </footer>
@@ -35,7 +35,7 @@
 
         <footer class="recommendations-post--author">
           <nuxt-link :to="{name: 'author', params: {author: item.ref.author.id}}">
-            <img :src="item.ref.author.picture" :alt="item.ref.author.name" />
+            <AuthorPicture :author="item.ref.author" />
             {{ item.ref.author.name }}
           </nuxt-link>
         </footer>
@@ -45,11 +45,16 @@
 </template>
 
 <script>
+import AuthorPicture from '@/components/widgets/AuthorPicture'
+
 export default {
   name: 'PostRecommendations',
 
   props: ["post", "isSubscribed"],
 
+  components: {
+    AuthorPicture
+  },
 
   computed: {
     recommendedPosts() {

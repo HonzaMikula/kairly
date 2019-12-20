@@ -34,14 +34,14 @@
             </td>
             <td v-else-if="t.source.author">
               <!-- Monthly reward for author -->
-              <img :src="t.source.author.picture" :alt="t.source.author.name" />
+              <AuthorPicture :author="t.source.author" />
               {{ t.source.author.name }}
             </td>
             <td v-else>System</td>
 
             <td v-if="t.target.user">
               <!-- Monthly reward for author -->
-              <img v-if="t.target.user.picture" :src="t.target.user.picture" :alt="t.target.user.name" />
+              <AuthorPicture :author="t.target.user" />
               {{ t.target.user.name }}
             </td>
             <td v-else>System</td>
@@ -56,8 +56,8 @@
 import { mapState, mapMutations } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import MoneyFormat from '@/components/widgets/MoneyFormat'
-
 
 export default {
   name: 'Settings',
@@ -70,7 +70,8 @@ export default {
 
   components: {
     AppLayout,
-    MoneyFormat
+    AuthorPicture,
+    MoneyFormat,
   },
 
   async fetch ({ store, redirect }) {

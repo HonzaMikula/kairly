@@ -14,8 +14,7 @@
     <section class="author-subscription--author">
       <h3>{{ author.name }}</h3>
       <picture>
-        <img v-if="author.picture" :src="author.picture" :alt="author.name" />
-        <img v-else src="~assets/user.png" :alt="author.name"/>
+        <AuthorPicture :author="author" />
       </picture>
 
       <time>{{ getPeriodicityLabel(periodicity) }}</time>
@@ -118,6 +117,7 @@
 <script>
 import { mapState } from 'vuex'
 
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 import DialogWindow from '@/components/modals/DialogWindow'
 import ChangePeriodicity from '@/components/widgets/ChangePeriodicity'
 import ModalMixin from '@/mixins/ModalMixin'
@@ -132,6 +132,7 @@ export default {
   },
 
   components: {
+    AuthorPicture,
     DialogWindow,
     ChangePeriodicity,
     MoneyFormat,

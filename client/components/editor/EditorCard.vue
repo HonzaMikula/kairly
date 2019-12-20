@@ -1,7 +1,7 @@
 <template>
   <li>
     <picture>
-      <img :src="editor.picture" :alt="editor.name"/>
+      <AuthorPicture :author="editor" />
     </picture>
 
     <h3>{{ editor.name }}</h3>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import AuthorPicture from '@/components/widgets/AuthorPicture'
 
 export default {
   name: "EditorCard",
@@ -26,7 +27,11 @@ export default {
     editor: Object,
     role: String,
     canDelete: Boolean
-  }
+  },
+
+  components: {
+    AuthorPicture
+  },
 };
 </script>
 
@@ -70,7 +75,7 @@ export default {
       grid-area: nse-remove
       place-self: center
       height: $baseline
-      
+
       background: transparent
       border: 0
       color: #999
@@ -80,10 +85,10 @@ export default {
       &:focus,
       &:hover
         color: #000
-      
+
       &::after
         +fa-icon()
         @extend .fas
         content: fa-content($fa-var-times)
-      
+
 </style>
