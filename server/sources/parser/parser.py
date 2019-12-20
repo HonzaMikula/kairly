@@ -12,7 +12,7 @@ class ArticleParser:
     REGEX_ATTR_PROP = re.compile(r"\[(\w+)\]")
 
     DANGEROUS_ELEMENTS = set([
-        'script', 'noscript',
+        'script',
         'style',
         'iframe', 'applet', 'object', 'canvas',
         'audio', 'input', 'textarea', 'button', 'select', 'datalist', 'meter',
