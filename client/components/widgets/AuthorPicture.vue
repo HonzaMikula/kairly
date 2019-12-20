@@ -1,7 +1,7 @@
 <template>
   <img
     :itemprop="itemprop"
-    :src="author.pictures ? author.pictures[size] : '~assets/user.png'"
+    :src="author.pictures ? author.pictures[size] : require('~/assets/user.png')"
     :alt="author.name"
   />
 </template>
