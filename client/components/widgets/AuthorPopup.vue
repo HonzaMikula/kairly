@@ -11,7 +11,7 @@
       <header>
         <picture>
           <nuxt-link :to="{name: 'author', params: {author: author.id}}">
-            <AuthorPicture :author="author" />
+            <AuthorPicture :author="author" size="big" />
           </nuxt-link>
         </picture>
         <h3>

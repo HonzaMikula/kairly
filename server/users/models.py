@@ -168,8 +168,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         if self.picture:
             result['pictures'] = {
-                'small': self.get_picture_url('26x26'),
-                'big': self.get_picture_url('104x104'),
+                'small': self.get_picture_url('32x32'),
+                'big': self.get_picture_url('128x128'),
             }
         else:
             result['pictures'] = None
