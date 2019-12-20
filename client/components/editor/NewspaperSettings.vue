@@ -76,8 +76,8 @@
           <picture>
             <picture-input
               ref="pictureInput"
-              width="300"
-              height="129"
+              width="283"
+              height="120"
               accept="image/jpeg, image/png"
               size="10"
               buttonClass="btn"

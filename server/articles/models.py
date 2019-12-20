@@ -18,12 +18,13 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.timezone import now as timezone_now
 from django.utils.translation import ugettext_lazy as _
-from utils.json import datetime_isoformat_ecma262, entities_key
-from utils.url import clean_url
+from sorl.thumbnail import ImageField, get_thumbnail
 
 from .period import PeriodMixin, periodicity_to_json
 from .weight import calculate_post_weight
 from users.models import User
+from utils.json import datetime_isoformat_ecma262, entities_key
+from utils.url import clean_url
 
 
 def round_fair_price(price):
@@ -316,7 +317,7 @@ class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
     slug = models.SlugField(_('Slug'))
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='editions', null=True, blank=True)
+    image = ImageField(upload_to='editions', null=True, blank=True)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)
     co_editors = models.ManyToManyField(settings.AUTH_USER_MODEL, through="CoEditor", related_name="+")
     price = models.DecimalField(_('Price'), max_digits=11, decimal_places=2,
@@ -378,13 +379,27 @@ class Newspaper(models.Model, PeriodMixin):
     def full_name(self):
         return "{}/{}".format(self.editor.username, self.slug)
 
+    def get_picture_url(self, size):
+        if not self.image:
+            return None
+
+        value = str(self.image)
+        if value.startswith('http://') or value.startswith('https://'):
+            return value
+
+        im = get_thumbnail(self.image, size, crop='center')
+        if im:
+            return settings.MEDIA_SITE + im.url
+        else:
+            return settings.MEDIA_SITE + self.image.url
+
     def to_json(self, entities):
         entities.add(User, self.editor)
         data = {
             "name": self.slug,
             "fullName": self.full_name,
             "title": self.title,
-            "picture": settings.MEDIA_SITE + self.image.url if self.image else None,
+            "picture": self.get_picture_url('283x120'),
             "description": self.description,
             "editor": self.editor.username,
             "periodicity": periodicity_to_json(self),

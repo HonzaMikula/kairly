@@ -127,13 +127,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_picture_url(self, size):
         if not self.picture:
-            return ''
+            return None
 
         value = str(self.picture)
         if value.startswith('http://') or value.startswith('https://'):
             return value
 
-        im = get_thumbnail(self.picture, size)
+        im = get_thumbnail(self.picture, size, crop='center')
         if im:
             return settings.MEDIA_SITE + im.url
         else:
