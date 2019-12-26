@@ -22,7 +22,7 @@
     </div>
 
     <nav class="app-header-public--submenu">
-      <template v-if="topRoute == '/' || topRoute == 'platform'">
+      <template v-if="topRoute == 'platform'">
         <span>{{ $t('For who?') }}</span>
 
         <ul>
