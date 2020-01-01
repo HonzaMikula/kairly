@@ -4,12 +4,12 @@
 
       <header class="search--search-box">
         <input type="search" @keyup.enter="search()" v-model="query" autofocus />
-        <button @click="search()">Search</button>
+        <button @click="search()">{{ $t('Search') }}</button>
       </header>
 
       <div
         class="search-item"
-        v-for="result in testResults"
+        v-for="result in results"
         :key="result.cacheId">
         <h2>
           <nuxt-link 
@@ -26,18 +26,18 @@
 
         <div class="search-item--label">
           <template v-if="result.pagemap.newspaper">
-            <span class="label">Newspaper</span>
-            <span class="author">by {{ result.pagemap.metatags[0].author }}</span>
+            <span class="label">{{ $t('Newspaper') }}</span>
+            <span class="author">{{ $t('by') }} {{ result.pagemap.metatags[0].author }}</span>
             <time>{{ result.pagemap.newspaper[0].datepublished | moment('calendar') }}</time>
           </template>
 
           <templave v-else-if="result.pagemap.metatags[0]['og:type'] == 'profile'">
-            <span class="label">Author</span>
+            <span class="label">{{ $t('Author') }}</span>
           </templave>
 
           <template v-else-if="result.pagemap.newsarticle">
-            <span class="label">Article</span>
-            <span class="author">by {{ result.pagemap.metatags[0].author }}</span>
+            <span class="label">{{ $t('Article') }}</span>
+            <span class="author">{{ $t('by') }}  {{ result.pagemap.person[0].name }}</span>
             <time>{{ result.pagemap.newsarticle[0].datepublished | moment('calendar') }}</time>
           </template>
         </div>
@@ -52,9 +52,6 @@
 import RESULTS from '@/searchResults'
 import AppLayout from "@/components/layout/AppLayout"
 import ErrorHandler from '@/mixins/ErrorHandler'
-
-const GOOGLE_SEARCH_API = 'AIzaSyBbkq4m8pQym-r2hFYmTwStzXCNWzmom1Y'
-const SEARCH_ID = '006213174493429117077:jze2yfipbxo'
 
 export default {
   name: 'Search',
@@ -81,21 +78,19 @@ export default {
 
   methods: {
     async search() {
-
       if (this.query) {
-        console.log(this.testResults)
         try {
-          const params = {
-            key: this.GOOGLE_SEARCH_API,
-            cx: this.SEARCH_ID,
-            q: this.query
-          }
-
-          // remove default authorization header
-          // To Do: it removes from all Axios request, which makes the app unusable
-          delete this.$axios.defaults.headers.common["Authorization"] 
-          const { items } = await this.$axios.$get(`https://www.googleapis.com/customsearch/v1`, { params })
-          console.log(items)
+          const adapter = this.$axios.create({
+            baseURL: `https://www.googleapis.com/`,
+          })
+          delete adapter.defaults.headers.common["Authorization"]
+          const { items } = await adapter.$get(`customsearch/v1`, { 
+            params: {
+              key: 'AIzaSyBbkq4m8pQym-r2hFYmTwStzXCNWzmom1Y',
+              cx: '006213174493429117077:jze2yfipbxo',
+              q: this.query,
+            }
+          })
           this.results = items
 
           this.$ga.event({
