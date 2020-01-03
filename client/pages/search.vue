@@ -6,6 +6,11 @@
         <input type="search" @keyup.enter="search()" v-model="query" autofocus />
         <button @click="search()">{{ $t('Search') }}</button>
       </header>
+      <aside 
+        class="search--total-results"
+        v-if="totalResults > 0">
+        {{ totalResults }} results
+      </aside>
 
       <div
         class="search-item"
@@ -44,12 +49,21 @@
         <p v-html="result.htmlSnippet"></p>
         
       </div>
+
+      <footer class="search--pagination">
+        <ul>
+          <li 
+            v-for="page in numberOfPages"
+            :key="page"
+            @click="pagination(page)"
+            :class="{'is-active': page == currentPage}">{{page}}</li>
+        </ul>
+      </footer>
     </main>
   </AppLayout>
 </template>
 
 <script>
-import RESULTS from '@/searchResults'
 import AppLayout from "@/components/layout/AppLayout"
 import ErrorHandler from '@/mixins/ErrorHandler'
 
@@ -72,7 +86,10 @@ export default {
     return {
       query: null,
       results: null,
-      testResults: RESULTS
+      totalResults: null,
+      startResult: null,
+      numberOfPages: 0,
+      currentPage: 1
     }
   },
 
@@ -84,14 +101,19 @@ export default {
             baseURL: `https://www.googleapis.com/`,
           })
           delete adapter.defaults.headers.common["Authorization"]
-          const { items } = await adapter.$get(`customsearch/v1`, { 
+          const test = await adapter.$get(`customsearch/v1`, { 
             params: {
               key: 'AIzaSyBbkq4m8pQym-r2hFYmTwStzXCNWzmom1Y',
               cx: '006213174493429117077:jze2yfipbxo',
               q: this.query,
+              start: this.startResult
             }
           })
+          console.log(test)
+          const { items, searchInformation } = test
           this.results = items
+          this.totalResults = searchInformation.totalResults
+          this.numberOfPages = Math.ceil(this.totalResults / 10)
 
           this.$ga.event({
             eventCategory: 'Search',
@@ -108,6 +130,14 @@ export default {
           })
         }
       }
+    },
+
+    pagination(page) {
+      this.startResult = page * 10 + 1
+      this.currentPage = page
+
+      this.search()
+      window.scrollTo(0, 0)
     }
   }
 }
@@ -126,7 +156,7 @@ export default {
   .search--search-box
     display: flex
     max-width: 600px
-    margin: 0 auto $baseline auto
+    margin: 0 auto
 
     box-shadow: 4px 4px 8px #eee, -4px -4px 8px #fff
 
@@ -158,6 +188,13 @@ export default {
       &:hover,
       &:focus
         background: darken($c-base, 10%)
+
+  //- Total Results
+  .search--total-results
+    margin-bottom: $baseline
+
+    font-size: $fs--2
+
 
   //- Search Results
   .search-item 
@@ -238,4 +275,34 @@ export default {
       &::after
         content: ' • '
 
+  .search--pagination
+    margin: $baseline 0
+
+    ul
+      display: flex
+      justify-content: center
+      flex-wrap: wrap
+
+    li
+      
+      border-radius: 100%
+      margin-right: $baseline / 4
+      margin-bottom: $baseline / 2
+      height: $baseline * 1.25
+      width: $baseline * 1.25
+
+      background: #eee
+
+      cursor: pointer
+      font-weight: 600
+      line-height: $baseline * 1.25
+      text-align: center
+
+      &:hover,
+      &:focus
+        background: #ddd
+
+      &.is-active
+        background: $c-base
+        color: #fff
 </style>
