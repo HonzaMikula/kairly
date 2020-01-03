@@ -6,13 +6,13 @@
       v-else-if="timeline"
       class="timeline-view explore-timeline-view"
     >
-      <header class="explore--controls">
+      <header class="explore--controls" v-if="!controls">
         <nuxt-link :to="`/explore/${tab.slug}/newspapers-authors`">
           {{ $t('See all authors') }}
         </nuxt-link>
 
         <div>
-          <label for="onlyNewspapers">{{ $t('Only newspapers') }}</label>
+          <label for="onlyNewspapers">{{ $t('Only newsletters') }}</label>
           <label class="switch">
             <input
               type="checkbox"
@@ -72,20 +72,15 @@ import IssueWrapper from '@/components/IssueWrapper'
 import JumpMenu from '@/components/widgets/JumpMenu'
 
 export default {
-  name: 'ExploreTab',
-
-  auth: false,
+  name: 'ExploreTimeline',
 
   components: {
     IssueWrapper,
     JumpMenu
   },
 
-  head() {
-    const title = this.tab[this.$i18n.locale || 'en']
-    return {
-      title:  `${title} – Explore – Kairly`
-    }
+  props: {
+    controls: Boolean
   },
 
   data() {
@@ -102,8 +97,7 @@ export default {
     }),
 
     tab() {
-      console.log(this.$route.params.tab)
-      return TABS.find(t => t.slug === this.$route.params.tab)
+      return TABS.find(t => 'news')
     },
 
     links() {

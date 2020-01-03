@@ -1,60 +1,71 @@
 <template>
   <div class="welcome-view">
-    <h1>{{ $t('Welcome to Kairly!') }}</h1>
+    
+    <section class="welcome-intro">
+      <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
-    <ExploreNewspapers>
-      {{ $t('Subscribe to newspapers prepared by professional editors') }}
-    </ExploreNewspapers>
+      <!-- <section class="welcome--import">
+        <h2>{{ $t('Or import your favorite authors') }}</h2>
+        <div class="welcome--import--rss">
+          <nuxt-link to="/import">{{  $t('Import RSS feeds')  }}</nuxt-link>
 
-    <section class="welcome--import">
-      <h2>{{ $t('Or import your favorite authors') }}</h2>
-      <div class="welcome--import--rss">
-        <nuxt-link to="/import">{{  $t('Import RSS feeds')  }}</nuxt-link>
+          <p>{{ $t('Upload OPML file.') }}</p>
+        </div>
 
-        <p>{{ $t('Upload OPML file.') }}</p>
-      </div>
+        <div class="welcome--import--twitter">
+          <button @click="importTwitter()">
+            {{ $t('Read your Twitter on Kairly') }}
+          </button>
 
-      <div class="welcome--import--twitter">
-        <button @click="importTwitter()">
-          {{ $t('Read your Twitter on Kairly') }}
-        </button>
+          <p>{{ $t('Connect your Twitter account.') }}</p>
+        </div>
+      </section> -->
 
-        <p>{{ $t('Connect your Twitter account.') }}</p>
-      </div>
+      <section class="welcome--roles">
+        <div>
+          <section>
+            <h3>{{ $t('As a reader') }}</h3>
+            <p>
+              {{ $t('Do you want to read newsletters and interesting authors?') }}
+            </p>
+
+            <ul>
+              <li><a href="#explore-timeline">Subscribe to newsletters</a></li>
+              <li><nuxt-link to="/import">Import your RSS feed</nuxt-link></li>
+              <li><nuxt-link to="/explore/news">Explore</nuxt-link> or <nuxt-link to="/search">search</nuxt-link></li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>{{ $t('As an editor') }}</h3>
+            <p>
+              {{ $t('Do you want to start a newsletter and curate content for others?') }}
+            </p>
+
+            <ol>
+              <li><nuxt-link to="/newspapers">Start a newsletter</nuxt-link></li>
+              <li>Curate content for your #1 issue</li>
+              <li>Get subscribers and earn money</li>
+            </ol>
+          </section>
+
+          <section>
+            <h3>{{ $t('As an author') }}</h3>
+            <p>
+              {{ $t('Do you want to start publishing articles and start earning money?') }}
+            </p>
+
+            <ol>
+              <li><nuxt-link to="/posts">Write a new post</nuxt-link></li>
+              <li>Set a price for your content</li>
+              <li>Publish it & pitch it to editors</li>
+            </ol>
+          </section>
+        </div>
+      </section>
     </section>
 
-    <section class="welcome--roles">
-      <h2>{{ $t('Start using Kairly') }}</h2>
-      <div>
-        <section>
-          <h3>{{ $t('As a reader') }}</h3>
-          <p>
-            {{ $t('Are you interested in more newspapers and authors?') }}
-          </p>
-          <p><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
-        </section>
-
-        <section>
-          <h3>{{ $t('As an editor') }}</h3>
-          <p>
-            {{ $t('Do you want to start a newspaper and pick the best content for others?') }}
-          </p>
-
-          <p><nuxt-link to="/newspapers">{{ $t('Start a newspaper') }}</nuxt-link></p>
-        </section>
-
-        <section>
-          <h3>{{ $t('As an author') }}</h3>
-          <p>
-            {{ $t('Do you want to start writing articles and tweets?') }}
-          </p>
-
-          <p><nuxt-link to="/posts">{{ $t('Write a new post') }}</nuxt-link></p>
-        </section>
-      </div>
-
-      <a href="" @click.prevent="$router.go({path:'/', force: true})">{{ $t('Go Home to start reading') }}</a>
-    </section>
+    <ExploreTimeline id="explore-timeline" controls="false" />
 
     <TwitterApologyModal
       :active.sync="isTwitterApologyModalOpen"
@@ -67,7 +78,7 @@ import { mapState, mapGetters } from 'vuex'
 
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import TwitterApologyModal from '@/components/modals/TwitterApologyModal'
-import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
+import ExploreTimeline from '@/components/ExploreTimeline'
 
 export default {
   name: 'Welcome',
@@ -75,7 +86,7 @@ export default {
   components: {
     NewspaperWidget,
     TwitterApologyModal,
-    ExploreNewspapers
+    ExploreTimeline
   },
 
   data() {
@@ -113,7 +124,14 @@ export default {
   max-width: 900px
   margin: 0 auto
 
-  //- Welcome heading
+
+
+.welcome-intro
+  padding: $baseline
+  background: #fff
+  box-shadow: 4px 4px 8px #eee, -4px -4px 8px #fff
+
+    //- Welcome heading
   > h1
     margin-bottom: $baseline
 
@@ -132,6 +150,28 @@ export default {
       font-size: $fs-2
       font-weight: 600
       text-align: center
+
+
+  ul,
+  ol
+    margin-top: $baseline
+
+    li
+      list-style: disc inside
+      margin-bottom: $baseline / 4
+
+      font-weight: 600
+
+      a
+
+        color: darken($c-base, 10%)
+
+        &:hover,
+        &:focus
+          color: darken($c-base, 20%)
+
+  ol li
+    list-style: decimal inside
 
   //- newspaper crossroad
   .microsite-explore
@@ -192,7 +232,6 @@ export default {
 
   > div
     display: flex
-    margin-bottom: $baseline * 2
 
     @media (max-width: $mobile)
       flex-direction: column
@@ -213,11 +252,14 @@ export default {
 
   h3
     margin-bottom: $baseline / 2
-    font-size: $fs-1
+    font-size: $fs-2
     font-weight: 600
 
     @media (max-width: $mobile)
       margin-bottom: 0
+
+  h3 + p
+   
 
   p + p
     margin-top: $baseline / 2
