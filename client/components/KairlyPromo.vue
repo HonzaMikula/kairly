@@ -3,15 +3,17 @@
     <div>
       <section>
           <h1>
-            {{ $t('Modern news platform')}}
-            <br />
-            {{ $t('for demanding readers') }}
+            <nuxt-link to="/">
+              {{ $t('Modern news platform')}}
+              <br />
+              {{ $t('for demanding readers') }}
+            </nuxt-link>
           </h1>
 
           <p>{{ $t('Subscribe to thematic newsletters prepared by professional editors.') }}</p>
 
           <ul>
-            <li>{{ $t('Read your sources at regular time you want. E.g. every day at 9am.') }}</li>
+            <li>{{ $t('Read your newsletters at regular time you want. E.g. every day at 9am.') }}</li>
             <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
             <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
           </ul>
@@ -75,6 +77,9 @@ export default {
         
       padding: 0
       margin-bottom: $baseline
+
+      a
+        color: #000
 
       @media (max-width: $mobile)
         margin: $baseline 0

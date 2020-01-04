@@ -160,6 +160,7 @@
       </nav>
 
       <nav class="app-header--user-profile" v-if="user">
+        <nuxt-link to="/search" class="search" v-b-tooltip :title="$t('Search')"></nuxt-link>
         <AuthorPicture :author="user" />
         <button-icon
           @click="isDropDownMenuOpen = true"
@@ -525,32 +526,56 @@ export default {
   cursor: pointer
   white-space: nowrap
 
-  > a
+  .search
     display: inline-block
-    padding: 0 $baseline/2
+    border-radius: 100%
+    height: $baseline * 1.25
+    width: $baseline * 1.25
 
-    color: #000
+    color: #777
+
+    line-height: $baseline * 1.25
+    vertical-align: middle
+    text-align: center
 
     &:focus,
-    &:hover
+    &:hover,
+    &.is-active
       background: #eee
+      color: #000
 
-    &.nuxt-link-active
-      background: #eee
+    &::before
+      +fa-icon()
+      @extend .fas
 
-    @media (max-width: 850px)
-      span
-        display: none
+      content: fa-content($fa-var-search)
 
-    &.credits
-      border-radius: 5px
-      padding: 0 $baseline/2
-      margin-top: $baseline / 4
+  // > a
+  //   display: inline-block
+  //   padding: 0 $baseline/2
 
-      color: $c-base
+  //   color: #000
 
-      font-weight: 600
-      line-height: $baseline * 1.5
+  //   &:focus,
+  //   &:hover
+  //     background: #eee
+
+  //   &.nuxt-link-active
+  //     background: #eee
+
+  //   @media (max-width: 850px)
+  //     span
+  //       display: none
+
+  //   &.credits
+  //     border-radius: 5px
+  //     padding: 0 $baseline/2
+  //     margin-top: $baseline / 4
+
+  //     color: $c-base
+
+  //     font-weight: 600
+  //     line-height: $baseline * 1.5
 
   //- profile picture
   img
