@@ -35,9 +35,15 @@
         <slot name="controls">
           <span>
             <button
+              v-if="post.author.id == user.id"
+              class="edit"
+              v-b-tooltip
+              :title="$t('Edit post')"
+              @click.prevent="$router.push(`/posts/${post.id}`)"
+            />
+            <button
               v-if="userNewspapers.length > 0"
               class="consider-post"
-              role="button"
               tabindex="0"
               :aria-label="$t('Consider for newspaper')"
               v-b-tooltip
@@ -58,7 +64,7 @@
 
 <script>
 import { directive as onClickaway } from '@/lib/vue-clickaway'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
@@ -87,6 +93,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      user: state => state.auth.user
+    }),
+
     ...mapGetters(['userNewspapers']),
   },
 
@@ -190,12 +200,14 @@ export default {
   > section
     display: flex
 
-    > *
+    span
+      display: flex
+
+    a,
+    button-icon,
+    button
       margin-left: $baseline / 4
 
-    > a,
-    > button-icon,
-    > button
       background: #eee
 
       transition: 0.15s background
@@ -238,7 +250,7 @@ export default {
         &.is-active
           background: $c-base
 
-    > button
+    button
       +button(primary, small)
       margin-left: $baseline / 4
 
