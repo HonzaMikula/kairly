@@ -95,6 +95,17 @@ poedit locales/cs.po
 npm run compilemessages
 ```
 
+## Python dependencies
+
+Do not upgrade (without fix)
+
+Pillow - anything > 5.1.0 probably causes:
+cannot identify image file <_io.BytesIO object at 0x7fc8b8b798e0>
+for image upload (not only)
+make reasearch about it
+
+django_anymail (upgrade to 7.x needs templates update, see docs)
+
 ## Rosti
 
 Run command, eg.
