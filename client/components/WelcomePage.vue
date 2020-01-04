@@ -12,9 +12,13 @@
           </p>
 
           <ul>
-            <li><a href="#explore-timeline">Subscribe to newsletters</a></li>
-            <li><nuxt-link to="/import">Import your RSS feed</nuxt-link></li>
-            <li><nuxt-link to="/explore/news">Explore</nuxt-link> or <nuxt-link to="/search">search</nuxt-link></li>
+            <li><a href="/#explore-timeline">{{ $t('Subscribe to newsletters') }}</a></li>
+            <li><nuxt-link to="/import">{{ $t('Import your RSS feed') }}</nuxt-link></li>
+            <li>
+              <nuxt-link to="/explore/news">{{ $t('Explore') }}</nuxt-link>
+              {{ $t('or') }} 
+              <nuxt-link to="/search">{{ $t('search') }}</nuxt-link>
+            </li>
           </ul>
         </section>
 
@@ -25,9 +29,9 @@
           </p>
 
           <ol>
-            <li><nuxt-link to="/newspapers">Start a newsletter</nuxt-link></li>
-            <li>Curate content for your #1 issue</li>
-            <li>Get subscribers and earn money</li>
+            <li><nuxt-link to="/newspapers">{{ $t('Start a newsletter') }}</nuxt-link></li>
+            <li>{{ $t('Curate content for your #1 issue') }}</li>
+            <li>{{ $t('Get subscribers and earn money') }}</li>
           </ol>
         </section>
 
@@ -38,9 +42,9 @@
           </p>
 
           <ol>
-            <li><nuxt-link to="/posts">Write a new post</nuxt-link></li>
-            <li>Set a price for your content</li>
-            <li>Publish it & pitch it to editors</li>
+            <li><nuxt-link to="/posts">{{ $t('Write a new post') }}</nuxt-link></li>
+            <li>{{ $t('Set a price of your content') }}</li>
+            <li>{{ $t('Publish it & pitch it to editors') }}</li>
           </ol>
         </section>
       </div>
@@ -185,6 +189,9 @@ export default {
 .welcome--explore-tabs
   margin: $baseline $baseline 0 $baseline
 
+  @media (max-width: $mobile)
+    margin: $baseline $baseline/2 0 $baseline/2
+
   ul
     display: flex
     justify-content: center
@@ -203,6 +210,7 @@ export default {
 
     @media (max-width: $mobile)
       display: inline-block
+      margin-right: $baseline / 2
 
     &:last-of-type
       margin-right: 0
