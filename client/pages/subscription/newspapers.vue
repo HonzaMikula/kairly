@@ -26,7 +26,7 @@ export default {
 
   head() {
     return {
-      title: this.$t('Newspapers – My Subscription – Kairly')
+      title: this.$t('Newsletters – My Subscription – Kairly')
     }
   },
 

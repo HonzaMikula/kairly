@@ -102,7 +102,6 @@ export default {
     }),
 
     tab() {
-      console.log(this.$route.params.tab)
       return TABS.find(t => t.slug === this.$route.params.tab)
     },
 

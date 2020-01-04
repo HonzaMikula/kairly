@@ -36,8 +36,8 @@
             <nuxt-link
               to="/newspapers"
               :class="{'is-active': isNewspapersRoute}"
-              title="Newspapers">
-              <span>{{ $t('Newspapers') }}</span>
+              title="Newsletters">
+              <span>{{ $t('Newsletters') }}</span>
             </nuxt-link>
           </li>
 
@@ -70,7 +70,7 @@
 
           <li>
             <nuxt-link to="/newspapers">
-              {{ $t('Newspapers') }}
+              {{ $t('Newsletters') }}
             </nuxt-link>
           </li>
 
@@ -89,7 +89,7 @@
           <template v-if="isSubscriptionRoute">
             <li>
               <nuxt-link to="/subscription/newspapers">
-                {{ $t('Newspapers') }}
+                {{ $t('Newsletters') }}
               </nuxt-link>
             </li>
 
@@ -115,13 +115,13 @@
           <template v-if="isNewspapersRoute">
             <li>
               <nuxt-link to="/newspapers">
-                {{ $t('Newspapers') }}
+                {{ $t('Newsletters') }}
               </nuxt-link>
             </li>
 
             <li>
               <nuxt-link to="/newspapers/start">
-                {{ $t('Start a newspapers') }}
+                {{ $t('Start a newsletter') }}
               </nuxt-link>
             </li>
           </template>

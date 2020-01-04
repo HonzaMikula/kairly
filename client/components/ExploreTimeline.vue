@@ -6,7 +6,7 @@
       v-else-if="timeline"
       class="timeline-view explore-timeline-view"
     >
-      <header class="explore--controls" v-if="!controls">
+      <header class="explore--controls" v-if="!disableControls">
         <nuxt-link :to="`/explore/${tab.slug}/newspapers-authors`">
           {{ $t('See all authors') }}
         </nuxt-link>
@@ -80,7 +80,8 @@ export default {
   },
 
   props: {
-    controls: Boolean
+    disableControls: Boolean,
+    category: Object
   },
 
   data() {
@@ -97,7 +98,7 @@ export default {
     }),
 
     tab() {
-      return TABS.find(t => 'news')
+      return this.category
     },
 
     links() {
@@ -134,6 +135,10 @@ export default {
   watch:{
     $route (to, from){
       this.loadTimeline()
+    },
+
+    category: function() {
+      this.loadTimeline()
     }
   },
 
@@ -143,6 +148,7 @@ export default {
 
       // TODO support historical timelines
       const { date } = this.$route.params
+      console.log(this.tab)
       const endpoint = `/explore-timeline/${this.tab.slug}`
       const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date })
       this.timeline = timeline
@@ -152,6 +158,7 @@ export default {
 
   mounted() {
     this.loadTimeline()
+    console.log('a'+this.tabX)
   }
 }
 </script>

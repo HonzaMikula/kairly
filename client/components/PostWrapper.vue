@@ -88,8 +88,8 @@ export default {
   margin-bottom: $baseline / 2
 
   background: #F2ECEC
-  border: 1px solid #f5f5f5
-  box-shadow: 4px 4px 8px #eee, -4px -4px 8px #fff
+  border: 1px solid #eee
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 
   @media (max-width: $mobile)
     grid-template-columns: calc(100vw - (#{$baseline} * 1.5)) 60vw
@@ -180,7 +180,7 @@ export default {
   position: relative
 
   .post
-    border: 1px solid #f5f5f5
-    box-shadow: 4px 4px 8px #eee, -4px -4px 8px #fff
+    border: 1px solid #eee
+    box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 </style>
 
