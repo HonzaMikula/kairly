@@ -35,7 +35,7 @@
         <slot name="controls">
           <span>
             <button
-              v-if="post.author.id == user.id"
+              v-if="user && post.author.id == user.id"
               class="edit"
               v-b-tooltip
               :title="$t('Edit post')"
@@ -203,9 +203,12 @@ export default {
     span
       display: flex
 
-    a,
-    button-icon,
-    button
+    > a,
+    > span > a,
+    > button
+    > span > button,
+    > button-icon,
+    > span > button-icon
       margin-left: $baseline / 4
 
       background: #eee
