@@ -7,7 +7,7 @@
       class="timeline-view explore-timeline-view"
     >
       <header class="explore--controls" v-if="!disableControls">
-        <nuxt-link :to="`/explore/${tab.slug}/newspapers-authors`">
+        <nuxt-link :to="`/explore/${category.slug}/newspapers-authors`">
           {{ $t('See all authors') }}
         </nuxt-link>
 
@@ -31,7 +31,7 @@
           class="timeline--header"
         >
           <nuxt-link
-            :to="`/explore/${tab.slug}/${links.prev}`"
+            :to="`/explore/${category.slug}/${links.prev}`"
             v-b-tooltip
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
@@ -39,7 +39,7 @@
 
           <nuxt-link
             v-if="links.next"
-            :to="`/explore/${tab.slug}/${links.next}`"
+            :to="`/explore/${category.slug}/${links.next}`"
             v-b-tooltip
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import TABS from '@/exploreTabs'
 import { mapGetters } from 'vuex'
 
 import IssueWrapper from '@/components/IssueWrapper'
@@ -81,7 +80,8 @@ export default {
 
   props: {
     disableControls: Boolean,
-    category: Object
+    category: Object,
+    period: String
   },
 
   data() {
@@ -96,10 +96,6 @@ export default {
     ...mapGetters({
       denormalize: 'entities/denormalize',
     }),
-
-    tab() {
-      return this.category
-    },
 
     links() {
       if (this.loading) {
@@ -133,11 +129,11 @@ export default {
   },
 
   watch:{
-    $route (to, from){
+    category: function() {
       this.loadTimeline()
     },
 
-    category: function() {
+    period: function() {
       this.loadTimeline()
     }
   },
@@ -148,8 +144,7 @@ export default {
 
       // TODO support historical timelines
       const { date } = this.$route.params
-      console.log(this.tab)
-      const endpoint = `/explore-timeline/${this.tab.slug}`
+      const endpoint = `/explore-timeline/${this.category.slug}`
       const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date })
       this.timeline = timeline
       this.loading = false
@@ -158,7 +153,6 @@ export default {
 
   mounted() {
     this.loadTimeline()
-    console.log('a'+this.tabX)
   }
 }
 </script>
