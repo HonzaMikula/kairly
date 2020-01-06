@@ -199,8 +199,8 @@ export default {
     let metaPicture
     let images
 
-    //- act as an issue detail
     if (this.$route.params.issue) {
+      //- act as an issue detail
       metaTitle = `${title} #${this.issue.number} – Kairly`
       metaDescription = this.issue.posts
         .map(({post}) => post.content.title || post.author.name)
@@ -208,9 +208,8 @@ export default {
         .join(' • ')
         .slice(0, 280)
       metaUrl = `https://kairly.com/${editor.id}/${name}/${this.issue.number}`
-    }
-    //- act as a newspaper detail
-    else {
+    } else {
+      //- act as a newspaper detail
       metaTitle = `${title} – Kairly`
       metaDescription = description
       metaUrl = `https://kairly.com/${editor.id}/${name}`
@@ -223,12 +222,13 @@ export default {
         .filter(x => x)
     }
 
-    if (images === undefined || images.length == 0)
-      metaPicture = picture
-    else
+    if (images && images.length) {
       metaPicture = images[0][1]
+    } else {
+      metaPicture = picture
+    }
 
-    return {
+    const head = {
       title: metaTitle,
       meta: [
         { hid: 'description', name: 'description', content: metaDescription },
@@ -243,7 +243,6 @@ export default {
         { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: metaPicture },
-        { hid: `og:article:published_time`, property: 'og:article:published_time', content: this.issue.time},
         { hid: 'author', name: 'author', content: editor.name},
       ],
       link: [
@@ -251,6 +250,12 @@ export default {
           href: `https://kairly.com/${editor.id}/${name}/rss` }
       ]
     }
+
+    if (this.issue) {
+      head.meta.push({ hid: `og:article:published_time`, property: 'og:article:published_time', content: this.issue.time})
+    }
+
+    return head
   },
 
   components: {
