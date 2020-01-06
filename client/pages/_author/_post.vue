@@ -104,7 +104,7 @@
           <template v-for="(editorial, index) in editorials">
             <div
               v-if="editorial.type == 'article'"
-              :key="index"
+              :key="'article-' + index"
               class="post-detail--editorial-comments--post"
             >
               <h3>{{ editorial.title }}</h3>
@@ -129,7 +129,7 @@
             </div>
             <div
               v-if="editorial.type == 'tweets'"
-              :key="index"
+              :key="'tweets-' + index"
               class="post-detail--editorial-comments--tweets"
             >
               <aside>
@@ -141,10 +141,14 @@
                   {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
                 </nuxt-link>
               </aside>
-              <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet" />
+              <PostTweet
+                v-for="tweet in editorial.tweets"
+                :key="tweet.id"
+                :post="tweet"
+              />
             </div>
             <NewspaperPopup
-              :key="index"
+              :key="'newspaper-popup-' + index"
               :target="`post-editorial-newspaper-${index}`"
               :newspaper="editorial.issue.newspaper"
             />

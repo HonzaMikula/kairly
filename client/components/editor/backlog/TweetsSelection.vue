@@ -9,7 +9,12 @@
     </header>
 
     <main>
-      <PostTweet v-for="post in tweets" :post="post" :key="post.id">
+      <!-- work with raw post in add / remove event -->
+      <PostTweet
+        v-for="post in tweets"
+        :post="post"
+        :key="post.id"
+      >
         <template #extended-controls>
           &nbsp;
         </template>
@@ -50,7 +55,11 @@ export default {
 
   data() {
     const { considered } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-    const tweets = considered.map(log => log.post).filter(post => post.type === 'tweet')
+    const tweets = considered
+      .map(log => log.post)
+      .filter(post => post.type === 'tweet')
+      .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
+
     return {
       alwaysDisplayTweets: tweets
     }
@@ -61,7 +70,10 @@ export default {
       // do not remove from tweets when tweet is moved from baclog to editorial
       // but add tweet to list when moved from editoril back to backlog
       const { considered } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-      const backlogTweets = considered.map(log => log.post).filter(post => post.type === 'tweet')
+      const backlogTweets = considered
+        .map(log => log.post)
+        .filter(post => post.type === 'tweet')
+        .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
 
       const ids = {}
       this.alwaysDisplayTweets.forEach(p => { ids[p.id] = true })

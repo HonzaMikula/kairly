@@ -43,7 +43,8 @@ const schemas = {
   },
   'EditorialRef': {
     author: 'Author',
-    issue: 'IssueRef'
+    tweets: 'Post',
+    issue: 'IssueRef',
   },
   'IssueRef': {
     newspaper: 'Newspaper',
