@@ -51,6 +51,7 @@ export default {
           eventCategory: 'Sign up',
           eventAction: 'Successful'
         })
+        this.$ga.set('dimension2', 'new-user')
         this.$router.push("/")
       } catch (err) {
         if (err.response) {

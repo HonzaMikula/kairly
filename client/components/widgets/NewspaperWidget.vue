@@ -85,7 +85,7 @@ export default {
 
   background: #fff
   border: 1px solid #ddd
-  box-shadow: 4px 4px 8px #eee, -4px -4px 8px #fff
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 
   text-align: left
 

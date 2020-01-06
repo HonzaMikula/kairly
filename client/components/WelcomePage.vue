@@ -1,111 +1,106 @@
 <template>
   <div class="welcome-view">
-    <h1>{{ $t('Welcome to Kairly!') }}</h1>
+    
+    <section class="welcome-intro">
+      <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
-    <ExploreNewspapers>
-      {{ $t('Subscribe to newspapers prepared by professional editors') }}
-    </ExploreNewspapers>
-
-    <section class="welcome--import">
-      <h2>{{ $t('Or import your favorite authors') }}</h2>
-      <div class="welcome--import--rss">
-        <nuxt-link to="/import">{{  $t('Import RSS feeds')  }}</nuxt-link>
-
-        <p>{{ $t('Upload OPML file.') }}</p>
-      </div>
-
-      <div class="welcome--import--twitter">
-        <button @click="importTwitter()">
-          {{ $t('Read your Twitter on Kairly') }}
-        </button>
-
-        <p>{{ $t('Connect your Twitter account.') }}</p>
-      </div>
-    </section>
-
-    <section class="welcome--roles">
-      <h2>{{ $t('Start using Kairly') }}</h2>
-      <div>
+      <div class="welcome-intro--roles">
         <section>
           <h3>{{ $t('As a reader') }}</h3>
           <p>
-            {{ $t('Are you interested in more newspapers and authors?') }}
+            {{ $t('Do you want to read newsletters and interesting authors?') }}
           </p>
-          <p><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
+
+          <ul>
+            <li><a href="/#explore-timeline">{{ $t('Subscribe to newsletters') }}</a></li>
+            <li><nuxt-link to="/import">{{ $t('Import your RSS feed') }}</nuxt-link></li>
+            <li>
+              <nuxt-link to="/explore/news">{{ $t('Explore') }}</nuxt-link>
+              {{ $t('or') }} 
+              <nuxt-link to="/search">{{ $t('search') }}</nuxt-link>
+            </li>
+          </ul>
         </section>
 
         <section>
           <h3>{{ $t('As an editor') }}</h3>
           <p>
-            {{ $t('Do you want to start a newspaper and pick the best content for others?') }}
+            {{ $t('Do you want to start a newsletter and curate content for others?') }}
           </p>
 
-          <p><nuxt-link to="/newspapers">{{ $t('Start a newspaper') }}</nuxt-link></p>
+          <ol>
+            <li><nuxt-link to="/newspapers">{{ $t('Start a newsletter') }}</nuxt-link></li>
+            <li>{{ $t('Curate content for your #1 issue') }}</li>
+            <li>{{ $t('Get subscribers and earn money') }}</li>
+          </ol>
         </section>
 
         <section>
           <h3>{{ $t('As an author') }}</h3>
           <p>
-            {{ $t('Do you want to start writing articles and tweets?') }}
+            {{ $t('Do you want to start publishing articles and start earning money?') }}
           </p>
 
-          <p><nuxt-link to="/posts">{{ $t('Write a new post') }}</nuxt-link></p>
+          <ol>
+            <li><nuxt-link to="/posts">{{ $t('Write a new post') }}</nuxt-link></li>
+            <li>{{ $t('Set a price of your content') }}</li>
+            <li>{{ $t('Publish it & pitch it to editors') }}</li>
+          </ol>
         </section>
       </div>
-
-      <a href="" @click.prevent="$router.go({path:'/', force: true})">{{ $t('Go Home to start reading') }}</a>
     </section>
 
-    <TwitterApologyModal
-      :active.sync="isTwitterApologyModalOpen"
-    />
+    <nav class="welcome--explore-tabs">
+      <ul>
+        <li 
+          v-for="tab in tabs" 
+          :key="tab.slug"
+          :class="{'is-active': tab == currentTab}">
+          <a href @click.prevent="switchTab(tab)">
+            {{ tab[$i18n.locale] || tab.en }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <ExploreTimeline id="explore-timeline" disableControls :category="currentTab" />
+
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-
-import NewspaperWidget from '@/components/widgets/NewspaperWidget'
-import TwitterApologyModal from '@/components/modals/TwitterApologyModal'
-import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
+import TABS from '@/exploreTabs'
+import ExploreTimeline from '@/components/ExploreTimeline'
 
 export default {
   name: 'Welcome',
 
   components: {
-    NewspaperWidget,
-    TwitterApologyModal,
-    ExploreNewspapers
+    ExploreTimeline
   },
 
   data() {
     return {
-      isTwitterApologyModalOpen: false
+      tabs: TABS,
+      currentTab: TABS.find(t => t.slug === 'news')
     }
   },
 
   methods: {
-    importTwitter() {
-      this.isTwitterApologyModalOpen = true
+    switchTab(tab) {
+      this.currentTab = tab
 
       this.$ga.event({
-        eventCategory: 'Onboarding / Exploring',
-        eventAction: 'Import Twitter',
-        eventLabel: 'Welcome screen'
+        eventCategory: 'Onboarding',
+        eventAction: 'Switch timeline',
+        eventLabel: tab
       })
-    },
-
-    closeTwitterApology() {
-      this.isTwitterApologyModalOpen = false
     }
   }
 }
 </script>
 
 <style lang="sass">
-//- Imports
-@import './styles/components/buttons'
-
 //- WELCOME VIEW -//
 .welcome-view
   display: block
@@ -113,7 +108,14 @@ export default {
   max-width: 900px
   margin: 0 auto
 
-  //- Welcome heading
+//- Intro Box
+.welcome-intro
+  padding: $baseline
+  background: #fff
+  border: 1px solid #eee
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+
+    //- Welcome heading
   > h1
     margin-bottom: $baseline
 
@@ -123,137 +125,99 @@ export default {
     line-height: $baseline * 2
     text-align: center
 
-  //- Sections
-  > h2,
-  > section > h2
-      margin-bottom: $baseline
-
-      font-family: $ff-serif
-      font-size: $fs-2
-      font-weight: 600
-      text-align: center
-
-  //- newspaper crossroad
-  .microsite-explore
-    > h2
-      margin-bottom: 0
-
-  .microsite-explore--crossroad
-    margin: 0
-    padding: $baseline 0 $baseline/2 0
-
-//- Import
-.welcome--import
-  display: grid
-  grid-template-columns: 1fr 1fr
-  grid-template-rows: auto auto
-  justify-content: center
-  padding: $baseline 0
-  margin-bottom: $baseline
-
-  background: #fff
-  border: 1px solid #eee
-
-  @media (max-width: $mobile)
-    grid-template-columns: auto
-    grid-template-rows: auto auto auto
-    grid-row-gap: $baseline / 2
-
-  > h2
-    grid-column: 1 / span 2
-
-    @media (max-width: $mobile)
-      grid-column: 1
-      margin-bottom: 0 !important
-
-  > div
-    grid-row: 2
-    margin: 0 $baseline*2
-
-    text-align: center
-
-    @media (max-width: $mobile)
-      grid-row: auto
-
-  p
-    font-size: $fs--1
-
-  .welcome--import--twitter
-    button
-      +button-icon($fa-var-twitter, icon-text, brand)
-
-  .welcome--import--rss
-    a
-      +button-icon($fa-var-rss, icon-text, solid)
-
 
 //- Roles
-.welcome--roles
+.welcome-intro--roles
+  display: grid
+  grid-auto-columns: 1fr
+  grid-auto-flow: column
+  grid-column-gap: $baseline
 
-  > div
-    display: flex
-    margin-bottom: $baseline * 2
-
-    @media (max-width: $mobile)
-      flex-direction: column
-      padding: 0 $baseline/4
-      margin-bottom: 0
+  @media (max-width: $mobile)
+    grid-auto-flow: row
 
   section
     position: relative
 
-    flex: 1
-    margin-right: $baseline * 1.5
+    display: flex
+    flex-direction: column
 
     @media (max-width: $mobile)
       margin: 0 0 $baseline 0
 
-    &:last-of-type
-      margin-right: 0
+      &:last-of-type
+        margin-bottom: 0
 
   h3
     margin-bottom: $baseline / 2
-    font-size: $fs-1
+    font-size: $fs-2
     font-weight: 600
 
     @media (max-width: $mobile)
       margin-bottom: 0
 
-  p + p
-    margin-top: $baseline / 2
+  h3 + p
+    margin-bottom: auto
 
+  ul,
+  ol
+    margin-top: $baseline
+    
     @media (max-width: $mobile)
-      margin-top: $baseline / 4
+      margin-top: $baseline / 2
 
-    a
-      color: $c-base
+    li
+      list-style: disc outside
+      margin-bottom: $baseline / 4
+      margin-left: $baseline * 0.75
 
       font-weight: 600
+      line-height: 1.42
 
-      transition: .15s all
+      a
 
-      &:hover
         color: darken($c-base, 10%)
 
-      &::after
-        +fa-icon()
-        @extend .fas
+        &:hover,
+        &:focus
+          color: darken($c-base, 20%)
 
-        margin-left: $baseline / 2
+  ol li
+    list-style: decimal outside
 
-        opacity: 0.5
+//- Tabs
+.welcome--explore-tabs
+  margin: $baseline $baseline 0 $baseline
 
-        content: fa-content($fa-var-arrow-right)
+  @media (max-width: $mobile)
+    margin: $baseline $baseline/2 0 $baseline/2
 
+  ul
+    display: flex
+    justify-content: center
 
-      &:hover::after
-        opacity: 1
+    @media (max-width: $mobile)
+      display: block
 
-  //- start reading Kairly button
-  > a
-    +button(primary, large)
+      white-space: nowrap
+      overflow-x: auto
+      -webkit-overflow-scrolling: touch
 
-    display: table
-    margin: 0 auto
+  li
+    margin-right: $baseline
 
+    font-size: $fs-2
+
+    @media (max-width: $mobile)
+      display: inline-block
+      margin-right: $baseline / 2
+
+    &:last-of-type
+      margin-right: 0
+
+    &.is-active 
+      font-weight: 600
+
+    a
+      color: #000
 </style>

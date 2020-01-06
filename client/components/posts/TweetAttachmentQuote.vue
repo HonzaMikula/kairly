@@ -20,7 +20,7 @@ export default {
   padding: $baseline/4
 
   background: #fafafa
-  box-shadow: 4px 4px 8px #eee, -4px -4px 8px #fff
+  box-shadow: 2px 2px 2px #eee, -2px -2px 4px #fff
 
   font-size: $fs-0
 

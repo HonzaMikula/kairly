@@ -131,7 +131,7 @@ export default {
 
   head() {
     return {
-      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newspapers – Kairly'
+      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newsletters – Kairly'
     }
   },
 

@@ -113,7 +113,7 @@ export default {
   async asyncData({ app, store }) {
     const [issues, authors] = await Promise.all([
       store.dispatch('getRecentIssues', 5),
-      store.dispatch('getNewAuthors', 5),
+      store.dispatch('getNewAuthors', 10),
     ])
     return { issues, authors }
   }
