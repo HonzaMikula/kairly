@@ -205,7 +205,7 @@ export default {
 
     > a,
     > span > a,
-    > button
+    > button,
     > span > button,
     > button-icon,
     > span > button-icon
