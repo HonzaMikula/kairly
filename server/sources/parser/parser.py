@@ -149,7 +149,7 @@ class ArticleParser:
                     del el.attrib[attr]
                 elif value == 'force-https':
                     el.attrib[attr] = re.sub('http://', 'https://', el.attrib[attr])
-                elif value.startwth('rename '):
+                elif value.startswith('rename '):
                     new_attr = value[6:].lstip()
                     el.attrib[new_attr] = el.attrib[attr]
                     del el.attrib[attr]
