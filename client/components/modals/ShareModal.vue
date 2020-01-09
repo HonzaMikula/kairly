@@ -2,25 +2,31 @@
   <DialogWindow
     v-if="active"
     custom-class="share-modal"
+    ignoreBackgroundClick
     @close="closeModal"
   >
     <template #header>
       <h1>{{ $t('Share') }}</h1>
     </template>
 
-    <h1>{{ issue.newspaper.title }} #{{ issue.number }}</h1>
-    <ul>
-      <li v-for="post in issue.posts" :key="post.id">
-        {{ post.post.content.title }}
-      </li>
-    </ul>
+    <div>
+      <h1>{{ title }}</h1>
+      <ul>
+        <li v-for="post in posts" :key="post.post.id">
+          • <a :href="post.post.source">{{ post.post.content.title }}</a>
+          <button @click="removeItem(post.post.id)" class="remove"></button>
+        </li>
+      </ul>
+
+      <p>{{ url }}</p>
+    </div>
 
     <template #footer>
-      <a href="" class="copy">Copy</a>
-      <a href="" class="facebook">Facebook</a>
-      <a href="" class="twitter">Twitter</a>
-      <a href="" class="linkedin">LinkedIn</a>
-      <a href="" class="send-by-email">Send by email</a>
+      <a href="" class="copy" @click.prevent="copyToClipboard()">Copy</a>
+      <a :href="`https://www.facebook.com/sharer/sharer.php?u=${url}`" target="_blank" class="facebook">Facebook</a>
+      <a :href="`https://twitter.com/intent/tweet?text=${content}&url=${url}`" target="_blank" class="twitter">Twitter</a>
+      <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${content}`" class="linkedin" target="_blank">LinkedIn</a>
+      <a :href="`mailto:?subject=${title}&body=${content}%0D%0A%0D%0A${url}`" class="send-by-email">Send by email</a>
     </template>
   </DialogWindow>
 </template>
@@ -40,7 +46,47 @@ export default {
     issue: Object
   },
 
-  mixins: [ModalMixin]
+  data() {
+    return {
+      posts: this.issue.posts,
+    }
+  },
+
+  computed: {
+    title() {
+      return `${this.issue.newspaper.title} #${this.issue.number}`
+    },
+
+    url() {
+      return `https://kairly.com/${this.issue.newspaper.fullName}/${this.issue.number}`
+    },
+
+    content() {
+      let content = ''
+      this.issue.posts.forEach(function (post) {
+        content += '• '+ post.post.content.title +'\n'
+      })
+      return encodeURIComponent(content)
+    }
+  },
+
+  mixins: [ModalMixin],
+
+  methods: {
+    removeItem(id) {
+      this.posts.splice(this.posts.findIndex(function(i){
+          return i.post.id === id
+      }), 1)
+    },
+
+    async copyToClipboard() {
+      try {
+        await this.$copyText(this.content)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
 }
 </script>
 
@@ -73,12 +119,44 @@ export default {
       font-size: $fs-1
 
     li
+      position: relative
+      
       margin-bottom: $baseline / 4
+      padding-right: $baseline
 
-      font-size: $fs--1
+      font-size: $fs-0
 
-      &::before
-        content: ' • '
+      a
+        display: inline-block
+        margin-left: $baseline / 4
+
+        color: darken($c-base, 20%)
+
+      
+      &:hover button
+        display: inline-block
+
+      //- remove button
+      button
+        position: absolute
+
+        display: none
+        background: transparent
+        border: 0
+        color: #aaa
+
+        cursor: pointer
+        line-height: $baseline
+
+        &:hover,
+        &:focus
+          color: #333
+
+        &::before
+          +fa-icon()
+          @extend .fas
+          content: fa-content($fa-var-times)
+
 
   //- Footer
   footer
