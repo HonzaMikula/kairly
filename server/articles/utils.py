@@ -8,7 +8,7 @@ from sources.parser.og import parse_og_tags
 from sources.twitter_api import get_api_connection, status_to_post_args
 from utils.url import fetch_url
 
-RE_TWITTER_URL = re.compile(r'https://twitter\.com/[^/]+/status/(\d+)(\?.*)?')
+RE_TWITTER_URL = re.compile(r'https://(mobile\.)?twitter\.com/[^/]+/status/(\d+)(\?.*)?')
 
 
 def create_twitter_link(status_id):
@@ -33,7 +33,7 @@ def create_twitter_link(status_id):
 def create_post_link(url, user, hidden=False, published=None, guid=None):
     m = RE_TWITTER_URL.fullmatch(url)
     if m:
-        return create_twitter_link(m.group(1))
+        return create_twitter_link(m.group(2))
 
     html, resolved_url = fetch_url(url)
     existing_post = Post.find_by_source_url(resolved_url)
