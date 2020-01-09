@@ -47,6 +47,9 @@ class Entities:
         self.called_from_to_json = False
         self.to_json_entities = None
 
+    def __str__(self):
+        return str(self.entities)
+
     def add(self, cls, id_or_object):
         if isinstance(id_or_object, int):
             object_id = id_or_object
@@ -68,7 +71,7 @@ class Entities:
         for cls, ids in other.entities.items():
             self.entities[cls].update(ids)
         for cls, objects in other.loaded.items():
-            self.loaded.update(objects)
+            self.loaded[cls].update(objects)
 
     def to_json(self):
         data = defaultdict(dict)
