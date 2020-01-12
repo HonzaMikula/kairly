@@ -26,21 +26,30 @@
     />
 
     <footer class="issue--footer">
-      <div class="issue--footer--show-more">
-        <button
-          v-if="(tailPostsCount > 0 && !expanded)"
-          @click.prevent="expandIssue">
-          {{ $t('Show more') }} ({{tailPostsCount}})
-        </button>
-      </div>
+      <button
+        class="show-more"
+        v-if="(tailPostsCount > 0 && !expanded)"
+        @click.prevent="expandIssue">
+        {{ $t('Show more') }} ({{tailPostsCount}})
+      </button>
 
-      <div class="issue--footer--recommend-button">
-        <RecommendButtonIssue
-          v-if="loggedIn && issue.type == 'newspaper'"
-          :issue="issue"
-        />
-      </div>
+      <RecommendButtonIssue
+        v-if="loggedIn && issue.type == 'newspaper'"
+        :issue="issue"
+      />
+
+      <button
+        class="share"
+        @click="openShareModal()"
+       >
+        {{ $t('Share') }}
+      </button>
     </footer>
+
+    <ShareModal
+      :active.sync="isShareModalOpen"
+      :issue="issue"
+    />
   </component>
 </template>
 
@@ -54,6 +63,7 @@ import IssueNewspaper from '@/components/issues/IssueNewspaper'
 import IssueAuthor from '@/components/issues/IssueAuthor'
 import PostWrapper from '@/components/PostWrapper'
 import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
+import ShareModal from '@/components/modals/ShareModal'
 
 const POST_LIMIT = 5
 
@@ -74,12 +84,14 @@ export default {
     IssueSuspendedNewspaper,
     IssueUnreleasedNewspaper,
     PostWrapper,
-    RecommendButtonIssue
+    RecommendButtonIssue,
+    ShareModal
   },
 
   data() {
     return {
-      showAllPosts: false
+      showAllPosts: false,
+      isShareModalOpen: false,
     }
   },
 
@@ -118,7 +130,15 @@ export default {
   methods: {
     expandIssue() {
       this.$store.dispatch('timeline/expandIssue', this.issue.id)
-    }
+    },
+
+    openShareModal() {
+      this.isShareModalOpen = true
+      this.$ga.event({
+        eventCategory: 'Share',
+        eventAction: 'Open Share modal'
+      })
+    },
   }
 }
 </script>
@@ -180,12 +200,18 @@ timeline-newspaper
   display: flex
   justify-content: center
 
-  > div
-    margin: 0 $baseline/4
+  > *
+    margin-right: $baseline / 2
 
-//- show more button
-.issue--footer--show-more button
-  +button
+    &:last-of-type
+      margin-right: 0
+
+  //- show more button
+  .show-more
+    +button
+
+  .share
+     +button-icon($fa-var-share-alt, icon-text)
 
 //- Issue
 .issue-footer

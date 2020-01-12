@@ -57,6 +57,7 @@ module.exports = {
     }],
     ['@nuxtjs/style-resources'],
     ['bootstrap-vue/nuxt'],
+    ['nuxt-clipboard2']
   //  '@nuxtjs/redirect-module',
   ],
 

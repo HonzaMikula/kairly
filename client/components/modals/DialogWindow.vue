@@ -111,19 +111,20 @@ export default {
   //- Header
   > header
     display: grid
-    grid-template-columns: 1fr auto
+    grid-template-columns: $baseline*2 1fr $baseline*2
 
     height: $baseline * 2
 
-    background: $c-base
-    color: #fff
+    background: #eee
+    color: #000
 
     font-weight: 600
     line-height: $baseline * 2
 
     //- Dialog title
     h1
-      padding: 0 $baseline/2
+      text-align: center
+      grid-column: 2 / span 1
 
     //- Close button
     .button-close
@@ -161,7 +162,7 @@ export default {
     text-align: center
 
     //- action button
-    button
+    > button
       +button(primary, medium)
 
 </style>

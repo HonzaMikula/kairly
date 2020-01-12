@@ -1,12 +1,11 @@
 <template>
-  <a
+  <button
     :class="{'recommend-button-issue': true, 'recommended': recommended}"
-    href="#"
-    @click.prevent="recommend"
+    @click="recommend"
     v-b-tooltip
     :title="$t('Recommend')"
     :aria-label="$t('Recommend')">
-  </a>
+  </button>
 </template>
 
 <script>
