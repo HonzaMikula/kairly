@@ -78,4 +78,3 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         args['published'] = published
 
     return Post.objects.create(**args)
-

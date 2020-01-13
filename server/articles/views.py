@@ -1,3 +1,4 @@
+import io
 import html
 from collections import defaultdict
 from datetime import datetime
@@ -5,12 +6,13 @@ from decimal import ConversionSyntax, Decimal
 from itertools import chain
 from operator import attrgetter
 
+import requests
 import pytz
 import rapidjson as json
-from credits.utils import (get_user_credits, pay_author_subscription,
-                           pay_newspaper_subscription)
+import PIL
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+from django.core.cache import cache
 from django.db import transaction
 from django.db.models import F, Q, Sum
 from django.http import (HttpResponse, HttpResponseBadRequest,
@@ -23,6 +25,7 @@ from django.utils.timezone import now as timezone_now
 from django.views import View
 from django.views.decorators.http import require_POST
 
+from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 from users.models import User
 from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
@@ -1059,3 +1062,53 @@ class IssueRecommendationView(View):
         recommendation.delete()
 
         return JsonResponse({})
+
+
+def media_proxy(request):
+    src = request.GET['src']
+    slug = request.GET['post']
+    size = request.GET.get('size')
+
+    if size != 'timeline':
+        return HttpResponseBadRequest("Invalid size")
+
+    cache_key = f'media-{slug}-{src}-{size}'
+
+    cached = cache.get(cache_key)
+    if cached:
+        status = 200
+        content = cached['content']
+        content_type = cached['content-type']
+    else:
+        perex = Post.objects.filter(slug=slug).values_list('perex', flat=True)[0]
+        if src not in perex:
+            return HttpResponseBadRequest("Post doesn't contain such media object")
+
+        ua = request.META.get('HTTP_USER_AGENT', settings.DEFAULT_USER_AGENT)
+
+        resp = requests.get(src, headers={'User-Agent': ua})
+
+        TIMELINE_WIDTH = 254
+
+        orig_image = image = PIL.Image.open(io.BytesIO(resp.content))
+
+        if image.width > TIMELINE_WIDTH:
+            dim = (TIMELINE_WIDTH, int(image.height * TIMELINE_WIDTH / image.width))
+            image = image.resize(dim, PIL.Image.LANCZOS)
+            image.format = orig_image.format
+
+        buf = io.BytesIO()
+        image.save(buf, format=image.format)
+        content = buf.getvalue()
+        content_type = resp.headers.get('Content-Type')
+
+        if resp.ok:
+            cache.set(cache_key, {
+                'content-type': content_type,
+                'content': content,
+                'size': f'{image.width}x{image.height}'
+            }, 7 * 86400)
+
+        status = resp.status_code
+
+    return HttpResponse(content, status=status, content_type=content_type)

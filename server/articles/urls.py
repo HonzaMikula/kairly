@@ -31,4 +31,6 @@ urlpatterns = [
 
     path('recommendation/post/<username>/<post_slug>', views.PostRecommendationView.as_view(), name='post_recommendation'),
     path('recommendation/issue/<username>/<slug:newspapeper_slug>/<int:issue_number>', views.IssueRecommendationView.as_view(), name='issue_recommendation'),
+
+    path('p', views.media_proxy, name='media_proxy'),
 ]
