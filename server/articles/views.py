@@ -10,7 +10,7 @@ import urllib.parse
 import requests
 import pytz
 import rapidjson as json
-import PIL
+from PIL import Image
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.core.cache import cache
@@ -1096,14 +1096,14 @@ def media_proxy(request):
     TIMELINE_WIDTH = 254
 
     try:
-        orig_image = image = PIL.Image.open(io.BytesIO(resp.content))
+        orig_image = image = Image.open(io.BytesIO(resp.content))
     except OSError:
         cache.set(cache_key, {'status': 404}, 60)
         return HttpResponseNotFound()
 
     if image.width > TIMELINE_WIDTH:
         dim = (TIMELINE_WIDTH, int(image.height * TIMELINE_WIDTH / image.width))
-        image = image.resize(dim, PIL.Image.LANCZOS)
+        image = image.resize(dim, Image.LANCZOS)
         image.format = orig_image.format
 
     buf = io.BytesIO()
