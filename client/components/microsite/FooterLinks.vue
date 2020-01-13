@@ -24,8 +24,8 @@
     </div>
 
     <div>
-      {{ $t('Contact us on') }}
-      <a href="mailto:info@kairly.com">info@kairly.com</a>
+      <a href="mailto:info@kairly.com">info@kairly.com</a> |
+      <nuxt-link to="/privacy-policy">{{ $t('Privacy policy') }}</nuxt-link> 
     </div>
 
     <div class="microsite-footer-links--switch-language">

@@ -148,8 +148,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
