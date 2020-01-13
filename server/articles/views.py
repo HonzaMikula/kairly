@@ -5,6 +5,7 @@ from datetime import datetime
 from decimal import ConversionSyntax, Decimal
 from itertools import chain
 from operator import attrgetter
+import urllib.parse
 
 import requests
 import pytz
@@ -1076,39 +1077,45 @@ def media_proxy(request):
 
     cached = cache.get(cache_key)
     if cached:
-        status = 200
-        content = cached['content']
-        content_type = cached['content-type']
-    else:
-        perex = Post.objects.filter(slug=slug).values_list('perex', flat=True)[0]
-        if src not in perex:
-            return HttpResponseBadRequest("Post doesn't contain such media object")
+        if 'status' in cached and cached['status'] == 404:
+            return HttpResponseNotFound()
+        return HttpResponse(cached['content'], content_type=cached['content-type'])
 
-        ua = request.META.get('HTTP_USER_AGENT', settings.DEFAULT_USER_AGENT)
+    perex = Post.objects.filter(slug=slug).values_list('perex', flat=True)[0]
+    perex_unespaced = html.unescape(perex)
+    norm_src = src.replace('http://', '').replace('https://', '')
 
-        resp = requests.get(src, headers={'User-Agent': ua})
+    if norm_src not in perex_unespaced and urllib.parse.unquote_plus(norm_src) not in perex_unespaced:
+        print(f'{src} not found in post {slug}')
+        return HttpResponseBadRequest("Post doesn't contain such media object")
 
-        TIMELINE_WIDTH = 254
+    ua = request.META.get('HTTP_USER_AGENT', settings.DEFAULT_USER_AGENT)
 
+    resp = requests.get(src, headers={'User-Agent': ua})
+
+    TIMELINE_WIDTH = 254
+
+    try:
         orig_image = image = PIL.Image.open(io.BytesIO(resp.content))
+    except OSError:
+        cache.set(cache_key, {'status': 404}, 60)
+        return HttpResponseNotFound()
 
-        if image.width > TIMELINE_WIDTH:
-            dim = (TIMELINE_WIDTH, int(image.height * TIMELINE_WIDTH / image.width))
-            image = image.resize(dim, PIL.Image.LANCZOS)
-            image.format = orig_image.format
+    if image.width > TIMELINE_WIDTH:
+        dim = (TIMELINE_WIDTH, int(image.height * TIMELINE_WIDTH / image.width))
+        image = image.resize(dim, PIL.Image.LANCZOS)
+        image.format = orig_image.format
 
-        buf = io.BytesIO()
-        image.save(buf, format=image.format)
-        content = buf.getvalue()
-        content_type = resp.headers.get('Content-Type')
+    buf = io.BytesIO()
+    image.save(buf, format=image.format)
+    content = buf.getvalue()
+    content_type = resp.headers.get('Content-Type')
 
-        if resp.ok:
-            cache.set(cache_key, {
-                'content-type': content_type,
-                'content': content,
-                'size': f'{image.width}x{image.height}'
-            }, 7 * 86400)
+    if resp.ok:
+        cache.set(cache_key, {
+            'content-type': content_type,
+            'content': content,
+            'size': f'{image.width}x{image.height}'
+        }, 14 * 86400)
 
-        status = resp.status_code
-
-    return HttpResponse(content, status=status, content_type=content_type)
+    return HttpResponse(content, status=resp.status_code, content_type=content_type)

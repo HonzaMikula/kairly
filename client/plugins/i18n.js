@@ -13,7 +13,8 @@ export default ({ req, app, store }) => {
     messages: {
       'en': require('~/po/en.json'),
       'cs': require('~/po/cs.json')
-    }
+    },
+    silentFallbackWarn: true
   })
 
   app.setLocale = function(locale) {

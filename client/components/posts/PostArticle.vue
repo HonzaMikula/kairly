@@ -7,7 +7,7 @@
       </h2>
 
       <timeline-post--article--content>
-        <div v-html="post.content.perex"></div>
+        <div v-html="perex"></div>
         <div class="timeline-post--continue-reading" v-if="post.timeRead && !post.draft">
           <template v-if="post.content.protected">
             <a :href="post.source" target="_blank">{{ $t('Read the article') }}</a>
@@ -43,6 +43,23 @@ export default {
 
   components: {
     PostBase
+  },
+
+  computed: {
+    perex() {
+      const { baseURL } = this.$axios.defaults
+      // don't use template element! querySelectorAll ignores templates
+      const fragment = document.createElement('div')
+      fragment.innerHTML = this.post.content.perex
+      fragment.querySelectorAll('img').forEach(img => {
+        const url = new URL(img.src)
+        if (url !== 'kairly.com') {
+          img.src = `${baseURL}/p?post=${encodeURIComponent(this.post.slug)}&size=timeline&src=${encodeURIComponent(img.src)}`
+        }
+      })
+      //post.content.perex
+      return fragment.innerHTML
+    }
   }
 }
 </script>
