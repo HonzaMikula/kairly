@@ -6,20 +6,69 @@
         <section>
           <h1>
             {{ $t('Modern news platform')}}
-            <br />
             {{ $t('for demanding readers') }}
           </h1>
 
           <p>{{ $t('Subscribe to thematic newsletters prepared by professional editors.') }}</p>
 
-          <ul>
-            <li>{{ $t('Read your sources at regular time you want. E.g. every day at 9am.') }}</li>
-            <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
-            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
-          </ul>
+          <aside>
+            by 
+              <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" /> Jan Mikula
+              <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" /> Roman Krejčík
+          </aside>
+
+          <!-- <ul><li>Čtěte vaše zdroje v pravidelném čase, který zvolíte. Například každé ráno v 9:00.</li> <li>Timelinu vám aktualizujeme jen každé 3 hodiny. Tak je to rozumné.</li> <li>Žádné notifikace. Žádné nekonečné skrolování. Žádná závislost.</li></ul> -->
+
+          <article>
+            <img src="~assets/microsite/kairly-random-25.jpg" />
+            <h3>Newslettery připravují editoři</h3>
+            <p>
+              V záplavě informací na internetu potřebujeme profesionály,
+              kteří dokáží vybrat ty nejlepší a nejdůvěryhodnější články a
+              tweety.
+            </p>
+            <h3>Newslettery vycházejí vždy ve stejný čas</h3>
+            <p>
+              Například váš oblíbený newsletter 
+              o politice vám zobrazíme každé ráno v 9:00. Tímto způsobem si můžete vytvořit
+              zdravé návyky při konzumaci informací na internetu.
+            </p>
+
+            <h3>Timelinu s newslettery aktualizujeme jen každé 3 hodiny</h3>
+            <p>
+              Tak je to rozumné. Nechceme, abyste trpěli stresem, 
+              že vám něco unikne.
+            </p>
+
+            
+            
+            
+            
+            <h3>Žádné notifikace, žádné nekonečné skrolování</h3>
+            <p>
+              Nemáme žádné notifikace, ani žádné nekonečné skrolování. Nechceme, 
+              abyste v naší aplikaci trávili více času, než je zapotřebí. Nechceme, abyste
+              si vytvořili závislost na naší aplikaci.
+            </p>
+
+            <h3>
+              Jste nezávislý 
+              <nuxt-link to='platform/journalists'>novinář/bloger</nuxt-link>
+              nebo 
+              <nuxt-link to='platform/publishers'>vydavatel</nuxt-link>?</h3>
+            <p>
+              Získejte nové čtenáře
+              a vydělejte, díky unikátnímu konceptu placeného obsahu.
+            </p>
+            
+          </article>
+
+          <button>Try it and sign up</button>
         </section>
 
-        <SignUpForm></SignUpForm>
+        <picture>
+          <img src="~assets/microsite/kairly-random-25.jpg" />
+        </picture>
       </div>
     </section>
 
@@ -43,7 +92,7 @@
 
     </section> -->
 
-    <section class="homepage--readers">
+    <!-- <section class="homepage--readers">
       <picture>
         <img src="~assets/homepage/kairly-1.jpg" />
       </picture>
@@ -68,11 +117,11 @@
           Nesloužíme žádným byznysovým ani politickým zájmům.
           Za noviny se vždy platilo a <strong>zakoupením předplatného novin si kupujete kvalitní a nezávislý obsah</strong>.
         </p>
-         -->
+         
       </div>
-    </section>
+    </section> -->
 
-    <section class="homepage--quote">
+    <!-- <section class="homepage--quote">
       <blockquote>
         <div v-html="$t('@homepage/quote/honza')" itemprop="citation"></div>
         <!--
@@ -87,16 +136,16 @@
           rádoby zajímavý obsah. Pravidelně a vždy ve stejný čas zobrazujeme jen ten obsah,
           který jste si objednal a to od lidí, kterým věříte a kteří vás skutečně intelektuálně obohacují.
         </p>
-         -->
+         
 
         <footer>
           <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
           <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
         </footer>
       </blockquote>
-    </section>
+    </section> -->
 
-    <section class="homepage--readers">
+    <!-- <section class="homepage--readers">
       <picture>
         <img src="~assets/homepage/kairly-3.jpg" />
       </picture>
@@ -120,11 +169,11 @@
           Čtenáři si mohou předplatit i přímo vás jako autora. Ostatní editoři mohou vaše články
           zařadit do svých vydání novin. <strong>Tím získáte podíl i z předplatného novin, ve kterých se vaše články objevily</strong>.
         </p>
-         -->
+         
       </div>
-    </section>
+    </section> -->
 
-    <section class="homepage--quote">
+    <!-- <section class="homepage--quote">
       <blockquote>
         <div v-html="$t('@homepage/quote/roman')" itemprop="citation"></div>
         <!--
@@ -139,14 +188,14 @@
           a síťového efektu, kterými si nás před lety získaly sociální sítě. Právě proto věříme, že Kairly přináší
           vysněný fungující model placeného obsahu na internetu.
         </p>
-        -->
+        
 
         <footer>
           <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
           <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
         </footer>
       </blockquote>
-    </section>
+    </section> -->
 
     <!-- <section class="homepage--newspapers">
       <h2>{{ $t('Check out some of our newspapers.') }}</h2>
@@ -301,11 +350,20 @@ export default {
 
   > div
     display: grid
-    grid-template-columns: 2fr 1fr
+    grid-template-columns: 1fr
+    grid-column-gap: $baseline
     max-width: 900px
 
     @media (max-width: $mobile)
       grid-template-columns: auto
+
+    > picture
+      display: none
+      img
+        height: $baseline * 5
+        width: 100%
+
+        object-fit: cover
 
   section
     display: flex
@@ -313,10 +371,23 @@ export default {
     align-items: flex-start
     justify-content: center
 
+    font-family: $ff-serif
+
+    button
+      +button(primary, large)
+
+      display: table
+      margin: 0 auto
+
+      border: 1px solid darken($c-base, 10%)
+      box-shadow: 0 3px 3px #aaa
+      //text-shadow: 0 0 2px #000
+
     h1
       +heading
       padding: 0
-      margin-bottom: $baseline
+      margin-bottom: $baseline * 0.75
+      max-width: 480px
 
       @media (max-width: $mobile)
         margin: $baseline/2
@@ -327,7 +398,8 @@ export default {
 
 
     > p
-      margin-bottom: $baseline
+      max-width: 720px
+      margin-bottom: $baseline * 0.75
 
       font-size: $fs-3
       line-height: 1.42
@@ -336,6 +408,53 @@ export default {
         padding: 0 $baseline/2
 
         font-size: $fs-2
+
+    > aside
+      display: flex
+      align-items: center
+      margin-bottom: $baseline * 0.75
+
+      font-size: $fs--2
+
+      img
+        position: relative
+
+        height: $baseline * 0.75
+        margin-left: $baseline / 4
+        margin-right: $baseline / 8
+        width: $baseline * 0.75
+
+        border-radius: 100%
+
+
+    article
+      columns: 3
+      column-rule: 1px solid #ddd
+
+      margin-bottom: $baseline / 2
+
+      h3
+        margin-bottom: $baseline / 2
+        font-weight: 600
+        line-height: 1.42
+
+        a
+          color: darken($c-base, 20%)
+          text-decoration: underline
+
+      p
+        position: relative
+
+        margin-bottom: $baseline / 2
+        
+        line-height: 1.42
+        text-indent: $baseline / 2
+
+      img
+        max-width: 100%
+        height: $baseline * 7
+        width: 100%
+        object-fit: cover
 
     ul
       padding: 0 $baseline 0 0
