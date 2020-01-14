@@ -32,4 +32,5 @@ export default {
 <style lang="sass">
 .editorial-post--editorial.many-tweets
   align-self: start !important  
+  margin-bottom: auto
 </style>

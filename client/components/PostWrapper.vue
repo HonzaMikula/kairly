@@ -101,6 +101,11 @@ export default {
     &.is-before
       grid-template-columns: 60vw calc(100vw - (#{$baseline} * 1.5))
 
+  > aside
+    display: flex
+    flex-direction: column
+    justify-content: center
+
   > aside > div
     @media (max-width: $mobile)
       position: absolute
