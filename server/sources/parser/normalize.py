@@ -1,7 +1,6 @@
 import re
 
-from .html import is_br, create_element, copy_element, is_phrasing_context, fragments_to_string
-from .debug import normalize_logging
+from .html import is_br, create_element, copy_element, is_phrasing_context
 
 TAG_OMIT_ALLOWED = {'body', 'div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'}
 PARAGRAPH_REPLACEMENTS = {'div', 'article', 'main', 'aside', 'section', 'header', 'footer', 'nav'}

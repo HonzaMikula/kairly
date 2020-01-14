@@ -119,6 +119,8 @@ class ArticleParser:
             preserve = {'title', 'src', 'alt', 'srcset', 'sizes'}
         elif el.tag == 'a':
             preserve = {'title', 'href'}
+        elif el.tag == 'video':
+            preserve = {'title', 'src', 'duration'}
         else:
             preserve = {'title'}
 
@@ -130,6 +132,10 @@ class ArticleParser:
                 del attrib[attr]
             elif attr == 'href' and attrib[attr].startswith('javascript'):
                 del attrib[attr]
+
+        if el.tag == 'video':
+            attrib['controls'] = ''
+            attrib['poster'] = ''
 
     def _prune(self, el):
         def reverse_enumerate(arr):
