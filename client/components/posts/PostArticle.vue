@@ -48,18 +48,47 @@ export default {
   computed: {
     perex() {
       const { baseURL } = this.$axios.defaults
+      const { perex } = this.post.content
+      let URL
+
+      if (process.server) {
+        URL = require('universal-url').URL
+      } else {
+        URL = window.URL
+      }
+
+      const replaceUrl = (src, callback) => {
+        const url = new URL(src)
+          if (url !== 'kairly.com') {
+            callback(`${baseURL}/p?post=${encodeURIComponent(this.post.slug)}&size=timeline&src=${encodeURIComponent(src)}`)
+          }
+      }
+
       // don't use template element! querySelectorAll ignores templates
-      const fragment = document.createElement('div')
-      fragment.innerHTML = this.post.content.perex
-      fragment.querySelectorAll('img').forEach(img => {
-        const url = new URL(img.src)
-        if (url !== 'kairly.com') {
-          img.src = `${baseURL}/p?post=${encodeURIComponent(this.post.slug)}&size=timeline&src=${encodeURIComponent(img.src)}`
-        }
-      })
-      //post.content.perex
-      return fragment.innerHTML
+      if (process.server) {
+        // document (and createElement is not defined on server)
+        const cheerio = require('cheerio')
+        const $ = cheerio.load(perex)
+        $('img').each(function(i, img) {
+          replaceUrl($(img).attr('src'), src => {
+            $(img).attr('src', src)
+          })
+        })
+        return $.html()
+      } else {
+        const fragment = document.createElement('div')
+        fragment.innerHTML = perex
+        fragment.querySelectorAll('img').forEach(img => {
+          replaceUrl(img.src, src => { img.src = src })
+        })
+        //post.content.perex
+        return fragment.innerHTML
+      }
     }
+  },
+
+  mounted() {
+
   }
 }
 </script>
