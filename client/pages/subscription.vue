@@ -60,7 +60,7 @@
             </li>
           </ul>
 
-          <p>{{ $t('You can find more newspapers and authors on Explore page.') }}</p>
+          <p>{{ $t('You can find more newsletters and authors on Explore page.') }}</p>
 
           <p class="explore-more-content"><nuxt-link to="/explore">{{ $t('Explore more content') }}</nuxt-link></p>
         </section>

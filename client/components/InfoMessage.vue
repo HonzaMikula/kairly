@@ -1,7 +1,7 @@
 <template>
-  <info-message-view :class="type">
+  <div class="info-message-view" :class="type">
     <slot></slot>
-  </info-message-view>
+  </div>
 </template>
 
 <script>
@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style lang="sass">
-info-message-view
+.info-message-view
   position: fixed
   left: 50%
   bottom: $baseline

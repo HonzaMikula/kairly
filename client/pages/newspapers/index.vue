@@ -51,6 +51,17 @@
           </div>
 
           <div class="newspaper-controls" v-if="selectedNewspaper">
+            <div class="newspaper-controls--external-article">
+              <input
+                type="url"
+                v-model="externalLink"
+                :placeholder="$t('Paste URL of external article')"
+              />
+              <button
+                @click.prevent="addExternalLink">
+                {{ $t('Add article') }}
+              </button>
+            </div>
             <nuxt-link
               class="detail"
               :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
@@ -99,15 +110,15 @@
           </div>
         </header>
 
-        <editor-newspapers--board
+        <div
           v-if="isBacklogLoaded"
-          class="upcoming-issue"
+          class="editor-newspapers--board upcoming-issue"
         >
           <NewspaperBacklog
             v-if="selectedNewspaper"
             :newspaper="selectedNewspaper"
           />
-        </editor-newspapers--board>
+        </div>
         <loading-spinner v-else />
       </template>
     </div>
@@ -149,7 +160,7 @@ export default {
     return {
       isSelectNewspaperOpen: false,
       isMobileMenuOpen: false,
-
+      externalLink: null,
       selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
       isBacklogLoaded: false,
     }
@@ -219,8 +230,29 @@ export default {
 
     ...mapActions({
       deleteNewspaper: 'deleteNewspaper',
-      loadNewspaperBacklog: 'backlog/loadNewspaperBacklog'
-    })
+      loadNewspaperBacklog: 'backlog/loadNewspaperBacklog',
+      addLinkToBacklog: 'backlog/addLink'
+    }),
+
+    async addExternalLink() {
+      const url = this.externalLink
+      if (!url) {
+        return
+      }
+
+      this.$ga.event({
+        eventCategory: 'Add external article',
+        eventAction: url,
+        eventLabel: this.selectedNewspaper
+      })
+
+      try {
+        await this.addLinkToBacklog({newspaper: this.selectedNewspaper, url})
+        this.externalLink = ''
+      } catch (err) {
+        this.handleError(err)
+      }
+    }
   },
 
   async fetch({ store, redirect }) {
@@ -319,6 +351,7 @@ export default {
           content: fa-content($fa-var-chevron-down)
 
     .newspaper-controls
+      display: flex
       align-self: center
       justify-self: end
 
@@ -359,6 +392,39 @@ export default {
 
         &.delete::before
           content: fa-content($fa-var-trash)
+
+    .newspaper-controls--external-article
+      display: flex
+
+      input[type=url]
+        border: 1px solid #ddd
+        border-right: 0
+        border-radius: 3px 0 0 3px
+        box-sizing: border-box
+        flex: 1
+        height: $baseline * 1.25
+        padding: 0 $baseline/4
+
+        font-family: $ff-sans
+        font-size: $fs--1
+
+      button
+        border-radius: 0 3px 3px 0
+        box-sizing: border-box
+        height: $baseline * 1.25
+
+        background: $c-base
+        border: 0
+        color: #fff
+
+        font-family: $ff-sans
+        font-size: $fs--1
+
+        cursor: pointer
+
+        &:hover,
+        &:focus
+          background: darken($c-base, 10%)
 
     .mobile-menu
       display: none

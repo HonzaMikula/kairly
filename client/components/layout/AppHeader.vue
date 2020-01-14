@@ -161,7 +161,9 @@
 
       <nav class="app-header--user-profile" v-if="user">
         <nuxt-link to="/search" class="search" v-b-tooltip :title="$t('Search')"></nuxt-link>
-        <AuthorPicture :author="user" />
+        <nuxt-link :to="{name: 'author', params: {author: user.id}}">
+          <AuthorPicture :author="user" />
+        </nuxt-link>
         <button-icon
           @click="isDropDownMenuOpen = true"
           :class="{'is-active': isDropDownMenuOpen}"

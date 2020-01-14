@@ -1,5 +1,5 @@
 <template>
-  <issue-widget-view>
+  <div class="issue-widget-view">
     <picture>
       <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
         <img v-if="issue.newspaper.picture" :src="issue.newspaper.picture" :alt="issue.newspaper.title" />
@@ -11,10 +11,10 @@
       <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">{{ issue.newspaper.title }}</nuxt-link>
     </h2>
 
-    <issue-widget--author>
+    <div class="issue-widget--author">
       <AuthorPicture :author="issue.newspaper.editor" />
       <nuxt-link :to="{name: 'author', params: {author: issue.newspaper.editor.id}}">{{ issue.newspaper.editor.name }}</nuxt-link>
-    </issue-widget--author>
+    </div>
 
     <ul>
       <li v-for="{post} in issue.posts.slice(0, 3)" :key="post.id">
@@ -22,15 +22,15 @@
       </li>
     </ul>
 
-    <issue-widget--subscribe v-if="loggedIn">
+    <div class="issue-widget--subscribe" v-if="loggedIn">
       <NewspaperSubscriptionButton :newspaper="issue.newspaper" />
 
       <p>
         {{ issue.newspaper.likes }} {{ $t('subscribers') }}
       </p>
-    </issue-widget--subscribe>
+    </div>
 
-  </issue-widget-view>
+  </div>
 </template>
 
 <script>
@@ -60,7 +60,7 @@ export default {
 </script>
 
 <style lang="sass">
-issue-widget-view
+.issue-widget-view
   position: relative
 
   display: flex
@@ -119,7 +119,7 @@ issue-widget-view
         color: #000
 
 //- Author + Periodicity
-issue-widget--author
+.issue-widget--author
   font-size: $fs--1
   order: 2
   margin: $baseline/2 0
@@ -138,7 +138,7 @@ issue-widget--author
 
 
 //- Subscribe issue
-issue-widget--subscribe
+.issue-widget--subscribe
   display: block
   padding: $baseline / 2 0 0 0
   order: 4

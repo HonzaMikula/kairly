@@ -35,7 +35,7 @@
 
           <div>
             <label for="bio">Bio</label>
-            <textarea id="bio" v-model="bio"></textarea>
+            <textarea id="bio" v-model="bio" maxlength="280"></textarea>
           </div>
 
           <div>

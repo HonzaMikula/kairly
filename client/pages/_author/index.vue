@@ -1,32 +1,38 @@
 <template>
   <AppLayout :name="$t('Author\'s profile')">
-    <author-detail-view
+    <div class="author-detail-view"
       v-infinite-scroll="loadPosts"
       infinite-scroll-disabled="loadingPosts"
       infinite-scroll-distance="100"
       itemtype="https://schema.org/Person"
       itemscope
     >
-      <author-detail--header>
+      <header class="author-detail--header">
         <picture>
            <AuthorPicture itemprop="image" size="big" :author="author" />
         </picture>
 
         <section>
           <h1 itemprop="name">{{ author.name }}</h1>
+
           <p itemprop="description">{{ author.bio }}</p>
         </section>
 
-        <author-detail--subscribe v-if="loggedIn">
+        <div class="author-detail--subscribe" v-if="loggedIn">
           <AuthorSubscriptionButton
             :author="author"
           />
-        </author-detail--subscribe>
-      </author-detail--header>
 
-      <author-detail--newspapers v-if="newspapers.length">
-        <h2>{{ author.name }}'s newspapers</h2>
+          <nuxt-link 
+            class="edit-profile"
+            v-if="user && author.id == user.id"
+            to="/user/settings">
+            {{ $t('Edit profile') }}
+          </nuxt-link>
+        </div>
+      </header>
 
+      <div class="author-detail--newspapers" v-if="newspapers.length">
         <div :class="{'show-all': showAllNewspapers}">
           <NewspaperWidget
             v-for="newspaper in visibleNewspapers"
@@ -38,17 +44,15 @@
         <button
           v-if="newspapers.length > 3"
           @click="toggleNewspapers()"
-        >{{ !showAllNewspapers ? this.$t('Show all newspapers') : this.$t('Hide newspapers') }}</button>
-      </author-detail--newspapers>
+        >{{ !showAllNewspapers ? this.$t('Show all newsletters') : this.$t('Hide newsletters') }}</button>
+      </div>
 
-      <author-detail--posts v-if="posts.length">
-        <h2>{{ author.name }}'s Posts</h2>
-
+      <div class="author-detail--posts" v-if="posts.length">
         <PostWrapper v-for="post in posts" :post="post" :isSubscribed="true" :key="post.id"/>
-      </author-detail--posts>
+      </div>
 
       <div class="author-detail--empty" v-if="!newspapers.length && !posts.length && !loadingPosts">
-        <template v-if="test.user.id !== author.id">
+        <template v-if="user.id !== author.id">
           <p>{{ $t("User didn't write any posts and didn't start any newspaper.") }}</p>
         </template>
 
@@ -60,7 +64,7 @@
       </div>
 
       <loading-spinner v-if="loadingPosts"></loading-spinner>
-    </author-detail-view>
+    </div>
   </AppLayout>
 </template>
 
@@ -133,7 +137,7 @@ export default {
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn,
-      test: state => state.auth
+      user: state => state.auth.user
     }),
 
     visibleNewspapers() {
@@ -253,7 +257,7 @@ export default {
 
 //- AUTHOR DETAIL -//
 
-author-detail-view
+.author-detail-view
   display: block
   padding-top: $baseline
   margin: 0 auto
@@ -264,7 +268,7 @@ author-detail-view
 
 
 //- Header
-author-detail--header
+.author-detail--header
   position: sticky
   top: 0
   z-index: 1
@@ -311,10 +315,13 @@ author-detail--header
 
 
 //- Subsribe
-author-detail--subscribe
+.author-detail--subscribe
   position: relative
 
-  display: block
+  display: flex
+  align-items: center
+  flex-direction: column
+
   margin-bottom: $baseline
 
   color: #555
@@ -326,6 +333,12 @@ author-detail--subscribe
   @media (max-width: $mobile)
     grid-column: 1 / span 2
     margin-bottom: 0
+
+  //- edit profile
+  .edit-profile
+    +button-icon($fa-var-edit, icon-text, solid, small)
+
+    margin-top: $baseline / 2
 
   .author-subscription-view
     //- when author is subscribed
@@ -346,7 +359,7 @@ author-detail--subscribe
       color: #fff
 
 //- Newspapers
-author-detail--newspapers
+.author-detail--newspapers
   display: block
   margin-bottom: $baseline
 
@@ -393,7 +406,7 @@ author-detail--newspapers
       display: none
 
 //- Posts
-author-detail--posts
+.author-detail--posts
   display: block
   margin-bottom: $baseline
 
