@@ -37,12 +37,13 @@
         v-if="loggedIn && issue.type == 'newspaper'"
         :issue="issue"
       />
-
       <button
+        v-if="issue.type == 'newspaper'"
         class="share"
+        :title="$t('Share')"
+        :aria-label="$t('Share')"
         @click="openShareModal()"
        >
-        {{ $t('Share') }}
       </button>
     </footer>
 
