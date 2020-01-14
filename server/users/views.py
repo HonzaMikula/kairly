@@ -107,15 +107,20 @@ class ProfileView(View):
     def patch(self, request, entities):
         payload = json.loads(request.body.decode('utf-8'))
         user = request.user
-        fields = ['name', 'bio', 'medium', 'timezone']
+        fields = ['name', 'medium', 'timezone']
         for field in fields:
             if field in payload:
                 setattr(user, field, payload[field])
 
+        if 'bio' in payload:
+            if len(payload['bio']) > 280:
+                return JsonResponse({'error': "'Bio' is too long"}, status=400)
+            user.bio = payload['bio']
+
         if 'price' in payload:
             price = Decimal(payload['price'])
             if price not in settings.ALLOWED_PRICE_LEVELS:
-                return JsonResponse({'error': 'invalid price'}, status=400)
+                return JsonResponse({'error': 'Invalid price'}, status=400)
             user.price = price
 
         integrations = payload.get('integrations', {})

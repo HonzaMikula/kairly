@@ -1,5 +1,9 @@
 export default {
   methods: {
+    cleanError() {
+      this.$store.commit('messages/error', null)
+    },
+
     handleError(err) {
       if (err.response && err.response.status >= 400) {
         this.$store.commit('messages/error', err.response.data.error)

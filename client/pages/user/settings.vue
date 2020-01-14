@@ -93,6 +93,7 @@ import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import AppLayout from '@/components/layout/AppLayout'
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal'
 import InfoMessage from '@/components/InfoMessage'
+import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'Settings',
@@ -109,6 +110,8 @@ export default {
     ChangePasswordModal,
     InfoMessage
   },
+
+  mixins: [ErrorHandler],
 
   data() {
     return {
@@ -139,12 +142,17 @@ export default {
     },
 
     async updateProfile(payload) {
-      const user = await this.$axios.$patch('/profile', payload)
-      this.updateComponentData(user)
-      // update user in store. Merge properties because GET on /profile endpoint
-      // returns more then update (eg owned newspapers)
-      this.$auth.setUser({...this.user, ...user})
-      this.showSuccess('Your settings were updated.')
+      this.cleanError()
+      try {
+        const user = await this.$axios.$patch('/profile', payload)
+        this.updateComponentData(user)
+        // update user in store. Merge properties because GET on /profile endpoint
+        // returns more then update (eg owned newspapers)
+        this.$auth.setUser({...this.user, ...user})
+        this.showSuccess('Your settings were updated.')
+      } catch (err) {
+        this.handleError(err)
+      }
     },
 
     onPictureChange(picture) {
@@ -158,7 +166,6 @@ export default {
     },
 
     ...mapMutations({
-      showError: 'messages/error',
       showSuccess: 'messages/success'
     })
   },
