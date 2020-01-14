@@ -295,7 +295,10 @@ class BaseTimelineView(View):
 
         def post_to_json(author, post):
             if author.kind == User.FEED and post.kind == Post.RECOMMENDATION and post.ref_post:
-                return post.ref_post.to_json(issue_entities, short=True)
+                return {
+                    'post': post.ref_post.to_json(issue_entities, short=True),
+                    'edutorial': None
+                }
             return {
                 'post': post.to_json(issue_entities, short=True),
                 'editorial': None
