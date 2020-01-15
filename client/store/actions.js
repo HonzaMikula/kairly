@@ -41,7 +41,7 @@ export async function getNewspapers(store, newspaperIds) {
     const promises = missing.map(id => getNewspaperDetail.call(this, store, { newspaperId: id }))
     await Promise.all(promises)
   }
-  return newspaperIds.map(id => store.state.entities.newspapers[id])
+  return newspaperIds.map(id => store.getters['entities/denormalize'](id, 'Newspaper'))
 }
 
 export async function getAuthor({ getters }, authorId) {
