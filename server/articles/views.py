@@ -41,10 +41,20 @@ from .utils import create_post_link
 
 AUTOR_POSTS_PAGE_SIZE = 20
 
+SUBSCRIPTIONS_CACHE_KEY = 'subscriptions-{}'
+
 
 @ajax_login_required
 @entities_json_response
 def subscriptions(request, entities):
+    cache_key = SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)
+    cached = cache.get(cache_key)
+
+    if cached:
+        cache_entities, response = cached
+        entities.from_cache(cache_entities)
+        return response
+
     now = datetime.now(request.user.tzinfo)
     subscribed_authors = {}
     query = SubscriptionToAuthor.objects.filter(
@@ -52,9 +62,12 @@ def subscriptions(request, entities):
         user=request.user
     ).select_related('author')
 
+    valid_to = None
+
     for s in query:
         data = s.to_json(entities)
         subscribed_authors[data['author']] = data
+        valid_to = min(valid_to, s.valid_to) if valid_to else s.valid_to
 
     subscribed_newspapers = {}
     query = Subscription.objects.filter(
@@ -65,13 +78,17 @@ def subscriptions(request, entities):
     for s in query:
         entities.add(Newspaper, s.newspaper_id)
         subscribed_newspapers[get_newspaper_full_name(s.newspaper_id)] = s.to_json(entities)
+        valid_to = min(valid_to, s.valid_to) if valid_to else s.valid_to
 
-    return {
+    response = {
         'subscriptions': {
             "authors": subscribed_authors,
             "newspapers": subscribed_newspapers,
         }
     }
+
+    cache.set(cache_key, (entities.to_cache(), response), (valid_to - now).total_seconds() if valid_to else None)
+    return response
 
 
 @ajax_login_required
@@ -589,6 +606,8 @@ class NewspaperSubscriptionView(View):
                 credits -= newspaper.price + donation
                 pay_newspaper_subscription(subscription)
 
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
+
         return {
             'credits': str(credits),
             'subscription': subscription.to_json(entities)
@@ -618,6 +637,8 @@ class NewspaperSubscriptionView(View):
         subscription.renewal = False
         subscription.suspended = False
         subscription.save()
+
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
 
         return {
             'subscription': subscription.to_json(entities) if subscription.valid_to > now else None
@@ -710,6 +731,8 @@ class AuthorSubscriptionView(View):
                 pay_author_subscription(subscription)
                 credits -= author.price + donation
 
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
+
         return {
             'credits': str(credits),
             'subscription': subscription.to_json(entities)
@@ -739,6 +762,8 @@ class AuthorSubscriptionView(View):
         subscription.renewal = False
         subscription.suspended = False
         subscription.save()
+
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
 
         return {
             'subscription': subscription.to_json(entities) if subscription.valid_to > now else None

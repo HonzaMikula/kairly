@@ -6,8 +6,10 @@ from dateutil.relativedelta import relativedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.db import transaction
+from django.core.cache import cache
 
 from articles.models import Subscription, SubscriptionToAuthor
+from articles.views import SUBSCRIPTIONS_CACHE_KEY
 from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 
 
@@ -32,6 +34,8 @@ class Command(BaseCommand):
 
         now = timezone.now() + timedelta(minutes=10)
 
+        cache_invalidate = []
+
         for sub in Subscription.objects.filter(valid_to__lt=now, renewal=True, suspended=False).select_related('user', 'newspaper').order_by('valid_from'):
             with transaction.atomic():
                 credits = get_user_credits(sub.user.id)
@@ -40,6 +44,8 @@ class Command(BaseCommand):
                         self.stdout.write('Suspending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
                     sub.suspended = True
                     sub.save()
+
+                    cache_invalidate.append(SUBSCRIPTIONS_CACHE_KEY.format(sub.user.username))
                 else:
                     if verbosity > 0:
                         self.stdout.write('Extending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
@@ -57,12 +63,17 @@ class Command(BaseCommand):
                         self.stdout.write('Suspending author subscription: {} -> {}'.format(sub.user, author_id))
                     sub.suspended = True
                     sub.save()
+
+                    cache_invalidate.append(SUBSCRIPTIONS_CACHE_KEY.format(sub.user.username))
                 else:
                     if verbosity > 1:
                         self.stdout.write('Extending author subscription: {} -> {}'.format(sub.user, author_id))
                     pay_author_subscription(sub)
                     counter_author += 1
                     self.extend_subscriptions(sub)
+
+        if cache_invalidate:
+            cache.delete_many(cache_invalidate)
 
         counter_end = time.perf_counter()
         self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: renewsubscriptions finished in {} / extended subscriptions: {} author / {} newspaper".format(

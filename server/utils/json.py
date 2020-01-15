@@ -2,6 +2,7 @@ import rapidjson as json
 from functools import wraps
 from collections import defaultdict
 
+from django.apps import apps
 from django.http import HttpResponse
 
 
@@ -72,6 +73,21 @@ class Entities:
             self.entities[cls].update(ids)
         for cls, objects in other.loaded.items():
             self.loaded[cls].update(objects)
+
+    def to_cache(self):
+        data = {
+            'tzinfo': str(self.tzinfo),
+            'entities': {}
+        }
+        for cls, ids in self.entities.items():
+            data['entities'][str(cls._meta)] = list(ids)
+        return data
+
+    def from_cache(self, data):
+        # save tzinfo is now ignored
+        for model_name, ids in data['entities'].items():
+            cls = apps.get_model(model_name)
+            self.entities[cls].update(ids)
 
     def to_json(self):
         data = defaultdict(dict)
