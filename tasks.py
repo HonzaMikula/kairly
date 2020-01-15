@@ -46,7 +46,7 @@ def promote_js(ctx):
         'rm -rf /srv/kairly/client/.nuxt',
         'mv /tmp/.nuxt /srv/kairly/client/.nuxt',
         'cd /srv/app',
-        'npm ci',  # npm ci doesn't work because of Node 5.x in container
+        'npm install',
         'git reset --hard',  # reset package-lock.json back, workaround to unsupported npm ci
         "supervisorctl restart app",
     ]
