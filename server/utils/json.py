@@ -140,13 +140,23 @@ def entities_json_response(view):
     def wrapper(*args, **kwargs):
         request, *tail = args
 
-        entities = Entities(user=request.user)
-        resp = view(request, entities, *tail, **kwargs)
+        from utils.debug import perf_timer
+        with perf_timer('{} entities_json_response', request.path) as timer:
+            entities = Entities(user=request.user)
+            resp = view(request, entities, *tail, **kwargs)
 
-        if isinstance(resp, HttpResponse):
-            assert not isinstance(resp, JsonResponse) or resp.status_code > 299, "Return plain date instead of JsonResponse. It will be updated with entities"
-            return resp
+            timer('{} render view response', request.path)
 
-        resp.update(entities.to_json())
-        return JsonResponse(resp)
+            if isinstance(resp, HttpResponse):
+                assert not isinstance(resp, JsonResponse) or resp.status_code > 299, "Return plain date instead of JsonResponse. It will be updated with entities"
+                return resp
+
+            resp.update(entities.to_json())
+            timer('{} update response with entities', request.path)
+
+            try:
+                return JsonResponse(resp)
+            finally:
+                timer('{} dump JSON', request.path)
+
     return wrapper

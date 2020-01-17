@@ -39,8 +39,8 @@ def JwtAuthenticationMiddleware(get_response):
                 if not request.user.is_anonymous:
                     request.user = AnonymousUser()
 
-        # from utils.debug import perf
-        # with perf(f"{request.path} get response"):
+        # from utils.debug import perf_timer
+        # with perf_timer(f"{request.path} get response"):
         return get_response(request)
 
     return middleware

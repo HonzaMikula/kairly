@@ -53,3 +53,5 @@ TWITTER_KEYS = [
 ]
 
 # EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+
+ENABLE_PERFORMANCE_TIMER = True
