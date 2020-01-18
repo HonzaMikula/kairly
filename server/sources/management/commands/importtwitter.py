@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 )
 
                 # import pickle
-                # import rapidjson as json
+                # import orjson as json
                 # # with open('/mnt/c/Users/farin/w/etabery.pickle', 'wb') as f:
                 # #     pickle.dump(timeline, f)
                 # with open('/mnt/c/Users/farin/w/jiripehe.pickle', 'rb') as f:

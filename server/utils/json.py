@@ -1,4 +1,4 @@
-import rapidjson as json
+import orjson as json
 from functools import wraps
 from collections import defaultdict
 
@@ -17,7 +17,7 @@ def datetime_isoformat_ecma262(d):
 
 
 class JsonResponse(HttpResponse):
-    """JsonResponse using rapidjson"""
+    """JsonResponse using orjson"""
 
     def __init__(self, data, **kwargs):
         kwargs.setdefault('content_type', 'application/json')

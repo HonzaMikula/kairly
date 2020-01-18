@@ -1,6 +1,5 @@
 import io
 import html
-from collections import defaultdict
 from datetime import datetime
 from decimal import ConversionSyntax, Decimal
 from itertools import chain
@@ -9,7 +8,7 @@ import urllib.parse
 
 import requests
 import pytz
-import rapidjson as json
+import orjson as json
 from PIL import Image
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -93,13 +92,13 @@ def subscriptions(request, entities):
 
 @ajax_login_required
 def user_backlog(request):
-    backlog = defaultdict(dict)
+    backlog = {}  # do not use defaultdict becase urjson can serialize by default
     query = Backlog.objects \
         .filter(Q(newspaper__editor=request.user) | Q(newspaper__coeditor__editor=request.user)) \
 
     for bl in query:
         full_name = get_newspaper_full_name(bl.newspaper_id)
-        backlog[str(bl.post_id)][full_name] = bl.publish_in or 0
+        backlog.setdefault(str(bl.post_id), {})[full_name] = bl.publish_in or 0
 
     return JsonResponse({
         "backlog": backlog

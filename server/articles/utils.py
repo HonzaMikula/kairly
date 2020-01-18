@@ -1,7 +1,7 @@
 import re
 import lxml.html
 
-import rapidjson as json
+import orjson as json
 
 from articles.models import Post
 from sources.parser.og import parse_og_tags

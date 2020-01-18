@@ -5,7 +5,7 @@ import urllib.request
 from decimal import Decimal
 
 import jwt
-import rapidjson as json
+import orjson as json
 from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth import authenticate

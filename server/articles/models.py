@@ -6,7 +6,7 @@ from decimal import Decimal
 from functools import lru_cache
 
 import pytz
-import rapidjson as json
+import orjson as json
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.cache import cache

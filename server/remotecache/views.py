@@ -1,4 +1,4 @@
-import rapidjson as json
+import orjson as json
 
 from django.conf import settings
 from django.core.cache import cache
