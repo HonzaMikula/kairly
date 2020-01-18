@@ -15,9 +15,15 @@ def perf_timer(summary=None, *args, **kwargs):
             print("{}   >".format(timedelta(seconds=counter - counter_prev)),
                   message.format(*args, **kwargs))
 
-    yield timer
+        yield timer
 
-    if summary and settings.ENABLE_PERFORMANCE_TIMER:
-        end = time.perf_counter()
-        print("{} >>>".format(timedelta(seconds=end - start)),
-              summary.format(*args, **kwargs))
+        if summary and settings.ENABLE_PERFORMANCE_TIMER:
+            end = time.perf_counter()
+            print("{} >>>".format(timedelta(seconds=end - start)),
+                  summary.format(*args, **kwargs))
+
+    else:
+        def null_timer(message, *args, **kwargs):
+            pass
+
+        yield timer
