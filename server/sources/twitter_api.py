@@ -1,5 +1,5 @@
 import re
-import orjson as json
+import rapidjson as json
 from datetime import datetime
 from urllib.parse import urlsplit
 

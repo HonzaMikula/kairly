@@ -1,4 +1,4 @@
-import orjson as json
+import rapidjson as json
 from functools import wraps
 from collections import defaultdict
 

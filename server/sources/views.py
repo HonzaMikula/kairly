@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 import feedparser
 import requests
-import orjson as json
+import rapidjson as json
 from dal import autocomplete
 from dateutil.relativedelta import relativedelta
 from django.db import transaction

@@ -8,7 +8,7 @@ import urllib.parse
 
 import requests
 import pytz
-import orjson as json
+import rapidjson as json
 from PIL import Image
 from dateutil.relativedelta import relativedelta
 from django.conf import settings

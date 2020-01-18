@@ -342,6 +342,7 @@ class TimelineView(BaseTimelineView):
             else:
                 return timeline
         except ValueError as e:
+            raise e
             return HttpResponseBadRequest(str(e))
 
     def get_newspaper_subscriptions(self, request, timeline_ctx, now):

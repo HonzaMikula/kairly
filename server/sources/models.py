@@ -1,6 +1,6 @@
 from os.path import dirname
 from urllib.parse import urlsplit, urlunsplit
-import orjson as json
+import rapidjson as json
 
 import feedparser
 import requests
