@@ -26,4 +26,4 @@ def perf_timer(summary=None, *args, **kwargs):
         def null_timer(message, *args, **kwargs):
             pass
 
-        yield timer
+        yield null_timer
