@@ -1,9 +1,11 @@
 import hashlib
 import math
 import re
+import traceback
 from datetime import datetime, timedelta
 from decimal import Decimal
 from functools import lru_cache
+from json import JSONDecodeError
 
 import pytz
 import rapidjson as json
@@ -202,7 +204,12 @@ class Post(models.Model):
         if self.draft:
             result['draft'] = True
 
-        attachments = json.loads(self.attachments) if self.attachments else None
+        try:
+            attachments = json.loads(self.attachments) if self.attachments else None
+        except JSONDecodeError:
+            print(f'Corrupted attachemnt for post id={self.id} slug={self.slug}')
+            traceback.print_exc()
+            attachments = None
 
         if self.kind == Post.TWEET:
             result['content'] = {
