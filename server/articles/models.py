@@ -5,7 +5,6 @@ import traceback
 from datetime import datetime, timedelta
 from decimal import Decimal
 from functools import lru_cache
-from json import JSONDecodeError
 
 import pytz
 import rapidjson as json
@@ -206,7 +205,7 @@ class Post(models.Model):
 
         try:
             attachments = json.loads(self.attachments) if self.attachments else None
-        except JSONDecodeError:
+        except json.JSONDecodeError:
             print(f'Corrupted attachemnt for post id={self.id} slug={self.slug}')
             traceback.print_exc()
             attachments = None
@@ -271,8 +270,8 @@ class Post(models.Model):
                 'title': self.title,
                 'perex': self.perex,
             }
-            if self.attachments:
-                result['content']['attachments'] = json.loads(self.attachments)
+            if attachments:
+                result['content']['attachments'] = attachments
         return result
 
 
