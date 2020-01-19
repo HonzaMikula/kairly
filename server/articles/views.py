@@ -1105,7 +1105,7 @@ def media_proxy(request):
             return HttpResponseNotFound()
         return HttpResponse(cached['content'], content_type=cached['content-type'])
 
-    perex = Post.objects.filter(slug=slug).values_list('perex', flat=True)[0]
+    perex, source = Post.objects.filter(slug=slug).values_list('perex', 'source')[0]
     perex_unespaced = html.unescape(perex)
     norm_src = src.replace('http://', '').replace('https://', '')
 
@@ -1114,6 +1114,13 @@ def media_proxy(request):
         return HttpResponseBadRequest("Post doesn't contain such media object")
 
     ua = request.META.get('HTTP_USER_AGENT', settings.DEFAULT_USER_AGENT)
+
+    if src.startswith('//'):
+        if source is None:
+            # should never happen
+            src = 'http:' + source
+        else:
+            src = source.split('//')[0] + src
 
     resp = requests.get(src, headers={'User-Agent': ua})
 
