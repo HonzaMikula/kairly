@@ -1,7 +1,7 @@
 import re
 import lxml.html
 
-import rapidjson as json
+import orjson as json
 
 from articles.models import Post
 from sources.parser.og import parse_og_tags
@@ -26,7 +26,7 @@ def create_twitter_link(status_id):
             'screen_name': status.user.screen_name,
             'profile_image_url_https': status.user.profile_image_url_https,
         })
-        args['attachments'] = json.dumps(attachments)
+        args['attachments'] = json.dumps(attachments).decode()
         return Post.objects.create(**args)
 
 
@@ -68,7 +68,7 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         hidden=hidden,
         title=og.get('title', title),
         perex=og.get('description', description),
-        attachments=json.dumps(attachments) if attachments else None,
+        attachments=json.dumps(attachments).decode() if attachments else None,
         author=user,
         price=0,
         weight=0

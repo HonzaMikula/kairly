@@ -89,7 +89,7 @@ class Command(BaseCommand):
         elif options.get('subscriptions-of'):
             user = User.objects.get(username=options['subscriptions-of'])
             authors = []
-            for subscription in SubscriptionToAuthor.objects.filter(user=user).select_related('author'):
+            for subscription in SubscriptionToAuthor.objects.filter(user=user):
                 authors.append(subscription.author_id)
             channels = channels.filter(author_id__in=authors)
 

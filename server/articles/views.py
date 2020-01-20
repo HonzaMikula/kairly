@@ -8,7 +8,7 @@ import urllib.parse
 
 import requests
 import pytz
-import rapidjson as json
+import orjson as json
 from PIL import Image
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -29,11 +29,11 @@ from credits.utils import get_user_credits, pay_author_subscription, pay_newspap
 from users.models import User
 from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
-from utils.json import JsonResponse, entities_json_response
+from utils.json import JsonResponse, Ref, entities_json_response
 from utils.upload import file_from_data_uri
 from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
                      SubscriptionToAuthor, IssuePost, Editorial, EditorialTweet,
-                     round_fair_price, get_newspaper_full_name)
+                     round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
 from .utils import create_post_link
@@ -50,33 +50,33 @@ def subscriptions(request, entities):
     cached = cache.get(cache_key)
 
     if cached:
-        cache_entities, response = cached
-        entities.from_cache(cache_entities)
+        refs, response = cached
+        entities.add_references(refs)
         return response
 
+    entities.track_references = set()
+
     now = datetime.now(request.user.tzinfo)
-    subscribed_authors = {}
+    subscribed_authors = []
     query = SubscriptionToAuthor.objects.filter(
         Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user
-    ).select_related('author')
+    )
 
     valid_to = None
 
     for s in query:
-        data = s.to_json(entities)
-        subscribed_authors[data['author']] = data
+        subscribed_authors.append(s.to_json(entities))
         valid_to = min(valid_to, s.valid_to) if valid_to else s.valid_to
 
-    subscribed_newspapers = {}
+    subscribed_newspapers = []
     query = Subscription.objects.filter(
         Q(valid_to__gt=now) | Q(renewal=True),
         user=request.user
     )
 
     for s in query:
-        entities.add(Newspaper, s.newspaper_id)
-        subscribed_newspapers[get_newspaper_full_name(s.newspaper_id)] = s.to_json(entities)
+        subscribed_newspapers.append(s.to_json(entities))
         valid_to = min(valid_to, s.valid_to) if valid_to else s.valid_to
 
     response = {
@@ -86,22 +86,40 @@ def subscriptions(request, entities):
         }
     }
 
-    cache.set(cache_key, (entities.to_cache(), response), (valid_to - now).total_seconds() if valid_to else None)
+    cache.set(cache_key, (entities.track_references, response), (valid_to - now).total_seconds() if valid_to else None)
+    entities.track_references = None
     return response
 
 
 @ajax_login_required
 def user_backlog(request):
-    backlog = {}  # do not use defaultdict becase urjson can serialize by default
+    user_backlog = {}  # do not use defaultdict becase urjson can serialize by default
     query = Backlog.objects \
-        .filter(Q(newspaper__editor=request.user) | Q(newspaper__coeditor__editor=request.user)) \
+        .filter(Q(newspaper__editor=request.user) | Q(newspaper__coeditor__editor=request.user))
 
-    for bl in query:
-        full_name = get_newspaper_full_name(bl.newspaper_id)
-        backlog.setdefault(str(bl.post_id), {})[full_name] = bl.publish_in or 0
+    items = list(query)
+
+    full_names = {}
+    to_load = []
+    newspaper_refs = set(Ref(Newspaper, bl.newspaper_id) for bl in items)
+    cached = cache.get_many([ref.cache_key for ref in newspaper_refs])
+    for ref in newspaper_refs:
+        cached_ent = cached.get(ref.cache_key)
+        if cached_ent:
+            full_names[ref.id] = cached_ent[0]
+        else:
+            to_load.append(ref.id)
+
+    if to_load:
+        for n in Newspaper.objects.filter(id__in=to_load).select_related('editor'):
+            full_names[n.id] = n.full_name
+
+    for bl in items:
+        full_name = full_names[bl.newspaper_id]
+        user_backlog.setdefault(str(bl.post_id), {})[full_name] = bl.publish_in or 0
 
     return JsonResponse({
-        "backlog": backlog
+        "backlog": user_backlog
     })
 
 
@@ -132,7 +150,7 @@ def recent_issues(request, entities):
 def recent_posts(request, entities):
     posts = Post.objects.filter(draft=False, published__lt=timezone.now())\
         .exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])\
-        .select_related('author').order_by('-published')[:12]
+        .order_by('-published')[:12]
 
     return {
         'posts': [post.to_json(entities) for post in posts]
@@ -160,14 +178,12 @@ class NewspaperView(View):
             issue = get_object_or_404(Issue, newspaper=newspaper, number=issue_no)
         else:
             try:
-                issue = Issue.objects.filter(newspaper=newspaper).order_by('-number').select_related('editor')[0]
+                issue = Issue.objects.filter(newspaper=newspaper).order_by('-number')[0]
             except IndexError:
                 issue = None
 
-        entities.add(Newspaper, newspaper)
-
         resp = {
-            'newspaper': newspaper.full_name,
+            'newspaper': entities.make_ref(Newspaper, newspaper),
             'issue': None,
             'links': {}
         }
@@ -265,19 +281,16 @@ class NewspaperView(View):
 def author_detail(request, entities, username):
     author = get_object_or_404(User, username=username)
 
-    entities.add(User, author)
-
     newspapers = list(Newspaper.objects.filter(editor=author))
     newspapers.sort(key=attrgetter('likes'), reverse=True)
 
     resp = {
-        'author': author.username,
+        'author': entities.make_ref(User, author),
         'newspapers': []
     }
 
     for newspaper in newspapers:
-        entities.add(Newspaper, newspaper)
-        resp['newspapers'].append(newspaper.full_name)
+        resp['newspapers'].append(entities.make_ref(Newspaper, newspaper))
 
     return resp
 
@@ -322,7 +335,7 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
         result = {'backlog': []}
 
         query = Backlog.objects.filter(
-            newspaper=newspaper).select_related('post').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
+            newspaper=newspaper).select_related('post', 'editorial').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
         for log in query:
             result['backlog'].append({
                 'post': log.post.to_json(entities),
@@ -934,7 +947,7 @@ def post(request, entities, username, post_slug):
 
     editorials = []
     query = IssuePost.objects.filter(post=post, editorial__isnull=False) \
-        .select_related('editorial', 'issue__newspaper') \
+        .select_related('editorial', 'issue') \
         .order_by('issue_id', 'ordering')
 
     for issue_post in query:
@@ -1012,9 +1025,8 @@ def start_newspaper(request, entities, username):
         ]
     )
 
-    entities.add(Newspaper, newspaper)
     return {
-        'newspaper': newspaper.full_name
+        'newspaper': entities.make_ref(Newspaper, newspaper)
     }
 
 

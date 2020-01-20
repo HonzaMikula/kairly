@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
-from articles.models import Newspaper, get_newspaper_full_name
+from articles.models import Newspaper
 from users.models import User
 from utils.json import datetime_isoformat_ecma262
 
@@ -38,25 +38,19 @@ class Transaction(models.Model):
     def to_json(self, entities, reversed=False):
         source = {}
         if self.from_user_id:
-            entities.add(User, self.from_user)
-            source['user'] = self.from_user.username
+            source['user'] = entities.make_ref(User, self.from_user_id)
         elif self.from_author_id:
-            entities.add(User, self.from_author)
-            source['author'] = self.from_author.username
+            source['author'] = entities.make_ref(User, self.from_author_id)
         elif self.from_newspaper_id:
-            entities.add(Newspaper, self.from_newspaper_id)
-            source['newspaper'] = get_newspaper_full_name(self.from_newspaper_id)
+            source['newspaper'] = entities.make_ref(Newspaper, self.from_newspaper_id)
 
         target = {}
         if self.to_user_id:
-            entities.add(User, self.to_user)
-            target['user'] = self.to_user.username
+            target['user'] = entities.make_ref(User, self.to_user_id)
         elif self.to_author_id:
-            entities.add(User, self.to_author)
-            target['author'] = self.to_author.username
+            target['author'] = entities.make_ref(User, self.to_author_id)
         elif self.to_newspaper_id:
-            entities.add(Newspaper, self.to_newspaper_id)
-            source['newspaper'] = get_newspaper_full_name(self.to_newspaper_id)
+            source['newspaper'] = entities.make_ref(Newspaper, self.to_newspaper_id)
 
         return {
             'source': source,

@@ -3,9 +3,11 @@ import pytz
 from decimal import Decimal
 
 import oyaml as yaml
+from django.db import transaction
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.core import validators
+from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -14,7 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.deconstruct import deconstructible
 from sorl.thumbnail import ImageField, get_thumbnail
 
-from utils.json import entities_key
+from utils.json import entities_key, Ref
 
 
 @deconstructible
@@ -121,9 +123,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
-    @property
-    def public_id(self):
-        return self.username
+    def save(self, *args, **kwargs):
+        transaction.on_commit(lambda: cache.delete(Ref(User, self.id).cache_key))
+        return super().save(*args, **kwargs)
 
     def get_picture_url(self, size):
         if not self.picture:

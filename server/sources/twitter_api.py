@@ -1,5 +1,5 @@
 import re
-import rapidjson as json
+import orjson as json
 from datetime import datetime
 from urllib.parse import urlsplit
 
@@ -138,7 +138,7 @@ def status_to_post_args(api, status, *, screen_name=None, dump_attachments=True)
     source = "https://twitter.com/{}/status/{}".format(screen_name, status.id_str)
 
     if dump_attachments:
-        attachments = json.dumps(attachments) if attachments else None
+        attachments = json.dumps(attachments).decode() if attachments else None
 
     return dict(
         kind=Post.TWEET,

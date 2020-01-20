@@ -1,5 +1,4 @@
 import time
-import pickle
 from datetime import datetime, date, timedelta
 from datetime import tzinfo as t_tzinfo
 from itertools import chain
@@ -17,8 +16,8 @@ from more_itertools import peekable
 from pytz import timezone
 
 from utils.decorators import ajax_login_required
-from utils.json import datetime_isoformat_ecma262, Entities, entities_json_response
-from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper, get_newspaper_full_name
+from utils.json import datetime_isoformat_ecma262, entities_json_response, MappedRef
+from .models import Issue, Post, Subscription, SubscriptionToAuthor, Newspaper
 from .period import PeriodMixin
 from users.models import User, ExploreTimeline
 
@@ -30,6 +29,7 @@ class TimelinePeriod:
     naive_date: date
     start: datetime
     end: datetime
+    effective_end: datetime
     tzinfo: t_tzinfo
     recent_day: bool
     cache_valid_to: int
@@ -56,6 +56,8 @@ class BaseTimelineView(View):
         now = datetime.now(tzinfo)
 
         period = self.get_timeline_period(request, now, tzinfo)
+        print(period)
+        print("XXXXXXXXXXXXXXXXXXXXX")
 
         if period.start > now:
             raise ValueError("Invalid date.")
@@ -113,11 +115,12 @@ class BaseTimelineView(View):
         if recent_day and now < end_dt:
             cache_valid_to = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
             cache_valid_to = int(cache_valid_to.timestamp())
-            end_dt = now
+            effective_end_dt = now
         else:
             cache_valid_to = None
+            effective_end_dt = end_dt
 
-        return TimelinePeriod(d, start_dt, end_dt, tzinfo, recent_day, cache_valid_to)
+        return TimelinePeriod(d, start_dt, end_dt, effective_end_dt, tzinfo, recent_day, cache_valid_to)
 
     def get_links(self, period):
         links = {
@@ -172,36 +175,36 @@ class BaseTimelineView(View):
         return issues, subscription_exists
 
     def get_newspaper_subscription_issues(self, sub, period, entities):
-        newspaper_name = "{}/{}".format(sub.newspaper.editor.username, sub.newspaper.slug)
         cache_key = "newspaper_issues_{}_{}-{}".format(
-            newspaper_name,
+            sub.newspaper_id,
             int(period.start.timestamp()),
-            int(period.end.timestamp() if period.cache_valid_to is None else period.cache_valid_to)
+            int(period.end.timestamp())
         )
 
         cached = cache.get(cache_key)
         if cached:
-            issue_entities, cached_issues = pickle.loads(cached)
-            entities.update(issue_entities)
+            references, cached_issues = cached
+            entities.add_references(references)
             return cached_issues
 
         expected_issues = set()
         dt = period.start
-        while dt < period.end:
+        while dt < period.effective_end:
+            # TODO PERFORMACE newspaper is needed there
             newspaper_period = sub.newspaper.get_period_interval(dt, period.tzinfo)
-            if period.start <= newspaper_period.end < period.end:
+            if period.start <= newspaper_period.end < period.effective_end:
                 expected_issues.add(newspaper_period.end)
             dt = newspaper_period.end
 
-        issue_entities = Entities(user=entities.user, tzinfo=entities.tzinfo)
+        entities.track_references = set()
         query = Issue.objects.filter(
-            published__gte=period.start, published__lt=period.end,
+            published__gte=period.start, published__lt=period.effective_end,
             newspaper=sub.newspaper
         )
 
         issues = []
         for issue in query:
-            issue_json = issue.to_json(issue_entities)
+            issue_json = issue.to_json(entities)
             issue_json['$'] = {'id': issue.id}  # internal keys, we want to cache it but it will be stripped on response
             issues.append(issue_json)
             try:
@@ -210,17 +213,17 @@ class BaseTimelineView(View):
                 pass
 
         for missing in expected_issues:
-            issue_entities.add(Newspaper, sub.newspaper_id)
+            newspaper_ref = entities.make_ref(Newspaper, sub.newspaper_id)
             issues.append({
-                "id": '{}/{}.unreleased'.format(get_newspaper_full_name(sub.newspaper_id), int(missing.timestamp())),
+                "id": MappedRef(newspaper_ref, f'{{}}/{int(missing.timestamp())}.unreleased'),
                 "type": 'unreleased-newspaper',
-                "newspaper": get_newspaper_full_name(sub.newspaper_id),
+                "newspaper": newspaper_ref,
                 "time": datetime_isoformat_ecma262(missing.astimezone(period.tzinfo)),
                 "posts": []
             })
 
-        cache.set(cache_key, pickle.dumps([issue_entities, issues]), period.timeout)
-        entities.update(issue_entities)
+        cache.set(cache_key, (entities.track_references, issues), period.timeout)
+        entities.track_references = None
         return issues
 
     def get_author_issues(self, request, timeline_ctx, now, period, entities):
@@ -239,28 +242,26 @@ class BaseTimelineView(View):
 
     def get_author_subscription_issues(self, sub, period, entities):
         cache_key = "author_issues_{}_{}_{}-{}".format(
-            sub.author,
+            sub.author_id,
             sub.get_period_uid(),
             int(period.start.timestamp()),
-            int(period.end.timestamp() if period.cache_valid_to is None else period.cache_valid_to)
+            int(period.end.timestamp())
         )
 
         if not sub.suspended:
             # for suspended issue we must find just first interval and return
             # suspended placeholder instead
-
-            # there is still place to improve it using get_many or redis directly
             cached = cache.get(cache_key)
             if cached:
-                issue_entities, cached_issues = pickle.loads(cached)
-                entities.update(issue_entities)
+                references, cached_issues = cached
+                entities.add_references(references)
                 return cached_issues
 
         dt = period.start
         intervals = []
         while True:
             interval = sub.get_period_interval(dt, period.tzinfo)
-            if period.start <= interval.end < period.end:
+            if period.start <= interval.end < period.effective_end:
                 intervals.append(interval)
                 dt = interval.end
             else:
@@ -272,13 +273,13 @@ class BaseTimelineView(View):
         if sub.suspended:
             interval = intervals[0]
             isodate = datetime_isoformat_ecma262(interval.end)
-            entities.add(User, sub.author_id)
+            author_ref = entities.make_ref(User, sub.author_id)
             return [{
-                "id": '{}/${}/{}.suspended'.format(sub.author.username, sub.period, int(interval.end.timestamp())),
+                "id": MappedRef(author_ref, f'{{}}/${sub.period}/{int(interval.end.timestamp())}.suspended'),
                 "type": 'suspended-author',
                 'title': interval.title,
                 'time': isodate,
-                'author': sub.author.username,
+                'author': author_ref,
                 "posts": []
             }]
 
@@ -288,19 +289,21 @@ class BaseTimelineView(View):
             published__gte=intervals[0].start,
             published__lt=intervals[-1].end,
             hidden=False
-        ).select_related('author')
+        )
 
         posts = peekable(posts_query.order_by('published'))
-        issue_entities = Entities(user=entities.user, tzinfo=period.tzinfo)
+        entities.track_references = set()
 
         def post_to_json(author, post):
+            # TODO make a new king for this case (refernce to exisiting post by feed user)
+            # then author can be removed from select_related
             if author.kind == User.FEED and post.kind == Post.RECOMMENDATION and post.ref_post:
                 return {
-                    'post': post.ref_post.to_json(issue_entities, short=True),
+                    'post': post.ref_post.to_json(entities, short=True),
                     'edutorial': None
                 }
             return {
-                'post': post.to_json(issue_entities, short=True),
+                'post': post.to_json(entities, short=True),
                 'editorial': None
             }
 
@@ -315,18 +318,19 @@ class BaseTimelineView(View):
 
             if interval_posts:
                 isodate = datetime_isoformat_ecma262(interval.end)
-                issue_entities.add(User, sub.author_id)
+                author_ref = entities.make_ref(User, sub.author_id)
+
                 issues.append({
-                    'id': '{}/${}/{}'.format(sub.author.username, sub.period, int(interval.end.timestamp())),
+                    'id': MappedRef(author_ref, f'{{}}/${sub.period}/{int(interval.end.timestamp())}'),
                     'type': 'author',
                     'title': interval.title,
                     'time': isodate,
-                    'author': sub.author.username,
+                    'author': author_ref,
                     'posts': [post_to_json(sub.author, p) for p in interval_posts],
                 })
 
-        cache.set(cache_key, pickle.dumps([issue_entities, issues]), period.timeout)
-        entities.update(issue_entities)
+        cache.set(cache_key, (entities.track_references, issues), period.timeout)
+        entities.track_references = None
         return issues
 
 
@@ -349,7 +353,7 @@ class TimelineView(BaseTimelineView):
         return Subscription.objects.filter(
             Q(valid_to__gt=now) | Q(renewal=True) | Q(suspended=True),
             user=request.user,
-        ).select_related('newspaper', 'newspaper__editor')
+        ).select_related('newspaper')
 
     def get_author_subscriptions(self, request, timeline_ctx, now):
         return SubscriptionToAuthor.objects.filter(

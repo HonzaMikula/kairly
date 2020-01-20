@@ -5,7 +5,7 @@ import urllib.request
 from decimal import Decimal
 
 import jwt
-import rapidjson as json
+import orjson as json
 from dal import autocomplete
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -27,7 +27,7 @@ from django.shortcuts import get_object_or_404
 from libgravatar import Gravatar
 from pytz import UnknownTimeZoneError, timezone
 
-from articles.models import Newspaper, get_newspaper_full_name
+from articles.models import Newspaper
 from credits.utils import get_user_credits
 from utils.db import get_column_if_duplicate
 from utils.decorators import ajax_login_required
@@ -76,9 +76,9 @@ class ProfileView(View):
     @method_decorator(entities_json_response)
     def get(self, request, entities):
         newspapers = []
-        for newspaper in Newspaper.objects.filter(Q(editor=request.user) | Q(co_editors=request.user)).values_list('id', 'title', named=True):
+        for newspaper in Newspaper.objects.filter(Q(editor=request.user) | Q(co_editors=request.user)).select_related('editor'):
             newspapers.append({
-                'fullName': get_newspaper_full_name(newspaper.id),
+                'fullName': newspaper.full_name,
                 'title': newspaper.title,
             })
 
@@ -296,8 +296,7 @@ def explore_new_authors(request, entities):
 
     resp = {'authors': []}
     for author in authors:
-        entities.add(User, author)
-        resp['authors'].append(author.username)
+        resp['authors'].append(entities.make_ref(User, author))
 
     return resp
 

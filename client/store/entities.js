@@ -1,5 +1,44 @@
 
 import isFunction from 'lodash/isFunction'
+import isString from 'lodash/isString'
+
+import Vue from 'vue'
+
+function getNextRelease({ frequency, time, dow }) {
+  const now = Vue.moment()
+  const m = Vue.moment()
+  if (frequency === '3x_per_day' || frequency === '6x_per_day') {
+    if (now.hour() < 6) {
+      m.hour(6)
+    } else if (now.hour() < 9 && frequency === '6x_per_day') {
+      m.hour(9)
+    } else if (now.hour() < 12) {
+      m.hour(12)
+    } else if (now.hour() < 15 && frequency === '6x_per_day') {
+      m.hour(15)
+    } else if (now.hour() < 18) {
+      m.hour(18)
+    } else if (now.hour() < 21 && frequency === '6x_per_day') {
+      m.hour(21)
+    } else {
+      m.add(1, 'd').hour(6)
+    }
+  } else if (frequency === 'daily') {
+    const h = parseInt(time)
+    if (now.hour() < h) {
+      m.hour(h)
+    } else {
+      m.add(1, 'd').hour(h)
+    }
+  } else if (frequency === 'weekly') {
+    const h = parseInt(time)
+    m.isoWeekday(dow).hour(h).startOf('hour') // startOi is needed to get correct isBefore comparison
+    if (m.isBefore(now)) {
+      m.add(7, 'd')
+    }
+  }
+  return m.startOf('hour').format()
+}
 
 export const state = () => {
   return {
@@ -15,6 +54,7 @@ export const mutations = {
   },
 
   newspaper(state, { newspaper }) {
+    newspaper.nextRelease = getNextRelease(newspaper.periodicity)
     state.newspapers[newspaper.fullName] = newspaper
   },
 
@@ -112,10 +152,12 @@ export const getters = {
     }
 
     if (type === 'Author') {
-      return getters.getAuthor(obj)
+      // if author is inlined, then return it directly
+      return isString(obj) ? getters.getAuthor(obj) : obj
     }
     if (type === 'Newspaper') {
-      return getters.getNewspaper(obj)
+      // if newspapper is inlined, then return it directly
+      return isString(obj) ? getters.getNewspaper(obj) : obj
     }
 
     if (!schemas[type]) {

@@ -12,25 +12,38 @@ from django.contrib.auth.models import AnonymousUser
 
 
 def JwtAuthenticationMiddleware(get_response):
-    def middleware(request):
-        user = None
+
+    def get_token(request):
         if 'HTTP_AUTHORIZATION' in request.META:
             try:
                 bearer, token = request.META['HTTP_AUTHORIZATION'].split(' ', maxsplit=1)
-                User = get_user_model()
-                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            except PyJWTError as e:
-                logging.error(str(e))
-                payload = None
+                return token
             except ValueError:
                 # wrong header, can't split
+                return None
+
+        if settings.DEBUG:
+            # allow passint token to make easier debuging of single api endpoint
+            return request.GET.get('jwt')
+
+        return None
+
+    def middleware(request):
+        user = None
+        token = get_token(request)
+        if token:
+            try:
+                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            except PyJWTError as e:
+                logging.error(f"Can't decode JWT: {e}")
                 payload = None
 
             if payload:
                 try:
+                    User = get_user_model()
                     user = User.objects.get(id=payload.get('uid'))
                 except User.DoesNotExist as e:
-                    logging.error(str(e))
+                    logging.error(e)
 
         if (request.is_ajax() and not request.path.startswith('/api/autocomplete/')) or user:
             if user:

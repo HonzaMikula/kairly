@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 )
 
                 # import pickle
-                # import rapidjson as json
+                # import orjson as json
                 # # with open('/mnt/c/Users/farin/w/etabery.pickle', 'wb') as f:
                 # #     pickle.dump(timeline, f)
                 # with open('/mnt/c/Users/farin/w/jiripehe.pickle', 'rb') as f:
@@ -67,9 +67,6 @@ class Command(BaseCommand):
                     # ignore retweets and replies
                     if status.retweeted_status or status.in_reply_to_status_id:
                         continue
-
-                    # print("-----------------------------")
-                    # print(json.dumps(status.AsDict(), indent=2, ensure_ascii=False))
 
                     try:
                         post = Post.objects.get(guid=guid)

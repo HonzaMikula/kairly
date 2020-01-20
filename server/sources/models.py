@@ -1,6 +1,6 @@
 from os.path import dirname
 from urllib.parse import urlsplit, urlunsplit
-import rapidjson as json
+import orjson as json
 
 import feedparser
 import requests
@@ -17,7 +17,7 @@ from sources.parser import ArticleParser, split_article_to_perex_and_content, va
 from sources.directives import validate_directives, parse as parse_directives
 from utils.url import clean_url, fetch_url
 
-from articles.models import Backlog, Post, get_newspaper_full_name
+from articles.models import Backlog, Post
 from articles.signals import post_publish
 
 
@@ -86,7 +86,7 @@ class Channel(models.Model):
                             'type': 'video-poster',
                             'src': src
                         }
-                    ])
+                    ]).decode()
             except IndexError:
                 pass
 
@@ -204,7 +204,7 @@ class Automation(models.Model):
     newspaper = models.ForeignKey('articles.Newspaper', models.CASCADE)
 
     def __str__(self):
-        return get_newspaper_full_name(self.newspaper_id)
+        return self.newspaper.full_name
 
 
 class AutomationItem(models.Model):

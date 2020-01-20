@@ -1,10 +1,16 @@
+import keyBy from 'lodash/keyBy'
+
 export async function getSubscriptions({ commit, state }) {
   if (state.subscriptions) {
     return state.subscriptions
   }
   const { subscriptions } = await this.$axios.$get('/subscriptions')
-  commit('subscriptions', subscriptions)
-  return subscriptions
+  const mappedByKey = {
+    'authors': keyBy(subscriptions.authors, 'author'),
+    'newspapers': keyBy(subscriptions.newspapers, 'newspaper')
+  }
+  commit('subscriptions', mappedByKey)
+  return mappedByKey
 }
 
 export async function getTransactions({ commit, getters }) {
