@@ -58,6 +58,7 @@ export default {
       }
 
       const replaceUrl = (src, callback) => {
+        // universal URL can't parse url without protocol
         const url = new URL(src.startsWith('//') ? `http:${src}` : src)
           if (url.hostname !== 'kairly.com') {
             callback(`${baseURL}/p?post=${encodeURIComponent(this.post.slug)}&size=timeline&src=${encodeURIComponent(src)}`)

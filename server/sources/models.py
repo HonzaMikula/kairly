@@ -172,16 +172,18 @@ class Channel(models.Model):
         return True
 
     def fix_relative_links(self, htmltree, parsed_url):
-        host = '//' + parsed_url.hostname
+        base = parsed_url.scheme + '://' + parsed_url.netloc
 
         def fix_attr(el, attr):
             link = el.attrib.get(attr)
-            if not link or link.startswith('//') or '://' in link:
+            if not link or link.startswith('http://') or link.startswith('https://'):
                 return
-            if link.startswith('/'):
-                el.attrib[attr] = host + link
+            if link.startswith('//'):
+                el.attrib[attr] = parsed_url.scheme + ':' + link
+            elif link.startswith('/'):
+                el.attrib[attr] = base + link
             else:
-                el.attrib[attr] = host + dirname(parsed_url.path) + link
+                el.attrib[attr] = base + dirname(parsed_url.path) + link
 
         for el in htmltree.cssselect('img'):
             fix_attr(el, 'src')
