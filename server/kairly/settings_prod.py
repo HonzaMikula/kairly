@@ -73,6 +73,7 @@ DATABASES = {
 
 ALLOWED_HOSTS = [
     'kairly.com',
+    'api.kairly.com',
     'kairly-2648.rostiapp.cz'
 ]
 
