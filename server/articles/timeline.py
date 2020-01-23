@@ -56,8 +56,6 @@ class BaseTimelineView(View):
         now = datetime.now(tzinfo)
 
         period = self.get_timeline_period(request, now, tzinfo)
-        print(period)
-        print("XXXXXXXXXXXXXXXXXXXXX")
 
         if period.start > now:
             raise ValueError("Invalid date.")

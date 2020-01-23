@@ -156,3 +156,22 @@ ns = Collection()
 ns.add_collection(deploy_ns)
 ns.add_collection(dbdump_ns)
 ns.add_task(download_media)
+
+
+"""
+TODO try to implement fast import, something like
+(but nice to have also limit articles with date range, like article from last week )
+
+mysqldump -u root -h 127.0.0.1 --default-character-set=utf8mb4 --no-data kairly  > /tmp/d1.sql
+mysqldump -u root -h 127.0.0.1 --default-character-set=utf8mb4 --no-create-db --no-create-info \
+    --ignore-table=kairly.articles_post \
+    --ignore-table=kairly.django_session \
+    --ignore-table=kairly.thumbnail_kvstore \
+    kairly > /tmp/d2.sql
+mysqldump -u root -h 127.0.0.1 --default-character-set=utf8mb4 --no-create-db --no-create-info --single-transaction \
+    kairly  \
+    --tables articles_post \
+    --where="id not in (SELECT post_id FROM kairly.articles_issuepost) and id not in (SELECT post_id FROM kairly.articles_backlog)" \
+    > /tmp/d3.sql
+cat /tmp/d1.sql /tmp/d2.sql /tmp/d3.sql | gzip > /tmp/d.sql.gz
+"""
