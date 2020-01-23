@@ -3,7 +3,7 @@ from datetime import date, timedelta
 from django.core.management.base import BaseCommand
 from django.core.cache import cache
 from django.conf import settings
-from django.db import connection, transaction
+from django.db import connection
 
 from articles.models import Post
 
@@ -19,7 +19,6 @@ class Command(BaseCommand):
             help='do not create anything',
         )
 
-    @transaction.atomic
     def handle(self, *args, **options):
         # verbosity = options.get('verbosity')
         dry_run = options.get('dry-run', False)
@@ -30,6 +29,11 @@ class Command(BaseCommand):
             if d <= today:
                 if latest is None or d > latest:
                     latest = d
+
+        try:
+            post_latest_id = Post.objects.order_by('-id').values_list('id', flat=True)[1000]
+        except IndexError:
+            post_latest_id = 0
 
         if latest is None:
             self.stdout.write('Nothing found.')
@@ -60,6 +64,6 @@ class Command(BaseCommand):
             self.stdout.write(f'Shifting newspaper issues...')
             cursor.execute(f'UPDATE articles_issue SET published = published + INTERVAL {diff} DAY WHERE published >= {boundary}')
             self.stdout.write(f'Shifting posts...')
-            cursor.execute(f'UPDATE articles_post SET published = published + INTERVAL {diff} DAY WHERE source IS NOT NULL AND NOT draft AND published >= {boundary}')
+            cursor.execute(f'UPDATE articles_post SET published = published + INTERVAL {diff} DAY WHERE id > {post_latest_id} AND source IS NOT NULL AND NOT draft AND published >= {boundary}')
 
         cache.clear()
