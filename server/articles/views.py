@@ -46,7 +46,7 @@ SUBSCRIPTIONS_CACHE_KEY = 'subscriptions-{}'
 @ajax_login_required
 @entities_json_response
 def subscriptions(request, entities):
-    cache_key = SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)
+    cache_key = SUBSCRIPTIONS_CACHE_KEY.format(request.user.id)
     cached = cache.get(cache_key)
 
     if cached:
@@ -584,6 +584,8 @@ class NewspaperSubscriptionView(View):
         except Subscription.DoesNotExist:
             subscription = None
 
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.id)))
+
         if subscription and not subscription.suspended:
             subscription.renewal = True
             subscription.donation = donation or Decimal(0)
@@ -618,8 +620,6 @@ class NewspaperSubscriptionView(View):
                 credits -= newspaper.price + donation
                 pay_newspaper_subscription(subscription)
 
-        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
-
         return {
             'credits': str(credits),
             'subscription': subscription.to_json(entities)
@@ -640,6 +640,8 @@ class NewspaperSubscriptionView(View):
         if subscription is None:
             return HttpResponseNotFound()
 
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.id)))
+
         if newspaper.price == 0:
             subscription.delete()
             return {
@@ -649,8 +651,6 @@ class NewspaperSubscriptionView(View):
         subscription.renewal = False
         subscription.suspended = False
         subscription.save()
-
-        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
 
         return {
             'subscription': subscription.to_json(entities) if subscription.valid_to > now else None
@@ -699,6 +699,8 @@ class AuthorSubscriptionView(View):
                 return HttpResponseBadRequest("Periodicity is required.")
             subscription = None
 
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.id)))
+
         if subscription and not subscription.suspended:
             if periodicity:
                 subscription.set_periodicity(periodicity)
@@ -743,8 +745,6 @@ class AuthorSubscriptionView(View):
                 pay_author_subscription(subscription)
                 credits -= author.price + donation
 
-        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
-
         return {
             'credits': str(credits),
             'subscription': subscription.to_json(entities)
@@ -765,6 +765,8 @@ class AuthorSubscriptionView(View):
         if not subscription:
             return HttpResponseNotFound()
 
+        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.id)))
+
         if author.price == 0:
             subscription.delete()
             return {
@@ -774,8 +776,6 @@ class AuthorSubscriptionView(View):
         subscription.renewal = False
         subscription.suspended = False
         subscription.save()
-
-        transaction.on_commit(lambda: cache.delete(SUBSCRIPTIONS_CACHE_KEY.format(request.user.username)))
 
         return {
             'subscription': subscription.to_json(entities) if subscription.valid_to > now else None

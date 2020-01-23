@@ -45,7 +45,7 @@ class Command(BaseCommand):
                     sub.suspended = True
                     sub.save()
 
-                    cache_invalidate.append(SUBSCRIPTIONS_CACHE_KEY.format(sub.user.username))
+                    cache_invalidate.append(SUBSCRIPTIONS_CACHE_KEY.format(sub.user_id))
                 else:
                     if verbosity > 0:
                         self.stdout.write('Extending newspaper subscription: {} -> {}'.format(sub.user, sub.newspaper.slug))
@@ -64,7 +64,7 @@ class Command(BaseCommand):
                     sub.suspended = True
                     sub.save()
 
-                    cache_invalidate.append(SUBSCRIPTIONS_CACHE_KEY.format(sub.user.username))
+                    cache_invalidate.append(SUBSCRIPTIONS_CACHE_KEY.format(sub.user_id))
                 else:
                     if verbosity > 1:
                         self.stdout.write('Extending author subscription: {} -> {}'.format(sub.user, author_id))
