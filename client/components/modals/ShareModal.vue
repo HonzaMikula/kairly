@@ -41,9 +41,9 @@
     <template #footer>
       <a href="" class="copy" @click.prevent="copyToClipboard()">{{ $t('Copy') }}</a>
       <a :href="`https://www.facebook.com/sharer/sharer.php?u=${url}`" target="_blank" class="facebook">Facebook</a>
-      <a :href="`https://twitter.com/intent/tweet?text=${encodedContent}&url=${url}`" target="_blank" class="twitter">Twitter</a>
-      <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${encodedContent}`" class="linkedin" target="_blank">LinkedIn</a>
-      <a :href="`mailto:?subject=${title}&body=${encodedContent}%0D%0A%0D%0A${url}`" class="send-by-email">Email</a>
+      <a :href="`https://twitter.com/intent/tweet?text=${encodedContent()}&url=${url}`" target="_blank" class="twitter">Twitter</a>
+      <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${encodedContent()}`" class="linkedin" target="_blank">LinkedIn</a>
+      <a :href="`mailto:?subject=${title}&body=${encodedContent()}%0D%0A%0D%0A${url}`" class="send-by-email">Email</a>
     </template>
   </DialogWindow>
 </template>
