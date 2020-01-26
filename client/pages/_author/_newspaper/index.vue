@@ -70,58 +70,48 @@
             <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
           </div>
 
-          <footer class="newspaper-detail--social-sharing">
-            <a
-              :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
-              target="_blank"
-              class="rss"
-              :aria-label="$t('Subscribe RSS')"
-              v-b-tooltip
-              :title="$t('Subscribe RSS')"
-              @click="$ga.event({
-                eventCategory: 'Subscribe RSS newspaper',
-                eventAction: newspaper.name,
-                eventLabel: newspaper.editor.id
-              })"
-            />
+          <footer 
+            v-if="newspaper.newsletterSubscriptionUrl"
+            class="newspaper-detail--newsletter-subscription">
+            <h2>{{ $t('Subscribe to newsletter') }}</h2>
+            <ul>
+              <li>
+                {{ $t('Read the best content selected by') }}
 
-            <a
-              :href="`https://www.facebook.com/sharer/sharer.php?u=https://kairly.com/${issue.id}`"
-              target="_blank"
-              class="share-fb"
-              :aria-label="$t('Share on Facebook')"
-              v-b-tooltip
-              :title="$t('Share on Facebook')"
-              @click="$ga.event({
-                eventCategory: 'Share newspaper FB',
-                eventAction: newspaper.name,
-                eventLabel: newspaper.editor.id
-              })"
-            />
-
-            <a
-              :href="`https://twitter.com/intent/tweet?url=https://kairly.com/${issue.id}&text=${newspaper.title}`"
-              target="_blank"
-              class="share-twitter"
-              :aria-label="$t('Share on Twitter')"
-              v-b-tooltip
-              :title="$t('Share on Twitter')"
-              @click="$ga.event({
-                eventCategory: 'Share newspaper Twitter',
-                eventAction: newspaper.name,
-                eventLabel: newspaper.editor.id
-              })"
-            />
-
+                <nuxt-link
+                  :to="{name: 'author', params: {author: newspaper.editor.id}}"
+                  :id="`issue-newspaper-author-${$_uid}`"
+                >
+                  <img :src="newspaper.editor.pictures.small" :alt="newspaper.editor.name" />
+                  <strong>{{ newspaper.editor.name }}</strong>
+                </nuxt-link>.
+              </li>
+              <li>{{ $t('You will receive newsletter in your inbox') }} <strong class="periodicity">{{ periodicity }}</strong>.</li>
+              <li>
+                {{ $t('You can also subscribe using') }}
+                <a
+                  :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
+                  target="_blank"
+                  class="rss"
+                  :aria-label="$t('Subscribe RSS')"
+                  v-b-tooltip
+                  :title="$t('Subscribe RSS')"
+                  @click="$ga.event({
+                    eventCategory: 'Subscribe RSS newspaper',
+                    eventAction: newspaper.name,
+                    eventLabel: newspaper.editor.id
+                  })"
+                >{{ $t('RSS feed') }}</a>.
+              </li>
+            </ul>
             <!-- Begin Mailchimp Signup Form -->
             <div
-              v-if="newspaper.newsletterSubscriptionUrl"
               id="mc_embed_signup"
             >
               <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
                 <div id="mc_embed_signup_scroll">
                   <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
-                  <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                  <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signupss -->
                   <div style="position: absolute; left: -5000px;" aria-hidden="true">
                     <input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value="">
                     <input type="checkbox" :value="newspaper.newsletterSubscriptionUrl" :name="`group[84705][${newspaper.newsletterSubscriptionUrl}]`" checked />
@@ -130,7 +120,7 @@
                     <input
                       id="mc-embedded-subscribe"
                       type="submit"
-                      :value="$t('Send newspaper by email')"
+                      :value="$t('Subscribe')"
                       name="subscribe"
                       class="button"
                       @click="$ga.event({
@@ -143,7 +133,8 @@
                 </div>
               </form>
             </div>
-            <!--End mc_embed_signup-->
+            <!--End mc_embed_signup -->
+              
           </footer>
         </template>
 
@@ -532,41 +523,75 @@ export default {
 
   //- That's it...
   > p
+    padding: $baseline 0
+
+    border-top: 3px solid #eee
+
     font-family: $ff-serif
     font-size: $fs-1
     font-weight: 600
     line-height: 1.42
     text-align: center
 
-    padding-bottom: $baseline
+
+//- Footer subscribe to newsletter
+.newspaper-detail--newsletter-subscription
+  display: table
+  margin: 0 auto $baseline/2 auto
+  padding: $baseline $baseline 0 $baseline
+
+  background: #fff
+  border: 1px solid #eee
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+
+  font-family: $ff-sans
+
+  > h2
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-1
+    font-weight: 600
+    text-align: center
+
+  ul
+    display: table
+    margin: 0 auto $baseline/2 auto
+  
+  li
+    padding-bottom: $baseline / 4
+
+    list-style: disc outside
+    line-height: 1.42
+
+  li a
+    color: darken($c-base, 20%)
+
+  //- periodicity
+  li .periodicity
+    text-transform: lowercase
+
+  li .rss::before
+    +fa-icon()
+
+    @extend .fas
+
+    content: fa-content($fa-var-rss-square)
+
+    margin-right: $baseline / 8
 
 
-//- Footer with social buttons
-.newspaper-detail--social-sharing
-  display: flex
-  justify-content: center
+  //- author's image
+  li img
+    height: $baseline * 0.75
+    width: $baseline * 0.75
+    border-radius: 100%
 
-  border-top: 3px solid #eee
-  padding-top: $baseline / 2
-
-  > a
-    margin: 0 $baseline/4
-
-  a.share-fb
-    +button-icon($fa-var-facebook, icon, brand)
-
-  a.share-twitter
-    +button-icon($fa-var-twitter, icon, brand)
-
-  a.rss
-    +button-icon($fa-var-rss-square, icon)
+    vertical-align: middle
+    object-fit: cover
 
   //- Mailchimp
   #mc_embed_signup
     margin-left: auto
-
-    @media (max-width: $mobile)
-      display: none
 
     #mc_embed_signup_scroll
       display: flex
@@ -581,9 +606,9 @@ export default {
       box-sizing: border-box
       border-radius: 5px 0 0 5px
       height: $baseline * 1.25
-      padding: 0 $baseline/2
+      padding: 0 $baseline/4
       margin-bottom: $baseline / 2
-      width: 200px
+      width: 250px
 
       background: #fff
       border: 1px solid #ddd
@@ -641,6 +666,29 @@ export default {
     padding-bottom: 0px
 
 
+
+
+//- Footer with social buttons
+.newspaper-detail--social-sharing
+  display: flex
+  justify-content: center
+
+  border-top: 3px solid #eee
+  padding-top: $baseline / 2
+
+  > a
+    margin: 0 $baseline/4
+
+  a.share-fb
+    +button-icon($fa-var-facebook, icon, brand)
+
+  a.share-twitter
+    +button-icon($fa-var-twitter, icon, brand)
+
+  a.rss
+    +button-icon($fa-var-rss-square, icon)
+
+  
 
 //- When newspaper is empty
 .newspaper-detail--empty-newspaper
