@@ -12,7 +12,7 @@
     <div>
       <h1>{{ title }}</h1>
       <ul>
-        <li v-for="post in listOfPosts" :key="post.post.id">
+        <li v-for="post in listOfPosts()" :key="post.post.id">
           <template v-if="post.post.content.title">
             <nuxt-link :to="{ name: 'author-post', params: { author: post.post.author.id, post: post.post.slug }}">
               {{ post.post.content.title }}
@@ -32,18 +32,18 @@
 
     <div class="share--show-more">
       <button
-        v-if="(tailPostsCount > 0 && !isExpanded)"
+        v-if="(tailPostsCount() > 0 && !isExpanded)"
         @click.prevent="isExpanded = true">
-        {{ $t('Show more') }} ({{tailPostsCount}})
+        {{ $t('Show more') }} ({{tailPostsCount()}})
       </button>
     </div>
 
     <template #footer>
       <a href="" class="copy" @click.prevent="copyToClipboard()">{{ $t('Copy') }}</a>
       <a :href="`https://www.facebook.com/sharer/sharer.php?u=${url}`" target="_blank" class="facebook">Facebook</a>
-      <a :href="`https://twitter.com/intent/tweet?text=${content}&url=${url}`" target="_blank" class="twitter">Twitter</a>
-      <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${content}`" class="linkedin" target="_blank">LinkedIn</a>
-      <a :href="`mailto:?subject=${title}&body=${content}%0D%0A%0D%0A${url}`" class="send-by-email">Email</a>
+      <a :href="`https://twitter.com/intent/tweet?text=${encodedContent()}&url=${url}`" target="_blank" class="twitter">Twitter</a>
+      <a :href="`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${encodedContent()}`" class="linkedin" target="_blank">LinkedIn</a>
+      <a :href="`mailto:?subject=${title}&body=${encodedContent()}%0D%0A%0D%0A${url}`" class="send-by-email">Email</a>
     </template>
   </DialogWindow>
 </template>
@@ -79,31 +79,44 @@ export default {
 
     url() {
       return `https://kairly.com/${this.issue.newspaper.fullName}/${this.issue.number}`
-    },
-
-    content() {
-      let content = ''
-      this.issue.posts.forEach(function (post) {
-        content += '• '+ post.post.content.title +'\n'
-      })
-      return encodeURIComponent(content)
-    },
-
-    listOfPosts() {
-      if (!this.isExpanded)
-        return this.issue.posts.slice(0, POST_LIMIT)
-      else
-        return this.issue.posts
-    },
-
-    tailPostsCount() {
-      return Math.max(0, this.issue.posts.length - POST_LIMIT)
     }
   },
 
   mixins: [ModalMixin],
 
   methods: {
+    content() {
+      let content = ''
+      this.posts.forEach(function (post) {
+        if (post.post.content.title) {
+          content += `• ${post.post.content.title} \n`
+        }
+        else {
+          var div = document.createElement("div") // striping HTML
+          div.innerHTML = post.post.content.content
+          var text = div.textContent || div.innerText || ""
+          content += `• ${post.post.author.name}: ${text} \n`
+        }
+      })
+
+      return content
+    },
+
+    encodedContent(){
+      return encodeURIComponent(this.content())
+    },
+
+    tailPostsCount() {
+      return Math.max(0, this.posts.length - POST_LIMIT)
+    },
+
+    listOfPosts() {
+      if (!this.isExpanded)
+        return this.posts.slice(0, POST_LIMIT)
+      else
+        return this.posts
+    },
+
     removeItem(id) {
       this.posts.splice(this.posts.findIndex(function(i){
           return i.post.id === id
@@ -112,7 +125,8 @@ export default {
 
     async copyToClipboard() {
       try {
-        await this.$copyText(this.content)
+        const textToShare = this.title + '\n'+ this.content() + this.url
+        await this.$copyText(textToShare)
       } catch (e) {
         console.error(e)
       }
