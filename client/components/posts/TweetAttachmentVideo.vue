@@ -9,12 +9,12 @@
       controls
       playsinline
     >
-      <!--source
+      <source
         v-for="(source, idx) in item.video_info.variants"
         :key="idx"
         :src="source.url"
         :type="source.content_type"
-      /-->
+      />
     </video>
   </div>
 </template>
