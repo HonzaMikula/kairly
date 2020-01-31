@@ -2,7 +2,7 @@
   <div class="tweet-attachment-video-view">
     <video
       :poster="item.src"
-      :preload="none"
+      preload="none"
       :width="dim[0]"
       :height="dim[1]"
       :duration="item.video_info.duration_millis / 1000"

@@ -29,6 +29,7 @@
       </div>
 
       <rich-editor
+        v-if="post.type !== 'comment'"
         v-model="perex"
         :options="perexOptions"
        />
@@ -78,12 +79,20 @@ export default {
 
   methods: {
     submit() {
-      this.$emit('submit', {
-        type: 'newspaper',
-        title: this.title,
-        perex: this.perex,
-        content: this.content
-      })
+      if (this.post.type === 'newspaper') {
+        this.$emit('submit', {
+          type: 'newspaper',
+          title: this.title,
+          perex: this.perex,
+          content: this.content
+        })
+      } else {
+        this.$emit('submit', {
+          type: 'comment',
+          title: this.title,
+          content: this.content
+        })
+      }
     }
   }
 }

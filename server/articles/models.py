@@ -41,6 +41,7 @@ def round_fair_price(price):
 class Post(models.Model):
 
     NEWSPAPER = 'newspaper'
+    COMMENT = 'comment'  # eg issue intro, etc, no perex, just content
     TWEET = 'tweet'
     RECOMMENDATION = 'recommendation'
     LINK = 'link'
@@ -48,6 +49,7 @@ class Post(models.Model):
 
     KIND_CHOICES = (
         (NEWSPAPER, _('Newspaper')),
+        (COMMENT, _('Comment')),
         (TWEET, _('Tweet')),
         (RECOMMENDATION, _('Recommendation')),
         (LINK, _('Link')),
@@ -249,6 +251,11 @@ class Post(models.Model):
                 }
                 if not short:
                     result['content']['content'] = self.content
+        elif self.kind == Post.COMMENT:
+            result['content'] = {
+                'title': self.title,
+                'content': self.content,
+            }
         elif self.kind == Post.RECOMMENDATION:
             if self.ref_post:
                 result['type'] += '-post'

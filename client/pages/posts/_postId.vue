@@ -1,7 +1,7 @@
 <template>
   <AppLayout :name="$t('Edit a post')">
     <div class="edit-post">
-      <EditArticle v-if="post.type == 'newspaper'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
+      <EditArticle v-if="post.type == 'newspaper' || post.type === 'comment'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
       <EditTweet v-if="post.type == 'tweet'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
     </div>
   </AppLayout>

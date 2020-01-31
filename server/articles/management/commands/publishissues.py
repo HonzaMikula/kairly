@@ -25,6 +25,12 @@ class Command(BaseCommand):
             help='Fake time for which time issues should be published. Use H+TZ form, eg 9+02 for 9:00 in Europe/Prague zone',
         )
         parser.add_argument(
+            '--newspaper',
+            action='store',
+            dest='newspaper',
+            help='Newspaper only',
+        )
+        parser.add_argument(
             '--dry-run',
             action='store_true',
             dest='dry-run',
@@ -100,7 +106,14 @@ class Command(BaseCommand):
         if verbosity > 1:
             self.stdout.write('Serching for issues to be published at {}'.format(now))
 
-        query = Newspaper.objects\
+        newspaper_name = options.get('newspaper')
+        if newspaper_name is not None:
+            username, newspaper_slug = newspaper_name.split('/')
+            query = Newspaper.objects.filter(editor__username=username, slug=newspaper_slug)
+        else:
+            query = Newspaper.objects.all()
+
+        query = query\
             .filter(backlog__publish_in__isnull=False)\
             .select_related('editor')\
             .distinct()

@@ -43,7 +43,7 @@
               @click.prevent="$router.push(`/posts/${post.id}`)"
             />
             <button
-              v-if="userNewspapers.length > 0"
+              v-if="userNewspapers.length > 0 && post.type !== 'comment'"
               class="consider-post"
               tabindex="0"
               :aria-label="$t('Consider for newspaper')"

@@ -797,6 +797,15 @@ def validate_post_attributes(request, payload, draft):
 
         perex = convert_data_uris(perex)
         content = convert_data_uris(content)
+    elif kind == Post.COMMENT:
+        title = payload['title'].strip()
+        content = sanitize(payload['content'].strip())
+
+        if not title:
+            raise ValueError("No title")
+
+        perex = None
+        content = convert_data_uris(content)
     elif kind == Post.TWEET:
         raw_content = payload['content'].strip()
 
