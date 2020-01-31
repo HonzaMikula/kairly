@@ -23,6 +23,7 @@
         </h3>
 
         <AuthorPopup
+         v-if="post.author.kind != 'external'"
           :target="`post-author-${post.id}`"
           :author="post.author"
         />
