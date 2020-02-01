@@ -7,7 +7,7 @@
     @click.native="toggleMobileControls"
   >
     <template #extended-controls>
-      <span class="price">{{ log.post.price }} Kč</span>
+      <span v-if="log.post.type !== 'comment'" class="price">{{ log.post.price }} Kč</span>
     </template>
 
     <template #controls>
@@ -184,6 +184,13 @@
               </ul>
             </b-popover>
           </template>
+
+          <button
+            v-if="log.post.type == 'comment'"
+            class="edit-comment"
+            @click="editComment"
+          ></button>
+
         </div>
       </div>
     </template>
@@ -252,6 +259,10 @@ export default {
       const { type, position} = this.log.editorial
       this.editorType = type
       this.editorPosition = position
+    },
+
+    editComment() {
+      this.$router.push(`/posts/${this.log.post.id}`)
     },
 
     async saveEditorial(payload) {
@@ -386,6 +397,10 @@ export default {
   //- button add editorial
   .add-editorial
     +button-icon($fa-var-font)
+
+  //- button add comment
+  .edit-comment
+    +button-icon($fa-var-pencil-alt)
 
   //- button menu
   .menu

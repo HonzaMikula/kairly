@@ -824,7 +824,7 @@ def validate_post_attributes(request, payload, draft):
         'kind': kind,
         'title': title,
         'perex': perex,
-        'content': content,
+        'content': content
     }
 
 
@@ -851,6 +851,7 @@ class DraftsView(View):
             draft=True,
             protected=False,
             author=request.user,
+            hidden=payload['type'] == Post.COMMENT,
             **attrs
         )
 

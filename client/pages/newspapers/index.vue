@@ -76,6 +76,11 @@
               :title="$t('Edit newspaper')"
               v-b-tooltip
             />
+
+            <button
+              @click.prevent="addComment">
+              {{ $t('Add comment') }}
+            </button>
           </div>
 
           <div class="mobile-menu">
@@ -167,6 +172,11 @@ export default {
   },
 
   computed: {
+    isAdmin() {
+      const { user } = store.state.auth
+      return user.isAdmin
+    },
+
     newspapers() {
       const ids = this.$store.state.auth.user.newspapers.map(newspaper => newspaper.fullName)
       const newspapers = ids.map(id => this.$store.getters['entities/getNewspaper'](id))
@@ -231,6 +241,7 @@ export default {
     ...mapActions({
       deleteNewspaper: 'deleteNewspaper',
       loadNewspaperBacklog: 'backlog/loadNewspaperBacklog',
+      addToBacklog: 'backlog/add',
       addLinkToBacklog: 'backlog/addLink'
     }),
 
@@ -252,7 +263,23 @@ export default {
       } catch (err) {
         this.handleError(err)
       }
-    }
+    },
+
+    async addComment() {
+      const data = {
+        type: 'comment',
+        title: '...',
+        content: '<p>...</p>'
+      }
+      const { post } = await this.$axios.$post(`/drafts`, data)
+
+      const newspaper = this.selectedNewspaper
+      await this.addToBacklog({
+        newspaper,
+        post: post,
+        source: 'considered'
+      })
+   }
   },
 
   async fetch({ store, redirect }) {

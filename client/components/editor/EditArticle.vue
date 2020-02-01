@@ -29,7 +29,7 @@
       </div>
 
       <rich-editor
-        v-if="post.type !== 'comment'"
+        v-if="!post || post.type !== 'comment'"
         v-model="perex"
         :options="perexOptions"
        />
