@@ -118,7 +118,8 @@ export default {
   //- main article
   .newspaper,
   .link,
-  .video
+  .video,
+  .comment
     grid-column: 1 / span 2
     grid-row: 1
     margin: 0
