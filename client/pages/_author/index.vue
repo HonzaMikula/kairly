@@ -12,11 +12,9 @@
            <AuthorPicture itemprop="image" size="big" :author="author" />
         </picture>
 
-        <section>
-          <h1 itemprop="name">{{ author.name }}</h1>
+        <h1 itemprop="name">{{ author.name }}</h1>
 
-          <p itemprop="description">{{ author.bio }}</p>
-        </section>
+        <p itemprop="description">{{ author.bio }}</p>
 
         <div class="author-detail--subscribe" v-if="loggedIn">
           <AuthorSubscriptionButton
@@ -288,28 +286,49 @@ export default {
 
   @media (max-width: $mobile)
     position: static
-    grid-template-columns: $baseline*4 1fr
+    grid-template-columns: $baseline*3 1fr
     grid-template-rows: auto auto
-    grid-row-gap: $baseline / 2
+    grid-row-gap: $baseline / 4
+    grid-column-gap: $baseline / 2
     padding: $baseline / 4
     margin: 0
 
   //- Author name
   h1
+    grid-row: 1 / span 1
+    grid-column: 2 / span 1
     font-size: $fs-3
     font-weight: 600
     line-height: $baseline * 2
     text-shadow: 0 0 5px #fafafa
 
+    @media (max-width: $mobile)
+      font-size: $fs-2
+      line-height: 1.42
+
   //- Bio
   p
+    grid-row: 2 / span 1
+    grid-column: 2 / span 1
     text-shadow: 0 0 5px #fafafa
+
+    @media (max-width: $mobile)
+      grid-row: 3 / span 1
+      grid-column: 1 / span 2
+
+  picture
+    grid-row: 1 / span 2
+    grid-column: 1 / span 1
 
   picture img
     display: block
     border-radius: 100%
     height: $baseline * 4
     width: $baseline * 4
+
+    @media (max-width: $mobile)
+      height: $baseline * 3
+      width: $baseline * 3
 
     object-fit: cover
 
@@ -318,10 +337,11 @@ export default {
 .author-detail--subscribe
   position: relative
 
+  grid-column: 3 / span 1
+  grid-row: 1 / span 2
   display: flex
   align-items: center
   flex-direction: column
-
   margin-bottom: $baseline
 
   color: #555
@@ -331,7 +351,10 @@ export default {
   text-align: center
 
   @media (max-width: $mobile)
-    grid-column: 1 / span 2
+    align-items: flex-start
+    flex-direction: row
+    grid-column: 2 / span 1
+    grid-row: 2 / span 1
     margin-bottom: 0
 
   //- edit profile
@@ -339,6 +362,10 @@ export default {
     +button-icon($fa-var-edit, icon-text, solid, small)
 
     margin-top: $baseline / 2
+
+    @media (max-width: $mobile)
+      margin-top: 0
+      margin-left: $baseline / 4
 
   .author-subscription-view
     //- when author is subscribed
@@ -387,11 +414,10 @@ export default {
 
     @media (max-width: $mobile)
       display: flex
-      grid-column-gap: $baseline / 4
       overflow-x: auto
       -webkit-overflow-scrolling: touch
 
-      newspaper-widget-view
+      .newspaper-widget-view
         margin-right: $baseline / 2
         max-width: 200px
 
