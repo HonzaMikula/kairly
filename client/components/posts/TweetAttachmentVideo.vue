@@ -45,6 +45,9 @@ export default {
 
   video
     display: block
+    height: auto
+    margin: 0 auto
     max-width: 100%
+    max-height: 576px
 
 </style>
