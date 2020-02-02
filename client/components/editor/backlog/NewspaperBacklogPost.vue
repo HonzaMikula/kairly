@@ -6,12 +6,8 @@
     :editorial="editorType ? {position: editorPosition} : log.editorial"
     @click.native="toggleMobileControls"
   >
-    <template #extended-controls>
-      <span v-if="log.post.type !== 'comment'" class="price">{{ log.post.price }} Kč</span>
-    </template>
-
     <template #controls>
-      &nbsp;
+      <span v-if="log.post.type !== 'comment'" class="price">{{ log.post.price }} Kč</span>
     </template>
 
     <template #editorial>

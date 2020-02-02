@@ -264,6 +264,7 @@ export default {
 
     //- price
     > .price
+      margin-left: $baseline / 4
       margin-right: $baseline / 4
 
       font-weight: 600

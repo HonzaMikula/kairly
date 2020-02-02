@@ -2,4 +2,4 @@
 /server/myenv
 /.vscode
 .pytest_cache
-kairly.sql.gz
+kairly.sql.gz*
