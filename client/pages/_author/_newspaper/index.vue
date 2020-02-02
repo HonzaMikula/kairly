@@ -71,7 +71,6 @@
           </div>
 
           <footer 
-            v-if="newspaper.newsletterSubscriptionUrl"
             class="newspaper-detail--newsletter-subscription">
             <h2>{{ $t('Subscribe to newsletter') }}</h2>
             <ul>
@@ -106,6 +105,7 @@
             </ul>
             <!-- Begin Mailchimp Signup Form -->
             <div
+              v-if="newspaper.newsletterSubscriptionUrl"
               id="mc_embed_signup"
             >
               <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
