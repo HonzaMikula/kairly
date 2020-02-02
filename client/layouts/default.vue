@@ -74,6 +74,7 @@ export default {
 @import '../node_modules/@fortawesome/fontawesome-free/scss/fontawesome'
 @import '../node_modules/bootstrap/scss/_tooltip'
 @import '../node_modules/bootstrap/scss/_popover'
+@import '../node_modules/bootstrap-vue/src/index.scss'
 
 //- Scaffolding
 @import 'styles/scaffolding/layout'
