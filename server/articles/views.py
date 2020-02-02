@@ -832,7 +832,7 @@ class DraftsView(View):
     @ajax_login_required
     @method_decorator(entities_json_response)
     def get(self, request, entities):
-        posts = Post.objects.filter(author=request.user, draft=True).order_by('-published')
+        posts = Post.objects.filter(author=request.user, draft=True, kind=Post.NEWSPAPER).order_by('-published')
         return{
             'posts': [post.to_json(entities) for post in posts]
         }

@@ -9,8 +9,9 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import Max
+from django.utils.timezone import now as timezone_now
 
-from articles.models import Newspaper, Issue, Backlog, IssuePost, Editorial, EditorialTweet
+from articles.models import Newspaper, Issue, Backlog, IssuePost, Editorial, EditorialTweet, Post
 from articles.period import PeriodMixin
 
 
@@ -61,6 +62,7 @@ class Command(BaseCommand):
                     newspaper=newspaper
                 )
 
+            comments = []
             for i, backlog in enumerate(backlog_items):
                 if verbosity > 0:
                     self.stdout.write('Adding post {}'.format(backlog.post))
@@ -73,8 +75,14 @@ class Command(BaseCommand):
                         editorial.delete()
                         editorial = None
 
-                    IssuePost.objects.create(
-                        issue=issue, post=backlog.post, editorial=editorial, ordering=i)
+                    post = backlog.post
+                    IssuePost.objects.create(issue=issue, post=post, editorial=editorial, ordering=i)
+                    if post.kind == Post.COMMENT:
+                        comments.append(post.id)
+
+            if not dry_run:
+                if comments:
+                    Post.objects.filter(id__in=comments).update(draft=False, published=timezone_now())
 
         if not dry_run:
             Backlog.objects.filter(newspaper=newspaper, publish_in=Backlog.NEXT_ISSUE).update(publish_in=Backlog.UPCOMING_ISSUE)
