@@ -144,7 +144,7 @@ export default {
     article
       margin: 0
 
-    timeline-post--tweet
+    .timeline-post--tweet
         margin: 0
 
   //- tweets
@@ -157,11 +157,33 @@ export default {
       margin: 0
       background: #F2ECEC
 
-      timeline-post--tweet
+      .timeline-post--tweet
         margin: 0
 
       .tweet-attachment-link-view
         display: none //- TODO: refactor so it's not done over CSS
+
+      .tweet-attachment-gallery
+
+        img
+          display: block
+          height: auto
+          max-height: 288px
+
+        &.gallery-1,
+        &.gallery-2,
+        &.gallery-3,
+        &.gallery-4
+          grid-template-rows: minmax(auto, max-content)
+
+        &.gallery-2
+          grid-template-columns: 100%
+
+        &.gallery-1 img
+          object-fit: contain
+        
+      .tweet-attachment-video-view video
+        max-height: 288px
 
     @media (max-width: $mobile)
       grid-column: 2 / span 1
