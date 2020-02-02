@@ -67,6 +67,29 @@
               </template>
             </IssueWrapper>
 
+            <template v-if="issue">
+              <nav
+                v-if="links.prev || links.next"
+                class="newspaper-detail--navigation footer"
+              >
+                <nuxt-link
+                  v-if="links.prev"
+                  :to="links.prev"
+                  v-b-tooltip
+                  :title="$t('Previous issue')"
+                  class="previous"
+                />
+
+                <nuxt-link
+                  v-if="links.next"
+                  :to="links.next"
+                  v-b-tooltip
+                  :title="$t('Next issue')"
+                  class="next"
+                />
+              </nav>
+            </template>
+
             <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
           </div>
 
@@ -465,26 +488,37 @@ export default {
   margin-bottom: -($baseline * 2.375)
 
   border-top: 1px solid #eee
+  
+  @media (max-width: $mobile)
+    padding-left: $baseline / 4
+    padding-right: $baseline / 4
+
+  &.footer
+    margin-bottom: 0
+    margin-top: -($baseline * 3 - 6px)
+    border-top: 0
 
   a
     position: relative
     z-index: 3
 
     display: block
+    box-sizing: border-box
     border-radius: 100%
-    height: $baseline * 1.5
-    width: $baseline * 1.5
+    height: $baseline * 1.25
+    width: $baseline * 1.25
 
-    background: #fff
+    background: #eee
+    border: 1px solid #ccc
+    box-shadow: 2px 2px 4px #ccc, -2px -2px 4px #fff
     color: #000
 
-    line-height: $baseline * 1.5
+    line-height: $baseline * 1.25
     text-align: center
 
     &:hover,
     &:focus
-      background: $c-base
-      color: #fff
+      background: #ddd
 
     &.is-disabled
       opacity: 0.5
@@ -524,8 +558,6 @@ export default {
   //- That's it...
   > p
     padding: $baseline 0
-
-    border-top: 3px solid #eee
 
     font-family: $ff-serif
     font-size: $fs-1
