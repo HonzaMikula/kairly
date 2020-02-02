@@ -216,7 +216,9 @@ class Post(models.Model):
                         result['author'] = {
                            'id': 'twitter|' + a['screen_name'],
                            'name': a['name'],
-                           'picture': a['profile_image_url_https'],
+                           'pictures': {
+                               'small': a['profile_image_url_https']
+                            },
                            'url': 'https://twitter.com/' + a['screen_name'],
                            'kind': 'external',
                         }

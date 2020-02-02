@@ -6,9 +6,16 @@
     <header @mouseleave="closeAuthorWidget">
       <slot name="author">
         <picture>
-          <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-            <AuthorPicture :author="post.author" />
-          </nuxt-link>
+          <template v-if="post.author.kind == 'external'">
+            <a :href="post.author.url" target="_blank">
+              <AuthorPicture :author="post.author" />
+            </a>
+          </template>
+          <template v-else>
+            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+              <AuthorPicture :author="post.author" />
+            </nuxt-link>
+          </template>
         </picture>
 
         <h3 :id="`post-author-${post.id}`">
