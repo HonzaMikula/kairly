@@ -79,7 +79,7 @@ export default {
 
   methods: {
     submit() {
-      if (this.post.type === 'newspaper') {
+      if (!this.post || this.post.type === 'newspaper') {
         this.$emit('submit', {
           type: 'newspaper',
           title: this.title,
