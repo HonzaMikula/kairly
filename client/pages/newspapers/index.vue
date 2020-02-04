@@ -78,6 +78,7 @@
             />
 
             <button
+              v-if="isAdmin"
               @click.prevent="addComment">
               {{ $t('Add comment') }}
             </button>
@@ -173,7 +174,7 @@ export default {
 
   computed: {
     isAdmin() {
-      const { user } = store.state.auth
+      const { user } = this.$store.state.auth
       return user.isAdmin
     },
 

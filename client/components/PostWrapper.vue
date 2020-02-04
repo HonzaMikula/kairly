@@ -116,10 +116,11 @@ export default {
       overflow-y: auto
 
   //- main article
-  .newspaper,
-  .link,
-  .video,
-  .comment
+  > .newspaper,
+  > .tweet,
+  > .link,
+  > .video,
+  > .comment
     grid-column: 1 / span 2
     grid-row: 1
     margin: 0
@@ -181,7 +182,7 @@ export default {
 
         &.gallery-1 img
           object-fit: contain
-        
+
       .tweet-attachment-video-view video
         max-height: 288px
 

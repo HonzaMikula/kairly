@@ -122,7 +122,7 @@
         </div>
 
         <div
-          v-if="log.post.type != 'tweet'"
+          v-if="log.post.type != 'tweet' || isAdmin"
           class="newspaper-backlog-controls--options">
           <button
             v-if="!log.editorial && !editorType"
@@ -234,6 +234,13 @@ export default {
     canMoveUp: Boolean,
     canMoveDown: Boolean,
     source: String,
+  },
+
+  computed: {
+    isAdmin() {
+      const { user } = this.$store.state.auth
+      return user.isAdmin
+    }
   },
 
   methods: {
