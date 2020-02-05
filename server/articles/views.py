@@ -460,7 +460,9 @@ class EditorialsView(View):
         editorial.kind = kind
 
         if kind == 'article':
-            title = payload['title'].strip()
+            title = payload.get('title')
+            if title:
+                title = title.strip()
             content = sanitize(payload['content'].strip())
 
             editorial.title = title or None
