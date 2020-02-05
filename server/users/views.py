@@ -76,7 +76,7 @@ class ProfileView(View):
     @method_decorator(entities_json_response)
     def get(self, request, entities):
         newspapers = []
-        for newspaper in Newspaper.objects.filter(Q(editor=request.user) | Q(co_editors=request.user)).select_related('editor'):
+        for newspaper in Newspaper.objects.filter(Q(editor=request.user) | Q(co_editors=request.user), archived=False).select_related('editor'):
             newspapers.append({
                 'fullName': newspaper.full_name,
                 'title': newspaper.title,
