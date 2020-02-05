@@ -15,8 +15,11 @@
         </h3>
       </header>
       <timeline-post--article>
-        <h2>{{ editorial.title }}</h2>
-        <timeline-post--article--content v-html="editorial.content" />
+        <h2 v-if="editorial.title">{{ editorial.title }}</h2>
+        <timeline-post--article--content
+          :class="{'no-title': !editorial.title}"
+          v-html="editorial.content"
+        />
       </timeline-post--article>
     </article>
   </div>
@@ -44,5 +47,8 @@ export default {
 .editorial-post--editorial .post.newspaper.editorial
   timeline-post--article--content
     column-count: 1
+
+    &.no-title
+      padding-top: 7px
 
 </style>

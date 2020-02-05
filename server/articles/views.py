@@ -463,10 +463,7 @@ class EditorialsView(View):
             title = payload['title'].strip()
             content = sanitize(payload['content'].strip())
 
-            if not title:
-                return HttpResponseBadRequest("No title")
-
-            editorial.title = title
+            editorial.title = title or None
             editorial.content = content
 
         elif kind == 'tweets':
