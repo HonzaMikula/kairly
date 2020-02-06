@@ -93,7 +93,7 @@
             <p>{{ $t('That\'s it. You read the whole issue.') }}</p>
           </div>
 
-          <footer 
+          <footer
             class="newspaper-detail--newsletter-subscription">
             <h2>{{ $t('Subscribe to newsletter') }}</h2>
             <ul>
@@ -157,7 +157,7 @@
               </form>
             </div>
             <!--End mc_embed_signup -->
-              
+
           </footer>
         </template>
 
@@ -217,7 +217,7 @@ export default {
       //- act as an issue detail
       metaTitle = `${title} #${this.issue.number} – Kairly`
       metaDescription = this.issue.posts
-        .map(({post}) => post.content.title || post.author.name)
+        .map((post) => post.content.title || post.author.name)
         .filter(title => title)
         .join(' • ')
         .slice(0, 280)
@@ -232,7 +232,7 @@ export default {
     //- newspaper image
     if (this.$route.params.issue) {
       images = this.issue.posts
-        .map(({post}) => IMG_REGEXP.exec(post.content.perex))
+        .map((post) => IMG_REGEXP.exec(post.content.perex))
         .filter(x => x)
     }
 
@@ -488,7 +488,7 @@ export default {
   margin-bottom: -($baseline * 2.375)
 
   border-top: 1px solid #eee
-  
+
   @media (max-width: $mobile)
     padding-left: $baseline / 4
     padding-right: $baseline / 4
@@ -588,7 +588,7 @@ export default {
   ul
     display: table
     margin: 0 auto $baseline/2 auto
-  
+
   li
     padding-bottom: $baseline / 4
 
@@ -720,7 +720,7 @@ export default {
   a.rss
     +button-icon($fa-var-rss-square, icon)
 
-  
+
 
 //- When newspaper is empty
 .newspaper-detail--empty-newspaper

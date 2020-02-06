@@ -2,10 +2,9 @@
   <section
     :class="{'editorial-post': !!editorial, 'normal-post': !editorial, 'is-before': editorial && editorial.position === 'left'}">
     <component
-      :is="'post-' + postType"
-      :key="post.id"
+      :is="postType"
       class="post-content"
-      :post="post"
+      :post="basePost"
       :isSubscribed="isSubscribed"
     >
       <template #author>
@@ -48,9 +47,8 @@ import EditorialArticle from '@/components/posts/EditorialArticle'
 export default {
   name: 'PostWrapper',
   props: {
-    post: Object,
+    post: [Object, Array] ,
     isSubscribed: Boolean,
-    editorial: Object,  // right or left
   },
 
   components: {
@@ -66,16 +64,55 @@ export default {
   },
 
   computed: {
+    basePost() {
+      if (Array.isArray(this.post)) {
+        const col = this.post[0] === 'cols-2-1' ? this.post[1] : this.post[2]
+        return col[0]
+      }
+      return this.post
+    },
+
+    editorial() {
+      if (Array.isArray(this.post)) {
+        const col = this.post[0] === 'cols-2-1' ? this.post[2] : this.post[1]
+        const posts = col.slice(1)
+        const first = posts[0]
+        const data = {
+          'author': first.type === 'newspaper' ? first.author : null,
+          'type': first.type === 'newspaper' ? 'article' : 'tweets',
+          'position': this.post[0] === 'cols-2-1' ? 'right': 'left'
+        }
+        if (data.type === 'tweets') {
+          data.tweets = posts
+        } else {
+          data.title = first.title
+          data.content = first.content
+        }
+        return data
+      }
+      return null
+    },
     //- TEMP hack - we can get rid of it after migration
     postType() {
+      function map_type(t) {
+        if (t === 'newspaper') {
+          return 'post-article' // TODO: back to 'article'
+        } else {
+          return 'post-' + t
+        }
+      }
+
+      if (Array.isArray(this.post)) {
+        if (this.post[0] === 'cols-2-1') {
+          return map_type(this.post[1][0].type)
+        } else {
+          return map_type(this.post[2][0].type)
+        }
+      }
       // if (this.editorial == 'article' || this.editorial == 'tweet') {
       //   return 'editorial'
       // }
-      if (this.post.type === 'newspaper') {
-        return 'article' // TODO: back to 'article'
-      } else {
-        return this.post.type
-      }
+      return map_type(this.post.type)
     }
   }
 }

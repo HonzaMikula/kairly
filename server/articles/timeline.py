@@ -167,6 +167,7 @@ class BaseTimelineView(View):
                     issue['id'] = issue['id'].replace('.unreleased', '') + '.suspended'
                     issue['type'] = 'suspended-newspaper'
                     issue['posts'] = []
+                    issue['layout'] = []
 
             issues.extend(newspaper_issues)
 
@@ -217,7 +218,8 @@ class BaseTimelineView(View):
                 "type": 'unreleased-newspaper',
                 "newspaper": newspaper_ref,
                 "time": datetime_isoformat_ecma262(missing.astimezone(period.tzinfo)),
-                "posts": []
+                "posts": [],
+                'layout': []
             })
 
         cache.set(cache_key, (entities.track_references, issues), period.timeout)
@@ -278,7 +280,8 @@ class BaseTimelineView(View):
                 'title': interval.title,
                 'time': isodate,
                 'author': author_ref,
-                "posts": []
+                "posts": [],
+                'layout': []
             }]
 
         posts_query = Post.objects.filter(
@@ -325,6 +328,7 @@ class BaseTimelineView(View):
                     'time': isodate,
                     'author': author_ref,
                     'posts': [post_to_json(sub.author, p) for p in interval_posts],
+                    'layout': [{'post': p.id} for p in interval_posts]
                 })
 
         cache.set(cache_key, (entities.track_references, issues), period.timeout)

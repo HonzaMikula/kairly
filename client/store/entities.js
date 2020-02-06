@@ -93,7 +93,7 @@ const schemas = {
   'Issue': {
     author: 'Author',
     newspaper: 'Newspaper',
-    posts: 'PostEditorial',
+    posts: 'Post',
   },
   'PostEditorial': {
     post: 'Post',

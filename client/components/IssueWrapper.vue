@@ -10,18 +10,16 @@
     </template>
 
     <PostWrapper
-      v-for="{post, editorial} in headPosts"
-      :key="post.id"
+      v-for="(post, idx) in headPosts"
+      :key="`head-${idx}`"
       :post="post"
-      :editorial="editorial"
       :isSubscribed="true"
     />
 
     <PostWrapper
-      v-for="{post, editorial} in tailPosts"
-      :key="post.id"
+      v-for="(post, idx) in tailPosts"
+      :key="`tail-${idx}`"
       :post="post"
-      :editorial="editorial"
       :isSubscribed="true"
     />
 
@@ -56,6 +54,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import keyBy from 'lodash/keyBy'
 
 import IssueSuspendedAuthor from '@/components/issues/IssueSuspendedAuthor'
 import IssueSuspendedNewspaper from '@/components/issues/IssueSuspendedNewspaper'
@@ -114,16 +113,20 @@ export default {
       }
     },
 
+    postsById() {
+      return keyBy(this.issue.posts, 'id')
+    },
+
     headPosts() {
-      return this.issue.posts.slice(0, POST_LIMIT)
+      return this.issue.layout.slice(0, POST_LIMIT).map(item => this.getPostObject(item))
     },
 
     tailPosts() {
-      return this.expanded ? this.issue.posts.slice(POST_LIMIT) : []
+      return this.expanded ? this.issue.layout.slice(POST_LIMIT).map(item => this.getPostObject(item)) : []
     },
 
     tailPostsCount() {
-      return Math.max(0, this.issue.posts.length - POST_LIMIT)
+      return Math.max(0, this.issue.layout.length - POST_LIMIT)
     }
 
   },
@@ -140,6 +143,16 @@ export default {
         eventAction: 'Open Share modal'
       })
     },
+
+    getPostObject(item) {
+      if (item.post) {
+        return this.postsById[item.post]
+      }
+      if (Array.isArray(item)) {
+        return item.map(i => this.getPostObject(i))
+      }
+      return item
+    }
   }
 }
 </script>

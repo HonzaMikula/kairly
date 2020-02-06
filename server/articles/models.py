@@ -489,13 +489,13 @@ class Issue(models.Model):
             "type": 'newspaper',
             "newspaper": newspaper_ref,
             "time": datetime_isoformat_ecma262(self.published.astimezone(entities.tzinfo)),
+            "layout": json.loads(self.layout)
         }
         if posts:
-            query = IssuePost.objects.filter(issue=self).select_related('post', 'editorial').order_by('ordering', '-post__published')
-            result["posts"] = [{
-                'post': ip.post.to_json(entities, short=True),
-                'editorial': ip.editorial.to_json(entities) if ip.editorial else None
-            } for ip in query]
+            posts_json = []
+            for ip in IssuePost.objects.filter(issue=self).select_related('post'):
+                posts_json.append(ip.post.to_json(entities, short=True))
+            result["posts"] = posts_json
         return result
 
 
