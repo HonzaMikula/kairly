@@ -9,15 +9,17 @@
       <slot name="newspaper-title"/>
     </template>
 
-    <PostWrapper
+    <component
       v-for="(post, idx) in headPosts"
+      :is="Array.isArray(post) ? 'BoxWrapper' : 'PostWrapper'"
       :key="`head-${idx}`"
       :post="post"
       :isSubscribed="true"
     />
 
-    <PostWrapper
+    <component
       v-for="(post, idx) in tailPosts"
+      :is="Array.isArray(post) ? 'BoxWrapper' : 'PostWrapper'"
       :key="`tail-${idx}`"
       :post="post"
       :isSubscribed="true"
@@ -62,6 +64,7 @@ import IssueUnreleasedNewspaper from '@/components/issues/IssueUnreleasedNewspap
 import IssueNewspaper from '@/components/issues/IssueNewspaper'
 import IssueAuthor from '@/components/issues/IssueAuthor'
 import PostWrapper from '@/components/PostWrapper'
+import BoxWrapper from '@/components/BoxWrapper'
 import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
 import ShareModal from '@/components/modals/ShareModal'
 
@@ -84,6 +87,7 @@ export default {
     IssueSuspendedNewspaper,
     IssueUnreleasedNewspaper,
     PostWrapper,
+    BoxWrapper,
     RecommendButtonIssue,
     ShareModal
   },
@@ -251,6 +255,4 @@ timeline-newspaper
     &:focus
       border: 1px solid $c-base
       color: $c-base
-
-
 </style>
