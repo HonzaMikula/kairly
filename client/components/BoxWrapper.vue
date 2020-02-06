@@ -51,9 +51,6 @@ export default {
 </script>
 
 <style lang="sass">
- //- TODO WHY IS THIS IGNORED ?????
-
-
 .box-wrapper
   display: flex
 
@@ -62,4 +59,4 @@ export default {
 
   .box-column.editorial
     background: #f2ecec
-<style>
+</style>
