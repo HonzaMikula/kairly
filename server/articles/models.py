@@ -473,6 +473,7 @@ class Issue(models.Model):
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from newspaper
     posts = models.ManyToManyField(Post, blank=True, through='IssuePost')
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
+    layout = models.TextField(null=True)
 
     class Meta:
         ordering = ('-published',)
