@@ -3,16 +3,16 @@ export default [
     name: 'Zpravodajství a politika',
     newspapers: [
       {
+        id: 'farin/coronavirus-unofficial',
+        name: 'Coronavirus Unofficial'
+      },
+      {
         id: 'janmikula/malostranskenoviny',
         name: 'Malostranský deník'
       },
       {
         id: 'farin/nej-novinari-na-twitteru',
         name: 'Nej novináři na Twitteru'
-      },
-      {
-        id: 'janmikula/kairly',
-        name: 'Novinky na Kairly'
       }
     ]
   },

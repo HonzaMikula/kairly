@@ -86,7 +86,7 @@ export default {
       links: null,
       expandNewspaper: false,
       exploreNewspapers: NEWSPAPERS,
-      selectedNewspaper: 'janmikula/malostranskenoviny'
+      selectedNewspaper: 'farin/coronavirus-unofficial'
     }
   },
 
