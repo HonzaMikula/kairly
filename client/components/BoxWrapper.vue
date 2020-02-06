@@ -46,20 +46,41 @@ export default {
         }
       })
     }
-  },
+  }
 }
 </script>
 
 <style lang="sass">
- //- TODO WHY IS THIS IGNORED ?????
-
+//- TODO WHY IS THIS IGNORED ?????
 
 .box-wrapper
-  display: flex
+  display: grid
+
+  
+  &.cols-2-1
+    grid-template-columns: 2fr 1fr
+
+    timeline-post--article--content
+      columns: 2
+
+  &.cols-1-2
+    grid-template-columns: 1fr 2fr
+    
+    timeline-post--article--content
+      columns: 2
+
+  &.cols-1-1
+    grid-template-columns: 1fr 1fr
+
+    timeline-post--article--content
+      columns: 2
+
+  &.cols-1-1-1
+    grid-template-columns: 1fr 1fr 1fr
 
   > *
     flex: 1
 
   .box-column.editorial
     background: #f2ecec
-<style>
+</style>
