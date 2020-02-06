@@ -299,14 +299,8 @@ class BaseTimelineView(View):
             # TODO make a new king for this case (refernce to exisiting post by feed user)
             # then author can be removed from select_related
             if author.kind == User.FEED and post.kind == Post.RECOMMENDATION and post.ref_post:
-                return {
-                    'post': post.ref_post.to_json(entities, short=True),
-                    'edutorial': None
-                }
-            return {
-                'post': post.to_json(entities, short=True),
-                'editorial': None
-            }
+                return post.ref_post.to_json(entities, short=True)
+            return post.to_json(entities, short=True)
 
         issues = []
         for interval in intervals:
