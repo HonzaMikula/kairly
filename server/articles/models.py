@@ -275,6 +275,7 @@ class Post(models.Model):
         return result
 
 
+# TODO DELETE
 class Editorial(models.Model):
     ARTICLE = 'article'
     TWEETS = 'tweets'
@@ -311,6 +312,7 @@ class Editorial(models.Model):
         return data
 
 
+# TODO DELETE
 class EditorialTweet(models.Model):
     editorial = models.ForeignKey(Editorial, models.CASCADE)
     post = models.ForeignKey(Post, models.CASCADE)
@@ -429,6 +431,7 @@ class CoEditor(models.Model):
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
+# TODO DELETE
 class BacklogX(models.Model):
     UPCOMING_ISSUE = 1
     NEXT_ISSUE = 2
@@ -517,8 +520,6 @@ class Issue(models.Model):
 class IssuePost(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    editorial = models.ForeignKey(Editorial, on_delete=models.SET_NULL, null=True)
-    ordering = models.IntegerField(default=1)
 
     def __str__(self):
         return self.post.title
