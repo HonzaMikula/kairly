@@ -143,6 +143,10 @@ timeline-post--article--content
   +article-perex
 
 
+.editorial-post
+  timeline-post--article--content
+    column-count: 2
+
 //- Continue Reading
 .timeline-post--continue-reading
   color: #999

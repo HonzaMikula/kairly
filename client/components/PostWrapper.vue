@@ -235,7 +235,7 @@ export default {
         grid-column: 2 / span 1
         grid-row: 1
 
-    .video
+    .video, .comment, .link
       grid-column: 2 / span 2
       grid-row: 1
 

@@ -86,7 +86,7 @@ export default {
       links: null,
       expandNewspaper: false,
       exploreNewspapers: NEWSPAPERS,
-      selectedNewspaper: 'janmikula/malostranskenoviny'
+      selectedNewspaper: 'farin/coronavirus-unofficial'
     }
   },
 
@@ -126,7 +126,7 @@ export default {
 
   async created() {
     const { newspaper, issue, links } = await this.$store.dispatch('getNewspaperDetail', {
-      newspaperId: 'janmikula/malostranskenoviny'
+      newspaperId: this.selectedNewspaper
     })
 
     this.newspaper = newspaper
