@@ -31,7 +31,7 @@ from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse, Ref, entities_json_response
 from utils.upload import file_from_data_uri
-from .models import (Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
+from .models import (BacklogX, Issue, Newspaper, CoEditor, Post, Subscription,
                      SubscriptionToAuthor, IssuePost, Editorial, EditorialTweet,
                      round_fair_price)
 from .period import parse_periodicity
@@ -94,7 +94,7 @@ def subscriptions(request, entities):
 @ajax_login_required
 def user_backlog(request):
     user_backlog = {}  # do not use defaultdict becase urjson can serialize by default
-    query = Backlog.objects \
+    query = BacklogX.objects \
         .filter(Q(newspaper__editor=request.user) | Q(newspaper__coeditor__editor=request.user))
 
     items = list(query)
@@ -334,7 +334,7 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
     if request.method == 'GET':
         result = {'backlog': []}
 
-        query = Backlog.objects.filter(
+        query = BacklogX.objects.filter(
             newspaper=newspaper).select_related('post', 'editorial').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
         for log in query:
             result['backlog'].append({
@@ -377,7 +377,7 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
         next_ids = set(next_ids)
         consider_ids = set(consider_ids)
 
-        for log in Backlog.objects.filter(newspaper=newspaper).order_by(F('publish_in').asc(nulls_last=True), 'ordering'):
+        for log in BacklogX.objects.filter(newspaper=newspaper).order_by(F('publish_in').asc(nulls_last=True), 'ordering'):
             idx = ordering.get(log.post_id)
             publish_in = issues.get(log.post_id)
             if idx != log.ordering or publish_in != log.publish_in:
@@ -390,13 +390,13 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
     if request.method == 'PUT':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
-        created = Backlog.prepend_post(newspaper, post)
+        created = BacklogX.prepend_post(newspaper, post)
         return HttpResponse(status=201 if created else 204)
 
     if request.method == 'DELETE':
         payload = json.loads(request.body.decode('utf-8'))
         post = get_object_or_404(Post, id=payload.get('post'))
-        Backlog.objects.filter(newspaper=newspaper, post=post).delete()
+        BacklogX.objects.filter(newspaper=newspaper, post=post).delete()
 
         if post.kind == Post.LINK:
             post.delete()
@@ -429,7 +429,7 @@ def create_link(request, entities, username, newspapeper_slug):
             'error': str(e)
         }, status=409)
 
-    created = Backlog.append_post(newspaper, post)
+    created = BacklogX.append_post(newspaper, post)
     return {
         'post': post.to_json(entities) if created else None
     }
@@ -453,7 +453,7 @@ class EditorialsView(View):
         if position not in ('left', 'right'):
             return HttpResponseBadRequest("Invalid position value")
 
-        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
+        backlog = get_object_or_404(BacklogX, newspaper=newspaper, post__id=post_id)
         kind_changed = backlog.editorial and backlog.editorial.kind != kind
         editorial = backlog.editorial or Editorial(kind=kind)
         editorial.position = position
@@ -494,19 +494,19 @@ class EditorialsView(View):
                         et.save()
                 except ValueError:
                     et.delete()
-                    Backlog.append_post(newspaper, et.post_id)
+                    BacklogX.append_post(newspaper, et.post_id)
 
             for post_id in set(ids) - ids_in_db:
                 idx = ids.index(post_id)
                 EditorialTweet.objects.create(editorial=editorial, post_id=post_id, ordering=idx)
-                Backlog.objects.filter(newspaper=newspaper, post_id=post_id).delete()
+                BacklogX.objects.filter(newspaper=newspaper, post_id=post_id).delete()
 
         else:
             if kind_changed:
                 EditorialTweet.objects.filter(editorial=editorial).delete()
 
         if not backlog.editorial:
-            Backlog.objects.filter(id=backlog.id).update(editorial=editorial)
+            BacklogX.objects.filter(id=backlog.id).update(editorial=editorial)
 
         return editorial.to_json(entities)
 
@@ -529,7 +529,7 @@ class EditorialsView(View):
         if position not in ('left', 'right'):
             return HttpResponseBadRequest("Invalid position value")
 
-        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
+        backlog = get_object_or_404(BacklogX, newspaper=newspaper, post__id=post_id)
         editorial = backlog.editorial
         editorial.position = position
         editorial.save()
@@ -544,13 +544,13 @@ class EditorialsView(View):
             if request.user not in newspaper.co_editors.all():
                 return HttpResponseForbidden()
 
-        backlog = get_object_or_404(Backlog, newspaper=newspaper, post__id=post_id)
+        backlog = get_object_or_404(BacklogX, newspaper=newspaper, post__id=post_id)
         if not backlog.editorial:
             return HttpResponseNotFound()
 
         for et in EditorialTweet.objects.filter(editorial=backlog.editorial):
             # put back tweers to backlog
-            Backlog.append_post(newspaper, et.post_id)
+            BacklogX.append_post(newspaper, et.post_id)
 
         backlog.editorial.delete()
         return HttpResponse(status=204)

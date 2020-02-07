@@ -11,7 +11,7 @@ from django.db import transaction
 from django.db.models import Max
 from django.utils.timezone import now as timezone_now
 
-from articles.models import Newspaper, Issue, Backlog, IssuePost, Editorial, EditorialTweet, Post
+from articles.models import Newspaper, Issue, BacklogX, IssuePost, Editorial, EditorialTweet, Post
 from articles.period import PeriodMixin
 
 
@@ -48,8 +48,8 @@ class Command(BaseCommand):
             self.stdout.write('Creating {} #{}'.format(newspaper, number))
 
         backlog_items = list(
-            Backlog.objects
-            .filter(newspaper=newspaper, publish_in=Backlog.UPCOMING_ISSUE)
+            BacklogX.objects
+            .filter(newspaper=newspaper, publish_in=BacklogX.UPCOMING_ISSUE)
             .order_by('ordering', 'post__published')
             .select_related('post'))
 
@@ -85,7 +85,7 @@ class Command(BaseCommand):
                     Post.objects.filter(id__in=comments).update(draft=False, published=timezone_now())
 
         if not dry_run:
-            Backlog.objects.filter(newspaper=newspaper, publish_in=Backlog.NEXT_ISSUE).update(publish_in=Backlog.UPCOMING_ISSUE)
+            BacklogX.objects.filter(newspaper=newspaper, publish_in=BacklogX.NEXT_ISSUE).update(publish_in=BacklogX.UPCOMING_ISSUE)
 
     def get_now(self, hour=None):
         now = timezone.now().replace(minute=0, second=0, microsecond=0)

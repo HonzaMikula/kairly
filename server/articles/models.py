@@ -429,15 +429,15 @@ class CoEditor(models.Model):
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
-class Backlog(models.Model):
+class BacklogX(models.Model):
     UPCOMING_ISSUE = 1
     NEXT_ISSUE = 2
 
-    newspaper = models.ForeignKey(Newspaper, models.CASCADE)
-    post = models.ForeignKey(Post, models.CASCADE)
+    newspaper = models.ForeignKey(Newspaper, models.CASCADE, db_constraint=False)
+    post = models.ForeignKey(Post, models.CASCADE, db_constraint=False)
     publish_in = models.SmallIntegerField(null=True, db_index=True)
     ordering = models.IntegerField(null=True)
-    editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True)
+    editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True, db_constraint=False)
 
     @classmethod
     def append_post(cls, newspaper, post):
@@ -465,6 +465,21 @@ class Backlog(models.Model):
             post_id=post_id,
             ordering=0 if prepend else None
         )
+
+
+class Backlog(models.Model):
+    name = models.CharField(max_length=64)
+    newspaper = models.ForeignKey(Newspaper, models.CASCADE)
+    posts = models.ManyToManyField(Post, blank=True, through='BacklogPost')
+    layout = models.TextField(null=True)
+
+
+class BacklogPost(models.Model):
+    backlog = models.ForeignKey(Backlog, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.post.title
 
 
 class Issue(models.Model):
