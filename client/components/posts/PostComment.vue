@@ -79,6 +79,10 @@ timeline-post--comment--content
   +article-perex
 
 
+.editorial-post
+  timeline-post--comment--content
+    column-count: 2
+
 // HACK by farin
 .post-content.comment time
     visibility: hidden
