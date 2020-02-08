@@ -31,7 +31,7 @@ from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse, Ref, entities_json_response
 from utils.upload import file_from_data_uri
-from .models import (BacklogX, Issue, Newspaper, CoEditor, Post, Subscription,
+from .models import (BacklogX, Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
                      SubscriptionToAuthor, IssuePost, Editorial, EditorialTweet,
                      round_fair_price)
 from .period import parse_periodicity
@@ -332,16 +332,31 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
             return HttpResponseForbidden()
 
     if request.method == 'GET':
-        result = {'backlog': []}
+        name = 'upcoming'  # DEV
+        result = {}
+        try:
+            backlog = Backlog.objects.get(newspaper=newspaper, name=name)
+            result['backlog'] = backlog.to_json(entities)
+        except Backlog.DoesNotExist:
+            if name in ['upcoming', 'next']:
+                result['backlog'] = {
+                    'name': name,
+                    'newspaper': entities.make_ref(Newspaper, newspaper.id),
+                    'layout': []
+                }
+            else:
+                return HttpResponseNotFound()
 
-        query = BacklogX.objects.filter(
-            newspaper=newspaper).select_related('post', 'editorial').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
-        for log in query:
-            result['backlog'].append({
-                'post': log.post.to_json(entities),
-                'publish': log.publish_in,
-                'editorial': log.editorial.to_json(entities) if log.editorial else None
-            })
+        # result = {'backlog': []}
+
+        # query = BacklogX.objects.filter(
+        #     newspaper=newspaper).select_related('post', 'editorial').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
+        # for log in query:
+        #     result['backlog'].append({
+        #         'post': log.post.to_json(entities),
+        #         'publish': log.publish_in,
+        #         'editorial': log.editorial.to_json(entities) if log.editorial else None
+        #     })
 
         editor_tz = pytz.timezone(newspaper.editor.timezone)
         now = timezone_now().astimezone(editor_tz)

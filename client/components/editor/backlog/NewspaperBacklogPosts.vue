@@ -28,10 +28,10 @@
           :name="!drag ? 'flip-list' : null"
         >
           <NewspaperBacklogPost
-            v-for="(log, idx) in items"
-            :key="log.post.id"
+            v-for="(post, idx) in items"
+            :key="idx"
             :newspaper="newspaper"
-            :log="log"
+            :post="post"
             :canMoveUp="idx > 0 || source !== 'upcoming'"
             :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
             :source="source"
@@ -46,6 +46,7 @@
 import Vue from 'vue'
 import { mapActions } from 'vuex'
 import draggable from 'vuedraggable'
+import keyBy from 'lodash/keyBy'
 
 import NewspaperBacklogPost from '@/components/editor/backlog/NewspaperBacklogPost'
 import { isTouchDevice } from '@/utils/browser'
@@ -74,9 +75,13 @@ export default {
   },
 
   computed: {
+    postsById() {
+      return keyBy(this.backlog.posts, 'id')
+    },
+
     items: {
       get() {
-        return this.backlog
+        return this.backlog.layout.map(item => this.getPostObject(item))
       },
 
       set(value) {
@@ -89,9 +94,22 @@ export default {
     }
   },
 
-  methods: mapActions({
-    backlogReorder: 'backlog/reorder'
-  }),
+  methods: {
+    ...mapActions({
+      backlogReorder: 'backlog/reorder'
+    }),
+
+    getPostObject(item) {
+      if (item.post) {
+        return this.postsById[item.post]
+      }
+      if (Array.isArray(item)) {
+        return item.map(i => this.getPostObject(i))
+      }
+      return item
+    }
+  },
+
 
   mounted() {
     this.isTouchDevice = isTouchDevice()

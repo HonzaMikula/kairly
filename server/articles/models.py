@@ -476,6 +476,19 @@ class Backlog(models.Model):
     posts = models.ManyToManyField(Post, blank=True, through='BacklogPost')
     layout = models.TextField(null=True)
 
+    def to_json(self, entities):
+        newspaper_ref = entities.make_ref(Newspaper, self.newspaper_id)
+        result = {
+            "name": self.name,
+            "newspaper": newspaper_ref,
+            "layout": json.loads(self.layout)
+        }
+        posts_json = []
+        for ip in BacklogPost.objects.filter(backlog=self).select_related('post'):
+            posts_json.append(ip.post.to_json(entities, short=True))
+        result["posts"] = posts_json
+        return result
+
 
 class BacklogPost(models.Model):
     backlog = models.ForeignKey(Backlog, on_delete=models.CASCADE)

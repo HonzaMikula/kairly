@@ -9,12 +9,12 @@
       source="upcoming"
     />
 
-    <NewspaperBacklogPosts
+    <!--NewspaperBacklogPosts
       :title="$t('Issue #') + (newspaper.issues + 2)"
       :newspaper="newspaper"
       :backlog="backlog.next"
       source="next"
-    />
+    /-->
 
     <NewspaperBacklogPosts
       :title="$t('Considered posts')"
@@ -124,6 +124,6 @@ p.newspaper-backlog--info--profit
 
 //- Add external article
 .newspaper-backlog--backlog--external-article
-  
+
 
 </style>
