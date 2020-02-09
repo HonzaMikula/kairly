@@ -12,7 +12,7 @@ def forwards_func(apps, schema_editor):
 
     query = Newspaper.objects.filter(backlogx__publish_in__isnull=False).select_related('editor').distinct()
     for newspaper in query:
-        issues = [(1, 'upcoming'), (2, 'next')]
+        issues = [(None, 'considered'), (1, 'upcoming'), (2, 'next')]
 
         bp_bulk = []
 

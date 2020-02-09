@@ -27,7 +27,7 @@
           tag="div"
           :name="!drag ? 'flip-list' : null"
         >
-          <NewspaperBacklogPost
+          <NewspaperBacklogBox
             v-for="(post, idx) in items"
             :key="idx"
             :newspaper="newspaper"
@@ -48,15 +48,15 @@ import { mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 import keyBy from 'lodash/keyBy'
 
-import NewspaperBacklogPost from '@/components/editor/backlog/NewspaperBacklogPost'
+import NewspaperBacklogBox from '@/components/editor/backlog/NewspaperBacklogBox'
 import { isTouchDevice } from '@/utils/browser'
 
 export default {
-  name: 'NewspaperBacklogPosts',
+  name: 'NewspaperBacklogBox',
 
   components: {
     draggable,
-    NewspaperBacklogPost,
+    NewspaperBacklogBox,
   },
 
   props: {

@@ -333,20 +333,21 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
 
     if request.method == 'GET':
         name = 'upcoming'  # DEV
-        result = {}
-        try:
-            backlog = Backlog.objects.get(newspaper=newspaper, name=name)
-            result['backlog'] = backlog.to_json(entities)
-        except Backlog.DoesNotExist:
-            if name in ['upcoming', 'next']:
+        result = {
+            'backlogs': {}
+        }
+
+        newspaper_ref = entities.make_ref(Newspaper, newspaper.id)
+        for name in ['considered', 'upcoming']:
+            try:
+                backlog = Backlog.objects.get(newspaper=newspaper, name=name)
+                result['backlogs'][name] = backlog.to_json(entities)
+            except Backlog.DoesNotExist:
                 result['backlog'] = {
                     'name': name,
-                    'newspaper': entities.make_ref(Newspaper, newspaper.id),
+                    'newspaper': newspaper_ref,
                     'layout': []
                 }
-            else:
-                return HttpResponseNotFound()
-
         # result = {'backlog': []}
 
         # query = BacklogX.objects.filter(

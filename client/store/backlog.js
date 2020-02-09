@@ -39,20 +39,14 @@ export const actions = {
   },
 
   async loadNewspaperBacklog({ commit }, fullName) {
-    const { backlog, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
-    let upcoming = []
-    let next = []
-    let considered = []
-    backlog.forEach(log => {
-      if (log.publish === 1) { upcoming.push(log) }
-      else if (log.publish === 2) { next.push(log) }
-      else { considered.push(log) }
-    })
+    const { backlogs, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
 
+    Object.values(backlogs).forEach(bl => {
+      // TODO save layout to store
+      commit('newspaperBacklogPosts', { fullName, section: bl.name, posts: bl.posts})
+    })
     commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
-    commit('newspaperBacklogPosts', { fullName, section: 'upcoming', posts: upcoming})
-    commit('newspaperBacklogPosts', { fullName, section: 'next', posts: next })
-    commit('newspaperBacklogPosts', { fullName, section: 'considered', posts: considered })
+
   },
 
   async moveUp({ commit, state }, { newspaper, source, target, postId }) {
