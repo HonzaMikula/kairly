@@ -20,6 +20,9 @@
       </template>
     </component>
 
+    <slot name="aside">
+    </slot>
+
     <!--slot name="editorial">
       <aside>
       <component

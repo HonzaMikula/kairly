@@ -14,6 +14,9 @@
         :isSubscribed="true"
       />
     </div>
+
+    <slot name="aside">
+    </slot>
   </div>
 </template>
 
@@ -62,11 +65,11 @@ export default {
 
   .post
     margin-bottom: 0
-    
+
     border: 0
     box-shadow: none
     background: transparent
-  
+
   &.cols-2-1
     grid-template-columns: 2fr 1fr
 
