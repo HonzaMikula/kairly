@@ -104,9 +104,7 @@ const schemas = {
     tweets: 'Post'
   },
   'NewspaperBacklog': {
-    considered: 'PostEditorial',
-    next: 'PostEditorial',
-    upcoming: 'PostEditorial',
+    posts: 'Post',
   },
 
   'Transaction': {

@@ -2,10 +2,11 @@
   <div class="newspaper-backlog-view">
 
     <NewspaperBacklogPosts
+      v-if="upcoming"
       :title="$t('Issue #') + (newspaper.issues + 1)"
       :description="$t('Issue will be published ') + timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
-      :backlog="backlog.upcoming"
+      :backlog="upcoming"
       source="upcoming"
     />
 
@@ -17,9 +18,10 @@
     /-->
 
     <NewspaperBacklogPosts
+      v-if="considered"
       :title="$t('Considered posts')"
       :newspaper="newspaper"
-      :backlog="backlog.considered"
+      :backlog="considered"
       source="considered"
     />
   </div>
@@ -54,13 +56,16 @@ export default {
   },
 
   computed: {
-    backlog() {
-      const backlog = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-      return this.$store.getters['entities/denormalize'](backlog, 'NewspaperBacklog')
+    backlogs() {
+      return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
     },
 
-    currentMonth() {
-      return this.backlog ? this.backlog.currentMonthStats : []
+    upcoming() {
+      return this.$store.getters['entities/denormalize'](this.backlogs.upcoming, 'NewspaperBacklog')
+    },
+
+    considered() {
+      return this.$store.getters['entities/denormalize'](this.backlogs.considered, 'NewspaperBacklog')
     }
   },
 

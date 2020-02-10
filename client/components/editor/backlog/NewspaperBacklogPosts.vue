@@ -8,12 +8,21 @@
 
 
     <div class="newspaper-backlog--next-issue">
-
-      <div v-show="!backlog.length" class="no-post">
+      <div v-show="!backlog.layout.length" class="no-post">
         <h2>{{ $t('No posts in backlog') }}</h2>
       </div>
 
-      <draggable
+      <NewspaperBacklogBox
+        v-for="(post, idx) in items"
+        :key="idx"
+        :newspaper="newspaper"
+        :post="post"
+        :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
+        :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
+        :source="backlog.name"
+      />
+
+      <!--draggable
         v-model="items"
         group="backlog-posts"
         animation="200"
@@ -32,12 +41,12 @@
             :key="idx"
             :newspaper="newspaper"
             :post="post"
-            :canMoveUp="idx > 0 || source !== 'upcoming'"
-            :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
-            :source="source"
+            :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
+            :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
+            :source="backlog.name"
           />
         </transition-group>
-      </draggable>
+      </draggable-->
     </div>
   </div>
 </template>
@@ -52,7 +61,7 @@ import NewspaperBacklogBox from '@/components/editor/backlog/NewspaperBacklogBox
 import { isTouchDevice } from '@/utils/browser'
 
 export default {
-  name: 'NewspaperBacklogBox',
+  name: 'NewspaperBacklogPosts',
 
   components: {
     draggable,
@@ -63,8 +72,7 @@ export default {
     newspaper: Object,
     title: String,
     description: String,
-    backlog: Array,
-    source: String,
+    backlog: Object
   },
 
   data() {
@@ -87,7 +95,7 @@ export default {
       set(value) {
         this.backlogReorder({
           newspaper: this.newspaper,
-          source: this.source,
+          source: this.backlog.name,
           posts: value,
         })
       }

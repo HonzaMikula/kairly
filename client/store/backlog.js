@@ -43,7 +43,7 @@ export const actions = {
 
     Object.values(backlogs).forEach(bl => {
       // TODO save layout to store
-      commit('newspaperBacklogPosts', { fullName, section: bl.name, posts: bl.posts})
+      commit('newspaperBacklog', { fullName, section: bl.name, backlog: bl})
     })
     commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
 
@@ -152,14 +152,15 @@ export const mutations = {
     state.userBacklog = backlog
   },
 
-  newspaperBacklogPosts( state, { fullName, section, posts }) {
+  newspaperBacklog( state, { fullName, section, backlog }) {
     if (state.newspaperBacklog[fullName]) {
-      Vue.set(state.newspaperBacklog[fullName], section, posts)
+      Vue.set(state.newspaperBacklog[fullName], section, backlog)
     } else {
-      Vue.set(state.newspaperBacklog, fullName, { [section]: posts })
+      Vue.set(state.newspaperBacklog, fullName, { [section]: backlog })
     }
   },
   newspaperBacklogStats( state, { fullName, currentMonthStats}) {
+    // TODO use different key then newspaperBacklog
     if (state.newspaperBacklog[fullName]) {
       Vue.set(state.newspaperBacklog[fullName], 'currentMonthStats', currentMonthStats)
     } else {
