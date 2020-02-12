@@ -14,7 +14,7 @@
 
       <NewspaperBacklogBox
         v-for="(post, idx) in items"
-        :key="idx"
+        :key="post.id"
         :newspaper="newspaper"
         :post="post"
         :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
@@ -38,7 +38,7 @@
         >
           <NewspaperBacklogBox
             v-for="(post, idx) in items"
-            :key="idx"
+            :key="post.id"
             :newspaper="newspaper"
             :post="post"
             :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
@@ -56,6 +56,7 @@ import Vue from 'vue'
 import { mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 import keyBy from 'lodash/keyBy'
+import isString from 'lodash/isString'
 
 import NewspaperBacklogBox from '@/components/editor/backlog/NewspaperBacklogBox'
 import { isTouchDevice } from '@/utils/browser'
@@ -89,7 +90,7 @@ export default {
 
     items: {
       get() {
-        return this.backlog.layout.map(item => this.getPostObject(item))
+        return this.backlog.layout.map((item, idx) => this.getPostObject(item, idx))
       },
 
       set(value) {
@@ -107,12 +108,26 @@ export default {
       backlogReorder: 'backlog/reorder'
     }),
 
-    getPostObject(item) {
+    // TODO copied from IssueWrapper
+    getPostObject(item, idx) {
       if (item.post) {
         return this.postsById[item.post]
       }
       if (Array.isArray(item)) {
-        return item.map(i => this.getPostObject(i))
+        const id = Math.random().toString(36).substring(2)
+        const css = isString(item[0]) ? item[0] : null
+        const columns = css === null ? item : item.slice(1)
+        return {
+          id,
+          type: 'box',
+          css,
+          columns: columns.map(c => {
+            return  {
+              css: isString(c[0]) ? c[0] : '',
+              posts: (isString(c[0]) ? c.slice(1) : c).map(item => this.postsById[item.post])
+            }
+          })
+        }
       }
       return item
     }

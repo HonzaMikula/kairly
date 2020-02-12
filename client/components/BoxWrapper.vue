@@ -1,15 +1,15 @@
 <template>
   <div
-    :class="`box-wrapper ${css}`"
+    :class="`box-wrapper ${post.css}`"
   >
     <div
-      v-for="(col, idx) in columns"
+      v-for="(col, idx) in post.columns"
       :key="idx"
       :class="`box-column ${col.css}`"
     >
       <PostWrapper
-        v-for="(post, postIdx) in col.posts"
-        :key="postIdx"
+        v-for="post in col.posts"
+        :key="`${idx}-${post.id}`"
         :post="post"
         :isSubscribed="true"
       />
@@ -28,33 +28,18 @@ import PostWrapper from '@/components/PostWrapper'
 export default {
   name: 'BoxWrapper',
   props: {
-    post: Array,
+    post: Object,
   },
 
   components: {
     PostWrapper,
   },
-
-  computed: {
-    css() {
-      return isString(this.post[0]) ? this.post[0] : null
-    },
-
-    columns() {
-      let cols = isString(this.post[0]) ? this.post.slice(1) : this.post
-      return cols.map(c => {
-        return {
-          css: isString(c[0]) ? c[0] : '',
-          posts: isString(c[0]) ? c.slice(1) : c
-        }
-      })
-    }
-  }
 }
 </script>
 
 <style lang="sass">
 .box-wrapper
+  position: relative
   display: grid
   align-items: stretch
   margin-bottom: $baseline / 2

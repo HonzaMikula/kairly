@@ -1,6 +1,6 @@
 <template>
   <compotent
-    :is="Array.isArray(post) ? 'BoxWrapper' : 'PostWrapper'"
+    :is="post.type == 'box' ? 'BoxWrapper' : 'PostWrapper'"
     :post="post"
     :isSubscribed="true"
     @click.native="toggleMobileControls"
@@ -10,7 +10,7 @@
     </template>
 
     <template #aside>
-       <div
+      <div
         :class="{'newspaper-backlog-controls': true, 'hide-mobile-controls': mobileControls}"
       >
         <div class="newspaper-backlog-controls--arrows">
@@ -165,13 +165,15 @@
 <script>
 import PostWrapper from '@/components/PostWrapper'
 import BoxWrapper from '@/components/BoxWrapper'
+import { BPopover } from 'bootstrap-vue'
 
 export default {
   name: 'NewspaperBacklogBox',
 
   components: {
     PostWrapper,
-    BoxWrapper
+    BoxWrapper,
+    BPopover
   },
 
   props: {
@@ -206,6 +208,7 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
+
 
 //- Backlog controls
 .newspaper-backlog-controls.hide-mobile-controls
