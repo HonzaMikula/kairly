@@ -7,7 +7,7 @@
       :description="$t('Issue will be published ') + timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
       :backlog="upcoming"
-      :posts="backlogs.$posts"
+      :posts="posts"
       source="upcoming"
     />
 
@@ -15,7 +15,7 @@
       :title="$t('Issue #') + (newspaper.issues + 2)"
       :newspaper="newspaper"
       :backlog="next"
-      :posts="backlogs.$posts"
+      :posts="posts"
       source="next"
     />
 
@@ -24,7 +24,7 @@
       :title="$t('Considered posts')"
       :newspaper="newspaper"
       :backlog="considered"
-      :posts="backlogs.$posts"
+      :posts="posts"
       source="considered"
     />
   </div>
@@ -33,7 +33,8 @@
 <script>
 import Vue from 'vue'
 import moment from 'moment'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import mapValues from 'lodash/mapValues'
 
 import ErrorHandler from '@/mixins/ErrorHandler'
 import PostWrapper from '@/components/PostWrapper'
@@ -59,23 +60,28 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      denormalize: 'entities/denormalize',
+    }),
+
     backlogs() {
       return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
     },
 
+    posts() {
+      return mapValues(this.backlogs.$posts, p => this.denormalize(p, 'Post'))
+    },
+
     upcoming() {
       return this.backlogs.upcoming
-      // return this.$store.getters['entities/denormalize'](this.backlogs.upcoming, 'NewspaperBacklog')
     },
 
     next() {
       return this.backlogs.next
-      // return this.$store.getters['entities/denormalize'](this.backlogs.next, 'NewspaperBacklog')
     },
 
     considered() {
       return this.backlogs.considered
-      // return this.$store.getters['entities/denormalize'](this.backlogs.considered, 'NewspaperBacklog')
     }
   },
 

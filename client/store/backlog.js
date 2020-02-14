@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import isString from 'lodash/isString'
 
 let reorderPostScheduled = false
 
@@ -8,12 +9,13 @@ export const state = () => ({
 })
 
 async function _postBackLog(state, fullName) {
-  const backlog = state.newspaperBacklog[fullName]
-  await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
-    upcoming: backlog.upcoming.map(log => log.post.id),
-    next: backlog.next.map(log => log.post.id),
-    considered: backlog.considered.map(log => log.post.id)
-  })
+  //TODO
+  // const backlog = state.newspaperBacklog[fullName]
+  // await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
+  //   upcoming: backlog.upcoming.map(log => log.post.id),
+  //   next: backlog.next.map(log => log.post.id),
+  //   considered: backlog.considered.map(log => log.post.id)
+  // })
 }
 
 export const actions = {
@@ -45,6 +47,24 @@ export const actions = {
     commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
 
     Object.values(backlogs).forEach(bl => {
+      bl.layout = bl.layout.map(item => {
+        if (Array.isArray(item)) {
+          const css = isString(item[0]) ? item[0] : null
+          const columns = css === null ? item : item.slice(1)
+          return {
+            id: Math.random().toString(36).substring(2),
+            type: 'box',
+            css,
+            columns: columns.map(c => {
+              return  {
+                css: isString(c[0]) ? c[0] : '',
+                posts: (isString(c[0]) ? c.slice(1) : c).map(item => ({type: 'post', id: item.post}))
+              }
+            })
+          }
+        }
+        return {type: 'post', id: item.post}
+      })
       // TODO save layout to store
       commit('newspaperBacklog', { fullName, section: bl.name, backlog: bl})
     })

@@ -56,8 +56,6 @@
 import Vue from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 import draggable from 'vuedraggable'
-import keyBy from 'lodash/keyBy'
-import isString from 'lodash/isString'
 
 import NewspaperBacklogBox from '@/components/editor/backlog/NewspaperBacklogBox'
 import { isTouchDevice } from '@/utils/browser'
@@ -86,14 +84,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      denormalize: 'entities/denormalize',
-    }),
-
-    postsById() {
-      return keyBy(this.backlog.posts, 'id')
-    },
-
     items: {
       get() {
         return this.backlog.layout.map((item, idx) => this.getPostObject(item, idx))
@@ -116,26 +106,18 @@ export default {
 
     // TODO copied from IssueWrapper
     getPostObject(item, idx) {
-      if (item.post) {
-        return this.denormalize(this.posts[item.post], 'Post')
+      if (item.type === 'post') {
+        return this.posts[item.id]
       }
-      if (Array.isArray(item)) {
-        const id = Math.random().toString(36).substring(2)
-        const css = isString(item[0]) ? item[0] : null
-        const columns = css === null ? item : item.slice(1)
-        return {
-          id,
-          type: 'box',
-          css,
-          columns: columns.map(c => {
-            return  {
-              css: isString(c[0]) ? c[0] : '',
-              posts: (isString(c[0]) ? c.slice(1) : c).map(item => this.denormalize(this.posts[item.post], 'Post'))
-            }
-          })
-        }
+      return {
+        ...item,
+        columns: item.columns.map(c => {
+          return {
+            css: c.css,
+            posts: c.posts.map(item => this.posts[item.id])
+          }
+        })
       }
-      return item
     }
   },
 
