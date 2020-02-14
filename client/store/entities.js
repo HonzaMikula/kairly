@@ -103,10 +103,6 @@ const schemas = {
     author: 'Author',
     tweets: 'Post'
   },
-  'NewspaperBacklog': {
-    posts: 'Post',
-  },
-
   'Transaction': {
     source: 'TransactionParty',
     target: 'TransactionParty'

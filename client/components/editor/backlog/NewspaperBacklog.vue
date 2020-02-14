@@ -7,21 +7,24 @@
       :description="$t('Issue will be published ') + timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
       :backlog="upcoming"
+      :posts="backlogs.$posts"
       source="upcoming"
     />
 
-    <!--NewspaperBacklogPosts
+    <NewspaperBacklogPosts
       :title="$t('Issue #') + (newspaper.issues + 2)"
       :newspaper="newspaper"
-      :backlog="backlog.next"
+      :backlog="next"
+      :posts="backlogs.$posts"
       source="next"
-    /-->
+    />
 
     <NewspaperBacklogPosts
       v-if="considered"
       :title="$t('Considered posts')"
       :newspaper="newspaper"
       :backlog="considered"
+      :posts="backlogs.$posts"
       source="considered"
     />
   </div>
@@ -61,11 +64,18 @@ export default {
     },
 
     upcoming() {
-      return this.$store.getters['entities/denormalize'](this.backlogs.upcoming, 'NewspaperBacklog')
+      return this.backlogs.upcoming
+      // return this.$store.getters['entities/denormalize'](this.backlogs.upcoming, 'NewspaperBacklog')
+    },
+
+    next() {
+      return this.backlogs.next
+      // return this.$store.getters['entities/denormalize'](this.backlogs.next, 'NewspaperBacklog')
     },
 
     considered() {
-      return this.$store.getters['entities/denormalize'](this.backlogs.considered, 'NewspaperBacklog')
+      return this.backlogs.considered
+      // return this.$store.getters['entities/denormalize'](this.backlogs.considered, 'NewspaperBacklog')
     }
   },
 

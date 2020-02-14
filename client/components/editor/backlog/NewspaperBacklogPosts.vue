@@ -20,6 +20,7 @@
         :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
         :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
         :source="backlog.name"
+        :index="idx"
       />
 
       <!--draggable
@@ -53,7 +54,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import draggable from 'vuedraggable'
 import keyBy from 'lodash/keyBy'
 import isString from 'lodash/isString'
@@ -70,10 +71,11 @@ export default {
   },
 
   props: {
-    newspaper: Object,
-    title: String,
+    newspaper: {type: Object, required: true},
+    title: {type: String, required: true},
     description: String,
-    backlog: Object
+    backlog: {type: Object, required: true},
+    posts: {type: Object, required: true}
   },
 
   data() {
@@ -84,6 +86,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      denormalize: 'entities/denormalize',
+    }),
+
     postsById() {
       return keyBy(this.backlog.posts, 'id')
     },
@@ -111,7 +117,7 @@ export default {
     // TODO copied from IssueWrapper
     getPostObject(item, idx) {
       if (item.post) {
-        return this.postsById[item.post]
+        return this.denormalize(this.posts[item.post], 'Post')
       }
       if (Array.isArray(item)) {
         const id = Math.random().toString(36).substring(2)
@@ -124,7 +130,7 @@ export default {
           columns: columns.map(c => {
             return  {
               css: isString(c[0]) ? c[0] : '',
-              posts: (isString(c[0]) ? c.slice(1) : c).map(item => this.postsById[item.post])
+              posts: (isString(c[0]) ? c.slice(1) : c).map(item => this.denormalize(this.posts[item.post], 'Post'))
             }
           })
         }

@@ -17,20 +17,20 @@
           <button
             class="up"
             :id="`backlog-controls-up-${post.id}`"
-            @click.stop="moveUp(post.id)"
+            @click.stop="moveUp()"
             :disabled="!canMoveUp"
           ></button>
 
           <button
             class="down"
             :id="`backlog-controls-down-${post.id}`"
-            @click.stop="moveDown(post.id)"
+            @click.stop="moveDown()"
             :disabled="!canMoveDown"
           ></button>
 
           <button
             class="remove"
-            @click.stop="removePost(post.id)"
+            @click.stop="removePost()"
             v-b-tooltip
             title="Remove post"
           ></button>
@@ -47,14 +47,14 @@
               <li
                 v-if="source !== 'upcoming'"
                 tabindex="0"
-                @click="moveUp(post.id, 'upcoming')"
+                @click="moveUp('upcoming')"
               >
                 <h6>{{ $t('Move to upcoming issue') }}</h6>
                 <p></p>
               </li>
               <li
                 v-if="source === 'considered'"
-                @click="moveUp(post.id, 'next')"
+                @click="moveUp('next')"
               >
                 <h6>{{ $t('Move to next issue') }}</h6>
                 <p></p>
@@ -74,14 +74,14 @@
               <li
                 v-if="source === 'upcoming'"
                 tabindex="0"
-                @click="moveDown(post.id, 'next')"
+                @click="moveDown('next')"
               >
                 <h6>{{ $t('Move to next issue') }}</h6>
                 <p></p>
               </li>
               <li
                 v-if="source !== 'considered'"
-                @click="moveDown(post.id, 'considered')"
+                @click="moveDown('considered')"
               >
                 <h6>{{ $t('Move to backlog issue') }}</h6>
                 <p></p>
@@ -163,6 +163,7 @@
 </template>
 
 <script>
+import { mapActions  } from 'vuex'
 import PostWrapper from '@/components/PostWrapper'
 import BoxWrapper from '@/components/BoxWrapper'
 import { BPopover } from 'bootstrap-vue'
@@ -178,10 +179,11 @@ export default {
 
   props: {
     newspaper: Object,
-    post: [Object, Array],
+    post: Object,
     canMoveUp: Boolean,
     canMoveDown: Boolean,
     source: String,
+    index: Number
   },
 
   data() {
@@ -200,7 +202,40 @@ export default {
   methods: {
     toggleMobileControls() {
       this.mobileControls = !this.mobileControls
-    }
+    },
+
+    moveUp(target=null) {
+      this.backlogMoveUp({
+        newspaper: this.newspaper,
+        source: this.source,
+        index: this.index,
+        target
+      })
+    },
+
+    moveDown(target=null) {
+      this.backlogMoveDown({
+        newspaper: this.newspaper,
+        source: this.source,
+        index: this.index,
+        target
+      })
+    },
+
+    removePost(postId) {
+      this.removeFromBacklog({
+        newspaper: this.newspaper,
+        source: this.source,
+        index: this.index
+      })
+    },
+
+    ...mapActions({
+      removeFromBacklog: 'backlog/remove',
+      addLinkToBacklog: 'backlog/addLink',
+      backlogMoveDown: 'backlog/moveDown',
+      backlogMoveUp: 'backlog/moveUp'
+    }),
   }
 }
 </script>

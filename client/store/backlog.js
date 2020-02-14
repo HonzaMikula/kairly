@@ -39,25 +39,27 @@ export const actions = {
   },
 
   async loadNewspaperBacklog({ commit }, fullName) {
-    const { backlogs, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
+    const { backlogs, posts, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
+
+    commit('newspaperBacklogPosts', { fullName, posts })
+    commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
 
     Object.values(backlogs).forEach(bl => {
       // TODO save layout to store
       commit('newspaperBacklog', { fullName, section: bl.name, backlog: bl})
     })
-    commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
 
   },
 
-  async moveUp({ commit, state }, { newspaper, source, target, postId }) {
+  async moveUp({ commit, state }, { newspaper, source, target, index }) {
     const { fullName } = newspaper
-    commit('moveUp', { fullName, source, target, postId})
+    commit('moveUp', { fullName, source, target, index})
     _postBackLog.call(this, state, fullName)
   },
 
-  async moveDown({ commit, state }, { newspaper, source, target, postId }) {
+  async moveDown({ commit, state }, { newspaper, source, target, index  }) {
     const { fullName } = newspaper
-    commit('moveDown', { fullName, source, target, postId})
+    commit('moveDown', { fullName, source, target, index})
     _postBackLog.call(this, state, fullName)
   },
 
@@ -159,6 +161,13 @@ export const mutations = {
       Vue.set(state.newspaperBacklog, fullName, { [section]: backlog })
     }
   },
+  newspaperBacklogPosts( state, { fullName, posts}) {
+    if (state.newspaperBacklog[fullName]) {
+      Vue.set(state.newspaperBacklog[fullName], '$posts', posts)
+    } else {
+      Vue.set(state.newspaperBacklog, fullName, { $posts: posts })
+    }
+  },
   newspaperBacklogStats( state, { fullName, currentMonthStats}) {
     // TODO use different key then newspaperBacklog
     if (state.newspaperBacklog[fullName]) {
@@ -174,18 +183,18 @@ export const mutations = {
     posts[idx].editorial = editorial
   },
 
-  remove(state, { fullName, source, postId }) {
-    const postBacklog = state.userBacklog[postId] || {}
-    delete postBacklog[fullName]
-    Vue.set(state.userBacklog, postId, {...postBacklog})
-
+  // THIS will be not working from timeline
+  remove(state, { fullName, source, index }) {
     const newspaperBacklog = state.newspaperBacklog[fullName]
-    if (newspaperBacklog) {
-      let posts = newspaperBacklog[source]
-      const idx = posts.findIndex(log => log.post.id === postId)
-      posts.splice(idx, 1)
-    }
+    let { layout } = newspaperBacklog[source]
+    layout.splice(index, 1)
+    const box = layout[index]
+
+    const postBacklog = state.userBacklog[box.post] || {}
+    delete postBacklog[fullName]
+    Vue.set(state.userBacklog, box.post, {...postBacklog})
   },
+  // TODO v2
   append(state, { fullName, source, post }) {
     const postBacklog = state.userBacklog[post.id] || {}
     Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
@@ -195,6 +204,7 @@ export const mutations = {
       newspaperBacklog[source].push({ post: post, editorial: null })
     }
   },
+  // TODO v2
   prepend(state, { fullName, source, post }) {
     const postBacklog = state.userBacklog[post.id] || {}
     Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
@@ -204,40 +214,39 @@ export const mutations = {
       newspaperBacklog[source].unshift({ post: post, editorial: null })
     }
   },
-  moveUp(state, { fullName, source, target, postId }) {
+  moveUp(state, { fullName, source, target, index }) {
     const backlog = state.newspaperBacklog[fullName]
-    let posts = backlog[source]
-    const idx = posts.findIndex(log => log.post.id === postId)
-    const post = posts[idx]
-    if (idx === 0 || target !== null) {
+    let sourceLayout = backlog[source].layout
+    const box = sourceLayout[index]
+    if (index === 0 || target !== null) {
       if (target === null) {
         target = (source === 'considered' ? 'next' : 'upcoming')
       }
-      const targetPosts = backlog[target]
-      posts.splice(idx, 1)
-      targetPosts.push(post)
+      const targetLayout = backlog[target].layout
+      sourceLayout.splice(index, 1)
+      targetLayout.push(box)
     } else {
-      Vue.set(posts, idx, posts[idx - 1])
-      Vue.set(posts, idx - 1, post)
+      Vue.set(sourceLayout, index, sourceLayout[index - 1])
+      Vue.set(sourceLayout, index - 1, box)
     }
   },
-  moveDown(state, { fullName, source, target, postId }) {
+  moveDown(state, { fullName, source, target, index }) {
     const backlog = state.newspaperBacklog[fullName]
-    let posts = backlog[source]
-    const idx = posts.findIndex(log => log.post.id === postId)
-    const post = posts[idx]
-    if (idx === posts.length - 1 || target !== null) {
+    let sourceLayout = backlog[source].layout
+    const box = sourceLayout[index]
+    if (index === sourceLayout.length - 1 || target !== null) {
       if (target === null) {
         target =  source == 'upcoming' ? 'next' : 'considered'
       }
-      const targetPosts = backlog[target]
-      posts.splice(idx, 1)
-      targetPosts.unshift(post)
+      const targetLayout = backlog[target].layout
+      sourceLayout.splice(index, 1)
+      targetLayout.unshift(box)
     } else {
-      Vue.set(posts, idx, posts[idx + 1])
-      Vue.set(posts, idx + 1, post)
+      Vue.set(sourceLayout, index, sourceLayout[index + 1])
+      Vue.set(sourceLayout, index + 1, box)
     }
   },
+  // TODO v2
   reorder(state, { fullName, source, posts }) {
     const backlog = state.newspaperBacklog[fullName]
     backlog[source] = posts

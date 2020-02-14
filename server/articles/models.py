@@ -483,9 +483,9 @@ class Backlog(models.Model):
             "newspaper": newspaper_ref,
             "layout": json.loads(self.layout)
         }
-        posts_json = []
+        posts_json = {}
         for ip in BacklogPost.objects.filter(backlog=self).select_related('post'):
-            posts_json.append(ip.post.to_json(entities, short=True))
+            posts_json[str(ip.post_id)] = ip.post.to_json(entities, short=True)
         result["posts"] = posts_json
         return result
 
