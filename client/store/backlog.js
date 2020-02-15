@@ -9,13 +9,31 @@ export const state = () => ({
 })
 
 async function _postBackLog(state, fullName) {
-  //TODO
-  // const backlog = state.newspaperBacklog[fullName]
-  // await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
-  //   upcoming: backlog.upcoming.map(log => log.post.id),
-  //   next: backlog.next.map(log => log.post.id),
-  //   considered: backlog.considered.map(log => log.post.id)
-  // })
+  function serialize(layout) {
+    return layout.map(item => {
+      if (item.type === 'post') return {post: item.id}
+      if (item.type === 'box') {
+        const box = [item.css]
+        item.columns.forEach(col => {
+          const data = []
+          if (col.css && col.css !== '') {
+            data.push(col.css)
+          }
+          col.posts.forEach(p => data.push({post: p.id}))
+          box.push(data)
+        })
+        return box
+      }
+      throw Exception("Unknown type")
+    })
+  }
+
+  const backlog = state.newspaperBacklog[fullName]
+  await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
+    upcoming: serialize(backlog.upcoming.layout),
+    next: serialize(backlog.next.layout),
+    considered: serialize(backlog.considered.layout)
+  })
 }
 
 export const actions = {
@@ -83,6 +101,19 @@ export const actions = {
     _postBackLog.call(this, state, fullName)
   },
 
+  async remove({ commit, state }, { newspaper, source, index }) {
+    // TODO to have better user experience, post can be removed immediately
+    // and reverted when api call fails
+    const { fullName } = newspaper
+    commit('remove', { fullName, source, index})
+    _postBackLog.call(this, state, fullName)
+
+    this.$ga.event({
+      eventCategory: 'Stop considering for newspaper',
+      eventAction: fullName
+    })
+  },
+
   async reorder({ commit, state }, { newspaper, source, posts }) {
     const { fullName } = newspaper
     commit('reorder', { fullName, source, posts})
@@ -111,23 +142,7 @@ export const actions = {
     })
   },
 
-  async remove({ commit }, { newspaper, source, postId }) {
-    // TODO to have better user experience, post can be removed immediately
-    // and reverted when api call fails
-    const { fullName } = newspaper
-    await this.$axios.delete(`/newspapers/${fullName}/backlog`, { data: { post: postId } })
 
-    commit('remove', {
-      fullName: fullName,
-      source,
-      postId,
-    })
-
-    this.$ga.event({
-      eventCategory: 'Stop considering for newspaper',
-      eventAction: fullName
-    })
-  },
 
   async addLink({ commit, state }, { newspaper, url }) {
     const { fullName } = newspaper

@@ -2,7 +2,6 @@ import io
 import html
 from datetime import datetime
 from decimal import ConversionSyntax, Decimal
-from itertools import chain
 from operator import attrgetter
 import urllib.parse
 
@@ -14,7 +13,7 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.core.cache import cache
 from django.db import transaction
-from django.db.models import F, Q, Sum
+from django.db.models import Q, Sum
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden, HttpResponseNotFound)
 from django.shortcuts import get_object_or_404
@@ -31,7 +30,7 @@ from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse, Ref, entities_json_response
 from utils.upload import file_from_data_uri
-from .models import (BacklogX, Backlog, Issue, Newspaper, CoEditor, Post, Subscription,
+from .models import (BacklogX, Backlog, BacklogPost, Issue, Newspaper, CoEditor, Post, Subscription,
                      SubscriptionToAuthor, IssuePost, Editorial, EditorialTweet,
                      round_fair_price)
 from .period import parse_periodicity
@@ -352,16 +351,6 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
                     'newspaper': newspaper_ref,
                     'layout': []
                 }
-        # result = {'backlog': []}
-
-        # query = BacklogX.objects.filter(
-        #     newspaper=newspaper).select_related('post', 'editorial').order_by(F('publish_in').asc(nulls_last=True), F('ordering').asc(nulls_last=True), 'id')
-        # for log in query:
-        #     result['backlog'].append({
-        #         'post': log.post.to_json(entities),
-        #         'publish': log.publish_in,
-        #         'editorial': log.editorial.to_json(entities) if log.editorial else None
-        #     })
 
         editor_tz = pytz.timezone(newspaper.editor.timezone)
         now = timezone_now().astimezone(editor_tz)
@@ -380,48 +369,50 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
 
     if request.method == 'POST':
         payload = json.loads(request.body.decode('utf-8'))
-        upcoming_ids = payload['upcoming']
-        next_ids = payload['next']
-        consider_ids = payload['considered']
 
-        ordering = {}
-        for idx, id in enumerate(chain(upcoming_ids, next_ids, consider_ids)):
-            ordering[id] = idx
+        for name, layout in payload.items():
+            if name not in ['considered', 'upcoming', 'next']:
+                raise HttpResponseBadRequest('Invalid backlog name')
 
-        issues = {id: 1 for id in upcoming_ids}
-        issues.update({id: 2 for id in next_ids})
-        issues.update({id: None for id in consider_ids})
+            new_posts = Backlog.get_layout_posts(layout)
+            try:
+                backlog = Backlog.objects.get(name=name, newspaper=newspaper)
+                current_posts = Backlog.get_layout_posts(backlog.layout)
 
-        # after ordering is captured, convert lists to sets
-        upcoming_ids = set(upcoming_ids)
-        next_ids = set(next_ids)
-        consider_ids = set(consider_ids)
+                removed_posts = current_posts - new_posts
+                if removed_posts:
+                    BacklogPost.objects.filter(backlog=backlog, post_id__in=list(removed_posts)).delete()
+                added_posts = new_posts - current_posts
+                if added_posts:
+                    BacklogPost.objects.bulk_create([BacklogPost(backlog=backlog, post_id=p) for p in added_posts])
 
-        for log in BacklogX.objects.filter(newspaper=newspaper).order_by(F('publish_in').asc(nulls_last=True), 'ordering'):
-            idx = ordering.get(log.post_id)
-            publish_in = issues.get(log.post_id)
-            if idx != log.ordering or publish_in != log.publish_in:
-                log.ordering = idx
-                log.publish_in = publish_in
-                log.save()
+                backlog.layout = json.dumps(layout).decode()
+                backlog.save()
+            except Backlog.DoesNotExist:
+                if not layout:
+                    continue
+                backlog = Backlog.objects.create(name=name, newspaper=newspaper, layout=json.dumps(layout).decode())
+                BacklogPost.objects.bulk_create([BacklogPost(backlog=backlog, post_id=p) for p in new_posts])
 
-        return HttpResponse(status=204)
-
-    if request.method == 'PUT':
-        payload = json.loads(request.body.decode('utf-8'))
-        post = get_object_or_404(Post, id=payload.get('post'))
-        created = BacklogX.prepend_post(newspaper, post)
-        return HttpResponse(status=201 if created else 204)
-
-    if request.method == 'DELETE':
-        payload = json.loads(request.body.decode('utf-8'))
-        post = get_object_or_404(Post, id=payload.get('post'))
-        BacklogX.objects.filter(newspaper=newspaper, post=post).delete()
-
-        if post.kind == Post.LINK:
-            post.delete()
+        # TODO delete unreferenced links
 
         return HttpResponse(status=204)
+
+    # if request.method == 'PUT':
+    #     payload = json.loads(request.body.decode('utf-8'))
+    #     post = get_object_or_404(Post, id=payload.get('post'))
+    #     created = BacklogX.prepend_post(newspaper, post)
+    #     return HttpResponse(status=201 if created else 204)
+
+    # if request.method == 'DELETE':
+    #     payload = json.loads(request.body.decode('utf-8'))
+    #     post = get_object_or_404(Post, id=payload.get('post'))
+    #     BacklogX.objects.filter(newspaper=newspaper, post=post).delete()
+
+    #     if post.kind == Post.LINK:
+    #         post.delete()
+
+    #     return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)
 

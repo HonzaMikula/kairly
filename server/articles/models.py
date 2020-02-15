@@ -489,6 +489,18 @@ class Backlog(models.Model):
         result["posts"] = posts_json
         return result
 
+    @classmethod
+    def get_layout_posts(cls, layout):
+        ids = set()
+        for item in layout:
+            if isinstance(item, list):
+                ids.update(cls.get_layout_posts(item))
+            elif isinstance(item, dict):
+                post_id = item.get('post')
+                if post_id:
+                    ids.add(post_id)
+        return ids
+
 
 class BacklogPost(models.Model):
     backlog = models.ForeignKey(Backlog, on_delete=models.CASCADE)
