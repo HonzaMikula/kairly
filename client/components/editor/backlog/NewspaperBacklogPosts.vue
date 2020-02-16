@@ -121,7 +121,6 @@ export default {
     }
   },
 
-
   mounted() {
     this.isTouchDevice = isTouchDevice()
   }

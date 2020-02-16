@@ -114,6 +114,12 @@ export const actions = {
     })
   },
 
+  async setBacklogItem({ commit, state }, { newspaper, source, index, item }) {
+    const { fullName } = newspaper
+    commit('setBacklogItem', { fullName, source, index, item})
+    _postBackLog.call(this, state, fullName)
+  },
+
   async reorder({ commit, state }, { newspaper, source, posts }) {
     const { fullName } = newspaper
     commit('reorder', { fullName, source, posts})
@@ -141,8 +147,6 @@ export const actions = {
       eventAction: newspaper.fullName
     })
   },
-
-
 
   async addLink({ commit, state }, { newspaper, url }) {
     const { fullName } = newspaper
@@ -229,6 +233,13 @@ export const mutations = {
     delete postBacklog[fullName]
     Vue.set(state.userBacklog, box.post, {...postBacklog})
   },
+
+  setBacklogItem(state, { fullName, source, index, item }) {
+    const newspaperBacklog = state.newspaperBacklog[fullName]
+    let { layout } = newspaperBacklog[source]
+    Vue.set(layout, index, item)
+  },
+
   // TODO v2
   append(state, { fullName, source, post }) {
     const postBacklog = state.userBacklog[post.id] || {}

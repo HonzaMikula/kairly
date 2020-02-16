@@ -90,16 +90,31 @@
           </b-popover>
         </div>
 
-        <!--div
-          v-if="post.type != 'tweet' || isAdmin"
-          class="newspaper-backlog-controls--options">
+        <div class="newspaper-backlog-controls--options">
           <button
-            v-if="!log.editorial && !editorType"
+            v-if="post.type !== 'box'"
             class="add-editorial"
-            @click="showCrossroad('right')"
-          ></button>
+            @click="addEditorial"
+          />
 
           <template v-else>
+            <button
+              class="change-position"
+              @click="changeEditorialPosition"
+              v-b-tooltip
+              :title="$t('Change position')"
+            ></button>
+
+            <!--button
+              class="menu"
+              :id="`backlog-controls-option-${post.id}`"
+              @click.stop
+              v-b-tooltip
+              :title="$t('Editorial menu')"
+            ></button-->
+          </template>
+
+          <!--template v-else>
             <button
               class="change-position"
               @click="changeEditorialPosition"
@@ -154,9 +169,9 @@
             v-if="post.type == 'comment'"
             class="edit-comment"
             @click="editComment"
-          ></button>
+          ></button-->
 
-        </div-->
+        </div>
       </div>
     </template>
   </compotent>
@@ -205,7 +220,7 @@ export default {
     },
 
     moveUp(target=null) {
-      this.backlogMoveUp({
+      this.$store.dispatch('backlog/moveUp', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index,
@@ -214,7 +229,7 @@ export default {
     },
 
     moveDown(target=null) {
-      this.backlogMoveDown({
+      this.$store.dispatch('backlog/moveDown', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index,
@@ -222,20 +237,50 @@ export default {
       })
     },
 
-    removePost(postId) {
-      this.removeFromBacklog({
+    removePost() {
+      this.$store.dispatch('backlog/remove', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index
       })
     },
 
-    ...mapActions({
-      removeFromBacklog: 'backlog/remove',
-      addLinkToBacklog: 'backlog/addLink',
-      backlogMoveDown: 'backlog/moveDown',
-      backlogMoveUp: 'backlog/moveUp'
-    }),
+    setBacklogItem(item) {
+      this.$store.dispatch('backlog/setBacklogItem', {
+        newspaper: this.newspaper,
+        source: this.source,
+        index: this.index,
+        item
+      })
+    },
+
+    addEditorial() {
+      this.setBacklogItem({
+        id: Math.random().toString(36).substring(2),
+        type: 'box',
+        css: 'cols-2-1',
+        columns: [
+          { css: '', posts: [{id: this.post.id, type: 'post'}] },
+          { css: 'editorial', posts: []}
+        ]
+      })
+    },
+
+    changeEditorialPosition() {
+      this.setBacklogItem({
+        ...this.post,
+        css: this.post.css === 'cols-2-1' ? 'cols-1-2' : 'cols-2-1',
+        columns: [this.post.columns[1], this.post.columns[0]]
+      })
+    }
+
+    // ...mapActions({
+    //   removeFromBacklog: 'backlog/remove',
+    //   addLinkToBacklog: 'backlog/addLink',
+    //   backlogMoveDown: 'backlog/moveDown',
+    //   backlogMoveUp: 'backlog/moveUp',
+    //   setItemLayout: 'backlog/setItemLayout'
+    // }),
   }
 }
 </script>
