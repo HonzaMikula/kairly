@@ -54,11 +54,12 @@ export default {
   },
 
   data() {
-    const { considered } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-    const tweets = considered
-      .map(log => log.post)
-      .filter(post => post.type === 'tweet')
+    const { considered, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
+    const tweets = considered.layout
+      .filter(post => post.type === 'post')
+      .map(post => $posts[post.id])
       .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
+      .filter(post => post.type === 'tweet')
 
     return {
       alwaysDisplayTweets: tweets
@@ -69,11 +70,12 @@ export default {
     tweets() {
       // do not remove from tweets when tweet is moved from baclog to editorial
       // but add tweet to list when moved from editoril back to backlog
-      const { considered } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-      const backlogTweets = considered
-        .map(log => log.post)
-        .filter(post => post.type === 'tweet')
+      const { considered, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
+      const backlogTweets = considered.layout
+        .filter(post => post.type === 'post')
+        .map(post => $posts[post.id])
         .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
+        .filter(post => post.type === 'tweet')
 
       const ids = {}
       this.alwaysDisplayTweets.forEach(p => { ids[p.id] = true })

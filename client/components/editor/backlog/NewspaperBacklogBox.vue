@@ -1,6 +1,6 @@
 <template>
   <compotent
-    :is="post.type == 'box' ? 'BoxWrapper' : 'PostWrapper'"
+    :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
     :post="post"
     :isSubscribed="true"
     @click.native="toggleMobileControls"
@@ -103,15 +103,42 @@
               @click="changeEditorialPosition"
               v-b-tooltip
               :title="$t('Change position')"
-            ></button>
+            />
 
-            <!--button
+            <button
               class="menu"
               :id="`backlog-controls-option-${post.id}`"
               @click.stop
               v-b-tooltip
               :title="$t('Editorial menu')"
-            ></button-->
+            />
+
+            <b-popover
+              :target="`backlog-controls-option-${post.id}`"
+              placement="bottomleft"
+              triggers="click blur"
+              @click.stop
+            >
+              <ul>
+                <li
+                  tabindex="0"
+                  @click="editEditorial"
+                >
+                  <h6>{{ $t('Update editorial comment') }}</h6>
+                  <p>{{ $t('Write short comment to the topic') }}</p>
+                </li>
+
+                <li
+                  tabindex="0"
+                  @click="removeEditorial"
+                >
+                  <h6>{{ $t('Remove editorial') }}</h6>
+                  <p>{{ $t('Remove existing editorial') }}</p>
+                </li>
+              </ul>
+
+
+            </b-popover>
           </template>
 
           <!--template v-else>
@@ -173,6 +200,17 @@
 
         </div>
       </div>
+
+      <portal to="modal">
+        <TweetsSelection
+          v-if="editedColumn !== null"
+          :newspaper="newspaper"
+          :selected="post.columns[editedColumn].posts"
+          @add="addToColumn"
+          @remove="removeFromColumn"
+          @done="closeEditor"
+        />
+      </portal>
     </template>
   </compotent>
 </template>
@@ -183,13 +221,16 @@ import PostWrapper from '@/components/PostWrapper'
 import BoxWrapper from '@/components/BoxWrapper'
 import { BPopover } from 'bootstrap-vue'
 
+import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
+
 export default {
   name: 'NewspaperBacklogBox',
 
   components: {
     PostWrapper,
     BoxWrapper,
-    BPopover
+    BPopover,
+    TweetsSelection,
   },
 
   props: {
@@ -203,7 +244,8 @@ export default {
 
   data() {
     return {
-      mobileControls: false
+      mobileControls: false,
+      editedColumn: null
     }
   },
 
@@ -217,6 +259,28 @@ export default {
   methods: {
     toggleMobileControls() {
       this.mobileControls = !this.mobileControls
+    },
+
+    addToColumn(post) {
+      const columns = [...this.post.columns]
+      columns[this.editedColumn].posts.push({id: post.id, type: 'post'})
+      this.setBacklogItem({
+        ...this.post,
+        columns
+      })
+    },
+
+    removeFromColumn(post) {
+      console.log(post)
+    },
+
+    editEditorial() {
+      const idx = this.post.columns.findIndex(c => c.css === 'editorial')
+      this.editedColumn = idx
+    },
+
+    closeEditor() {
+      this.editedColumn = null
     },
 
     moveUp(target=null) {
@@ -256,7 +320,7 @@ export default {
 
     addEditorial() {
       this.setBacklogItem({
-        id: Math.random().toString(36).substring(2),
+        id: this.post.id, // keep same id to keep same NewspaperBacklogBox
         type: 'box',
         css: 'cols-2-1',
         columns: [
@@ -264,6 +328,12 @@ export default {
           { css: 'editorial', posts: []}
         ]
       })
+      this.showEditor = true
+    },
+
+    removeEditorial() {
+      const col = this.post.columns.find(c => c.css !== 'editorial')
+      this.setBacklogItem({id: col.posts[0].id, type: 'post'})
     },
 
     changeEditorialPosition() {

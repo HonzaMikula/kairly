@@ -68,13 +68,13 @@ export default {
   },
 
   props: {
-    editorial: Object,
     newspaper: Object,
+    column: Object
   },
 
   data() {
     return {
-      tweets: this.editorial ? [...this.editorial.tweets] : []
+      tweets: [...column.posts]
     }
   },
 
