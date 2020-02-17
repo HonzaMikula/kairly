@@ -8,7 +8,7 @@
       <template v-if="photoAttachments">
         <TweetAttachmentPhoto :items="photoAttachments" />
       </template>
-      
+
       <template v-if="otherAttachments">
         <component
           v-for="attachment in otherAttachments"
@@ -19,8 +19,8 @@
       </template>
     </div>
 
-    <template #extended-controls>
-      <slot name="extended-controls">
+    <template #global-controls>
+      <slot name="global-controls">
         <a
           v-if="post.source"
           :href="post.source"
@@ -32,7 +32,7 @@
       </slot>
     </template>
 
-    <template #controls><slot name="controls"></slot></template>
+    <template #page-controls><slot name="page-controls"></slot></template>
   </PostBase>
 </template>
 
@@ -63,7 +63,7 @@ export default {
     photoAttachments() {
       if (this.post.content.attachments) {
         const photoAttachments = this.post.content.attachments.filter(attachment => attachment.type == 'media.photo')
-        
+
         if (photoAttachments.length > 0)
           return photoAttachments
       }

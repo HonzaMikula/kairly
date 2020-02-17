@@ -5,8 +5,9 @@
     :isSubscribed="true"
     @click.native="toggleMobileControls"
   >
-    <template #controls>
-      <span v-if="post.type !== 'comment'" class="price">{{ post.price }} Kč</span>
+    <template #page-controls="{ post: childPost }">
+      <span v-if="childPost.type === 'newspaper'" class="price">{{ childPost.price }} Kč</span>
+      <template v-else>&nbsp;</template>
     </template>
 
     <template #aside>

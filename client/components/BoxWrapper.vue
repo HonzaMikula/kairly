@@ -12,7 +12,12 @@
         :key="`${idx}-${post.id}`"
         :post="post"
         :isSubscribed="true"
-      />
+      >
+        <template #page-controls>
+          <slot name="page-controls" :post="post"></slot>
+        </template>
+      </PostWrapper>
+
     </div>
 
     <slot name="aside">

@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <template #controls><slot name="controls"></slot></template>
+    <template #page-controls><slot name="page-controls"></slot></template>
   </PostBase>
 </template>
 

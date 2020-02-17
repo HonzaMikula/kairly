@@ -11,12 +11,12 @@
         <slot name="author"></slot>
       </template>
 
-      <template #extended-controls>
-        <slot name="extended-controls"></slot>
+      <template #global-controls>
+        <slot name="global-controls" :post="post"></slot>
       </template>
 
-      <template #controls>
-        <slot name="controls"></slot>
+      <template #page-controls>
+        <slot name="page-controls" :post="post"></slot>
       </template>
     </component>
 

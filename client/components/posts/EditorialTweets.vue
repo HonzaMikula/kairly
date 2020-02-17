@@ -3,7 +3,7 @@
     class="editorial-post--editorial"
     :class="{'many-tweets': editorial.tweets.length > 1}">
     <PostTweet v-for="tweet in editorial.tweets" :key="tweet.id" :post="tweet">
-      <template #controls><slot name="controls"></slot></template>
+      <template #page-controls><slot name="page-controls"></slot></template>
     </PostTweet>
   </div>
 </template>
@@ -31,6 +31,6 @@ export default {
 </script>
 <style lang="sass">
 .editorial-post--editorial.many-tweets
-  align-self: start !important  
+  align-self: start !important
   margin-bottom: auto
 </style>

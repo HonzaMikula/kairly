@@ -15,10 +15,10 @@
         :post="post"
         :key="post.id"
       >
-        <template #extended-controls>
+        <template #global-controls>
           &nbsp;
         </template>
-        <template #controls>
+        <template #page-controls>
           <button
             v-if="selected.indexOf(post.id) === -1"
             class="add"

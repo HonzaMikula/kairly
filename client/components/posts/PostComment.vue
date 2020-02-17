@@ -11,8 +11,8 @@
       </timeline-post--comment--content>
     </timeline-post--comment>
 
-    <template #controls><slot name="controls"></slot></template>
-    <template #extended-controls><slot name="extended-controls"></slot></template>
+    <template #page-controls><slot name="page-controls"></slot></template>
+    <template #global-controls><slot name="global-controls"></slot></template>
   </PostBase>
 </template>
 

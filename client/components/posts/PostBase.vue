@@ -39,8 +39,8 @@
       </slot>
 
       <section>
-        <slot name="extended-controls"/>
-        <slot name="controls">
+        <slot name="global-controls"/>
+        <slot name="page-controls">
           <span>
             <button
               v-if="user && post.author.id == user.id"
