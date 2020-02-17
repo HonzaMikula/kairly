@@ -8,33 +8,7 @@ export const state = () => ({
   newspaperBacklog: {},
 })
 
-async function _postBackLog(state, fullName) {
-  function serialize(layout) {
-    return layout.map(item => {
-      if (item.type === 'post') return {post: item.id}
-      if (item.type === 'box') {
-        const box = [item.css]
-        item.columns.forEach(col => {
-          const data = []
-          if (col.css && col.css !== '') {
-            data.push(col.css)
-          }
-          col.posts.forEach(p => data.push({post: p.id}))
-          box.push(data)
-        })
-        return box
-      }
-      throw Exception("Unknown type")
-    })
-  }
 
-  const backlog = state.newspaperBacklog[fullName]
-  await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
-    upcoming: serialize(backlog.upcoming.layout),
-    next: serialize(backlog.next.layout),
-    considered: serialize(backlog.considered.layout)
-  })
-}
 
 export const actions = {
   async loadUserBacklog({ commit, state }) {
@@ -89,36 +63,65 @@ export const actions = {
 
   },
 
-  async moveUp({ commit, state }, { newspaper, source, target, index }) {
+  async save({ state }, { newspaper }) {
     const { fullName } = newspaper
-    commit('moveUp', { fullName, source, target, index})
-    _postBackLog.call(this, state, fullName)
-  },
+    function serialize(layout) {
+      return layout.map(item => {
+        if (item.type === 'post') return {post: item.id}
+        if (item.type === 'box') {
+          const box = [item.css]
+          item.columns.forEach(col => {
+            const data = []
+            if (col.css && col.css !== '') {
+              data.push(col.css)
+            }
+            col.posts.forEach(p => data.push({post: p.id}))
+            box.push(data)
+          })
+          return box
+        }
+        throw Exception("Unknown type")
+      })
+    }
 
-  async moveDown({ commit, state }, { newspaper, source, target, index  }) {
-    const { fullName } = newspaper
-    commit('moveDown', { fullName, source, target, index})
-    _postBackLog.call(this, state, fullName)
-  },
-
-  async remove({ commit, state }, { newspaper, source, index }) {
-    // TODO to have better user experience, post can be removed immediately
-    // and reverted when api call fails
-    const { fullName } = newspaper
-    commit('remove', { fullName, source, index})
-    _postBackLog.call(this, state, fullName)
-
-    this.$ga.event({
-      eventCategory: 'Stop considering for newspaper',
-      eventAction: fullName
+    const backlog = state.newspaperBacklog[fullName]
+    await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
+      upcoming: serialize(backlog.upcoming.layout),
+      next: serialize(backlog.next.layout),
+      considered: serialize(backlog.considered.layout)
     })
   },
 
-  async setBacklogItem({ commit, state }, { newspaper, source, index, item }) {
-    const { fullName } = newspaper
-    commit('setBacklogItem', { fullName, source, index, item})
-    _postBackLog.call(this, state, fullName)
-  },
+  // async moveUp({ commit, state }, { newspaper, source, target, index }) {
+  //   const { fullName } = newspaper
+  //   commit('moveUp', { fullName, source, target, index})
+  //   _postBackLog.call(this, state, fullName)
+  // },
+
+  // async moveDown({ commit, state }, { newspaper, source, target, index  }) {
+  //   const { fullName } = newspaper
+  //   commit('moveDown', { fullName, source, target, index})
+  //   _postBackLog.call(this, state, fullName)
+  // },
+
+  // async remove({ commit, state }, { newspaper, source, index }) {
+  //   // TODO to have better user experience, post can be removed immediately
+  //   // and reverted when api call fails
+  //   const { fullName } = newspaper
+  //   commit('remove', { fullName, source, index})
+  //   _postBackLog.call(this, state, fullName)
+
+  //   this.$ga.event({
+  //     eventCategory: 'Stop considering for newspaper',
+  //     eventAction: fullName
+  //   })
+  // },
+
+  // async setBacklogItem({ commit, state }, { newspaper, source, index, item }) {
+  //   const { fullName } = newspaper
+  //   commit('setBacklogItem', { fullName, source, index, item})
+  //   _postBackLog.call(this, state, fullName)
+  // },
 
   async reorder({ commit, state }, { newspaper, source, posts }) {
     const { fullName } = newspaper
@@ -223,9 +226,20 @@ export const mutations = {
   },
 
   // THIS will be not working from timeline
-  remove(state, { fullName, source, index }) {
+  remove(state, { newspaper, source, index=null, postId=null }) {
+    if (index === null && postId === null) {
+      throw Error("Index or post id must specified")
+    }
+    const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
     let { layout } = newspaperBacklog[source]
+    if (index === null) {
+      index = layout.findIndex(p => p.id === postId)
+      if (index === -1) {
+        return
+      }
+    }
+
     layout.splice(index, 1)
     const box = layout[index]
 
@@ -234,7 +248,8 @@ export const mutations = {
     Vue.set(state.userBacklog, box.post, {...postBacklog})
   },
 
-  setBacklogItem(state, { fullName, source, index, item }) {
+  setBacklogItem(state, { newspaper, source, index, item }) {
+    const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
     let { layout } = newspaperBacklog[source]
     Vue.set(layout, index, item)
@@ -258,9 +273,12 @@ export const mutations = {
     const newspaperBacklog = state.newspaperBacklog[fullName]
     if (newspaperBacklog) {
       newspaperBacklog[source].unshift({ post: post, editorial: null })
+
     }
   },
-  moveUp(state, { fullName, source, target, index }) {
+
+  moveUp(state, { newspaper, source, target, index }) {
+    const { fullName } = newspaper
     const backlog = state.newspaperBacklog[fullName]
     let sourceLayout = backlog[source].layout
     const box = sourceLayout[index]
@@ -276,7 +294,9 @@ export const mutations = {
       Vue.set(sourceLayout, index - 1, box)
     }
   },
-  moveDown(state, { fullName, source, target, index }) {
+
+  moveDown(state, { newspaper, source, target, index }) {
+    const { fullName } = newspaper
     const backlog = state.newspaperBacklog[fullName]
     let sourceLayout = backlog[source].layout
     const box = sourceLayout[index]
@@ -292,6 +312,7 @@ export const mutations = {
       Vue.set(sourceLayout, index + 1, box)
     }
   },
+
   // TODO v2
   reorder(state, { fullName, source, posts }) {
     const backlog = state.newspaperBacklog[fullName]

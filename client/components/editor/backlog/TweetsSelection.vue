@@ -95,11 +95,11 @@ export default {
 
   methods: {
     add(post) {
-      this.$emit('add', post)
+      this.$emit('add', { post, source: 'considered'})
     },
 
     remove(post) {
-      this.$emit('remove', post)
+      this.$emit('remove', { post })
     }
   }
 }

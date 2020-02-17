@@ -205,7 +205,7 @@
         <TweetsSelection
           v-if="editedColumn !== null"
           :newspaper="newspaper"
-          :selected="post.columns[editedColumn].posts"
+          :selected="post.columns[editedColumn].posts.map(p => p.id)"
           @add="addToColumn"
           @remove="removeFromColumn"
           @done="closeEditor"
@@ -261,17 +261,32 @@ export default {
       this.mobileControls = !this.mobileControls
     },
 
-    addToColumn(post) {
+    addToColumn({ post, source }) {
       const columns = [...this.post.columns]
       columns[this.editedColumn].posts.push({id: post.id, type: 'post'})
       this.setBacklogItem({
         ...this.post,
         columns
       })
+      this.$store.commit('backlog/remove', {
+        newspaper: this.newspaper,
+        source,
+        postId: post.id
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    removeFromColumn(post) {
-      console.log(post)
+    removeFromColumn({ post }) {
+      const columns = []
+      this.post.columns.forEach(col => {
+        columns.push(col.filter(p => p.id !== post.id))
+      })
+      this.setBacklogItem({
+        ...this.post,
+        columns
+      })
+      //TODO return to backlog
+      // and save
     },
 
     editEditorial() {
@@ -284,33 +299,36 @@ export default {
     },
 
     moveUp(target=null) {
-      this.$store.dispatch('backlog/moveUp', {
+      this.$store.commit('backlog/moveUp', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index,
         target
       })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
     moveDown(target=null) {
-      this.$store.dispatch('backlog/moveDown', {
+      this.$store.commit('backlog/moveDown', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index,
         target
       })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
     removePost() {
-      this.$store.dispatch('backlog/remove', {
+      this.$store.commit('backlog/remove', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index
       })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
     setBacklogItem(item) {
-      this.$store.dispatch('backlog/setBacklogItem', {
+      this.$store.commit('backlog/setBacklogItem', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index,
@@ -328,12 +346,14 @@ export default {
           { css: 'editorial', posts: []}
         ]
       })
-      this.showEditor = true
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
+      this.editedColumn = 1
     },
 
     removeEditorial() {
       const col = this.post.columns.find(c => c.css !== 'editorial')
       this.setBacklogItem({id: col.posts[0].id, type: 'post'})
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
     changeEditorialPosition() {
@@ -342,6 +362,7 @@ export default {
         css: this.post.css === 'cols-2-1' ? 'cols-1-2' : 'cols-2-1',
         columns: [this.post.columns[1], this.post.columns[0]]
       })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     }
 
     // ...mapActions({
