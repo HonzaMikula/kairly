@@ -3,18 +3,18 @@
     :class="`box-wrapper ${post.css}`"
   >
     <div
-      v-for="(col, idx) in post.columns"
-      :key="idx"
+      v-for="(col, colIndex) in post.columns"
+      :key="colIndex"
       :class="`box-column ${col.css}`"
     >
       <PostWrapper
-        v-for="post in col.posts"
-        :key="`${idx}-${post.id}`"
+        v-for="(post, postIndex) in col.posts"
+        :key="`${colIndex}-${post.id}`"
         :post="post"
         :isSubscribed="true"
       >
         <template #page-controls>
-          <slot name="page-controls" :post="post"></slot>
+          <slot name="page-controls" :post="post" :postIndex="postIndex" :column="col" :columnIndex="colIndex"></slot>
         </template>
       </PostWrapper>
 

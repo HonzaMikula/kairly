@@ -5,9 +5,38 @@
     :isSubscribed="true"
     @click.native="toggleMobileControls"
   >
-    <template #page-controls="{ post: childPost }">
-      <span v-if="childPost.type === 'newspaper'" class="price">{{ childPost.price }} Kč</span>
+    <template #page-controls="{ post, postIndex, column, columnIndex}">
+      <span v-if="post.type === 'newspaper'" class="price">{{ post.price }} Kč</span>
       <template v-else>&nbsp;</template>
+
+      <template v-if="column && column.css === 'editorial'">
+        <button-icon
+          v-if="postIndex > 0"
+          class="up"
+          v-b-tooltip
+          tabindex="0"
+          role="button"
+          :title="$t('Move tweet up')"
+          @click="moveUpInColumn(columnIndex, postIndex)"
+        />
+        <button-icon
+          v-if="postIndex < column.posts.length - 1"
+          class="down"
+          v-b-tooltip
+          tabindex="0"
+          role="button"
+          :title="$t('Move tweet down')"
+          @click="moveDownInColumn(columnIndex, postIndex)"
+        />
+        <button-icon
+          class="remove"
+          v-b-tooltip
+          tabindex="0"
+          role="button"
+          :title="$t('Remove tweet')"
+          @click="removeFromColumn({ post })"
+        />
+      </template>
     </template>
 
     <template #aside>
@@ -280,14 +309,61 @@ export default {
     removeFromColumn({ post }) {
       const columns = []
       this.post.columns.forEach(col => {
-        columns.push(col.filter(p => p.id !== post.id))
+        columns.push({
+          ...col,
+          posts: col.posts.filter(p => p.id !== post.id)
+        })
       })
       this.setBacklogItem({
         ...this.post,
         columns
       })
-      //TODO return to backlog
-      // and save
+      this.$store.commit('backlog/prepend', {
+        newspaper: this.newspaper,
+        target: 'considered',
+        item: {id: post.id, type: 'post'}
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
+    },
+
+    moveUpInColumn(columnIndex, postIndex) {
+      const columns = this.post.columns.map((col, idx) => {
+        col = {
+          ...col,
+          posts: col.posts.map(p => ({id: p.id, type: 'post'}))
+        }
+        if (idx === columnIndex) {
+          const post = col.posts[postIndex]
+          col.posts[postIndex] = col.posts[postIndex - 1]
+          col.posts[postIndex - 1] = post
+        }
+        return col
+      })
+      this.setBacklogItem({
+        ...this.post,
+        columns
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
+    },
+
+    moveDownInColumn(columnIndex, postIndex) {
+      const columns = this.post.columns.map((col, idx) => {
+        col = {
+          ...col,
+          posts: col.posts.map(p => ({id: p.id, type: 'post'}))
+        }
+        if (idx === columnIndex) {
+          const post = col.posts[postIndex]
+          col.posts[postIndex] = col.posts[postIndex + 1]
+          col.posts[postIndex + 1] = post
+        }
+        return col
+      })
+      this.setBacklogItem({
+        ...this.post,
+        columns
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
     editEditorial() {
@@ -352,8 +428,16 @@ export default {
     },
 
     removeEditorial() {
-      const col = this.post.columns.find(c => c.css !== 'editorial')
-      this.setBacklogItem({id: col.posts[0].id, type: 'post'})
+      const mainCol = this.post.columns.find(c => c.css !== 'editorial')
+      const editorialCol = this.post.columns.find(c => c.css === 'editorial')
+      this.setBacklogItem({id: mainCol.posts[0].id, type: 'post'})
+      editorialCol.posts.forEach(post => {
+        this.$store.commit('backlog/prepend', {
+          newspaper: this.newspaper,
+          target: 'considered',
+          item: {id: post.id, type: 'post'}
+        })
+      })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
@@ -365,14 +449,6 @@ export default {
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     }
-
-    // ...mapActions({
-    //   removeFromBacklog: 'backlog/remove',
-    //   addLinkToBacklog: 'backlog/addLink',
-    //   backlogMoveDown: 'backlog/moveDown',
-    //   backlogMoveUp: 'backlog/moveUp',
-    //   setItemLayout: 'backlog/setItemLayout'
-    // }),
   }
 }
 </script>

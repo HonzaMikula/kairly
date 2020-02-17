@@ -255,26 +255,22 @@ export const mutations = {
     Vue.set(layout, index, item)
   },
 
-  // TODO v2
-  append(state, { fullName, source, post }) {
-    const postBacklog = state.userBacklog[post.id] || {}
-    Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
-
+  append(state, { newspaper, target, item }) {
+    const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
-    if (newspaperBacklog) {
-      newspaperBacklog[source].push({ post: post, editorial: null })
-    }
+    let { layout } = newspaperBacklog[target]
+    layout.push(item)
+    // const postBacklog = state.userBacklog[post.id] || {}
+    // Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
   },
-  // TODO v2
-  prepend(state, { fullName, source, post }) {
-    const postBacklog = state.userBacklog[post.id] || {}
-    Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
 
+  prepend(state, { newspaper, target, item }) {
+    const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
-    if (newspaperBacklog) {
-      newspaperBacklog[source].unshift({ post: post, editorial: null })
-
-    }
+    let { layout } = newspaperBacklog[target]
+    layout.unshift(item)
+    // const postBacklog = state.userBacklog[post.id] || {}
+    // Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
   },
 
   moveUp(state, { newspaper, source, target, index }) {
