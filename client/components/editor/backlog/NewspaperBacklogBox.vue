@@ -9,6 +9,14 @@
       <span v-if="post.type === 'newspaper'" class="price">{{ post.price }} Kč</span>
       <template v-else>&nbsp;</template>
 
+      <button-icon
+        v-if="post.draft"
+        class="edit"
+        role="button"
+        :title="$t('Edit comment')"
+        @click="editComment(post.id)"
+      />
+
       <template v-if="column && column.css === 'editorial'">
         <button-icon
           v-if="postIndex > 0"
@@ -276,6 +284,10 @@ export default {
         item: {id: post.id, type: 'post'}
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
+    },
+
+    editComment(postId) {
+
     },
 
     moveUpInColumn(columnIndex, postIndex) {
