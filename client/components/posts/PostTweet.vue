@@ -48,7 +48,9 @@ import TweetAttachmentVideo from './TweetAttachmentVideo'
 export default {
   name: 'post-tweet',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: {
     PostBase,

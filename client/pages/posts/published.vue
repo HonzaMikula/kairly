@@ -4,7 +4,6 @@
       <PostWrapper
         v-for="post in posts"
         :post="post"
-        :isSubscribed="true"
         :key="post.id"
       >
         <template #page-controls>

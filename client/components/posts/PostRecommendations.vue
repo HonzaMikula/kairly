@@ -50,7 +50,9 @@ import AuthorPicture from '@/components/widgets/AuthorPicture'
 export default {
   name: 'PostRecommendations',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: {
     AuthorPicture

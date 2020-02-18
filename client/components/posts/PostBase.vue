@@ -80,7 +80,10 @@ import ConsiderPost from '@/components/widgets/ConsiderPost'
 
 export default {
   name: 'PostDetail',
-  props: ["post", "isSubscribed"],
+
+  props: {
+    post: Object,
+  },
 
   components: {
     AuthorPicture,

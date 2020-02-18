@@ -39,7 +39,9 @@ import PostBase from './PostBase';
 export default {
   name: 'post-link',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: { PostBase }
 }

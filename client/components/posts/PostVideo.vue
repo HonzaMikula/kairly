@@ -32,7 +32,9 @@ import PostBase from './PostBase';
 export default {
   name: 'PostVideo',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: {
     PostBase

@@ -14,7 +14,6 @@
       :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
       :key="`head-${idx}`"
       :post="post"
-      :isSubscribed="true"
     />
 
     <component
@@ -22,7 +21,6 @@
       :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
       :key="`tail-${idx}`"
       :post="post"
-      :isSubscribed="true"
     />
 
     <footer class="issue--footer">

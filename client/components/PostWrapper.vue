@@ -4,7 +4,6 @@
       :is="postType"
       class="post-content"
       :post="post"
-      :isSubscribed="isSubscribed"
     >
       <template #author>
         <slot name="author"></slot>
@@ -37,7 +36,6 @@ export default {
   name: 'PostWrapper',
   props: {
     post: Object,
-    isSubscribed: Boolean,
   },
 
   components: {

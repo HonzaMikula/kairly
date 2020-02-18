@@ -14,14 +14,14 @@
             ({{ post.timeRead }} {{ $t('read') }})
           </template>
           <template v-else>
-            <div v-if="isSubscribed">
+            <div>
               <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }, hash: '#continue'}">
                 {{ $t('Continue reading') }}
               </nuxt-link>
             </div>
-            <div v-else>
+            <!--div v-else>
               {{ $t('Subscribe newspaper to continue reading') }}
-            </div>
+            </div-->
             ({{ post.timeRead }} {{ $t('read') }})
           </template>
         </div>
@@ -39,7 +39,9 @@ import PostBase from './PostBase';
 export default {
   name: 'PostArticle',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: {
     PostBase

@@ -11,7 +11,6 @@
         v-for="(post, postIndex) in col.posts"
         :key="`${colIndex}-${post.id}`"
         :post="post"
-        :isSubscribed="true"
       >
         <template #page-controls>
           <slot name="page-controls" :post="post" :postIndex="postIndex" :column="col" :columnIndex="colIndex"></slot>

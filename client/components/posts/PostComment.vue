@@ -22,7 +22,9 @@ import PostBase from './PostBase';
 export default {
   name: 'PostComment',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: {
     PostBase

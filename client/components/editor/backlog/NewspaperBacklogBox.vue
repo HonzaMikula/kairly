@@ -2,7 +2,6 @@
   <compotent
     :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
     :post="post"
-    :isSubscribed="true"
     @click.native="toggleMobileControls"
   >
     <template #page-controls="{ post, postIndex, column, columnIndex}">

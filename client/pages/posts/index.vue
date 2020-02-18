@@ -8,7 +8,6 @@
       <div v-for="post in posts" :key="post.id">
         <PostWrapper
           :post="post"
-          :isSubscribed="true"
         >
           <template #page-controls v-if="post.draft">
             <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>

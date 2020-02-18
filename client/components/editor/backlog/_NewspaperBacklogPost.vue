@@ -1,7 +1,6 @@
 <template>
   <PostWrapper
     :post="log.post"
-    :isSubscribed="true"
     :key="log.post.id"
     :editorial="editorType ? {position: editorPosition} : log.editorial"
     @click.native="toggleMobileControls"
