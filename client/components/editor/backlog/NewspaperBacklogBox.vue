@@ -152,7 +152,7 @@
               <ul>
                 <li
                   tabindex="0"
-                  @click="editEditorial"
+                  @click="openPostSelection"
                 >
                   <h6>{{ $t('Update editorial comment') }}</h6>
                   <p>{{ $t('Write short comment to the topic') }}</p>
@@ -197,7 +197,7 @@
                 <li
                   v-show="!editorType"
                   tabindex="0"
-                  @click="editEditorial"
+                  @click="openPostSelection"
                 >
                   <h6>{{ $t('Update editorial comment') }}</h6>
                   <p>{{ $t('Write short comment to the topic') }}</p>
@@ -238,7 +238,7 @@
           :selected="post.columns[editedColumn].posts.map(p => p.id)"
           @add="addToColumn"
           @remove="removeFromColumn"
-          @done="closeEditor"
+          @done="closePostSelection"
         />
       </portal>
     </template>
@@ -366,12 +366,14 @@ export default {
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    editEditorial() {
-      const idx = this.post.columns.findIndex(c => c.css === 'editorial')
+    openPostSelection(idx=null) {
+      if (idx === null) {
+        idx = this.post.columns.findIndex(c => c.css === 'editorial')
+      }
       this.editedColumn = idx
     },
 
-    closeEditor() {
+    closePostSelection() {
       this.editedColumn = null
     },
 
@@ -424,10 +426,11 @@ export default {
         ]
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
-      this.editedColumn = 1
+      this.openPostSelection(1)
     },
 
     removeEditorial() {
+      this.closePostSelection()
       const mainCol = this.post.columns.find(c => c.css !== 'editorial')
       const editorialCol = this.post.columns.find(c => c.css === 'editorial')
       this.setBacklogItem({id: mainCol.posts[0].id, type: 'post'})

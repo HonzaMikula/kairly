@@ -89,7 +89,7 @@ export const actions = {
       upcoming: serialize(backlog.upcoming.layout),
       next: serialize(backlog.next.layout),
       considered: serialize(backlog.considered.layout)
-    })
+    }, { progress: false })
   },
 
   // async moveUp({ commit, state }, { newspaper, source, target, index }) {
