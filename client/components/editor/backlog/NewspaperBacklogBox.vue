@@ -130,12 +130,17 @@
         </div>
 
         <div class="newspaper-backlog-controls--options">
-          <button
-            v-if="post.type !== 'box'"
-            class="add-editorial"
-            @click="addEditorial"
-          />
+          <template v-if="post.type !== 'box'">
+            <button
+              class="make-2-1"
+              @click="makeBox('cols-2-1', ['', 'editorial'])"
+            />
 
+            <button
+              class="make-1-1"
+              @click="makeBox('cols-1-1', ['', ''])"
+            />
+          </template>
           <template v-else>
             <button
               class="change-position"
@@ -169,7 +174,7 @@
 
                 <li
                   tabindex="1"
-                  @click="removeEditorial"
+                  @click="splitColumns"
                 >
                   <h6>{{ $t('Remove editorial') }}</h6>
                   <p>{{ $t('Remove existing editorial') }}</p>
@@ -296,7 +301,6 @@ export default {
     },
 
     closeEditor(postId) {
-      console.log(postId)
       Vue.delete(this.typeOverride, postId)
     },
 
@@ -402,30 +406,51 @@ export default {
       })
     },
 
-    addEditorial() {
+    makeBox(layout, columnsStyle) {
       this.setBacklogItem({
         id: this.post.id, // keep same id to keep same NewspaperBacklogBox
         type: 'box',
-        css: 'cols-2-1',
-        columns: [
-          { css: '', posts: [{id: this.post.id, type: 'post'}] },
-          { css: 'editorial', posts: []}
-        ]
+        css: layout,
+        columns: columnsStyle.map((css, idx) => {
+          return {
+            css,
+            posts: idx === 0 ? [{id: this.post.id, type: 'post'}] : []
+          }
+        })
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
       this.openPostSelection(1)
     },
 
-    removeEditorial() {
+    splitColumns() {
       this.closePostSelection()
-      const mainCol = this.post.columns.find(c => c.css !== 'editorial')
-      const editorialCol = this.post.columns.find(c => c.css === 'editorial')
-      this.setBacklogItem({id: mainCol.posts[0].id, type: 'post'})
-      editorialCol.posts.forEach(post => {
-        this.$store.commit('backlog/prepend', {
-          newspaper: this.newspaper,
-          target: 'considered',
-          item: {id: post.id, type: 'post'}
+      let mainColumn
+      let secondaryColumns
+      if (this.post.css === 'cols-1-2') {
+        mainColumn = this.post.columns[1]
+        secondaryColumns = [this.post.columns[0]]
+      } else {
+        mainColumn = this.post.columns[0]
+        secondaryColumns = this.post.columns.slice(1)
+      }
+      this.setBacklogItem({id: mainColumn.posts[0].id, type: 'post'})
+      const remainingPosts = mainColumn.posts.slice(1)
+      remainingPosts.forEach(post => {
+          // TODO insert after current box instead of to considered
+          this.$store.commit('backlog/prepend', {
+            newspaper: this.newspaper,
+            target: 'considered',
+            item: {id: post.id, type: 'post'}
+          })
+        }
+      )
+      secondaryColumns.forEach(col => {
+        col.posts.forEach(post => {
+          this.$store.commit('backlog/prepend', {
+            newspaper: this.newspaper,
+            target: 'considered',
+            item: {id: post.id, type: 'post'}
+          })
         })
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
@@ -505,8 +530,11 @@ export default {
     top: 40%
 
   //- button add editorial
-  .add-editorial
+  .make-2-1
     +button-icon($fa-var-font)
+
+  .make-1-1
+    +button-icon($fa-var-columns)
 
   //- button add comment
   .edit-comment
