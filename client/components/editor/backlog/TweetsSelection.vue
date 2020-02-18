@@ -11,7 +11,7 @@
     <main>
       <!-- work with raw post in add / remove event -->
       <PostTweet
-        v-for="post in tweets"
+        v-for="post in posts"
         :post="post"
         :key="post.id"
       >
@@ -55,41 +55,38 @@ export default {
 
   data() {
     const { considered, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-    const tweets = considered.layout
+    const posts = considered.layout
       .filter(post => post.type === 'post')
       .map(post => $posts[post.id])
       .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
       .filter(post => post.type === 'tweet')
 
     return {
-      alwaysDisplayTweets: tweets
+      initialPosts: posts
     }
   },
 
   computed: {
-    tweets() {
+    posts() {
+      const ids = {}
+      const posts = []
+      this.initialPosts.forEach(p => {
+        ids[p.id] = true
+        posts.push(p)
+       })
+
       // do not remove from tweets when tweet is moved from baclog to editorial
       // but add tweet to list when moved from editoril back to backlog
       const { considered, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
       const backlogTweets = considered.layout
-        .filter(post => post.type === 'post')
+        .filter(post => post.type === 'post' && !ids[post.id] )
         .map(post => $posts[post.id])
         .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
         .filter(post => post.type === 'tweet')
-
-      const ids = {}
-      this.alwaysDisplayTweets.forEach(p => { ids[p.id] = true })
-
-      const tweets = [...this.alwaysDisplayTweets]
-
-      backlogTweets.forEach(p => {
-        if (!ids[p.id]) {
-          tweets.push(p)
-          this.alwaysDisplayTweets.push(p)
-        }
-      })
-
-      return tweets
+        .forEach(p => {
+          posts.push(p)
+        })
+      return posts
     }
   },
 

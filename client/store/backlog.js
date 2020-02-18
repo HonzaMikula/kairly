@@ -89,39 +89,8 @@ export const actions = {
       upcoming: serialize(backlog.upcoming.layout),
       next: serialize(backlog.next.layout),
       considered: serialize(backlog.considered.layout)
-    }, { progress: false })
+    }, { progress: false  })
   },
-
-  // async moveUp({ commit, state }, { newspaper, source, target, index }) {
-  //   const { fullName } = newspaper
-  //   commit('moveUp', { fullName, source, target, index})
-  //   _postBackLog.call(this, state, fullName)
-  // },
-
-  // async moveDown({ commit, state }, { newspaper, source, target, index  }) {
-  //   const { fullName } = newspaper
-  //   commit('moveDown', { fullName, source, target, index})
-  //   _postBackLog.call(this, state, fullName)
-  // },
-
-  // async remove({ commit, state }, { newspaper, source, index }) {
-  //   // TODO to have better user experience, post can be removed immediately
-  //   // and reverted when api call fails
-  //   const { fullName } = newspaper
-  //   commit('remove', { fullName, source, index})
-  //   _postBackLog.call(this, state, fullName)
-
-  //   this.$ga.event({
-  //     eventCategory: 'Stop considering for newspaper',
-  //     eventAction: fullName
-  //   })
-  // },
-
-  // async setBacklogItem({ commit, state }, { newspaper, source, index, item }) {
-  //   const { fullName } = newspaper
-  //   commit('setBacklogItem', { fullName, source, index, item})
-  //   _postBackLog.call(this, state, fullName)
-  // },
 
   async reorder({ commit, state }, { newspaper, source, posts }) {
     const { fullName } = newspaper
