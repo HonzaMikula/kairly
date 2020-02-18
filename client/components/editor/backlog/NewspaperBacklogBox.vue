@@ -152,7 +152,7 @@
               <ul>
                 <li
                   tabindex="0"
-                  @click="openPostSelection"
+                  @click="openPostSelection(null)"
                 >
                   <h6>{{ $t('Update editorial comment') }}</h6>
                   <p>{{ $t('Write short comment to the topic') }}</p>
@@ -367,6 +367,7 @@ export default {
     },
 
     openPostSelection(idx=null) {
+      this.$root.$emit('post-selection-open', this.post.id)
       if (idx === null) {
         idx = this.post.columns.findIndex(c => c.css === 'editorial')
       }
@@ -452,6 +453,19 @@ export default {
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     }
+  },
+
+  mounted() {
+    this._onSelectionOpen = postId => {
+      if (this.post.id !== postId) {
+        this.closePostSelection()
+      }
+    }
+    this.$root.$on('post-selection-open', this._onSelectionOpen)
+  },
+
+  beforeDestroy() {
+    this.$root.$off('post-selection-open', this._onSelectionOpen)
   }
 }
 </script>
