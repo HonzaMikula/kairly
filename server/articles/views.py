@@ -827,20 +827,21 @@ def post(request, entities, username, post_slug):
     # if not is_subscribed:
     #     return HttpResponse('402 Payment Required', status=402)
 
-    editorials = []
-    query = IssuePost.objects.filter(post=post, editorial__isnull=False) \
-        .select_related('editorial', 'issue') \
-        .order_by('issue_id', 'ordering')
+    # editorials = []
+    # query = IssuePost.objects.filter(post=post, editorial__isnull=False) \
+    #     .select_related('editorial', 'issue') \
+    #     .order_by('issue_id', 'ordering')
 
-    for issue_post in query:
-        item = issue_post.editorial.to_json(entities)
-        item['issue'] = issue_post.issue.to_json(entities, posts=False)
-        del item['position']
-        editorials.append(item)
+    # for issue_post in query:
+    #     item = issue_post.editorial.to_json(entities)
+    #     item['issue'] = issue_post.issue.to_json(entities, posts=False)
+    #     del item['position']
+    #     editorials.append(item)
 
     resp = {
         'post': post.to_json(entities),
-        'editorials': editorials
+        #'editorials': editorials
+        'editorials': []
     }
 
     if request.user.is_authenticated:
