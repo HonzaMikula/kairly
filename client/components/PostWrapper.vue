@@ -4,6 +4,7 @@
       :is="postType"
       class="post-content"
       :post="post"
+      @close-editor="p => $emit('close-editor', p)"
     >
       <template #author>
         <slot name="author"></slot>

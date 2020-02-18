@@ -4,6 +4,7 @@
     :post="post"
     :typeOverride="typeOverride"
     @click.native="toggleMobileControls"
+    @close-editor="closeEditor"
   >
     <template #page-controls="{ post, postIndex, column, columnIndex}">
       <span v-if="post.type === 'newspaper'" class="price">{{ post.price }} Kč</span>
@@ -294,6 +295,11 @@ export default {
       Vue.set(this.typeOverride, postId, CommentEditor)
     },
 
+    closeEditor(postId) {
+      console.log(postId)
+      Vue.delete(this.typeOverride, postId)
+    },
+
     moveUpInColumn(columnIndex, postIndex) {
       const columns = this.post.columns.map((col, idx) => {
         col = {
@@ -350,8 +356,8 @@ export default {
       const idx = this.post.columns.findIndex(c => c.css === 'editorial')
       const data = {
         type: 'comment',
-        title: '...',
-        content: '<p>...</p>'
+        title: '',
+        content: ''
       }
       const { post } = await this.$axios.$post(`/drafts`, data)
       this.$store.commit('backlog/registerPost', { newspaper: this.newspaper, post })

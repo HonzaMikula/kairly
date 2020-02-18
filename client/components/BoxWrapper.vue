@@ -12,6 +12,7 @@
         :key="`${colIndex}-${post.id}`"
         :post="post"
         :typeOverride="typeOverride"
+        @close-editor="p => $emit('close-editor', p)"
       >
         <template #page-controls>
           <slot name="page-controls" :post="post" :postIndex="postIndex" :column="col" :columnIndex="colIndex"></slot>

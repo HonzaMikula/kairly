@@ -1,19 +1,24 @@
 <template>
-  <PostBase :post="post">
+  <PostBase
+    :post="post"
+  >
+    <div class="editorial-post-editor--content">
+      <input
+        v-model="title"
+        type="text"
+        :placeholder="$t('Title')"
+      />
+      <rich-editor
+        v-model="content"
+        :options="options"
+      />
+    </div>
 
-        <div class="editorial-post-editor--content">
-          <input
-            v-model="title"
-            type="text"
-            :placeholder="$t('Title')"
-          />
-          <rich-editor
-            v-model="content"
-            :options="options"
-          />
-        </div>
-
-    <template #page-controls><slot name="page-controls"></slot></template>
+    <template #page-controls>
+      <button
+        @click="saveComment"
+      >{{ $t('Save') }}</button>
+    </template>
     <template #global-controls><slot name="global-controls"></slot></template>
   </PostBase>
 </template>
@@ -44,12 +49,13 @@ export default {
   },
 
   methods: {
-    saveEditorial() {
-      // this.$emit('save', {
-      //   type: 'article',
-      //   title: this.title,
-      //    content: this.content,
-      // })
+    async saveComment() {
+      await this.$axios.$patch(`/drafts/${this.post.id}`, {
+        type: this.post.type,
+        title: this.title,
+        content: this.content
+      })
+      this.$emit('close-editor', this.post.id)
     }
   }
 
@@ -57,6 +63,8 @@ export default {
 </script>
 <style lang="sass">
 @import './styles/components/article-perex'
+@import './styles/components/buttons'
+@import './styles/components/mixins'
 
 //- Editorial Post Editor
 .editorial-post-editor
@@ -107,5 +115,4 @@ export default {
 
     .ck-content
       height: 100%
-
 </style>
