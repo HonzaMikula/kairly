@@ -36,6 +36,7 @@ export default {
   name: 'PostWrapper',
   props: {
     post: Object,
+    typeOverride: Object // override component type is set, value is map {id: component}
   },
 
   components: {
@@ -50,6 +51,12 @@ export default {
 
   computed: {
     postType() {
+      if (this.typeOverride) {
+        const component = this.typeOverride[this.post.id]
+        if (component) {
+          return component
+        }
+      }
       if (this.post.type === 'newspaper') {
         return 'post-article'
       } else {

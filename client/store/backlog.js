@@ -8,8 +8,6 @@ export const state = () => ({
   newspaperBacklog: {},
 })
 
-
-
 export const actions = {
   async loadUserBacklog({ commit, state }) {
     if (state.userBacklog) {

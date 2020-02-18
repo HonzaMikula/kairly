@@ -11,12 +11,12 @@
         v-for="(post, postIndex) in col.posts"
         :key="`${colIndex}-${post.id}`"
         :post="post"
+        :typeOverride="typeOverride"
       >
         <template #page-controls>
           <slot name="page-controls" :post="post" :postIndex="postIndex" :column="col" :columnIndex="colIndex"></slot>
         </template>
       </PostWrapper>
-
     </div>
 
     <slot name="aside">
@@ -33,6 +33,7 @@ export default {
   name: 'BoxWrapper',
   props: {
     post: Object,
+    typeOverride: Object // override component type is set, value is map {id: component}
   },
 
   components: {

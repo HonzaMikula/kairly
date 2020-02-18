@@ -2,6 +2,7 @@
   <compotent
     :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
     :post="post"
+    :typeOverride="typeOverride"
     @click.native="toggleMobileControls"
   >
     <template #page-controls="{ post, postIndex, column, columnIndex}">
@@ -200,11 +201,13 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapActions  } from 'vuex'
-import PostWrapper from '@/components/PostWrapper'
-import BoxWrapper from '@/components/BoxWrapper'
 import { BPopover } from 'bootstrap-vue'
 
+import PostWrapper from '@/components/PostWrapper'
+import BoxWrapper from '@/components/BoxWrapper'
+import CommentEditor from '@/components/editor/backlog/CommentEditor'
 import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
 
 export default {
@@ -214,6 +217,7 @@ export default {
     PostWrapper,
     BoxWrapper,
     BPopover,
+    CommentEditor,
     TweetsSelection,
   },
 
@@ -229,7 +233,8 @@ export default {
   data() {
     return {
       mobileControls: false,
-      editedColumn: null
+      editedColumn: null,
+      typeOverride: {}
     }
   },
 
@@ -286,7 +291,7 @@ export default {
     },
 
     editComment(postId) {
-
+      Vue.set(this.typeOverride, postId, CommentEditor)
     },
 
     moveUpInColumn(columnIndex, postIndex) {
