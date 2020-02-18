@@ -10,14 +10,18 @@ def forwards_func(apps, schema_editor):
     Backlog = apps.get_model("articles", "Backlog")
     BacklogPost = apps.get_model("articles", "BacklogPost")
 
-    query = Newspaper.objects.filter(backlogx__publish_in__isnull=False).select_related('editor').distinct()
+    query = Newspaper.objects.filter(backlogx__isnull=False).select_related('editor').distinct()
     for newspaper in query:
         issues = [(None, 'considered'), (1, 'upcoming'), (2, 'next')]
 
         bp_bulk = []
 
         for num, backlog_name in issues:
-            logs = list(BacklogX.objects.filter(newspaper=newspaper, publish_in=num).order_by('ordering', 'post__published').select_related('post'))
+            if num is None:
+                q = BacklogX.objects.filter(newspaper=newspaper, publish_in__isnull=True)
+            else:
+                q = BacklogX.objects.filter(newspaper=newspaper, publish_in=num)
+            logs = list(q.order_by('ordering', 'post__published').select_related('post'))
             if not logs:
                 continue
 
