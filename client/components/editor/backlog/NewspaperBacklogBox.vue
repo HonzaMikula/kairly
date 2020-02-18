@@ -159,75 +159,22 @@
                 </li>
 
                 <li
-                  tabindex="0"
+                  tabindex="1"
                   @click="removeEditorial"
                 >
                   <h6>{{ $t('Remove editorial') }}</h6>
                   <p>{{ $t('Remove existing editorial') }}</p>
                 </li>
               </ul>
-
-
             </b-popover>
-          </template>
-
-          <!--template v-else>
-            <button
-              class="change-position"
-              @click="changeEditorialPosition"
-              v-b-tooltip
-              :title="$t('Change position')"
-            ></button>
 
             <button
-              class="menu"
-              :id="`backlog-controls-option-${post.id}`"
-              @click.stop
+              class="write-comment"
+              @click="writeComment"
               v-b-tooltip
-              :title="$t('Editorial menu')"
-            ></button>
-
-            <b-popover
-              :target="`backlog-controls-option-${post.id}`"
-              placement="bottomleft"
-              triggers="click blur"
-              @click.stop
-            >
-              <ul>
-                <li
-                  v-show="!editorType"
-                  tabindex="0"
-                  @click="openPostSelection"
-                >
-                  <h6>{{ $t('Update editorial comment') }}</h6>
-                  <p>{{ $t('Write short comment to the topic') }}</p>
-                </li>
-                <li
-                  v-show="!editorType"
-                  tabindex="0"
-                  @click="removeEditorial"
-                >
-                  <h6>{{ $t('Remove editorial') }}</h6>
-                  <p>{{ $t('Remove existing editorial') }}</p>
-                </li>
-                <li
-                  v-show="editorType"
-                  tabindex="0"
-                  @click="cancelEditorialEdit"
-                >
-                  <h6>{{ $t('Cancel edit') }}</h6>
-                  <p>{{ $t('Your changes will be lost') }}</p>
-                </li>
-              </ul>
-            </b-popover>
+              :title="$t('Write comment')"
+            />
           </template>
-
-          <button
-            v-if="post.type == 'comment'"
-            class="edit-comment"
-            @click="editComment"
-          ></button-->
-
         </div>
       </div>
 
@@ -291,18 +238,23 @@ export default {
       this.mobileControls = !this.mobileControls
     },
 
-    addToColumn({ post, source }) {
+    addToColumn({ post, source, columnIndex=null }) {
       const columns = [...this.post.columns]
-      columns[this.editedColumn].posts.push({id: post.id, type: 'post'})
+      if (columnIndex === null) {
+        columnIndex = this.editedColumn
+      }
+      columns[columnIndex].posts.push({id: post.id, type: 'post'})
       this.setBacklogItem({
         ...this.post,
         columns
       })
-      this.$store.commit('backlog/remove', {
-        newspaper: this.newspaper,
-        source,
-        postId: post.id
-      })
+      if (source) {
+        this.$store.commit('backlog/remove', {
+          newspaper: this.newspaper,
+          source,
+          postId: post.id
+        })
+      }
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
@@ -376,6 +328,18 @@ export default {
 
     closePostSelection() {
       this.editedColumn = null
+    },
+
+    async writeComment() {
+      const idx = this.post.columns.findIndex(c => c.css === 'editorial')
+      const data = {
+        type: 'comment',
+        title: '...',
+        content: '<p>...</p>'
+      }
+      const { post } = await this.$axios.$post(`/drafts`, data)
+      this.$store.commit('backlog/registerPost', { newspaper: this.newspaper, post })
+      this.addToColumn({ post, columnIndex: idx })
     },
 
     moveUp(target=null) {
@@ -533,6 +497,9 @@ export default {
   //- change position button
   .change-position
     +button-icon($fa-var-exchange-alt)
+
+  .write-comment
+    +button-icon($fa-var-feather-alt)
 
 
 .sortable-drag

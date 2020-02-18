@@ -165,20 +165,21 @@ export const mutations = {
     state.userBacklog = backlog
   },
 
-  newspaperBacklog( state, { fullName, section, backlog }) {
+  newspaperBacklog(state, { fullName, section, backlog }) {
     if (state.newspaperBacklog[fullName]) {
       Vue.set(state.newspaperBacklog[fullName], section, backlog)
     } else {
       Vue.set(state.newspaperBacklog, fullName, { [section]: backlog })
     }
   },
-  newspaperBacklogPosts( state, { fullName, posts}) {
+  newspaperBacklogPosts(state, { fullName, posts}) {
     if (state.newspaperBacklog[fullName]) {
       Vue.set(state.newspaperBacklog[fullName], '$posts', posts)
     } else {
       Vue.set(state.newspaperBacklog, fullName, { $posts: posts })
     }
   },
+
   newspaperBacklogStats( state, { fullName, currentMonthStats}) {
     // TODO use different key then newspaperBacklog
     if (state.newspaperBacklog[fullName]) {
@@ -187,11 +188,10 @@ export const mutations = {
       Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
     }
   },
-  updateEditorial(state, { fullName, source, postId, editorial }) {
-    const backlog = state.newspaperBacklog[fullName]
-    let posts = backlog[source]
-    const idx = posts.findIndex(log => log.post.id === postId)
-    posts[idx].editorial = editorial
+
+  registerPost(state, { newspaper, post }) {
+    const { fullName } = newspaper
+    Vue.set(state.newspaperBacklog[fullName].$posts, post.id, post)
   },
 
   // THIS will be not working from timeline
