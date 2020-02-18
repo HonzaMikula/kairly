@@ -506,6 +506,9 @@ class BacklogPost(models.Model):
     backlog = models.ForeignKey(Backlog, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = [['backlog', 'post']]
+
     def __str__(self):
         return self.post.title
 

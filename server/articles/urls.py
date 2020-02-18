@@ -16,7 +16,6 @@ urlpatterns = [
     path('newspapers/<username>/<slug:newspapeper_slug>/subscription', views.NewspaperSubscriptionView.as_view(), name='newspaper_subscribtion'),
     path('newspapers/<username>/<slug:newspapeper_slug>/backlog', views.newspaper_backlog, name='newspaper_backlog'),
     path('newspapers/<username>/<slug:newspapeper_slug>/backlog/links', views.create_link, name='create_link'),
-    path('newspapers/<username>/<slug:newspapeper_slug>/editorials/<int:post_id>', views.EditorialsView.as_view(), name='editorials'),
 
     path('authors/<username>', views.author_detail, name='author'),
     path('authors/<username>/posts', views.author_posts, name='author_posts'),
