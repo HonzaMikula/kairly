@@ -71,8 +71,15 @@ export default {
       scroll-behavior: smooth
       -webkit-overflow-scrolling: touch
 
-    timeline-post--article--content
-      columns: 2
+    //- 1st column
+    .box-column:nth-of-type(1)
+      .post-body--content
+        columns: 2
+
+    //- 2nd column
+    .box-column:nth-of-type(2)
+      .post-body--content
+        columns: 1
 
   &.cols-1-2
     grid-template-columns: 1fr 2fr
@@ -84,13 +91,20 @@ export default {
       scroll-behavior: smooth
       -webkit-overflow-scrolling: touch
 
-    timeline-post--article--content
-      columns: 2
+    //- 1st column
+    .box-column:nth-of-type(1)
+      .post-body--content
+        columns: 1
+
+    //- 2nd column
+    .box-column:nth-of-type(2)
+      .post-body--content
+        columns: 2
 
   &.cols-1-1
     grid-template-columns: 1fr 1fr
 
-    timeline-post--article--content
+    .newspaper .post-body--content
       columns: 2
 
   &.cols-1-1-1

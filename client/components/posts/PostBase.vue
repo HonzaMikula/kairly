@@ -140,6 +140,8 @@ export default {
 
 //- Post -//
 .post
+  position: relative
+  
   display: block
   margin-bottom: $baseline / 2
   padding: $baseline / 2

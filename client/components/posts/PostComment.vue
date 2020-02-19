@@ -1,15 +1,15 @@
 <template>
   <PostBase :post="post">
-    <timeline-post--comment>
+    <div class="post-body">
       <h2>
         <span v-if="post.draft">{{ post.content.title }}</span>
         <nuxt-link v-else :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link>
       </h2>
 
-      <timeline-post--comment--content>
+      <div class="post-body--content">
         <div v-html="post.content.content"></div>
-      </timeline-post--comment--content>
-    </timeline-post--comment>
+      </div>
+    </div>
 
     <template #page-controls><slot name="page-controls"></slot></template>
     <template #global-controls><slot name="global-controls"></slot></template>
@@ -37,7 +37,7 @@ export default {
 @import './styles/components/article-perex'
 
 
-timeline-post--comment
+.comment > .post-body
   font-family: $ff-serif
 
   //- Title
@@ -59,7 +59,7 @@ timeline-post--comment
     color: $c-base
 
 //- Content
-timeline-post--comment--content
+.comment .post-body--content
   position: relative
 
   column-count: 3
@@ -82,7 +82,7 @@ timeline-post--comment--content
 
 
 .editorial-post
-  timeline-post--comment--content
+  .timeline-post--comment--content
     column-count: 2
 
 // HACK by farin

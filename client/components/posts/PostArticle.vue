@@ -1,12 +1,12 @@
 <template>
   <PostBase :post="post">
-    <timeline-post--article>
+    <div class="post-body">
       <h2>
         <span v-if="post.draft">{{ post.content.title }}</span>
         <nuxt-link v-else :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link>
       </h2>
 
-      <timeline-post--article--content>
+      <div class="post-body--content">
         <div v-html="perex"></div>
         <div class="timeline-post--continue-reading" v-if="post.timeRead && !post.draft">
           <template v-if="post.content.protected">
@@ -25,8 +25,8 @@
             ({{ post.timeRead }} {{ $t('read') }})
           </template>
         </div>
-      </timeline-post--article--content>
-    </timeline-post--article>
+      </div>
+    </div>
 
     <template #page-controls><slot name="page-controls"></slot></template>
     <template #global-controls><slot name="global-controls"></slot></template>
@@ -101,7 +101,7 @@ export default {
 @import './styles/components/article-perex'
 
 
-timeline-post--article
+.newspaper > .post-body
   font-family: $ff-serif
 
   //- Title
@@ -123,7 +123,7 @@ timeline-post--article
     color: $c-base
 
 //- Content
-timeline-post--article--content
+.newspaper .post-body--content
   position: relative
 
   column-count: 3
@@ -144,39 +144,41 @@ timeline-post--article--content
 
   +article-perex
 
+  //- Continue Reading
+  .timeline-post--continue-reading
+    color: #999
+
+    font-family: $ff-sans
+    font-size: $fs--1
+    text-align: center
+
+    break-inside: avoid-column
+
+    a[href]
+      display: table
+      border-radius: 15px
+      clear: both
+      margin: $baseline / 2 auto 0 auto
+      padding: 0 $baseline / 4
+
+      border: 1px solid transparent
+      color: $c-base
+
+      font-size: $fs--1
+      line-height: 1.58
+      text-transform: uppercase
+      text-decoration: none
+
+      &:focus,
+      &:hover
+        background: $c-base
+        color: #fff
+
 
 .editorial-post
-  timeline-post--article--content
+  .post-body--content
     column-count: 2
 
-//- Continue Reading
-.timeline-post--continue-reading
-  color: #999
 
-  font-family: $ff-sans
-  font-size: $fs--1
-  text-align: center
-
-  break-inside: avoid-column
-
-  a[href]
-    display: table
-    border-radius: 15px
-    clear: both
-    margin: $baseline / 2 auto 0 auto
-    padding: 0 $baseline / 4
-
-    border: 1px solid transparent
-    color: $c-base
-
-    font-size: $fs--1
-    line-height: 1.58
-    text-transform: uppercase
-    text-decoration: none
-
-    &:focus,
-    &:hover
-      background: $c-base
-      color: #fff
 
 </style>

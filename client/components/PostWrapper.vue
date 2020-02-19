@@ -1,5 +1,5 @@
 <template>
-  <section class="normal-post">
+  <section class="post-wrapper">
     <component
       :is="postType"
       class="post-content"
@@ -20,6 +20,7 @@
     </component>
 
     <slot name="aside">
+
     </slot>
   </section>
 </template>
@@ -69,11 +70,7 @@ export default {
 </script>
 
 <style lang="sass">
-.normal-post
+.post-wrapper
   position: relative
-
-  .post
-    border: 1px solid #eee
-    box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 </style>
 
