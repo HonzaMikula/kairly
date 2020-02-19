@@ -117,4 +117,5 @@ export default {
 
   > .tweet-content a
     color: $c-base
+    word-break: break-word
 </style>
