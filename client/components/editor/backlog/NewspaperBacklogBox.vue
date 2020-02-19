@@ -149,44 +149,50 @@
               :title="$t('Change position')"
             />
 
-            <button
-              class="menu"
-              :id="`backlog-controls-option-${post.id}`"
-              @click.stop
-              v-b-tooltip
-              :title="$t('Editorial menu')"
-            />
-
-            <b-popover
-              :target="`backlog-controls-option-${post.id}`"
-              placement="bottomleft"
-              triggers="click blur"
-              @click.stop
+            <template
+              v-for="(icon, colIndex) in columnIcons"
             >
-              <ul>
-                <li
-                  tabindex="0"
-                  @click="openPostSelection(null)"
-                >
-                  <h6>{{ $t('Update editorial comment') }}</h6>
-                  <p>{{ $t('Write short comment to the topic') }}</p>
-                </li>
+              <button
+                :class="icon"
+                :id="`backlog-controls-option-${post.id}-${colIndex}`"
+                v-b-tooltip
+                :title="$t('Column') + ' ' + (colIndex + 1)"
+                :key="`btn-${colIndex}`"
+                @click.stop
+              />
 
-                <li
-                  tabindex="1"
-                  @click="splitColumns"
-                >
-                  <h6>{{ $t('Split columns') }}</h6>
-                  <p>{{ $t('Split columns') }}</p>
-                </li>
-              </ul>
-            </b-popover>
+              <b-popover
+                :target="`backlog-controls-option-${post.id}-${colIndex}`"
+                placement="bottomleft"
+                triggers="click blur"
+                :key="`btn-popover-${colIndex}`"
+                @click.stop
+              >
+                <ul>
+                  <li
+                    tabindex="0"
+                    @click="openPostSelection(colIndex)"
+                  >
+                    <h6>{{ $t('Update editorial comment') }}</h6>
+                    <p>{{ $t('Write short comment to the topic') }}</p>
+                  </li>
+
+                  <li
+                    tabindex="1"
+                    @click="writeComment(colIndex)"
+                  >
+                    <h6>{{ $t('Write comment') }}</h6>
+                    <p>{{ $t('Write comment') }}</p>
+                  </li>
+                </ul>
+              </b-popover>
+            </template>
 
             <button
-              class="write-comment"
-              @click="writeComment"
+              class="split-columns"
+              @click="splitColumns"
               v-b-tooltip
-              :title="$t('Write comment')"
+              :title="$t('Split columns')"
             />
           </template>
         </div>
@@ -245,6 +251,16 @@ export default {
   },
 
   computed: {
+    columnIcons() {
+      if (this.post.type !== 'box') {
+        return []
+      }
+      if (this.post.css === 'cols-1-1-1') {
+        return ['menu-left-col', 'menu-middle-col', 'menu-right-col']
+      }
+      return ['menu-left-col', 'menu-right-col']
+    },
+
     isAdmin() {
       const { user } = this.$store.state.auth
       return user.isAdmin
@@ -517,22 +533,28 @@ export default {
     +button-icon($fa-var-font)
 
   .make-1-1
-    +button-icon($fa-var-columns)
+    +button-icon($fa-var-book-open)
 
   //- button add comment
   .edit-comment
     +button-icon($fa-var-pencil-alt)
 
   //- button menu
-  .menu
-    +button-icon($fa-var-ellipsis-v)
+  .menu-left-col
+    +button-icon($fa-var-align-left)
+
+  .menu-middle-col
+    +button-icon($fa-var-align-center)
+
+  .menu-right-col
+    +button-icon($fa-var-align-right)
 
   //- change position button
   .change-position
     +button-icon($fa-var-exchange-alt)
 
-  .write-comment
-    +button-icon($fa-var-feather-alt)
+  .split-columns
+    +button-icon($fa-var-undo)
 
 
 .sortable-drag
