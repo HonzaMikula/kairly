@@ -161,6 +161,7 @@ export const mutations = {
       Vue.set(state.newspaperBacklog, fullName, { [section]: backlog })
     }
   },
+
   newspaperBacklogPosts(state, { fullName, posts}) {
     if (state.newspaperBacklog[fullName]) {
       Vue.set(state.newspaperBacklog[fullName], '$posts', posts)
@@ -180,7 +181,16 @@ export const mutations = {
 
   registerPost(state, { newspaper, post }) {
     const { fullName } = newspaper
-    Vue.set(state.newspaperBacklog[fullName].$posts, post.id, post)
+    const { $posts } = state.newspaperBacklog[fullName]
+    Vue.set($posts, post.id, post)
+  },
+
+  updatePost(state, { post }) {
+    Object.values(state.newspaperBacklog).forEach(({$posts}) => {
+      if ($posts[post.id]) {
+        $posts[post.id] = { ...$posts[post.id], ...post }
+      }
+    })
   },
 
   // THIS will be not working from timeline

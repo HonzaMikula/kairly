@@ -50,11 +50,12 @@ export default {
 
   methods: {
     async saveComment() {
-      await this.$axios.$patch(`/drafts/${this.post.id}`, {
+      const { post } = await this.$axios.$patch(`/drafts/${this.post.id}`, {
         type: this.post.type,
         title: this.title,
         content: this.content
       })
+      this.$store.commit('backlog/updatePost', { post })
       this.$emit('close-editor', this.post.id)
     }
   }

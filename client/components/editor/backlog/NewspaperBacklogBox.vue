@@ -366,6 +366,7 @@ export default {
       const { post } = await this.$axios.$post(`/drafts`, data)
       this.$store.commit('backlog/registerPost', { newspaper: this.newspaper, post })
       this.addToColumn({ post, columnIndex: idx })
+      this.editComment(post.id)
     },
 
     moveUp(target=null) {
