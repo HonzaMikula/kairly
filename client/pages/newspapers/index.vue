@@ -269,17 +269,19 @@ export default {
     async addComment() {
       const data = {
         type: 'comment',
-        title: '...',
-        content: '<p>...</p>'
+        title: '',
+        content: ''
       }
       const { post } = await this.$axios.$post(`/drafts`, data)
-
       const newspaper = this.selectedNewspaper
-      await this.addToBacklog({
-        newspaper,
-        post: post,
-        source: 'considered'
+
+      this.$store.commit('backlog/registerPost', { newspaper, post })
+      this.$store.commit('backlog/prepend', {
+        newspaper: newspaper,
+        target: 'upcoming',
+        item: {id: post.id, type: 'post'}
       })
+      this.$store.dispatch('backlog/save', { newspaper })
    }
   },
 
