@@ -95,10 +95,12 @@ export const actions = {
     if (!state.newspaperBacklog[newspaper.fullName]) {
       await dispatch('loadNewspaperBacklog', newspaper.fullName)
     }
-    commit('prepend', {
+    commit('splice', {
       newspaper,
       target,
-      item: {id: post.id, type: 'post'}
+      items: {id: post.id, type: 'post'},
+      index: 0,
+      deleteCount: 0
     })
     await dispatch('save', { newspaper })
 
@@ -242,14 +244,16 @@ export const mutations = {
     Vue.set(state.userBacklog, item.id, { ...postBacklog, [fullName]: target })
   },
 
-  prepend(state, { newspaper, target, item }) {
+  splice(state, { newspaper, target, index, items, deleteCount }) {
     const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
     let { layout } = newspaperBacklog[target]
-    layout.unshift(item)
+    layout.splice(index, deleteCount, ...items)
 
-    const postBacklog = state.userBacklog[item.id] || {}
-    Vue.set(state.userBacklog, item.id, { ...postBacklog, [fullName]: target })
+    items.forEach(item => {
+      const postBacklog = state.userBacklog[item.id] || {}
+      Vue.set(state.userBacklog, item.id, { ...postBacklog, [fullName]: target })
+    })
   },
 
   moveUp(state, { newspaper, source, target, index }) {

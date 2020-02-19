@@ -276,10 +276,12 @@ export default {
       const newspaper = this.selectedNewspaper
 
       this.$store.commit('backlog/registerPost', { newspaper, post })
-      this.$store.commit('backlog/prepend', {
+      this.$store.commit('backlog/splice', {
         newspaper: newspaper,
         target: 'upcoming',
-        item: {id: post.id, type: 'post'}
+        items: [{id: post.id, type: 'post'}],
+        index: 0,
+        deleteCount: 0
       })
       this.$store.dispatch('backlog/save', { newspaper })
    }

@@ -42,7 +42,7 @@
           v-b-tooltip
           tabindex="0"
           role="button"
-          :title="$t('Remove tweet')"
+          :title="$t('Remove from column')"
           @click="removeFromColumn({ post })"
         />
       </template>
@@ -176,8 +176,8 @@
                   tabindex="1"
                   @click="splitColumns"
                 >
-                  <h6>{{ $t('Remove editorial') }}</h6>
-                  <p>{{ $t('Remove existing editorial') }}</p>
+                  <h6>{{ $t('Split columns') }}</h6>
+                  <p>{{ $t('Split columns') }}</p>
                 </li>
               </ul>
             </b-popover>
@@ -288,10 +288,12 @@ export default {
         ...this.post,
         columns
       })
-      this.$store.commit('backlog/prepend', {
+      this.$store.commit('backlog/splice', {
         newspaper: this.newspaper,
         target: 'considered',
-        item: {id: post.id, type: 'post'}
+        items: [{id: post.id, type: 'post'}],
+        index: 0,
+        deleteCount: 0
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
@@ -425,34 +427,14 @@ export default {
 
     splitColumns() {
       this.closePostSelection()
-      let mainColumn
-      let secondaryColumns
-      if (this.post.css === 'cols-1-2') {
-        mainColumn = this.post.columns[1]
-        secondaryColumns = [this.post.columns[0]]
-      } else {
-        mainColumn = this.post.columns[0]
-        secondaryColumns = this.post.columns.slice(1)
-      }
-      this.setBacklogItem({id: mainColumn.posts[0].id, type: 'post'})
-      const remainingPosts = mainColumn.posts.slice(1)
-      remainingPosts.forEach(post => {
-          // TODO insert after current box instead of to considered
-          this.$store.commit('backlog/prepend', {
-            newspaper: this.newspaper,
-            target: 'considered',
-            item: {id: post.id, type: 'post'}
-          })
-        }
-      )
-      secondaryColumns.forEach(col => {
-        col.posts.forEach(post => {
-          this.$store.commit('backlog/prepend', {
-            newspaper: this.newspaper,
-            target: 'considered',
-            item: {id: post.id, type: 'post'}
-          })
-        })
+      const posts = []
+      this.post.columns.forEach(col => col.posts.forEach(p => posts.push({id: p.id, type: 'post'})))
+      this.$store.commit('backlog/splice', {
+        newspaper: this.newspaper,
+        target: this.source,
+        index: this.index,
+        items: posts,
+        deleteCount: 1
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
