@@ -110,6 +110,9 @@ export default {
   &.cols-1-1-1
     grid-template-columns: 1fr 1fr 1fr
 
+    .newspaper .post-body--content
+      columns: 1
+
 .box-column.editorial
   position: relative
   left: 1px

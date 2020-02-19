@@ -140,6 +140,11 @@
               class="make-1-1"
               @click="makeBox('cols-1-1', ['', ''])"
             />
+
+            <button
+              class="make-1-1-1"
+              @click="makeBox('cols-1-1-1', ['', '', ''])"
+            />
           </template>
           <template v-else>
             <button
@@ -183,6 +188,14 @@
                   >
                     <h6>{{ $t('Write comment') }}</h6>
                     <p>{{ $t('Write comment') }}</p>
+                  </li>
+
+                  <li
+                    tabindex="2"
+                    @click="toggleEditorialStyle(colIndex)"
+                  >
+                    <h6>{{ $t('Toggle editorlal style') }}</h6>
+                    <p>{{ $t('Change column background') }}</p>
                   </li>
                 </ul>
               </b-popover>
@@ -374,8 +387,7 @@ export default {
       this.editedColumn = null
     },
 
-    async writeComment() {
-      const idx = this.post.columns.findIndex(c => c.css === 'editorial')
+    async writeComment(idx) {
       const data = {
         type: 'comment',
         title: '',
@@ -385,6 +397,21 @@ export default {
       this.$store.commit('backlog/registerPost', { newspaper: this.newspaper, post })
       this.addToColumn({ post, columnIndex: idx })
       this.editComment(post.id)
+    },
+
+    toggleEditorialStyle(columnIdx) {
+      this.setBacklogItem({
+        ...this.post,
+        columns: this.post.columns.map((col, idx) => {
+          return {
+            ...col,
+            css: columnIdx === idx
+              ? (col.css === 'editorial' ? '' : 'editorial')
+              : col.css
+          }
+        })
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
     moveUp(target=null) {
@@ -534,6 +561,9 @@ export default {
 
   .make-1-1
     +button-icon($fa-var-book-open)
+
+  .make-1-1-1
+    +button-icon($fa-var-map)
 
   //- button add comment
   .edit-comment
