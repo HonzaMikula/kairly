@@ -1,5 +1,5 @@
 <template>
-  <div class="tweets-selection-view">
+  <div class="posts-selection-view">
     <header>
       <h2>{{ $t('Select tweets') }}</h2>
 
@@ -10,8 +10,8 @@
 
     <main>
       <!-- work with raw post in add / remove event -->
-      <PostTweet
-        v-for="post in posts"
+      <PostWrapper
+        v-for="{post, source} in posts"
         :post="post"
         :key="post.id"
       >
@@ -22,15 +22,15 @@
           <button
             v-if="selected.indexOf(post.id) === -1"
             class="add"
-            @click="add(post)"
+            @click="add(post, source)"
           />
           <button
             v-else
             class="remove"
-            @click="remove(post)"
+            @click="remove(post, source)"
           />
         </template>
-      </PostTweet>
+      </PostWrapper>
     </main>
   </div>
 </template>
@@ -39,13 +39,13 @@
 import Vue from 'vue'
 
 import { mapActions, mapMutations } from 'vuex'
-import PostTweet from '@/components/posts/PostTweet'
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: 'TweetsSelection',
+  name: 'PostsSelection',
 
   components: {
-    PostTweet
+    PostWrapper
   },
 
   props: {
@@ -54,12 +54,15 @@ export default {
   },
 
   data() {
-    const { considered, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-    const posts = considered.layout
+    const { considered, next, upcoming, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
+    const posts = []
+    ;[considered, next, upcoming].forEach(bl => {
+      bl.layout
       .filter(post => post.type === 'post')
-      .map(post => $posts[post.id])
-      .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
-      .filter(post => post.type === 'tweet')
+      .map(post => this.$store.getters['entities/denormalize']($posts[post.id], 'Post'))
+      //.filter(post => post.type === 'tweet')
+      .forEach(post => posts.push({post, source: bl.name}))
+    })
 
     return {
       initialPosts: posts
@@ -71,32 +74,31 @@ export default {
       const ids = {}
       const posts = []
       this.initialPosts.forEach(p => {
-        ids[p.id] = true
+        ids[p.post.id] = true
         posts.push(p)
-       })
+      })
 
       // do not remove from tweets when tweet is moved from baclog to editorial
       // but add tweet to list when moved from editoril back to backlog
-      const { considered, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-      const backlogTweets = considered.layout
+      const { considered, next, upcoming, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
+      ;[considered, next, upcoming].forEach(bl => {
+        bl.layout
         .filter(post => post.type === 'post' && !ids[post.id] )
-        .map(post => $posts[post.id])
-        .map(post => this.$store.getters['entities/denormalize'](post, 'Post'))
-        .filter(post => post.type === 'tweet')
-        .forEach(p => {
-          posts.push(p)
-        })
+        .map(post => this.$store.getters['entities/denormalize']($posts[post.id], 'Post'))
+        //.filter(post => post.type === 'tweet')
+        .forEach(post => posts.push({post, source: bl.name}))
+      })
       return posts
     }
   },
 
   methods: {
-    add(post) {
-      this.$emit('add', { post, source: 'considered'})
+    add(post, source) {
+      this.$emit('add', { post, source })
     },
 
     remove(post) {
-      this.$emit('remove', { post })
+      this.$emit('remove', { post, source })
     }
   }
 }
@@ -105,7 +107,7 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 
-.tweets-selection-view
+.posts-selection-view
   position: fixed
   right: $baseline
   top: 10vh
@@ -142,4 +144,8 @@ export default {
   //- Main
   main
     overflow: auto
+
+    .post-body--content
+      columns: 1
+
 </style>

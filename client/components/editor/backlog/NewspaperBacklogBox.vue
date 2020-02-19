@@ -18,7 +18,7 @@
         @click="editComment(post.id)"
       />
 
-      <template v-if="column && column.css === 'editorial'">
+      <template v-if="column">
         <button-icon
           v-if="postIndex > 0"
           class="up"
@@ -38,12 +38,12 @@
           @click="moveDownInColumn(columnIndex, postIndex)"
         />
         <button-icon
-          class="remove"
+          class="level-up"
           v-b-tooltip
           tabindex="0"
           role="button"
           :title="$t('Remove from column')"
-          @click="removeFromColumn({ post })"
+          @click="removeFromColumn({ post, source, index: index + 1 })"
         />
       </template>
     </template>
@@ -149,7 +149,7 @@
           <template v-else>
             <button
               class="change-position"
-              @click="changeEditorialPosition"
+              @click="reverseColumns"
               v-b-tooltip
               :title="$t('Change position')"
             />
@@ -178,16 +178,16 @@
                     tabindex="0"
                     @click="openPostSelection(colIndex)"
                   >
-                    <h6>{{ $t('Update editorial comment') }}</h6>
-                    <p>{{ $t('Write short comment to the topic') }}</p>
+                    <h6>{{ $t('Select posts') }}</h6>
+                    <p>{{ $t('Move posts to the column') }}</p>
                   </li>
 
                   <li
                     tabindex="1"
                     @click="writeComment(colIndex)"
                   >
-                    <h6>{{ $t('Write comment') }}</h6>
-                    <p>{{ $t('Write comment') }}</p>
+                    <h6>{{ $t('Add comment') }}</h6>
+                    <p>{{ $t('Write short comment to the topic') }}</p>
                   </li>
 
                   <li
@@ -212,7 +212,7 @@
       </div>
 
       <portal to="modal">
-        <TweetsSelection
+        <PostsSelection
           v-if="editedColumn !== null"
           :newspaper="newspaper"
           :selected="post.columns[editedColumn].posts.map(p => p.id)"
@@ -233,7 +233,7 @@ import { BPopover } from 'bootstrap-vue'
 import PostWrapper from '@/components/PostWrapper'
 import BoxWrapper from '@/components/BoxWrapper'
 import CommentEditor from '@/components/editor/backlog/CommentEditor'
-import TweetsSelection from '@/components/editor/backlog/TweetsSelection'
+import PostsSelection from '@/components/editor/backlog/PostsSelection'
 
 export default {
   name: 'NewspaperBacklogBox',
@@ -243,7 +243,7 @@ export default {
     BoxWrapper,
     BPopover,
     CommentEditor,
-    TweetsSelection,
+    PostsSelection,
   },
 
   props: {
@@ -305,7 +305,7 @@ export default {
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    removeFromColumn({ post }) {
+    removeFromColumn({ post, source, index=0 }) {
       const columns = []
       this.post.columns.forEach(col => {
         columns.push({
@@ -319,9 +319,9 @@ export default {
       })
       this.$store.commit('backlog/splice', {
         newspaper: this.newspaper,
-        target: 'considered',
+        target: source,
         items: [{id: post.id, type: 'post'}],
-        index: 0,
+        index,
         deleteCount: 0
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
@@ -454,7 +454,8 @@ export default {
 
     makeBox(layout, columnsStyle) {
       this.setBacklogItem({
-        id: this.post.id, // keep same id to keep same NewspaperBacklogBox
+        //id: this.post.id, // keep same id to keep same NewspaperBacklogBox, NOT GOOD idea as long as post can be removed
+        id: Math.random().toString(36).substring(2),
         type: 'box',
         css: layout,
         columns: columnsStyle.map((css, idx) => {
@@ -465,7 +466,6 @@ export default {
         })
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
-      this.openPostSelection(1)
     },
 
     splitColumns() {
@@ -482,12 +482,18 @@ export default {
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    changeEditorialPosition() {
-      this.setBacklogItem({
-        ...this.post,
-        css: this.post.css === 'cols-2-1' ? 'cols-1-2' : 'cols-2-1',
-        columns: [this.post.columns[1], this.post.columns[0]]
-      })
+    reverseColumns() {
+      const columns = [...this.post.columns]
+      columns.reverse()
+      let css = null
+      if (this.post.css === 'cols-2-1') {
+        css = 'cols-1-2'
+      } else if (this.post.css === 'cols-1-2') {
+        css = 'cols-2-1'
+      } else {
+        css = this.post.css
+      }
+      this.setBacklogItem({ ...this.post, css, columns })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     }
   },

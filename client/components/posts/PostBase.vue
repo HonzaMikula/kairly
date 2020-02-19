@@ -141,7 +141,7 @@ export default {
 //- Post -//
 .post
   position: relative
-  
+
   display: block
   margin-bottom: $baseline / 2
   padding: $baseline / 2
@@ -249,6 +249,9 @@ export default {
 
       &.remove
         +button-icon($fa-var-times, icon, solid, small)
+
+      &.level-up
+        +button-icon($fa-var-level-up-alt, icon, solid, small)
 
       &.add
         +button-icon($fa-var-plus, icon, solid, small)

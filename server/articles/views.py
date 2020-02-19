@@ -31,7 +31,7 @@ from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse, Ref, entities_json_response
 from utils.upload import file_from_data_uri
 from .models import (BacklogX, Backlog, BacklogPost, Issue, Newspaper, CoEditor, Post, Subscription,
-                     SubscriptionToAuthor, IssuePost, round_fair_price)
+                     SubscriptionToAuthor, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
 from .utils import create_post_link
@@ -840,7 +840,7 @@ def post(request, entities, username, post_slug):
 
     resp = {
         'post': post.to_json(entities),
-        #'editorials': editorials
+        # 'editorials': editorials
         'editorials': []
     }
 

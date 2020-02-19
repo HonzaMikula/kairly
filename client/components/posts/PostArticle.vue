@@ -173,12 +173,4 @@ export default {
       &:hover
         background: $c-base
         color: #fff
-
-
-.editorial-post
-  .post-body--content
-    column-count: 2
-
-
-
 </style>
