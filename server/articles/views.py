@@ -407,12 +407,7 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
 @require_POST
 @transaction.atomic
 @entities_json_response
-def create_link(request, entities, username, newspapeper_slug):
-    newspaper = get_object_or_404(Newspaper, editor__username=username, slug=newspapeper_slug)
-    if newspaper.editor_id != request.user.id:
-        if request.user not in newspaper.co_editors.all():
-            return HttpResponseForbidden()
-
+def create_link(request, entities):
     payload = json.loads(request.body.decode('utf-8'))
     url = payload['url']
 
@@ -420,15 +415,14 @@ def create_link(request, entities, username, newspapeper_slug):
         url = 'http://' + url
 
     try:
-        post = create_post_link(url, request.user, hidden=True)
+        post = create_post_link(url, None, hidden=True)
     except IOError as e:
         return JsonResponse({
             'error': str(e)
         }, status=409)
 
-    created = BacklogX.append_post(newspaper, post)
     return {
-        'post': post.to_json(entities) if created else None
+        'post': post.to_json(entities)
     }
 
 

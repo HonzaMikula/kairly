@@ -126,7 +126,7 @@ export const actions = {
 
   //TODO
   async addLink({ commit, dispatch }, { newspaper, url }) {
-    const { post } = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
+    const { post } = await this.$axios.$post(`/external-links`, {url})
     if (post) {
       commit('registerPost', { newspaper, post })
       commit('append', {
