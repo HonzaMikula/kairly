@@ -11,7 +11,7 @@ from django.db import transaction
 from django.db.models import Max
 from django.utils.timezone import now as timezone_now
 
-from articles.models import Newspaper, Issue, Backlog, BacklogPost, IssuePost, Editorial, EditorialTweet, Post
+from articles.models import Newspaper, Issue, Backlog, BacklogPost, IssuePost, Post
 from articles.period import PeriodMixin
 
 

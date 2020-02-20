@@ -12,7 +12,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
-from django.db.models import Count, Sum, F
+from django.db.models import Count, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -275,50 +275,6 @@ class Post(models.Model):
         return result
 
 
-# TODO DELETE
-class Editorial(models.Model):
-    ARTICLE = 'article'
-    TWEETS = 'tweets'
-
-    KIND_CHOICES = (
-        (ARTICLE, _('Article')),
-        (TWEETS, _('Tweets')),
-    )
-
-    title = models.CharField(max_length=160, null=True)
-    content = models.TextField(_("Content"), blank=True, null=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
-    kind = models.CharField(max_length=60, choices=KIND_CHOICES)
-    position = models.CharField(max_length=32)
-
-    def __str__(self):
-        return self.title
-
-    def to_json(self, entities):
-        data = {
-            'author': entities.make_ref(User, self.author_id),
-            'type': self.kind,
-            'position': self.position,
-        }
-
-        if self.kind == 'article':
-            data['title'] = self.title
-            data['content'] = self.content
-        elif self.kind == 'tweets':
-            tweets = EditorialTweet.objects.filter(editorial=self).select_related('post').order_by('ordering')
-            data['tweets'] = [t.post.to_json(entities) for t in tweets]
-        else:
-            raise ValueError
-        return data
-
-
-# TODO DELETE
-class EditorialTweet(models.Model):
-    editorial = models.ForeignKey(Editorial, models.CASCADE)
-    post = models.ForeignKey(Post, models.CASCADE)
-    ordering = models.IntegerField(null=True)
-
-
 @entities_key("newspapers", 1)
 class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
@@ -429,45 +385,6 @@ class CoEditor(models.Model):
     """
     newspaper = models.ForeignKey(Newspaper, on_delete=models.CASCADE)
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-
-# TODO DELETE
-class BacklogX(models.Model):
-    UPCOMING_ISSUE = 1
-    NEXT_ISSUE = 2
-
-    newspaper = models.ForeignKey(Newspaper, models.CASCADE, db_constraint=False)
-    post = models.ForeignKey(Post, models.CASCADE, db_constraint=False)
-    publish_in = models.SmallIntegerField(null=True, db_index=True)
-    ordering = models.IntegerField(null=True)
-    editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True, db_constraint=False)
-
-    @classmethod
-    def append_post(cls, newspaper, post):
-        return cls._consider_post(newspaper, post, prepend=False)
-
-    @classmethod
-    def prepend_post(cls, newspaper, post):
-        return cls._consider_post(newspaper, post, prepend=True)
-
-    @classmethod
-    def _consider_post(cls, newspaper, post, prepend):
-        if isinstance(post, int):
-            post_id = post
-        else:
-            post_id = post.id
-
-        if cls.objects.filter(newspaper=newspaper, post_id=post_id).exists():
-            return None
-
-        if prepend:
-            cls.objects.filter(newspaper=newspaper, publish_in__isnull=True).update(ordering=F('ordering') + 1)
-
-        return cls.objects.create(
-            newspaper=newspaper,
-            post_id=post_id,
-            ordering=0 if prepend else None
-        )
 
 
 class Backlog(models.Model):
