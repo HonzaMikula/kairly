@@ -474,7 +474,43 @@ class Backlog(models.Model):
     name = models.CharField(max_length=64)
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
     posts = models.ManyToManyField(Post, blank=True, through='BacklogPost')
-    layout = models.TextField(null=True)
+    layout = models.TextField(default='[]')
+
+    @classmethod
+    def get_layout_posts(cls, layout):
+        ids = set()
+        for item in layout:
+            if isinstance(item, list):
+                ids.update(cls.get_layout_posts(item))
+            elif isinstance(item, dict):
+                post_id = item.get('post')
+                if post_id:
+                    ids.add(post_id)
+        return ids
+
+    def save_layout(self, layout):
+        if not self.id and not layout:
+            # do not save non existing backlog with no posts
+            return
+
+        self.layout = json.dumps(layout).decode()
+        self.save()
+
+        new_posts = self.get_layout_posts(layout)
+        current_posts = self.get_layout_posts(json.loads(self.layout))
+
+        removed_posts = current_posts - new_posts
+        if removed_posts:
+            BacklogPost.objects.filter(backlog=self, post_id__in=list(removed_posts)).delete()
+
+        added_posts = new_posts - current_posts
+        if added_posts:
+            BacklogPost.objects.bulk_create([BacklogPost(backlog=self, post_id=p) for p in added_posts])
+
+    def append_item(self, item):
+        layout = json.loads(self.layout)
+        layout.append(item)
+        self.save_layout(layout)
 
     def to_json(self, entities):
         newspaper_ref = entities.make_ref(Newspaper, self.newspaper_id)
@@ -488,18 +524,6 @@ class Backlog(models.Model):
             posts_json[str(ip.post_id)] = ip.post.to_json(entities, short=True)
         result["posts"] = posts_json
         return result
-
-    @classmethod
-    def get_layout_posts(cls, layout):
-        ids = set()
-        for item in layout:
-            if isinstance(item, list):
-                ids.update(cls.get_layout_posts(item))
-            elif isinstance(item, dict):
-                post_id = item.get('post')
-                if post_id:
-                    ids.add(post_id)
-        return ids
 
 
 class BacklogPost(models.Model):

@@ -30,7 +30,7 @@ from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
 from utils.json import JsonResponse, Ref, entities_json_response
 from utils.upload import file_from_data_uri
-from .models import (BacklogX, Backlog, BacklogPost, Issue, Newspaper, CoEditor, Post, Subscription,
+from .models import (Backlog, BacklogPost, Issue, Newspaper, CoEditor, Post, Subscription,
                      SubscriptionToAuthor, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
@@ -375,29 +375,13 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
             if name not in ['considered', 'upcoming', 'next']:
                 raise HttpResponseBadRequest('Invalid backlog name')
 
-            new_posts = Backlog.get_layout_posts(layout)
             try:
-                backlog = Backlog.objects.get(name=name, newspaper=newspaper)
-                current_posts = Backlog.get_layout_posts(json.loads(backlog.layout))
-
-                removed_posts = current_posts - new_posts
-
-                if removed_posts:
-                    BacklogPost.objects.filter(backlog=backlog, post_id__in=list(removed_posts)).delete()
-                added_posts = new_posts - current_posts
-                if added_posts:
-                    BacklogPost.objects.bulk_create([BacklogPost(backlog=backlog, post_id=p) for p in added_posts])
-
-                backlog.layout = json.dumps(layout).decode()
-                backlog.save()
+                backlog = Backlog.objects.get(newspaper=newspaper, name=name)
             except Backlog.DoesNotExist:
-                if not layout:
-                    continue
-                backlog = Backlog.objects.create(name=name, newspaper=newspaper, layout=json.dumps(layout).decode())
-                BacklogPost.objects.bulk_create([BacklogPost(backlog=backlog, post_id=p) for p in new_posts])
+                backlog = Backlog(newspaper=newspaper, name=name)
+            backlog.save_layout(layout)
 
-        # TODO delete unreferenced links
-
+        # TODO nice to have delete unreferenced comments
         return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)
