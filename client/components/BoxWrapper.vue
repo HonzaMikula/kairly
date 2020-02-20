@@ -104,13 +104,15 @@ export default {
   &.cols-1-1
     grid-template-columns: 1fr 1fr
 
-    .newspaper .post-body--content
+    .newspaper .post-body--content,
+    .comment .post-body--content
       columns: 2
 
   &.cols-1-1-1
     grid-template-columns: 1fr 1fr 1fr
 
-    .newspaper .post-body--content
+    .newspaper .post-body--content,
+    .comment .post-body--content
       columns: 1
 
 .box-column.editorial

@@ -132,19 +132,43 @@
         <div class="newspaper-backlog-controls--options">
           <template v-if="post.type !== 'box'">
             <button
-              class="make-2-1"
-              @click="makeBox('cols-2-1', ['', 'editorial'])"
+              class="change-layout"
+              :id="`change-layout-${post.id}`"
+              @click.stop
             />
 
-            <button
-              class="make-1-1"
-              @click="makeBox('cols-1-1', ['', ''])"
-            />
+            <b-popover
+              :target="`change-layout-${post.id}`"
+              placement="bottomleft"
+              triggers="click blur"
+              @click.stop
+            >
+              <ul>
+                <li
+                  tabindex="0"
+                  @click="makeBox('cols-2-1', ['', 'editorial'])"
+                >
+                  <h6>{{ $t('Layout 2-1') }}</h6>
+                  <p>{{ $t('Move posts to the column') }}</p>
+                </li>
 
-            <button
-              class="make-1-1-1"
-              @click="makeBox('cols-1-1-1', ['', '', ''])"
-            />
+                <li
+                  tabindex="1"
+                  @click="makeBox('cols-1-1', ['', ''])"
+                >
+                  <h6>{{ $t('Layout 1-1') }}</h6>
+                  <p>{{ $t('Write short comment to the topic') }}</p>
+                </li>
+
+                <li
+                  tabindex="2"
+                  @click="makeBox('cols-1-1-1', ['', '', ''])"
+                >
+                  <h6>{{ $t('Layout 1-1-1') }}</h6>
+                  <p>{{ $t('Change column background') }}</p>
+                </li>
+              </ul>
+            </b-popover>
           </template>
           <template v-else>
             <button
@@ -154,52 +178,54 @@
               :title="$t('Change position')"
             />
 
-            <template
-              v-for="(icon, colIndex) in columnIcons"
-            >
-              <button
-                :class="icon"
-                :id="`backlog-controls-option-${post.id}-${colIndex}`"
-                v-b-tooltip
-                :title="$t('Column') + ' ' + (colIndex + 1)"
-                :key="`btn-${colIndex}`"
-                @click.stop
-              />
-
-              <b-popover
-                :target="`backlog-controls-option-${post.id}-${colIndex}`"
-                placement="bottomleft"
-                triggers="click blur"
-                :key="`btn-popover-${colIndex}`"
-                @click.stop
+            <div class="newspaper-backlog-controls--options--columns">
+              <template
+                v-for="(icon, colIndex) in columnIcons"
               >
-                <ul>
-                  <li
-                    tabindex="0"
-                    @click="openPostSelection(colIndex)"
-                  >
-                    <h6>{{ $t('Select posts') }}</h6>
-                    <p>{{ $t('Move posts to the column') }}</p>
-                  </li>
+                <button
+                  :class="icon"
+                  :id="`backlog-controls-option-${post.id}-${colIndex}`"
+                  v-b-tooltip
+                  :title="$t('Column') + ' ' + (colIndex + 1)"
+                  @click.stop
+                  :key="`btn-${colIndex}`"
+                />
 
-                  <li
-                    tabindex="1"
-                    @click="writeComment(colIndex)"
-                  >
-                    <h6>{{ $t('Add comment') }}</h6>
-                    <p>{{ $t('Write short comment to the topic') }}</p>
-                  </li>
+                <b-popover
+                  :target="`backlog-controls-option-${post.id}-${colIndex}`"
+                  placement="bottomleft"
+                  triggers="click blur"
+                  :key="`btn-popover-${colIndex}`"
+                  @click.stop
+                >
+                  <ul>
+                    <li
+                      tabindex="0"
+                      @click="openPostSelection(colIndex)"
+                    >
+                      <h6>{{ $t('Select posts') }}</h6>
+                      <p>{{ $t('Move posts to the column') }}</p>
+                    </li>
 
-                  <li
-                    tabindex="2"
-                    @click="toggleEditorialStyle(colIndex)"
-                  >
-                    <h6>{{ $t('Toggle editorlal style') }}</h6>
-                    <p>{{ $t('Change column background') }}</p>
-                  </li>
-                </ul>
-              </b-popover>
-            </template>
+                    <li
+                      tabindex="1"
+                      @click="writeComment(colIndex)"
+                    >
+                      <h6>{{ $t('Add comment') }}</h6>
+                      <p>{{ $t('Write short comment to the topic') }}</p>
+                    </li>
+
+                    <li
+                      tabindex="2"
+                      @click="toggleEditorialStyle(colIndex)"
+                    >
+                      <h6>{{ $t('Toggle editorlal style') }}</h6>
+                      <p>{{ $t('Change column background') }}</p>
+                    </li>
+                  </ul>
+                </b-popover>
+              </template>
+            </div>
 
             <button
               class="split-columns"
@@ -556,20 +582,15 @@ export default {
   display: grid
   grid-template-row: auto auto
   grid-row-gap: $baseline / 4
+  width: $baseline * 1.25
 
   @media (max-width: $mobile)
     right: $baseline/4
     top: 40%
 
   //- button add editorial
-  .make-2-1
-    +button-icon($fa-var-font)
-
-  .make-1-1
-    +button-icon($fa-var-book-open)
-
-  .make-1-1-1
-    +button-icon($fa-var-map)
+  .change-layout
+    +button-icon($fa-var-columns)
 
   //- button add comment
   .edit-comment
@@ -592,6 +613,12 @@ export default {
   .split-columns
     +button-icon($fa-var-undo)
 
+//- icons for columns
+.newspaper-backlog-controls--options--columns
+  white-space: nowrap
+
+  > button
+    margin-right: $baseline / 8
 
 .sortable-drag
   .newspaper-backlog-controls
