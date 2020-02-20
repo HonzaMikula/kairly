@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import isString from 'lodash/isString'
+import keyBy from 'lodash/keyBy'
 
 let reorderPostScheduled = false
 
@@ -43,10 +44,8 @@ export const actions = {
         }
         return {type: 'post', id: item.post}
       })
-      // TODO save layout to store
       commit('newspaperBacklog', { fullName, section: bl.name, backlog: bl})
     })
-
   },
 
   async save({ state }, { newspaper }) {
@@ -78,15 +77,13 @@ export const actions = {
     }, { progress: false  })
   },
 
-  // TODO v2
-  async reorder({ commit, state }, { newspaper, source, posts }) {
-    const { fullName } = newspaper
-    commit('reorder', { fullName, source, posts})
+  async reorder({ commit, dispatch }, { newspaper, target, ordering }) {
+    commit('reorder', { newspaper, target, ordering})
     if (!reorderPostScheduled) {
       reorderPostScheduled = true
       Vue.nextTick(() => {
         reorderPostScheduled = false
-        _postBackLog.call(this, state, fullName)
+        dispatch('save', { newspaper })
       })
     }
   },
@@ -293,9 +290,9 @@ export const mutations = {
     }
   },
 
-  // TODO v2
-  reorder(state, { fullName, source, posts }) {
-    const backlog = state.newspaperBacklog[fullName]
-    backlog[source] = posts
+  reorder(state, { newspaper, target, ordering }) {
+    const backlog = state.newspaperBacklog[newspaper.fullName]
+    const posts = keyBy(backlog[target].layout, 'id')
+    backlog[target].layout = ordering.map(id => posts[id])
   },
 }

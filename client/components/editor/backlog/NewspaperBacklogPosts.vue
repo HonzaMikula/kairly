@@ -12,18 +12,7 @@
         <h2>{{ $t('No posts in backlog') }}</h2>
       </div>
 
-      <NewspaperBacklogBox
-        v-for="(post, idx) in items"
-        :key="post.id"
-        :newspaper="newspaper"
-        :post="post"
-        :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
-        :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
-        :source="backlog.name"
-        :index="idx"
-      />
-
-      <!--draggable
+      <draggable
         v-model="items"
         group="backlog-posts"
         animation="200"
@@ -45,9 +34,10 @@
             :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
             :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
             :source="backlog.name"
+            :index="idx"
           />
         </transition-group>
-      </draggable-->
+      </draggable>
     </div>
   </div>
 </template>
@@ -92,8 +82,8 @@ export default {
       set(value) {
         this.backlogReorder({
           newspaper: this.newspaper,
-          source: this.backlog.name,
-          posts: value,
+          target: this.backlog.name,
+          ordering: value.map(p => p.id),
         })
       }
     }
