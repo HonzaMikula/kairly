@@ -142,6 +142,7 @@ import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import NewspaperBacklog from '@/components/editor/backlog/NewspaperBacklog'
+import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'Newspapers',
@@ -157,6 +158,8 @@ export default {
     NewspaperWidget,
     NewspaperBacklog
   },
+
+  mixins: [ErrorHandler],
 
   directives: {
     onClickaway

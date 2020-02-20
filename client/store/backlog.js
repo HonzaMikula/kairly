@@ -128,19 +128,20 @@ export const actions = {
   },
 
   //TODO
-  async addLink({ commit, state }, { newspaper, url }) {
-    const { fullName } = newspaper
-    const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
-    if (resp.post) {
+  async addLink({ commit, dispatch }, { newspaper, url }) {
+    const { post } = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
+    if (post) {
+      commit('registerPost', { newspaper, post })
       commit('append', {
-        fullName,
-        source: 'considered',
-        post: resp.post
+        newspaper,
+        target: 'considered',
+        item: {id: post.id, type: 'post'}
       })
+      await dispatch('save', { newspaper })
 
       this.$ga.event({
         eventCategory: 'Consider for newspaper',
-        eventAction: fullName
+        eventAction: newspaper.fullName
       })
     }
   },
