@@ -11,7 +11,7 @@ from django.db import transaction
 from django.db.models import Max
 from django.utils.timezone import now as timezone_now
 
-from articles.models import Newspaper, Issue, BacklogX, IssuePost, Editorial, EditorialTweet, Post
+from articles.models import Newspaper, Issue, Backlog, BacklogPost, IssuePost, Editorial, EditorialTweet, Post
 from articles.period import PeriodMixin
 
 
@@ -44,48 +44,38 @@ class Command(BaseCommand):
             .aggregate(Max('number'))['number__max']
         number = 1 if mx_num is None else mx_num + 1
 
+        backlog = Backlog.objects.get(newspaper=newspaper, name='upcoming')
+        if (backlog.layout == '[]'):
+            return
+
         if verbosity > 0:
             self.stdout.write('Creating {} #{}'.format(newspaper, number))
 
-        backlog_items = list(
-            BacklogX.objects
-            .filter(newspaper=newspaper, publish_in=BacklogX.UPCOMING_ISSUE)
-            .order_by('ordering', 'post__published')
-            .select_related('post'))
-
-        if backlog_items:
-            if not dry_run:
-                issue = Issue.objects.create(
-                    number=number,
-                    published=now,
-                    editor=newspaper.editor,
-                    newspaper=newspaper
-                )
-
-            comments = []
-            for i, backlog in enumerate(backlog_items):
-                if verbosity > 0:
-                    self.stdout.write('Adding post {}'.format(backlog.post))
-                if not dry_run:
-                    backlog.delete()
-
-                    editorial = backlog.editorial
-                    if editorial and editorial.kind == Editorial.TWEETS and EditorialTweet.objects.filter(editorial=editorial).count() == 0:
-                        # ignore editorial with no tweets
-                        editorial.delete()
-                        editorial = None
-
-                    post = backlog.post
-                    IssuePost.objects.create(issue=issue, post=post, editorial=editorial, ordering=i)
-                    if post.kind == Post.COMMENT:
-                        comments.append(post.id)
-
-            if not dry_run:
-                if comments:
-                    Post.objects.filter(id__in=comments).update(draft=False, published=timezone_now())
+        issue = Issue(
+            number=number,
+            published=now,
+            editor=newspaper.editor,
+            newspaper=newspaper,
+            layout=backlog.layout
+        )
 
         if not dry_run:
-            BacklogX.objects.filter(newspaper=newspaper, publish_in=BacklogX.NEXT_ISSUE).update(publish_in=BacklogX.UPCOMING_ISSUE)
+            issue.save()
+
+        refs = []
+        post_ids = []
+        for bp in BacklogPost.objects.filter(backlog=backlog):
+            if verbosity > 0:
+                self.stdout.write('Adding post {}'.format(bp.post))
+
+            refs.append(IssuePost(issue=issue, post_id=bp.post_id))
+            post_ids.append(bp.post_id)
+
+        if not dry_run:
+            IssuePost.objects.bulk_create(refs)
+            Post.objects.filter(id__in=post_ids, kind=Post.COMMENT).update(draft=False, published=timezone_now())
+            backlog.delete()
+            Backlog.objects.filter(newspaper=newspaper, name='next').update(name='upcoming')
 
     def get_now(self, hour=None):
         now = timezone.now().replace(minute=0, second=0, microsecond=0)
@@ -122,7 +112,7 @@ class Command(BaseCommand):
             query = Newspaper.objects.all()
 
         query = query\
-            .filter(backlog__publish_in__isnull=False)\
+            .filter(backlog__name='upcoming')\
             .select_related('editor')\
             .distinct()
 

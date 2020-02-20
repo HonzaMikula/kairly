@@ -493,11 +493,11 @@ class Backlog(models.Model):
             # do not save non existing backlog with no posts
             return
 
-        self.layout = json.dumps(layout).decode()
-        self.save()
-
         new_posts = self.get_layout_posts(layout)
         current_posts = self.get_layout_posts(json.loads(self.layout))
+
+        self.layout = json.dumps(layout).decode()
+        self.save()
 
         removed_posts = current_posts - new_posts
         if removed_posts:

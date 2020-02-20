@@ -134,7 +134,7 @@ class Command(BaseCommand):
                             backlog = Backlog.objects.get(newspaper=newspaper, name='upcoming')
                         except Backlog.DoesNotExist:
                             backlog = Backlog(newspaper=newspaper, name='upcoming')
-                        backlog.append_item({'id': post.id, 'type': 'post'})
+                        backlog.append_item({'post': post.id})
                 except Exception:
                     self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {}".format(timezone.now(), getattr(entry, 'link', ''), channel.rss))
                     traceback.print_exc()
