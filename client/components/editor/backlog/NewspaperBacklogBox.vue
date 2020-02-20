@@ -130,7 +130,7 @@
         </div>
 
         <div class="newspaper-backlog-controls--options">
-          <template v-if="post.type !== 'box'">
+          <template v-if="post.type === 'post'">
             <button
               class="change-layout"
               :id="`change-layout-${post.id}`"
@@ -170,7 +170,7 @@
               </ul>
             </b-popover>
           </template>
-          <template v-else>
+          <template v-else-if="post.type === 'box'">
             <button
               class="change-position"
               @click="reverseColumns"

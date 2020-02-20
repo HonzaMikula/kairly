@@ -99,6 +99,9 @@ export default {
       if (item.type === 'post') {
         return this.posts[item.id]
       }
+      if (item.type === 'header') {
+        return item
+      }
       return {
         ...item,
         columns: item.columns.map(c => {

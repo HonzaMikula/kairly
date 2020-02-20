@@ -42,7 +42,13 @@ export const actions = {
             })
           }
         }
-        return {type: 'post', id: item.post}
+        if (item.post) {
+          return {type: 'post', id: item.post}
+        }
+        if (item.header) {
+          return { type: 'header', id: Math.random().toString(36).substring(2), title: item.header }
+        }
+        throw Exception("Unknown type")
       })
       commit('newspaperBacklog', { fullName, section: bl.name, backlog: bl})
     })
@@ -52,7 +58,8 @@ export const actions = {
     const { fullName } = newspaper
     function serialize(layout) {
       return layout.map(item => {
-        if (item.type === 'post') return {post: item.id}
+        if (item.type === 'post') return { post: item.id }
+        if (item.type === 'header') return { header: item.title }
         if (item.type === 'box') {
           const box = [item.css]
           item.columns.forEach(col => {
