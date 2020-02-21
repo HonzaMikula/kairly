@@ -74,5 +74,7 @@ export default {
 <style lang="sass">
 .post-wrapper
   position: relative
+
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 </style>
 
