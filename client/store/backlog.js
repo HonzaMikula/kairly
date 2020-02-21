@@ -299,7 +299,12 @@ export const mutations = {
 
   reorder(state, { newspaper, target, ordering }) {
     const backlog = state.newspaperBacklog[newspaper.fullName]
-    const posts = keyBy(backlog[target].layout, 'id')
+    // need to search bettween all backlogs because post can be dragged between them
+    const posts = {
+      ...keyBy(backlog['considered'].layout, 'id'),
+      ...keyBy(backlog['upcoming'].layout, 'id'),
+      ...keyBy(backlog['next'].layout, 'id')
+    }
     backlog[target].layout = ordering.map(id => posts[id])
   },
 }
