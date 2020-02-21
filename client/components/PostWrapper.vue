@@ -28,6 +28,7 @@
 <script>
 import PostArticle from '@/components/posts/PostArticle'
 import PostComment from '@/components/posts/PostComment'
+import PostHeader from '@/components/posts/PostHeader'
 import PostLink from '@/components/posts/PostLink'
 import PostTweet from '@/components/posts/PostTweet'
 import PostPicture from '@/components/posts/PostPicture'
@@ -44,6 +45,7 @@ export default {
   components: {
     PostArticle,
     PostComment,
+    PostHeader,
     PostLink,
     PostTweet,
     PostPicture,

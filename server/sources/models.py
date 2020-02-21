@@ -17,7 +17,7 @@ from sources.parser import ArticleParser, split_article_to_perex_and_content, va
 from sources.directives import validate_directives, parse as parse_directives
 from utils.url import clean_url, fetch_url
 
-from articles.models import BacklogX, Post
+from articles.models import Backlog, Post
 from articles.signals import post_publish
 
 
@@ -234,8 +234,8 @@ def on_post_published(sender, post, **kwargs):
         automationitem__author=post.author,
     )
     for automation in q:
-        BacklogX.objects.create(
-            newspaper_id=automation.newspaper_id,
-            post=post,
-            publish_in=BacklogX.UPCOMING_ISSUE,
-        )
+        try:
+            backlog = Backlog.objects.get(newspaper_id=automation.newspaper_id, name='upcoming')
+        except Backlog.DoesNotExist:
+            backlog = Backlog(newspaper_id=automation.newspaper_id, name='upcoming')
+        backlog.append_item({'post': post.id})

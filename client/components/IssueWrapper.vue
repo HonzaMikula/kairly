@@ -9,6 +9,8 @@
       <slot name="newspaper-title"/>
     </template>
 
+    <PostHeader />
+
     <component
       v-for="(post, idx) in headPosts"
       :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
