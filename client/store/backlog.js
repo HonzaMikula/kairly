@@ -102,7 +102,7 @@ export const actions = {
     commit('splice', {
       newspaper,
       target,
-      items: {id: post.id, type: 'post'},
+      items: [{id: post.id, type: 'post'}],
       index: 0,
       deleteCount: 0
     })
