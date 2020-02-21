@@ -378,7 +378,7 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
             try:
                 backlog = Backlog.objects.get(newspaper=newspaper, name=name)
             except Backlog.DoesNotExist:
-                backlog = Backlog(newspaper=newspaper, name=name)
+                backlog = Backlog(newspaper=newspaper, name=name, layout='[]')
             backlog.save_layout(layout)
 
         # TODO nice to have delete unreferenced comments

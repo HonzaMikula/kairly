@@ -237,5 +237,5 @@ def on_post_published(sender, post, **kwargs):
         try:
             backlog = Backlog.objects.get(newspaper_id=automation.newspaper_id, name='upcoming')
         except Backlog.DoesNotExist:
-            backlog = Backlog(newspaper_id=automation.newspaper_id, name='upcoming')
+            backlog = Backlog(newspaper_id=automation.newspaper_id, name='upcoming', layout='[]')
         backlog.append_item({'post': post.id})

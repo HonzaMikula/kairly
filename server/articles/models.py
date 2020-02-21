@@ -391,7 +391,7 @@ class Backlog(models.Model):
     name = models.CharField(max_length=64)
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
     posts = models.ManyToManyField(Post, blank=True, through='BacklogPost')
-    layout = models.TextField(default='[]')
+    layout = models.TextField()
 
     @classmethod
     def get_layout_posts(cls, layout):
