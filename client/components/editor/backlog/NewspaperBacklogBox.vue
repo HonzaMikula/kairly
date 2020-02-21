@@ -130,7 +130,7 @@
         </div>
 
         <div class="newspaper-backlog-controls--options">
-          <template v-if="post.type === 'post'">
+          <template v-if="post.type !== 'box' && post.type !== 'header'">
             <button
               class="change-layout"
               :id="`change-layout-${post.id}`"
