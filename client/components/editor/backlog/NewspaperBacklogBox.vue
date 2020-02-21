@@ -130,7 +130,7 @@
         </div>
 
         <div class="newspaper-backlog-controls--options">
-          <template v-if="post.type === 'post'">
+          <template v-if="['newspaper', 'comment', 'tweet'].includes(post.type)">
             <button
               class="change-layout"
               :id="`change-layout-${post.id}`"
@@ -171,20 +171,13 @@
             </b-popover>
           </template>
           <template v-else-if="post.type === 'box'">
-            <button
-              class="change-position"
-              @click="reverseColumns"
-              v-b-tooltip
-              :title="$t('Change position')"
-            />
-
             <div class="newspaper-backlog-controls--options--columns">
               <template
                 v-for="(icon, colIndex) in columnIcons"
               >
                 <button
                   :class="icon"
-                  :id="`backlog-controls-option-${post.id}-${colIndex}`"
+                  :id="`backlog-controls-column-options-${post.id}-${colIndex}`"
                   v-b-tooltip
                   :title="$t('Column') + ' ' + (colIndex + 1)"
                   @click.stop
@@ -192,7 +185,7 @@
                 />
 
                 <b-popover
-                  :target="`backlog-controls-option-${post.id}-${colIndex}`"
+                  :target="`backlog-controls-column-options-${post.id}-${colIndex}`"
                   placement="bottomleft"
                   triggers="click blur"
                   :key="`btn-popover-${colIndex}`"
@@ -228,11 +221,37 @@
             </div>
 
             <button
-              class="split-columns"
-              @click="splitColumns"
+              class="menu"
               v-b-tooltip
-              :title="$t('Split columns')"
+              :title="$t('Options')"
+              :id="`backlog-controls-layout-options-${post.id}`"
+              @click.stop
             />
+
+            <b-popover
+              :target="`backlog-controls-layout-options-${post.id}`"
+              placement="bottomleft"
+              triggers="click blur"
+              @click.stop
+            >
+              <ul>
+                <li
+                  tabindex="0"
+                  @click="reverseColumns"
+                >
+                  <h6>{{ $t('Swap columns') }}</h6>
+                  <p>{{ $t('Change positions of columns') }}</p>
+                </li>
+
+                <li
+                  tabindex="1"
+                  @click="splitColumns"
+                >
+                  <h6>{{ $t('Cancel columns') }}</h6>
+                  <p>{{ $t('Posts will be bellow each other') }}</p>
+                </li>
+              </ul>
+            </b-popover>
           </template>
         </div>
       </div>
@@ -555,12 +574,13 @@ export default {
   top: 0
 
   display: grid
-  grid-template-row: auto auto
+  grid-template-rows: auto auto
   grid-row-gap: $baseline / 4
 
   @media (max-width: $mobile)
     left: $baseline/4
     top: 40%
+
 
   //- button up
   .up
@@ -574,13 +594,18 @@ export default {
   .remove
     +button-icon($fa-var-times)
 
+.box-header + div > .newspaper-backlog-controls--arrows
+  grid-template-rows: 1fr
+  grid-column-gap: $baseline / 4
+  grid-template-columns: auto auto auto
+
 .newspaper-backlog-controls--options
   position: absolute
   right: (-$baseline * 1.5)
   top: 0
 
   display: grid
-  grid-template-row: auto auto
+  grid-template-rows: auto auto
   grid-row-gap: $baseline / 4
   width: $baseline * 1.25
 
@@ -606,12 +631,9 @@ export default {
   .menu-right-col
     +button-icon($fa-var-align-right)
 
-  //- change position button
-  .change-position
-    +button-icon($fa-var-exchange-alt)
-
-  .split-columns
-    +button-icon($fa-var-undo)
+  //- options menu
+  .menu
+    +button-icon($fa-var-ellipsis-v)
 
 //- icons for columns
 .newspaper-backlog-controls--options--columns
