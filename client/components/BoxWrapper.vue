@@ -73,6 +73,8 @@ export default {
 
     //- 1st column
     .box-column:nth-of-type(1)
+      border-right: 1px dotted #ddd
+      
       .post-body--content
         columns: 2
 
@@ -98,6 +100,8 @@ export default {
 
     //- 2nd column
     .box-column:nth-of-type(2)
+      border-left: 1px dotted #ddd
+
       .post-body--content
         columns: 2
 
@@ -108,6 +112,9 @@ export default {
     .comment .post-body--content
       columns: 2
 
+    .box-column:nth-of-type(2)
+      border-left: 1px dotted #ddd
+
   &.cols-1-1-1
     grid-template-columns: 1fr 1fr 1fr
 
@@ -115,8 +122,10 @@ export default {
     .comment .post-body--content
       columns: 1
 
+    .box-column:nth-of-type(2)
+      border-right: 1px dotted #ddd
+      border-left: 1px dotted #ddd
+
 .box-column.editorial
-  position: relative
-  left: 1px
   background: #f2ecec
 </style>

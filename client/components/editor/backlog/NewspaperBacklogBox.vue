@@ -149,7 +149,7 @@
                   @click="makeBox('cols-2-1', ['', 'editorial'])"
                 >
                   <h6>{{ $t('Layout 2-1') }}</h6>
-                  <p>{{ $t('Move posts to the column') }}</p>
+                  <p>{{ $t('One main article, one smaller column') }}</p>
                 </li>
 
                 <li
@@ -157,7 +157,7 @@
                   @click="makeBox('cols-1-1', ['', ''])"
                 >
                   <h6>{{ $t('Layout 1-1') }}</h6>
-                  <p>{{ $t('Write short comment to the topic') }}</p>
+                  <p>{{ $t('Two equal sections') }}</p>
                 </li>
 
                 <li
@@ -165,7 +165,7 @@
                   @click="makeBox('cols-1-1-1', ['', '', ''])"
                 >
                   <h6>{{ $t('Layout 1-1-1') }}</h6>
-                  <p>{{ $t('Change column background') }}</p>
+                  <p>{{ $t('Three equal sections') }}</p>
                 </li>
               </ul>
             </b-popover>
