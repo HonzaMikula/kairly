@@ -28,15 +28,48 @@ export default {
 
   &.gallery-1
     grid-template-columns: 100%
-    grid-template-rows: minmax(auto, 383px)
+    grid-template-rows: minmax(auto, max-content)
+
+    .cols-2-1 .box-column:nth-of-type(2) &,
+    .cols-1-2 .box-column:nth-of-type(1) &
+      img
+        display: block
+        height: auto
+        max-height: 288px
+
+        object-fit: contain
 
   &.gallery-2
     grid-template-columns: 50% 50%
-    grid-template-rows: minmax(auto, 383px)
+    grid-template-rows: minmax(auto, max-content)
+
+    .cols-2-1 .box-column:nth-of-type(2) &,
+    .cols-1-2 .box-column:nth-of-type(1) &
+      grid-template-columns: auto
+      grid-template-rows: auto
+
+      img
+        display: block
+        height: auto
+        max-height: 288px
+
+        object-fit: contain
 
   &.gallery-3
     grid-template-columns: 50% 50%
     grid-template-rows: minmax(auto, 191.5px) minmax(auto, 191.5px)
+    
+    .cols-2-1 .box-column:nth-of-type(2) &,
+    .cols-1-2 .box-column:nth-of-type(1) &
+      grid-template-columns: auto
+      grid-template-rows: auto
+
+      img
+        display: block
+        height: auto
+        max-height: 288px
+
+        object-fit: contain
 
     a:nth-of-type(2)
       grid-column: 2 / span 1
@@ -45,6 +78,18 @@ export default {
   &.gallery-4
     grid-template-columns: 50% 50%
     grid-template-rows: minmax(auto, 191.5px) minmax(auto, 191.5px)
+
+    .cols-2-1 .box-column:nth-of-type(2) &,
+    .cols-1-2 .box-column:nth-of-type(1) &
+      grid-template-columns: auto
+      grid-template-rows: auto
+
+      img
+        display: block
+        height: auto
+        max-height: 288px
+
+        object-fit: contain
 
   img
     object-fit: cover
