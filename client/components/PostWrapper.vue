@@ -75,6 +75,11 @@ export default {
 .post-wrapper
   position: relative
 
+  //- in backlog the margin is done by the toolbar
+  &:first-of-type > article,
+  .newspaper-backlog-post-toolbar-view + & > article
+    margin-bottom: 0
+
   > article
     box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 </style>

@@ -26,16 +26,18 @@
           tag="div"
           :name="!drag ? 'flip-list' : null"
         >
-          <NewspaperBacklogBox
-            v-for="(post, idx) in items"
-            :key="post.id"
-            :newspaper="newspaper"
-            :post="post"
-            :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
-            :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
-            :source="backlog.name"
-            :index="idx"
-          />
+          <template v-for="(post, idx) in items">
+            <NewspaperBacklogBox
+              :key="post.id"
+              :newspaper="newspaper"
+              :post="post"
+              :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
+              :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
+              :source="backlog.name"
+              :index="idx"
+            />
+            <NewspaperBacklogPostToolbar :key="post.id" />>
+          </template>
         </transition-group>
       </draggable>
     </div>
@@ -49,6 +51,7 @@ import draggable from 'vuedraggable'
 
 import NewspaperBacklogBox from '@/components/editor/backlog/NewspaperBacklogBox'
 import { isTouchDevice } from '@/utils/browser'
+import NewspaperBacklogPostToolbar from '@/components/editor/backlog/NewspaperBacklogPostToolbar'
 
 export default {
   name: 'NewspaperBacklogPosts',
@@ -56,6 +59,7 @@ export default {
   components: {
     draggable,
     NewspaperBacklogBox,
+    NewspaperBacklogPostToolbar,
   },
 
   props: {

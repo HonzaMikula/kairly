@@ -7,17 +7,25 @@
       :key="colIndex"
       :class="`box-column ${col.css}`"
     >
-      <PostWrapper
-        v-for="(post, postIndex) in col.posts"
-        :key="`${colIndex}-${post.id}`"
-        :post="post"
-        :typeOverride="typeOverride"
-        @close-editor="p => $emit('close-editor', p)"
-      >
-        <template #page-controls>
-          <slot name="page-controls" :post="post" :postIndex="postIndex" :column="col" :columnIndex="colIndex"></slot>
-        </template>
-      </PostWrapper>
+      <template v-if="col.posts.length > 0">
+        <PostWrapper
+          v-for="(post, postIndex) in col.posts"
+          :key="`${colIndex}-${post.id}`"
+          :post="post"
+          :typeOverride="typeOverride"
+          @close-editor="p => $emit('close-editor', p)"
+        >
+          <template #page-controls>
+            <slot name="page-controls" :post="post" :postIndex="postIndex" :column="col" :columnIndex="colIndex"></slot>
+          </template>
+        </PostWrapper>
+      </template>
+
+      <template v-else>
+        <BacklogPlaceholder>
+
+        </BacklogPlaceholder>
+      </template>
     </div>
 
     <slot name="aside">
@@ -29,6 +37,7 @@
 import isString from 'lodash/isString'
 
 import PostWrapper from '@/components/PostWrapper'
+import BacklogPlaceholder from '@/components/posts/BacklogPlaceholder'
 
 export default {
   name: 'BoxWrapper',
@@ -39,6 +48,7 @@ export default {
 
   components: {
     PostWrapper,
+    BacklogPlaceholder,
   },
 }
 </script>
@@ -53,6 +63,10 @@ export default {
   background: #fff
   border: 1px solid #eee
   box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+
+  //- in backlog the margin is done by the toolbar
+  .newspaper-backlog-post-toolbar-view + &
+    margin-bottom: 0
 
   .post
     margin-bottom: 0
