@@ -85,12 +85,17 @@ export default {
     //- 1st column
     .box-column:nth-of-type(1)
       border-right: 1px dotted #ddd
+      grid-column: 1 / span 1
+      grid-row: 1 / span 1
       
       .post-body--content
         columns: 2
 
     //- 2nd column
     .box-column:nth-of-type(2)
+      grid-column: 2 / span 1
+      grid-row: 1 / span 1
+
       .post-body--content
         columns: 1
 
@@ -106,11 +111,16 @@ export default {
 
     //- 1st column
     .box-column:nth-of-type(1)
+      grid-column: 1 / span 1
+      grid-row: 1 / span 1
+
       .post-body--content
         columns: 1
 
     //- 2nd column
     .box-column:nth-of-type(2)
+      grid-column: 2 / span 1
+      grid-row: 1 / span 1
       border-left: 1px dotted #ddd
 
       .post-body--content
@@ -132,8 +142,14 @@ export default {
 
       @media (max-width: $mobile)
         columns: 1
+    
+    .box-column:nth-of-type(1)
+      grid-column: 1 / span 1
+      grid-row: 1 / span 1
 
     .box-column:nth-of-type(2)
+      grid-column: 2 / span 1
+      grid-row: 1 / span 1
       border-left: 1px dotted #ddd
 
   &.cols-1-1-1
@@ -150,9 +166,19 @@ export default {
     .comment .post-body--content
       columns: 1
 
+    .box-column:nth-of-type(1)
+      grid-column: 1 / span 1
+      grid-row: 1 / span 1
+
     .box-column:nth-of-type(2)
+      grid-column: 2 / span 1
+      grid-row: 1 / span 1
       border-right: 1px dotted #ddd
       border-left: 1px dotted #ddd
+
+    .box-column:nth-of-type(3)
+      grid-column: 3 / span 1
+      grid-row: 1 / span 1
 
 .box-column.editorial
   background: #f2ecec

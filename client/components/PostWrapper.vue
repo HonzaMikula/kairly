@@ -19,24 +19,22 @@
       </template>
     </component>
 
-    <slot name="aside">
-
-    </slot>
+    <slot name="aside"></slot>
   </section>
 </template>
 
 <script>
-import PostArticle from '@/components/posts/PostArticle'
-import PostComment from '@/components/posts/PostComment'
-import PostHeader from '@/components/posts/PostHeader'
-import PostLink from '@/components/posts/PostLink'
-import PostTweet from '@/components/posts/PostTweet'
-import PostPicture from '@/components/posts/PostPicture'
-import PostVideo from '@/components/posts/PostVideo'
-import PostRecommendations from '@/components/posts/PostRecommendations'
+import PostArticle from "@/components/posts/PostArticle";
+import PostComment from "@/components/posts/PostComment";
+import PostHeader from "@/components/posts/PostHeader";
+import PostLink from "@/components/posts/PostLink";
+import PostTweet from "@/components/posts/PostTweet";
+import PostPicture from "@/components/posts/PostPicture";
+import PostVideo from "@/components/posts/PostVideo";
+import PostRecommendations from "@/components/posts/PostRecommendations";
 
 export default {
-  name: 'PostWrapper',
+  name: "PostWrapper",
   props: {
     post: Object,
     typeOverride: Object // override component type is set, value is map {id: component}
@@ -50,25 +48,25 @@ export default {
     PostTweet,
     PostPicture,
     PostVideo,
-    PostRecommendations,
+    PostRecommendations
   },
 
   computed: {
     postType() {
       if (this.typeOverride) {
-        const component = this.typeOverride[this.post.id]
+        const component = this.typeOverride[this.post.id];
         if (component) {
-          return component
+          return component;
         }
       }
-      if (this.post.type === 'newspaper') {
-        return 'post-article'
+      if (this.post.type === "newspaper") {
+        return "post-article";
       } else {
-        return 'post-' + this.post.type
+        return "post-" + this.post.type;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="sass">
@@ -82,5 +80,11 @@ export default {
 
   > article
     box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+  
+  .newspaper-backlog-controls
+    @media (max-width: $mobile)
+      position: absolute
+      top: 30%
+      width: 100vw  
 </style>
 
