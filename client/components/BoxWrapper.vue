@@ -140,7 +140,7 @@ export default {
     grid-template-columns: 1fr 1fr 1fr
 
     @media (max-width: $mobile)
-      grid-template-columns: 50vw 50vw 50vw
+      grid-template-columns: 45vw 45vw 45vw
 
       overflow: auto
       scroll-behavior: smooth
