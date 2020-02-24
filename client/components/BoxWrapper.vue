@@ -1,12 +1,6 @@
 <template>
-  <div
-    :class="`box-wrapper ${post.css}`"
-  >
-    <div
-      v-for="(col, colIndex) in post.columns"
-      :key="colIndex"
-      :class="`box-column ${col.css}`"
-    >
+  <div :class="`box-wrapper ${post.css}`">
+    <div v-for="(col, colIndex) in post.columns" :key="colIndex" :class="`box-column ${col.css}`">
       <template v-if="col.posts.length > 0">
         <PostWrapper
           v-for="(post, postIndex) in col.posts"
@@ -16,31 +10,34 @@
           @close-editor="p => $emit('close-editor', p)"
         >
           <template #page-controls>
-            <slot name="page-controls" :post="post" :postIndex="postIndex" :column="col" :columnIndex="colIndex"></slot>
+            <slot
+              name="page-controls"
+              :post="post"
+              :postIndex="postIndex"
+              :column="col"
+              :columnIndex="colIndex"
+            ></slot>
           </template>
         </PostWrapper>
       </template>
 
       <template v-else>
-        <BacklogPlaceholder>
-
-        </BacklogPlaceholder>
+        <BacklogPlaceholder></BacklogPlaceholder>
       </template>
     </div>
 
-    <slot name="aside">
-    </slot>
+    <slot name="aside"></slot>
   </div>
 </template>
 
 <script>
-import isString from 'lodash/isString'
+import isString from "lodash/isString";
 
-import PostWrapper from '@/components/PostWrapper'
-import BacklogPlaceholder from '@/components/posts/BacklogPlaceholder'
+import PostWrapper from "@/components/PostWrapper";
+import BacklogPlaceholder from "@/components/posts/BacklogPlaceholder";
 
 export default {
-  name: 'BoxWrapper',
+  name: "BoxWrapper",
   props: {
     post: Object,
     typeOverride: Object // override component type is set, value is map {id: component}
@@ -48,9 +45,9 @@ export default {
 
   components: {
     PostWrapper,
-    BacklogPlaceholder,
-  },
-}
+    BacklogPlaceholder
+  }
+};
 </script>
 
 <style lang="sass">
@@ -122,15 +119,32 @@ export default {
   &.cols-1-1
     grid-template-columns: 1fr 1fr
 
+    @media (max-width: $mobile)
+      grid-template-columns: 60vw 60vw
+
+      overflow: auto
+      scroll-behavior: smooth
+      -webkit-overflow-scrolling: touch
+
     .newspaper .post-body--content,
     .comment .post-body--content
       columns: 2
+
+      @media (max-width: $mobile)
+        columns: 1
 
     .box-column:nth-of-type(2)
       border-left: 1px dotted #ddd
 
   &.cols-1-1-1
     grid-template-columns: 1fr 1fr 1fr
+
+    @media (max-width: $mobile)
+      grid-template-columns: 50vw 50vw 50vw
+
+      overflow: auto
+      scroll-behavior: smooth
+      -webkit-overflow-scrolling: touch
 
     .newspaper .post-body--content,
     .comment .post-body--content
