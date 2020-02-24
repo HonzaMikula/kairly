@@ -1,44 +1,25 @@
 <template>
   <div class="newspaper-backlog-post-toolbar-view">
     <nav>
-      <button 
-        class="posts"
-      >
-        Post(s)
-      </button>
+      <button class="posts">Post(s)</button>
 
-      <button 
-        class="comment"
-      >
-        Comment
-      </button>
+      <button class="comment">Comment</button>
 
-      <button
-        class="header"
-      >
-        Header
-      </button>
+      <button class="header">Header</button>
 
-      <button
-        class="external-article"
-      >
-        External article
-      </button>
+      <button class="divider">Divider</button>
 
-      <button
-        class="layout"
-      >
-        Special layout
-      </button>
+      <button class="external-article">External article</button>
+
+      <button class="layout">Special layout</button>
     </nav>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'NewspaperBacklogPostToolbar'
-}
+  name: "NewspaperBacklogPostToolbar"
+};
 </script>
 
 <style lang="sass">
@@ -100,6 +81,9 @@ export default {
 
     &.header::before
       content: fa-content($fa-var-heading)
+
+    &.divider::before
+      content: fa-content($fa-var-grip-lines)
 
     &.external-article::before
       content: fa-content($fa-var-external-link-alt)
