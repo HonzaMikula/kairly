@@ -3,32 +3,16 @@
     <header>
       <h2>{{ $t('Select tweets') }}</h2>
 
-      <button @click="$emit('done')">
-        {{ $t('Done') }}
-      </button>
+      <button @click="$emit('done')">{{ $t('Done') }}</button>
     </header>
 
     <main>
       <!-- work with raw post in add / remove event -->
-      <PostWrapper
-        v-for="{post, source} in posts"
-        :post="post"
-        :key="post.id"
-      >
-        <template #global-controls>
-          &nbsp;
-        </template>
+      <PostWrapper v-for="{post, source} in posts" :post="post" :key="post.id">
+        <template #global-controls>&nbsp;</template>
         <template #page-controls>
-          <button
-            v-if="selected.indexOf(post.id) === -1"
-            class="add"
-            @click="add(post, source)"
-          />
-          <button
-            v-else
-            class="remove"
-            @click="remove(post, source)"
-          />
+          <button v-if="selected.indexOf(post.id) === -1" class="add" @click="add(post, source)" />
+          <button v-else class="remove" @click="remove(post, source)" />
         </template>
       </PostWrapper>
     </main>
@@ -36,13 +20,13 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 
-import { mapActions, mapMutations } from 'vuex'
-import PostWrapper from '@/components/PostWrapper'
+import { mapActions, mapMutations } from "vuex";
+import PostWrapper from "@/components/PostWrapper";
 
 export default {
-  name: 'PostsSelection',
+  name: "PostsSelection",
 
   components: {
     PostWrapper
@@ -54,54 +38,68 @@ export default {
   },
 
   data() {
-    const { considered, next, upcoming, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-    const posts = []
-    ;[considered, next, upcoming].forEach(bl => {
+    const {
+      considered,
+      next,
+      upcoming,
+      $posts
+    } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName];
+    const posts = [];
+    [considered, next, upcoming].forEach(bl => {
       bl.layout
-      .filter(post => post.type === 'post')
-      .map(post => this.$store.getters['entities/denormalize']($posts[post.id], 'Post'))
-      //.filter(post => post.type === 'tweet')
-      .forEach(post => posts.push({post, source: bl.name}))
-    })
+        .filter(post => post.type === "post")
+        .map(post =>
+          this.$store.getters["entities/denormalize"]($posts[post.id], "Post")
+        )
+        //.filter(post => post.type === 'tweet')
+        .forEach(post => posts.push({ post, source: bl.name }));
+    });
 
     return {
       initialPosts: posts
-    }
+    };
   },
 
   computed: {
     posts() {
-      const ids = {}
-      const posts = []
+      const ids = {};
+      const posts = [];
       this.initialPosts.forEach(p => {
-        ids[p.post.id] = true
-        posts.push(p)
-      })
+        ids[p.post.id] = true;
+        posts.push(p);
+      });
 
       // do not remove from tweets when tweet is moved from baclog to editorial
       // but add tweet to list when moved from editoril back to backlog
-      const { considered, next, upcoming, $posts } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-      ;[considered, next, upcoming].forEach(bl => {
+      const {
+        considered,
+        next,
+        upcoming,
+        $posts
+      } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName];
+      [considered, next, upcoming].forEach(bl => {
         bl.layout
-        .filter(post => post.type === 'post' && !ids[post.id] )
-        .map(post => this.$store.getters['entities/denormalize']($posts[post.id], 'Post'))
-        //.filter(post => post.type === 'tweet')
-        .forEach(post => posts.push({post, source: bl.name}))
-      })
-      return posts
+          .filter(post => post.type === "post" && !ids[post.id])
+          .map(post =>
+            this.$store.getters["entities/denormalize"]($posts[post.id], "Post")
+          )
+          //.filter(post => post.type === 'tweet')
+          .forEach(post => posts.push({ post, source: bl.name }));
+      });
+      return posts;
     }
   },
 
   methods: {
     add(post, source) {
-      this.$emit('add', { post, source })
+      this.$emit("add", { post, source });
     },
 
     remove(post) {
-      this.$emit('remove', { post, source })
+      this.$emit("remove", { post, source });
     }
   }
-}
+};
 </script>
 
 <style lang="sass">
@@ -145,6 +143,22 @@ export default {
   main
     overflow: auto
 
+    .post-wrapper
+      position: relative
+      max-height: 250px
+      overflow: hidden
+
+      &::after
+        position: absolute
+        bottom: 0
+
+        height: $baseline
+        width: 100%
+
+        background: linear-gradient(to bottom, transparent, #fff)
+
+        content: ''
+      
     .post-body--content
       columns: 1
 
