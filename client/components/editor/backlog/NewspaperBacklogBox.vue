@@ -6,6 +6,23 @@
     @click.native="toggleMobileControls"
     @close-editor="closeEditor"
   >
+    <template #empty-box="{ columnIndex }">
+      <BacklogPlaceholder>
+        <button
+          class="add-posts"
+          @click="openPostSelection(columnIndex)"
+        >{{ $t('Add posts') }}</button>
+        <button
+          class="toggle-editorial"
+          @click="toggleEditorialStyle(columnIndex)"
+        >{{ $t('Toggle editorial') }}</button>
+        <button
+          class="add-comment"
+          @click="writeComment(columnIndex)"
+        >{{ $t('Add comment') }}</button>
+      </BacklogPlaceholder>
+    </template>
+
     <template #page-controls="{ post, postIndex, column, columnIndex}">
       <span v-if="post.type === 'newspaper'" class="price">{{ post.price }} Kč</span>
       <template v-else>&nbsp;</template>
@@ -110,7 +127,7 @@
 
         <div class="newspaper-backlog-controls--options">
           <template v-if="post.type !== 'box' && post.type !== 'header'">
-            <button 
+            <button
               class="change-layout"
               :id="`change-layout-${post.id}`"
               @click.stop
@@ -228,20 +245,22 @@ import Vue from "vue";
 import { mapActions } from "vuex";
 import { BPopover } from "bootstrap-vue";
 
-import PostWrapper from "@/components/PostWrapper";
 import BoxWrapper from "@/components/BoxWrapper";
+import BacklogPlaceholder from "@/components/posts/BacklogPlaceholder";
 import CommentEditor from "@/components/editor/backlog/CommentEditor";
 import PostsSelection from "@/components/editor/backlog/PostsSelection";
+import PostWrapper from "@/components/PostWrapper";
 
 export default {
   name: "NewspaperBacklogBox",
 
   components: {
-    PostWrapper,
+    BacklogPlaceholder,
     BoxWrapper,
-    BPopover,
     CommentEditor,
-    PostsSelection
+    PostWrapper,
+    PostsSelection,
+    BPopover,
   },
 
   props: {
@@ -530,7 +549,7 @@ export default {
 .newspaper-backlog-controls
   grid-row: 1 / span 1
   grid-column: 1 / span 3
-  
+
 .newspaper-backlog-controls.hide-mobile-controls
   @media (max-width: $mobile)
     display: none

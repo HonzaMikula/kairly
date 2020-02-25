@@ -21,9 +21,12 @@
         </PostWrapper>
       </template>
 
-      <template v-else>
-        <BacklogPlaceholder></BacklogPlaceholder>
-      </template>
+      <slot
+        v-else
+        name="empty-box"
+        :column="col"
+        :columnIndex="colIndex"
+       />
     </div>
 
     <slot name="aside"></slot>
@@ -34,7 +37,6 @@
 import isString from "lodash/isString";
 
 import PostWrapper from "@/components/PostWrapper";
-import BacklogPlaceholder from "@/components/posts/BacklogPlaceholder";
 
 export default {
   name: "BoxWrapper",
@@ -45,7 +47,6 @@ export default {
 
   components: {
     PostWrapper,
-    BacklogPlaceholder
   }
 };
 </script>
@@ -87,7 +88,7 @@ export default {
       border-right: 1px dotted #ddd
       grid-column: 1 / span 1
       grid-row: 1 / span 1
-      
+
       .post-body--content
         columns: 2
 
@@ -142,7 +143,7 @@ export default {
 
       @media (max-width: $mobile)
         columns: 1
-    
+
     .box-column:nth-of-type(1)
       grid-column: 1 / span 1
       grid-row: 1 / span 1

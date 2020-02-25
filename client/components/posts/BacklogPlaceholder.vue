@@ -1,13 +1,8 @@
 <template>
   <div class="backlog-placeholder-view">
     <h2>{{ $t('Available actions') }}</h2>
-
     <nav>
-      <button class="add-posts">{{ $t('Add posts') }}</button>
-
-      <button class="toggle-editorial">{{ $t('Toggle editorial') }}</button>
-
-      <button class="add-comment">{{ $t('Add comment') }}</button>
+      <slot/>
     </nav>
   </div>
 </template>
