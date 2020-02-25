@@ -45,10 +45,10 @@ export const actions = {
         if (item.post) {
           return {type: 'post', id: item.post}
         }
-        if (item.header) {
+        if (item.header !== undefined) { // header can be null
           return { type: 'header', id: Math.random().toString(36).substring(2), title: item.header }
         }
-        throw Exception("Unknown type")
+        throw new Error("Unknown type")
       })
       commit('newspaperBacklog', { fullName, section: bl.name, backlog: bl})
     })

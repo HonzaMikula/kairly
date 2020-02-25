@@ -9,8 +9,6 @@
       <slot name="newspaper-title"/>
     </template>
 
-    <PostHeader />
-
     <component
       v-for="(post, idx) in headPosts"
       :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
@@ -150,9 +148,6 @@ export default {
     },
 
     getPostObject(item, idx) {
-      if (item.post) {
-        return this.postsById[item.post]
-      }
       if (Array.isArray(item)) {
         const id = Math.random().toString(36).substring(2)
         const css = isString(item[0]) ? item[0] : null
@@ -169,7 +164,14 @@ export default {
           })
         }
       }
-      return item
+      if (item.post) {
+        return this.postsById[item.post]
+      }
+      if (item.header !== undefined) { // header can be null!
+        return { type: 'header', id: Math.random().toString(36).substring(2), title: item.header }
+      }
+      console.log(item)
+      throw new Error("Unknown type")
     }
   }
 }
