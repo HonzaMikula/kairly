@@ -110,7 +110,11 @@
 
         <div class="newspaper-backlog-controls--options">
           <template v-if="post.type !== 'box' && post.type !== 'header'">
-            <button class="change-layout" :id="`change-layout-${post.id}`" @click.stop />
+            <button 
+              class="change-layout"
+              :id="`change-layout-${post.id}`"
+              @click.stop
+            />
 
             <b-popover
               :target="`change-layout-${post.id}`"
@@ -167,7 +171,7 @@
                     </li>
 
                     <li tabindex="2" @click="toggleEditorialStyle(colIndex)">
-                      <h6>{{ $t('Toggle editorlal style') }}</h6>
+                      <h6>{{ $t('Toggle editorial style') }}</h6>
                       <p>{{ $t('Change column background') }}</p>
                     </li>
                   </ul>
@@ -543,8 +547,9 @@ export default {
   @media (max-width: $mobile)
     position: sticky
     left: $baseline/4
-    top: 40%
-    
+    top: $baseline * 2
+
+    height: $baseline * 5
     width: $baseline * 2
 
   //- button up
@@ -577,7 +582,8 @@ export default {
   @media (max-width: $mobile)
     position: sticky
     left: 90vw
-    top: 40%
+    top: $baseline * 2
+
 
   //- button add editorial
   .change-layout

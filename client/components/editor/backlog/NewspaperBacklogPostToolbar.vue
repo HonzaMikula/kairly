@@ -1,17 +1,17 @@
 <template>
   <div class="newspaper-backlog-post-toolbar-view">
     <nav>
-      <button class="posts">Post(s)</button>
+      <button class="posts">{{ $t('Post') }}</button>
 
-      <button class="comment">Comment</button>
+      <button class="comment">{{ $t('Comment') }}</button>
 
-      <button class="header">Header</button>
+      <button class="heading">{{ $t('Heading') }}</button>
 
-      <button class="divider">Divider</button>
+      <button class="divider">{{ $t('Divider') }}</button>
 
-      <button class="external-article">External article</button>
+      <button class="external-article">{{ $t('External article') }}</button>
 
-      <button class="layout">Special layout</button>
+      <button class="layout">{{ $t('Special layout') }}</button>
     </nav>
   </div>
 </template>
@@ -19,7 +19,7 @@
 <script>
 export default {
   name: "NewspaperBacklogPostToolbar"
-};
+}
 </script>
 
 <style lang="sass">
@@ -79,7 +79,7 @@ export default {
     &.comment::before
       content: fa-content($fa-var-comment)
 
-    &.header::before
+    &.heading::before
       content: fa-content($fa-var-heading)
 
     &.divider::before
