@@ -74,7 +74,7 @@ export default {
   position: relative
 
   //- in backlog the margin is done by the toolbar
-  &:first-of-type > article,
+  .newspaper-editor-view &:first-of-type > article,
   .newspaper-backlog-post-toolbar-view + & > article
     margin-bottom: 0
 

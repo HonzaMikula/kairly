@@ -28,10 +28,16 @@ export default {
 
   &.gallery-1
     grid-template-columns: 100%
-    grid-template-rows: minmax(auto, max-content)
+    grid-template-rows: auto
+
+    img
+      object-fit: contain
 
     .cols-2-1 .box-column:nth-of-type(2) &,
-    .cols-1-2 .box-column:nth-of-type(1) &
+    .cols-1-2 .box-column:nth-of-type(1) &,
+    .cols-1-1-1 &
+      grid-template-rows: minmax(auto, max-content)
+
       img
         display: block
         height: auto
@@ -93,7 +99,8 @@ export default {
 
   img
     object-fit: cover
-    width: 100%
     height: 100%
+    max-width: 100%
+    max-height: 383px
 
 </style>
