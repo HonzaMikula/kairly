@@ -569,6 +569,12 @@ export default {
   grid-column-gap: $baseline / 4
   grid-template-columns: auto auto auto
 
+  @media (max-width: $mobile)
+    grid-template-rows: 1fr 1fr
+    grid-column-gap: $baseline / 4
+    grid-template-columns: $baseline*1.25 1fr $baseline*1.25
+    width: 100%
+
 .newspaper-backlog-controls--options
   position: absolute
   right: (-$baseline * 1.5)

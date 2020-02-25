@@ -18,12 +18,28 @@ export default {
 
 <style lang="sass">
 .box-header
+  @media (max-width: $mobile)
+    border-bottom: 1px solid #ddd
+    margin: $baseline/2 0
+
+
   h2
     position: relative
     margin: $baseline 0 $baseline/2 0
     font-family: $ff-serif
     font-size: $fs-1
     text-align: center
+
+    @media (max-width: $mobile)
+      position: relative
+      top: $baseline / 2
+
+      display: table
+      margin: 0 auto
+      padding: 0 $baseline/2
+
+      background: #fafafa
+
 
     &::after,
     &::before
@@ -33,6 +49,9 @@ export default {
       width: 25%
       border-top: 1px solid #ddd
       content: ''
+
+      @media (max-width: $mobile)
+        display: none
 
     &::after
       right: $baseline * 2
