@@ -50,7 +50,8 @@ export default {
     grid-template-rows: minmax(auto, max-content)
 
     .cols-2-1 .box-column:nth-of-type(2) &,
-    .cols-1-2 .box-column:nth-of-type(1) &
+    .cols-1-2 .box-column:nth-of-type(1) &,
+    .cols-1-1-1 &
       grid-template-columns: auto
       grid-template-rows: auto
 
@@ -66,7 +67,8 @@ export default {
     grid-template-rows: minmax(auto, 191.5px) minmax(auto, 191.5px)
     
     .cols-2-1 .box-column:nth-of-type(2) &,
-    .cols-1-2 .box-column:nth-of-type(1) &
+    .cols-1-2 .box-column:nth-of-type(1) &,
+    .cols-1-1-1 &
       grid-template-columns: auto
       grid-template-rows: auto
 
@@ -86,7 +88,8 @@ export default {
     grid-template-rows: minmax(auto, 191.5px) minmax(auto, 191.5px)
 
     .cols-2-1 .box-column:nth-of-type(2) &,
-    .cols-1-2 .box-column:nth-of-type(1) &
+    .cols-1-2 .box-column:nth-of-type(1) &,
+    .cols-1-1-1 &
       grid-template-columns: auto
       grid-template-rows: auto
 

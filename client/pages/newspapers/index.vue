@@ -88,6 +88,12 @@
               @click.prevent="addHeader">
               {{ $t('Add header') }}
             </button>
+
+            <button
+              v-if="isAdmin"
+              @click.prevent="addHR">
+              {{ $t('Add HR') }}
+            </button>
           </div>
 
           <div class="mobile-menu">
@@ -297,6 +303,7 @@ export default {
 
     async addHeader() {
       const newspaper = this.selectedNewspaper
+
       let title = window.prompt("Title")
       if (title === null) {
         return
@@ -316,7 +323,25 @@ export default {
         deleteCount: 0
       })
       this.$store.dispatch('backlog/save', { newspaper })
+    },
+
+    async addHR() {
+      const newspaper = this.selectedNewspaper
+
+      const item = {
+        id: Math.random().toString(36).substring(2),
+        type: 'header',
+      }
+      this.$store.commit('backlog/splice', {
+        newspaper: newspaper,
+        target: 'upcoming',
+        items: [item],
+        index: 0,
+        deleteCount: 0
+      })
+      this.$store.dispatch('backlog/save', { newspaper })
     }
+
   },
 
   async fetch({ store, redirect }) {
