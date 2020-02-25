@@ -95,7 +95,7 @@ export default {
       this.$emit("add", { post, source });
     },
 
-    remove(post) {
+    remove(post, source) {
       this.$emit("remove", { post, source });
     }
   }
@@ -158,7 +158,7 @@ export default {
         background: linear-gradient(to bottom, transparent, #fff)
 
         content: ''
-      
+
     .post-body--content
       columns: 1
 
