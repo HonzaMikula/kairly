@@ -36,7 +36,12 @@
               :source="backlog.name"
               :index="idx"
             />
-            <NewspaperBacklogPostToolbar :key="`${post.id}-toolbar`" />
+            <NewspaperBacklogPostToolbar
+              :key="`${post.id}-toolbar`"
+              :index="idx"
+              :newspaper="newspaper"
+              :backlog="backlog"
+             />
           </template>
         </transition-group>
       </draggable>

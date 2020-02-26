@@ -1,24 +1,131 @@
 <template>
   <div class="newspaper-backlog-post-toolbar-view">
     <nav>
-      <button class="posts">{{ $t('Post') }}</button>
+      <!-- <button class="posts">{{ $t('Post') }}</button> -->
 
-      <button class="comment">{{ $t('Comment') }}</button>
+      <button
+        class="comment"
+        @click.prevent="addComment"
+      >
+        {{ $t('Comment') }}
+      </button>
 
-      <button class="heading">{{ $t('Heading') }}</button>
+      <button
+        class="heading"
+        @click.prevent="addHeader"
+      >
+        {{ $t('Heading') }}
+      </button>
 
-      <button class="divider">{{ $t('Divider') }}</button>
+      <button
+        class="divider"
+        @click.prevent="addHR"
+      >
+        {{ $t('Divider') }}
+      </button>
 
-      <button class="external-article">{{ $t('External article') }}</button>
+      <button 
+        class="external-article"
+        @click.prevent="addExternalLink"
+      >
+        {{ $t('External article') }}
+      </button>
 
-      <button class="layout">{{ $t('Special layout') }}</button>
+      <!-- <button class="layout">{{ $t('Special layout') }}</button> -->
     </nav>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import ErrorHandler from '@/mixins/ErrorHandler'
+
 export default {
-  name: "NewspaperBacklogPostToolbar"
+  name: "NewspaperBacklogPostToolbar",
+
+  props: {
+    index: Number,
+    newspaper: Object,
+    backlog: Object
+  },
+
+  mixins: [ErrorHandler],
+
+  methods: {
+    ...mapActions({
+      addLinkToBacklog: 'backlog/addLink'
+    }),
+
+    async addExternalLink() {
+      let url = window.prompt("URL")
+      if (url === null) {
+        return
+      }
+
+      this.$ga.event({
+        eventCategory: 'Add external article',
+        eventAction: url,
+        eventLabel: this.newspaper
+      })
+
+      try {
+        await this.addLinkToBacklog({newspaper: this.newspaper, url})
+        this.externalLink = ''
+      } catch (err) {
+        this.handleError(err)
+      }
+    },
+
+    async addComment() {
+      const data = {
+        type: 'comment',
+        title: '',
+        content: ''
+      }
+      const { post } = await this.$axios.$post(`/drafts`, data)
+      const newspaper = this.newspaper
+
+      this.$store.commit('backlog/registerPost', { newspaper, post })
+      this.$store.commit('backlog/splice', {
+        newspaper: newspaper,
+        target: this.backlog.name,
+        items: [{id: post.id, type: 'post'}],
+        index: this.index + 1,
+        deleteCount: 0
+      })
+      this.$store.dispatch('backlog/save', { newspaper })
+    },
+
+    addHeader() {
+      let title = window.prompt("Title")
+      if (title === null) {
+        return
+      }
+      title = title.trim()
+      this.addHeaderItem(title === '' ? null : title)
+    },
+
+    addHR() {
+      this.addHeaderItem(null)
+    },
+
+    addHeaderItem(title) {
+      const newspaper = this.newspaper
+      const item = {
+        id: Math.random().toString(36).substring(2),
+        type: 'header',
+        title: title
+      }
+      this.$store.commit('backlog/splice', {
+        newspaper: newspaper,
+        target: this.backlog.name,
+        items: [item],
+        index: this.index + 1,
+        deleteCount: 0
+      })
+      this.$store.dispatch('backlog/save', { newspaper })
+    }
+  }
 }
 </script>
 

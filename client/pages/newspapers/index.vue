@@ -76,24 +76,6 @@
               :title="$t('Edit newspaper')"
               v-b-tooltip
             />
-
-            <button
-              v-if="isAdmin"
-              @click.prevent="addComment">
-              {{ $t('Add comment') }}
-            </button>
-
-            <button
-              v-if="isAdmin"
-              @click.prevent="addHeader">
-              {{ $t('Add header') }}
-            </button>
-
-            <button
-              v-if="isAdmin"
-              @click.prevent="addHR">
-              {{ $t('Add HR') }}
-            </button>
           </div>
 
           <div class="mobile-menu">
@@ -280,58 +262,6 @@ export default {
         this.handleError(err)
       }
     },
-
-    async addComment() {
-      const data = {
-        type: 'comment',
-        title: '',
-        content: ''
-      }
-      const { post } = await this.$axios.$post(`/drafts`, data)
-      const newspaper = this.selectedNewspaper
-
-      this.$store.commit('backlog/registerPost', { newspaper, post })
-      this.$store.commit('backlog/splice', {
-        newspaper: newspaper,
-        target: 'upcoming',
-        items: [{id: post.id, type: 'post'}],
-        index: 0,
-        deleteCount: 0
-      })
-      this.$store.dispatch('backlog/save', { newspaper })
-    },
-
-    addHeader() {
-
-
-      let title = window.prompt("Title")
-      if (title === null) {
-        return
-      }
-      title = title.trim()
-      this.addHeaderItem(title === '' ? null : title)
-    },
-
-    addHR() {
-      this.addHeaderItem(null)
-    },
-
-    addHeaderItem(title) {
-      const newspaper = this.selectedNewspaper
-      const item = {
-        id: Math.random().toString(36).substring(2),
-        type: 'header',
-        title: title
-      }
-      this.$store.commit('backlog/splice', {
-        newspaper: newspaper,
-        target: 'upcoming',
-        items: [item],
-        index: 0,
-        deleteCount: 0
-      })
-      this.$store.dispatch('backlog/save', { newspaper })
-    }
   },
 
   async fetch({ store, redirect }) {
