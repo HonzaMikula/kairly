@@ -24,7 +24,7 @@ def forwards_func(apps, schema_editor):
                 published = now
                 author_id = bl.newspaper.editor_id
             except Backlog.DoesNotExist:
-                print(f"unused editorial {editorial.title}")
+                # print(f"unused editorial {editorial.title}")
                 editorial.delete()
                 continue
 
