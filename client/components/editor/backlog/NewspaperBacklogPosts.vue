@@ -4,13 +4,11 @@
       <h2>{{ title }}</h2>
 
       <p>{{ description }}</p>
-
     </header>
 
 
     <div class="newspaper-backlog--next-issue">
-
-      <div v-show="!backlog.length" class="no-post">
+      <div v-show="!backlog.layout.length" class="no-post">
         <h2>{{ $t('No posts in backlog') }}</h2>
       </div>
 
@@ -28,15 +26,23 @@
           tag="div"
           :name="!drag ? 'flip-list' : null"
         >
-          <NewspaperBacklogPost
-            v-for="(log, idx) in items"
-            :key="log.post.id"
-            :newspaper="newspaper"
-            :log="log"
-            :canMoveUp="idx > 0 || source !== 'upcoming'"
-            :canMoveDown="idx < backlog.length - 1 || source != 'considered'"
-            :source="source"
-          />
+          <template v-for="(post, idx) in items">
+            <NewspaperBacklogBox
+              :key="post.id"
+              :newspaper="newspaper"
+              :post="post"
+              :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
+              :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
+              :source="backlog.name"
+              :index="idx"
+            />
+            <NewspaperBacklogPostToolbar
+              :key="`${post.id}-toolbar`"
+              :index="idx"
+              :newspaper="newspaper"
+              :backlog="backlog"
+             />
+          </template>
         </transition-group>
       </draggable>
     </div>
@@ -45,26 +51,28 @@
 
 <script>
 import Vue from 'vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import draggable from 'vuedraggable'
 
-import NewspaperBacklogPost from '@/components/editor/backlog/NewspaperBacklogPost'
+import NewspaperBacklogBox from '@/components/editor/backlog/NewspaperBacklogBox'
 import { isTouchDevice } from '@/utils/browser'
+import NewspaperBacklogPostToolbar from '@/components/editor/backlog/NewspaperBacklogPostToolbar'
 
 export default {
   name: 'NewspaperBacklogPosts',
 
   components: {
     draggable,
-    NewspaperBacklogPost,
+    NewspaperBacklogBox,
+    NewspaperBacklogPostToolbar,
   },
 
   props: {
-    newspaper: Object,
-    title: String,
+    newspaper: {type: Object, required: true},
+    title: {type: String, required: true},
     description: String,
-    backlog: Array,
-    source: String,
+    backlog: {type: Object, required: true},
+    posts: {type: Object, required: true}
   },
 
   data() {
@@ -77,22 +85,43 @@ export default {
   computed: {
     items: {
       get() {
-        return this.backlog
+        return this.backlog.layout.map((item, idx) => this.getPostObject(item, idx))
       },
 
       set(value) {
         this.backlogReorder({
           newspaper: this.newspaper,
-          source: this.source,
-          posts: value,
+          target: this.backlog.name,
+          ordering: value.map(p => p.id),
         })
       }
     }
   },
 
-  methods: mapActions({
-    backlogReorder: 'backlog/reorder'
-  }),
+  methods: {
+    ...mapActions({
+      backlogReorder: 'backlog/reorder'
+    }),
+
+    // TODO copied from IssueWrapper
+    getPostObject(item, idx) {
+      if (item.type === 'post') {
+        return this.posts[item.id]
+      }
+      if (item.type === 'header') {
+        return item
+      }
+      return {
+        ...item,
+        columns: item.columns.map(c => {
+          return {
+            css: c.css,
+            posts: c.posts.map(item => this.posts[item.id])
+          }
+        })
+      }
+    }
+  },
 
   mounted() {
     this.isTouchDevice = isTouchDevice()

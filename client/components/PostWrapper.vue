@@ -1,217 +1,90 @@
 <template>
-  <section
-    :class="{'editorial-post': !!editorial, 'normal-post': !editorial, 'is-before': editorial && editorial.position === 'left'}">
+  <section class="post-wrapper">
     <component
-      :is="'post-' + postType"
-      :key="post.id"
+      :is="postType"
       class="post-content"
       :post="post"
-      :isSubscribed="isSubscribed"
+      @close-editor="p => $emit('close-editor', p)"
     >
       <template #author>
         <slot name="author"></slot>
       </template>
 
-      <template #extended-controls>
-        <slot name="extended-controls"></slot>
+      <template #global-controls>
+        <slot name="global-controls" :post="post"></slot>
       </template>
 
-      <template #controls>
-        <slot name="controls"></slot>
+      <template #page-controls>
+        <slot name="page-controls" :post="post"></slot>
       </template>
     </component>
 
-    <slot name="editorial">
-      <aside>
-      <component
-        v-if="editorial"
-        :is="'editorial-' + editorial.type"
-        :editorial="editorial"
-      />
-      </aside>
-    </slot>
+    <slot name="aside"></slot>
   </section>
 </template>
 
 <script>
-import PostArticle from '@/components/posts/PostArticle'
-import PostComment from '@/components/posts/PostComment'
-import PostLink from '@/components/posts/PostLink'
-import PostTweet from '@/components/posts/PostTweet'
-import PostPicture from '@/components/posts/PostPicture'
-import PostVideo from '@/components/posts/PostVideo'
-import PostRecommendations from '@/components/posts/PostRecommendations'
-
-import EditorialTweets from '@/components/posts/EditorialTweets'
-import EditorialArticle from '@/components/posts/EditorialArticle'
+import PostArticle from "@/components/posts/PostArticle";
+import PostComment from "@/components/posts/PostComment";
+import PostHeader from "@/components/posts/PostHeader";
+import PostLink from "@/components/posts/PostLink";
+import PostTweet from "@/components/posts/PostTweet";
+import PostPicture from "@/components/posts/PostPicture";
+import PostVideo from "@/components/posts/PostVideo";
+import PostRecommendations from "@/components/posts/PostRecommendations";
 
 export default {
-  name: 'PostWrapper',
+  name: "PostWrapper",
   props: {
     post: Object,
-    isSubscribed: Boolean,
-    editorial: Object,  // right or left
+    typeOverride: Object // override component type is set, value is map {id: component}
   },
 
   components: {
     PostArticle,
     PostComment,
+    PostHeader,
     PostLink,
     PostTweet,
     PostPicture,
     PostVideo,
-    PostRecommendations,
-    EditorialTweets,
-    EditorialArticle,
+    PostRecommendations
   },
 
   computed: {
-    //- TEMP hack - we can get rid of it after migration
     postType() {
-      // if (this.editorial == 'article' || this.editorial == 'tweet') {
-      //   return 'editorial'
-      // }
-      if (this.post.type === 'newspaper') {
-        return 'article' // TODO: back to 'article'
+      if (this.typeOverride) {
+        const component = this.typeOverride[this.post.id];
+        if (component) {
+          return component;
+        }
+      }
+      if (this.post.type === "newspaper") {
+        return "post-article";
       } else {
-        return this.post.type
+        return "post-" + this.post.type;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="sass">
-.editorial-post
+.post-wrapper
   position: relative
 
-  display: grid
-  grid-template-columns: 1fr 1fr 1fr
-  margin-bottom: $baseline / 2
+  //- in backlog the margin is done by the toolbar
+  .newspaper-editor-view &:first-of-type > article,
+  .newspaper-backlog-post-toolbar-view + & > article
+    margin-bottom: 0
 
-  background: #F2ECEC
-  border: 1px solid #eee
-  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
-
-  @media (max-width: $mobile)
-    grid-template-columns: calc(100vw - (#{$baseline} * 1.5)) 60vw
-
-    overflow: auto
-    scroll-behavior: smooth
-    -webkit-overflow-scrolling: touch
-
-    &.is-before
-      grid-template-columns: 60vw calc(100vw - (#{$baseline} * 1.5))
-
-  > aside
-    display: flex
-    flex-direction: column
-    justify-content: center
-
-  > aside > div
+  > article
+    box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+  
+  .newspaper-backlog-controls
     @media (max-width: $mobile)
       position: absolute
-      height: 100%
-      width: 100%
-      overflow-y: auto
-
-  //- main article
-  > .newspaper,
-  > .tweet,
-  > .link,
-  > .video,
-  > .comment
-    grid-column: 1 / span 2
-    grid-row: 1
-    margin: 0
-    max-width: none
-
-    @media (max-width: $mobile)
-      grid-column: 1 / span 1
-      grid-row: 1
-
-    timeline-post--article--content
-      column-count: 2
-
-    .timeline-post--video--content
-      grid-template-columns: 1fr
-
-  .video + .editorial-post--editorial
-
-    .tweet-attachment-link-view
-      display: none
-
-  .editorial-post-tweet-editor
-    article
-      margin: 0
-
-    .timeline-post--tweet
-        margin: 0
-
-  //- tweets
-  .editorial-post--editorial
-    align-self: center
-    grid-column: 3 / span 1
-    grid-row: 1
-
-    article
-      margin: 0
-      background: #F2ECEC
-
-      .timeline-post--tweet
-        margin: 0
-
-      .tweet-attachment-link-view
-        display: none //- TODO: refactor so it's not done over CSS
-
-      .tweet-attachment-gallery
-
-        img
-          display: block
-          height: auto
-          max-height: 288px
-
-        &.gallery-1,
-        &.gallery-2,
-        &.gallery-3,
-        &.gallery-4
-          grid-template-rows: minmax(auto, max-content)
-
-        &.gallery-2
-          grid-template-columns: 100%
-
-        &.gallery-1 img
-          object-fit: contain
-
-      .tweet-attachment-video-view video
-        max-height: 288px
-
-    @media (max-width: $mobile)
-      grid-column: 2 / span 1
-      grid-row: 1
-
-  &.is-before
-    .newspaper
-      grid-column: 2 / span 2
-
-      @media (max-width: $mobile)
-        grid-column: 2 / span 1
-        grid-row: 1
-
-    .video, .comment, .link
-      grid-column: 2 / span 2
-      grid-row: 1
-
-    .editorial-post--editorial
-      grid-column: 1 / span 1
-
-
-//- Normal Post
-.normal-post
-  position: relative
-
-  .post
-    border: 1px solid #eee
-    box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+      top: 30%
+      width: 100vw  
 </style>
 

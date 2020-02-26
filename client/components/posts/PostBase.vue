@@ -5,45 +5,47 @@
   >
     <header @mouseleave="closeAuthorWidget">
       <slot name="author">
-        <picture>
-          <template v-if="post.author.kind == 'external'">
-            <a :href="post.author.url" target="_blank">
-              <AuthorPicture :author="post.author" />
-            </a>
-          </template>
-          <template v-else>
-            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-              <AuthorPicture :author="post.author" />
-            </nuxt-link>
-          </template>
-        </picture>
+        <template v-if="post.author">
+          <picture>
+            <template v-if="post.author.kind == 'external'">
+              <a :href="post.author.url" target="_blank">
+                <AuthorPicture :author="post.author" />
+              </a>
+            </template>
+            <template v-else>
+              <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+                <AuthorPicture :author="post.author" />
+              </nuxt-link>
+            </template>
+          </picture>
 
-        <h3 :id="`post-author-${post.id}`">
-          <template v-if="post.author.kind == 'external'">
-            <a :href="post.author.url" target="_blank">{{ post.author.name }}</a>
-          </template>
-          <template v-else>
-            <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-              {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
-            </nuxt-link>
-          </template>
-        </h3>
+          <h3 :id="`post-author-${post.id}`">
+            <template v-if="post.author.kind == 'external'">
+              <a :href="post.author.url" target="_blank">{{ post.author.name }}</a>
+            </template>
+            <template v-else>
+              <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
+                {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+              </nuxt-link>
+            </template>
+          </h3>
 
-        <AuthorPopup
-         v-if="post.author.kind != 'external'"
-          :target="`post-author-${post.id}`"
-          :author="post.author"
-        />
+          <AuthorPopup
+          v-if="post.author.kind != 'external'"
+            :target="`post-author-${post.id}`"
+            :author="post.author"
+          />
 
-        <time>{{ post.time | moment('MMM D') }}</time>
+          <time>{{ post.time | moment('MMM D') }}</time>
+        </template>
       </slot>
 
       <section>
-        <slot name="extended-controls"/>
-        <slot name="controls">
+        <slot name="global-controls"/>
+        <slot name="page-controls">
           <span>
             <button
-              v-if="user && post.author.id == user.id"
+              v-if="user && post.author && post.author.id == user.id"
               class="edit"
               v-b-tooltip
               :title="$t('Edit post')"
@@ -80,7 +82,10 @@ import ConsiderPost from '@/components/widgets/ConsiderPost'
 
 export default {
   name: 'PostDetail',
-  props: ["post", "isSubscribed"],
+
+  props: {
+    post: Object,
+  },
 
   components: {
     AuthorPicture,
@@ -137,6 +142,8 @@ export default {
 
 //- Post -//
 .post
+  position: relative
+
   display: block
   margin-bottom: $baseline / 2
   padding: $baseline / 2
@@ -244,6 +251,9 @@ export default {
 
       &.remove
         +button-icon($fa-var-times, icon, solid, small)
+
+      &.level-up
+        +button-icon($fa-var-level-up-alt, icon, solid, small)
 
       &.add
         +button-icon($fa-var-plus, icon, solid, small)

@@ -15,8 +15,6 @@ urlpatterns = [
     path('newspapers/<username>/<slug:newspapeper_slug>', views.NewspaperView.as_view(), name='newspaper'),
     path('newspapers/<username>/<slug:newspapeper_slug>/subscription', views.NewspaperSubscriptionView.as_view(), name='newspaper_subscribtion'),
     path('newspapers/<username>/<slug:newspapeper_slug>/backlog', views.newspaper_backlog, name='newspaper_backlog'),
-    path('newspapers/<username>/<slug:newspapeper_slug>/backlog/links', views.create_link, name='create_link'),
-    path('newspapers/<username>/<slug:newspapeper_slug>/editorials/<int:post_id>', views.EditorialsView.as_view(), name='editorials'),
 
     path('authors/<username>', views.author_detail, name='author'),
     path('authors/<username>/posts', views.author_posts, name='author_posts'),
@@ -28,6 +26,7 @@ urlpatterns = [
     path('drafts/<int:post_id>/fair-price', views.draft_fair_price, name='draft_fair_prace'),
     path('drafts/<int:post_id>/publish', views.publish_draft, name='publish_draft'),
     path('posts/<username>/<post_slug>', views.post, name='post'),
+    path('external-links', views.create_link, name='create_link'),
 
     path('recommendation/post/<username>/<post_slug>', views.PostRecommendationView.as_view(), name='post_recommendation'),
     path('recommendation/issue/<username>/<slug:newspapeper_slug>/<int:issue_number>', views.IssueRecommendationView.as_view(), name='issue_recommendation'),

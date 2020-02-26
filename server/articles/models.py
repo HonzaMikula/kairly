@@ -12,7 +12,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
-from django.db.models import Count, Sum, F
+from django.db.models import Count, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -275,48 +275,6 @@ class Post(models.Model):
         return result
 
 
-class Editorial(models.Model):
-    ARTICLE = 'article'
-    TWEETS = 'tweets'
-
-    KIND_CHOICES = (
-        (ARTICLE, _('Article')),
-        (TWEETS, _('Tweets')),
-    )
-
-    title = models.CharField(max_length=160, null=True)
-    content = models.TextField(_("Content"), blank=True, null=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
-    kind = models.CharField(max_length=60, choices=KIND_CHOICES)
-    position = models.CharField(max_length=32)
-
-    def __str__(self):
-        return self.title
-
-    def to_json(self, entities):
-        data = {
-            'author': entities.make_ref(User, self.author_id),
-            'type': self.kind,
-            'position': self.position,
-        }
-
-        if self.kind == 'article':
-            data['title'] = self.title
-            data['content'] = self.content
-        elif self.kind == 'tweets':
-            tweets = EditorialTweet.objects.filter(editorial=self).select_related('post').order_by('ordering')
-            data['tweets'] = [t.post.to_json(entities) for t in tweets]
-        else:
-            raise ValueError
-        return data
-
-
-class EditorialTweet(models.Model):
-    editorial = models.ForeignKey(Editorial, models.CASCADE)
-    post = models.ForeignKey(Post, models.CASCADE)
-    ordering = models.IntegerField(null=True)
-
-
 @entities_key("newspapers", 1)
 class Newspaper(models.Model, PeriodMixin):
     title = models.CharField(max_length=160)
@@ -430,41 +388,70 @@ class CoEditor(models.Model):
 
 
 class Backlog(models.Model):
-    UPCOMING_ISSUE = 1
-    NEXT_ISSUE = 2
-
+    name = models.CharField(max_length=64)
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
-    post = models.ForeignKey(Post, models.CASCADE)
-    publish_in = models.SmallIntegerField(null=True, db_index=True)
-    ordering = models.IntegerField(null=True)
-    editorial = models.ForeignKey(Editorial, models.SET_NULL, null=True)
+    posts = models.ManyToManyField(Post, blank=True, through='BacklogPost')
+    layout = models.TextField()
 
     @classmethod
-    def append_post(cls, newspaper, post):
-        return cls._consider_post(newspaper, post, prepend=False)
+    def get_layout_posts(cls, layout):
+        ids = set()
+        for item in layout:
+            if isinstance(item, list):
+                ids.update(cls.get_layout_posts(item))
+            elif isinstance(item, dict):
+                post_id = item.get('post')
+                if post_id:
+                    ids.add(post_id)
+        return ids
 
-    @classmethod
-    def prepend_post(cls, newspaper, post):
-        return cls._consider_post(newspaper, post, prepend=True)
+    def save_layout(self, layout):
+        if not self.id and not layout:
+            # do not save non existing backlog with no posts
+            return
 
-    @classmethod
-    def _consider_post(cls, newspaper, post, prepend):
-        if isinstance(post, int):
-            post_id = post
-        else:
-            post_id = post.id
+        new_posts = self.get_layout_posts(layout)
+        current_posts = self.get_layout_posts(json.loads(self.layout))
 
-        if cls.objects.filter(newspaper=newspaper, post_id=post_id).exists():
-            return None
+        self.layout = json.dumps(layout).decode()
+        self.save()
 
-        if prepend:
-            cls.objects.filter(newspaper=newspaper, publish_in__isnull=True).update(ordering=F('ordering') + 1)
+        removed_posts = current_posts - new_posts
+        if removed_posts:
+            BacklogPost.objects.filter(backlog=self, post_id__in=list(removed_posts)).delete()
 
-        return cls.objects.create(
-            newspaper=newspaper,
-            post_id=post_id,
-            ordering=0 if prepend else None
-        )
+        added_posts = new_posts - current_posts
+        if added_posts:
+            BacklogPost.objects.bulk_create([BacklogPost(backlog=self, post_id=p) for p in added_posts])
+
+    def append_item(self, item):
+        layout = json.loads(self.layout)
+        layout.append(item)
+        self.save_layout(layout)
+
+    def to_json(self, entities):
+        newspaper_ref = entities.make_ref(Newspaper, self.newspaper_id)
+        result = {
+            "name": self.name,
+            "newspaper": newspaper_ref,
+            "layout": json.loads(self.layout)
+        }
+        posts_json = {}
+        for ip in BacklogPost.objects.filter(backlog=self).select_related('post'):
+            posts_json[str(ip.post_id)] = ip.post.to_json(entities, short=True)
+        result["posts"] = posts_json
+        return result
+
+
+class BacklogPost(models.Model):
+    backlog = models.ForeignKey(Backlog, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = [['backlog', 'post']]
+
+    def __str__(self):
+        return self.post.title
 
 
 class Issue(models.Model):
@@ -473,6 +460,7 @@ class Issue(models.Model):
     editor = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, null=True)  # TODO why this is denormalized, why this is not taken from newspaper
     posts = models.ManyToManyField(Post, blank=True, through='IssuePost')
     newspaper = models.ForeignKey(Newspaper, models.CASCADE)
+    layout = models.TextField(null=True)
 
     class Meta:
         ordering = ('-published',)
@@ -488,21 +476,19 @@ class Issue(models.Model):
             "type": 'newspaper',
             "newspaper": newspaper_ref,
             "time": datetime_isoformat_ecma262(self.published.astimezone(entities.tzinfo)),
+            "layout": json.loads(self.layout)
         }
         if posts:
-            query = IssuePost.objects.filter(issue=self).select_related('post', 'editorial').order_by('ordering', '-post__published')
-            result["posts"] = [{
-                'post': ip.post.to_json(entities, short=True),
-                'editorial': ip.editorial.to_json(entities) if ip.editorial else None
-            } for ip in query]
+            posts_json = []
+            for ip in IssuePost.objects.filter(issue=self).select_related('post'):
+                posts_json.append(ip.post.to_json(entities, short=True))
+            result["posts"] = posts_json
         return result
 
 
 class IssuePost(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    editorial = models.ForeignKey(Editorial, on_delete=models.SET_NULL, null=True)
-    ordering = models.IntegerField(default=1)
 
     def __str__(self):
         return self.post.title

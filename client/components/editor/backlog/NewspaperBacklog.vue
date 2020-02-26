@@ -2,24 +2,29 @@
   <div class="newspaper-backlog-view">
 
     <NewspaperBacklogPosts
+      v-if="upcoming"
       :title="$t('Issue #') + (newspaper.issues + 1)"
       :description="$t('Issue will be published ') + timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
-      :backlog="backlog.upcoming"
+      :backlog="upcoming"
+      :posts="posts"
       source="upcoming"
     />
 
     <NewspaperBacklogPosts
       :title="$t('Issue #') + (newspaper.issues + 2)"
       :newspaper="newspaper"
-      :backlog="backlog.next"
+      :backlog="next"
+      :posts="posts"
       source="next"
     />
 
     <NewspaperBacklogPosts
+      v-if="considered"
       :title="$t('Considered posts')"
       :newspaper="newspaper"
-      :backlog="backlog.considered"
+      :backlog="considered"
+      :posts="posts"
       source="considered"
     />
   </div>
@@ -28,7 +33,8 @@
 <script>
 import Vue from 'vue'
 import moment from 'moment'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import mapValues from 'lodash/mapValues'
 
 import ErrorHandler from '@/mixins/ErrorHandler'
 import PostWrapper from '@/components/PostWrapper'
@@ -54,13 +60,28 @@ export default {
   },
 
   computed: {
-    backlog() {
-      const backlog = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
-      return this.$store.getters['entities/denormalize'](backlog, 'NewspaperBacklog')
+    ...mapGetters({
+      denormalize: 'entities/denormalize',
+    }),
+
+    backlogs() {
+      return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
     },
 
-    currentMonth() {
-      return this.backlog ? this.backlog.currentMonthStats : []
+    posts() {
+      return mapValues(this.backlogs.$posts, p => this.denormalize(p, 'Post'))
+    },
+
+    upcoming() {
+      return this.backlogs.upcoming
+    },
+
+    next() {
+      return this.backlogs.next
+    },
+
+    considered() {
+      return this.backlogs.considered
     }
   },
 
@@ -124,6 +145,6 @@ p.newspaper-backlog--info--profit
 
 //- Add external article
 .newspaper-backlog--backlog--external-article
-  
+
 
 </style>

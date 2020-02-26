@@ -7,7 +7,5 @@ Vue.config.ignoredElements = [
   'timeline-newspaper',
   'timeline-post--article',
   'timeline-post--article--content',
-  'timeline-post--comment',
-  'timeline-post--comment--content',
   'timeline-view',
 ]

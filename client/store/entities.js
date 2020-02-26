@@ -93,7 +93,7 @@ const schemas = {
   'Issue': {
     author: 'Author',
     newspaper: 'Newspaper',
-    posts: 'PostEditorial',
+    posts: 'Post',
   },
   'PostEditorial': {
     post: 'Post',
@@ -103,12 +103,6 @@ const schemas = {
     author: 'Author',
     tweets: 'Post'
   },
-  'NewspaperBacklog': {
-    considered: 'PostEditorial',
-    next: 'PostEditorial',
-    upcoming: 'PostEditorial',
-  },
-
   'Transaction': {
     source: 'TransactionParty',
     target: 'TransactionParty'

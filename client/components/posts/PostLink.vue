@@ -17,7 +17,7 @@
         <a :href="post.source" target="_blank">{{ post.content.title }}</a>
       </h2>
 
-      <div>
+      <div class="post-body--content">
         <picture v-if="post.content.attachments && post.content.attachments.image">
           <img :src="post.content.attachments.image"/>
         </picture>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <template #controls><slot name="controls"></slot></template>
+    <template #page-controls><slot name="page-controls"></slot></template>
   </PostBase>
 </template>
 
@@ -39,7 +39,9 @@ import PostBase from './PostBase';
 export default {
   name: 'post-link',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: { PostBase }
 }
@@ -84,7 +86,7 @@ export default {
     a
       color: #000
 
-  > div
+  .post-body--content
     column-count: 2
     column-rule: 1px dotted #ddd
     column-gap: $baseline

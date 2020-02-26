@@ -59,18 +59,18 @@ export default {
     },
 
     toggle(newspaper, ev) {
-      const source = this.postBacklog[newspaper.fullName]
-      if (source !== undefined) {
+      const backlogName = this.postBacklog[newspaper.fullName]
+      if (backlogName) {
         this.removeFromBacklog({
           newspaper,
-          source,
-          postId: this.post.id
+          source: backlogName,
+          post: this.post
         })
       } else {
         this.addToBacklog({
           newspaper,
-          post: this.post,
-          source: 'considered'
+          target: 'considered',
+          post: this.post
         })
       }
       document.activeElement.blur()

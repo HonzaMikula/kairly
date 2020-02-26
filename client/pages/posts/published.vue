@@ -4,10 +4,9 @@
       <PostWrapper
         v-for="post in posts"
         :post="post"
-        :isSubscribed="true"
         :key="post.id"
       >
-        <template #controls>
+        <template #page-controls>
           <button-icon
             class="edit"
             v-b-tooltip

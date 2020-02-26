@@ -21,7 +21,7 @@
             :author="author"
           />
 
-          <nuxt-link 
+          <nuxt-link
             class="edit-profile"
             v-if="user && author.id == user.id"
             to="/user/settings">
@@ -46,7 +46,11 @@
       </div>
 
       <div class="author-detail--posts" v-if="posts.length">
-        <PostWrapper v-for="post in posts" :post="post" :isSubscribed="true" :key="post.id"/>
+        <PostWrapper
+          v-for="post in posts"
+          :key="post.id"
+          :post="post"
+        />
       </div>
 
       <div class="author-detail--empty" v-if="!newspapers.length && !posts.length && !loadingPosts">

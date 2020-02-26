@@ -7,7 +7,7 @@
         <figcaption>{{ post.content.title }}</figcaption>
       </figure>
     </timeline-post--picture>
-    <template #controls><slot name="controls"></slot></template>
+    <template #page-controls><slot name="page-controls"></slot></template>
   </PostBase>
 </template>
 
@@ -17,7 +17,9 @@ import PostBase from './PostBase';
 export default {
   name: 'post-picture',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: { PostBase }
 }

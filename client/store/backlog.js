@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import isString from 'lodash/isString'
+import keyBy from 'lodash/keyBy'
 
 let reorderPostScheduled = false
 
@@ -7,87 +9,104 @@ export const state = () => ({
   newspaperBacklog: {},
 })
 
-async function _postBackLog(state, fullName) {
-  const backlog = state.newspaperBacklog[fullName]
-  await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
-    upcoming: backlog.upcoming.map(log => log.post.id),
-    next: backlog.next.map(log => log.post.id),
-    considered: backlog.considered.map(log => log.post.id)
-  })
-}
-
 export const actions = {
   async loadUserBacklog({ commit, state }) {
     if (state.userBacklog) {
       return state.userBacklog
     }
     const { backlog } = await this.$axios.$get('/backlog')
-    Object.entries(backlog).forEach(([postId, newspapers]) => {
-      Object.entries(newspapers).forEach(([newspaperId, value]) => {
-        if (value === 1) {
-          backlog[postId][newspaperId] = 'next'
-        } else if (value === 2) {
-          backlog[postId][newspaperId] = 'upcoming'
-        } else {
-          backlog[postId][newspaperId] = 'considered'
-        }
-      })
-    })
-
     commit('userBacklog', backlog)
     return backlog
   },
 
   async loadNewspaperBacklog({ commit }, fullName) {
-    const { backlog, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
-    let upcoming = []
-    let next = []
-    let considered = []
-    backlog.forEach(log => {
-      if (log.publish === 1) { upcoming.push(log) }
-      else if (log.publish === 2) { next.push(log) }
-      else { considered.push(log) }
-    })
+    const { backlogs, posts, currentMonth } = await this.$axios.$get(`/newspapers/${fullName}/backlog`)
 
+    commit('newspaperBacklogPosts', { fullName, posts })
     commit('newspaperBacklogStats', { fullName, currentMonthStats: currentMonth })
-    commit('newspaperBacklogPosts', { fullName, section: 'upcoming', posts: upcoming})
-    commit('newspaperBacklogPosts', { fullName, section: 'next', posts: next })
-    commit('newspaperBacklogPosts', { fullName, section: 'considered', posts: considered })
+
+    Object.values(backlogs).forEach(bl => {
+      bl.layout = bl.layout.map(item => {
+        if (Array.isArray(item)) {
+          const css = isString(item[0]) ? item[0] : null
+          const columns = css === null ? item : item.slice(1)
+          return {
+            id: Math.random().toString(36).substring(2),
+            type: 'box',
+            css,
+            columns: columns.map(c => {
+              return  {
+                css: isString(c[0]) ? c[0] : '',
+                posts: (isString(c[0]) ? c.slice(1) : c).map(item => ({type: 'post', id: item.post}))
+              }
+            })
+          }
+        }
+        if (item.post) {
+          return {type: 'post', id: item.post}
+        }
+        if (item.header !== undefined) { // header can be null
+          return { type: 'header', id: Math.random().toString(36).substring(2), title: item.header }
+        }
+        throw new Error("Unknown type")
+      })
+      commit('newspaperBacklog', { fullName, section: bl.name, backlog: bl})
+    })
   },
 
-  async moveUp({ commit, state }, { newspaper, source, target, postId }) {
+  async save({ state }, { newspaper }) {
     const { fullName } = newspaper
-    commit('moveUp', { fullName, source, target, postId})
-    _postBackLog.call(this, state, fullName)
+    function serialize(layout) {
+      return layout.map(item => {
+        if (item.type === 'post') return { post: item.id }
+        if (item.type === 'header') return { header: item.title }
+        if (item.type === 'box') {
+          const box = [item.css]
+          item.columns.forEach(col => {
+            const data = []
+            if (col.css && col.css !== '') {
+              data.push(col.css)
+            }
+            col.posts.forEach(p => data.push({post: p.id}))
+            box.push(data)
+          })
+          return box
+        }
+        throw Exception("Unknown type")
+      })
+    }
+
+    const backlog = state.newspaperBacklog[fullName]
+    await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
+      upcoming: serialize(backlog.upcoming.layout),
+      next: serialize(backlog.next.layout),
+      considered: serialize(backlog.considered.layout)
+    }, { progress: false  })
   },
 
-  async moveDown({ commit, state }, { newspaper, source, target, postId }) {
-    const { fullName } = newspaper
-    commit('moveDown', { fullName, source, target, postId})
-    _postBackLog.call(this, state, fullName)
-  },
-
-  async reorder({ commit, state }, { newspaper, source, posts }) {
-    const { fullName } = newspaper
-    commit('reorder', { fullName, source, posts})
+  async reorder({ commit, dispatch }, { newspaper, target, ordering }) {
+    commit('reorder', { newspaper, target, ordering})
     if (!reorderPostScheduled) {
       reorderPostScheduled = true
       Vue.nextTick(() => {
         reorderPostScheduled = false
-        _postBackLog.call(this, state, fullName)
+        dispatch('save', { newspaper })
       })
     }
   },
 
-  async add({ commit }, { newspaper, post, source }) {
-    // TODO to have better user experience, post can be added immediately
-    // and reverted when api call fails
-    await this.$axios.put(`/newspapers/${newspaper.fullName}/backlog`, {post: post.id})
-    commit('prepend', {
-      fullName: newspaper.fullName,
-      post,
-      source
+  async add({ state, commit, dispatch }, { newspaper, post, target }) {
+    if (!state.newspaperBacklog[newspaper.fullName]) {
+      await dispatch('loadNewspaperBacklog', newspaper.fullName)
+    }
+    commit('splice', {
+      newspaper,
+      target,
+      items: [{id: post.id, type: 'post'}],
+      index: 0,
+      deleteCount: 0
     })
+    await dispatch('save', { newspaper })
 
     this.$ga.event({
       eventCategory: 'Consider for newspaper',
@@ -95,56 +114,40 @@ export const actions = {
     })
   },
 
-  async remove({ commit }, { newspaper, source, postId }) {
-    // TODO to have better user experience, post can be removed immediately
-    // and reverted when api call fails
-    const { fullName } = newspaper
-    await this.$axios.delete(`/newspapers/${fullName}/backlog`, { data: { post: postId } })
-
+  async remove({ state, commit, dispatch }, { newspaper, source, post }) {
+    if (!state.newspaperBacklog[newspaper.fullName]) {
+      await dispatch('loadNewspaperBacklog', newspaper.fullName)
+    }
     commit('remove', {
-      fullName: fullName,
+      newspaper,
       source,
-      postId,
+      postId: post.id,
     })
+    await dispatch('save', { newspaper })
 
     this.$ga.event({
       eventCategory: 'Stop considering for newspaper',
-      eventAction: fullName
+      eventAction: newspaper.fullName
     })
   },
 
-  async addLink({ commit, state }, { newspaper, url }) {
-    const { fullName } = newspaper
-    const resp = await this.$axios.$post(`/newspapers/${newspaper.fullName}/backlog/links`, {url})
-    if (resp.post) {
+  //TODO
+  async addLink({ commit, dispatch }, { newspaper, url }) {
+    const { post } = await this.$axios.$post(`/external-links`, {url})
+    if (post) {
+      commit('registerPost', { newspaper, post })
       commit('append', {
-        fullName,
-        source: 'considered',
-        post: resp.post
+        newspaper,
+        target: 'considered',
+        item: {id: post.id, type: 'post'}
       })
+      await dispatch('save', { newspaper })
 
       this.$ga.event({
         eventCategory: 'Consider for newspaper',
-        eventAction: fullName
+        eventAction: newspaper.fullName
       })
     }
-  },
-
-  async saveEditorial({ commit}, { newspaperId, source, postId, editorial: payload}) {
-    const editorial = await this.$axios.$post(`/newspapers/${newspaperId}/editorials/${postId}`, payload)
-    commit('updateEditorial', { fullName: newspaperId, source, postId, editorial })
-    return editorial
-  },
-
-  async saveEditorialPosition({ commit }, { newspaperId, source, postId, position }) {
-    const editorial = await this.$axios.$patch(`/newspapers/${newspaperId}/editorials/${postId}`, {position})
-    commit('updateEditorial', { fullName: newspaperId, source, postId, editorial })
-    return editorial
-  },
-
-  async removeEditorial({ commit }, { newspaperId, source, postId}) {
-    await this.$axios.$delete(`/newspapers/${newspaperId}/editorials/${postId}`)
-    commit('updateEditorial', { fullName: newspaperId, source, postId, editorial: null })
   },
 }
 
@@ -158,93 +161,150 @@ export const mutations = {
     state.userBacklog = backlog
   },
 
-  newspaperBacklogPosts( state, { fullName, section, posts }) {
+  newspaperBacklog(state, { fullName, section, backlog }) {
     if (state.newspaperBacklog[fullName]) {
-      Vue.set(state.newspaperBacklog[fullName], section, posts)
+      Vue.set(state.newspaperBacklog[fullName], section, backlog)
     } else {
-      Vue.set(state.newspaperBacklog, fullName, { [section]: posts })
+      Vue.set(state.newspaperBacklog, fullName, { [section]: backlog })
     }
   },
+
+  newspaperBacklogPosts(state, { fullName, posts}) {
+    if (state.newspaperBacklog[fullName]) {
+      Vue.set(state.newspaperBacklog[fullName], '$posts', posts)
+    } else {
+      Vue.set(state.newspaperBacklog, fullName, { $posts: posts })
+    }
+  },
+
   newspaperBacklogStats( state, { fullName, currentMonthStats}) {
+    // TODO use different key then newspaperBacklog
     if (state.newspaperBacklog[fullName]) {
       Vue.set(state.newspaperBacklog[fullName], 'currentMonthStats', currentMonthStats)
     } else {
       Vue.set(state.newspaperBacklog, fullName, { currentMonthStats })
     }
   },
-  updateEditorial(state, { fullName, source, postId, editorial }) {
+
+  registerPost(state, { newspaper, post }) {
+    const { fullName } = newspaper
+    const { $posts } = state.newspaperBacklog[fullName]
+    Vue.set($posts, post.id, post)
+  },
+
+  updatePost(state, { post }) {
+    Object.values(state.newspaperBacklog).forEach(({$posts}) => {
+      if ($posts[post.id]) {
+        $posts[post.id] = { ...$posts[post.id], ...post }
+      }
+    })
+  },
+
+  // THIS will be not working from timeline
+  remove(state, { newspaper, source, index=null, postId=null }) {
+    if (index === null && postId === null) {
+      throw Error("Index or post id must specified")
+    }
+    const { fullName } = newspaper
+    const newspaperBacklog = state.newspaperBacklog[fullName]
+    let { layout } = newspaperBacklog[source]
+
+    if (index === null) {
+      index = layout.findIndex(p => p.id === postId)
+      if (index === -1) {
+        return
+      }
+    }
+
+    const item = layout[index]
+    layout.splice(index, 1)
+
+    const postIds = []
+    if (item.type === 'box') {
+      item.columns.forEach(col => col.posts.forEach(p => postIds.push(p.id)))
+    } else {
+      postIds.push(item.id)
+    }
+
+    postIds.forEach(id => {
+      const postBacklog = state.userBacklog[id] || {}
+      Vue.delete(postBacklog, fullName)
+    })
+  },
+
+  setBacklogItem(state, { newspaper, source, index, item }) {
+    const { fullName } = newspaper
+    const newspaperBacklog = state.newspaperBacklog[fullName]
+    let { layout } = newspaperBacklog[source]
+    Vue.set(layout, index, item)
+  },
+
+  append(state, { newspaper, target, item }) {
+    const { fullName } = newspaper
+    const newspaperBacklog = state.newspaperBacklog[fullName]
+    let { layout } = newspaperBacklog[target]
+    layout.push(item)
+
+    const postBacklog = state.userBacklog[item.id] || {}
+    Vue.set(state.userBacklog, item.id, { ...postBacklog, [fullName]: target })
+  },
+
+  splice(state, { newspaper, target, index, items, deleteCount }) {
+    const { fullName } = newspaper
+    const newspaperBacklog = state.newspaperBacklog[fullName]
+    let { layout } = newspaperBacklog[target]
+    layout.splice(index, deleteCount, ...items)
+
+    items.forEach(item => {
+      const postBacklog = state.userBacklog[item.id] || {}
+      Vue.set(state.userBacklog, item.id, { ...postBacklog, [fullName]: target })
+    })
+  },
+
+  moveUp(state, { newspaper, source, target, index }) {
+    const { fullName } = newspaper
     const backlog = state.newspaperBacklog[fullName]
-    let posts = backlog[source]
-    const idx = posts.findIndex(log => log.post.id === postId)
-    posts[idx].editorial = editorial
-  },
-
-  remove(state, { fullName, source, postId }) {
-    const postBacklog = state.userBacklog[postId] || {}
-    delete postBacklog[fullName]
-    Vue.set(state.userBacklog, postId, {...postBacklog})
-
-    const newspaperBacklog = state.newspaperBacklog[fullName]
-    if (newspaperBacklog) {
-      let posts = newspaperBacklog[source]
-      const idx = posts.findIndex(log => log.post.id === postId)
-      posts.splice(idx, 1)
-    }
-  },
-  append(state, { fullName, source, post }) {
-    const postBacklog = state.userBacklog[post.id] || {}
-    Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
-
-    const newspaperBacklog = state.newspaperBacklog[fullName]
-    if (newspaperBacklog) {
-      newspaperBacklog[source].push({ post: post, editorial: null })
-    }
-  },
-  prepend(state, { fullName, source, post }) {
-    const postBacklog = state.userBacklog[post.id] || {}
-    Vue.set(state.userBacklog, post.id, { ...postBacklog, [fullName]: source })
-
-    const newspaperBacklog = state.newspaperBacklog[fullName]
-    if (newspaperBacklog) {
-      newspaperBacklog[source].unshift({ post: post, editorial: null })
-    }
-  },
-  moveUp(state, { fullName, source, target, postId }) {
-    const backlog = state.newspaperBacklog[fullName]
-    let posts = backlog[source]
-    const idx = posts.findIndex(log => log.post.id === postId)
-    const post = posts[idx]
-    if (idx === 0 || target !== null) {
+    let sourceLayout = backlog[source].layout
+    const box = sourceLayout[index]
+    if (index === 0 || target !== null) {
       if (target === null) {
         target = (source === 'considered' ? 'next' : 'upcoming')
       }
-      const targetPosts = backlog[target]
-      posts.splice(idx, 1)
-      targetPosts.push(post)
+      const targetLayout = backlog[target].layout
+      sourceLayout.splice(index, 1)
+      targetLayout.push(box)
     } else {
-      Vue.set(posts, idx, posts[idx - 1])
-      Vue.set(posts, idx - 1, post)
+      Vue.set(sourceLayout, index, sourceLayout[index - 1])
+      Vue.set(sourceLayout, index - 1, box)
     }
   },
-  moveDown(state, { fullName, source, target, postId }) {
+
+  moveDown(state, { newspaper, source, target, index }) {
+    const { fullName } = newspaper
     const backlog = state.newspaperBacklog[fullName]
-    let posts = backlog[source]
-    const idx = posts.findIndex(log => log.post.id === postId)
-    const post = posts[idx]
-    if (idx === posts.length - 1 || target !== null) {
+    let sourceLayout = backlog[source].layout
+    const box = sourceLayout[index]
+    if (index === sourceLayout.length - 1 || target !== null) {
       if (target === null) {
         target =  source == 'upcoming' ? 'next' : 'considered'
       }
-      const targetPosts = backlog[target]
-      posts.splice(idx, 1)
-      targetPosts.unshift(post)
+      const targetLayout = backlog[target].layout
+      sourceLayout.splice(index, 1)
+      targetLayout.unshift(box)
     } else {
-      Vue.set(posts, idx, posts[idx + 1])
-      Vue.set(posts, idx + 1, post)
+      Vue.set(sourceLayout, index, sourceLayout[index + 1])
+      Vue.set(sourceLayout, index + 1, box)
     }
   },
-  reorder(state, { fullName, source, posts }) {
-    const backlog = state.newspaperBacklog[fullName]
-    backlog[source] = posts
+
+  reorder(state, { newspaper, target, ordering }) {
+    const backlog = state.newspaperBacklog[newspaper.fullName]
+    // need to search bettween all backlogs because post can be dragged between them
+    const posts = {
+      ...keyBy(backlog['considered'].layout, 'id'),
+      ...keyBy(backlog['upcoming'].layout, 'id'),
+      ...keyBy(backlog['next'].layout, 'id')
+    }
+    backlog[target].layout = ordering.map(id => posts[id])
   },
 }

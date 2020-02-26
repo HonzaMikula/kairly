@@ -76,12 +76,6 @@
               :title="$t('Edit newspaper')"
               v-b-tooltip
             />
-
-            <button
-              v-if="isAdmin"
-              @click.prevent="addComment">
-              {{ $t('Add comment') }}
-            </button>
           </div>
 
           <div class="mobile-menu">
@@ -142,6 +136,7 @@ import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import NewspaperBacklog from '@/components/editor/backlog/NewspaperBacklog'
+import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'Newspapers',
@@ -157,6 +152,8 @@ export default {
     NewspaperWidget,
     NewspaperBacklog
   },
+
+  mixins: [ErrorHandler],
 
   directives: {
     onClickaway
@@ -265,22 +262,6 @@ export default {
         this.handleError(err)
       }
     },
-
-    async addComment() {
-      const data = {
-        type: 'comment',
-        title: '...',
-        content: '<p>...</p>'
-      }
-      const { post } = await this.$axios.$post(`/drafts`, data)
-
-      const newspaper = this.selectedNewspaper
-      await this.addToBacklog({
-        newspaper,
-        post: post,
-        source: 'considered'
-      })
-   }
   },
 
   async fetch({ store, redirect }) {

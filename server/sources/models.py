@@ -234,8 +234,8 @@ def on_post_published(sender, post, **kwargs):
         automationitem__author=post.author,
     )
     for automation in q:
-        Backlog.objects.create(
-            newspaper_id=automation.newspaper_id,
-            post=post,
-            publish_in=Backlog.UPCOMING_ISSUE,
-        )
+        try:
+            backlog = Backlog.objects.get(newspaper_id=automation.newspaper_id, name='upcoming')
+        except Backlog.DoesNotExist:
+            backlog = Backlog(newspaper_id=automation.newspaper_id, name='upcoming', layout='[]')
+        backlog.append_item({'post': post.id})

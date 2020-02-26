@@ -9,20 +9,18 @@
       <slot name="newspaper-title"/>
     </template>
 
-    <PostWrapper
-      v-for="{post, editorial} in headPosts"
-      :key="post.id"
+    <component
+      v-for="(post, idx) in headPosts"
+      :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
+      :key="`head-${idx}`"
       :post="post"
-      :editorial="editorial"
-      :isSubscribed="true"
     />
 
-    <PostWrapper
-      v-for="{post, editorial} in tailPosts"
-      :key="post.id"
+    <component
+      v-for="(post, idx) in tailPosts"
+      :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
+      :key="`tail-${idx}`"
       :post="post"
-      :editorial="editorial"
-      :isSubscribed="true"
     />
 
     <footer class="issue--footer">
@@ -56,6 +54,8 @@
 
 <script>
 import { mapState } from 'vuex'
+import keyBy from 'lodash/keyBy'
+import isString from 'lodash/isString'
 
 import IssueSuspendedAuthor from '@/components/issues/IssueSuspendedAuthor'
 import IssueSuspendedNewspaper from '@/components/issues/IssueSuspendedNewspaper'
@@ -63,6 +63,7 @@ import IssueUnreleasedNewspaper from '@/components/issues/IssueUnreleasedNewspap
 import IssueNewspaper from '@/components/issues/IssueNewspaper'
 import IssueAuthor from '@/components/issues/IssueAuthor'
 import PostWrapper from '@/components/PostWrapper'
+import BoxWrapper from '@/components/BoxWrapper'
 import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
 import ShareModal from '@/components/modals/ShareModal'
 
@@ -85,6 +86,7 @@ export default {
     IssueSuspendedNewspaper,
     IssueUnreleasedNewspaper,
     PostWrapper,
+    BoxWrapper,
     RecommendButtonIssue,
     ShareModal
   },
@@ -114,16 +116,20 @@ export default {
       }
     },
 
+    postsById() {
+      return keyBy(this.issue.posts, 'id')
+    },
+
     headPosts() {
-      return this.issue.posts.slice(0, POST_LIMIT)
+      return this.issue.layout.slice(0, POST_LIMIT).map(item => this.getPostObject(item))
     },
 
     tailPosts() {
-      return this.expanded ? this.issue.posts.slice(POST_LIMIT) : []
+      return this.expanded ? this.issue.layout.slice(POST_LIMIT).map(item => this.getPostObject(item)) : []
     },
 
     tailPostsCount() {
-      return Math.max(0, this.issue.posts.length - POST_LIMIT)
+      return Math.max(0, this.issue.layout.length - POST_LIMIT)
     }
 
   },
@@ -140,6 +146,33 @@ export default {
         eventAction: 'Open Share modal'
       })
     },
+
+    getPostObject(item, idx) {
+      if (Array.isArray(item)) {
+        const id = Math.random().toString(36).substring(2)
+        const css = isString(item[0]) ? item[0] : null
+        const columns = css === null ? item : item.slice(1)
+        return {
+          id,
+          type: 'box',
+          css,
+          columns: columns.map(c => {
+            return  {
+              css: isString(c[0]) ? c[0] : '',
+              posts: (isString(c[0]) ? c.slice(1) : c).map(item => this.postsById[item.post])
+            }
+          })
+        }
+      }
+      if (item.post) {
+        return this.postsById[item.post]
+      }
+      if (item.header !== undefined) { // header can be null!
+        return { type: 'header', id: Math.random().toString(36).substring(2), title: item.header }
+      }
+      console.log(item)
+      throw new Error("Unknown type")
+    }
   }
 }
 </script>
@@ -238,6 +271,4 @@ timeline-newspaper
     &:focus
       border: 1px solid $c-base
       color: $c-base
-
-
 </style>

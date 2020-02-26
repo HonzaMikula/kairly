@@ -9,7 +9,7 @@ import dateutil.parser
 from django.utils import timezone
 from django.core.management.base import BaseCommand
 
-from articles.models import Post, Newspaper, Backlog, IssuePost
+from articles.models import Post, Newspaper, Backlog, BacklogPost, IssuePost
 from articles.signals import post_publish
 from articles.utils import create_post_link
 from sources.models import Channel, EntryHasNoContentException
@@ -123,17 +123,18 @@ class Command(BaseCommand):
                     if newspaper and post.kind not in [Post.RECOMMENDATION, Post.LINK]:
                         if IssuePost.objects.filter(issue__newspaper=newspaper, post=post).exists():
                             continue
-                        if Backlog.objects.filter(newspaper=newspaper, post=post).exists():
+
+                        if BacklogPost.objects.filter(backlog__newspaper=newspaper, post=post).exists():
                             continue
 
                         if verbosity > 1:
                             self.stdout.write('Publishing {} in {}'.format(post.guid, channel.newspaper))
 
-                        Backlog.objects.create(
-                            newspaper=newspaper,
-                            post=post,
-                            publish_in=Backlog.UPCOMING_ISSUE,
-                        )
+                        try:
+                            backlog = Backlog.objects.get(newspaper=newspaper, name='upcoming')
+                        except Backlog.DoesNotExist:
+                            backlog = Backlog(newspaper=newspaper, name='upcoming', layout='[]')
+                        backlog.append_item({'post': post.id})
                 except Exception:
                     self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {}".format(timezone.now(), getattr(entry, 'link', ''), channel.rss))
                     traceback.print_exc()

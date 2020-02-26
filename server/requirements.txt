@@ -22,4 +22,5 @@ bleach==3.1.0
 orjson==2.1.4
 nltk==3.4.5
 sqlparse==0.3.0
-git+git://github.com/jazzband/sorl-thumbnail@13bedfb7d2970809eda597e3ef79318a6fa80ac2#egg=sorl-thumbnail
+sorl-thumbnail==12.6.3
+

@@ -11,7 +11,7 @@
         </h3>
 
         <p>
-          {{ item.ref.posts.map(log => log.post.content.title || log.post.author.name).filter(title => title).join(' • ')  }}
+          {{ item.ref.posts.map(post => post.content.title || post.author.name).filter(title => title).join(' • ')  }}
         </p>
 
         <footer class="recommendations-post--author">
@@ -50,7 +50,9 @@ import AuthorPicture from '@/components/widgets/AuthorPicture'
 export default {
   name: 'PostRecommendations',
 
-  props: ["post", "isSubscribed"],
+  props: {
+    post: Object,
+  },
 
   components: {
     AuthorPicture
