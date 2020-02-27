@@ -91,5 +91,6 @@ class NewspaperFeed(Feed):
                             break
                 titles.append(name + "'s tweet")
             else:
-                titles.append(post.title)
+                if post.title:
+                    titles.append(post.title)
         return ' • '.join(titles)
