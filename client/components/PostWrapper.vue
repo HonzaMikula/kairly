@@ -80,6 +80,18 @@ export default {
 
   > article
     box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+
+  .ck-content
+    columns: 3
+    column-gap: $baseline
+    column-rule: 1px dotted #ddd
+    min-height: $baseline * 5
+
+    background: #fff
+    border: 1px solid #ddd
+
+  .editorial-post-editor--content input
+    background: #fff
   
   .newspaper-backlog-controls
     @media (max-width: $mobile)

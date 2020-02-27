@@ -73,6 +73,19 @@ export default {
     box-shadow: none
     background: transparent
 
+  //- default setting for ck-editor
+  .ck-content
+    columns: 3
+    column-gap: $baseline
+    column-rule: 1px dotted #ddd
+    min-height: $baseline * 5
+
+    background: #fff
+    border: 1px solid #ddd
+
+  .editorial-post-editor--content input
+    background: #fff
+
   &.cols-2-1
     grid-template-columns: 2fr 1fr
 
@@ -89,7 +102,8 @@ export default {
       grid-column: 1 / span 1
       grid-row: 1 / span 1
 
-      .post-body--content
+      .post-body--content,
+      .ck-content
         columns: 2
 
     //- 2nd column
@@ -124,7 +138,8 @@ export default {
       grid-row: 1 / span 1
       border-left: 1px dotted #ddd
 
-      .post-body--content
+      .post-body--content,
+      .ck-content
         columns: 2
 
   &.cols-1-1
@@ -138,7 +153,8 @@ export default {
       -webkit-overflow-scrolling: touch
 
     .newspaper .post-body--content,
-    .comment .post-body--content
+    .comment .post-body--content,
+    .ck-content
       columns: 2
 
       @media (max-width: $mobile)
@@ -164,7 +180,8 @@ export default {
       -webkit-overflow-scrolling: touch
 
     .newspaper .post-body--content,
-    .comment .post-body--content
+    .comment .post-body--content,
+    .ck-content
       columns: 1
 
     .box-column:nth-of-type(1)
