@@ -12,6 +12,12 @@
         <h2>{{ $t('No posts in backlog') }}</h2>
       </div>
 
+      <NewspaperBacklogPostToolbar
+        :index="0"
+        :newspaper="newspaper"
+        :backlog="backlog"
+      />
+
       <draggable
         v-model="items"
         group="backlog-posts"
@@ -38,7 +44,7 @@
             />
             <NewspaperBacklogPostToolbar
               :key="`${post.id}-toolbar`"
-              :index="idx"
+              :index="idx + 1"
               :newspaper="newspaper"
               :backlog="backlog"
              />

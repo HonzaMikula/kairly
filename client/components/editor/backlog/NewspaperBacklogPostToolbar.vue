@@ -24,7 +24,7 @@
         {{ $t('Divider') }}
       </button>
 
-      <button 
+      <button
         class="external-article"
         @click.prevent="addExternalLink"
       >
@@ -62,15 +62,13 @@ export default {
         return
       }
 
-      this.$ga.event({
-        eventCategory: 'Add external article',
-        eventAction: url,
-        eventLabel: this.newspaper
-      })
-
       try {
-        await this.addLinkToBacklog({newspaper: this.newspaper, url})
-        this.externalLink = ''
+        await this.addLinkToBacklog({
+          newspaper: this.newspaper,
+          target: this.backlog.name,
+          index: this.index,
+          url
+        })
       } catch (err) {
         this.handleError(err)
       }
@@ -90,7 +88,7 @@ export default {
         newspaper: newspaper,
         target: this.backlog.name,
         items: [{id: post.id, type: 'post'}],
-        index: this.index + 1,
+        index: this.index,
         deleteCount: 0
       })
       this.$store.dispatch('backlog/save', { newspaper })
@@ -120,7 +118,7 @@ export default {
         newspaper: newspaper,
         target: this.backlog.name,
         items: [item],
-        index: this.index + 1,
+        index: this.index,
         deleteCount: 0
       })
       this.$store.dispatch('backlog/save', { newspaper })

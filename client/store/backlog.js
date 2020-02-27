@@ -131,21 +131,23 @@ export const actions = {
     })
   },
 
-  //TODO
-  async addLink({ commit, dispatch }, { newspaper, url }) {
+  async addLink({ commit, dispatch }, { newspaper, target, index, url }) {
     const { post } = await this.$axios.$post(`/external-links`, {url})
     if (post) {
       commit('registerPost', { newspaper, post })
-      commit('append', {
+      commit('splice', {
         newspaper,
-        target: 'considered',
-        item: {id: post.id, type: 'post'}
+        target,
+        items: [{id: post.id, type: 'post'}],
+        index,
+        deleteCount: 0
       })
       await dispatch('save', { newspaper })
 
       this.$ga.event({
-        eventCategory: 'Consider for newspaper',
-        eventAction: newspaper.fullName
+        eventCategory: 'Add external article',
+        eventAction: url,
+        eventLabel: newspaper.fullName
       })
     }
   },
