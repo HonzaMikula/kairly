@@ -2,6 +2,7 @@
   <article class="post"
     role="article"
     :class="post.type"
+    :id="`post-${post.id}`"
   >
     <header @mouseleave="closeAuthorWidget">
       <slot name="author">
