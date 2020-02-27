@@ -12,12 +12,6 @@
         <h2>{{ $t('No posts in backlog') }}</h2>
       </div>
 
-      <NewspaperBacklogPostToolbar
-        :index="0"
-        :newspaper="newspaper"
-        :backlog="backlog"
-      />
-
       <draggable
         v-model="items"
         group="backlog-posts"
@@ -33,6 +27,12 @@
           :name="!drag ? 'flip-list' : null"
         >
           <template v-for="(post, idx) in items">
+            <NewspaperBacklogPostToolbar
+              :key="`${post.id}-toolbar`"
+              :index="idx"
+              :newspaper="newspaper"
+              :backlog="backlog"
+             />
             <NewspaperBacklogBox
               :key="post.id"
               :newspaper="newspaper"
@@ -42,15 +42,15 @@
               :source="backlog.name"
               :index="idx"
             />
-            <NewspaperBacklogPostToolbar
-              :key="`${post.id}-toolbar`"
-              :index="idx + 1"
-              :newspaper="newspaper"
-              :backlog="backlog"
-             />
           </template>
         </transition-group>
       </draggable>
+      <NewspaperBacklogPostToolbar
+        :index="items.length"
+        :newspaper="newspaper"
+        :backlog="backlog"
+        :show="true"
+      />
     </div>
   </div>
 </template>

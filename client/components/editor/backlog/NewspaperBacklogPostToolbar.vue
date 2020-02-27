@@ -1,5 +1,8 @@
 <template>
-  <div class="newspaper-backlog-post-toolbar-view">
+  <div 
+    class="newspaper-backlog-post-toolbar-view"
+    :class="{'is-shown': show}"
+    >
     <nav>
       <!-- <button class="posts">{{ $t('Post') }}</button> -->
 
@@ -46,7 +49,8 @@ export default {
   props: {
     index: Number,
     newspaper: Object,
-    backlog: Object
+    backlog: Object,
+    show: Boolean
   },
 
   mixins: [ErrorHandler],
@@ -131,14 +135,14 @@ export default {
 @import './styles/components/buttons'
 
 .newspaper-backlog-post-toolbar-view
-
   height: $baseline / 2
 
   cursor: pointer
 
   transition: 0.3s all
 
-  &:hover
+  &:hover,
+  &.is-shown
     height: $baseline * 2.5
     padding: $baseline/2 0
     transition: all 0.3s 0.3s
