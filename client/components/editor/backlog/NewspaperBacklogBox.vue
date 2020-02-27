@@ -392,12 +392,14 @@ export default {
       this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
     },
 
-    openPostSelection(idx = null) {
+    openPostSelection(idx) {
       this.$root.$emit("post-selection-open", this.post.id);
-      if (idx === null) {
-        idx = this.post.columns.findIndex(c => c.css === "editorial");
-      }
-      this.editedColumn = idx;
+      Vue.nextTick(() => {
+        // make this in next tick and let old dialog close first
+        // this cause that PostSelection component will destroyed and recreated immediatelly
+        // causing initialPosts property reinitilzed - fixes #506
+        this.editedColumn = idx;
+      })
     },
 
     closePostSelection() {
