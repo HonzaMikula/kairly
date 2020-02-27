@@ -12,18 +12,18 @@
     <div>
       <h1>{{ title }}</h1>
       <ul>
-        <li v-for="post in listOfPosts()" :key="post.post.id">
-          <template v-if="post.post.content.title">
-            <nuxt-link :to="{ name: 'author-post', params: { author: post.post.author.id, post: post.post.slug }}">
-              {{ post.post.content.title }}
+        <li v-for="post in listOfPosts()" :key="post.id">
+          <template v-if="post.content.title">
+            <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">
+              {{ post.content.title }}
             </nuxt-link>
           </template>
 
           <template v-else>
-            {{ post.post.author.name }}: <span v-html="post.post.content.content"></span>
+            {{ post.author.name }}: <span v-html="post.content.content"></span>
           </template>
           
-          <button @click="removeItem(post.post.id)" class="remove"></button>
+          <button @click="removeItem(post.id)" class="remove"></button>
         </li>
       </ul>
 
@@ -88,14 +88,14 @@ export default {
     content() {
       let content = ''
       this.posts.forEach(function (post) {
-        if (post.post.content.title) {
-          content += `• ${post.post.content.title} \n`
+        if (post.content.title) {
+          content += `• ${post.content.title} \n`
         }
         else {
           var div = document.createElement("div") // striping HTML
-          div.innerHTML = post.post.content.content
+          div.innerHTML = post.content.content
           var text = div.textContent || div.innerText || ""
-          content += `• ${post.post.author.name}: ${text} \n`
+          content += `• ${post.author.name}: ${text} \n`
         }
       })
 
@@ -111,6 +111,7 @@ export default {
     },
 
     listOfPosts() {
+      console.log(this.posts)
       if (!this.isExpanded)
         return this.posts.slice(0, POST_LIMIT)
       else
@@ -119,7 +120,7 @@ export default {
 
     removeItem(id) {
       this.posts.splice(this.posts.findIndex(function(i){
-          return i.post.id === id
+          return i.id === id
       }), 1)
     },
 
