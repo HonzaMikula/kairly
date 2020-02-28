@@ -57,10 +57,12 @@ export default {
       left: auto
 
   hr
+    height: 1px
     margin: $baseline $baseline*2
-    border-top: 1px solid #ddd
+    color: #ddd
+    background: #ddd
+    border: 0
 
     @media (max-width: $mobile)
-      margin: 0
-      border: 0
+      display: none
 </style>
