@@ -130,6 +130,8 @@
             <button
               class="change-layout"
               :id="`change-layout-${post.id}`"
+              v-b-tooltip
+              :title="$t('Change layout')" 
               @click.stop
             />
 

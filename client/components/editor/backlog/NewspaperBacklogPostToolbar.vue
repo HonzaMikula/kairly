@@ -34,7 +34,36 @@
         {{ $t('External article') }}
       </button>
 
-      <!-- <button class="layout">{{ $t('Special layout') }}</button> -->
+      <button 
+        class="layout"
+        :id="`layout-${backlog.name}-${index}`"
+      >
+        {{ $t('Special layout') }}
+      </button>
+
+      <b-popover
+        :target="`layout-${backlog.name}-${index}`"
+        placement="bottom"
+        triggers="click blur"
+        @click.stop
+      >
+        <ul>
+          <li tabindex="0" @click="makeBox('cols-2-1', ['', 'editorial'])">
+            <h6>{{ $t('Layout 2-1') }}</h6>
+            <p>{{ $t('One main article, one smaller column') }}</p>
+          </li>
+
+          <li tabindex="1" @click="makeBox('cols-1-1', ['', ''])">
+            <h6>{{ $t('Layout 1-1') }}</h6>
+            <p>{{ $t('Two equal sections') }}</p>
+          </li>
+
+          <li tabindex="2" @click="makeBox('cols-1-1-1', ['', '', ''])">
+            <h6>{{ $t('Layout 1-1-1') }}</h6>
+            <p>{{ $t('Three equal sections') }}</p>
+          </li>
+        </ul>
+      </b-popover>
     </nav>
   </div>
 </template>
@@ -42,9 +71,14 @@
 <script>
 import { mapActions } from 'vuex'
 import ErrorHandler from '@/mixins/ErrorHandler'
+import { BPopover } from "bootstrap-vue";
 
 export default {
   name: "NewspaperBacklogPostToolbar",
+
+  components: {
+    BPopover,
+  },
 
   props: {
     index: Number,
@@ -59,6 +93,33 @@ export default {
     ...mapActions({
       addLinkToBacklog: 'backlog/addLink'
     }),
+
+    setBacklogItem(item) {
+      this.$store.commit("backlog/setBacklogItem", {
+        newspaper: this.newspaper,
+        source: this.backlog.name,
+        index: this.index,
+        item
+      });
+    },
+
+    makeBox(layout, columnsStyle) {
+      this.setBacklogItem({
+        //id: this.post.id, // keep same id to keep same NewspaperBacklogBox, NOT GOOD idea as long as post can be removed
+        id: Math.random()
+          .toString(36)
+          .substring(2),
+        type: "box",
+        css: layout,
+        columns: columnsStyle.map((css, idx) => {
+          return {
+            css,
+            posts: []
+          };
+        })
+      });
+      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+    },
 
     async addExternalLink() {
       let url = window.prompt("URL")
