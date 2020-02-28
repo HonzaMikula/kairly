@@ -37,6 +37,7 @@ export default {
     .cols-1-2 .box-column:nth-of-type(1) &,
     .cols-1-1-1 &
       grid-template-rows: minmax(auto, max-content)
+      max-height: none
 
       img
         display: block
@@ -54,6 +55,7 @@ export default {
     .cols-1-1-1 &
       grid-template-columns: auto
       grid-template-rows: auto
+      max-height: none
 
       img
         display: block
@@ -71,6 +73,7 @@ export default {
     .cols-1-1-1 &
       grid-template-columns: auto
       grid-template-rows: auto
+      max-height: none
 
       img
         display: block
@@ -92,6 +95,7 @@ export default {
     .cols-1-1-1 &
       grid-template-columns: auto
       grid-template-rows: auto
+      max-height: none
 
       img
         display: block
