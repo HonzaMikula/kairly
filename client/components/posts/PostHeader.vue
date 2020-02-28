@@ -20,8 +20,7 @@ export default {
 .box-header
   @media (max-width: $mobile)
     border-bottom: 1px solid #ddd
-    margin: $baseline/2 0
-
+    margin: $baseline/2 0 $baseline 0
 
   h2
     position: relative
@@ -60,4 +59,8 @@ export default {
   hr
     margin: $baseline $baseline*2
     border-top: 1px solid #ddd
+
+    @media (max-width: $mobile)
+      margin: 0
+      border: 0
 </style>

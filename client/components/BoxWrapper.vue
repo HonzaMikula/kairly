@@ -157,6 +157,7 @@ export default {
 
     .newspaper .post-body--content,
     .comment .post-body--content,
+    .link .post-body--content,
     .ck-content
       columns: 2
 
@@ -176,7 +177,7 @@ export default {
     grid-template-columns: 1fr 1fr 1fr
 
     @media (max-width: $mobile)
-      grid-template-columns: 45vw 45vw 45vw
+      grid-template-columns: 48vw 48vw 48vw
 
       overflow: auto
       scroll-behavior: smooth
