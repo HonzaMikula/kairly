@@ -184,6 +184,7 @@ export default {
 
     .newspaper .post-body--content,
     .comment .post-body--content,
+    .link .post-body--content,
     .ck-content
       columns: 1
 
