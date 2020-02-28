@@ -554,6 +554,9 @@ export default {
   grid-row: 1 / span 1
   grid-column: 1 / span 3
 
+  @media (max-width: $mobile)
+    z-index: 5
+
 .newspaper-backlog-controls.hide-mobile-controls
   @media (max-width: $mobile)
     display: none
@@ -596,7 +599,7 @@ export default {
     grid-template-rows: 1fr 1fr
     grid-column-gap: $baseline / 4
     grid-template-columns: $baseline*1.25 1fr $baseline*1.25
-    width: 100%
+    width: calc(100vw - (#{$baseline} * 0.75))
 
 .newspaper-backlog-controls--options
   position: absolute
@@ -610,7 +613,7 @@ export default {
 
   @media (max-width: $mobile)
     position: sticky
-    left: 90vw
+    left: calc(100vw - (#{$baseline} * 2))
     top: $baseline * 2
 
 
@@ -639,9 +642,17 @@ export default {
 //- icons for columns
 .newspaper-backlog-controls--options--columns
   white-space: nowrap
+  
+  @media (max-width: $mobile)
+    display: grid
+    grid-template-rows: auto
+    grid-row-gap: $baseline / 4
 
   > button
     margin-right: $baseline / 8
+
+    &:last-of-type
+      margin-right: 0
 
 .sortable-drag
   .newspaper-backlog-controls

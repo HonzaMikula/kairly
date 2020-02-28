@@ -97,6 +97,6 @@ export default {
     @media (max-width: $mobile)
       position: absolute
       top: 30%
-      width: 100vw  
+      width: calc(100vw - (#{$baseline} * 0.5))
 </style>
 
