@@ -109,6 +109,7 @@ export default {
   position: fixed
   right: $baseline
   top: 10vh
+  z-index: 2
 
   display: grid
   grid-template-rows: $baseline * 1.5 1fr

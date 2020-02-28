@@ -86,6 +86,9 @@ export default {
   .editorial-post-editor--content input
     background: #fff
 
+  .box-column
+    z-index: 1
+
   &.cols-2-1
     grid-template-columns: 2fr 1fr
 
