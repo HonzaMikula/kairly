@@ -2,8 +2,7 @@
   <PostBase :post="post">
     <div class="post-body">
       <h2>
-        <span v-if="post.draft">{{ post.content.title }}</span>
-        <nuxt-link v-else :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">{{ post.content.title }}</nuxt-link>
+        <span>{{ post.content.title }}</span>
       </h2>
 
       <div class="post-body--content">
