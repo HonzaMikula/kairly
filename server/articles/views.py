@@ -381,7 +381,6 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
                 backlog = Backlog(newspaper=newspaper, name=name, layout='[]')
             backlog.save_layout(layout)
 
-        # TODO nice to have delete unreferenced comments
         return HttpResponse(status=204)
 
     return HttpResponse('405 Method Not Allowed', status=405)

@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
-from django.db import models, transaction
+from django.db import models, transaction, connection
 from django.db.models import Count, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -423,7 +423,15 @@ class Backlog(models.Model):
 
         removed_posts = current_posts - new_posts
         if removed_posts:
-            BacklogPost.objects.filter(backlog=self, post_id__in=list(removed_posts)).delete()
+            ids = list(removed_posts)
+            BacklogPost.objects.filter(backlog=self, post_id__in=ids).delete()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """DELETE p FROM
+                        articles_post p
+                        left outer join articles_backlogpost bp ON(bp.post_id=p.id)
+                        left outer join articles_issuepost ip ON(ip.post_id=p.id)
+                        where p.id in %s AND kind='comment' AND (bp.id is null and ip.id is NULL)""", [ids])
 
         added_posts = new_posts - current_posts
         if added_posts:
