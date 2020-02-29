@@ -44,6 +44,7 @@ class Post(models.Model):
     COMMENT = 'comment'  # eg issue intro, etc, no perex, just content
     TWEET = 'tweet'
     RECOMMENDATION = 'recommendation'
+    REFERENCE = 'reference'
     LINK = 'link'
     VIDEO = 'video'
 
@@ -52,6 +53,7 @@ class Post(models.Model):
         (COMMENT, _('Comment')),
         (TWEET, _('Tweet')),
         (RECOMMENDATION, _('Recommendation')),
+        (REFERENCE, _('Reference')),
         (LINK, _('Link')),
         (VIDEO, _('Video')),
     )
@@ -91,7 +93,7 @@ class Post(models.Model):
     def find_by_source_url(cls, url):
         url = clean_url(url)
         md5 = hashlib.md5(url.encode()).hexdigest()
-        for p in cls.objects.filter(source_md5=md5).exclude(kind__in=[Post.LINK, Post.RECOMMENDATION]).order_by('-published'):
+        for p in cls.objects.filter(source_md5=md5).exclude(kind__in=[Post.LINK, Post.RECOMMENDATION, Post.REFERENCE]).order_by('-published'):
             if p.source == url:
                 return p
 
@@ -144,7 +146,7 @@ class Post(models.Model):
             agg = json.loads(cache_value)
         else:
             agg = Post.objects.filter(author=self.author, draft=False, published__gte=start, published__lt=end) \
-                              .exclude(kind=Post.RECOMMENDATION) \
+                              .exclude(kind__in=[Post.RECOMMENDATION, Post.REFERENCE]) \
                               .aggregate(count=Count('*'), weight=Sum('weight'))
             cache.set(cache_key, json.dumps(agg))
 
@@ -184,6 +186,9 @@ class Post(models.Model):
         return '{} min'.format(max(1, value))
 
     def to_json(self, entities, short=False):
+        if self.kind == Post.REFERENCE:
+            return self.ref_post.to_json(entities, short=short)
+
         result = {
             'id': self.id,  # id is still used by backlog endpoints, TODO remove this
             'slug': self.slug,

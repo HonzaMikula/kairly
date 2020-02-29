@@ -120,7 +120,7 @@ class Command(BaseCommand):
                     if imported:
                         counter_posts += 1
 
-                    if newspaper and post.kind not in [Post.RECOMMENDATION, Post.LINK]:
+                    if newspaper and post.kind not in [Post.RECOMMENDATION, Post.REFERENCE, Post.LINK]:
                         if IssuePost.objects.filter(issue__newspaper=newspaper, post=post).exists():
                             continue
 
@@ -222,17 +222,17 @@ def _import_post(channel, entry, stdout, verbosity, force, only_url, draft):
         if post.kind == Post.LINK:
             return post, True
 
-        # post already exists under regular author, add recommendation instead
-        recommendation = Post.objects.create(
+        # post already exists under regular author, add refernce instead
+        ref = Post.objects.create(
             title=post.title,
-            kind=Post.RECOMMENDATION,
+            kind=Post.REFERENCE,
             author=channel.author,
             guid=guid,
             ref_post=post,
             protected=False,
             published=published,
         )
-        return recommendation, True
+        return ref, True
 
     args = channel.parse_entry(entry, usecache=False)
 

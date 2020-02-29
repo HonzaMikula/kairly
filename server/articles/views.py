@@ -149,7 +149,7 @@ def recent_issues(request, entities):
 @entities_json_response
 def recent_posts(request, entities):
     posts = Post.objects.filter(draft=False, published__lt=timezone.now())\
-        .exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])\
+        .exclude(kind__in=[Post.RECOMMENDATION, Post.REFERENCE, Post.LINK])\
         .order_by('-published')[:12]
 
     return {
@@ -312,7 +312,7 @@ def author_posts(request, entities, username):
     )
 
     if request.GET.get('skipRecommendations') == '1':
-        posts_query = posts_query.exclude(kind__in=[Post.RECOMMENDATION, Post.LINK])
+        posts_query = posts_query.exclude(kind__in=[Post.RECOMMENDATION, Post.REFERENCE, Post.LINK])
     posts_query = posts_query.order_by('-published')[offset:offset + AUTOR_POSTS_PAGE_SIZE]
 
     posts = [post.to_json(entities, short=True) for post in posts_query]
@@ -902,6 +902,9 @@ class PostRecommendationView(View):
         if post.kind == Post.RECOMMENDATION:
             return JsonResponse({'error': "Recommendation post can't be recommended."}, status=400)
 
+        if post.kind == Post.REFERENCE:
+            return JsonResponse({'error': "Reference post can't be recommended."}, status=400)
+
         if Post.objects.filter(kind=Post.RECOMMENDATION, author=request.user, ref_post=post).exists():
             return JsonResponse({'error': "Post is already recommended."}, status=400)
 
@@ -923,7 +926,6 @@ class PostRecommendationView(View):
         post = get_object_or_404(Post, author__username=username, slug=post_slug, draft=False)
         recommendation = get_object_or_404(Post, author=request.user, ref_post=post, kind=Post.RECOMMENDATION)
         recommendation.delete()
-
         return JsonResponse({})
 
 

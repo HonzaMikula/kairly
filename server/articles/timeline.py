@@ -295,10 +295,8 @@ class BaseTimelineView(View):
         posts = peekable(posts_query.order_by('published'))
         entities.track_references = set()
 
-        def post_to_json(author, post):
-            # TODO make a new king for this case (refernce to exisiting post by feed user)
-            # then author can be removed from select_related
-            if author.kind == User.FEED and post.kind == Post.RECOMMENDATION and post.ref_post:
+        def post_to_json(post):
+            if post.kind == Post.REFERENCE:
                 return post.ref_post.to_json(entities, short=True)
             return post.to_json(entities, short=True)
 
@@ -321,8 +319,8 @@ class BaseTimelineView(View):
                     'title': interval.title,
                     'time': isodate,
                     'author': author_ref,
-                    'posts': [post_to_json(sub.author, p) for p in interval_posts],
-                    'layout': [{'post': p.id} for p in interval_posts]
+                    'posts': [post_to_json(p) for p in interval_posts],
+                    'layout': [{'post': p.ref_post_id if p.kind == Post.REFERENCE else p.id} for p in interval_posts]
                 })
 
         cache.set(cache_key, (entities.track_references, issues), period.timeout)

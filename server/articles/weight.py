@@ -12,7 +12,7 @@ MIN_POST_WEIGHT = 100
 
 def calculate_post_weight(post):
     # dont' import Post to avoid circular import
-    if post.kind == post.RECOMMENDATION:
+    if post.kind in [post.RECOMMENDATION, post.REFERENCE]:
         return 0
 
     word_chars = 0
