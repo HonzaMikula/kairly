@@ -60,4 +60,16 @@ export default {
     &.add-comment::before
       content: fa-content($fa-var-comment)
 
+    &.add-external::before
+      content: fa-content($fa-var-external-link-alt)
+
+.cols-1-1-1
+  .empty-column-placeholder-view
+    nav
+      flex-wrap: wrap
+
+      button
+        margin-bottom: 10px
+
+
 </style>

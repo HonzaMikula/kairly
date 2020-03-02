@@ -131,17 +131,36 @@ export const actions = {
     })
   },
 
-  async addLink({ commit, dispatch }, { newspaper, target, index, url }) {
+  async addLink({ state, commit, dispatch }, { newspaper, target, index, columnIndex, url }) {
     const { post } = await this.$axios.$post(`/external-links`, {url})
     if (post) {
       commit('registerPost', { newspaper, post })
-      commit('splice', {
-        newspaper,
-        target,
-        items: [{id: post.id, type: 'post'}],
-        index,
-        deleteCount: 0
-      })
+      const item = {id: post.id, type: 'post'}
+      if (columnIndex === undefined) {
+        commit('splice', {
+          newspaper,
+          target,
+          items: [item],
+          index,
+          deleteCount: 0
+        })
+      } else {
+        const box = state.newspaperBacklog[newspaper.fullName][target].layout[index]
+        commit('setBacklogItem', {
+          newspaper,
+          target,
+          index,
+          item: {
+            ...box,
+            columns: box.columns.map((col, idx) => {
+              return {
+                ...col,
+                posts: columnIndex === idx ? [...col.posts, item] : col.posts
+              }
+            })
+          }
+        })
+      }
       await dispatch('save', { newspaper })
 
       this.$ga.event({
@@ -234,10 +253,10 @@ export const mutations = {
     })
   },
 
-  setBacklogItem(state, { newspaper, source, index, item }) {
+  setBacklogItem(state, { newspaper, target, index, item }) {
     const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
-    let { layout } = newspaperBacklog[source]
+    let { layout } = newspaperBacklog[target]
     Vue.set(layout, index, item)
   },
 

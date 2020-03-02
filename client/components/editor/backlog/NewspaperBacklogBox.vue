@@ -20,6 +20,10 @@
           class="add-comment"
           @click="writeComment(columnIndex)"
         >{{ $t('Add comment') }}</button>
+        <button
+          class="add-external"
+          @click="addExternalLink(columnIndex)"
+        >{{ $t('External article') }}</button>
       </EmptyColumnPlaceholder>
     </template>
 
@@ -247,14 +251,18 @@ import Vue from "vue";
 import { mapActions } from "vuex";
 import { BPopover } from "bootstrap-vue";
 
+
 import BoxWrapper from "@/components/BoxWrapper";
-import EmptyColumnPlaceholder from "@/components/posts/EmptyColumnPlaceholder";
 import CommentEditor from "@/components/editor/backlog/CommentEditor";
+import EmptyColumnPlaceholder from "@/components/posts/EmptyColumnPlaceholder";
+import ErrorHandler from '@/mixins/ErrorHandler'
 import PostsSelection from "@/components/editor/backlog/PostsSelection";
 import PostWrapper from "@/components/PostWrapper";
 
 export default {
   name: "NewspaperBacklogBox",
+
+  mixins: [ErrorHandler],
 
   components: {
     EmptyColumnPlaceholder,
@@ -408,7 +416,7 @@ export default {
       this.editedColumn = null;
     },
 
-    async writeComment(idx) {
+    async writeComment(columnIndex) {
       const data = {
         type: "comment",
         title: "",
@@ -419,8 +427,27 @@ export default {
         newspaper: this.newspaper,
         post
       });
-      this.addToColumn({ post, columnIndex: idx });
+      this.addToColumn({ post, columnIndex });
       this.editComment(post.id);
+    },
+
+    async addExternalLink(columnIndex) {
+      let url = window.prompt("URL")
+      if (url === null) {
+        return
+      }
+
+      try {
+        await this.$store.dispatch('backlog/addLink', {
+          newspaper: this.newspaper,
+          target: this.source,
+          index: this.index,
+          columnIndex: columnIndex,
+          url
+        })
+      } catch (err) {
+        this.handleError(err)
+      }
     },
 
     toggleEditorialStyle(columnIdx) {
@@ -473,7 +500,7 @@ export default {
     setBacklogItem(item) {
       this.$store.commit("backlog/setBacklogItem", {
         newspaper: this.newspaper,
-        source: this.source,
+        target: this.source,
         index: this.index,
         item
       });
