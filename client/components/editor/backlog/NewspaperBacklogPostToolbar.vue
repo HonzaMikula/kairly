@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="newspaper-backlog-post-toolbar-view"
     :class="{'is-shown': show}"
     >
@@ -34,7 +34,7 @@
         {{ $t('External article') }}
       </button>
 
-      <button 
+      <button
         class="layout"
         :id="`layout-${backlog.name}-${index}`"
       >
@@ -48,17 +48,17 @@
         @click.stop
       >
         <ul>
-          <li tabindex="0" @click="makeBox('cols-2-1', ['', 'editorial'])">
+          <li tabindex="0" @click="addBox('cols-2-1', ['', 'editorial'])">
             <h6>{{ $t('Layout 2-1') }}</h6>
             <p>{{ $t('One main article, one smaller column') }}</p>
           </li>
 
-          <li tabindex="1" @click="makeBox('cols-1-1', ['', ''])">
+          <li tabindex="1" @click="addBox('cols-1-1', ['', ''])">
             <h6>{{ $t('Layout 1-1') }}</h6>
             <p>{{ $t('Two equal sections') }}</p>
           </li>
 
-          <li tabindex="2" @click="makeBox('cols-1-1-1', ['', '', ''])">
+          <li tabindex="2" @click="addBox('cols-1-1-1', ['', '', ''])">
             <h6>{{ $t('Layout 1-1-1') }}</h6>
             <p>{{ $t('Three equal sections') }}</p>
           </li>
@@ -94,32 +94,6 @@ export default {
       addLinkToBacklog: 'backlog/addLink'
     }),
 
-    setBacklogItem(item) {
-      this.$store.commit("backlog/setBacklogItem", {
-        newspaper: this.newspaper,
-        source: this.backlog.name,
-        index: this.index,
-        item
-      });
-    },
-
-    makeBox(layout, columnsStyle) {
-      this.setBacklogItem({
-        //id: this.post.id, // keep same id to keep same NewspaperBacklogBox, NOT GOOD idea as long as post can be removed
-        id: Math.random()
-          .toString(36)
-          .substring(2),
-        type: "box",
-        css: layout,
-        columns: columnsStyle.map((css, idx) => {
-          return {
-            css,
-            posts: []
-          };
-        })
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
-    },
 
     async addExternalLink() {
       let url = window.prompt("URL")
@@ -137,6 +111,29 @@ export default {
       } catch (err) {
         this.handleError(err)
       }
+    },
+
+    addBox(layout, columnsStyle) {
+      const newspaper = this.newspaper
+      const item = {
+        id: Math.random().toString(36).substring(2),
+        type: "box",
+        css: layout,
+        columns: columnsStyle.map((css, idx) => {
+          return {
+            css,
+            posts: []
+          };
+        })
+      }
+      this.$store.commit('backlog/splice', {
+        newspaper,
+        target: this.backlog.name,
+        items: [item],
+        index: this.index,
+        deleteCount: 0
+      })
+      this.$store.dispatch("backlog/save", { newspaper });
     },
 
     async addComment() {
