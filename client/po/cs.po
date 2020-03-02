@@ -90,7 +90,7 @@ msgid "Move posts to the column"
 msgstr "Přesuňte příspěvky do sloupce"
 
 #: components/editor/backlog/NewspaperBacklogBox.vue:169
-#: components/posts/BacklogPlaceholder.vue:10 pages/newspapers/index.vue:83
+#: components/posts/EmptyColumnPlaceholder.vue:10 pages/newspapers/index.vue:83
 msgid "Add comment"
 msgstr "Přidat komentář"
 
@@ -1046,15 +1046,15 @@ msgstr "Pokračovat ve čtení"
 msgid "Subscribe newspaper to continue reading"
 msgstr "Abyste si mohli přečíst celý článek, přihlaste se k odběru novin."
 
-#: components/posts/BacklogPlaceholder.vue:3
+#: components/posts/EmptyColumnPlaceholder.vue:3
 msgid "Available actions"
 msgstr "Dostupné akce"
 
-#: components/posts/BacklogPlaceholder.vue:6
+#: components/posts/EmptyColumnPlaceholder.vue:6
 msgid "Add posts"
 msgstr "Přidat příspěvky"
 
-#: components/posts/BacklogPlaceholder.vue:8
+#: components/posts/EmptyColumnPlaceholder.vue:8
 msgid "Toggle editorial"
 msgstr "Speciální styl"
 

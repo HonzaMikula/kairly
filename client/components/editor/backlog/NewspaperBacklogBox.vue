@@ -7,7 +7,7 @@
     @close-editor="closeEditor"
   >
     <template #empty-box="{ columnIndex }">
-      <BacklogPlaceholder>
+      <EmptyColumnPlaceholder>
         <button
           class="add-posts"
           @click="openPostSelection(columnIndex)"
@@ -20,7 +20,7 @@
           class="add-comment"
           @click="writeComment(columnIndex)"
         >{{ $t('Add comment') }}</button>
-      </BacklogPlaceholder>
+      </EmptyColumnPlaceholder>
     </template>
 
     <template #page-controls="{ post, postIndex, column, columnIndex}">
@@ -131,7 +131,7 @@
               class="change-layout"
               :id="`change-layout-${post.id}`"
               v-b-tooltip
-              :title="$t('Change layout')" 
+              :title="$t('Change layout')"
               @click.stop
             />
 
@@ -248,7 +248,7 @@ import { mapActions } from "vuex";
 import { BPopover } from "bootstrap-vue";
 
 import BoxWrapper from "@/components/BoxWrapper";
-import BacklogPlaceholder from "@/components/posts/BacklogPlaceholder";
+import EmptyColumnPlaceholder from "@/components/posts/EmptyColumnPlaceholder";
 import CommentEditor from "@/components/editor/backlog/CommentEditor";
 import PostsSelection from "@/components/editor/backlog/PostsSelection";
 import PostWrapper from "@/components/PostWrapper";
@@ -257,7 +257,7 @@ export default {
   name: "NewspaperBacklogBox",
 
   components: {
-    BacklogPlaceholder,
+    EmptyColumnPlaceholder,
     BoxWrapper,
     CommentEditor,
     PostWrapper,
@@ -642,7 +642,7 @@ export default {
 //- icons for columns
 .newspaper-backlog-controls--options--columns
   white-space: nowrap
-  
+
   @media (max-width: $mobile)
     display: grid
     grid-template-rows: auto

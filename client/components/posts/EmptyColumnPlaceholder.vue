@@ -1,5 +1,5 @@
 <template>
-  <div class="backlog-placeholder-view">
+  <div class="empty-column-placeholder-view">
     <h2>{{ $t('Available actions') }}</h2>
     <nav>
       <slot/>
@@ -9,14 +9,14 @@
 
 <script>
 export default {
-  name: "BacklogPlaceholder"
+  name: "EmptyColumnPlaceholder"
 }
 </script>
 
 <style lang="sass">
 @import './styles/components/buttons'
 
-.backlog-placeholder-view
+.empty-column-placeholder-view
 
   h2
     padding: $baseline 0
