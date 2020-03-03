@@ -68,11 +68,21 @@ export default {
   .ck-content
     height: 100%
 
-
 .medium-editor-placeholder::after
   font-style: normal
 
 .medium-editor-toolbar li button.medium-editor-button-active
   background: $c-green
   color: white
+
+.ck-block-toolbar-button
+  border-radius: 100% !important
+  background: #fff !important
+
+  cursor: pointer !important
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff !important
+
+  &:focus,
+  &:hover
+    background: #eee !important
 </style>
