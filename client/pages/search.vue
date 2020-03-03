@@ -12,45 +12,56 @@
         {{ totalResults }} results
       </aside>
 
-      <div
-        class="search-item"
-        v-for="result in results"
-        :key="result.cacheId">
-        <h2>
-          <nuxt-link 
-            :to="result.link.replace('https://kairly.com/', '')"
-            v-html="result.htmlTitle.replace('– Kairly', '')">
-          </nuxt-link>
-        </h2>
-        
-        <img 
-          v-if="result.pagemap.metatags[0]['og:image']"
-          :src="result.pagemap.metatags[0]['og:image']" 
-          :alt="result.pagemap.metatags.og_image_alt"
-        />
+      <template v-if="totalResults > 0">
+        <div
+          class="search-item"
+          v-for="result in results"
+          :key="result.cacheId">
+          <h2>
+            <nuxt-link 
+              :to="result.link.replace('https://kairly.com/', '')"
+              v-html="result.htmlTitle.replace('– Kairly', '')">
+            </nuxt-link>
+          </h2>
+          
+          <img 
+            v-if="result.pagemap.metatags[0]['og:image']"
+            :src="result.pagemap.metatags[0]['og:image']" 
+            :alt="result.pagemap.metatags.og_image_alt"
+          />
 
-        <div class="search-item--label">
-          <template v-if="result.pagemap.newspaper">
-            <span class="label">{{ $t('Newspaper') }}</span>
-            <span class="author">{{ $t('by') }} {{ result.pagemap.metatags[0].author }}</span>
-            <time>{{ result.pagemap.newspaper[0].datepublished | moment('calendar') }}</time>
-          </template>
+          <div class="search-item--label">
+            <template v-if="result.pagemap.newspaper">
+              <span class="label">{{ $t('Newspaper') }}</span>
+              <span class="author">{{ $t('by') }} {{ result.pagemap.metatags[0].author }}</span>
+              <time>{{ result.pagemap.newspaper[0].datepublished | moment('calendar') }}</time>
+            </template>
 
-          <templave v-else-if="result.pagemap.metatags[0]['og:type'] == 'profile'">
-            <span class="label">{{ $t('Author') }}</span>
-          </templave>
+            <templave v-else-if="result.pagemap.metatags[0]['og:type'] == 'profile'">
+              <span class="label">{{ $t('Author') }}</span>
+            </templave>
 
-          <template v-else-if="result.pagemap.newsarticle">
-            <span class="label">{{ $t('Article') }}</span>
-            <span class="author">{{ $t('by') }}  {{ result.pagemap.person[0].name }}</span>
-            <time>{{ result.pagemap.newsarticle[0].datepublished | moment('calendar') }}</time>
-          </template>
+            <template v-else-if="result.pagemap.newsarticle">
+              <span class="label">{{ $t('Article') }}</span>
+              <span class="author">{{ $t('by') }}  {{ result.pagemap.person[0].name }}</span>
+              <time>{{ result.pagemap.newsarticle[0].datepublished | moment('calendar') }}</time>
+            </template>
+          </div>
+          <p v-html="result.htmlSnippet"></p>
+          
         </div>
-        <p v-html="result.htmlSnippet"></p>
-        
-      </div>
+      </template>
 
-      <footer class="search--pagination">
+      <template v-else-if="totalResults !== null">
+        <div class="search-no-results">
+          {{ $t('No results were found for') }} "{{ query }}".
+        </div>
+      </template>
+
+      <footer
+        class="search--pagination"
+        v-if="numberOfPages > 0"
+      >
         <ul>
           <li 
             v-for="page in numberOfPages"
@@ -101,7 +112,7 @@ export default {
             baseURL: `https://www.googleapis.com/`,
           })
           delete adapter.defaults.headers.common["Authorization"]
-          const test = await adapter.$get(`customsearch/v1`, { 
+          const searchResults = await adapter.$get(`customsearch/v1`, { 
             params: {
               key: 'AIzaSyBbkq4m8pQym-r2hFYmTwStzXCNWzmom1Y',
               cx: '006213174493429117077:jze2yfipbxo',
@@ -109,8 +120,7 @@ export default {
               start: this.startResult
             }
           })
-          console.log(test)
-          const { items, searchInformation } = test
+          const { items, searchInformation } = searchResults
           this.results = items
           this.totalResults = searchInformation.totalResults
           this.numberOfPages = Math.ceil(this.totalResults / 10)
@@ -305,4 +315,10 @@ export default {
       &.is-active
         background: $c-base
         color: #fff
+
+  //- When there is no results find
+  .search-no-results
+    margin-top: $baseline
+    
+    text-align: center
 </style>
