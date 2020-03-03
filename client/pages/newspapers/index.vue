@@ -445,7 +445,7 @@ export default {
   position: absolute
   left: 0
   top: $baseline * 3
-  z-index: 1
+  z-index: 100
 
   display: block
   padding: $baseline/4 0
