@@ -347,10 +347,6 @@ export default {
 
 //- Header
 .newspaper-detail--header
-  position: sticky
-  top: -1px
-  z-index: 5
-
   backdrop-filter: blur(10px) saturate(125%)
 
   @supports not (backdrop-filter: blur(10px))
