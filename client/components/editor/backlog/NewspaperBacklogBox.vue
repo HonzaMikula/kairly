@@ -193,6 +193,11 @@
                       <p>{{ $t('Write short comment to the topic') }}</p>
                     </li>
 
+                    <li tabindex="1" @click="addExternalLink(colIndex)">
+                      <h6>{{ $t('Add external article') }}</h6>
+                      <p>{{ $t('Add article directly') }}</p>
+                    </li>
+
                     <li tabindex="2" @click="toggleEditorialStyle(colIndex)">
                       <h6>{{ $t('Toggle editorial style') }}</h6>
                       <p>{{ $t('Change column background') }}</p>
