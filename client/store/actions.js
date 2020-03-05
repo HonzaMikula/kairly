@@ -38,6 +38,12 @@ export async function getNewspaperDetail({ commit, getters }, { newspaperId, iss
 
   data.newspaper = getters['entities/denormalize'](data.newspaper, 'Newspaper')
   data.issue = getters['entities/denormalize'](data.issue, 'Issue')
+
+  if (data.coEditors) {
+    data.newspaper.coEditors = getters['entities/denormalize'](data.coEditors, 'Author')
+    delete data.coEditors
+  }
+
   return data
 }
 

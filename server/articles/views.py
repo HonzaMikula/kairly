@@ -188,6 +188,11 @@ class NewspaperView(View):
             'links': {}
         }
 
+        if request.user.id == newspaper.editor_id:
+            resp['coEditors'] = []
+            for ce in newspaper.co_editors.all().order_by('username'):
+                resp['coEditors'].append(entities.make_ref(User, ce.id))
+
         if issue:
             resp['issue'] = issue.to_json(entities)
 

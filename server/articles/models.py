@@ -374,10 +374,6 @@ class Newspaper(models.Model, PeriodMixin):
             "likes": self.likes,
             "price": str(self.price),
         }
-        if entities.user.id == self.editor_id:
-            data['coEditors'] = []
-            for ce in self.co_editors.all().order_by('username'):
-                data['coEditors'].append(entities.make_ref(User, ce.id))
 
         if self.newsletter_subscription_url:
             data['newsletterSubscriptionUrl'] = self.newsletter_subscription_url
