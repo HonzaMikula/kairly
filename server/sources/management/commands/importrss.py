@@ -209,7 +209,7 @@ def _import_post(channel, entry, stdout, verbosity, force, only_url, draft):
 
     if post and not force:
         if verbosity > 1:
-            stdout and stdout.write('Skipping {}. Already imported'.format(url))
+            stdout and stdout.write('Skipping {} with guid {}. Already imported'.format(url, guid))
         return post, False
 
     if verbosity > 0:
