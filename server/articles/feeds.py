@@ -1,4 +1,4 @@
-import json
+import orjson as json
 
 from django.conf import settings
 from django.contrib.syndication.views import Feed
@@ -79,8 +79,11 @@ class NewspaperFeed(Feed):
 
     def item_description(self, newspaper_issue):
         newspaper, issue = newspaper_issue
+        posts = {post.id: post for post in issue.posts.all()}
         titles = []
-        for post in issue.posts.all():
+
+        def get_post_title(post_id):
+            post = posts[post_id]
             if post.kind == Post.TWEET:
                 if post.author:
                     name = post.author.name or post.author.username
@@ -89,8 +92,29 @@ class NewspaperFeed(Feed):
                         if attachment['type'] == 'author':
                             name = attachment['screen_name']
                             break
-                titles.append(name + "'s tweet")
+                titles.append(f"{name}'s tweet")
             else:
                 if post.title:
                     titles.append(post.title)
-        return ' • '.join(titles)
+
+        for box in json.loads(issue.layout):
+            if isinstance(box, list):
+                for col in box:
+                    # skip box layout, box is [layout: str, cols...]
+                    if isinstance(col, str):
+                        continue
+                    for item in col:
+                        # skip column class, columns is [cls: str, items...]
+                        if isinstance(item, str):
+                            continue
+                        post_id = item.get('post')
+                        if post_id:
+                            title = get_post_title(post_id)
+                            titles.append(title)
+            else:
+                post_id = box.get('post')
+                if post_id:
+                    title = get_post_title(post_id)
+                    titles.append(title)
+
+        return ' • '.join(t for t in titles if t)
