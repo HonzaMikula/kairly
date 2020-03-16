@@ -31,9 +31,11 @@ class RssFeedGenerator(DefaultFeed):
     def add_item_elements(self, handler, item):
         super().add_item_elements(handler, item)
         handler.addQuickElement("dc:creator", self.feed['author_name'])
+        handler.addQuickElement(u'content:encoded', item['content_encoded'])
 
 
 class NewspaperFeed(Feed):
+    title: Newspaper
     feed_type = RssFeedGenerator
 
     def get_object(self, request, username, newspapeper_slug):
@@ -62,6 +64,9 @@ class NewspaperFeed(Feed):
         query = Issue.objects.filter(newspaper=newspaper).order_by('-number')[:10]
         return [(newspaper, issue) for issue in query]
 
+    def item_extra_kwargs(self, item):
+        return {'content_encoded': self.item_content_encoded(item)}
+
     def item_link(self, newspaper_issue):
         newspaper, issue = newspaper_issue
         return f"https://kairly.com/{newspaper.full_name}/{issue.number}"
@@ -76,6 +81,49 @@ class NewspaperFeed(Feed):
     def item_pubdate(self, newspaper_issue):
         newspaper, issue = newspaper_issue
         return issue.published
+
+    def item_content_encoded(self, newspaper_issue):
+        newspaper, issue = newspaper_issue
+        posts = {post.id: post for post in issue.posts.all()}
+        titles = []
+
+        def get_post_title(post_id):
+            post = posts[post_id]
+            if post.kind == Post.TWEET:
+                if post.author:
+                    name = post.author.name or post.author.username
+                else:
+                    for attachment in json.loads(post.attachments):
+                        if attachment['type'] == 'author':
+                            name = attachment['screen_name']
+                            break
+                titles.append(f"{name}'s tweet")
+            else:
+                if post.title:
+                    titles.append(post.title)
+
+        for box in json.loads(issue.layout):
+            if isinstance(box, list):
+                for col in box:
+                    # skip box layout, box is [layout: str, cols...]
+                    if isinstance(col, str):
+                        continue
+                    for item in col:
+                        # skip column class, columns is [cls: str, items...]
+                        if isinstance(item, str):
+                            continue
+                        post_id = item.get('post')
+                        if post_id:
+                            title = get_post_title(post_id)
+                            titles.append(title)
+                            titles.append(posts[post_id].content)
+            else:
+                post_id = box.get('post')
+                if post_id:
+                    title = get_post_title(post_id)
+                    titles.append(title)
+
+        return ' • '.join(t for t in titles if t)
 
     def item_description(self, newspaper_issue):
         newspaper, issue = newspaper_issue
