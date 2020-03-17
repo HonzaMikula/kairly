@@ -264,10 +264,11 @@ export default {
   display: block
   padding: 0 $baseline
   max-width: 900px
-  margin: 0 auto
+  margin-left: $baseline
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4
+    margin-left: 0
 
 
   //- Header

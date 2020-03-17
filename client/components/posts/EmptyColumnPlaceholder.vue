@@ -2,7 +2,7 @@
   <div class="empty-column-placeholder-view">
     <h2>{{ $t('Available actions') }}</h2>
     <nav>
-      <slot/>
+      <slot />
     </nav>
   </div>
 </template>
@@ -26,23 +26,32 @@ export default {
 
   nav
     display: flex
-    align-items: center
+    align-items: stretch
+    flex-wrap: wrap
     justify-content: center
     padding: 0 $baseline $baseline $baseline
 
   button
     background: transparent
     border: 0
-    padding: 0
-    margin: 0 $baseline/2
+    border-radius: 3px
+    padding: $baseline / 4
+    margin: 0 $baseline/4 $baseline/2 $baseline/4
+    width: $baseline * 4
 
-    color: #777
+    background: #f5f5f5
+    box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
+    color: #555
 
     cursor: pointer
+
+    @media (max-width: $mobile)
+      width: $baseline * 4
 
     &:hover,
     &:focus
       color: #000
+      background: #eee
 
     &::before
       +fa-icon()
@@ -70,6 +79,4 @@ export default {
 
       button
         margin-bottom: 10px
-
-
 </style>

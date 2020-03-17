@@ -112,36 +112,6 @@ p.newspaper-backlog--info--profit
 .newspaper-backlog-view .post > header
   cursor: move
 
-//- Backlog
-.newspaper-backlog--backlog
-  .no-post
-    display: flex
-    align-items: center
-    justify-content: center
-    flex-direction: column
-    height: 100%
-    max-height: 50vh
-
-    color: #999
-
-    &::before
-      +fa-icon()
-      @extend .fas
-
-      display: block
-      margin-bottom: $baseline
-
-      font-size: $fs-4
-
-      content: fa-content($fa-var-newspaper)
-
-    h2
-      margin-bottom: $baseline / 2
-
-      font-size: $fs-4
-      line-height: $baseline * 2
-      text-align: center
-
 
 //- Add external article
 .newspaper-backlog--backlog--external-article

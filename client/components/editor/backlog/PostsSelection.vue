@@ -7,6 +7,10 @@
     </header>
 
     <main>
+      <div class="posts-selection--external">
+        <input type="url" :placeholder="$t('Paste URL')" />
+        <button>Add post</button>
+      </div>
       <!-- work with raw post in add / remove event -->
       <PostWrapper v-for="{post, source} in posts" :post="post" :key="post.id">
         <template #global-controls>&nbsp;</template>
@@ -107,22 +111,29 @@ export default {
 
 .posts-selection-view
   position: fixed
-  right: $baseline
+  right: 0
   top: 10vh
-  z-index: 2
+  z-index: 20
 
   display: grid
   grid-template-rows: $baseline * 1.5 1fr
-  max-height: 80vh
+  max-height: 90vh
   overflow: auto
-  width: 300px
-
+  width: 900px
+  
   background: #fff
-  box-shadow: 0 0 7px rgba(0,0,0,0.5)
 
-  @media (max-width: 1500px)
-    right: 50%
-    transform: translateX(45%)
+  @media (max-width: $mobile)
+    bottom: 0
+    left: 0
+    right: 0
+    top: auto
+    height: 60vh
+    width: 100vw
+
+    box-shadow: -2px -2px 4px #aaa
+
+    transform: none
 
   //- Header
   > header
@@ -144,23 +155,61 @@ export default {
   main
     overflow: auto
 
-    .post-wrapper
-      position: relative
-      max-height: 250px
-      overflow: hidden
+    @media (max-width: $mobile)
+      .post-wrapper
+        position: relative
+        max-height: 250px
+        overflow: hidden
 
-      &::after
-        position: absolute
-        bottom: 0
+        &::after
+          position: absolute
+          bottom: 0
 
-        height: $baseline
-        width: 100%
+          height: $baseline
+          width: 100%
 
-        background: linear-gradient(to bottom, transparent, #fff)
+          background: linear-gradient(to bottom, transparent, #fff)
 
-        content: ''
+          content: ''
 
-    .post-body--content
-      columns: 1
+//- Add external article
+.posts-selection--external
+  display: flex
+  margin: $baseline / 2
+
+  @media (max-width: $mobile)
+    margin: 0
+    border-bottom: 1px solid #eee
+    
+  input
+    box-sizing: border-box
+    height: $baseline * 1.25
+    padding: 0 $baseline/4
+    width: 100%
+
+    border: 1px solid #eee
+
+    font-family: $ff-sans
+    font-size: $fs--1
+    line-height: 1.42
+
+  button
+    flex: 1
+    border: 0
+
+    background: #eee
+    color: #555
+
+    cursor: pointer
+    font-family: $ff-sans
+    font-size: $fs--1
+    line-height: 1.42
+    white-space: nowrap
+
+    &:hover,
+    &:focus
+      background: #ddd
+      color: #000
+
 
 </style>

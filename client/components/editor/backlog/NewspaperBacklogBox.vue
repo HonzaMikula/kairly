@@ -11,19 +11,19 @@
         <button
           class="add-posts"
           @click="openPostSelection(columnIndex)"
-        >{{ $t('Add posts') }}</button>
+        >{{ $t('Posts') }}</button>
+        <button
+          class="add-comment"
+          @click="writeComment(columnIndex)"
+        >{{ $t('Comment') }}</button>
+        <button
+          class="add-external"
+          @click="addExternalLink(columnIndex)"
+        >{{ $t('External post') }}</button>
         <button
           class="toggle-editorial"
           @click="toggleEditorialStyle(columnIndex)"
         >{{ $t('Toggle editorial') }}</button>
-        <button
-          class="add-comment"
-          @click="writeComment(columnIndex)"
-        >{{ $t('Add comment') }}</button>
-        <button
-          class="add-external"
-          @click="addExternalLink(columnIndex)"
-        >{{ $t('External article') }}</button>
       </EmptyColumnPlaceholder>
     </template>
 
@@ -194,7 +194,7 @@
                     </li>
 
                     <li tabindex="1" @click="addExternalLink(colIndex)">
-                      <h6>{{ $t('Add external article') }}</h6>
+                      <h6>{{ $t('Add external post') }}</h6>
                       <p>{{ $t('Add article directly') }}</p>
                     </li>
 

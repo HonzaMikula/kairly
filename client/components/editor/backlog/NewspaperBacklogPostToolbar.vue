@@ -31,7 +31,7 @@
         class="external-article"
         @click.prevent="addExternalLink"
       >
-        {{ $t('External article') }}
+        {{ $t('External post') }}
       </button>
 
       <button
@@ -203,17 +203,21 @@ export default {
   &.is-shown
     height: $baseline * 2.5
     padding: $baseline/2 0
-    transition: all 0.3s 0.3s
+    transition: all 0.3s 0.3s, 0.3s background
+
+    background: #fff
 
     nav
-      background: #fff
       opacity: 1
 
       transition: opacity 0.3s 0.3s
 
+  &.is-shown
+    background: transparent
+
   nav
     display: flex
-    align-items: center
+    align-items: stretch
     justify-content: center
     padding: $baseline/2 $baseline
 
@@ -222,16 +226,21 @@ export default {
   button
     background: transparent
     border: 0
-    padding: 0
-    margin: 0 $baseline/2
+    border-radius: 3px
+    padding: $baseline / 4
+    margin: 0 $baseline/4
+    width: $baseline * 4
 
-    color: #777
+    background: #f5f5f5
+    box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
+    color: #555
 
     cursor: pointer
 
     &:hover,
     &:focus
       color: #000
+      background: #eee
 
     &::before
       +fa-icon()

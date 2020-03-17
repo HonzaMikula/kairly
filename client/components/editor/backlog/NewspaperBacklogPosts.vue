@@ -8,10 +8,6 @@
 
 
     <div class="newspaper-backlog--next-issue">
-      <div v-show="!backlog.layout.length" class="no-post">
-        <h2>{{ $t('No posts in backlog') }}</h2>
-      </div>
-
       <draggable
         v-model="items"
         group="backlog-posts"
@@ -170,33 +166,4 @@ export default {
     font-family: $ff-serif
     text-align: center
 
-//- Next Issue
-.newspaper-backlog--next-issue
-  .no-post
-    display: flex
-    align-items: center
-    justify-content: center
-    flex-direction: column
-    height: 100%
-    max-height: 50vh
-
-    color: #999
-
-    &::before
-      +fa-icon()
-      @extend .fas
-
-      display: block
-      margin-bottom: $baseline
-
-      font-size: $fs-4
-
-      content: fa-content($fa-var-clock)
-
-    h2
-      margin-bottom: $baseline / 2
-
-      font-size: $fs-4
-      line-height: $baseline * 2
-      text-align: center
 </style>
