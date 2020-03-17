@@ -1,6 +1,9 @@
 <template>
   <PostBase :post="post">
-    <template #author>
+    <template
+      v-if="!post.author"
+      #author
+    >
       <picture>
         <span class="external-link"></span>
       </picture>

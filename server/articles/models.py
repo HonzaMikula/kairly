@@ -103,7 +103,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         recalculate_weight = kwargs.pop('recalculate_weight', False)
 
-        if not self.slug and not self.draft:
+        if not self.slug and not self.draft and self.kind not in [Post.LINK, Post.RECOMMENDATION, Post.REFERENCE]:
             slug_words = []
             for part in re.split(r'[\?\.|\-]', self.title):
                 words = part.split()
@@ -276,7 +276,20 @@ class Post(models.Model):
                 'perex': self.perex,
             }
             if attachments:
+                if self.author_id is None and 'author' in attachments:
+                    a = attachments['author']
+                    result['author'] = {
+                        'id': 'fb|' + a['id'],
+                        'name': a['name'],
+                        'pictures': {
+                            'small': a['image']
+                        },
+                        'url': f"https://www.facebook.com/" + a['id'],
+                        'kind': 'external',
+                    }
+                    del attachments['author']
                 result['content']['attachments'] = attachments
+
         return result
 
 
