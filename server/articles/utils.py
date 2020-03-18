@@ -12,7 +12,9 @@ from sources.twitter_api import get_api_connection, status_to_post_args
 from utils.url import fetch_url
 
 RE_TWITTER_URL = re.compile(r'https://(mobile\.)?twitter\.com/[^/]+/status/(\d+)(\?.*)?')
+RE_FACEBOOK_ALERNATE = re.compile(r'https://(m|www).facebook.com/([^/]+)/.*')
 RE_FACEBOOK_POST = re.compile(r'https://(m|www).facebook.com/([^/]+)/posts/(\d+)(\?.*)?')
+RE_FACEBOOK_PHOTO = re.compile(r'https://www.facebook.com/photo.php\?fbid=(\d+).*')
 
 
 def create_twitter_link(status_id):
@@ -34,7 +36,7 @@ def create_twitter_link(status_id):
         return Post.objects.create(**args)
 
 
-def extend_facebook_link(source, fb_user, fb_post_id, post_args, htmltree):
+def extend_facebook_link(source, guid, fb_user, keep_image, post_args, htmltree):
     post_args['source'] = source
     try:
         el = htmltree.cssselect('.userContentWrapper .clearfix img')[0]
@@ -44,16 +46,30 @@ def extend_facebook_link(source, fb_user, fb_post_id, post_args, htmltree):
         content = base64.b64encode(icon_resp.content).decode()
         icon = f"data:{content_type};base64,{content}"
 
-        post_args['attachments']['author'] = {
-            'id': fb_user,
+        if fb_user is None:
+            for el in htmltree.cssselect('link[rel=alternate]'):
+                href = el.attrib['href']
+                m = RE_FACEBOOK_ALERNATE.fullmatch(href)
+                if m:
+                    fb_user = m.group(2)
+                    break
+
+        author = {
             'name': author_name,
-            'profile_url': f"https://www.facebook.com/{fb_user}",
             'image': icon
         }
+        if fb_user:
+            author['id'] = fb_user
+            author['profile_url']: f"https://www.facebook.com/{fb_user}"
+
+        if not keep_image:
+            del post_args['attachments']['image']
+
+        post_args['attachments']['author'] = author
         post_args['title'] = None
-        post_args['guid'] = f'fb|{fb_user}_{fb_post_id}'
-    except IndexError:
-        pass
+        post_args['guid'] = guid
+    except IndexError as e:
+        print(e)
     return post_args
 
 
@@ -69,12 +85,21 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         fb_user = m.group(2)
         fb_post_id = m.group(3)
         source = f"https://www.facebook.com/{fb_user}/posts/{fb_post_id}"
+        guid = f'fb|{fb_user}_{fb_post_id}'
 
         url = source + '?_fb_noscript=1'
-        extend_callback = partial(extend_facebook_link, source, fb_user, fb_post_id)
+        extend_callback = partial(extend_facebook_link, source, guid, fb_user, False)
+
+    m = RE_FACEBOOK_PHOTO.fullmatch(url)
+    if m:
+        fb_photo_id = m.group(1)
+        source = f"https://www.facebook.com/photo.php?fbid={fb_photo_id}"
+        guid = f'fb|photo:{fb_photo_id}'
+
+        url = source + '&_fb_noscript=1'
+        extend_callback = partial(extend_facebook_link, source, guid, None, True)
 
     html, resolved_url = fetch_url(url)
-    print(resolved_url)
     existing_post = Post.find_by_source_url(resolved_url)
     if existing_post:
         return existing_post
