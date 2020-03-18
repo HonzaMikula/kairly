@@ -263,12 +263,9 @@ export default {
 
   display: block
   padding: 0 $baseline
-  max-width: 900px
-  margin-left: $baseline
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4
-    margin-left: 0
 
 
   //- Header
@@ -277,7 +274,10 @@ export default {
 
     display: grid
     grid-template-columns: auto 2fr
+    max-width: 900px
+    margin: 0 auto
     padding: $baseline/2 0
+
     text-align: center
 
     @media (max-width: 800px)
@@ -536,4 +536,11 @@ export default {
 
       &.is-active
         color: #000
+
+.editor-newspapers--board
+  max-width: 900px
+  margin-left: $baseline
+
+  @media (max-width: 1260px)
+    margin-left: 0
 </style>
