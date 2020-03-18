@@ -15,6 +15,7 @@ RE_TWITTER_URL = re.compile(r'https://(mobile\.)?twitter\.com/[^/]+/status/(\d+)
 RE_FACEBOOK_ALERNATE = re.compile(r'https://(m|www).facebook.com/([^/]+)/.*')
 RE_FACEBOOK_POST = re.compile(r'https://(m|www).facebook.com/([^/]+)/posts/(\d+)(\?.*)?')
 RE_FACEBOOK_PHOTO = re.compile(r'https://www.facebook.com/photo.php\?fbid=(\d+).*')
+RE_FACEBOOK_PHOTOS_PHOTO = re.compile(r'https://(m|www).facebook.com/([^/]+)/photos/([^/]+)/(\d+).*')
 
 
 def create_twitter_link(status_id):
@@ -98,6 +99,17 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
 
         url = source + '&_fb_noscript=1'
         extend_callback = partial(extend_facebook_link, source, guid, None, True)
+
+    m = RE_FACEBOOK_PHOTOS_PHOTO.fullmatch(url)
+    if m:
+        fb_user = m.group(2)
+        fb_album_id = m.group(3)
+        fb_post_id = m.group(4)
+        source = f"https://www.facebook.com/{fb_user}/photos/{fb_album_id}/{fb_post_id}"
+        guid = f'fb|photo:{fb_album_id}/{fb_post_id}'
+
+        url = source + '?_fb_noscript=1'
+        extend_callback = partial(extend_facebook_link, source, guid, fb_user, True)
 
     if guid:
         try:
