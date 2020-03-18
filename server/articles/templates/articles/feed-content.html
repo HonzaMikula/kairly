@@ -1,0 +1,22 @@
+{% spaceless %}
+{% for box in item.boxes %}
+<div>
+  {% for column in box.columns %}
+  <div>
+    {% for post in column.posts %}
+    <div>
+      {% if post.kind == 'tweet' %}
+        {{ post.content }}
+      {% else %}
+        {% if post.title %}
+        <h2>{{ post.title }}</h2>
+        {% endif %}
+        {{ post.perex }}
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
+{% endspaceless %}

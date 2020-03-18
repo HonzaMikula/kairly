@@ -1,12 +1,35 @@
 import orjson as json
+from typing import List
+from dataclasses import dataclass
 
 from django.conf import settings
+from django.template import loader
 from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import DefaultFeed
 
 from .period import PeriodMixin
 from .models import Newspaper, Issue, Post
+
+
+@dataclass
+class LayoutColumn:
+    style: str
+    posts: List[object]
+
+
+@dataclass
+class LayoutBox:
+    layout: str
+    columns: List[LayoutColumn]
+    delimiter: str = None
+
+
+@dataclass
+class IssueItem:
+    newspaper: object
+    issue: object
+    boxes: List[object]
 
 
 class RssFeedGenerator(DefaultFeed):
@@ -31,6 +54,7 @@ class RssFeedGenerator(DefaultFeed):
     def add_item_elements(self, handler, item):
         super().add_item_elements(handler, item)
         handler.addQuickElement("dc:creator", self.feed['author_name'])
+        handler.addQuickElement('content:encoded', item['content_encoded'])
 
 
 class NewspaperFeed(Feed):
@@ -60,30 +84,62 @@ class NewspaperFeed(Feed):
 
     def items(self, newspaper):
         query = Issue.objects.filter(newspaper=newspaper).order_by('-number')[:10]
-        return [(newspaper, issue) for issue in query]
+        items = []
+        for issue in query:
+            posts = {post.id: post for post in issue.posts.all()}
+            boxes = []
+            for box in json.loads(issue.layout):
+                if isinstance(box, list):
+                    box_layout = None
+                    box_columns = []
+                    for col in box:
+                        # skip box layout, box is [layout: str, cols...]
+                        if isinstance(col, str):
+                            box_layout = col
+                            continue
 
-    def item_link(self, newspaper_issue):
-        newspaper, issue = newspaper_issue
-        return f"https://kairly.com/{newspaper.full_name}/{issue.number}"
+                        col_layout = None
+                        col_posts = []
+                        for item in col:
+                            # skip column class, columns is [cls: str, items...]
+                            if isinstance(item, str):
+                                col_layout = item
+                                continue
 
-    def item_title(self, newspaper_issue):
-        newspaper, issue = newspaper_issue
-        if newspaper.period in [PeriodMixin.X6_PER_DAY, PeriodMixin.X3_PER_DAY]:
-            return f"{newspaper.title} ~ {issue.published:%d. %m. %Y %H:%M}"
+                            post_id = item.get('post')
+                            if post_id:
+                                col_posts.append(posts[post_id])
+
+                        box_columns.append(LayoutColumn(col_layout, col_posts))
+
+                    boxes.append(LayoutBox(box_layout, box_columns))
+                else:
+                    post_id = box.get('post')
+                    if post_id:
+                        boxes.append(LayoutBox(None, [LayoutColumn(None, [posts[post_id]])]))
+
+            items.append(IssueItem(newspaper, issue, boxes))
+        return items
+
+    def item_extra_kwargs(self, item):
+        return {'content_encoded': self.item_content_encoded(item)}
+
+    def item_link(self, item):
+        return f"https://kairly.com/{item.newspaper.full_name}/{item.issue.number}"
+
+    def item_title(self, item):
+        if item.newspaper.period in [PeriodMixin.X6_PER_DAY, PeriodMixin.X3_PER_DAY]:
+            return f"{item.newspaper.title} ~ {item.issue.published:%d. %m. %Y %H:%M}"
         else:
-            return f"{newspaper.title} ~ {issue.published:%d. %m. %Y}"
+            return f"{item.newspaper.title} ~ {item.issue.published:%d. %m. %Y}"
 
-    def item_pubdate(self, newspaper_issue):
-        newspaper, issue = newspaper_issue
-        return issue.published
+    def item_pubdate(self, item):
+        return item.issue.published
 
-    def item_description(self, newspaper_issue):
-        newspaper, issue = newspaper_issue
-        posts = {post.id: post for post in issue.posts.all()}
+    def item_description(self, item):
         titles = []
 
-        def get_post_title(post_id):
-            post = posts[post_id]
+        def get_post_title(post):
             if post.kind == Post.TWEET:
                 if post.author:
                     name = post.author.name or post.author.username
@@ -92,29 +148,20 @@ class NewspaperFeed(Feed):
                         if attachment['type'] == 'author':
                             name = attachment['screen_name']
                             break
-                titles.append(f"{name}'s tweet")
+                return f"{name}'s tweet"
             else:
                 if post.title:
-                    titles.append(post.title)
+                    return post.title
 
-        for box in json.loads(issue.layout):
-            if isinstance(box, list):
-                for col in box:
-                    # skip box layout, box is [layout: str, cols...]
-                    if isinstance(col, str):
-                        continue
-                    for item in col:
-                        # skip column class, columns is [cls: str, items...]
-                        if isinstance(item, str):
-                            continue
-                        post_id = item.get('post')
-                        if post_id:
-                            title = get_post_title(post_id)
-                            titles.append(title)
-            else:
-                post_id = box.get('post')
-                if post_id:
-                    title = get_post_title(post_id)
-                    titles.append(title)
+        for box in item.boxes:
+            for col in box.columns:
+                for post in col.posts:
+                    title = get_post_title(post)
+                    if title:
+                        titles.append(title)
 
-        return ' • '.join(t for t in titles if t)
+        return ' • '.join(titles)
+
+    def item_content_encoded(self, item):
+        template = loader.get_template('articles/feed-content.html')
+        return template.render({'item': item})
