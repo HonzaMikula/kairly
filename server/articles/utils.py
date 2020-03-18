@@ -99,6 +99,12 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         url = source + '&_fb_noscript=1'
         extend_callback = partial(extend_facebook_link, source, guid, None, True)
 
+    if guid:
+        try:
+            return Post.objects.get(guid=guid, kind=Post.LINK)
+        except Post.DoesNotExist:
+            pass
+
     html, resolved_url = fetch_url(url)
     existing_post = Post.find_by_source_url(resolved_url)
     if existing_post:
