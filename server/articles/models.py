@@ -284,9 +284,10 @@ class Post(models.Model):
                         'pictures': {
                             'small': a['image']
                         },
-                        'url': f"https://www.facebook.com/" + a['id'],
                         'kind': 'external',
                     }
+                    if 'profile_url' in a:
+                        result['author']['url'] = a['profile_url']
                     del attachments['author']
                 result['content']['attachments'] = attachments
 

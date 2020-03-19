@@ -16,6 +16,7 @@ RE_FACEBOOK_ALERNATE = re.compile(r'https://(m|www).facebook.com/([^/]+)/.*')
 RE_FACEBOOK_POST = re.compile(r'https://(m|www).facebook.com/([^/]+)/posts/(\d+)(\?.*)?')
 RE_FACEBOOK_PHOTO = re.compile(r'https://www.facebook.com/photo.php\?fbid=(\d+).*')
 RE_FACEBOOK_PHOTOS_PHOTO = re.compile(r'https://(m|www).facebook.com/([^/]+)/photos/([^/]+)/(\d+).*')
+RE_THEREADERAPP = re.compile(r'https://threadreaderapp.com/thread/(\d+).html(\?.*)?')
 
 
 def create_twitter_link(status_id):
@@ -61,7 +62,7 @@ def extend_facebook_link(source, guid, fb_user, keep_image, post_args, htmltree)
         }
         if fb_user:
             author['id'] = fb_user
-            author['profile_url']: f"https://www.facebook.com/{fb_user}"
+            author['profile_url'] = f"https://www.facebook.com/{fb_user}"
 
         if not keep_image:
             del post_args['attachments']['image']
@@ -71,6 +72,26 @@ def extend_facebook_link(source, guid, fb_user, keep_image, post_args, htmltree)
         post_args['guid'] = guid
     except IndexError as e:
         print(e)
+    return post_args
+
+
+def extend_thereaderapp_link(guid, post_args, htmltree):
+    post_args['guid'] = guid
+    post_args['title'] = None
+    el_user_name = htmltree.cssselect('.box-user .username a')[0]
+    el_user_link = htmltree.cssselect('.box-user .avatar a')[0]
+    el_user_img = el_user_link.cssselect('img')[0]
+    profile_url = el_user_link.attrib['href']
+
+    author = {
+        'id': profile_url.split('/')[-1],
+        'profile_url': profile_url,
+        'name': el_user_name.text.strip(),
+        'image': el_user_img.attrib['src']
+    }
+
+    del post_args['attachments']['image']
+    post_args['attachments']['author'] = author
     return post_args
 
 
@@ -110,6 +131,12 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
 
         url = source + '?_fb_noscript=1'
         extend_callback = partial(extend_facebook_link, source, guid, fb_user, True)
+
+    m = RE_THEREADERAPP.fullmatch(url)
+    if m:
+        thread_id = m.group(1)
+        guid = f'thereaderapp|{thread_id}'
+        extend_callback = partial(extend_thereaderapp_link, guid)
 
     if guid:
         try:
