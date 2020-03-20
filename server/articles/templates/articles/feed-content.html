@@ -2,9 +2,8 @@
 {% for box in item.boxes %}
 <div>
   {% for column in box.columns %}
-  <div>
     {% for post in column.posts %}
-    <div>
+    <article>
       {% if post.kind == 'tweet' %}
         {{ post.content }}
       {% else %}
@@ -13,10 +12,10 @@
         {% endif %}
         {{ post.perex }}
       {% endif %}
-    </div>
+    </article>
     {% endfor %}
-  </div>
   {% endfor %}
 </div>
+<hr />
 {% endfor %}
 {% endspaceless %}
