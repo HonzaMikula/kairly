@@ -17,6 +17,7 @@ RE_FACEBOOK_POST = re.compile(r'https://(m|www).facebook.com/([^/]+)/posts/(\d+)
 RE_FACEBOOK_PHOTO = re.compile(r'https://www.facebook.com/photo.php\?fbid=(\d+).*')
 RE_FACEBOOK_PHOTOS_PHOTO = re.compile(r'https://(m|www).facebook.com/([^/]+)/photos/([^/]+)/(\d+).*')
 RE_THEREADERAPP = re.compile(r'https://threadreaderapp.com/thread/(\d+).html(\?.*)?')
+RE_MEDIUM = re.compile(r'https://medium.com/([^/]+)/([^/]+)-(\w+)/?(\?.*)?')
 
 
 def create_twitter_link(status_id):
@@ -78,20 +79,40 @@ def extend_facebook_link(source, guid, fb_user, keep_image, post_args, htmltree)
 def extend_thereaderapp_link(guid, post_args, htmltree):
     post_args['guid'] = guid
     post_args['title'] = None
-    el_user_name = htmltree.cssselect('.box-user .username a')[0]
-    el_user_link = htmltree.cssselect('.box-user .avatar a')[0]
-    el_user_img = el_user_link.cssselect('img')[0]
-    profile_url = el_user_link.attrib['href']
+    try:
+        el_user_name = htmltree.cssselect('.box-user .username a')[0]
+        el_user_link = htmltree.cssselect('.box-user .avatar a')[0]
+        el_user_img = el_user_link.cssselect('img')[0]
+        profile_url = el_user_link.attrib['href']
 
-    author = {
-        'id': profile_url.split('/')[-1],
-        'profile_url': profile_url,
-        'name': el_user_name.text.strip(),
-        'image': el_user_img.attrib['src']
-    }
+        author = {
+            'id': profile_url.split('/')[-1],
+            'profile_url': profile_url,
+            'name': el_user_name.text.strip(),
+            'image': el_user_img.attrib['src']
+        }
 
-    del post_args['attachments']['image']
-    post_args['attachments']['author'] = author
+        del post_args['attachments']['image']
+        post_args['attachments']['author'] = author
+    except IndexError as e:
+        print(e)
+    return post_args
+
+
+def extend_medium_link(medium_user, guid, post_args, htmltree):
+    post_args['guid'] = guid
+
+    try:
+        el_icon = htmltree.cssselect('article a[rel=noopener] > img[width="48"]')[0]
+        author = {
+            'id': medium_user,
+            'profile_url': 'https://medium.com/' + medium_user,
+            'name': el_icon.attrib['alt'],
+            'image': el_icon.attrib['src']
+        }
+        post_args['attachments']['author'] = author
+    except IndexError as e:
+        print(e)
     return post_args
 
 
@@ -137,6 +158,13 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         thread_id = m.group(1)
         guid = f'thereaderapp|{thread_id}'
         extend_callback = partial(extend_thereaderapp_link, guid)
+
+    m = RE_MEDIUM.fullmatch(url)
+    if m:
+        medium_user = m.group(1)
+        post_id = m.group(3)
+        guid = f'medium|{medium_user}/{post_id}'
+        extend_callback = partial(extend_medium_link, medium_user, guid)
 
     if guid:
         try:
