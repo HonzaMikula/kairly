@@ -128,10 +128,11 @@ class NewspaperFeed(Feed):
         return f"https://kairly.com/{item.newspaper.full_name}/{item.issue.number}"
 
     def item_title(self, item):
-        if item.newspaper.period in [PeriodMixin.X6_PER_DAY, PeriodMixin.X3_PER_DAY]:
-            return f"{item.newspaper.title} ~ {item.issue.published:%d. %m. %Y %H:%M}"
-        else:
-            return f"{item.newspaper.title} ~ {item.issue.published:%d. %m. %Y}"
+        return f"{item.newspaper.title}: {item.boxes[0].columns[0].posts[0].title}"
+        # if item.newspaper.period in [PeriodMixin.X6_PER_DAY, PeriodMixin.X3_PER_DAY]:
+        #     return f"{item.newspaper.title}: ~ {item.issue.published:%d. %m. %Y %H:%M}"
+        # else:
+        #     return f"{item.newspaper.title} ~ {item.issue.published:%d. %m. %Y}"
 
     def item_pubdate(self, item):
         return item.issue.published
