@@ -4,7 +4,7 @@
   {% for column in box.columns %}
     {% for post in column.posts %}
     <article>
-      {% if post.kind == 'tweet' %}
+      {% if post.kind == 'tweet' or post.kind == 'comment' %}
         <h2>
           {% if post.author.name %}
             {{ post.author.name }}
