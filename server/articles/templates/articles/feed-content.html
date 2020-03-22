@@ -1,3 +1,4 @@
+{% spaceless %}
 {% for box in item.boxes %}
 <div>
   {% for column in box.columns %}
@@ -5,7 +6,7 @@
     <article>
       {% if post.kind == 'tweet' %}
         <h2>{{ post.author.name }}</h2>
-        {{ post.content }}
+        {{ post.content | safe }}
       {% else %}
         {% if post.title %}
           <h2>
@@ -14,7 +15,7 @@
             </a>
           </h2>
         {% endif %}
-        {{ post.perex }}
+        {{ post.perex | safe }}
       {% endif %}
     </article>
     {% endfor %}
@@ -27,3 +28,4 @@
     <a href="https://kairly.com/{{ item.newspaper.full_name }}/{{ item.issue.number }}/">Read issue</a>
   </strong>
 </p>
+{% endspaceless %}
