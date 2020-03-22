@@ -15,7 +15,13 @@
         <p>{{ post.content | safe }}</p>
 
       {% elif post.kind == 'comment' %}
-        <h2>{{ post.author.name }}</h2>
+        <h2>
+          {% if post.title %}
+            {{ post.title }}
+          {% else %}
+            {{ post.author.name }}
+          {% endif %}
+        </h2>
         {{ post.content | safe }}
 
       {% else %}
