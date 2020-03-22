@@ -36,6 +36,7 @@ class RssFeedGenerator(DefaultFeed):
     def rss_attributes(self):
         attrs = super().rss_attributes()
         attrs['xmlns:dc'] = "http://purl.org/dc/elements/1.1/"
+        attrs['xmlns:content'] = "http://purl.org/rss/1.0/modules/content/"
         return attrs
 
     def add_root_elements(self, handler):

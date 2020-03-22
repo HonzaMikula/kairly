@@ -5,8 +5,19 @@
     {% for post in column.posts %}
     <article>
       {% if post.kind == 'tweet' %}
+        <h2>
+          {% if post.author.name %}
+            {{ post.author.name }}
+          {% elif post.author.username %}
+            {{ post.author.username }}
+          {% endif %}
+        </h2>
+        <p>{{ post.content | safe }}</p>
+
+      {% elif post.kind == 'comment' %}
         <h2>{{ post.author.name }}</h2>
-        {{ post.content }}
+        {{ post.content | safe }}
+
       {% else %}
         {% if post.title %}
           <h2>
@@ -15,7 +26,11 @@
             </a>
           </h2>
         {% endif %}
-        {{ post.perex }}
+        {% if post.kind == 'link' %}
+          <p>{{ post.perex | safe }}</p>
+        {% else %}
+          {{ post.perex | safe }}
+        {% endif %}
       {% endif %}
     </article>
     {% endfor %}
