@@ -4,7 +4,7 @@
   {% for column in box.columns %}
     {% for post in column.posts %}
     <article>
-      {% if post.kind == 'tweet' or post.kind == 'comment' %}
+      {% if post.kind == 'tweet' %}
         <h2>
           {% if post.author.name %}
             {{ post.author.name }}
@@ -12,7 +12,12 @@
             {{ post.author.username }}
           {% endif %}
         </h2>
+        <p>{{ post.content | safe }}</p>
+
+      {% elif post.kind == 'comment' %}
+        <h2>{{ post.author.name }}</h2>
         {{ post.content | safe }}
+
       {% else %}
         {% if post.title %}
           <h2>
@@ -39,3 +44,5 @@
   </strong>
 </p>
 {% endspaceless %}
+
+{% debug %}
