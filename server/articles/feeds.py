@@ -13,6 +13,22 @@ from .models import Newspaper, Issue, Post
 
 
 @dataclass
+class AuthorItem:
+    username: str
+    name: str
+
+
+@dataclass
+class PostItem:
+    kind: str
+    slug: str
+    author: str
+    title: str
+    perex: str
+    content: str
+
+
+@dataclass
 class LayoutColumn:
     style: str
     posts: List[object]
@@ -87,7 +103,32 @@ class NewspaperFeed(Feed):
         query = Issue.objects.filter(newspaper=newspaper).order_by('-number')[:10]
         items = []
         for issue in query:
-            posts = {post.id: post for post in issue.posts.all()}
+            posts = {}
+            for post in issue.posts.all().select_related('author'):
+                if post.author is None:
+                    if post.attachments:
+                        attachments = json.loads(post.attachments)
+                        if post.kind == Post.TWEET:
+                            for attachment in json.loads(post.attachments):
+                                if attachment['type'] == 'author':
+                                    author = AuthorItem(None, attachment['screen_name'])
+                                    break
+                        else:
+                            attachment = attachments.get('author')
+                            if attachment:
+                                author = AuthorItem(None, attachment['name'])
+                else:
+                    author = AuthorItem(post.author.username, post.author.name or post.author.username)
+
+                posts[post.id] = PostItem(
+                    post.kind,
+                    post.slug,
+                    author,
+                    post.title,
+                    post.perex,
+                    post.content
+                )
+
             boxes = []
             for box in json.loads(issue.layout):
                 if isinstance(box, list):
@@ -144,13 +185,7 @@ class NewspaperFeed(Feed):
         def get_post_title(post):
             if post.kind == Post.TWEET:
                 if post.author:
-                    name = post.author.name or post.author.username
-                else:
-                    for attachment in json.loads(post.attachments):
-                        if attachment['type'] == 'author':
-                            name = attachment['screen_name']
-                            break
-                return f"{name}'s tweet"
+                    return f"{post.author}'s tweet"
             else:
                 if post.title:
                     return post.title
