@@ -1,14 +1,14 @@
 <template>
   <div :class="`box-wrapper ${post.css}`">
     <div v-for="(col, colIndex) in post.columns" :key="colIndex" :class="`box-column ${col.css}`">
-      <template v-if="col.posts.length > 0">
+      <template v-if="col.posts.length > 0 && col.posts[0] != null">
         <PostWrapper
           v-for="(post, postIndex) in col.posts"
           :key="`${colIndex}-${post.id}`"
           :post="post"
           :typeOverride="typeOverride"
           @close-editor="p => $emit('close-editor', p)"
-        >
+        > 
           <template #page-controls>
             <slot
               name="page-controls"
@@ -34,8 +34,6 @@
 </template>
 
 <script>
-import isString from "lodash/isString";
-
 import PostWrapper from "@/components/PostWrapper";
 
 export default {

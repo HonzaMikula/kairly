@@ -27,6 +27,8 @@
       :posts="posts"
       source="considered"
     />
+
+    <SelectionToolbar/>
   </div>
 </template>
 
@@ -37,14 +39,15 @@ import { mapActions, mapGetters } from 'vuex'
 import mapValues from 'lodash/mapValues'
 
 import ErrorHandler from '@/mixins/ErrorHandler'
-import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogPosts from '@/components/editor/backlog/NewspaperBacklogPosts'
+import SelectionToolbar from '@/components/editor/backlog/SelectionToolbar'
 
 export default {
   name: 'NewspaperBacklog',
 
   components: {
-    NewspaperBacklogPosts
+    NewspaperBacklogPosts,
+    SelectionToolbar
   },
 
   mixins: [ErrorHandler],
