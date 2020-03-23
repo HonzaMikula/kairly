@@ -14,9 +14,15 @@
 
       {% else %}
         {% if post.title %}
-          <h2><a href="https://kairly.com/{{ post.author.username }}/{{ post.slug }}/">{{ post.title }}</a></h2>
+          <h2>
+            {% if post.author.username %}<a href="https://kairly.com/{{ post.author.username }}/{{ post.slug }}/">{% endif %}
+            {{ post.title }}
+            % if post.author.username %}</a>{% endif %}
+          </h2>
         {% else %}
+          {% if post.author %}
           <h2>{{ post.author.name }}</h2>
+          {% endif %}
         {% endif %}
         {% if post.kind == 'link' %}
           <p>{{ post.perex | safe }}</p>

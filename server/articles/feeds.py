@@ -106,6 +106,7 @@ class NewspaperFeed(Feed):
             posts = {}
             for post in issue.posts.all().select_related('author'):
                 if post.author is None:
+                    author = None
                     if post.attachments:
                         attachments = json.loads(post.attachments)
                         if post.kind == Post.TWEET:
