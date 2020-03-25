@@ -4,7 +4,11 @@
     :class="{'is-shown': show}"
     >
     <nav>
-      <!-- <button class="posts">{{ $t('Post') }}</button> -->
+      <button
+        class="paste"
+      >
+        {{ $t('Paste here') }}
+      </button>
 
       <button
         class="comment"
@@ -248,6 +252,9 @@ export default {
 
       display: block
       margin-bottom: $baseline / 4
+
+    &.paste::before  
+      content: fa-content($fa-var-paste)
 
     &.posts::before
       content: fa-content($fa-var-newspaper)

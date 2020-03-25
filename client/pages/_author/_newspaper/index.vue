@@ -189,6 +189,7 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import { errorToParams } from '@/utils/errors'
 
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
+import PostObjectMixin from '@/mixins/PostObjectMixin'
 import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
 import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
@@ -207,6 +208,7 @@ export default {
   head() {
     const { title, name, description, picture, editor} = this.newspaper
 
+    let firstPostTitle
     let metaTitle
     let metaDescription
     let metaUrl
@@ -215,12 +217,54 @@ export default {
 
     if (this.$route.params.issue) {
       //- act as an issue detail
-      metaTitle = `${title} #${this.issue.number} – Kairly`
-      metaDescription = this.issue.posts
-        .map((post) => post.content.title || post.author.name)
+
+      if (this.posts[0].title)
+        firstPostTitle = this.posts[0].title
+  
+      else if (this.posts[0].content && this.posts[0].content.title)
+        firstPostTitle = this.posts[0].content.title
+    
+      else if (this.posts[0].content)
+        firstPostTitle = this.posts[0].content.content
+
+      else if (this.posts[0].columns[0] && this.posts[0].columns[0].posts[0].content.title)
+        firstPostTitle = this.posts[0].columns[0].posts[0].content.title
+      
+      else if (this.posts[0].columns[0])
+        firstPostTitle = this.posts[0].columns[0].posts[0].content.content
+
+      firstPostTitle = firstPostTitle.length > 60 ? firstPostTitle.slice(0, 60 - 1) + "…" : firstPostTitle
+      
+      metaTitle = `${title} #${this.issue.number}: ${firstPostTitle} – Kairly`
+      metaDescription = this.posts
+        .map((post) => {
+          let descriptionText = []
+
+          if (post.type == 'box') {
+            post.columns.map((column) => {
+              column.posts.map((item) => {
+                if (item.content.title)
+                  descriptionText.push(item.content.title)
+                else
+                  descriptionText.push(item.author.name)
+              })
+            })
+          }
+          else if (post.title) {
+            descriptionText.push(post.title)
+          }
+          else if (post.content && post.content.title) {
+            descriptionText.push(post.content.title)
+          }
+          else if (post.content && post.content.content) {
+            descriptionText.push(post.author.name)
+          }
+          return descriptionText
+        })
         .filter(title => title)
         .join(' • ')
         .slice(0, 280)
+        
       metaUrl = `https://kairly.com/${editor.id}/${name}/${this.issue.number}`
     } else {
       //- act as a newspaper detail
@@ -282,7 +326,7 @@ export default {
     MoneyFormat,
   },
 
-  mixins: [PeriodicityMixin],
+  mixins: [PeriodicityMixin, PostObjectMixin],
 
   computed: {
     ...mapState({
@@ -300,6 +344,10 @@ export default {
 
     periodicity() {
       return this.getPeriodicityLabel(this.newspaper.periodicity)
+    },
+
+    posts() {
+      return this.issue.layout.map(item => this.getPostObject(item))
     },
 
     ...mapState({
