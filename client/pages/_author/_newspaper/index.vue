@@ -236,7 +236,6 @@ export default {
       else if (this.posts[0].columns[0])
         firstPostTitle = this.posts[0].columns[0].posts[0].content.content
 
-      console.log(this.posts[0].columns[0])
       firstPostTitle = firstPostTitle.replace(/(<([^>]+)>)/ig,"")
       firstPostTitle = firstPostTitle.length > 60 ? firstPostTitle.slice(0, 60 - 1) + "…" : firstPostTitle
       
