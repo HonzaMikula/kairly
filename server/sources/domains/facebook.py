@@ -4,11 +4,15 @@ from functools import partial
 
 import requests
 
+from sources.parser import ArticleParser, split_article_to_perex_and_content
+
 RE_FACEBOOK_ALERNATE = re.compile(r'https://(m|www).facebook.com/([^/]+)/.*')
 RE_FACEBOOK_POST = re.compile(r'https://(m|www).facebook.com/([^/]+)/posts/(\d+)/?(\?.*)?')
 RE_FACEBOOK_GROUP_POST = re.compile(r'https://(m|www).facebook.com/groups/([^/]+)/permalink/(\d+)/?(\?.*)?')
 RE_FACEBOOK_PHOTO = re.compile(r'https://www.facebook.com/photo.php\?fbid=(\d+).*')
 RE_FACEBOOK_PHOTOS_PHOTO = re.compile(r'https://(m|www).facebook.com/([^/]+)/photos/([^/]+)/(\d+).*')
+
+RE_EMOJI_STYLE = re.compile(r'height: 16px; width: 16px; font-size: 16px; background-image: url\("([^"]+)"\)')
 
 
 def extend_facebook_link(source, guid, fb_user, keep_image, post_args, htmltree):
@@ -39,6 +43,33 @@ def extend_facebook_link(source, guid, fb_user, keep_image, post_args, htmltree)
 
         if not keep_image:
             del post_args['attachments']['image']
+
+        try:
+            message_el = htmltree.cssselect("[data-testid=post_message]")[0]
+        except IndexError:
+            message_el = None
+
+        if message_el:
+            for el in htmltree.cssselect('span[style]'):
+                m = RE_EMOJI_STYLE.fullmatch(el.attrib['style'])
+                if m:
+                    emoji_url = m.group(1)
+                    el.tag = 'img'
+                    el.attrib.clear()
+                    el.attrib['src'] = emoji_url
+                    el.attrib['width'] = '16'
+                    el.attrib['height'] = '16'
+                    el.attrib['alt'] = el.text
+                    el.text = None
+                    for child in list(el):
+                        el.remove(child)
+
+            parser = ArticleParser('*')
+            fragments = parser.parse(message_el)
+            fragments = parser.normalize(fragments)
+            perex, content = split_article_to_perex_and_content(fragments, [300, 600])
+            post_args['perex'] = perex
+            post_args['content'] = content
 
         post_args['attachments']['author'] = author
         post_args['title'] = None

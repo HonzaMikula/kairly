@@ -8,7 +8,6 @@ from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import DefaultFeed
 
-from .period import PeriodMixin
 from .models import Newspaper, Issue, Post
 
 

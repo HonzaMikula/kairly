@@ -117,6 +117,16 @@ class ArticleParser:
     def _strip_attibutes(self, el):
         if el.tag == 'img':
             preserve = {'title', 'src', 'alt', 'srcset', 'sizes'}
+            try:
+                if int(el.attrib['width']) < 200:
+                    preserve.add('width')
+            except (KeyError, TypeError):
+                pass
+            try:
+                if int(el.attrib['height']) < 200:
+                    preserve.add('height')
+            except (KeyError, TypeError):
+                pass
         elif el.tag == 'a':
             preserve = {'title', 'href'}
         elif el.tag == 'video':

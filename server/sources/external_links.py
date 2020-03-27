@@ -1,3 +1,4 @@
+from html import escape
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
 import lxml.html
@@ -70,7 +71,7 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         protected=False,
         hidden=hidden,
         title=og.get('title', title),
-        perex=og.get('description', description),
+        perex='<p>' + escape(og.get('description', description)) + '</p>',
         attachments=attachments,  # keep it as dist for extend callback
         author=user,
         price=0,

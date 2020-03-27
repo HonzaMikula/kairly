@@ -24,11 +24,7 @@
           <h2>{{ post.author.name }}</h2>
           {% endif %}
         {% endif %}
-        {% if post.kind == 'link' %}
-          <p>{{ post.perex | safe }}</p>
-        {% else %}
-          {{ post.perex | safe }}
-        {% endif %}
+        {{ post.perex | safe }}
       {% endif %}
     </article>
     {% endfor %}

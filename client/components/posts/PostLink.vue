@@ -25,7 +25,7 @@
           <img :src="post.content.attachments.image"/>
         </picture>
 
-        <p>{{ post.content.perex }}</p>
+        <div v-html="post.content.perex"></div>
 
         <div class="post-link--continue-reading">
           <a :href="post.source" target="_blank">{{ $t('Read article') }}</a>
@@ -107,6 +107,9 @@ export default {
   //- image
   img
     width: 100%
+
+  img[height], img[width]
+      width: auto
 
 //- continue reading
 .post-link--continue-reading
