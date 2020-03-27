@@ -130,9 +130,6 @@ class NewspaperFeed(Feed):
                     post.content
                 )
 
-            print(issue)
-            print(posts)
-
             boxes = []
             for box in json.loads(issue.layout):
                 if isinstance(box, list):
@@ -174,11 +171,7 @@ class NewspaperFeed(Feed):
         return f"https://kairly.com/{item.newspaper.full_name}/{item.issue.number}"
 
     def item_title(self, item):
-        return f"{item.newspaper.title} #{item.newspaper.number}: {item.boxes[0].columns[0].posts[0].title}"
-        # if item.newspaper.period in [PeriodMixin.X6_PER_DAY, PeriodMixin.X3_PER_DAY]:
-        #     return f"{item.newspaper.title}: ~ {item.issue.published:%d. %m. %Y %H:%M}"
-        # else:
-        #     return f"{item.newspaper.title} ~ {item.issue.published:%d. %m. %Y}"
+        return f"{item.newspaper.title} #{item.issue.number}: {item.boxes[0].columns[0].posts[0].title}"
 
     def item_pubdate(self, item):
         return item.issue.published
@@ -189,7 +182,7 @@ class NewspaperFeed(Feed):
         def get_post_title(post):
             if post.kind == Post.TWEET:
                 if post.author:
-                    return f"{post.author}'s tweet"
+                    return f"{post.author.name}: {post.content[:50]}"
             else:
                 if post.title:
                     return post.title
