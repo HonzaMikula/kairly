@@ -208,7 +208,7 @@ export default {
   head() {
     const { title, name, description, picture, editor} = this.newspaper
 
-    let firstPostTitle
+    let firstPostTitle = ''
     let metaTitle
     let metaDescription
     let metaUrl
@@ -229,10 +229,15 @@ export default {
 
       else if (this.posts[0].columns[0] && this.posts[0].columns[0].posts[0].content.title)
         firstPostTitle = this.posts[0].columns[0].posts[0].content.title
+
+      else if (this.posts[0].columns[0] && this.posts[0].columns[0].posts[0].content.perex)
+        firstPostTitle = this.posts[0].columns[0].posts[0].content.perex
       
       else if (this.posts[0].columns[0])
         firstPostTitle = this.posts[0].columns[0].posts[0].content.content
 
+      console.log(this.posts[0].columns[0])
+      firstPostTitle = firstPostTitle.replace(/(<([^>]+)>)/ig,"")
       firstPostTitle = firstPostTitle.length > 60 ? firstPostTitle.slice(0, 60 - 1) + "…" : firstPostTitle
       
       metaTitle = `${title} #${this.issue.number}: ${firstPostTitle} – Kairly`
