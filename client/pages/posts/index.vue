@@ -1,8 +1,13 @@
 <template>
   <AppLayout :name="$t('Draft posts')">
     <div class="draft-posts-view">
-      <div class="my-posts--empty" v-if="posts.length == 0">
-        {{ $t('No drafts') }}
+      <div class="draft-posts--empty" v-if="posts.length == 0">
+        <h2>{{ $t('You haven\'t prepared any draft yet.') }}</h2>
+
+        <div class="draft-posts--empty--buttons">
+          <nuxt-link to="/posts/create/article">{{ $t('Write an article') }}</nuxt-link>
+          <nuxt-link to="/posts/create/tweet">{{ $t('Write a tweet') }}</nuxt-link>
+        </div>
       </div>
 
       <div v-for="post in posts" :key="post.id">
@@ -117,20 +122,34 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/buttons'
 
 .draft-posts-view
   max-width: 900px
   margin: $baseline auto
 
 //- Empty placeholder
-.my-posts--empty
+.draft-posts--empty
   display: block
   margin: $baseline 0
-  padding: $baseline
-
-  background: #eee
-  border: 1px dashed #ccc
 
   text-align: center
+
+  h2 
+    margin-bottom: $baseline / 2
+
+    font-size: $fs-2
+    font-weight: 600
+
+  p
+    margin-bottom: $baseline
+
+.draft-posts--empty--buttons
+  display: flex
+  justify-content: center
+
+  a
+    +button
+    margin: 0 $baseline/4
 
 </style>
