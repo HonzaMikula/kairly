@@ -1,3 +1,5 @@
+from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+
 import lxml.html
 import orjson as json
 
@@ -9,13 +11,21 @@ from .domains.twitter import TwitterImporter
 from .domains.thereaderapp import TheReaderAppImporter
 from .domains.medium import MediumImporter
 
-importers = {cls.DOMAIN: cls() for cls in (TwitterImporter, FacebookImporter, TheReaderAppImporter, MediumImporter)}
+IMPORTERS = {cls.DOMAIN: cls() for cls in (TwitterImporter, FacebookImporter, TheReaderAppImporter, MediumImporter)}
+IGNORED_QUERY = set([
+    'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_brand',
+    'fbclid', 'sessionId'])
+
+
+def clean_qs(url):
+    p = urlparse(url)
+    cleaned_query = {k: v for k, v in parse_qs(p.query).items() if k not in IGNORED_QUERY}
+    return urlunparse((p.scheme, p.netloc, p.path, p.params, urlencode(cleaned_query, doseq=True), ''))  # strip also fragment
 
 
 def create_post_link(url, user, hidden=False, published=None, guid=None):
-    # TODO get imported by domain
     extend_callback = None
-    for importer in importers.values():
+    for importer in IMPORTERS.values():
         match = importer.match(url)
         if match:
             if isinstance(match, Post):
