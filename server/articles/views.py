@@ -25,6 +25,7 @@ from django.views import View
 from django.views.decorators.http import require_POST
 
 from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
+from sources.external_links import create_post_link
 from users.models import User
 from utils.decorators import ajax_login_required
 from utils.html import convert_data_uris, sanitize
@@ -34,7 +35,6 @@ from .models import (Backlog, BacklogPost, Issue, Newspaper, CoEditor, Post, Sub
                      SubscriptionToAuthor, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
-from .utils import create_post_link
 
 AUTOR_POSTS_PAGE_SIZE = 20
 

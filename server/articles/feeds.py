@@ -130,6 +130,9 @@ class NewspaperFeed(Feed):
                     post.content
                 )
 
+            print(issue)
+            print(posts)
+
             boxes = []
             for box in json.loads(issue.layout):
                 if isinstance(box, list):
