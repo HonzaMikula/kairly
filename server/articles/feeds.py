@@ -171,12 +171,19 @@ class NewspaperFeed(Feed):
         return f"https://kairly.com/{item.newspaper.full_name}/{item.issue.number}"
 
     def item_title(self, item):
-        return f"{item.newspaper.title} #{item.issue.number}: {item.boxes[0].columns[0].posts[0].title}"
+        titles = self.get_post_titles(item)
+        return f"{item.newspaper.title} #{item.issue.number}: {titles[0]}"
 
     def item_pubdate(self, item):
         return item.issue.published
 
     def item_description(self, item):
+        description = self.get_post_titles(item)
+        description.pop(0)
+
+        return ' • '.join(description)
+
+    def get_post_titles(self, item):
         titles = []
 
         def get_post_title(post):
@@ -193,9 +200,9 @@ class NewspaperFeed(Feed):
                     title = get_post_title(post)
                     if title:
                         titles.append(title)
-        titles.pop(0)
-
-        return ' • '.join(titles)
+        
+        return titles
+      
 
     def item_content_encoded(self, item):
         template = loader.get_template('articles/feed-content.html')
