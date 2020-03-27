@@ -259,7 +259,8 @@ export default {
           else if (post.content && post.content.content) {
             descriptionText.push(post.author.name)
           }
-          return descriptionText
+
+          return descriptionText.shift()
         })
         .filter(title => title)
         .join(' • ')
