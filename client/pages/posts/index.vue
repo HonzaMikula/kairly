@@ -1,50 +1,47 @@
 <template>
   <AppLayout :name="$t('Draft posts')">
     <div class="draft-posts-view">
-      <div class="draft-posts--empty" v-if="posts.length == 0">
-        <h2>{{ $t('You haven\'t prepared any draft yet.') }}</h2>
+      <EmptyPostPlaceholder v-if="posts.length == 0">
+        {{ $t('You haven\'t prepared any draft yet.') }}
+      </EmptyPostPlaceholder>
 
-        <div class="draft-posts--empty--buttons">
-          <nuxt-link to="/posts/create/article">{{ $t('Write an article') }}</nuxt-link>
-          <nuxt-link to="/posts/create/tweet">{{ $t('Write a tweet') }}</nuxt-link>
+      <template v-else>
+        <div v-for="post in posts" :key="post.id">
+          <PostWrapper
+            :post="post"
+          >
+            <template #page-controls v-if="post.draft">
+              <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
+
+              <button-icon
+                class="edit"
+                v-b-tooltip
+                :title="$t('Edit post')"
+                tabindex="0"
+                role="button"
+                @click.prevent="$router.push(`/posts/${post.id}`)"
+              />
+
+              <button-icon
+                class="remove"
+                v-b-tooltip
+                :title="$t('Delete post')"
+                tabindex="0"
+                role="button"
+                @click.prevent="deletePost(post)"
+              />
+
+            </template>
+          </PostWrapper>
         </div>
-      </div>
 
-      <div v-for="post in posts" :key="post.id">
-        <PostWrapper
-          :post="post"
-        >
-          <template #page-controls v-if="post.draft">
-            <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
-
-            <button-icon
-              class="edit"
-              v-b-tooltip
-              :title="$t('Edit post')"
-              tabindex="0"
-              role="button"
-              @click.prevent="$router.push(`/posts/${post.id}`)"
-            />
-
-            <button-icon
-              class="remove"
-              v-b-tooltip
-              :title="$t('Delete post')"
-              tabindex="0"
-              role="button"
-              @click.prevent="deletePost(post)"
-            />
-
-          </template>
-        </PostWrapper>
-      </div>
-
-      <PublishPostModal
-        :active.sync="isPublishPostDialogOpen"
-        :post="modalPost"
-        :price="modalPrice"
-        @publish="publishPost"
-      />
+        <PublishPostModal
+          :active.sync="isPublishPostDialogOpen"
+          :post="modalPost"
+          :price="modalPrice"
+          @publish="publishPost"
+        />
+      </template>
     </div>
   </AppLayout>
 </template>
@@ -56,14 +53,22 @@ import ErrorHandler from '@/mixins/ErrorHandler'
 import AppLayout from '@/components/layout/AppLayout'
 import PostWrapper from '@/components/PostWrapper'
 import PublishPostModal from '@/components/modals/PublishPostModal'
+import EmptyPostPlaceholder from '@/components/editor/EmptyPostPlaceholder'
 
 export default {
   name: 'Drafts',
 
+  head() {
+    return {
+      title: this.$t('Draft Posts – Kairly')
+    }
+  },
+
   components: {
     AppLayout,
     PostWrapper,
-    PublishPostModal
+    PublishPostModal,
+    EmptyPostPlaceholder
   },
 
   mixins: [ErrorHandler],
@@ -122,34 +127,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import './styles/components/buttons'
-
 .draft-posts-view
   max-width: 900px
   margin: $baseline auto
-
-//- Empty placeholder
-.draft-posts--empty
-  display: block
-  margin: $baseline 0
-
-  text-align: center
-
-  h2 
-    margin-bottom: $baseline / 2
-
-    font-size: $fs-2
-    font-weight: 600
-
-  p
-    margin-bottom: $baseline
-
-.draft-posts--empty--buttons
-  display: flex
-  justify-content: center
-
-  a
-    +button
-    margin: 0 $baseline/4
-
 </style>

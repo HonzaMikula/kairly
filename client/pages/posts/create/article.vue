@@ -17,7 +17,7 @@ export default {
 
   head() {
     return {
-      title: this.$t('My Posts – Kairly')
+      title: this.$t('Write an Article – Kairly')
     }
   },
 

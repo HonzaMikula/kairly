@@ -106,7 +106,7 @@
             </li>
 
             <li>
-              <nuxt-link to="/user/transactions">
+              <nuxt-link class="credits" to="/user/transactions">
                 {{ $t('Credits') }}
               </nuxt-link>
             </li>
@@ -473,10 +473,12 @@ export default {
       &:focus,
         color: #000
 
-      &.nuxt-link-active
+      &.nuxt-link-exact-active,
+      &.credits.nuxt-link-active
         color: #000
 
         font-weight: 600
+      
 
 //- Logo
 .app-header--logo

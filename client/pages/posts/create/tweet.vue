@@ -16,7 +16,7 @@ export default {
 
   head() {
     return {
-      title: this.$t('My Posts – Kairly')
+      title: this.$t('Write a Tweet – Kairly')
     }
   },
 
