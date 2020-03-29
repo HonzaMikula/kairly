@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: "TimelineLoader"
+  name: 'TimelineLoader'
 }
 </script>
 
