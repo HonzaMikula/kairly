@@ -157,7 +157,7 @@ export default {
 @import './styles/components/buttons'
 
 //- Newspaper
-timeline-newspaper
+.timeline-newspaper
   display: block
   margin: $baseline*2 0 $baseline
 

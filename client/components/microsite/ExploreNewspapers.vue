@@ -225,7 +225,7 @@ export default {
     margin: 0
     padding: 0
 
-  timeline-newspaper
+  .timeline-newspaper
     margin-top: $baseline
     transform: scale(0.7)
     transform-origin: top left

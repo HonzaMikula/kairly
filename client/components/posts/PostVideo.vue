@@ -1,23 +1,30 @@
 <template>
   <PostBase :post="post">
-    <div class="timeline-post--video">
+    <div class="post-video-view">
       <h2>
         <span v-if="post.draft">{{ post.content.title }}</span>
         <a :href="post.source" target="_blank">{{ post.content.title }}</a>
       </h2>
 
-      <div class="timeline-post--video--content">
+      <div class="post-video--content">
         <div
           v-if="poster"
-          class="timeline-post--video--content--player"
+          class="post-video--content--player"
         >
           <a :href="post.source" target="_blank">
             <img :src="poster.src" />
           </a>
         </div>
 
-        <div v-html="post.content.perex"></div>
+        <div class="post-video--content--perex">
+          <div v-html="post.content.perex"></div>
 
+          <div class="post-video--content--perex--watch-video">
+            <a :href="post.source" target="_blank">
+              {{ $t('Watch video') }}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -56,8 +63,9 @@ export default {
 
 <style lang="sass">
 @import './styles/components/article-perex'
+@import './styles/mixins/perex-button'
 
-.timeline-post--video
+.post-video-view
   font-family: $ff-serif
 
   //- Title
@@ -79,7 +87,7 @@ export default {
     color: $c-base
 
 //- Content
-.timeline-post--video--content
+.post-video--content
   display: grid
   grid-template-columns: 2fr 1fr
   grid-column-gap: $baseline
@@ -87,9 +95,50 @@ export default {
   @media (max-width: $mobile)
     grid-template-columns: 1fr
 
+  .cols-1-1-1 &,
+  .cols-2-1 &,
+  .cols-1-2 &,
+  .cols-1-1 &
+    grid-template-columns: 1fr
 
-.timeline-post--video--content--player
+    .post-video--content--perex--watch-video
+      display: none
+
+.post-video--content--player
+  a
+    position: relative
+    display: block
+
+    &::before
+      +fa-icon()
+      @extend .fas
+
+      position: absolute
+      left: 50%
+      top: 50%
+
+      color: #eee
+
+      font-size: 40px
+
+      transform: translate(-50%, -50%)
+      transition: color 0.2s
+      content: fa-content($fa-var-play)
+
+    &:hover,
+    &:focus
+      &::before
+        color: #fff
+
   img
     height: auto
     width: 100%
+
+.post-video--content--perex
+  font-size: 15px
+  word-break: break-word
+  line-height: 1.6
+
+.post-video--content--perex--watch-video
+  +perex-button
 </style>

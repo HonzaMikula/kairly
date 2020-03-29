@@ -601,7 +601,7 @@ export default {
 .newspaper-detail--issue
   display: block
 
-  timeline-newspaper
+  .timeline-newspaper
     margin-top: $baseline
 
   //- That's it...

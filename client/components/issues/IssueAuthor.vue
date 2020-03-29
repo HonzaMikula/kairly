@@ -1,5 +1,5 @@
 <template>
-  <timeline-newspaper>
+  <div class="timeline-newspaper">
     <header>
       <h1>
         <nuxt-link
@@ -30,7 +30,7 @@
       :post="item"
       :key="item.id"
     />
-  </timeline-newspaper>
+  </div>
 </template>
 
 <script>

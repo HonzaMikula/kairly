@@ -1,5 +1,5 @@
 <template>
-  <timeline-newspaper>
+  <div class="timeline-newspaper">
     <header>
       <h1>
         <nuxt-link
@@ -16,7 +16,7 @@
       />
 
       <p>
-        <timeline-newspaper--editor>
+        <span class="timeline-newspaper--editor">
           <nuxt-link
             :to="{name: 'author', params: {author: newspaper.editor.id}}"
             :id="`issue-newspaper-author-${$_uid}`"
@@ -24,7 +24,7 @@
             <AuthorPicture :author="newspaper.editor" />
             {{ newspaper.editor.name }}
           </nuxt-link>
-        </timeline-newspaper--editor>
+        </span>
         <span>• {{ frequencyLabel }}</span>
         <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
@@ -36,7 +36,7 @@
 
     </header>
     <slot/>
-  </timeline-newspaper>
+  </div>
 </template>
 
 <script>

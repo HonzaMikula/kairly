@@ -99,7 +99,7 @@ export default {
 
 <style lang="sass">
 @import './styles/components/article-perex'
-
+@import './styles/mixins/perex-button'
 
 .newspaper > .post-body
   font-family: $ff-serif
@@ -123,17 +123,20 @@ export default {
     color: $c-base
 
 //- Content
-.newspaper .post-body--content
+.post-body--content
   position: relative
 
-  column-count: 3
   column-rule: 1px dotted #ddd
   column-gap: $baseline
-  display: block
 
   line-height: 1.58
   hyphens: auto
 
+  +article-perex
+
+.newspaper .post-body--content
+  column-count: 3
+  
   @media (max-width: $mobile)
     column-count: 2
     column-gap: $baseline / 2
@@ -141,36 +144,8 @@ export default {
     font-size: 15px
     line-height: 1.58
 
-
-  +article-perex
-
   //- Continue Reading
   .timeline-post--continue-reading
-    color: #999
-
-    font-family: $ff-sans
-    font-size: $fs--1
-    text-align: center
-
-    break-inside: avoid-column
-
-    a[href]
-      display: table
-      border-radius: 15px
-      clear: both
-      margin: $baseline / 2 auto 0 auto
-      padding: 0 $baseline / 4
-
-      border: 1px solid transparent
-      color: $c-base
-
-      font-size: $fs--1
-      line-height: 1.58
-      text-transform: uppercase
-      text-decoration: none
-
-      &:focus,
-      &:hover
-        background: $c-base
-        color: #fff
+    +perex-button
+    
 </style>
