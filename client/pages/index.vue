@@ -3,7 +3,7 @@
     <div class="timeline-view" v-if="loggedIn">
       <WelcomePage v-if="showWelcome"/>
 
-      <TimelineLoader v-else-if="!loading" />
+      <TimelineLoader v-else-if="loading" />
 
       <template v-else>
         <header

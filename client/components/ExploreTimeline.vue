@@ -1,11 +1,6 @@
 <template>
   <main>
-    <loading-spinner v-if="loading"></loading-spinner>
-
-    <div
-      v-else-if="timeline"
-      class="explore-timeline-view"
-    >
+    <div class="explore-timeline-view">
       <header class="explore--controls" v-if="!disableControls">
         <nuxt-link :to="`/explore/${category.slug}/newspapers-authors`">
           {{ $t('See all authors') }}
@@ -26,10 +21,10 @@
         </div>
       </header>
 
-      <header
-          v-if="!loading"
-          class="timeline--header"
-        >
+      <TimelineLoader v-if="loading" />
+
+      <template v-else>
+        <header class="timeline--header">
           <nuxt-link
             :to="`/explore/${category.slug}/${links.prev}`"
             v-b-tooltip
@@ -46,19 +41,20 @@
           />
         </header>
 
-      <template v-for="timeSlot in timeSlots">
-        <JumpMenu
-          :key="timeSlot.time"
-          :datetime="timeSlot.time"
-          :timeSlots="timeSlots"
-        />
+        <template v-for="timeSlot in timeSlots">
+          <JumpMenu
+            :key="timeSlot.time"
+            :datetime="timeSlot.time"
+            :timeSlots="timeSlots"
+          />
 
-        <IssueWrapper
-          v-for="issue in timeSlot.issues"
-          :key="issue.id"
-          :issue="issue"
-          :subscription="true"
-        />
+          <IssueWrapper
+            v-for="issue in timeSlot.issues"
+            :key="issue.id"
+            :issue="issue"
+            :subscription="true"
+          />
+        </template>
       </template>
     </div>
   </main>
@@ -69,13 +65,15 @@ import { mapGetters } from 'vuex'
 
 import IssueWrapper from '@/components/IssueWrapper'
 import JumpMenu from '@/components/widgets/JumpMenu'
+import TimelineLoader from '@/components/widgets/TimelineLoader'
 
 export default {
   name: 'ExploreTimeline',
 
   components: {
     IssueWrapper,
-    JumpMenu
+    JumpMenu,
+    TimelineLoader
   },
 
   props: {
