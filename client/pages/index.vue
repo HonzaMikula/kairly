@@ -1,11 +1,12 @@
 <template>
   <AppLayout>
-    <timeline-view v-if="loggedIn">
+    <div class="timeline-view" v-if="loggedIn">
       <WelcomePage v-if="showWelcome"/>
+
+      <TimelineLoader v-else-if="!loading" />
 
       <template v-else>
         <header
-          v-if="!loading"
           class="timeline--header"
         >
           <nuxt-link
@@ -41,7 +42,7 @@
           </template>
         </template>
 
-        <template v-else-if="!loading">
+        <template v-else>
           <div class="timeline-time-slot">
             <h1>{{ dayTitle }}</h1>
           </div>
@@ -59,7 +60,6 @@
         </template>
 
         <footer
-          v-if="!loading"
           id="start"
           class="timeline--footer"
         >
@@ -81,9 +81,7 @@
           />
         </footer>
       </template>
-
-      <loading-spinner v-if="loading"></loading-spinner>
-    </timeline-view>
+    </div>
 
     <HomePage v-else/>
   </AppLayout>
@@ -99,6 +97,7 @@ import WelcomePage from '@/components/WelcomePage'
 import AppLayout from '@/components/layout/AppLayout'
 import IssueWrapper from '@/components/IssueWrapper'
 import JumpMenu from '@/components/widgets/JumpMenu'
+import TimelineLoader from '@/components/widgets/TimelineLoader'
 
 export default {
   name: 'Timeline',
@@ -121,6 +120,7 @@ export default {
     IssueWrapper,
     JumpMenu,
     WelcomePage,
+    TimelineLoader
   },
 
   computed: {
@@ -276,7 +276,7 @@ export default {
 @import './styles/components/buttons'
 
 //- TIMELINE VIEW -//
-timeline-view
+.timeline-view
   display: block
   padding: $baseline $baseline 0 $baseline
   margin: 0 auto

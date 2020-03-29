@@ -6,7 +6,7 @@
       </main>
 
       <aside>
-        <section class="subscription--credits">
+        <!-- <section class="subscription--credits">
           <h2><nuxt-link to="/user/transactions/history">{{ $t('Credits') }}</nuxt-link></h2>
           <p>{{ $t('Current balance') }}</p>
           <p class="credits">
@@ -20,7 +20,7 @@
           <nuxt-link to="/user/add-credits">
             <button>{{ $t('Buy credits') }}</button>
           </nuxt-link>
-        </section>
+        </section> -->
 
         <section class="subscription--imports">
           <h2>{{ $t('Import authors') }}</h2>

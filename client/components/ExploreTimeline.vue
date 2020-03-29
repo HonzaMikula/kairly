@@ -4,7 +4,7 @@
 
     <div
       v-else-if="timeline"
-      class="timeline-view explore-timeline-view"
+      class="explore-timeline-view"
     >
       <header class="explore--controls" v-if="!disableControls">
         <nuxt-link :to="`/explore/${category.slug}/newspapers-authors`">
