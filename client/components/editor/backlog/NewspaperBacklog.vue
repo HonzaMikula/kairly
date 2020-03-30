@@ -28,7 +28,7 @@
       source="considered"
     />
 
-    <SelectionToolbar/>
+    <SelectionToolbar v-show="selectionSize > 0"/>
   </div>
 </template>
 
@@ -66,6 +66,10 @@ export default {
     ...mapGetters({
       denormalize: 'entities/denormalize',
     }),
+
+    selectionSize() {
+      return Object.keys(this.$store.state.backlog.selection).length
+    },
 
     backlogs() {
       return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]

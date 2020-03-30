@@ -7,6 +7,7 @@ let reorderPostScheduled = false
 export const state = () => ({
   userBacklog: null,
   newspaperBacklog: {},
+  selection: {} // newspaper editor selection
 })
 
 export const actions = {
@@ -328,4 +329,16 @@ export const mutations = {
     }
     backlog[target].layout = ordering.map(id => posts[id])
   },
+
+  select(state, id) {
+    Vue.set(state.selection, id, true)
+  },
+
+  unselect(state, id) {
+    Vue.delete(state.selection, id)
+  },
+
+  cleanSelection(state) {
+    state.selection = {}
+  }
 }

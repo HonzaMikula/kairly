@@ -2,10 +2,9 @@
   <div class="selection-toolbar-view">
     <div class="selection-toolbar--info">
       <span>
-        3 selected posts
+        {{ selectionSize }} selected posts
       </span>
-      
-      <button class="cancel"></button>
+      <button class="cancel" @click="cleanSelection"></button>
     </div>
 
     <nav class="selection-toolbar--navigation">
@@ -14,7 +13,7 @@
       <button class="upcoming-issue" id="upcomingIssue">Upcoming issue</button>
       <button class="backlog">Backlog</button>
       <button class="special-layout" id="specialLayout" @click.stop>Special layout</button>
-      <button 
+      <button
         class="delete"
         v-b-tooltip
         :title="$t('Remove post(s)')"
@@ -77,9 +76,16 @@ export default {
     BPopover
   },
 
+  computed: {
+    selectionSize() {
+      return Object.keys(this.$store.state.backlog.selection).length
+    }
+  },
 
   methods: {
-
+    cleanSelection() {
+      this.$store.commit('backlog/cleanSelection')
+    }
   }
 }
 </script>
@@ -96,7 +102,7 @@ export default {
 
   display: flex
   line-height: $baseline * 1.5
-  border-radius: $baseline / 4  
+  border-radius: $baseline / 4
 
   background: #eee
   border: 1px solid #aaa
@@ -130,7 +136,7 @@ export default {
       @extend .fas
 
       content: fa-content($fa-var-times)
-  
+
 
 .selection-toolbar--navigation
   display: flex
@@ -184,5 +190,5 @@ export default {
 
       content: fa-content($fa-var-trash-alt)
 
-      
+
 </style>

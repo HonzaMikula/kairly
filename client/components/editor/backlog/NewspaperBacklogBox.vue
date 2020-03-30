@@ -74,7 +74,7 @@
         <div class="newspaper-backlog-controls--arrows">
 
           <div class="newspaper-backlog-controls--arrows--checkbox">
-            <input type="checkbox" v-model="postSelection" /> 
+            <input type="checkbox" v-model="postSelection" />
           </div>
 
           <div class="newspaper-backlog-controls--arrows--controls" v-if="postSelection">
@@ -299,7 +299,6 @@ export default {
       mobileControls: false,
       editedColumn: null,
       typeOverride: {},
-      postSelection: null
     }
   },
 
@@ -312,6 +311,20 @@ export default {
         return ["menu-left-col", "menu-middle-col", "menu-right-col"];
       }
       return ["menu-left-col", "menu-right-col"];
+    },
+
+    postSelection: {
+      get() {
+        return this.$store.state.backlog.selection[this.post.id]
+      },
+
+      set(value) {
+        if (value) {
+          this.$store.commit('backlog/select', this.post.id)
+        } else {
+          this.$store.commit('backlog/unselect', this.post.id)
+        }
+      }
     },
 
     isAdmin() {
@@ -640,6 +653,10 @@ export default {
     grid-column-gap: $baseline / 4
     grid-template-columns: $baseline*1.25 1fr $baseline*1.25
     width: calc(100vw - (#{$baseline} * 0.75))
+
+.newspaper-backlog-controls--arrows--checkbox
+  input
+    transform: scale(1.6)
 
 .newspaper-backlog-controls--options
   position: absolute
