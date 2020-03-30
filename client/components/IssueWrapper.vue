@@ -54,8 +54,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import keyBy from 'lodash/keyBy'
-import isString from 'lodash/isString'
+
+import PostObjectMixin from '@/mixins/PostObjectMixin'
 
 import IssueSuspendedAuthor from '@/components/issues/IssueSuspendedAuthor'
 import IssueSuspendedNewspaper from '@/components/issues/IssueSuspendedNewspaper'
@@ -78,6 +78,8 @@ export default {
     hideDate: Boolean,
     showTail: Boolean
   },
+
+  mixins: [PostObjectMixin],
 
   components: {
     IssueAuthor,
@@ -116,9 +118,9 @@ export default {
       }
     },
 
-    postsById() {
-      return keyBy(this.issue.posts, 'id')
-    },
+    // postsById() {
+    //   return keyBy(this.issue.posts, 'id')
+    // },
 
     headPosts() {
       return this.issue.layout.slice(0, POST_LIMIT).map(item => this.getPostObject(item))
@@ -146,33 +148,6 @@ export default {
         eventAction: 'Open Share modal'
       })
     },
-
-    getPostObject(item, idx) {
-      if (Array.isArray(item)) {
-        const id = Math.random().toString(36).substring(2)
-        const css = isString(item[0]) ? item[0] : null
-        const columns = css === null ? item : item.slice(1)
-        return {
-          id,
-          type: 'box',
-          css,
-          columns: columns.map(c => {
-            return  {
-              css: isString(c[0]) ? c[0] : '',
-              posts: (isString(c[0]) ? c.slice(1) : c).map(item => this.postsById[item.post])
-            }
-          })
-        }
-      }
-      if (item.post) {
-        return this.postsById[item.post]
-      }
-      if (item.header !== undefined) { // header can be null!
-        return { type: 'header', id: Math.random().toString(36).substring(2), title: item.header }
-      }
-      console.log(item)
-      throw new Error("Unknown type")
-    }
   }
 }
 </script>
@@ -182,7 +157,7 @@ export default {
 @import './styles/components/buttons'
 
 //- Newspaper
-timeline-newspaper
+.timeline-newspaper
   display: block
   margin: $baseline*2 0 $baseline
 

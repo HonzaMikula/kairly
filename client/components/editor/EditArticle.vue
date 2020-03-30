@@ -149,7 +149,7 @@ export default {
 
   +article-perex
 
-.edit-article--perex.column-view .medium-editor-wrapper
+.edit-article--perex.column-view .ck-content
   column-count: 3
   column-rule: 1px dotted #ddd
   column-gap: $baseline

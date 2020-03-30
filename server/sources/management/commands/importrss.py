@@ -11,7 +11,7 @@ from django.core.management.base import BaseCommand
 
 from articles.models import Post, Newspaper, Backlog, BacklogPost, IssuePost
 from articles.signals import post_publish
-from articles.utils import create_post_link
+from sources.external_links import create_post_link
 from sources.models import Channel, EntryHasNoContentException
 from articles.models import SubscriptionToAuthor
 from users.models import User

@@ -25,7 +25,7 @@
           <img :src="post.content.attachments.image"/>
         </picture>
 
-        <p>{{ post.content.perex }}</p>
+        <div v-html="post.content.perex"></div>
 
         <div class="post-link--continue-reading">
           <a :href="post.source" target="_blank">{{ $t('Read article') }}</a>
@@ -52,6 +52,7 @@ export default {
 
 <style lang="sass">
 @import './styles/components/article-perex'
+@import './styles/mixins/perex-button'
 
 .post picture .external-link
   display: block
@@ -108,33 +109,10 @@ export default {
   img
     width: 100%
 
+  img[height], img[width]
+      width: auto
+
 //- continue reading
 .post-link--continue-reading
-  display: block
-
-  color: #999
-
-  font-family: $ff-sans
-  font-size: $fs--1
-  text-align: center
-
-  a[href]
-    display: table
-    border-radius: 15px
-    clear: both
-    margin: $baseline / 2 auto 0 auto
-    padding: 0 $baseline / 2
-
-    border: 1px solid transparent
-    color: $c-base
-
-    font-size: $fs--1
-    line-height: 1.58
-    text-transform: uppercase
-    text-decoration: none
-
-    &:focus,
-    &:hover
-      background: $c-base
-      color: #fff
+  +perex-button
 </style>

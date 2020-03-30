@@ -13,7 +13,10 @@
       <h1>{{ title }}</h1>
       <ul>
         <li v-for="post in listOfPosts()" :key="post.id">
-          <template v-if="post.content.title">
+          <template v-if="post.content.title && post.type == 'link'">
+            <a :href="post.source">{{ post.content.title }}</a>
+          </template>
+          <template v-else-if="post.content.title">
             <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">
               {{ post.content.title }}
             </nuxt-link>

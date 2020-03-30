@@ -5,32 +5,26 @@
     {% for post in column.posts %}
     <article>
       {% if post.kind == 'tweet' %}
-        <h2>
-          {% if post.author.name %}
-            {{ post.author.name }}
-          {% elif post.author.username %}
-            {{ post.author.username }}
-          {% endif %}
-        </h2>
+        <h2>{{ post.author.name }}</h2>
         <p>{{ post.content | safe }}</p>
 
       {% elif post.kind == 'comment' %}
-        <h2>{{ post.author.name }}</h2>
+        <h2>{% if post.title %}{{ post.title }}{% else %}{{ post.author.name }}{% endif %}</h2>
         {{ post.content | safe }}
 
       {% else %}
         {% if post.title %}
           <h2>
-            <a href="https://kairly.com/{{ post.author }}/{{ post.slug }}/">
-              {{ post.title }}
-            </a>
+            {% if post.author.username %}<a href="https://kairly.com/{{ post.author.username }}/{{ post.slug }}/">{% endif %}
+            {{ post.title }}
+            {% if post.author.username %}</a>{% endif %}
           </h2>
-        {% endif %}
-        {% if post.kind == 'link' %}
-          <p>{{ post.perex | safe }}</p>
         {% else %}
-          {{ post.perex | safe }}
+          {% if post.author %}
+          <h2>{{ post.author.name }}</h2>
+          {% endif %}
         {% endif %}
+        {{ post.perex | safe }}
       {% endif %}
     </article>
     {% endfor %}

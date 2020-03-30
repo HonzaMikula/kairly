@@ -1,5 +1,5 @@
 <template>
-  <timeline-newspaper class="issue-unreleased">
+  <div class="timeline-newspaper issue-unreleased">
     <header>
       <h1>
         <nuxt-link
@@ -28,7 +28,7 @@
       {{ $t('Your susbscription were suspended.') }}
     </article>
 
-  </timeline-newspaper>
+  </div>
 </template>
 
 <script>

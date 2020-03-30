@@ -8,8 +8,23 @@ from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import DefaultFeed
 
-from .period import PeriodMixin
 from .models import Newspaper, Issue, Post
+
+
+@dataclass
+class AuthorItem:
+    username: str
+    name: str
+
+
+@dataclass
+class PostItem:
+    kind: str
+    slug: str
+    author: str
+    title: str
+    perex: str
+    content: str
 
 
 @dataclass
@@ -87,7 +102,33 @@ class NewspaperFeed(Feed):
         query = Issue.objects.filter(newspaper=newspaper).order_by('-number')[:10]
         items = []
         for issue in query:
-            posts = {post.id: post for post in issue.posts.all()}
+            posts = {}
+            for post in issue.posts.all().select_related('author'):
+                if post.author is None:
+                    author = None
+                    if post.attachments:
+                        attachments = json.loads(post.attachments)
+                        if post.kind == Post.TWEET:
+                            for attachment in json.loads(post.attachments):
+                                if attachment['type'] == 'author':
+                                    author = AuthorItem(None, attachment['screen_name'])
+                                    break
+                        else:
+                            attachment = attachments.get('author')
+                            if attachment:
+                                author = AuthorItem(None, attachment['name'])
+                else:
+                    author = AuthorItem(post.author.username, post.author.name or post.author.username)
+
+                posts[post.id] = PostItem(
+                    post.kind,
+                    post.slug,
+                    author,
+                    post.title,
+                    post.perex,
+                    post.content
+                )
+
             boxes = []
             for box in json.loads(issue.layout):
                 if isinstance(box, list):
@@ -129,28 +170,25 @@ class NewspaperFeed(Feed):
         return f"https://kairly.com/{item.newspaper.full_name}/{item.issue.number}"
 
     def item_title(self, item):
-        return f"{item.newspaper.title}: {item.boxes[0].columns[0].posts[0].title}"
-        # if item.newspaper.period in [PeriodMixin.X6_PER_DAY, PeriodMixin.X3_PER_DAY]:
-        #     return f"{item.newspaper.title}: ~ {item.issue.published:%d. %m. %Y %H:%M}"
-        # else:
-        #     return f"{item.newspaper.title} ~ {item.issue.published:%d. %m. %Y}"
+        titles = self.get_post_titles(item)
+        return f"{item.newspaper.title} #{item.issue.number}: {titles[0]}"
 
     def item_pubdate(self, item):
         return item.issue.published
 
     def item_description(self, item):
+        description = self.get_post_titles(item)
+        description.pop(0)
+
+        return ' • '.join(description)
+
+    def get_post_titles(self, item):
         titles = []
 
         def get_post_title(post):
             if post.kind == Post.TWEET:
                 if post.author:
-                    name = post.author.name or post.author.username
-                else:
-                    for attachment in json.loads(post.attachments):
-                        if attachment['type'] == 'author':
-                            name = attachment['screen_name']
-                            break
-                return f"{name}'s tweet"
+                    return f"{post.author.name}: {post.content[:50]}"
             else:
                 if post.title:
                     return post.title
@@ -161,8 +199,9 @@ class NewspaperFeed(Feed):
                     title = get_post_title(post)
                     if title:
                         titles.append(title)
-
-        return ' • '.join(titles)
+        
+        return titles
+      
 
     def item_content_encoded(self, item):
         template = loader.get_template('articles/feed-content.html')

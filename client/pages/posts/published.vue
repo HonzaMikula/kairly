@@ -16,9 +16,9 @@
         </template>
       </PostWrapper>
 
-      <div v-if="!posts.length && !loadingPosts" class="my-posts--empty">
-        <p>{{ $t("You didn't publish any post.") }}</p>
-      </div>
+      <EmptyPostPlaceholder v-if="!posts.length && !loadingPosts">
+        {{ $t('You haven\'t published any post yet.') }}
+      </EmptyPostPlaceholder>
 
       <loading-spinner v-if="loadingPosts"></loading-spinner>
     </div>
@@ -30,13 +30,21 @@ import { mapActions, mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import PostWrapper from '@/components/PostWrapper'
+import EmptyPostPlaceholder from '@/components/editor/EmptyPostPlaceholder'
 
 export default {
-  name: 'Drafts',
+  name: 'Published',
+
+  head() {
+    return {
+      title: this.$t('Published Posts – Kairly')
+    }
+  },
 
   components: {
     AppLayout,
-    PostWrapper
+    PostWrapper,
+    EmptyPostPlaceholder
   },
 
   data() {
@@ -81,18 +89,9 @@ export default {
 </script>
 
 <style lang="sass">
+@import './styles/components/buttons'
+
 .published-posts-view
   max-width: 900px
   margin: $baseline auto
-
-//- Empty placeholder
-.my-posts--empty
-  display: block
-  margin: $baseline 0
-  padding: $baseline
-
-  background: #eee
-  border: 1px dashed #ccc
-
-  text-align: center
 </style>

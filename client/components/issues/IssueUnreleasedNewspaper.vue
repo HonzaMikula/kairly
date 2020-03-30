@@ -1,5 +1,5 @@
 <template>
-  <timeline-newspaper class="issue-unreleased">
+  <div class="timeline-newspaper issue-unreleased">
     <header>
       <h1>
         <nuxt-link
@@ -16,7 +16,7 @@
       />
 
       <p>
-        <timeline-newspaper--editor>
+        <span class="timeline-newspaper--editor">
           <nuxt-link
             :id="`issue-newspaper-author-${$_uid}`"
             :to="{name: 'author', params: {author: newspaper.editor.id}}"
@@ -24,7 +24,7 @@
             <AuthorPicture :author="newspaper.editor" />
             {{ newspaper.editor.name }}
           </nuxt-link>
-        </timeline-newspaper--editor>
+        </span>
         <span>• {{ frequencyLabel }}</span>
         <template v-if="!hideDate"> • {{ issue.time | moment('calendar')}}</template>
       </p>
@@ -39,7 +39,7 @@
       {{ $t('We are very sorry, but {editor} didn\'t prepare a new release for you.', {editor: newspaper.editor.name}) }}
     </article>
 
-  </timeline-newspaper>
+  </div>
 </template>
 
 <script>
