@@ -28,7 +28,10 @@
       source="considered"
     />
 
-    <SelectionToolbar v-show="selectionSize > 0"/>
+    <SelectionToolbar
+      v-show="selectionSize > 0"
+      :newspaper="newspaper"
+    />
   </div>
 </template>
 

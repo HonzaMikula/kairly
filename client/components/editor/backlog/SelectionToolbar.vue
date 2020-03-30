@@ -2,16 +2,16 @@
   <div class="selection-toolbar-view">
     <div class="selection-toolbar--info">
       <span>
-        {{ selectionSize }} selected posts
+        {{ selection.length }} selected posts
       </span>
       <button class="cancel" @click="cleanSelection"></button>
     </div>
 
     <nav class="selection-toolbar--navigation">
-      <button class="up"></button>
-      <button class="down"></button>
-      <button class="upcoming-issue" id="upcomingIssue">Upcoming issue</button>
-      <button class="backlog">Backlog</button>
+      <button class="up" @click="moveUp()"></button>
+      <button class="down" @click="moveDown()"></button>
+      <button class="upcoming-issue" id="upcomingIssue" @click="moveUp('upcoming')">Upcoming issue</button>
+      <button class="backlog" @click="moveDown('considered')">Backlog</button>
       <button class="special-layout" id="specialLayout" @click.stop>Special layout</button>
       <button
         class="delete"
@@ -76,15 +76,68 @@ export default {
     BPopover
   },
 
+  props: {
+    newspaper: Object
+  },
+
   computed: {
-    selectionSize() {
-      return Object.keys(this.$store.state.backlog.selection).length
+    selection() {
+      return Object.keys(this.$store.state.backlog.selection)
     }
   },
 
   methods: {
     cleanSelection() {
       this.$store.commit('backlog/cleanSelection')
+    },
+
+    moveUp(target=null) {
+      const { fullName } = this.newspaper
+      const backlogNames = ['upcoming', 'next', 'considered']
+      const sources = []
+      backlogNames.forEach(name => {
+        if (target !== name) {
+          const ids = this.$store.state.backlog.newspaperBacklog[fullName][name].layout.map(box => box.id)
+          ids.forEach((id, idx) => {
+            if (this.selection.indexOf("" + id) !== -1) {
+              sources.push({source: name, index: idx})
+            }
+          })
+        }
+      })
+      // TODO don't move with boxes on top
+      sources.forEach(item => {
+        this.$store.commit("backlog/moveUp", {
+          newspaper: this.newspaper,
+          target,
+          ...item
+        });
+      })
+    },
+
+    moveDown(target=null) {
+      const { fullName } = this.newspaper
+      const backlogNames = ['considered', 'next', 'upcoming']
+      const sources = []
+      backlogNames.forEach(name => {
+        if (target !== name) {
+          const ids = this.$store.state.backlog.newspaperBacklog[fullName][name].layout.map(box => box.id)
+          for (let idx = ids.length - 1; idx >= 0; idx--) {
+            const id = ids[idx]
+            if (this.selection.indexOf("" + id) !== -1) {
+              sources.push({source: name, index: idx})
+            }
+          }
+        }
+      })
+      // TODO don't move with boxes at bottom
+      sources.forEach(item => {
+        this.$store.commit("backlog/moveDown", {
+          newspaper: this.newspaper,
+          target,
+          ...item
+        });
+      })
     }
   }
 }
