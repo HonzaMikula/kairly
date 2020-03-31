@@ -17,6 +17,7 @@
         class="delete"
         v-b-tooltip
         :title="$t('Remove post(s)')"
+        @click="remove()"
       />
 
       <b-popover
@@ -91,61 +92,82 @@ export default {
       this.$store.commit('backlog/cleanSelection')
     },
 
-    move(target, direction, top=false) {
+    getSources({reversed, targetBacklog, skipHead}) {
       const { fullName } = this.newspaper
       const backlogNames = ['upcoming', 'next', 'considered']
-      if (direction === 'down' || top) {
+      if (reversed) {
         backlogNames.reverse()
       }
 
       const sources = []
-      let canMove = target !== null || top
       backlogNames.forEach(name => {
-        if (target !== name || top) {
+        if (name !== targetBacklog) {
           const ids = this.$store.state.backlog.newspaperBacklog[fullName][name].layout.map(box => box.id)
           const cb = (id, idx) => {
             if (this.selection.indexOf("" + id) !== -1) {
-              if (canMove) {
+              if (!skipHead) {
                 sources.push({source: name, index: idx})
+                return true
               }
             } else {
-              canMove = true
+              skipHead = false
             }
+            return false
           }
-          if (direction === 'up' && !top) {
+          if (reversed) {
+            for (let idx = ids.length - 1; idx >= 0; idx--) {
+              cb(ids[idx], idx)
+            }
+          } else {
             let movedOut = 0
             for (let idx = 0; idx < ids.length; idx++) {
               // when some post is moved outside section then indexes will be shifted for following items
               const adjustedIdx = idx - movedOut
-              cb(ids[idx], adjustedIdx)
-              if (adjustedIdx === 0 || target !== null) {
+              if (cb(ids[idx], adjustedIdx) && (adjustedIdx === 0 || targetBacklog !== null)) {
                 movedOut++
               }
-            }
-          } else {
-            for (let idx = ids.length - 1; idx >= 0; idx--) {
-              cb(ids[idx], idx)
             }
           }
         }
       })
 
+      return sources
+    },
+
+    moveUp(target=null, top=false) {
+      const sources = this.getSources({reversed: top, targetBacklog: target, skipHead: target === null})
       sources.forEach(item => {
-        this.$store.commit(direction === 'up' ? "backlog/moveUp" : "backlog/moveDown", {
+        this.$store.commit("backlog/moveUp", {
           newspaper: this.newspaper,
           target,
           top,
           ...item
-        });
+        })
       })
-    },
-
-    moveUp(target=null, top=false) {
-      this.move(target, 'up', top)
+      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
     },
 
     moveDown(target=null) {
-      this.move(target, 'down')
+      const sources = this.getSources({reversed: true, targetBacklog: target, skipHead: target === null})
+      sources.forEach(item => {
+        this.$store.commit("backlog/moveDown", {
+          newspaper: this.newspaper,
+          target,
+          ...item
+        })
+      })
+      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+    },
+
+    remove() {
+      const sources = this.getSources({reversed: true, targetBacklog: null, skipHead: false})
+      sources.forEach(item => {
+        this.$store.commit("backlog/remove", {
+          newspaper: this.newspaper,
+          ...item
+        })
+      })
+      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
     }
   }
 }
