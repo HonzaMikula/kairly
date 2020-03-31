@@ -12,7 +12,12 @@
       <button class="down" @click="moveDown()"></button>
       <button class="upcoming-issue" id="upcomingIssue">Upcoming issue</button>
       <button class="backlog" @click="moveDown('considered')">Backlog</button>
-      <button class="special-layout" id="specialLayout" @click.stop>Special layout</button>
+      <button
+        id="specialLayout"
+        class="special-layout"
+        :class="{disabled: !containsOnlyPosts || selection.length < 2 || selection.length > 3}"
+        @click.stop
+      >Special layout</button>
       <button
         class="delete"
         v-b-tooltip
@@ -27,17 +32,17 @@
         @click.stop
       >
         <ul>
-          <li tabindex="0" @click="makeBox('cols-2-1', ['', 'editorial'])">
+          <li tabindex="0" v-show="selection.length === 2" @click="makeBox('cols-2-1', ['', 'editorial'])">
             <h6>{{ $t('Layout 2-1') }}</h6>
             <p>{{ $t('One main article, one smaller column') }}</p>
           </li>
 
-          <li tabindex="1" @click="makeBox('cols-1-1', ['', ''])">
+          <li tabindex="1" v-show="selection.length === 2" @click="makeBox('cols-1-1', ['', ''])">
             <h6>{{ $t('Layout 1-1') }}</h6>
             <p>{{ $t('Two equal sections') }}</p>
           </li>
 
-          <li tabindex="2" @click="makeBox('cols-1-1-1', ['', '', ''])">
+          <li tabindex="2" v-show="selection.length === 3" @click="makeBox('cols-1-1-1', ['', '', ''])">
             <h6>{{ $t('Layout 1-1-1') }}</h6>
             <p>{{ $t('Three equal sections') }}</p>
           </li>
@@ -51,12 +56,12 @@
         @click.stop
       >
         <ul>
-          <li tabindex="0" @click="moveUp('upcoming', true)">
+          <li tabindex="0" @click="moveToUpcomingTop()">
             <h6>{{ $t('Top') }}</h6>
             <p>{{ $t('Make it first post') }}</p>
           </li>
 
-          <li tabindex="1" @click="moveUp('upcoming')">
+          <li tabindex="1" @click="moveToUpcomingBottom()">
             <h6>{{ $t('Bottom') }}</h6>
             <p>{{ $t('Make it last post') }}</p>
           </li>
@@ -69,6 +74,9 @@
 
 <script>
 import { BPopover } from "bootstrap-vue"
+
+const UPPERMOST_BACKLOG = 'upcoming'
+const BOTTOMMOST_BACKLOG = 'considered'
 
 export default {
   name: "SelectionToolbar",
@@ -84,6 +92,34 @@ export default {
   computed: {
     selection() {
       return Object.keys(this.$store.state.backlog.selection)
+    },
+
+    selectedBoxes() {
+      const { fullName } = this.newspaper
+      const backlogNames = ['upcoming', 'next', 'considered']
+      const sources = []
+      backlogNames.forEach(name => {
+        const { layout } = this.$store.state.backlog.newspaperBacklog[fullName][name]
+        layout.forEach((box, index) => {
+          if (this.selection.indexOf("" + box.id) !== -1) {
+            sources.push({
+              source: name,
+              index,
+              box,
+            })
+          }
+        })
+      })
+      return sources
+    },
+
+    containsOnlyPosts() {
+      for (let i = 0; i < this.selectedBoxes.length; i++) {
+        if (this.selectedBoxes[i].box.type !== 'post') {
+          return false
+        }
+      }
+      return true
     }
   },
 
@@ -92,66 +128,90 @@ export default {
       this.$store.commit('backlog/cleanSelection')
     },
 
-    getSources({reversed, targetBacklog, skipHead}) {
-      const { fullName } = this.newspaper
-      const backlogNames = ['upcoming', 'next', 'considered']
-      if (reversed) {
-        backlogNames.reverse()
-      }
-
-      const sources = []
-      backlogNames.forEach(name => {
-        if (name !== targetBacklog) {
-          const { layout } = this.$store.state.backlog.newspaperBacklog[fullName][name]
-          const ids = layout.map(box => box.id)
-          const cb = (id, index, item) => {
-            if (this.selection.indexOf("" + id) !== -1) {
-              if (!skipHead) {
-                sources.push({source: name, index, item})
-                return true
-              }
-            } else {
-              skipHead = false
-            }
-            return false
-          }
-          if (reversed) {
-            for (let idx = ids.length - 1; idx >= 0; idx--) {
-              cb(ids[idx], idx, layout[idx])
-            }
-          } else {
-            let movedOut = 0
-            for (let idx = 0; idx < ids.length; idx++) {
-              // when some post is moved outside section then indexes will be shifted for following items
-              const adjustedIdx = idx - movedOut
-              if (cb(ids[idx], adjustedIdx, layout[idx]) && (adjustedIdx === 0 || targetBacklog !== null)) {
-                movedOut++
-              }
-            }
-          }
-        }
-      })
-
-      return sources
-    },
-
-    moveUp(target=null, top=false) {
-      const sources = this.getSources({reversed: top, targetBacklog: target, skipHead: target === null})
+    moveToUpcomingTop() {
+      let sources = this.selectedBoxes.slice()
+      sources.reverse()
+      let selectedBefore = 0
       sources.forEach(item => {
+        let index = item.index
+        if (item.source === UPPERMOST_BACKLOG) {
+          index += selectedBefore
+        }
         this.$store.commit("backlog/moveUp", {
           newspaper: this.newspaper,
           source: item.source,
-          index: item.index,
-          target,
-          top
+          index,
+          target: UPPERMOST_BACKLOG,
+          top: true
         })
+
+        selectedBefore++
+      })
+      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+    },
+
+    moveToUpcomingBottom() {
+      let sources = this.selectedBoxes
+      let selectedBefore = 0
+      sources.forEach(item => {
+        let index = item.index
+        if (item.source === UPPERMOST_BACKLOG) {
+          index -= selectedBefore
+        }
+        this.$store.commit("backlog/moveUp", {
+          newspaper: this.newspaper,
+          source: item.source,
+          index,
+          target: UPPERMOST_BACKLOG,
+        })
+
+        selectedBefore++
+      })
+      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+    },
+
+    moveUp() {
+      let sources = this.selectedBoxes
+      let prevSource = null
+      let selectedBefore = 0
+      sources.forEach(item => {
+        if (prevSource !== item.source) {
+          prevSource = item.source
+          selectedBefore = 0
+        }
+        let index = item.index - selectedBefore
+        if (item.source === UPPERMOST_BACKLOG && index === 0) {
+          return
+        }
+
+        this.$store.commit("backlog/moveUp", {
+          newspaper: this.newspaper,
+          source: item.source,
+          index,
+          target: null
+        })
+        if (index === 0) {
+          selectedBefore++
+        }
       })
       this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
     },
 
     moveDown(target=null) {
-      const sources = this.getSources({reversed: true, targetBacklog: target, skipHead: target === null})
+      const { fullName } = this.newspaper
+      let sources = this.selectedBoxes.slice()
+      sources.reverse()
+      if (target) {
+        sources = sources.filter(({ source }) => source !== target)
+      }
+
+      let consideredSkipIndex = this.$store.state.backlog.newspaperBacklog[fullName][BOTTOMMOST_BACKLOG].layout.length - 1
       sources.forEach(item => {
+        if (item.source === BOTTOMMOST_BACKLOG && item.index === consideredSkipIndex) {
+          consideredSkipIndex--
+          return
+        }
+
         this.$store.commit("backlog/moveDown", {
           newspaper: this.newspaper,
           target,
@@ -163,7 +223,8 @@ export default {
     },
 
     remove() {
-      const sources = this.getSources({reversed: true, targetBacklog: null, skipHead: false})
+      let sources = this.selectedBoxes.slice()
+      sources.reverse()
       sources.forEach(item => {
         this.$store.commit("backlog/remove", {
           newspaper: this.newspaper,
@@ -179,17 +240,17 @@ export default {
         return
       }
 
-      const sources = this.getSources({reversed: true, targetBacklog: null, skipHead: false})
+      let sources = this.selectedBoxes.slice()
       const columns = []
       for (let i = 0; i < sources.length; i++) {
-        const { item } = sources[i]
-        if (item.type !== 'post') {
+        const { box } = sources[i]
+        if (box.type !== 'post') {
           // only posts can be added to box
           return
         }
         columns.push({
           css: columnsStyle[i],
-          posts: [item]
+          posts: [box]
         })
       }
 
@@ -200,6 +261,7 @@ export default {
         columns
       }
 
+      sources.reverse()
       for (let i = 0; i < sources.length; i++) {
         const item = sources[i]
         if (i === sources.length - 1) {
@@ -295,6 +357,12 @@ export default {
 
     &::before
       margin-right: $baseline / 4
+
+    &.disabled
+      color: #aaa
+
+      &:hover
+        background: transparent
 
   .up
     &::before
