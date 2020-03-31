@@ -10,6 +10,18 @@ export const state = () => ({
   selection: {} // newspaper editor selection
 })
 
+
+function getItemPostIds(item) {
+  const postIds = []
+  if (item.type === 'box') {
+    item.columns.forEach(col => col.posts.forEach(p => postIds.push(p.id)))
+  }
+  if (item.type === 'post') {
+    postIds.push(item.id)
+  }
+  return postIds
+}
+
 export const actions = {
   async loadUserBacklog({ commit, state }) {
     if (state.userBacklog) {
@@ -241,17 +253,12 @@ export const mutations = {
     const item = layout[index]
     layout.splice(index, 1)
 
-    const postIds = []
-    if (item.type === 'box') {
-      item.columns.forEach(col => col.posts.forEach(p => postIds.push(p.id)))
-    } else {
-      postIds.push(item.id)
-    }
-
-    postIds.forEach(id => {
+    getItemPostIds(item).forEach(id => {
       const postBacklog = state.userBacklog[id] || {}
       Vue.delete(postBacklog, fullName)
     })
+
+    return item
   },
 
   setBacklogItem(state, { newspaper, target, index, item }) {
@@ -259,6 +266,11 @@ export const mutations = {
     const newspaperBacklog = state.newspaperBacklog[fullName]
     let { layout } = newspaperBacklog[target]
     Vue.set(layout, index, item)
+
+    getItemPostIds(item).forEach(id => {
+      const postBacklog = state.userBacklog[id] || {}
+      Vue.set(state.userBacklog, id, { ...postBacklog, [fullName]: target })
+    })
   },
 
   append(state, { newspaper, target, item }) {
@@ -267,20 +279,34 @@ export const mutations = {
     let { layout } = newspaperBacklog[target]
     layout.push(item)
 
-    const postBacklog = state.userBacklog[item.id] || {}
-    Vue.set(state.userBacklog, item.id, { ...postBacklog, [fullName]: target })
+    getItemPostIds(item).forEach(id => {
+      const postBacklog = state.userBacklog[id] || {}
+      Vue.set(state.userBacklog, id, { ...postBacklog, [fullName]: target })
+    })
   },
 
   splice(state, { newspaper, target, index, items, deleteCount }) {
     const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
     let { layout } = newspaperBacklog[target]
-    layout.splice(index, deleteCount, ...items)
+
+    const postIds = []
+    const removedItems = layout.splice(index, deleteCount, ...items)
+    removedItems.forEach(item => {
+      getItemPostIds(item).forEach(id => {
+        const postBacklog = state.userBacklog[id] || {}
+        Vue.delete(postBacklog, fullName)
+      })
+    })
 
     items.forEach(item => {
-      const postBacklog = state.userBacklog[item.id] || {}
-      Vue.set(state.userBacklog, item.id, { ...postBacklog, [fullName]: target })
+      getItemPostIds(item).forEach(id => {
+        const postBacklog = state.userBacklog[id] || {}
+        Vue.set(state.userBacklog, id, { ...postBacklog, [fullName]: target })
+      })
     })
+
+    return removedItems
   },
 
   moveUp(state, { newspaper, source, target, top=false, index }) {

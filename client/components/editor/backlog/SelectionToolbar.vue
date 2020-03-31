@@ -27,17 +27,17 @@
         @click.stop
       >
         <ul>
-          <li tabindex="0">
+          <li tabindex="0" @click="makeBox('cols-2-1', ['', 'editorial'])">
             <h6>{{ $t('Layout 2-1') }}</h6>
             <p>{{ $t('One main article, one smaller column') }}</p>
           </li>
 
-          <li tabindex="1">
+          <li tabindex="1" @click="makeBox('cols-1-1', ['', ''])">
             <h6>{{ $t('Layout 1-1') }}</h6>
             <p>{{ $t('Two equal sections') }}</p>
           </li>
 
-          <li tabindex="2">
+          <li tabindex="2" @click="makeBox('cols-1-1-1', ['', '', ''])">
             <h6>{{ $t('Layout 1-1-1') }}</h6>
             <p>{{ $t('Three equal sections') }}</p>
           </li>
@@ -102,11 +102,12 @@ export default {
       const sources = []
       backlogNames.forEach(name => {
         if (name !== targetBacklog) {
-          const ids = this.$store.state.backlog.newspaperBacklog[fullName][name].layout.map(box => box.id)
-          const cb = (id, idx) => {
+          const { layout } = this.$store.state.backlog.newspaperBacklog[fullName][name]
+          const ids = layout.map(box => box.id)
+          const cb = (id, index, item) => {
             if (this.selection.indexOf("" + id) !== -1) {
               if (!skipHead) {
-                sources.push({source: name, index: idx})
+                sources.push({source: name, index, item})
                 return true
               }
             } else {
@@ -116,14 +117,14 @@ export default {
           }
           if (reversed) {
             for (let idx = ids.length - 1; idx >= 0; idx--) {
-              cb(ids[idx], idx)
+              cb(ids[idx], idx, layout[idx])
             }
           } else {
             let movedOut = 0
             for (let idx = 0; idx < ids.length; idx++) {
               // when some post is moved outside section then indexes will be shifted for following items
               const adjustedIdx = idx - movedOut
-              if (cb(ids[idx], adjustedIdx) && (adjustedIdx === 0 || targetBacklog !== null)) {
+              if (cb(ids[idx], adjustedIdx, layout[idx]) && (adjustedIdx === 0 || targetBacklog !== null)) {
                 movedOut++
               }
             }
@@ -139,9 +140,10 @@ export default {
       sources.forEach(item => {
         this.$store.commit("backlog/moveUp", {
           newspaper: this.newspaper,
+          source: item.source,
+          index: item.index,
           target,
-          top,
-          ...item
+          top
         })
       })
       this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
@@ -153,7 +155,8 @@ export default {
         this.$store.commit("backlog/moveDown", {
           newspaper: this.newspaper,
           target,
-          ...item
+          source: item.source,
+          index: item.index
         })
       })
       this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
@@ -164,11 +167,62 @@ export default {
       sources.forEach(item => {
         this.$store.commit("backlog/remove", {
           newspaper: this.newspaper,
-          ...item
+          source: item.source,
+          index: item.index
         })
       })
       this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
-    }
+    },
+
+    makeBox(layout, columnsStyle) {
+      if (columnsStyle.length !== this.selection.length) {
+        return
+      }
+
+      const sources = this.getSources({reversed: true, targetBacklog: null, skipHead: false})
+      const columns = []
+      for (let i = 0; i < sources.length; i++) {
+        const { item } = sources[i]
+        if (item.type !== 'post') {
+          // only posts can be added to box
+          return
+        }
+        columns.push({
+          css: columnsStyle[i],
+          posts: [item]
+        })
+      }
+
+      const boxItem = {
+        id: Math.random().toString(36).substring(2),
+        type: "box",
+        css: layout,
+        columns
+      }
+
+      for (let i = 0; i < sources.length; i++) {
+        const item = sources[i]
+        if (i === sources.length - 1) {
+          // newspaper, target, index, items, deleteCount
+          this.$store.commit("backlog/splice", {
+            newspaper: this.newspaper,
+            target: item.source,
+            index: item.index,
+            items: [boxItem],
+            deleteCount: 1
+          })
+        } else {
+          this.$store.commit("backlog/remove", {
+            newspaper: this.newspaper,
+            source: item.source,
+            index: item.index
+          })
+        }
+      }
+
+      this.cleanSelection()
+      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+    },
   }
 }
 </script>
