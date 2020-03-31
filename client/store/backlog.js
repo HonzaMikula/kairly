@@ -283,7 +283,7 @@ export const mutations = {
     })
   },
 
-  moveUp(state, { newspaper, source, target, index }) {
+  moveUp(state, { newspaper, source, target, top=false, index }) {
     const { fullName } = newspaper
     const backlog = state.newspaperBacklog[fullName]
     let sourceLayout = backlog[source].layout
@@ -294,7 +294,11 @@ export const mutations = {
       }
       const targetLayout = backlog[target].layout
       sourceLayout.splice(index, 1)
-      targetLayout.push(box)
+      if (top) {
+        targetLayout.unshift(box)
+      } else {
+        targetLayout.push(box)
+      }
     } else {
       Vue.set(sourceLayout, index, sourceLayout[index - 1])
       Vue.set(sourceLayout, index - 1, box)
