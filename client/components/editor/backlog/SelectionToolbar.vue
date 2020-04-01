@@ -14,7 +14,7 @@
         tabindex="0"
         @click="cleanSelection"
         v-b-tooltip
-        :title="$t('Cancel selection (Escape)')"
+        :title="$t('Cancel selection (ESC)')"
       />
     </div>
 
@@ -22,6 +22,8 @@
       <button 
         class="up" 
         tabindex="0"
+        v-b-tooltip
+        :title="$t('Move up (⬆)')"
         @click="moveUp()" 
       />
 
@@ -29,6 +31,8 @@
         class="down"
         @click="moveDown()" 
         tabindex="0"
+        v-b-tooltip
+        :title="$t('Move down (⬇)')"
       />
 
       <button
@@ -42,6 +46,8 @@
       <button 
         class="backlog"
         @click="moveDown('considered')"
+        v-b-tooltip
+        :title="$t('Move up (B)')"
       >
         <span>Backlog</span>
       </button>
@@ -58,7 +64,7 @@
       <button
         class="delete"
         v-b-tooltip
-        :title="$t('Remove post(s) (Delete)')"
+        :title="$t('Remove post(s) (Del)')"
         @click="remove()"
         @keydown.delete="remove()"
       />
@@ -96,7 +102,7 @@
         <ul>
           <li tabindex="0" @click="moveToUpcomingTop()">
             <h6>{{ $t('Top') }}</h6>
-            <p>{{ $t('Make it first post') }}</p>
+            <p>{{ $t('Make it headline (T)') }}</p>
           </li>
         </ul>
       </b-popover>
@@ -144,38 +150,38 @@ export default {
     },
 
     moveToUpcomingTop() {
-      this.$store.dispatch('backlog/moveToUpcomingTop', {
+      this.$store.dispatch('backlog/moveSelectionToUpcomingTop', {
         newspaper: this.newspaper
       })
     },
 
     moveToUpcomingBottom() {
-      this.$store.dispatch('backlog/moveToUpcomingBottom', {
+      this.$store.dispatch('backlog/moveSelectionToUpcomingBottom', {
         newspaper: this.newspaper
       })
     },
 
     moveUp() {
-      this.$store.dispatch('backlog/moveUp', {
+      this.$store.dispatch('backlog/moveSelectionUp', {
         newspaper: this.newspaper
       })
     },
 
     moveDown(target=null) {
-      this.$store.dispatch('backlog/moveDown', {
+      this.$store.dispatch('backlog/moveSelectionDown', {
         newspaper: this.newspaper,
         target
       })
     },
 
     remove() {
-      this.$store.dispatch('backlog/removeBox', {
+      this.$store.dispatch('backlog/removeSelectedBox', {
         newspaper: this.newspaper
       })
     },
 
     makeBox(layout, columnsStyle) {
-      this.$store.dispatch('backlog/makeBox', {
+      this.$store.dispatch('backlog/makeBoxFromSelection', {
         newspaper: this.newspaper,
         layout,
         columnsStyle

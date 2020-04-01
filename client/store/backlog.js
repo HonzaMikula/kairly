@@ -146,7 +146,7 @@ export const actions = {
     })
   },
 
-  async removeBox({commit, dispatch, getters}, {newspaper}) {
+  async removeSelectedBox({commit, dispatch, getters}, {newspaper}) {
     let sources = getters.getSelectedBoxes(newspaper).slice()
     sources.reverse()
     sources.forEach(item => {
@@ -199,7 +199,7 @@ export const actions = {
     }
   },
 
-  async moveUp({ commit, dispatch, getters }, { newspaper }) {
+  async moveSelectionUp({ commit, dispatch, getters }, { newspaper }) {
     let sources = getters.getSelectedBoxes(newspaper)
     let prevSource = null
     let selectedBefore = 0
@@ -226,7 +226,7 @@ export const actions = {
     dispatch("save", { newspaper })
   },
 
-  async moveDown({ state, commit, dispatch, getters }, { newspaper, target }) {
+  async moveSelectionDown({ state, commit, dispatch, getters }, { newspaper, target }) {
     const { fullName } = newspaper
     let sources = getters.getSelectedBoxes(newspaper).slice()
     sources.reverse()
@@ -251,7 +251,7 @@ export const actions = {
     dispatch("save", { newspaper })
   },
 
-  async moveToUpcomingTop({ commit, dispatch, getters }, { newspaper }) {
+  async moveSelectionToUpcomingTop({ commit, dispatch, getters }, { newspaper }) {
     let sources = getters.getSelectedBoxes(newspaper).slice()
     sources.reverse()
     let selectedBefore = 0
@@ -273,7 +273,7 @@ export const actions = {
     dispatch("save", { newspaper })
   },
 
-  async moveToUpcomingBottom({ commit, dispatch, getters }, {newspaper}) {
+  async moveSelectionToUpcomingBottom({ commit, dispatch, getters }, { newspaper }) {
     let sources = getters.getSelectedBoxes(newspaper)
     let selectedBefore = 0
     sources.forEach(item => {
@@ -293,7 +293,7 @@ export const actions = {
     dispatch("save", { newspaper })
   },
 
-  async makeBox({ commit, dispatch, getters }, {newspaper, layout, columnsStyle}) {
+  async makeBoxFromSelection({ commit, dispatch, getters }, { newspaper, layout, columnsStyle }) {
     if (columnsStyle.length !== getters.getSelection.length) {
       return
     }

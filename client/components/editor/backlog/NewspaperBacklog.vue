@@ -98,8 +98,52 @@ export default {
   methods: {
     timeFrom(dt) {
       return moment(dt).from()
-    }
-  }
+    },
+
+    onKeyUp(event) {
+      if (this.$store.getters['backlog/getSelection'].length) {
+        if (event.which === 27) {
+          this.$store.commit('backlog/cleanSelection')
+        }
+        else if (event.which === 38) {
+          
+          this.$store.dispatch('backlog/moveSelectionUp', {
+            newspaper: this.newspaper
+          })
+        }
+        else if (event.which === 40) {
+          this.$store.dispatch('backlog/moveSelectionDown', {
+            newspaper: this.newspaper,
+            target: null
+          })
+        }
+        else if (event.which === 46) {
+          this.$store.dispatch('backlog/removeSelectedBox', {
+            newspaper: this.newspaper
+          })
+        }
+        else if (event.which === 84) {
+          this.$store.dispatch('backlog/moveSelectionToUpcomingTop', {
+            newspaper: this.newspaper
+          })
+        }
+        else if (event.which === 66) {
+          this.$store.dispatch('backlog/moveSelectionDown', {
+            newspaper: this.newspaper,
+            target: 'considered'
+          })
+        }
+      }
+    },
+  },
+
+  beforeMount() {
+    window.addEventListener('keyup', this.onKeyUp);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('keyup', this.onKeyUp)
+  },
 }
 </script>
 
