@@ -91,48 +91,6 @@
               @click.stop="moveDown()"
               :disabled="!canMoveDown"
             ></button>
-
-            <button class="remove" @click.stop="removePost()" v-b-tooltip title="Remove post"></button>
-
-            <b-popover
-              v-if="source !== 'upcoming'"
-              :target="`backlog-controls-up-${post.id}`"
-              placement="leftbottom"
-              :delay="{ show: 400, hide: 100 }"
-              triggers="hover"
-              @click.stop
-            >
-              <ul>
-                <li v-if="source !== 'upcoming'" tabindex="0" @click="moveUp('upcoming')">
-                  <h6>{{ $t('Move to upcoming issue') }}</h6>
-                  <p></p>
-                </li>
-                <li v-if="source === 'considered'" @click="moveUp('next')">
-                  <h6>{{ $t('Move to next issue') }}</h6>
-                  <p></p>
-                </li>
-              </ul>
-            </b-popover>
-
-            <b-popover
-              v-if="source !== 'considered'"
-              :target="`backlog-controls-down-${post.id}`"
-              placement="leftbottom"
-              :delay="{ show: 400, hide: 100 }"
-              triggers="hover"
-              @click.stop
-            >
-              <ul>
-                <li v-if="source === 'upcoming'" tabindex="0" @click="moveDown('next')">
-                  <h6>{{ $t('Move to next issue') }}</h6>
-                  <p></p>
-                </li>
-                <li v-if="source !== 'considered'" @click="moveDown('considered')">
-                  <h6>{{ $t('Move to backlog issue') }}</h6>
-                  <p></p>
-                </li>
-              </ul>
-            </b-popover>
           </div>
         </div>
 

@@ -3,6 +3,8 @@ import isString from 'lodash/isString'
 import keyBy from 'lodash/keyBy'
 
 let reorderPostScheduled = false
+const UPPERMOST_BACKLOG = 'upcoming'
+const BOTTOMMOST_BACKLOG = 'considered'
 
 export const state = () => ({
   userBacklog: null,
@@ -144,6 +146,19 @@ export const actions = {
     })
   },
 
+  async removeBox({commit, dispatch, getters}, {newspaper}) {
+    let sources = getters.getSelectedBoxes(newspaper).slice()
+    sources.reverse()
+    sources.forEach(item => {
+      commit('remove', {
+        newspaper: newspaper,
+        source: item.source,
+        index: item.index
+      })
+    })
+    dispatch('save', { newspaper })
+  },
+
   async addLink({ state, commit, dispatch }, { newspaper, target, index, columnIndex, url }) {
     const { post } = await this.$axios.$post(`/external-links`, {url})
     if (post) {
@@ -183,7 +198,152 @@ export const actions = {
       })
     }
   },
-}
+
+  async moveUp({ commit, dispatch, getters }, { newspaper }) {
+    let sources = getters.getSelectedBoxes(newspaper)
+    let prevSource = null
+    let selectedBefore = 0
+    sources.forEach(item => {
+      if (prevSource !== item.source) {
+        prevSource = item.source
+        selectedBefore = 0
+      }
+      let index = item.index - selectedBefore
+      if (item.source === UPPERMOST_BACKLOG && index === 0) {
+        return
+      }
+
+      commit("moveUp", {
+        newspaper: newspaper,
+        source: item.source,
+        index,
+        target: null
+      })
+      if (index === 0) {
+        selectedBefore++
+      }
+    })
+    dispatch("save", { newspaper })
+  },
+
+  async moveDown({ state, commit, dispatch, getters }, { newspaper, target }) {
+    const { fullName } = newspaper
+    let sources = getters.getSelectedBoxes(newspaper).slice()
+    sources.reverse()
+    if (target) {
+      sources = sources.filter(({ source }) => source !== target)
+    }
+
+    let consideredSkipIndex = state.newspaperBacklog[fullName][BOTTOMMOST_BACKLOG].layout.length - 1
+    sources.forEach(item => {
+      if (item.source === BOTTOMMOST_BACKLOG && item.index === consideredSkipIndex) {
+        consideredSkipIndex--
+        return
+      }
+
+      commit("moveDown", {
+        newspaper: newspaper,
+        target,
+        source: item.source,
+        index: item.index
+      })
+    })
+    dispatch("save", { newspaper })
+  },
+
+  async moveToUpcomingTop({ commit, dispatch, getters }, { newspaper }) {
+    let sources = getters.getSelectedBoxes(newspaper).slice()
+    sources.reverse()
+    let selectedBefore = 0
+    sources.forEach(item => {
+      let index = item.index
+      if (item.source === UPPERMOST_BACKLOG) {
+        index += selectedBefore
+      }
+      commit("moveUp", {
+        newspaper: newspaper,
+        source: item.source,
+        index,
+        target: UPPERMOST_BACKLOG,
+        top: true
+      })
+
+      selectedBefore++
+    })
+    dispatch("save", { newspaper })
+  },
+
+  async moveToUpcomingBottom({ commit, dispatch, getters }, {newspaper}) {
+    let sources = getters.getSelectedBoxes(newspaper)
+    let selectedBefore = 0
+    sources.forEach(item => {
+      let index = item.index
+      if (item.source === UPPERMOST_BACKLOG) {
+        index -= selectedBefore
+      }
+      commit("moveUp", {
+        newspaper: newspaper,
+        source: item.source,
+        index,
+        target: UPPERMOST_BACKLOG,
+      })
+
+      selectedBefore++
+    })
+    dispatch("save", { newspaper })
+  },
+
+  async makeBox({ commit, dispatch, getters }, {newspaper, layout, columnsStyle}) {
+    if (columnsStyle.length !== getters.getSelection.length) {
+      return
+    }
+
+    let sources = getters.getSelectedBoxes(newspaper).slice()
+    const columns = []
+    for (let i = 0; i < sources.length; i++) {
+      const { box } = sources[i]
+      if (box.type !== 'post') {
+        // only posts can be added to box
+        return
+      }
+      columns.push({
+        css: columnsStyle[i],
+        posts: [box]
+      })
+    }
+
+    const boxItem = {
+      id: Math.random().toString(36).substring(2),
+      type: "box",
+      css: layout,
+      columns
+    }
+
+    sources.reverse()
+    for (let i = 0; i < sources.length; i++) {
+      const item = sources[i]
+      if (i === sources.length - 1) {
+        // newspaper, target, index, items, deleteCount
+        commit("splice", {
+          newspaper: newspaper,
+          target: item.source,
+          index: item.index,
+          items: [boxItem],
+          deleteCount: 1
+        })
+      } else {
+        commit("remove", {
+          newspaper: newspaper,
+          source: item.source,
+          index: item.index
+        })
+      }
+    }
+
+    commit('cleanSelection')
+    dispatch("save", { newspaper });
+  }
+ }
 
 export const mutations = {
   resetState(state) {
@@ -316,7 +476,7 @@ export const mutations = {
     const box = sourceLayout[index]
     if (index === 0 || target !== null) {
       if (target === null) {
-        target = (source === 'considered' ? 'next' : 'upcoming')
+        target = (source === BOTTOMMOST_BACKLOG ? 'next' : UPPERMOST_BACKLOG)
       }
       const targetLayout = backlog[target].layout
       sourceLayout.splice(index, 1)
@@ -338,7 +498,7 @@ export const mutations = {
     const box = sourceLayout[index]
     if (index === sourceLayout.length - 1 || target !== null) {
       if (target === null) {
-        target =  source == 'upcoming' ? 'next' : 'considered'
+        target =  source == UPPERMOST_BACKLOG ? 'next' : BOTTOMMOST_BACKLOG
       }
       const targetLayout = backlog[target].layout
       sourceLayout.splice(index, 1)
@@ -353,8 +513,8 @@ export const mutations = {
     const backlog = state.newspaperBacklog[newspaper.fullName]
     // need to search bettween all backlogs because post can be dragged between them
     const posts = {
-      ...keyBy(backlog['considered'].layout, 'id'),
-      ...keyBy(backlog['upcoming'].layout, 'id'),
+      ...keyBy(backlog[BOTTOMMOST_BACKLOG].layout, 'id'),
+      ...keyBy(backlog[UPPERMOST_BACKLOG].layout, 'id'),
       ...keyBy(backlog['next'].layout, 'id')
     }
     backlog[target].layout = ordering.map(id => posts[id])
@@ -370,5 +530,30 @@ export const mutations = {
 
   cleanSelection(state) {
     state.selection = {}
-  }
+  },
+}
+
+export const getters = {
+  getSelectedBoxes: (state, getters) => newspaper => {
+    const { fullName } = newspaper
+    const backlogNames = [UPPERMOST_BACKLOG, 'next', BOTTOMMOST_BACKLOG]
+    const sources = []
+    backlogNames.forEach(name => {
+      const { layout } = state.newspaperBacklog[fullName][name]
+      layout.forEach((box, index) => {
+        if (getters.getSelection.indexOf("" + box.id) !== -1) {
+          sources.push({
+            source: name,
+            index,
+            box,
+          })
+        }
+      })
+    })
+    return sources
+  },
+
+  getSelection: state => {
+    return Object.keys(state.selection)
+  },
 }

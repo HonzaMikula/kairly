@@ -55,7 +55,7 @@
 
         <tr>
           <th>{{ $t('Number of remaining issues') }}</th>
-          <td colspan="2">{{ currentMonth.upcommingIssues }}</td>
+          <td colspan="2">{{ currentMonth.upcomingIssues }}</td>
         </tr>
 
         <tr class="profit">
