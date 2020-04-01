@@ -1,12 +1,9 @@
 <template>
-  <div
-    class="selection-toolbar-view"
-
-  >
+  <div class="selection-toolbar-view">
     <div class="selection-toolbar--info">
       <strong>{{ selection.length }}</strong>
       <span>
-        selected posts
+        {{ $t('selected posts') }}
       </span>
       <button 
         class="cancel" 
@@ -40,7 +37,7 @@
         id="upcomingIssue"
         @click="moveToUpcomingBottom()"
       >
-        <span>Upcoming issue</span>
+        <span>{{ $t('Upcoming issue') }}</span>
       </button>
 
       <button 
@@ -49,7 +46,7 @@
         v-b-tooltip
         :title="$t('Move up (B)')"
       >
-        <span>Backlog</span>
+        <span>{{ $t('Backlog') }}</span>
       </button>
 
       <button
@@ -58,7 +55,7 @@
         :class="{disabled: !containsOnlyPosts || selection.length < 2 || selection.length > 3}"
         @click.stop
       >
-        <span>Special layout</span>
+        <span>{{ $t('Special layout') }}</span>
       </button>
 
       <button
