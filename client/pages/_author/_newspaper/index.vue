@@ -187,6 +187,7 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import { errorToParams } from '@/utils/errors'
+import { flattenPosts } from '@/utils/layout'
 
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import PostObjectMixin from '@/mixins/PostObjectMixin'
@@ -215,61 +216,34 @@ export default {
     let metaPicture
     let images
 
+    function shortTilte(post) {
+      const { content } = post
+      let short = ''
+      if (content.title) {
+        short = content.title
+      } else if (content.content) {
+        short = content.content.replace(/(<([^>]+)>)/ig,"")
+      } else if (content.perex) {
+        short = content.perex.replace(/(<([^>]+)>)/ig,"")
+      }
+      return short.length > 60 ? short.slice(0, 60 - 1) + "…" : short
+    }
+
     if (this.$route.params.issue) {
       //- act as an issue detail
 
-      if (this.posts[0].title)
-        firstPostTitle = this.posts[0].title
-  
-      else if (this.posts[0].content && this.posts[0].content.title)
-        firstPostTitle = this.posts[0].content.title
-    
-      else if (this.posts[0].content)
-        firstPostTitle = this.posts[0].content.content
+      const posts = flattenPosts(this.posts)
+      if (posts.length) {
+        firstPostTitle = shortTilte(posts[0])
+      }
 
-      else if (this.posts[0].columns[0] && this.posts[0].columns[0].posts[0].content.title)
-        firstPostTitle = this.posts[0].columns[0].posts[0].content.title
-
-      else if (this.posts[0].columns[0] && this.posts[0].columns[0].posts[0].content.perex)
-        firstPostTitle = this.posts[0].columns[0].posts[0].content.perex
-      
-      else if (this.posts[0].columns[0])
-        firstPostTitle = this.posts[0].columns[0].posts[0].content.content
-
-      firstPostTitle = firstPostTitle.replace(/(<([^>]+)>)/ig,"")
-      firstPostTitle = firstPostTitle.length > 60 ? firstPostTitle.slice(0, 60 - 1) + "…" : firstPostTitle
-      
       metaTitle = `${title} #${this.issue.number}: ${firstPostTitle} – Kairly`
-      metaDescription = this.posts
-        .map((post) => {
-          let descriptionText = []
-
-          if (post.type == 'box') {
-            post.columns.map((column) => {
-              column.posts.map((item) => {
-                if (item.content.title)
-                  descriptionText.push(item.content.title)
-                else
-                  descriptionText.push(item.author.name)
-              })
-            })
-          }
-          else if (post.title) {
-            descriptionText.push(post.title)
-          }
-          else if (post.content && post.content.title) {
-            descriptionText.push(post.content.title)
-          }
-          else if (post.content && post.content.content) {
-            descriptionText.push(post.author.name)
-          }
-
-          return descriptionText.shift()
-        })
-        .filter(title => title)
+      metaDescription = posts
+        .map(post => shortTilte(post))
+        .filter(title => title && title.length > 0)
         .join(' • ')
         .slice(0, 280)
-        
+
       metaUrl = `https://kairly.com/${editor.id}/${name}/${this.issue.number}`
     } else {
       //- act as a newspaper detail
