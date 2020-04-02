@@ -117,18 +117,19 @@ export default {
       left: 50%
       top: 50%
 
-      color: #eee
+      color: #fff
+      opacity: 0.7
 
       font-size: 40px
 
       transform: translate(-50%, -50%)
-      transition: color 0.2s
+      transition: opacity 0.2s
       content: fa-content($fa-var-play)
 
     &:hover,
     &:focus
       &::before
-        color: #fff
+        opacity: 1
 
   img
     height: auto

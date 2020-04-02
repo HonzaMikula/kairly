@@ -27,6 +27,11 @@
       :posts="posts"
       source="considered"
     />
+
+    <SelectionToolbar
+      v-show="selectionSize > 0"
+      :newspaper="newspaper"
+    />
   </div>
 </template>
 
@@ -37,14 +42,15 @@ import { mapActions, mapGetters } from 'vuex'
 import mapValues from 'lodash/mapValues'
 
 import ErrorHandler from '@/mixins/ErrorHandler'
-import PostWrapper from '@/components/PostWrapper'
 import NewspaperBacklogPosts from '@/components/editor/backlog/NewspaperBacklogPosts'
+import SelectionToolbar from '@/components/editor/backlog/SelectionToolbar'
 
 export default {
   name: 'NewspaperBacklog',
 
   components: {
-    NewspaperBacklogPosts
+    NewspaperBacklogPosts,
+    SelectionToolbar
   },
 
   mixins: [ErrorHandler],
@@ -63,6 +69,10 @@ export default {
     ...mapGetters({
       denormalize: 'entities/denormalize',
     }),
+
+    selectionSize() {
+      return Object.keys(this.$store.state.backlog.selection).length
+    },
 
     backlogs() {
       return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
@@ -88,8 +98,52 @@ export default {
   methods: {
     timeFrom(dt) {
       return moment(dt).from()
-    }
-  }
+    },
+
+    onKeyUp(event) {
+      if (this.$store.getters['backlog/getSelection'].length) {
+        if (event.which === 27) {
+          this.$store.commit('backlog/cleanSelection')
+        }
+        else if (event.which === 38) {
+          
+          this.$store.dispatch('backlog/moveSelectionUp', {
+            newspaper: this.newspaper
+          })
+        }
+        else if (event.which === 40) {
+          this.$store.dispatch('backlog/moveSelectionDown', {
+            newspaper: this.newspaper,
+            target: null
+          })
+        }
+        else if (event.which === 46) {
+          this.$store.dispatch('backlog/removeSelectedBox', {
+            newspaper: this.newspaper
+          })
+        }
+        else if (event.which === 84) {
+          this.$store.dispatch('backlog/moveSelectionToUpcomingTop', {
+            newspaper: this.newspaper
+          })
+        }
+        else if (event.which === 66) {
+          this.$store.dispatch('backlog/moveSelectionDown', {
+            newspaper: this.newspaper,
+            target: 'considered'
+          })
+        }
+      }
+    },
+  },
+
+  beforeMount() {
+    window.addEventListener('keyup', this.onKeyUp);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('keyup', this.onKeyUp)
+  },
 }
 </script>
 

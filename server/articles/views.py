@@ -369,7 +369,7 @@ def newspaper_backlog(request, entities, username, newspapeper_slug):
         result['currentMonth'] = {
             'priorIssues': len(issue_ids),
             'priorIssuesCost': str(cost),
-            'upcommingIssues': len(newspaper.current_month_upcomming_issues())
+            'upcomingIssues': len(newspaper.current_month_upcoming_issues())
         }
         return result
 

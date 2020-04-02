@@ -12,7 +12,7 @@
       v-if="canDelete"
       @click="$emit('delete')"
       v-b-tooltip
-      title="Remove co-editor"
+      :title="$t('Remove co-editor')"
     ></button>
   </li>
 </template>

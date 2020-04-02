@@ -65,7 +65,7 @@ export default {
     },
 
     revenuePerIssue() {
-      const totalIssues = this.currentMonth.priorIssues + this.currentMonth.upcommingIssues
+      const totalIssues = this.currentMonth.priorIssues + this.currentMonth.upcomingIssues
       return parseFloat(this.newspaper.price) / totalIssues
     },
 

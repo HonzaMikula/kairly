@@ -72,61 +72,26 @@
     <template #aside>
       <div :class="{'newspaper-backlog-controls': true, 'hide-mobile-controls': mobileControls}">
         <div class="newspaper-backlog-controls--arrows">
-          <button
-            class="up"
-            :id="`backlog-controls-up-${post.id}`"
-            @click.stop="moveUp()"
-            :disabled="!canMoveUp"
-          ></button>
 
-          <button
-            class="down"
-            :id="`backlog-controls-down-${post.id}`"
-            @click.stop="moveDown()"
-            :disabled="!canMoveDown"
-          ></button>
+          <div class="newspaper-backlog-controls--arrows--checkbox">
+            <input type="checkbox" v-model="postSelection" />
+          </div>
 
-          <button class="remove" @click.stop="removePost()" v-b-tooltip title="Remove post"></button>
+          <div class="newspaper-backlog-controls--arrows--controls" v-if="postSelection">
+            <button
+              class="up"
+              :id="`backlog-controls-up-${post.id}`"
+              @click.stop="moveUp()"
+              :disabled="!canMoveUp"
+            ></button>
 
-          <b-popover
-            v-if="source !== 'upcoming'"
-            :target="`backlog-controls-up-${post.id}`"
-            placement="leftbottom"
-            :delay="{ show: 400, hide: 100 }"
-            triggers="hover"
-            @click.stop
-          >
-            <ul>
-              <li v-if="source !== 'upcoming'" tabindex="0" @click="moveUp('upcoming')">
-                <h6>{{ $t('Move to upcoming issue') }}</h6>
-                <p></p>
-              </li>
-              <li v-if="source === 'considered'" @click="moveUp('next')">
-                <h6>{{ $t('Move to next issue') }}</h6>
-                <p></p>
-              </li>
-            </ul>
-          </b-popover>
-
-          <b-popover
-            v-if="source !== 'considered'"
-            :target="`backlog-controls-down-${post.id}`"
-            placement="leftbottom"
-            :delay="{ show: 400, hide: 100 }"
-            triggers="hover"
-            @click.stop
-          >
-            <ul>
-              <li v-if="source === 'upcoming'" tabindex="0" @click="moveDown('next')">
-                <h6>{{ $t('Move to next issue') }}</h6>
-                <p></p>
-              </li>
-              <li v-if="source !== 'considered'" @click="moveDown('considered')">
-                <h6>{{ $t('Move to backlog issue') }}</h6>
-                <p></p>
-              </li>
-            </ul>
-          </b-popover>
+            <button
+              class="down"
+              :id="`backlog-controls-down-${post.id}`"
+              @click.stop="moveDown()"
+              :disabled="!canMoveDown"
+            ></button>
+          </div>
         </div>
 
         <div class="newspaper-backlog-controls--options">
@@ -291,8 +256,8 @@ export default {
     return {
       mobileControls: false,
       editedColumn: null,
-      typeOverride: {}
-    };
+      typeOverride: {},
+    }
   },
 
   computed: {
@@ -304,6 +269,20 @@ export default {
         return ["menu-left-col", "menu-middle-col", "menu-right-col"];
       }
       return ["menu-left-col", "menu-right-col"];
+    },
+
+    postSelection: {
+      get() {
+        return this.$store.state.backlog.selection[this.post.id]
+      },
+
+      set(value) {
+        if (value) {
+          this.$store.commit('backlog/select', this.post.id)
+        } else {
+          this.$store.commit('backlog/unselect', this.post.id)
+        }
+      }
     },
 
     isAdmin() {
@@ -632,6 +611,10 @@ export default {
     grid-column-gap: $baseline / 4
     grid-template-columns: $baseline*1.25 1fr $baseline*1.25
     width: calc(100vw - (#{$baseline} * 0.75))
+
+.newspaper-backlog-controls--arrows--checkbox
+  input
+    transform: scale(1.6)
 
 .newspaper-backlog-controls--options
   position: absolute

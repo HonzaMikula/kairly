@@ -207,6 +207,7 @@ export default {
 
       const { fullName } = newspaper
       this.selectedFullName = fullName
+      this.$store.commit('backlog/cleanSelection')
 
       this.isBacklogLoaded = false
       await this.loadNewspaperBacklog(fullName)

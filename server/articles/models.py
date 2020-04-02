@@ -345,7 +345,7 @@ class Newspaper(models.Model, PeriodMixin):
         transaction.on_commit(lambda: cache.delete(Ref(Newspaper, self.id).cache_key))
         return super().save(*args, **kwargs)
 
-    def current_month_upcomming_issues(self):
+    def current_month_upcoming_issues(self):
         editor_tz = pytz.timezone(self.editor.timezone)
         dt = timezone_now().astimezone(editor_tz)
         month = dt.month
