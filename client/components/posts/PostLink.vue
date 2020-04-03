@@ -5,7 +5,7 @@
       #author
     >
       <picture>
-        <span class="external-link"></span>
+        <span class="external-link" />
       </picture>
 
       <h3>External article</h3>
@@ -22,31 +22,31 @@
 
       <div class="post-body--content">
         <picture v-if="post.content.attachments && post.content.attachments.image">
-          <img :src="post.content.attachments.image"/>
+          <img :src="post.content.attachments.image">
         </picture>
 
-        <div v-html="post.content.perex"></div>
+        <div v-html="post.content.perex" />
 
         <div class="post-link--continue-reading">
           <a :href="post.source" target="_blank">{{ $t('Read article') }}</a>
         </div>
       </div>
     </div>
-    <template #page-controls><slot name="page-controls"></slot></template>
+    <template #page-controls><slot name="page-controls" /></template>
   </PostBase>
 </template>
 
 <script>
-import PostBase from './PostBase';
+import PostBase from './PostBase'
 
 export default {
-  name: 'post-link',
+  name: 'PostLink',
+
+  components: { PostBase },
 
   props: {
     post: Object,
-  },
-
-  components: { PostBase }
+  }
 }
 </script>
 

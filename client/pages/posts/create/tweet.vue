@@ -1,24 +1,17 @@
 <template>
   <AppLayout :name="$t('Write tweet')">
     <div class="write-tweet-view">
-      <EditTweet :buttonTitle="$t('Save a draft')" @submit="createPost" />
+      <EditTweet :button-title="$t('Save a draft')" @submit="createPost" />
     </div>
   </AppLayout>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import EditTweet from '@/components/editor/EditTweet'
 
 export default {
   name: 'CreateTweet',
-
-  head() {
-    return {
-      title: this.$t('Write a Tweet – Kairly')
-    }
-  },
 
   components: {
     AppLayout,
@@ -26,9 +19,15 @@ export default {
   },
 
   methods: {
-    async createPost(data) {
-      const { post } = await this.$axios.$post(`/drafts`, data)
-      this.$router.push("/posts")
+    async createPost (data) {
+      await this.$axios.$post('/drafts', data)
+      this.$router.push('/posts')
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Write a Tweet – Kairly')
     }
   }
 }

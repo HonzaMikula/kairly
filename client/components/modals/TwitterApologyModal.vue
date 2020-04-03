@@ -61,5 +61,4 @@ export default {
         &:focus
           text-decoration: none
 
-
 </style>

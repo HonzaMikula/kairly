@@ -2,26 +2,26 @@
   <PostBase :post="post">
     <timeline-post--picture>
       <figure>
-        <img :src="post.content.picture" :alt="post.content.title" />
+        <img :src="post.content.picture" :alt="post.content.title">
 
         <figcaption>{{ post.content.title }}</figcaption>
       </figure>
     </timeline-post--picture>
-    <template #page-controls><slot name="page-controls"></slot></template>
+    <template #page-controls><slot name="page-controls" /></template>
   </PostBase>
 </template>
 
 <script>
-import PostBase from './PostBase';
+import PostBase from './PostBase'
 
 export default {
-  name: 'post-picture',
+  name: 'PostPicture',
+
+  components: { PostBase },
 
   props: {
     post: Object,
-  },
-
-  components: { PostBase }
+  }
 }
 </script>
 

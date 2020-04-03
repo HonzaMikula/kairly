@@ -1,16 +1,13 @@
 <template>
   <AppLayout :name="$t('Edit a post')">
     <div class="edit-post">
-      <EditArticle v-if="post.type == 'newspaper' || post.type === 'comment'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
-      <EditTweet v-if="post.type == 'tweet'" :post="post" :buttonTitle="$t('Save')" @submit="savePost" />
+      <EditArticle v-if="post.type == 'newspaper' || post.type === 'comment'" :post="post" :button-title="$t('Save')" @submit="savePost" />
+      <EditTweet v-if="post.type == 'tweet'" :post="post" :button-title="$t('Save')" @submit="savePost" />
     </div>
   </AppLayout>
 </template>
 
-
 <script>
-import { mapActions, mapState } from 'vuex'
-
 import AppLayout from '@/components/layout/AppLayout'
 import EditArticle from '@/components/editor/EditArticle'
 import EditTweet from '@/components/editor/EditTweet'
@@ -18,32 +15,32 @@ import EditTweet from '@/components/editor/EditTweet'
 export default {
   name: 'Posts',
 
-  head() {
-    return {
-      title: this.$t('My Posts – Kairly')
-    }
-  },
-
   components: {
     AppLayout,
     EditArticle,
     EditTweet,
   },
 
+  async asyncData ({ store, params }) {
+    return {
+      post: await store.dispatch('getPostDraft', params.postId)
+    }
+  },
+
   methods: {
-    async savePost(data) {
+    async savePost (data) {
       const { post } = await this.$axios.$patch(`/drafts/${this.post.id}`, data)
       if (post.draft) {
-        this.$router.push("/posts")
+        this.$router.push('/posts')
       } else {
-        this.$router.push("/posts/published")
+        this.$router.push('/posts/published')
       }
     }
   },
 
-  async asyncData({ store, params }) {
+  head () {
     return {
-      post: await store.dispatch('getPostDraft', params.postId)
+      title: this.$t('My Posts – Kairly')
     }
   }
 }

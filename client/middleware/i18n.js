@@ -1,5 +1,4 @@
 
-
 export default function ({ isHMR, app, store, req, route, params, error, redirect }) {
   // If middleware is called from hot module replacement, ignore it
   if (isHMR) {
@@ -16,7 +15,7 @@ export default function ({ isHMR, app, store, req, route, params, error, redirec
 
   const queryLang = route.query.lang
 
-  if (!locale && locales.indexOf(queryLang) !== -1) {
+  if (!locale && locales.includes(queryLang)) {
     locale = queryLang
     app.$auth.$storage.setUniversal('locale', locale)
   }
@@ -30,10 +29,10 @@ export default function ({ isHMR, app, store, req, route, params, error, redirec
       locale = req.headers['accept-language']
         .split(',')
         .map(lang => lang.trim().toLocaleLowerCase().substring(0, 2))
-        .find(lang => locales.indexOf(lang) !== -1)
+        .find(lang => locales.includes(lang))
     } catch {
       // no header is present or header is invalid
-      locale  = 'en'
+      locale = 'en'
     }
   }
 

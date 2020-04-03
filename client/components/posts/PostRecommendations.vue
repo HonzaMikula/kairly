@@ -6,12 +6,12 @@
       <div v-for="item in recommendedIssues" :key="item.id">
         <h3>
           <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: item.ref.newspaper.editor.id, newspaper: item.ref.newspaper.name, issue: item.ref.number}}">
-            {{ item.ref.newspaper.title }} ({{ item.ref.newspaper.time | moment('D. M. YYYY')}})
+            {{ item.ref.newspaper.title }} ({{ item.ref.newspaper.time | moment('D. M. YYYY') }})
           </nuxt-link>
         </h3>
 
         <p>
-          {{ item.ref.posts.map(post => post.content.title || post.author.name).filter(title => title).join(' • ')  }}
+          {{ item.ref.posts.map(post => post.content.title || post.author.name).filter(title => title).join(' • ') }}
         </p>
 
         <footer class="recommendations-post--author">
@@ -50,20 +50,20 @@ import AuthorPicture from '@/components/widgets/AuthorPicture'
 export default {
   name: 'PostRecommendations',
 
-  props: {
-    post: Object,
-  },
-
   components: {
     AuthorPicture
   },
 
+  props: {
+    post: Object,
+  },
+
   computed: {
-    recommendedPosts() {
+    recommendedPosts () {
       return this.post.posts
     },
 
-    recommendedIssues() {
+    recommendedIssues () {
       return this.post.issues
     }
   }

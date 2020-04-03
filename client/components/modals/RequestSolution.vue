@@ -2,14 +2,14 @@
   <DialogWindow
     v-if="active"
     custom-class="request-solution"
-    ignoreBackgroundClick
+    ignore-background-click
     @close="closeModal"
   >
     <template #header>
       <h1>{{ $t('Request solution') }}</h1>
     </template>
 
-    <iframe 
+    <iframe
       src="https://docs.google.com/forms/d/e/1FAIpQLSdedtdKD22tCx0ZVTLQuIgN0lzqiyrTXC77gcM_GmWyCN5hiw/viewform?embedded=true"
       width="100%"
       height="1000px"
@@ -21,7 +21,6 @@
     </iframe>
   </DialogWindow>
 </template>
-
 
 <script>
 import DialogWindow from '@/components/modals/DialogWindow'
@@ -36,14 +35,14 @@ export default {
 
   mixins: [ModalMixin],
 
-  data() {
+  data () {
     return {
       isSignInModalOpen: false,
     }
   },
 
   methods: {
-    
+
   }
 }
 </script>

@@ -28,20 +28,20 @@ import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionBut
 export default {
   name: 'AuthorWidget',
 
-  props: {
-    author: Object
-  },
-
   components: {
     AuthorPicture,
     AuthorSubscriptionButton
   },
 
+  props: {
+    author: Object
+  },
+
   computed: {
-    subscription() {
+    subscription () {
       return this.$store.getters.getAuthorSubscription(this.author)
     },
-    canceled() { return this.subscription && this.subscription.state == 'canceled'}
+    canceled () { return this.subscription && this.subscription.state === 'canceled' }
   }
 }
 </script>
@@ -97,7 +97,6 @@ export default {
     author-subscription-view
       font-family: $ff-sans !important
       text-align: right
-
 
     //- subscribe button
     section

@@ -5,22 +5,20 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-
-import { errorToParams } from "@/utils/errors"
+import { errorToParams } from '@/utils/errors'
 
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperSettings from '@/components/editor/NewspaperSettings'
 
 export default {
-  name: "NewspaperSettingsPage",
+  name: 'NewspaperSettingsPage',
 
   components: {
     AppLayout,
     NewspaperSettings
   },
 
-  async asyncData({ store, params, error }) {
+  async asyncData ({ store, params, error }) {
     const fullName = `${params.author}/${params.newspaper}`
 
     if (store.state.auth.loggedIn) {
@@ -36,7 +34,7 @@ export default {
       error(errorToParams(err))
     }
   }
-};
+}
 </script>
 
 <style lang="sass">

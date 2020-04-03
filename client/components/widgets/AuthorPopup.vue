@@ -44,15 +44,15 @@ import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionBut
 export default {
   name: 'AuthorPopup',
 
-  props: {
-    target: String,
-    author: Object
-  },
-
   components: {
     AuthorPicture,
     AuthorSubscriptionButton,
     BPopover
+  },
+
+  props: {
+    target: String,
+    author: Object
   },
 
   computed: mapState({

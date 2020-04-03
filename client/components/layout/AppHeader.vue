@@ -19,15 +19,17 @@
             <nuxt-link
               :to="{name: 'subscription-newspapers'}"
               :class="{'is-active': isSubscriptionRoute}"
-              title="Subscriptions">
-              <span>{{ $t('Subscriptions') }}{{ hasSuspendedSubscription ? '*' : ''}}</span>
+              title="Subscriptions"
+            >
+              <span>{{ $t('Subscriptions') }}{{ hasSuspendedSubscription ? '*' : '' }}</span>
             </nuxt-link>
           </li>
 
           <li class="explore">
             <nuxt-link
               to="/explore"
-              title="Explore">
+              title="Explore"
+            >
               <span>{{ $t('Explore') }}</span>
             </nuxt-link>
           </li>
@@ -36,7 +38,8 @@
             <nuxt-link
               to="/newspapers"
               :class="{'is-active': isNewspapersRoute}"
-              title="Newsletters">
+              title="Newsletters"
+            >
               <span>{{ $t('Newsletters') }}</span>
             </nuxt-link>
           </li>
@@ -45,7 +48,8 @@
             <nuxt-link
               to="/posts"
               :class="{'is-active': isPostsRoute}"
-              title="Posts">
+              title="Posts"
+            >
               <span>{{ $t('Posts') }}</span>
             </nuxt-link>
           </li>
@@ -54,7 +58,8 @@
 
       <nav
         v-if="topRoute == '/'"
-        class="app-header--sub-navigation is-mobile">
+        class="app-header--sub-navigation is-mobile"
+      >
         <ul>
           <li>
             <nuxt-link to="/subscription/newspapers">
@@ -84,7 +89,8 @@
 
       <nav
         v-if="isSubscriptionRoute || isNewspapersRoute || isPostsRoute"
-        class="app-header--sub-navigation">
+        class="app-header--sub-navigation"
+      >
         <ul>
           <template v-if="isSubscriptionRoute">
             <li>
@@ -154,47 +160,51 @@
         </ul>
       </nav>
 
-      <nav class="app-header--mobile-navigation" v-if="pageTitle">
-        <button-icon class="back" @click="$router.go(-1)"></button-icon>
-        <h1>{{pageTitle}}</h1>
+      <nav v-if="pageTitle" class="app-header--mobile-navigation">
+        <button-icon class="back" @click="$router.go(-1)" />
+        <h1>{{ pageTitle }}</h1>
       </nav>
 
-      <nav class="app-header--user-profile" v-if="user">
-        <nuxt-link to="/search" class="search" v-b-tooltip :title="$t('Search')"></nuxt-link>
+      <nav v-if="user" class="app-header--user-profile">
+        <nuxt-link v-b-tooltip to="/search" class="search" :title="$t('Search')" />
         <nuxt-link :to="{name: 'author', params: {author: user.id}}">
           <AuthorPicture :author="user" />
         </nuxt-link>
         <button-icon
-          @click="isDropDownMenuOpen = true"
           :class="{'is-active': isDropDownMenuOpen}"
+          @click="isDropDownMenuOpen = true"
         />
       </nav>
 
-      <nav class="app-header--user-profile-menu"
+      <nav
         v-if="user && isDropDownMenuOpen"
-        v-on-clickaway="() => isDropDownMenuOpen = false">
+        v-on-clickaway="() => isDropDownMenuOpen = false"
+        class="app-header--user-profile-menu"
+      >
         <ul>
           <li class="home"><nuxt-link :to="{name: 'index'}">{{ $t('Home') }}</nuxt-link></li>
           <li><nuxt-link :to="{name: 'author', params: {author: user.id}}">{{ $t('Profile') }}</nuxt-link></li>
           <li><nuxt-link :to="{name: 'user-settings'}"><span>{{ $t('Settings') }}</span></nuxt-link></li>
-          <li class="divider"></li>
+          <li class="divider" />
           <li class="language">
             {{ $t('Language') }}
             <a
               href="?lang=cs"
+              :class="{'is-active': currentLocale == 'cs'}"
               @click.prevent="setLang('cs')"
-              :class="{'is-active': currentLocale == 'cs'}">
+            >
               CS
             </a>
 
             <a
               href="?lang=en"
+              :class="{'is-active': currentLocale == 'en'}"
               @click.prevent="setLang('en')"
-              :class="{'is-active': currentLocale == 'en'}">
+            >
               EN
             </a>
           </li>
-          <li class="divider"></li>
+          <li class="divider" />
           <li>
             <a href="mailto:info@kairly.com?subject=Zpětná vazba">
               {{ $t('Give us feedback') }}
@@ -208,12 +218,10 @@
 </template>
 
 <script>
-import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapState, mapActions, mapGetters } from 'vuex'
-import store from '@/store'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import AuthorPicture from '@/components/widgets/AuthorPicture'
-import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 export default {
   name: 'AppHeader',
@@ -222,16 +230,15 @@ export default {
     onClickaway
   },
 
+  components: {
+    AuthorPicture
+  },
+
   props: {
     pageTitle: String
   },
 
-  components: {
-    AuthorPicture,
-    MoneyFormat
-  },
-
-  data: function() {
+  data () {
     return {
       username: null,
       password: null,
@@ -247,54 +254,52 @@ export default {
 
     ...mapGetters(['hasSuspendedSubscription']),
 
-    topRoute() {
+    topRoute () {
       const routes = this.$route.path.split('/')
 
-      if (routes[1] == '') {
+      if (routes[1] === '') {
         return '/'
       }
       return routes[1]
     },
 
-    isSubscriptionRoute() {
+    isSubscriptionRoute () {
       return ['subscription', 'import', 'user'].includes(this.topRoute)
     },
 
-    isNewspapersRoute() {
+    isNewspapersRoute () {
       return ['newspapers'].includes(this.topRoute)
     },
 
-    isPostsRoute() {
+    isPostsRoute () {
       return ['posts'].includes(this.topRoute)
     }
+  },
+
+  mounted () {
+    /*
+      this cause hasSuspendedSubscription to be correctly computed
+      but it can be requested after page is rendered so we don't need trigger this
+      in asyncData (if subscriptions is not needed for other parts of page)
+    */
+    this.$store.dispatch('getSubscriptions')
   },
 
   methods: {
     ...mapActions(['afterLogout']),
 
-    async logout() {
+    async logout () {
       await this.$auth.logout()
       this.afterLogout()
     },
 
-    setLang(locale) {
+    setLang (locale) {
       this.setLocale(locale)
       this.$auth.$storage.setUniversal('locale', locale)
       this.$ga.event({
         eventCategory: 'Switch language',
         eventAction: locale
       })
-    }
-  },
-
-  mounted() {
-    if (process.client) {
-      /*
-        this cause hasSuspendedSubscription to be correctly computed
-        but it can be requested after page is rendered so we don't need trigger this
-        in asyncData (if subscriptions is not needed for other parts of page)
-      */
-      this.$store.dispatch('getSubscriptions')
     }
   }
 }
@@ -333,7 +338,6 @@ export default {
     @media (max-width: $mobile)
       grid-template-columns: minmax(100px, min-content) 1fr
 
-
 //- Main Navigation
 .app-header--navigation
   margin-right: auto
@@ -365,7 +369,6 @@ export default {
       span
         display: none
 
-
   li a::after
     +fa-icon()
     @extend .fas
@@ -380,7 +383,6 @@ export default {
     @media (max-width: 850px)
       display: inline-block
 
-
   li.subscription a::after
     content: fa-content($fa-var-calendar)
     display: none
@@ -394,7 +396,6 @@ export default {
 
     @media (max-width: 850px)
       display: inline-block
-
 
   @media (max-width: $mobile)
     li a::after
@@ -478,7 +479,6 @@ export default {
         color: #000
 
         font-weight: 600
-      
 
 //- Logo
 .app-header--logo
@@ -500,7 +500,6 @@ export default {
   a
     color: #000
 
-
 //- Header mobile navigation
 .app-header--mobile-navigation
   display: none
@@ -521,7 +520,6 @@ export default {
     font-weight: 600
     white-space: nowrap
     text-overflow: ellipsis
-
 
 //- User Profile
 .app-header--user-profile
@@ -612,7 +610,6 @@ export default {
 
     &::before
       content: fa-content($fa-var-chevron-down)
-
 
 //- User Profile Menu
 .app-header--user-profile-menu

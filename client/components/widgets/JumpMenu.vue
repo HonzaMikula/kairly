@@ -7,8 +7,9 @@
     />
 
     <h1
+      :id="currentAnchor"
       @click="isMenuOpen = !isMenuOpen"
-      :id="currentAnchor">
+    >
       {{ dayTitle }} – {{ timeTitle }}
     </h1>
 
@@ -42,61 +43,68 @@ import { directive as onClickaway } from '@/lib/vue-clickaway'
 export default {
   name: 'JumpMenu',
 
+  directives: {
+    onClickaway
+  },
+
   props: {
     datetime: String,
     timeSlots: Array
   },
 
-  directives: {
-    onClickaway
-  },
-
-  data() {
+  data () {
     return {
       isMenuOpen: false
     }
   },
 
   computed: {
-    dayTitle() {
+    dayTitle () {
       const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
       const dt = moment(this.datetime)
-      const today = moment().format(format);
+      const today = moment().format(format)
       const day = dt.format(format)
-      const wod = day === today ? this.$t('Today') : dt.format("dddd")
+      const wod = day === today ? this.$t('Today') : dt.format('dddd')
       return `${wod} ${day}`
     },
 
-    timeTitle() {
-      return moment(this.datetime).format("H:mm")
+    timeTitle () {
+      return moment(this.datetime).format('H:mm')
     },
 
-    currentAnchor() {
+    currentAnchor () {
       return `time_${this.timeTitle}`
     },
 
-    anchors() {
+    anchors () {
       return this.timeSlots.map(slot => {
         const dt = moment(slot.time)
-        const h = ~~dt.format("H")
+        const h = ~~dt.format('H')
         let title = ''
         // be aware of timezone, in reality time be technically any time
-        if (h >= 21) { title = this.$t('Night') }
-        else if (h >= 18) { title = this.$t('Evening') }
-        else if (h > 12) { title = this.$t('Afternoon') }
-        else if (h == 12) { title = this.$t('Noon') }
-        else if (h >= 9) { title = this.$t('Morning') }
-        else { title = this.$t('Early morning') }
+        if (h >= 21) {
+          title = this.$t('Night')
+        } else if (h >= 18) {
+          title = this.$t('Evening')
+        } else if (h > 12) {
+          title = this.$t('Afternoon')
+        } else if (h === 12) {
+          title = this.$t('Noon')
+        } else if (h >= 9) {
+          title = this.$t('Morning')
+        } else {
+          title = this.$t('Early morning')
+        }
         return {
-          link: '#time_' + dt.format("H:mm"),
-          title: title + ' (' + dt.format("H:mm") + ')'
+          link: '#time_' + dt.format('H:mm'),
+          title: title + ' (' + dt.format('H:mm') + ')'
         }
       })
     }
   },
 
   methods: {
-    hideJumpMenu() {
+    hideJumpMenu () {
       this.isMenuOpen = false
     }
   }
@@ -155,7 +163,6 @@ export default {
       @extend .fas
 
       content: fa-content($fa-var-calendar)
-
 
     &:focus,
     &:hover

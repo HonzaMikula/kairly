@@ -6,7 +6,6 @@
       <p>{{ description }}</p>
     </header>
 
-
     <div class="newspaper-backlog--next-issue">
       <draggable
         v-model="items"
@@ -28,13 +27,13 @@
               :index="idx"
               :newspaper="newspaper"
               :backlog="backlog"
-             />
+            />
             <NewspaperBacklogBox
               :key="post.id"
               :newspaper="newspaper"
               :post="post"
-              :canMoveUp="idx > 0 || backlog.name !== 'upcoming'"
-              :canMoveDown="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
+              :can-move-up="idx > 0 || backlog.name !== 'upcoming'"
+              :can-move-down="idx < backlog.layout.length - 1 || backlog.name != 'considered'"
               :source="backlog.name"
               :index="idx"
             />
@@ -52,8 +51,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 
 import NewspaperBacklogBox from '@/components/editor/backlog/NewspaperBacklogBox'
@@ -70,14 +68,14 @@ export default {
   },
 
   props: {
-    newspaper: {type: Object, required: true},
-    title: {type: String, required: true},
+    newspaper: { type: Object, required: true },
+    title: { type: String, required: true },
     description: String,
-    backlog: {type: Object, required: true},
-    posts: {type: Object, required: true}
+    backlog: { type: Object, required: true },
+    posts: { type: Object, required: true }
   },
 
-  data() {
+  data () {
     return {
       drag: false,
       isTouchDevice: false
@@ -86,11 +84,11 @@ export default {
 
   computed: {
     items: {
-      get() {
+      get () {
         return this.backlog.layout.map((item, idx) => this.getPostObject(item, idx))
       },
 
-      set(value) {
+      set (value) {
         this.backlogReorder({
           newspaper: this.newspaper,
           target: this.backlog.name,
@@ -100,13 +98,17 @@ export default {
     }
   },
 
+  mounted () {
+    this.isTouchDevice = isTouchDevice()
+  },
+
   methods: {
     ...mapActions({
       backlogReorder: 'backlog/reorder'
     }),
 
     // TODO copied from IssueWrapper
-    getPostObject(item, idx) {
+    getPostObject (item, idx) {
       if (item.type === 'post') {
         return this.posts[item.id]
       }
@@ -123,10 +125,6 @@ export default {
         })
       }
     }
-  },
-
-  mounted() {
-    this.isTouchDevice = isTouchDevice()
   }
 }
 </script>
@@ -134,7 +132,6 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
-
 
 .flip-list-move
   transition: transform 0.25s

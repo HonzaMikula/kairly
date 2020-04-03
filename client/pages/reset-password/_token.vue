@@ -12,7 +12,7 @@
             id="newPassword"
             v-model="newPassword1"
             type="password"
-          />
+          >
         </div>
 
         <div>
@@ -21,7 +21,7 @@
             id="newPassword2"
             v-model="newPassword2"
             type="password"
-          />
+          >
         </div>
 
         <button type="submit">{{ $t('Change password') }}</button>
@@ -47,13 +47,7 @@ export default {
 
   mixins: [ErrorHandler],
 
-  head() {
-    return {
-      title: this.$t('Reset Password') +' – Kairly',
-    }
-  },
-
-  data() {
+  data () {
     return {
       newPassword1: '',
       newPassword2: ''
@@ -66,22 +60,28 @@ export default {
       showSuccess: 'messages/success'
     }),
 
-    async submit() {
-      if (this.newPassword1 != this.newPassword2) {
+    async submit () {
+      if (this.newPassword1 !== this.newPassword2) {
         this.showError(this.$t("Password doesn't match"))
         return
       }
 
       this.showError(null)
       try {
-        const res = await this.$axios.post('/change-password', {
+        await this.$axios.post('/change-password', {
           token: this.$route.params.token,
           newPassword: this.newPassword1
         })
-        this.showSuccess(this.$t("Password has been updated."))
+        this.showSuccess(this.$t('Password has been updated.'))
       } catch (err) {
         this.handleError(err)
       }
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Reset Password') + ' – Kairly',
     }
   }
 }

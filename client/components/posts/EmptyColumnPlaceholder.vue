@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "EmptyColumnPlaceholder"
+  name: 'EmptyColumnPlaceholder'
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div class="import-opml-button">
     <label>
       {{ text }}
-      <input ref type="file" accept=".opml" @change="importOpml($event)" hidden>
+      <input ref type="file" accept=".opml" hidden @change="importOpml($event)">
     </label>
   </div>
 </template>
@@ -21,27 +21,27 @@ export default {
       showError: 'messages/error',
     }),
 
-    importOpml(ev) {
+    importOpml (ev) {
       const f = event.target.files[0]
       const reader = new FileReader()
       const items = []
 
       reader.addEventListener('loadend', ev => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(reader.result, "application/xml");
-        const outlines = doc.getElementsByTagName('outline');
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(reader.result, 'application/xml')
+        const outlines = doc.getElementsByTagName('outline')
 
         for (let i = 0; i < outlines.length; i++) {
           const outline = outlines[i]
           if (!outline.hasChildNodes()) {
             let title = outline.getAttribute('title')
-            const xmlUrl  = outline.getAttribute('xmlUrl')
-            const htmlUrl  = outline.getAttribute('htmlUrl')
+            const xmlUrl = outline.getAttribute('xmlUrl')
+            const htmlUrl = outline.getAttribute('htmlUrl')
             if (xmlUrl) {
               if (!title) {
                 title = (htmlUrl || xmlUrl).replace('http://', '').replace('https://', '')
               }
-              items.push({title, url: xmlUrl})
+              items.push({ title, url: xmlUrl })
             }
           }
         }
@@ -55,14 +55,14 @@ export default {
 
         if (items.length > 100) {
           this.showError('Too many items')
-        } else if (items.length == 0) {
+        } else if (!items.length) {
           this.showError('OPML is empty')
         } else {
           this.$emit('loaded', items)
         }
       })
       reader.addEventListener('error', ev => {
-        this.showError(ev + "")
+        this.showError(ev + '')
       })
       reader.readAsText(f)
     }

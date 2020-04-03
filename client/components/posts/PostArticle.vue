@@ -7,8 +7,8 @@
       </h2>
 
       <div class="post-body--content">
-        <div v-html="perex"></div>
-        <div class="timeline-post--continue-reading" v-if="post.timeRead && !post.draft">
+        <div v-html="perex" />
+        <div v-if="post.timeRead && !post.draft" class="timeline-post--continue-reading">
           <template v-if="post.content.protected">
             <a :href="post.source" target="_blank">{{ $t('Read the article') }}</a>
             ({{ post.timeRead }} {{ $t('read') }})
@@ -28,27 +28,27 @@
       </div>
     </div>
 
-    <template #page-controls><slot name="page-controls"></slot></template>
-    <template #global-controls><slot name="global-controls"></slot></template>
+    <template #page-controls><slot name="page-controls" /></template>
+    <template #global-controls><slot name="global-controls" /></template>
   </PostBase>
 </template>
 
 <script>
-import PostBase from './PostBase';
+import PostBase from './PostBase'
 
 export default {
   name: 'PostArticle',
-
-  props: {
-    post: Object,
-  },
 
   components: {
     PostBase
   },
 
+  props: {
+    post: Object,
+  },
+
   computed: {
-    perex() {
+    perex () {
       const { baseURL } = this.$axios.defaults
       const { perex } = this.post.content
       let URL
@@ -62,9 +62,9 @@ export default {
       const replaceUrl = (src, callback) => {
         // universal URL can't parse url without protocol
         const url = new URL(src.startsWith('//') ? `http:${src}` : src)
-          if (url.hostname !== 'kairly.com') {
-            callback(`${baseURL}/p?post=${encodeURIComponent(this.post.slug)}&size=timeline&src=${encodeURIComponent(src)}`)
-          }
+        if (url.hostname !== 'kairly.com') {
+          callback(`${baseURL}/p?post=${encodeURIComponent(this.post.slug)}&size=timeline&src=${encodeURIComponent(src)}`)
+        }
       }
 
       // don't use template element! querySelectorAll ignores templates
@@ -72,7 +72,7 @@ export default {
         // document (and createElement is not defined on server)
         const cheerio = require('cheerio')
         const $ = cheerio.load(perex)
-        $('img').each(function(i, img) {
+        $('img').each(function (i, img) {
           replaceUrl($(img).attr('src'), src => {
             $(img).attr('src', src)
           })
@@ -84,18 +84,17 @@ export default {
         fragment.querySelectorAll('img').forEach(img => {
           replaceUrl(img.src, src => { img.src = src })
         })
-        //post.content.perex
+        // post.content.perex
         return fragment.innerHTML
       }
     }
   },
 
-  mounted() {
+  mounted () {
 
   }
 }
 </script>
-
 
 <style lang="sass">
 @import './styles/components/article-perex'
@@ -136,7 +135,7 @@ export default {
 
 .newspaper .post-body--content
   column-count: 3
-  
+
   @media (max-width: $mobile)
     column-count: 2
     column-gap: $baseline / 2
@@ -147,5 +146,5 @@ export default {
   //- Continue Reading
   .timeline-post--continue-reading
     +perex-button
-    
+
 </style>

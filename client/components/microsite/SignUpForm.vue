@@ -1,7 +1,7 @@
 <template>
   <div class="microsite-signup-form">
     <h2>{{ $t('@signupform/heading') }}</h2>
-    <div class="error" v-if="error">{{ error }}</div>
+    <div v-if="error" class="error">{{ error }}</div>
 
     <div>
       <label>{{ $t('Username') }}</label>
@@ -13,7 +13,7 @@
     </div>
     <div>
       <label>{{ $t('Password') }}</label>
-      <input type="password" v-model="password">
+      <input v-model="password" type="password">
       <p>{{ $t('At least 8 characters') }}</p>
     </div>
 
@@ -25,7 +25,13 @@
 export default {
   name: 'SignUpForm',
 
-  data() {
+  fetch ({ store, redirect }) {
+    if (store.state.auth.loggedIn) {
+      redirect('/')
+    }
+  },
+
+  data () {
     return {
       username: '',
       email: '',
@@ -35,14 +41,14 @@ export default {
   },
 
   methods: {
-    async submit() {
+    async submit () {
       const { username, email, password } = this
 
       try {
         const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
         await this.$axios.post('/signup',
           { username, email, password },
-          { headers: { 'X-Timezone': timeZone }}
+          { headers: { 'X-Timezone': timeZone } }
         )
         await this.$auth.loginWith('local', {
           data: { username, password }
@@ -52,7 +58,7 @@ export default {
           eventAction: 'Successful'
         })
         this.$ga.set('dimension2', 'new-user')
-        this.$router.push("/")
+        this.$router.push('/')
       } catch (err) {
         if (err.response) {
           this.error = err.response.data.error
@@ -65,13 +71,6 @@ export default {
           eventLabel: this.error
         })
       }
-    }
-  },
-
-  async fetch ({ store, redirect }) {
-    if (store.state.auth.loggedIn) {
-      redirect('/')
-      return
     }
   }
 }
@@ -101,13 +100,13 @@ export default {
   //- Heading
   h2
     margin-bottom: $baseline / 4
- 
+
     font-size: $fs-2
     font-weight: 600
 
   p
     margin-bottom: $baseline / 2
-    line-height: 1.42  
+    line-height: 1.42
 
   //- Label
   label
@@ -144,7 +143,6 @@ export default {
     max-width: 200px
     margin: 0 auto
     display: table
-
 
   div
     margin-bottom: $baseline / 2

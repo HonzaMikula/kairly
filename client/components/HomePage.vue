@@ -5,8 +5,8 @@
       <div>
         <section>
           <h1>
-            {{ $t('Modern news platform')}}
-            <br />
+            {{ $t('Modern news platform') }}
+            <br>
             {{ $t('for demanding readers') }}
           </h1>
 
@@ -19,7 +19,7 @@
           </ul>
         </section>
 
-        <SignUpForm></SignUpForm>
+        <SignUpForm />
       </div>
     </section>
 
@@ -45,12 +45,12 @@
 
     <section class="homepage--readers">
       <picture>
-        <img src="~assets/homepage/kairly-1.jpg" />
+        <img src="~assets/homepage/kairly-1.jpg">
       </picture>
 
       <div>
         <h2>{{ $t('Subscribe to a digital newspapers informing you on topics you are interested in.') }}</h2>
-        <div v-html="$t('@homepage/readers')"></div>
+        <div v-html="$t('@homepage/readers')" />
 
         <!--
         <p>
@@ -74,7 +74,10 @@
 
     <section class="homepage--quote">
       <blockquote>
-        <div v-html="$t('@homepage/quote/honza')" itemprop="citation"></div>
+        <div
+          itemprop="citation"
+          v-html="$t('@homepage/quote/honza')"
+        />
         <!--
         <p>
           Sociální sítě se nás snaží přehltit zábavným či šokujícím obsahem, aby vydělali co nejvíce na reklamě.
@@ -90,7 +93,7 @@
          -->
 
         <footer>
-          <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
+          <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula">
           <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
         </footer>
       </blockquote>
@@ -98,13 +101,13 @@
 
     <section class="homepage--readers">
       <picture>
-        <img src="~assets/homepage/kairly-3.jpg" />
+        <img src="~assets/homepage/kairly-3.jpg">
       </picture>
 
       <div>
         <h2>{{ $t('Are you a journalist? Start making money by publishing content or as a newspaper editor.') }}</h2>
 
-        <div v-html="$t('@homepage/editors')"></div>
+        <div v-html="$t('@homepage/editors')" />
         <!--
         <p>
           Nás baví design a technologie. <strong>Vytváříme unikátní platformu pro vás novináře a vaše čtenáře.</strong>
@@ -126,7 +129,7 @@
 
     <section class="homepage--quote">
       <blockquote>
-        <div v-html="$t('@homepage/quote/roman')" itemprop="citation"></div>
+        <div itemprop="citation" v-html="$t('@homepage/quote/roman')" />
         <!--
         <p>
           O placeném obsahu se mluví už roky, ale současné modely pay-wallů zatím úspěchy příliš nesklízejí.
@@ -142,7 +145,7 @@
         -->
 
         <footer>
-          <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
+          <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík">
           <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
         </footer>
       </blockquote>
@@ -166,7 +169,7 @@
       <h2>{{ $t('Was said about us.') }}</h2>
 
       <blockquote>
-        <div v-html="$t('@homepage/quote/zouzalik')" itemprop="citation"></div>
+        <div itemprop="citation" v-html="$t('@homepage/quote/zouzalik')" />
         <!--
         <p>
           Nowadays, when attacks on journalists, including physical ones, are increasing, we need to find a
@@ -182,7 +185,7 @@
          -->
 
         <footer>
-          <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+          <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík">
           <strong>Marek Zouzalík</strong> <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
         </footer>
       </blockquote>
@@ -197,14 +200,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
-
 import SignUpForm from '@/components/microsite/SignUpForm'
-import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import HowItWorks from '@/components/microsite/HowItWorks'
-import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
-import OfficialStart from '@/components/microsite/OfficialStart'
 import ExploreNewspapers from '@/components/microsite/ExploreNewspapers'
 
 import ogImage from '@/assets/homepage/kairly-1.jpg'
@@ -214,16 +212,19 @@ export default {
 
   components: {
     SignUpForm,
-    NewspaperWidget,
     HowItWorks,
-    OfficialStart,
-    Footer,
     FooterLinks,
     ExploreNewspapers
   },
 
-  head() {
-    const metaTitle = 'Kairly – '+ this.$t('Modern news platform for demanding readers')
+  data () {
+    return {
+      invalidCredentials: false
+    }
+  },
+
+  head () {
+    const metaTitle = 'Kairly – ' + this.$t('Modern news platform for demanding readers')
     const metaDescription = this.$t('Subscribe to thematic newsletters prepared by professional editors.')
     const metaUrl = 'https://kairly.com/'
     const baseUrl = 'https://kairly.com'
@@ -244,12 +245,6 @@ export default {
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: baseUrl + ogImage }
       ]
-    }
-  },
-
-  data() {
-    return {
-      invalidCredentials: false
     }
   },
 }
@@ -324,7 +319,6 @@ export default {
 
         br
           display: none
-
 
     > p
       margin-bottom: $baseline
@@ -450,7 +444,6 @@ export default {
 
     content: fa-content($fa-var-newspaper)
 
-
 //- Readers
 .homepage--readers
   display: grid
@@ -572,7 +565,6 @@ export default {
 
         content: fa-content($fa-var-quote-right)
 
-
     footer
       display: flex
 
@@ -615,7 +607,6 @@ export default {
           height: $baseline * 2
           margin-right: 0
           width: $baseline * 2
-
 
 //- Newspapers showcase
 .homepage--newspapers

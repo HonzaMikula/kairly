@@ -4,7 +4,7 @@
       <input
         v-model="title"
         :placeholder="$t('Title')"
-      />
+      >
     </div>
 
     <div :class="{'edit-article--perex': true, 'column-view': !normalPerexView}">
@@ -32,7 +32,7 @@
         v-if="!post || post.type !== 'comment'"
         v-model="perex"
         :options="perexOptions"
-       />
+      />
     </div>
 
     <div class="edit-article--content">
@@ -43,17 +43,12 @@
     </div>
 
     <div class="edit-article--footer">
-      <button @click="submit" :disabled="title === ''">{{ buttonTitle }}</button>
+      <button :disabled="title === ''" @click="submit">{{ buttonTitle }}</button>
     </div>
   </div>
 </template>
 
-
 <script>
-import { mapActions } from 'vuex'
-
-import AppLayout from '@/components/layout/AppLayout'
-
 export default {
   name: 'EditArticle',
 
@@ -62,7 +57,7 @@ export default {
     buttonTitle: String
   },
 
-  data() {
+  data () {
     return {
       title: this.post ? this.post.content.title : '',
       perex: this.post ? this.post.content.perex : '',
@@ -78,7 +73,7 @@ export default {
   },
 
   methods: {
-    submit() {
+    submit () {
       if (!this.post || this.post.type === 'newspaper') {
         this.$emit('submit', {
           type: 'newspaper',
@@ -141,7 +136,6 @@ export default {
       background: #fff
       color: #000
 
-
 //- Perex
 .edit-article--perex .medium-editor-wrapper
   line-height: 1.58
@@ -158,7 +152,6 @@ export default {
 .edit-article--content .medium-editor-wrapper
   +article-content
 
-
 //- Perex, Content
 .edit-article--perex,
 .edit-article--content
@@ -171,7 +164,6 @@ export default {
 
     .ck-content
       min-height: 260px
-
 
 //- Footer
 .edit-article--footer

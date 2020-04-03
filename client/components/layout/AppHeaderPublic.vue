@@ -8,7 +8,7 @@
           <li><nuxt-link to="/platform/readers">{{ $t('About') }}</nuxt-link></li>
           <li><nuxt-link to="/features/rss-reader">{{ $t('Features') }}</nuxt-link></li>
           <li><nuxt-link to="/explore/news">{{ $t('Explore') }}</nuxt-link></li>
-          <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)')}}</nuxt-link></li>
+          <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)') }}</nuxt-link></li>
         </ul>
       </nav>
 
@@ -17,7 +17,7 @@
           <li class="signup"><nuxt-link to="/signup">{{ $t('Create account') }}</nuxt-link></li>
           <li class="signin"><a href="" @click.prevent="openSignInModal()">{{ $t('Sign in') }}</a></li>
         </ul>
-        <button class="hamburger-menu" @click="openMobileMenu()"></button>
+        <button class="hamburger-menu" @click="openMobileMenu()" />
       </nav>
     </div>
 
@@ -41,15 +41,16 @@
     </nav>
 
     <nav
-      class="app-header-public--mobile-menu"
       v-if="isMobileMenuOpen"
-      v-on-clickaway="() => openMobileMenu()">
+      v-on-clickaway="() => openMobileMenu()"
+      class="app-header-public--mobile-menu"
+    >
       <ul>
         <li><nuxt-link to="/">{{ $t('Home') }}</nuxt-link></li>
         <li><nuxt-link to="/platform/readers">{{ $t('About platform') }}</nuxt-link></li>
         <li><nuxt-link to="/features/rss-reader">{{ $t('Features') }}</nuxt-link></li>
         <li><nuxt-link to="/explore/news">{{ $t('Explore') }}</nuxt-link></li>
-        <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)')}}</nuxt-link></li>
+        <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)') }}</nuxt-link></li>
         <li><nuxt-link to="/signup">{{ $t('Create account') }}</nuxt-link></li>
       </ul>
     </nav>
@@ -75,7 +76,7 @@ export default {
     SignInModal
   },
 
-  data() {
+  data () {
     return {
       isSignInModalOpen: false,
       isMobileMenuOpen: false,
@@ -83,10 +84,10 @@ export default {
   },
 
   computed: {
-    topRoute() {
+    topRoute () {
       const routes = this.$route.path.split('/')
 
-      if (routes[1] == '') {
+      if (routes[1] === '') {
         return '/'
       }
       return routes[1]
@@ -94,7 +95,7 @@ export default {
   },
 
   methods: {
-    openSignInModal() {
+    openSignInModal () {
       this.isSignInModalOpen = true
       this.$ga.event({
         eventCategory: 'Authentication',
@@ -102,7 +103,7 @@ export default {
       })
     },
 
-    openMobileMenu() {
+    openMobileMenu () {
       this.isMobileMenuOpen = !this.isMobileMenuOpen
     }
   }
@@ -154,7 +155,6 @@ export default {
       font-size: $fs-2
       text-align: left
 
-
   //- Get Involved
   .app-header-public--menu
     margin-right: auto
@@ -177,7 +177,6 @@ export default {
         color: #555
 
         line-height: $baseline * 1.5
-
 
         &:focus,
         &:hover,
@@ -220,8 +219,6 @@ export default {
   li:first-of-type a.nuxt-link-active
       color: $c-base
       font-weight: 400
-
-
 
 .app-header-public--submenu
   margin: 0 auto
@@ -275,7 +272,6 @@ export default {
 
         font-weight: 600
 
-
 //- Sign In
 .app-header-public--controls
   display: flex
@@ -310,7 +306,6 @@ export default {
 
       line-height: $baseline * 1.5
 
-
       &:focus,
       &:hover,
       &.nuxt-link-active
@@ -327,9 +322,5 @@ export default {
 
     @media (max-width: $mobile)
       display: block
-
-
-
-
 
 </style>

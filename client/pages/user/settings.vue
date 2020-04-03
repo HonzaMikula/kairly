@@ -11,9 +11,9 @@
             height="104"
             accept="image/jpeg,image/png"
             size="10"
-            buttonClass="btn"
+            button-class="btn"
             :prefill="user.pictures && user.pictures.big"
-            :customStrings="{
+            :custom-strings="{
               drag: $t('Upload image')
             }"
             @change="onPictureChange"
@@ -35,7 +35,7 @@
 
           <div>
             <label for="bio">Bio</label>
-            <textarea id="bio" v-model="bio" maxlength="280"></textarea>
+            <textarea id="bio" v-model="bio" maxlength="280" />
           </div>
 
           <div>
@@ -92,28 +92,20 @@ import { mapState, mapMutations } from 'vuex'
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import AppLayout from '@/components/layout/AppLayout'
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal'
-import InfoMessage from '@/components/InfoMessage'
 import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'Settings',
 
-  head() {
-    return {
-      title: this.$t('Account Settings – Kairly')
-    }
-  },
-
   components: {
     AppLayout,
     PictureInput,
     ChangePasswordModal,
-    InfoMessage
   },
 
   mixins: [ErrorHandler],
 
-  data() {
+  data () {
     return {
       name: null,
       medium: null,
@@ -131,8 +123,12 @@ export default {
     })
   },
 
+  beforeMount () {
+    this.updateComponentData(this.user)
+  },
+
   methods: {
-    updateComponentData({ name, medium, bio, timezone, price, integrations: { twitter }}) {
+    updateComponentData ({ name, medium, bio, timezone, price, integrations: { twitter } }) {
       this.name = name
       this.medium = medium
       this.bio = bio
@@ -141,28 +137,28 @@ export default {
       this.twitter = twitter
     },
 
-    async updateProfile(payload) {
+    async updateProfile (payload) {
       this.cleanError()
       try {
         const user = await this.$axios.$patch('/profile', payload)
         this.updateComponentData(user)
         // update user in store. Merge properties because GET on /profile endpoint
         // returns more then update (eg owned newspapers)
-        this.$auth.setUser({...this.user, ...user})
+        this.$auth.setUser({ ...this.user, ...user })
         this.showSuccess('Your settings were updated.')
       } catch (err) {
         this.handleError(err)
       }
     },
 
-    onPictureChange(picture) {
+    onPictureChange (picture) {
       // Save imediatelly
       this.updateProfile({ picture })
     },
 
-    submit() {
+    submit () {
       const { name, medium, bio, timezone, price, twitter } = this
-      this.updateProfile({ name, medium, bio, timezone, price, integrations: { twitter }})
+      this.updateProfile({ name, medium, bio, timezone, price, integrations: { twitter } })
     },
 
     ...mapMutations({
@@ -170,17 +166,17 @@ export default {
     })
   },
 
-  beforeMount() {
-    this.updateComponentData(this.user)
-  },
-
+  head () {
+    return {
+      title: this.$t('Account Settings – Kairly')
+    }
+  }
 }
 </script>
 
 <style lang="sass">
 //- Imports
 @import './styles/components/buttons'
-
 
 .settings-view
   position: relative
@@ -214,7 +210,6 @@ export default {
     @media (max-width: $mobile)
       display: block
       padding: $baseline / 4
-
 
 //- Profile Picture
 .settings--profile-picture
@@ -269,7 +264,6 @@ export default {
     width: $baseline * 14
     margin-bottom: $baseline
 
-
     //- label
     label, h3
       display: table
@@ -289,7 +283,6 @@ export default {
       font-family: $ff-sans
       font-size: $fs--1
 
-
     //- textarea
     textarea
       box-sizing: border-box
@@ -305,7 +298,6 @@ export default {
       @media (max-width: $mobile)
         width: 100%
 
-
     //- select
     select
       box-sizing: border-box
@@ -317,7 +309,6 @@ export default {
 
       font-family: $ff-sans
       font-size: $fs--1
-
 
     //- help
     p

@@ -2,7 +2,7 @@
   <AppLayout :name="$t('Subscriptions')">
     <div class="my-subscription-view">
       <main>
-        <nuxt-child/>
+        <nuxt-child />
       </main>
 
       <aside>
@@ -70,10 +70,9 @@
 </template>
 
 <script>
-import AppLayout from '@/components/layout/AppLayout'
-import { mapGetters, mapState, mapActions } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
-import MoneyFormat from '@/components/widgets/MoneyFormat'
+import AppLayout from '@/components/layout/AppLayout'
 import TwitterApologyModal from '@/components/modals/TwitterApologyModal'
 
 export default {
@@ -81,11 +80,18 @@ export default {
 
   components: {
     AppLayout,
-    MoneyFormat,
     TwitterApologyModal
   },
 
-  data() {
+  async asyncData ({ app, store }) {
+    const [issues, authors] = await Promise.all([
+      store.dispatch('getRecentIssues', 5),
+      store.dispatch('getNewAuthors', 10),
+    ])
+    return { issues, authors }
+  },
+
+  data () {
     return {
       isTwitterApologyModalOpen: false
     }
@@ -99,7 +105,7 @@ export default {
   },
 
   methods: {
-    importTwitter() {
+    importTwitter () {
       this.isTwitterApologyModalOpen = true
 
       this.$ga.event({
@@ -108,15 +114,8 @@ export default {
         eventLabel: 'Subscription page'
       })
     }
-  },
-
-  async asyncData({ app, store }) {
-    const [issues, authors] = await Promise.all([
-      store.dispatch('getRecentIssues', 5),
-      store.dispatch('getNewAuthors', 10),
-    ])
-    return { issues, authors }
   }
+
 }
 </script>
 
@@ -158,7 +157,6 @@ export default {
     //- add credits
     button
       +button-text
-
 
     section
       margin-bottom: $baseline

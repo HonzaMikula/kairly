@@ -16,17 +16,12 @@
   </div>
 </template>
 
-
 <script>
-import { mapActions, mapState } from 'vuex'
-
-import AppLayout from '@/components/layout/AppLayout'
-
-function htmlDecode(input){
-  const e = document.createElement('div');
-  e.innerHTML = input;
+function htmlDecode (input) {
+  const e = document.createElement('div')
+  e.innerHTML = input
   // handle case of empty input
-  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+  return e.childNodes.length === 0 ? '' : e.childNodes[0].nodeValue
 }
 
 export default {
@@ -37,14 +32,14 @@ export default {
     buttonTitle: String
   },
 
-  data() {
+  data () {
     return {
       content: this.post ? htmlDecode(this.post.content.content) : ''
     }
   },
 
   methods: {
-    submit() {
+    submit () {
       this.$emit('submit', {
         type: 'tweet',
         content: this.content
@@ -75,6 +70,5 @@ export default {
 .edit-tweet--footer
   button
     +button(primary, large)
-
 
 </style>

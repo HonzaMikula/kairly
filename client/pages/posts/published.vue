@@ -3,13 +3,13 @@
     <div class="published-posts-view">
       <PostWrapper
         v-for="post in posts"
-        :post="post"
         :key="post.id"
+        :post="post"
       >
         <template #page-controls>
           <button-icon
-            class="edit"
             v-b-tooltip
+            class="edit"
             :title="$t('Edit post')"
             @click.prevent="$router.push(`/posts/${post.id}`)"
           />
@@ -20,13 +20,13 @@
         {{ $t('You haven\'t published any post yet.') }}
       </EmptyPostPlaceholder>
 
-      <loading-spinner v-if="loadingPosts"></loading-spinner>
+      <loading-spinner v-if="loadingPosts" />
     </div>
   </AppLayout>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 import PostWrapper from '@/components/PostWrapper'
@@ -35,19 +35,13 @@ import EmptyPostPlaceholder from '@/components/editor/EmptyPostPlaceholder'
 export default {
   name: 'Published',
 
-  head() {
-    return {
-      title: this.$t('Published Posts – Kairly')
-    }
-  },
-
   components: {
     AppLayout,
     PostWrapper,
     EmptyPostPlaceholder
   },
 
-  data() {
+  data () {
     return {
       posts: [],
       cursor: 0,
@@ -61,12 +55,15 @@ export default {
     })
   },
 
+  created () {
+    this.loadPosts()
+  },
+
   methods: {
-    async loadPosts() {
+    async loadPosts () {
       if (this.cursor === null) {
         return
       }
-      const { author: authorId } = this.$route.params
 
       this.loadingPosts = true
 
@@ -82,8 +79,10 @@ export default {
     }
   },
 
-  created() {
-    this.loadPosts()
+  head () {
+    return {
+      title: this.$t('Published Posts – Kairly')
+    }
   }
 }
 </script>

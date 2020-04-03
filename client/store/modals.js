@@ -5,11 +5,11 @@ export const state = () => ({
 })
 
 export const mutations = {
-  authorSubscription(state, author) {
+  authorSubscription (state, author) {
     state.authorSubscription = author
   },
 
-  newspaperSubscription(state, newspaper) {
+  newspaperSubscription (state, newspaper) {
     state.newspaperSubscription = newspaper
   }
 }

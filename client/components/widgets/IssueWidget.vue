@@ -2,8 +2,8 @@
   <div class="issue-widget-view">
     <picture>
       <nuxt-link :to="{name: 'author-newspaper-issue', params: {author: issue.newspaper.editor.id, newspaper: issue.newspaper.name, issue: issue.number}}">
-        <img v-if="issue.newspaper.picture" :src="issue.newspaper.picture" :alt="issue.newspaper.title" />
-        <div v-else class="image-placeholder"></div>
+        <img v-if="issue.newspaper.picture" :src="issue.newspaper.picture" :alt="issue.newspaper.title">
+        <div v-else class="image-placeholder" />
       </nuxt-link>
     </picture>
 
@@ -18,15 +18,15 @@
 
     <ul>
       <li v-for="post in issue.posts.slice(0, 3)" :key="post.id">
-        <nuxt-link 
+        <nuxt-link
           :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}"
         >
-          {{ post.type === 'tweet' ? `${post.author.name}'s tweet`  : post.content.title }}
+          {{ post.type === 'tweet' ? `${post.author.name}'s tweet` : post.content.title }}
         </nuxt-link>
       </li>
     </ul>
 
-    <div class="issue-widget--subscribe" v-if="loggedIn">
+    <div v-if="loggedIn" class="issue-widget--subscribe">
       <NewspaperSubscriptionButton :newspaper="issue.newspaper" />
 
       <p>
@@ -46,13 +46,13 @@ import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscript
 export default {
   name: 'IssueWidget',
 
-  props: {
-    issue: Object
-  },
-
   components: {
     AuthorPicture,
     NewspaperSubscriptionButton
+  },
+
+  props: {
+    issue: Object
   },
 
   computed: {
@@ -139,7 +139,6 @@ export default {
 
   a
     color: #000
-
 
 //- Subscribe issue
 .issue-widget--subscribe

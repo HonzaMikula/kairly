@@ -5,13 +5,13 @@
         <div>
           <section>
             <h1>{{ $t('Are you an independent publisher?') }}</h1>
-           
+
             <p>{{ $t('Publish modern newsletters and allow readers to contribute you for your content.') }}</p>
-           
+
             <ul>
-              <li><span v-html="$t('<strong>Build a base of regular readers </strong> by sending daily, weekly, or monthly newsletters.')"></span></li>
-              <li><span v-html="$t('<strong>Let readers consume content as they like. </strong> We can send newsletters to email, RSS readers, Kindle or readers can use modern mobile and web applications.')"></span></li>
-              <li><span v-html="$t('<strong>Earn additional revenues </strong> by charging a newsletter or voluntary donations.')"></span></li>
+              <li><span v-html="$t('<strong>Build a base of regular readers </strong> by sending daily, weekly, or monthly newsletters.')" /></li>
+              <li><span v-html="$t('<strong>Let readers consume content as they like. </strong> We can send newsletters to email, RSS readers, Kindle or readers can use modern mobile and web applications.')" /></li>
+              <li><span v-html="$t('<strong>Earn additional revenues </strong> by charging a newsletter or voluntary donations.')" /></li>
             </ul>
 
             <div class="journalists--hero--call-to-action">
@@ -21,28 +21,28 @@
           </section>
 
           <picture>
-            <img src="~assets/microsite/newsletter-illustration4.png" alt="Newsletter illustration" />
+            <img src="~assets/microsite/newsletter-illustration4.png" alt="Newsletter illustration">
           </picture>
         </div>
       </section>
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-25.jpg" />
+          <img src="~assets/microsite/kairly-random-25.jpg">
         </picture>
 
         <div>
           <h2>{{ $t('Why you should publish regular newsletters for your readers?') }}</h2>
 
-          <div v-html="$t('@publishers/why-newsletters')"></div>
-            <!-- <p>
-              Ve věku sociálních médiích je těžké si udržet věrné čtenáře. Pravidelné 
-              newslettery v moderním provedením jsou způsobem, jak si vytvořit věrnou 
+          <div v-html="$t('@publishers/why-newsletters')" />
+          <!-- <p>
+              Ve věku sociálních médiích je těžké si udržet věrné čtenáře. Pravidelné
+              newslettery v moderním provedením jsou způsobem, jak si vytvořit věrnou
               čtenářskou základnu.
             </p>
 
             <p>
-              Naše newslettery se inspirují papírovými novinami s krásnou typografií a 
+              Naše newslettery se inspirují papírovými novinami s krásnou typografií a
               layoutem a kombinují je s moderními formáty internetu, jako jsou například tweety.
             </p>
 
@@ -53,15 +53,15 @@
             </p>
 
             <p>
-              Papírové noviny a časopisy jsou věčné. My se snažíme alespoň část jejich kouzla dostat na 
-              všechny moderní kanály. Distribuujeme newslettery na emaily, RSS čtečky, 
+              Papírové noviny a časopisy jsou věčné. My se snažíme alespoň část jejich kouzla dostat na
+              všechny moderní kanály. Distribuujeme newslettery na emaily, RSS čtečky,
               Kindle a jiné ebooky. Máme i moderní desktopovou a mobilní aplikaci.
             </p> -->
         </div>
       </section>
 
       <ExploreNewspapers>
-        <div v-html="$t('Few examples of newsletters <br /> that are published on our platform')"></div>
+        <div v-html="$t('Few examples of newsletters <br /> that are published on our platform')" />
       </ExploreNewspapers>
 
       <section class="microsite--newsletters-are-in">
@@ -70,12 +70,12 @@
         <div class="microsite--newsletters-are-in--quotes">
           <blockquote class="quote-lupa">
             <p>
-              „Mohli byste namítnout, že e-mail vyšel z módy, ale třeba pro starší diváky 
-              je to důležitý kanál. Máme velký úspěch s nejrůznějšími newslettery pod 
-              značkou CNN a neustále přemýšlíme nad tím, jaké další by šly ještě 
+              „Mohli byste namítnout, že e-mail vyšel z módy, ale třeba pro starší diváky
+              je to důležitý kanál. Máme velký úspěch s nejrůznějšími newslettery pod
+              značkou CNN a neustále přemýšlíme nad tím, jaké další by šly ještě
               připravit,“ tvrdí digitální editor CNN Nick Thomson.
             </p>
-            
+
             <footer>
               <a href="https://www.lupa.cz/clanky/kdyz-web-a-mobil-nestaci-cnn-v-praze-ukazala-ze-chce-byt-uplne-vsude/" target="_blank">
                 <strong>
@@ -88,21 +88,21 @@
 
           <blockquote class="quote-finmag">
             <p>
-              Vydavatelé už před několika lety pochopili, že závislost na distribuci 
-              obsahu přes Facebook a Google je časem přivede na mizinu, a tak pro 
-              podporu čtenosti, zapojení a utužování čtenářské komunity začali 
-              experimentovat se (staro)novými distribučními platformami včetně 
-              newsletterů. New York Times v současnosti nabízejí přes 60 
-              nejrůznějších tematických newsletterů, od denních zpravodajských 
+              Vydavatelé už před několika lety pochopili, že závislost na distribuci
+              obsahu přes Facebook a Google je časem přivede na mizinu, a tak pro
+              podporu čtenosti, zapojení a utužování čtenářské komunity začali
+              experimentovat se (staro)novými distribučními platformami včetně
+              newsletterů. New York Times v současnosti nabízejí přes 60
+              nejrůznějších tematických newsletterů, od denních zpravodajských
               shrnutí přes týdenní specializované newslettery.
             </p>
 
             <p>
-              Podle webu Digiday měly NYT už v roce 2017 přes 13 milionů odběratelů svých 
-              newsletterů, za tři roky se jejich počet víc než zdvojnásobil. I další 
-              mediální domy nabízejí obrovské množství newsletterů (jen Washington Post 
-              jich má přes 70) a vedle nich existuje a stále se rozrůstá mnohem širší a 
-              zajímavější scéna individuálních newsletterů celebrit, novinářů, umělců, 
+              Podle webu Digiday měly NYT už v roce 2017 přes 13 milionů odběratelů svých
+              newsletterů, za tři roky se jejich počet víc než zdvojnásobil. I další
+              mediální domy nabízejí obrovské množství newsletterů (jen Washington Post
+              jich má přes 70) a vedle nich existuje a stále se rozrůstá mnohem širší a
+              zajímavější scéna individuálních newsletterů celebrit, novinářů, umělců,
               nezávislých publicistů i podivínů všeho druhu
             </p>
 
@@ -116,9 +116,9 @@
 
           <blockquote class="quote-missionorg">
             <p>
-              In an age where attention spans are shorter than ever and digital distractions 
-              have never been more rampant, it may seem strange that a relic from the 
-              internet’s early years has come back stronger than before but it 
+              In an age where attention spans are shorter than ever and digital distractions
+              have never been more rampant, it may seem strange that a relic from the
+              internet’s early years has come back stronger than before but it
               actually makes perfect sense the deeper you look into it.
             </p>
 
@@ -135,19 +135,19 @@
           <h3>{{ $t('Who for example relies on newsletters?') }}</h3>
 
           <a href="https://www.nytimes.com/newsletters" target="_blank">
-            <img src="~assets/microsite/new-york-times-logo.png" alt="New York Times"/>
+            <img src="~assets/microsite/new-york-times-logo.png" alt="New York Times">
           </a>
-          
+
           <a href="https://subscribe.washingtonpost.com/newsletters/#/newsletters" target="_blank">
-            <img src="~assets/microsite/washington-post-logo.svg" alt="The Washington Post"/>
+            <img src="~assets/microsite/washington-post-logo.svg" alt="The Washington Post">
           </a>
 
           <a href="https://edition.cnn.com/email/subscription" target="_blank">
-            <img src="~assets/microsite/cnn-logo.png" alt="CNN"/>
+            <img src="~assets/microsite/cnn-logo.png" alt="CNN">
           </a>
 
           <a href="https://finmag.penize.cz/newsletter" target="_blank">
-            <img src="~assets/microsite/finmag-logo.svg" alt="FinMag"/>
+            <img src="~assets/microsite/finmag-logo.svg" alt="FinMag">
           </a>
         </div>
       </section>
@@ -166,7 +166,7 @@
           different from the current not very successful attempts.
         </p>
         -->
-        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík">
         <strong>Marek Zouzalík</strong>
         <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
       </Quote>
@@ -189,11 +189,11 @@
             {{ $t('With us you can charge newsletters or ask readers for a voluntary contribution to get new income.') }}
           </li>
         </ul>
-       
-       <div>
-        <button @click="openRequestSolutionModal()">{{ $t('Request solution') }}</button>
-        <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">{{ $t('Download PDF brochure') }}</a>
-       </div>
+
+        <div>
+          <button @click="openRequestSolutionModal()">{{ $t('Request solution') }}</button>
+          <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">{{ $t('Download PDF brochure') }}</a>
+        </div>
 
       </section>
 
@@ -208,8 +208,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
 import FooterLinks from '@/components/microsite/FooterLinks'
@@ -229,26 +227,14 @@ export default {
     RequestSolutionModal
   },
 
-  head() {
-    return {
-      title: this.$t('Digital Publishing Platform for Publishers') +' – Kairly',
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.$t('Kairly is a digital publishing platform for publishers that offers a unique concept of paid content.') },
-      ]
-    }
-  },
-
-  data() {
+  data () {
     return {
       isRequestSolutionModalOpen: false,
     }
   },
 
   methods: {
-    openRequestSolutionModal() {
+    openRequestSolutionModal () {
       this.isRequestSolutionModalOpen = true
 
       this.$ga.event({
@@ -257,11 +243,24 @@ export default {
       })
     },
 
-    downloadPDF() {
+    downloadPDF () {
       this.$ga.event({
         eventCategory: 'Download PDF brochure',
         eventAction: 'Publisher'
       })
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Digital Publishing Platform for Publishers') + ' – Kairly',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$t('Kairly is a digital publishing platform for publishers that offers a unique concept of paid content.')
+        },
+      ]
     }
   }
 }
@@ -312,7 +311,7 @@ export default {
     padding: 0
     padding-bottom: $baseline / 2
 
-  > div  
+  > div
     display: grid
     grid-template-columns: 2fr 1fr
     max-width: 900px
@@ -388,7 +387,6 @@ export default {
     img
       width: 100%
 
-
 .journalists--hero--call-to-action
   display: flex
   flex-direction: column
@@ -404,7 +402,6 @@ export default {
     font-size: $fs--1
 
     color: $c-base
-      
 
 //- Section
 .microsite--section
@@ -514,8 +511,8 @@ export default {
 
       font-family: $ff-serif
       font-size: $fs-0
-      line-height: 1.6  
-      
+      line-height: 1.6
+
     p + p
       padding-top: $baseline
 
@@ -556,14 +553,13 @@ export default {
     @media (max-width: $mobile)
       grid-column: 1 / span 1
       grid-row: 3 / span 1
-    
 
 .microsite--newsletters-are-in--examples
   padding-bottom: $baseline
 
   @media (max-width: $mobile)
     padding: 0 $baseline/2 $baseline/2 $baseline/2
-  
+
   h3
     margin-bottom: $baseline
 

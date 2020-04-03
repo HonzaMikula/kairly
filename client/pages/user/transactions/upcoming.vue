@@ -4,7 +4,7 @@
       <tr>
         <th>{{ $t('Newspaper / Author') }}</th>
         <th>{{ $t('Date of upcoming payment') }}</th>
-        <th></th>
+        <th />
       </tr>
     </thead>
     <tbody>
@@ -22,8 +22,8 @@
         <template v-if="t.newspaper">
           <td class="newspaper">
             <nuxt-link :to="{name: 'author-newspaper', params: {author: t.newspaper.editor.id, newspaper: t.newspaper.name}}">
-              <img :src="t.newspaper.picture" :alt="t.newspaper.name" />
-              {{ t.newspaper.title}}
+              <img :src="t.newspaper.picture" :alt="t.newspaper.name">
+              {{ t.newspaper.title }}
             </nuxt-link>
           </td>
           <td>{{ fmtTime(t.to) }}</td>
@@ -48,20 +48,20 @@ import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscript
 export default {
   name: 'UpcomingTransactions',
 
-  head() {
-    return {
-      title: this.$t('Upcoming payments') + ' – Kairly'
-    }
-  },
-
   components: {
     AuthorPicture,
     AuthorSubscriptionButton,
     NewspaperSubscriptionButton,
   },
 
+  async fetch ({ store }) {
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
+    }
+  },
+
   computed: {
-    authorSubscriptions() {
+    authorSubscriptions () {
       const { authors } = this.$store.state.subscriptions
       return Object.values(authors).map(s => {
         return {
@@ -71,7 +71,7 @@ export default {
       })
     },
 
-    newspaperSubscriptions() {
+    newspaperSubscriptions () {
       const { newspapers } = this.$store.state.subscriptions
       return Object.entries(newspapers).map(([id, s]) => {
         return {
@@ -81,22 +81,21 @@ export default {
       })
     },
 
-    transactions() {
-      const { authors, newspapers } = this.$store.state.subscriptions
+    transactions () {
       const transactions = this.authorSubscriptions
         .filter(sub => {
-          if (sub.state !== 'active') return false
-          if (sub.donation !== null &&  parseFloat(sub.donation) > 0) return true
-          if (parseFloat(sub.author.price) > 0) return true
+          if (sub.state !== 'active') { return false }
+          if (sub.donation !== null && parseFloat(sub.donation) > 0) { return true }
+          if (parseFloat(sub.author.price) > 0) { return true }
           return false
         })
 
       this.newspaperSubscriptions.filter(sub => {
-          if (sub.state !== 'active') return false
-          if (sub.donation !== null &&  parseFloat(sub.donation) > 0) return true
-          if (parseFloat(sub.newspaper.price) > 0) return true
-          return false
-        })
+        if (sub.state !== 'active') { return false }
+        if (sub.donation !== null && parseFloat(sub.donation) > 0) { return true }
+        if (parseFloat(sub.newspaper.price) > 0) { return true }
+        return false
+      })
         .forEach(sub => { transactions.push(sub) })
 
       transactions.sort(sortBy('to'))
@@ -106,15 +105,15 @@ export default {
   },
 
   methods: {
-    fmtTime(datetime) {
+    fmtTime (datetime) {
       const format = this.$i18n.locale === 'cs' ? 'D.M.YYYY' : 'M/D/YYYY'
       return moment(datetime).format(format)
     }
   },
 
-  async fetch({ store }) {
-    if (store.state.auth.loggedIn) {
-      await store.dispatch('getSubscriptions')
+  head () {
+    return {
+      title: this.$t('Upcoming payments') + ' – Kairly'
     }
   }
 }

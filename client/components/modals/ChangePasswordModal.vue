@@ -14,7 +14,7 @@
         id="oldPassword"
         v-model="oldPassword"
         type="password"
-      />
+      >
     </div>
 
     <div>
@@ -23,7 +23,7 @@
         id="newPassword"
         v-model="newPassword1"
         type="password"
-      />
+      >
     </div>
 
     <div>
@@ -32,7 +32,7 @@
         id="newPassword2"
         v-model="newPassword2"
         type="password"
-      />
+      >
     </div>
 
     <template #footer>
@@ -51,19 +51,13 @@ import ModalMixin from '@/mixins/ModalMixin'
 export default {
   name: 'ChangePasswordModal',
 
-  head() {
-    return {
-      title: this.$t('Change password - Kairly')
-    }
-  },
-
   components: {
     DialogWindow
   },
 
   mixins: [ErrorHandler, ModalMixin],
 
-  data() {
+  data () {
     return {
       oldPassword: '',
       newPassword1: '',
@@ -77,23 +71,29 @@ export default {
       showSuccess: 'messages/success'
     }),
 
-    async submit() {
-      if (this.newPassword1 != this.newPassword2) {
+    async submit () {
+      if (this.newPassword1 !== this.newPassword2) {
         this.showError(this.$t("Password doesn't match"))
         return
       }
 
       this.showError(null)
       try {
-        const res = await this.$axios.post('/change-password', {
+        await this.$axios.post('/change-password', {
           oldPassword: this.oldPassword,
           newPassword: this.newPassword1
         })
-        this.showSuccess(this.$t("Password has been updated."))
+        this.showSuccess(this.$t('Password has been updated.'))
         this.closeModal()
       } catch (err) {
         this.handleError(err)
       }
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Change password - Kairly')
     }
   }
 }
@@ -108,7 +108,6 @@ export default {
   header
     h1
       padding: 0 $baseline
-
 
 .change-password-dialog main
   position: relative

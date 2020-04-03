@@ -14,7 +14,7 @@
         :key="idx"
         :src="source.url"
         :type="source.content_type"
-      />
+      >
     </video>
   </div>
 </template>
@@ -23,12 +23,14 @@
 const MAX_SIZE = 576
 
 export default {
-  name: 'tweet-attachment-video',
+  name: 'TweetAttachmentVideo',
 
-  props: ["item"],
+  props: {
+    item: Object
+  },
 
   computed: {
-    dim() {
+    dim () {
       const ar = this.item.video_info.aspect_ratio
       const dim1 = [MAX_SIZE, parseInt(MAX_SIZE / ar[0] * ar[1])]
       const dim2 = [parseInt(MAX_SIZE / ar[1] * ar[0]), MAX_SIZE]
@@ -49,5 +51,4 @@ export default {
     margin: 0 auto
     max-width: 100%
     max-height: 576px
-
 </style>

@@ -6,35 +6,33 @@
       </h2>
 
       <div class="post-body--content">
-        <div v-html="post.content.content"></div>
+        <div v-html="post.content.content" />
       </div>
     </div>
 
-    <template #page-controls><slot name="page-controls"></slot></template>
-    <template #global-controls><slot name="global-controls"></slot></template>
+    <template #page-controls><slot name="page-controls" /></template>
+    <template #global-controls><slot name="global-controls" /></template>
   </PostBase>
 </template>
 
 <script>
-import PostBase from './PostBase';
+import PostBase from './PostBase'
 
 export default {
   name: 'PostComment',
 
-  props: {
-    post: Object,
-  },
-
   components: {
     PostBase
+  },
+
+  props: {
+    post: Object,
   }
 }
 </script>
 
-
 <style lang="sass">
 @import './styles/components/article-perex'
-
 
 .comment > .post-body
   font-family: $ff-serif
@@ -76,9 +74,7 @@ export default {
     font-size: 15px
     line-height: 1.58
 
-
   +article-perex
-
 
 .editorial-post
   .timeline-post--comment--content

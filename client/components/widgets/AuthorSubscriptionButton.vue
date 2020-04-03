@@ -1,5 +1,6 @@
 <template>
   <button
+    v-b-tooltip
     class="author-subscription-button"
     :class="{
       'to-subscribe': !subscription,
@@ -7,7 +8,6 @@
       'is-canceled': state === 'canceled',
       'is-suspended': state === 'suspended',
     }"
-    v-b-tooltip
     :title="buttonTitle"
     @click="(ev) => { openModal(); $emit('click', ev)}"
   >
@@ -36,15 +36,15 @@ export default {
   },
 
   computed: {
-    subscription() {
+    subscription () {
       return this.$store.getters.getAuthorSubscription(this.author)
     },
 
-    state() {
+    state () {
       return this.subscription ? this.subscription.state : null
     },
 
-    buttonTitle() {
+    buttonTitle () {
       if (this.state === 'active') {
         return 'Change subscription'
       }
@@ -57,22 +57,22 @@ export default {
       return false
     },
 
-    price() {
+    price () {
       // todo use decimal types
-      let price =  ~~this.author.price.split('.')[0]
+      let price = ~~this.author.price.split('.')[0]
       if (this.subscription && this.subscription.donation) {
         price += ~~this.subscription.donation.split('.')[0]
       }
       return price
     },
 
-    priceWithCurrency() {
+    priceWithCurrency () {
       return `${this.price} Kč`
     },
   },
 
   methods: {
-    openModal() {
+    openModal () {
       document.activeElement.blur()
       this.$store.commit('modals/authorSubscription', this.author)
     }

@@ -11,20 +11,20 @@
 
     </div>
 
-    <section :class="`explore-${index}`" v-for="(category, index) in categories" :key="index">
+    <section v-for="(category, index) in categories" :key="index" :class="`explore-${index}`">
       <h2>{{ category.name }}</h2>
-        <AuthorWidget
-          v-for="author in category.authors.slice(0, LIMIT)"
-          :key="author.id"
-          :author="author"
-        />
+      <AuthorWidget
+        v-for="author in category.authors.slice(0, LIMIT)"
+        :key="author.id"
+        :author="author"
+      />
 
-        <button
-          v-if="category.authors.length > LIMIT"
-          @click="openCategoryModal(category)"
-        >
-          {{ $t('Show more') }}
-        </button>
+      <button
+        v-if="category.authors.length > LIMIT"
+        @click="openCategoryModal(category)"
+      >
+        {{ $t('Show more') }}
+      </button>
     </section>
 
     <portal to="explore-header">{{ tab.name }}</portal>
@@ -56,29 +56,7 @@ export default {
     ExploreModal
   },
 
-  head() {
-    const title = this.tab[this.$i18n.locale || 'en']
-    return {
-      title:  `${title} – Explore – Kairly`
-    }
-  },
-
-  data() {
-    return {
-      LIMIT: 7,
-      modalCategory: null,
-      isModalOpen: false
-    }
-  },
-
-  methods: {
-    openCategoryModal(category) {
-      this.modalCategory = category
-      this.isModalOpen = true
-    }
-  },
-
-  async asyncData({ app, store, params }) {
+  async asyncData ({ app, store, params }) {
     const tab = TABS.find(t => t.slug === params.tab)
 
     const { newspapers: newspapersIds, categories } = await app.$axios.$get(`/explore/${tab.slug}`)
@@ -99,6 +77,28 @@ export default {
       tab,
       newspapers,
       categories
+    }
+  },
+
+  data () {
+    return {
+      LIMIT: 7,
+      modalCategory: null,
+      isModalOpen: false
+    }
+  },
+
+  methods: {
+    openCategoryModal (category) {
+      this.modalCategory = category
+      this.isModalOpen = true
+    }
+  },
+
+  head () {
+    const title = this.tab[this.$i18n.locale || 'en']
+    return {
+      title: `${title} – Explore – Kairly`
     }
   }
 }
@@ -185,6 +185,5 @@ main.explore
     &:hover,
     &:focus
       background: darken($c-base, 10%)
-
 
 </style>

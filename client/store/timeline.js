@@ -12,26 +12,26 @@ export const state = () => ({
 })
 
 export const mutations = {
-  resetState(state) {
+  resetState (state) {
     state.today = {}
     state.hasNoActiveSubscriptions = false
     state.expandedIssues = {}
     state.timeline = {}
   },
-  invalidate(state) {
+  invalidate (state) {
     state.hasNoActiveSubscriptions = false
     state.timeline = {}
   },
-  received(state, { endpoint, data: { date, issues, links } }) {
+  received (state, { endpoint, data: { date, issues, links } }) {
     Vue.set(state.timeline, `${endpoint}|${date}`, { issues, links })
   },
-  hasNoActiveSubscriptions(state) {
+  hasNoActiveSubscriptions (state) {
     state.hasNoActiveSubscriptions = true
   },
-  today(state, { endpoint, date, validTo }) {
+  today (state, { endpoint, date, validTo }) {
     Vue.set(state.today, endpoint, { date, validTo })
   },
-  expandIssue(state, { issueId }) {
+  expandIssue (state, { issueId }) {
     state.expandedIssues = {
       ...state.expandedIssues,
       [issueId]: true
@@ -39,9 +39,8 @@ export const mutations = {
   },
 }
 
-
 export const actions = {
-  async load({ commit, state }, { endpoint='/timeline', date, cachedOnly=false}) {
+  async load ({ commit, state }, { endpoint = '/timeline', date, cachedOnly = false }) {
     let cacheKey = date ? `${endpoint}|${date}` : null
     // TODO check not only valid to but also change of hour or too old timeline
     // but this is not important now
@@ -59,7 +58,7 @@ export const actions = {
       return null
     }
 
-    const { status, data } = await this.$axios.get(endpoint, {params: {date}})
+    const { status, data } = await this.$axios.get(endpoint, { params: { date } })
 
     if (status === 204) {
       commit('hasNoActiveSubscriptions')
@@ -94,22 +93,22 @@ export const actions = {
     })
 
     if (data.recommended) {
-      data.recommended.forEach(id => commit('recommendedIssue', {id, value: true}))
+      data.recommended.forEach(id => commit('recommendedIssue', { id, value: true }))
     }
 
     if (endpoint === '/timeline' && !date) {
-      commit('today', {endpoint, date: data.date, validTo: data.validTo})
+      commit('today', { endpoint, date: data.date, validTo: data.validTo })
     }
 
     delete data.authors
     delete data.newspapers
 
-    commit('received', {endpoint, data})
+    commit('received', { endpoint, data })
 
     return data
   },
 
-  expandIssue({ commit }, issueId) {
+  expandIssue ({ commit }, issueId) {
     commit('expandIssue', { issueId })
 
     this.$ga.event({
@@ -118,4 +117,3 @@ export const actions = {
     })
   }
 }
-

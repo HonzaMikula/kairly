@@ -24,23 +24,23 @@ import ModalMixin from '@/mixins/ModalMixin'
 export default {
   name: 'ExploreModal',
 
-  props: {
-    category: Object,
-    limit: Number
-  },
-
-  head() {
-    return {
-      title: this.category ? this.category.name : this.$t('Explore')
-    }
-  },
-
   components: {
     DialogWindow,
     AuthorWidget
   },
 
-  mixins: [ModalMixin]
+  mixins: [ModalMixin],
+
+  props: {
+    category: Object,
+    limit: Number
+  },
+
+  head () {
+    return {
+      title: this.category ? this.category.name : this.$t('Explore')
+    }
+  }
 }
 </script>
 
@@ -57,6 +57,5 @@ export default {
 
   @media (max-width: $mobile)
     padding: $baseline / 2 0
-
 
 </style>

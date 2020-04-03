@@ -1,6 +1,5 @@
 
-
-export function flattenPosts(layout) {
+export function flattenPosts (layout) {
   const posts = []
   layout.forEach(item => {
     if (item.type === 'box') {

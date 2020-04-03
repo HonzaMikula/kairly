@@ -11,10 +11,9 @@
 </template>
 
 <script>
-import CKEditor from '@ckeditor/ckeditor5-vue';
-import BalloonBlockEditor from '@ckeditor/ckeditor5-build-balloon-block';
-//import BalloonBlockEditor from 'ckeditor-build-kairly'
-
+import CKEditor from '@ckeditor/ckeditor5-vue'
+import BalloonBlockEditor from '@ckeditor/ckeditor5-build-balloon-block'
+// import BalloonBlockEditor from 'ckeditor-build-kairly'
 
 // const defaultOptions = {
 //   toolbar: {
@@ -28,7 +27,11 @@ import BalloonBlockEditor from '@ckeditor/ckeditor5-build-balloon-block';
 const defaultOptions = {}
 
 export default {
-  name: 'rich-editor',
+  name: 'RichEditor',
+
+  components: {
+    ckeditor: CKEditor.component
+  },
 
   props: {
     value: [String],
@@ -38,17 +41,13 @@ export default {
     }
   },
 
-  components: {
-    ckeditor: CKEditor.component
-  },
-
-  data() {
+  data () {
     return {
       editor: BalloonBlockEditor,
-      //content: this.value,
-      editorConfig: {...defaultOptions, ...this.options},
+      // content: this.value,
+      editorConfig: { ...defaultOptions, ...this.options },
       content: '',
-      //editorConfig: {}
+      // editorConfig: {}
     }
   }
 }

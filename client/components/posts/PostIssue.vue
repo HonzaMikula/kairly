@@ -4,7 +4,7 @@
       <h2><a :href="post.newspaper.fullName">{{ post.title }}</a></h2>
       <picture>
         <a :href="post.newspaper.fullName">
-          <img :src="post.newspaper.picture"/>
+          <img :src="post.newspaper.picture">
         </a>
       </picture>
       <p>{{ post.newspaper.description }}</p>
@@ -16,7 +16,10 @@
 
 export default {
   name: 'PostIssue',
-  props: ["post"]
+
+  props: {
+    post: Object
+  }
 }
 </script>
 
@@ -28,7 +31,6 @@ post--issue
   width: 576px
 
   background: #fff
-
 
   //- content
   > div

@@ -11,13 +11,13 @@ export default ({ req, app, store }) => {
     locale: store.state.locale,
     fallbackLocale: 'en',
     messages: {
-      'en': require('~/po/en.json'),
-      'cs': require('~/po/cs.json')
+      en: require('~/po/en.json'),
+      cs: require('~/po/cs.json')
     },
     silentFallbackWarn: true
   })
 
-  app.setLocale = function(locale) {
+  app.setLocale = function (locale) {
     store.commit('setLang', locale)
     app.i18n.locale = locale
     moment.locale(locale)

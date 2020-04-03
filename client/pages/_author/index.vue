@@ -1,7 +1,8 @@
 <template>
   <AppLayout :name="$t('Author\'s profile')">
-    <div class="author-detail-view"
+    <div
       v-infinite-scroll="loadPosts"
+      class="author-detail-view"
       infinite-scroll-disabled="loadingPosts"
       infinite-scroll-distance="100"
       itemtype="https://schema.org/Person"
@@ -9,33 +10,34 @@
     >
       <header class="author-detail--header">
         <picture>
-           <AuthorPicture itemprop="image" size="big" :author="author" />
+          <AuthorPicture itemprop="image" size="big" :author="author" />
         </picture>
 
         <h1 itemprop="name">{{ author.name }}</h1>
 
         <p itemprop="description">{{ author.bio }}</p>
 
-        <div class="author-detail--subscribe" v-if="loggedIn">
+        <div v-if="loggedIn" class="author-detail--subscribe">
           <AuthorSubscriptionButton
             :author="author"
           />
 
           <nuxt-link
-            class="edit-profile"
             v-if="user && author.id == user.id"
-            to="/user/settings">
+            class="edit-profile"
+            to="/user/settings"
+          >
             {{ $t('Edit profile') }}
           </nuxt-link>
         </div>
       </header>
 
-      <div class="author-detail--newspapers" v-if="newspapers.length">
+      <div v-if="newspapers.length" class="author-detail--newspapers">
         <div :class="{'show-all': showAllNewspapers}">
           <NewspaperWidget
             v-for="newspaper in visibleNewspapers"
             :key="newspaper.fullName"
-            v-bind:newspaper="newspaper"
+            :newspaper="newspaper"
           />
         </div>
 
@@ -45,7 +47,7 @@
         >{{ !showAllNewspapers ? this.$t('Show all newsletters') : this.$t('Hide newsletters') }}</button>
       </div>
 
-      <div class="author-detail--posts" v-if="posts.length">
+      <div v-if="posts.length" class="author-detail--posts">
         <PostWrapper
           v-for="post in posts"
           :key="post.id"
@@ -53,7 +55,7 @@
         />
       </div>
 
-      <div class="author-detail--empty" v-if="!newspapers.length && !posts.length && !loadingPosts">
+      <div v-if="!newspapers.length && !posts.length && !loadingPosts" class="author-detail--empty">
         <template v-if="user.id !== author.id">
           <p>{{ $t("User didn't write any posts and didn't start any newspaper.") }}</p>
         </template>
@@ -65,62 +67,24 @@
         </template>
       </div>
 
-      <loading-spinner v-if="loadingPosts"></loading-spinner>
+      <loading-spinner v-if="loadingPosts" />
     </div>
   </AppLayout>
 </template>
 
-
 <script>
-import { mapMutations, mapState } from "vuex"
-import { errorToParams } from "@/utils/errors"
+import { mapState } from 'vuex'
+import { errorToParams } from '@/utils/errors'
 
-import AppLayout from "@/components/layout/AppLayout"
+import AppLayout from '@/components/layout/AppLayout'
 import AuthorPicture from '@/components/widgets/AuthorPicture'
-import AuthorSubscriptionButton from "@/components/widgets/AuthorSubscriptionButton"
-import NewspaperWidget from "@/components/widgets/NewspaperWidget"
-import PostWrapper from "@/components/PostWrapper"
+import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionButton'
+import NewspaperWidget from '@/components/widgets/NewspaperWidget'
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: "AuthorDetail",
+  name: 'AuthorDetail',
   auth: false,
-
-  head() {
-    const { id, name, bio, picture } = this.author;
-    return {
-      title: `${name} – Kairly`,
-      meta: [
-        { hid: "description", name: "description", content: bio },
-        { hid: `og:title`, property: "og:title", content: `${name} – Kairly` },
-        { hid: `og:description`, property: "og:description", content: bio },
-        { hid: `og:image`, property: "og:image", content: picture },
-        { hid: `og:image:alt`, property: "og:image:alt", content: name },
-        { hid: `og:type`, property: "og:type", content: "profile" },
-        {
-          hid: `og:url`,
-          property: "og:url",
-          content: `https://kairly.com/${id}`
-        },
-        { hid: `twitter:card`, property: "twitter:card", content: "summary" },
-        {
-          hid: `twitter:site`,
-          property: "twitter:site",
-          content: "@kairlynews"
-        },
-        {
-          hid: `twitter:title`,
-          property: "twitter:title",
-          content: `${name} – Kairly`
-        },
-        {
-          hid: `twitter:description`,
-          property: "twitter:description",
-          content: bio
-        },
-        { hid: `twitter:image`, property: "twitter:image", content: picture }
-      ]
-    };
-  },
 
   components: {
     AppLayout,
@@ -130,10 +94,37 @@ export default {
     PostWrapper,
   },
 
-  data() {
+  async asyncData ({ app, store, params: { author: authorId }, error }) {
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
+    }
+
+    try {
+      // data is { author, newspapers } pbject
+      const data = await store.dispatch('getAuthor', authorId)
+
+      if (process.server) {
+        const { posts, cursor } = await store.dispatch('loadAuthorPosts', { authorId, cursor: 0 })
+        data.posts = posts
+        data.cursor = cursor
+        data.loadingPosts = false
+      } else {
+        // load all in created function to make transition faster
+        data.posts = []
+        data.cursor = 0
+        data.loadingPosts = true
+      }
+
+      return data
+    } catch (err) {
+      error(errorToParams(err))
+    }
+  },
+
+  data () {
     return {
       showAllNewspapers: false
-    };
+    }
   },
 
   computed: {
@@ -142,41 +133,59 @@ export default {
       user: state => state.auth.user
     }),
 
-    visibleNewspapers() {
+    visibleNewspapers () {
       return this.showAllNewspapers
         ? this.newspapers
-        : this.newspapers.slice(0, 3);
+        : this.newspapers.slice(0, 3)
     },
   },
 
+  mounted () {
+    if (this.cursor === 0) {
+      this.loadPosts()
+    }
+
+    window.addEventListener('resize', this.onResize)
+
+    this.onResize() // and recompute for initial page
+
+    if (this.loggedIn) {
+      this.$store.dispatch('backlog/loadUserBacklog')
+    }
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('resize', this.onResize)
+  },
+
   methods: {
-    unsubscribe() {
-      this.$store.dispatch("unsubscribeAuthor", {
+    unsubscribe () {
+      this.$store.dispatch('unsubscribeAuthor', {
         author: this.author
-      });
-      document.activeElement.blur();
+      })
+      document.activeElement.blur()
     },
 
-    renewSubscription() {
-      this.$store.dispatch("subscribeAuthor", {
+    renewSubscription () {
+      this.$store.dispatch('subscribeAuthor', {
         author: this.author
-      });
-      document.activeElement.blur();
+      })
+      document.activeElement.blur()
     },
 
-    toggleNewspapers() {
-      this.showAllNewspapers = !this.showAllNewspapers;
+    toggleNewspapers () {
+      this.showAllNewspapers = !this.showAllNewspapers
     },
 
-    async loadPosts() {
+    async loadPosts () {
       if (this.cursor === null) {
-        return;
+        return
       }
-      const { author: authorId } = this.$route.params;
+      const { author: authorId } = this.$route.params
 
-      this.loadingPosts = true;
+      this.loadingPosts = true
 
-      const { posts, cursor } = await this.$store.dispatch('loadAuthorPosts', { authorId, cursor: this.cursor})
+      const { posts, cursor } = await this.$store.dispatch('loadAuthorPosts', { authorId, cursor: this.cursor })
 
       posts.forEach(post => this.posts.push(post))
       this.cursor = cursor
@@ -184,8 +193,8 @@ export default {
     },
 
     // can be called on client side only
-    onResize() {
-      const {matches: isMobile} = window.matchMedia("(max-width: 640px)")
+    onResize () {
+      const { matches: isMobile } = window.matchMedia('(max-width: 640px)')
 
       if (isMobile === this._isMobile) {
         return
@@ -205,57 +214,48 @@ export default {
     }
   },
 
-  async asyncData({ app, store, params: { author: authorId }, error }) {
-    if (store.state.auth.loggedIn) {
-      await store.dispatch("getSubscriptions");
+  head () {
+    const { id, name, bio, picture } = this.author
+    return {
+      title: `${name} – Kairly`,
+      meta: [
+        { hid: 'description', name: 'description', content: bio },
+        { hid: 'og:title', property: 'og:title', content: `${name} – Kairly` },
+        { hid: 'og:description', property: 'og:description', content: bio },
+        { hid: 'og:image', property: 'og:image', content: picture },
+        { hid: 'og:image:alt', property: 'og:image:alt', content: name },
+        { hid: 'og:type', property: 'og:type', content: 'profile' },
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: `https://kairly.com/${id}`
+        },
+        { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
+        {
+          hid: 'twitter:site',
+          property: 'twitter:site',
+          content: '@kairlynews'
+        },
+        {
+          hid: 'twitter:title',
+          property: 'twitter:title',
+          content: `${name} – Kairly`
+        },
+        {
+          hid: 'twitter:description',
+          property: 'twitter:description',
+          content: bio
+        },
+        { hid: 'twitter:image', property: 'twitter:image', content: picture }
+      ]
     }
-
-    try {
-      // data is { author, newspapers } pbject
-      const data = await store.dispatch("getAuthor", authorId);
-
-      if (process.server) {
-        const { posts, cursor } = await store.dispatch('loadAuthorPosts', { authorId, cursor: 0})
-        data.posts = posts;
-        data.cursor = cursor;
-        data.loadingPosts = false;
-      } else {
-        // load all in created function to make transition faster
-        data.posts = [];
-        data.cursor = 0;
-        data.loadingPosts = true;
-      }
-
-      return data;
-    } catch (err) {
-      error(errorToParams(err));
-    }
-  },
-
-  mounted() {
-    if (this.cursor === 0) {
-      this.loadPosts()
-    }
-
-    window.addEventListener('resize', this.onResize)
-
-    this.onResize() // and recompute for initial page
-
-    if (this.loggedIn) {
-      this.$store.dispatch('backlog/loadUserBacklog')
-    }
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize)
   }
-};
+}
 </script>
 
 <style lang="sass">
 //- Imports
 @import './styles/components/buttons'
-
 
 //- AUTHOR DETAIL -//
 
@@ -267,7 +267,6 @@ export default {
 
   @media (max-width: $mobile)
     padding-top: 0
-
 
 //- Header
 .author-detail--header
@@ -331,7 +330,6 @@ export default {
       width: $baseline * 3
 
     object-fit: cover
-
 
 //- Subsribe
 .author-detail--subscribe

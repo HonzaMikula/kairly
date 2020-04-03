@@ -3,15 +3,14 @@ export const state = () => ({
   success: null,
 })
 
-
 export const mutations = {
-  error(state, msg) {
+  error (state, msg) {
     state.error = msg
   },
-  success(state, msg) {
+  success (state, msg) {
     state.success = msg
   },
-  clear(state) {
+  clear (state) {
     state.success = null
     state.error = null
   }

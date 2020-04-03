@@ -10,7 +10,7 @@
 
     <div class="explore-widget--crossroad">
       <div v-for="category in exploreNewspapers" :key="category.name">
-        <h3>{{category.name}}</h3>
+        <h3>{{ category.name }}</h3>
         <ul>
           <li v-for="item in category.newspapers" :key="item.id" :class="{'is-selected': item.id == selectedNewspaper}">
             <a :href="item.id" @click.prevent="showNewspaper(item.id)">{{ item.name }}</a>
@@ -21,15 +21,16 @@
 
     <div
       v-if="issue"
-      class="explore-widget--issue">
-      <nav class="explore-widget--issue--navigation" v-if="links.prev || links.next">
+      class="explore-widget--issue"
+    >
+      <nav v-if="links.prev || links.next" class="explore-widget--issue--navigation">
         <button
           v-if="links.prev"
           v-b-tooltip
           :title="$t('Previous issue')"
           class="previous"
           @click="showNewspaper(selectedNewspaper, links.prev)"
-        ></button>
+        />
 
         <button
           v-if="links.next"
@@ -37,23 +38,23 @@
           :title="$t('Next issue')"
           class="next"
           @click="showNewspaper(selectedNewspaper, links.next)"
-        ></button>
+        />
       </nav>
 
-      <IssueWrapper :issue="issue" showTail></IssueWrapper>
+      <IssueWrapper :issue="issue" show-tail />
 
-      <div class="explore-widget--issue--subscribe" v-if="loggedIn">
+      <div v-if="loggedIn" class="explore-widget--issue--subscribe">
         <NewspaperSubscriptionButton :newspaper="newspaper" />
         <p>{{ periodicity }}</p>
       </div>
 
-     </div>
+    </div>
   </section>
 </template>
 
 <script>
-import NEWSPAPERS from '@/topNewspapers'
 import { mapState } from 'vuex'
+import NEWSPAPERS from '@/topNewspapers'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import IssueWrapper from '@/components/IssueWrapper'
 import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
@@ -68,17 +69,7 @@ export default {
 
   mixins: [PeriodicityMixin],
 
-  computed: {
-    ...mapState({
-      loggedIn: state => state.auth.loggedIn
-    }),
-
-    periodicity() {
-      return this.getPeriodicityLabel(this.newspaper.periodicity)
-    },
-  },
-
-  data() {
+  data () {
     return {
       newspaper: null,
       newspapers: null,
@@ -90,8 +81,28 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
+    periodicity () {
+      return this.getPeriodicityLabel(this.newspaper.periodicity)
+    },
+  },
+
+  async created () {
+    const { newspaper, issue, links } = await this.$store.dispatch('getNewspaperDetail', {
+      newspaperId: this.selectedNewspaper
+    })
+
+    this.newspaper = newspaper
+    this.issue = issue
+    this.links = links
+  },
+
   methods: {
-    async showNewspaper(newspaperId, issueId) {
+    async showNewspaper (newspaperId, issueId) {
       this.selectedNewspaper = newspaperId
 
       if (issueId) {
@@ -105,7 +116,7 @@ export default {
       })
 
       const { newspaper, issue, links } = await this.$store.dispatch('getNewspaperDetail', {
-        newspaperId: newspaperId,
+        newspaperId,
         issue: issueId
       })
       this.newspaper = newspaper
@@ -113,7 +124,7 @@ export default {
       this.links = links
     },
 
-    showMore() {
+    showMore () {
       this.expandNewspaper = true
 
       this.$ga.event({
@@ -122,16 +133,6 @@ export default {
         eventLabel: this.selectedNewspaper
       })
     }
-  },
-
-  async created() {
-    const { newspaper, issue, links } = await this.$store.dispatch('getNewspaperDetail', {
-      newspaperId: this.selectedNewspaper
-    })
-
-    this.newspaper = newspaper
-    this.issue = issue
-    this.links = links
   }
 
 }
@@ -140,7 +141,6 @@ export default {
 <style lang="sass">
 //- Imports
 @import './styles/components/buttons'
-
 
 .explore-widget-view
   display: grid
@@ -188,7 +188,6 @@ export default {
 
     @media (max-width: $mobile)
       min-width: 200px
-
 
   h3
     margin-bottom: $baseline / 2

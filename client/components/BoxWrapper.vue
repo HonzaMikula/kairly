@@ -6,9 +6,9 @@
           v-for="(post, postIndex) in col.posts"
           :key="`${colIndex}-${post.id}`"
           :post="post"
-          :typeOverride="typeOverride"
+          :type-override="typeOverride"
           @close-editor="p => $emit('close-editor', p)"
-        > 
+        >
           <template #page-controls>
             <slot
               name="page-controls"
@@ -16,7 +16,7 @@
               :postIndex="postIndex"
               :column="col"
               :columnIndex="colIndex"
-            ></slot>
+            />
           </template>
         </PostWrapper>
       </template>
@@ -26,27 +26,26 @@
         name="empty-box"
         :column="col"
         :columnIndex="colIndex"
-       />
+      />
     </div>
 
-    <slot name="aside"></slot>
+    <slot name="aside" />
   </div>
 </template>
 
 <script>
-import PostWrapper from "@/components/PostWrapper";
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: "BoxWrapper",
+  components: {
+    PostWrapper,
+  },
+
   props: {
     post: Object,
     typeOverride: Object // override component type is set, value is map {id: component}
-  },
-
-  components: {
-    PostWrapper,
   }
-};
+}
 </script>
 
 <style lang="sass">

@@ -25,17 +25,14 @@ import { mapState } from 'vuex'
 
 import AppLayout from '@/components/layout/AppLayout'
 
-
 export default {
   name: 'AddCredit',
 
-  head() {
-    return {
-      title: this.$t('Buy credits') +' – Kairly'
-    }
+  components: {
+    AppLayout,
   },
 
-  data() {
+  data () {
     return {
       btnDisabled: false
     }
@@ -45,12 +42,14 @@ export default {
     user: state => state.auth.user,
   }),
 
-  components: {
-    AppLayout,
+  beforeDestroy () {
+    if (this.timer) {
+      clearTimeout(this.timer)
+    }
   },
 
   methods: {
-    async requestCredits() {
+    async requestCredits () {
       this.btnDisabled = true
       if (this.user.credits < 2500) {
         const { credits } = await this.$axios.$post('/buy-credits')
@@ -65,9 +64,9 @@ export default {
     }
   },
 
-  beforeDestroy() {
-    if (this.timer) {
-      clearTimeout(this.timer)
+  head () {
+    return {
+      title: this.$t('Buy credits') + ' – Kairly'
     }
   }
 }

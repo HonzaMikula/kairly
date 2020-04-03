@@ -1,25 +1,17 @@
 <template>
   <AppLayout :name="$t('Write article')">
     <div class="write-article-view">
-      <EditArticle :buttonTitle="$t('Save a draft')" @submit="createPost" />
+      <EditArticle :button-title="$t('Save a draft')" @submit="createPost" />
     </div>
   </AppLayout>
 </template>
 
-
 <script>
-import { mapActions, mapState } from 'vuex'
 import AppLayout from '@/components/layout/AppLayout'
 import EditArticle from '@/components/editor/EditArticle'
 
 export default {
   name: 'CreateArticle',
-
-  head() {
-    return {
-      title: this.$t('Write an Article – Kairly')
-    }
-  },
 
   components: {
     AppLayout,
@@ -27,9 +19,15 @@ export default {
   },
 
   methods: {
-    async createPost(data) {
-      const { post } = await this.$axios.$post(`/drafts`, data)
-      this.$router.push("/posts")
+    async createPost (data) {
+      await this.$axios.$post('/drafts', data)
+      this.$router.push('/posts')
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Write an Article – Kairly')
     }
   }
 }

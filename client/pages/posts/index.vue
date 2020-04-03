@@ -10,12 +10,12 @@
           <PostWrapper
             :post="post"
           >
-            <template #page-controls v-if="post.draft">
+            <template v-if="post.draft" #page-controls>
               <button @click="openPublishDialog(post)">{{ $t('Publish') }}</button>
 
               <button-icon
-                class="edit"
                 v-b-tooltip
+                class="edit"
                 :title="$t('Edit post')"
                 tabindex="0"
                 role="button"
@@ -23,8 +23,8 @@
               />
 
               <button-icon
-                class="remove"
                 v-b-tooltip
+                class="remove"
                 :title="$t('Delete post')"
                 tabindex="0"
                 role="button"
@@ -58,12 +58,6 @@ import EmptyPostPlaceholder from '@/components/editor/EmptyPostPlaceholder'
 export default {
   name: 'Drafts',
 
-  head() {
-    return {
-      title: this.$t('Draft Posts – Kairly')
-    }
-  },
-
   components: {
     AppLayout,
     PostWrapper,
@@ -73,7 +67,13 @@ export default {
 
   mixins: [ErrorHandler],
 
-  data() {
+  async asyncData ({ store }) {
+    return {
+      posts: await store.dispatch('getDrafts')
+    }
+  },
+
+  data () {
     return {
       isPublishPostDialogOpen: null,
       modalPost: null,
@@ -88,8 +88,8 @@ export default {
   },
 
   methods: {
-    async deletePost(post) {
-      if (confirm("Are you sure?")) {
+    async deletePost (post) {
+      if (confirm('Are you sure?')) {
         await this.$axios.$delete(`/drafts/${post.id}`)
         const idx = this.posts.findIndex(p => p.id === post.id)
         if (idx !== -1) {
@@ -98,7 +98,7 @@ export default {
       }
     },
 
-    async openPublishDialog(post) {
+    async openPublishDialog (post) {
       const { price: fairPrice } = await this.$axios.$get(`/drafts/${post.id}/fair-price`)
 
       this.modalPrice = fairPrice
@@ -106,7 +106,7 @@ export default {
       this.isPublishPostDialogOpen = true
     },
 
-    async publishPost(price) {
+    async publishPost (price) {
       const post = this.modalPost
       try {
         await this.$axios.$post(`/drafts/${post.id}/publish`, { price })
@@ -118,11 +118,11 @@ export default {
     }
   },
 
-  async asyncData({ store }) {
+  head () {
     return {
-      posts: await store.dispatch('getDrafts')
+      title: this.$t('Draft Posts – Kairly')
     }
-  }
+  },
 }
 </script>
 

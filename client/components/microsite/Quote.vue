@@ -3,10 +3,10 @@
     <h2 v-if="heading">{{ heading }}</h2>
 
     <blockquote>
-      <div v-html="quote"></div>
+      <div v-html="quote" />
       <footer>
         <slot>
-          <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+          <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík">
           <strong>Marek Zouzalík</strong>
           <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
         </slot>
@@ -85,7 +85,6 @@ export default {
 
         content: fa-content($fa-var-quote-right)
 
-
     footer
       display: flex
 
@@ -128,7 +127,5 @@ export default {
           height: $baseline * 2
           margin-right: 0
           width: $baseline * 2
-
-
 
 </style>

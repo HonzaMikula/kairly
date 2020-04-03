@@ -2,7 +2,7 @@
   <compotent
     :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
     :post="post"
-    :typeOverride="typeOverride"
+    :type-override="typeOverride"
     @click.native="toggleMobileControls"
     @close-editor="closeEditor"
   >
@@ -42,8 +42,8 @@
       <template v-if="column">
         <button-icon
           v-if="postIndex > 0"
-          class="up"
           v-b-tooltip
+          class="up"
           tabindex="0"
           role="button"
           :title="$t('Move tweet up')"
@@ -51,16 +51,16 @@
         />
         <button-icon
           v-if="postIndex < column.posts.length - 1"
-          class="down"
           v-b-tooltip
+          class="down"
           tabindex="0"
           role="button"
           :title="$t('Move tweet down')"
           @click="moveDownInColumn(columnIndex, postIndex)"
         />
         <button-icon
-          class="level-up"
           v-b-tooltip
+          class="level-up"
           tabindex="0"
           role="button"
           :title="$t('Remove from column')"
@@ -74,32 +74,32 @@
         <div class="newspaper-backlog-controls--arrows">
 
           <div class="newspaper-backlog-controls--arrows--checkbox">
-            <input type="checkbox" v-model="postSelection" />
+            <input v-model="postSelection" type="checkbox">
           </div>
 
-          <div class="newspaper-backlog-controls--arrows--controls" v-if="postSelection">
+          <div v-if="postSelection" class="newspaper-backlog-controls--arrows--controls">
             <button
-              class="up"
               :id="`backlog-controls-up-${post.id}`"
-              @click.stop="moveUp()"
+              class="up"
               :disabled="!canMoveUp"
-            ></button>
+              @click.stop="moveUp()"
+            />
 
             <button
-              class="down"
               :id="`backlog-controls-down-${post.id}`"
-              @click.stop="moveDown()"
+              class="down"
               :disabled="!canMoveDown"
-            ></button>
+              @click.stop="moveDown()"
+            />
           </div>
         </div>
 
         <div class="newspaper-backlog-controls--options">
           <template v-if="post.type !== 'box' && post.type !== 'header'">
             <button
-              class="change-layout"
               :id="`change-layout-${post.id}`"
               v-b-tooltip
+              class="change-layout"
               :title="$t('Change layout')"
               @click.stop
             />
@@ -132,19 +132,19 @@
             <div class="newspaper-backlog-controls--options--columns">
               <template v-for="(icon, colIndex) in columnIcons">
                 <button
-                  :class="icon"
                   :id="`backlog-controls-column-options-${post.id}-${colIndex}`"
+                  :key="`btn-${colIndex}`"
                   v-b-tooltip
+                  :class="icon"
                   :title="$t('Column') + ' ' + (colIndex + 1)"
                   @click.stop
-                  :key="`btn-${colIndex}`"
                 />
 
                 <b-popover
+                  :key="`btn-popover-${colIndex}`"
                   :target="`backlog-controls-column-options-${post.id}-${colIndex}`"
                   placement="bottomleft"
                   triggers="click blur"
-                  :key="`btn-popover-${colIndex}`"
                   @click.stop
                 >
                   <ul>
@@ -173,10 +173,10 @@
             </div>
 
             <button
-              class="menu"
-              v-b-tooltip
-              :title="$t('Options')"
               :id="`backlog-controls-layout-options-${post.id}`"
+              v-b-tooltip
+              class="menu"
+              :title="$t('Options')"
               @click.stop
             />
 
@@ -217,22 +217,18 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { mapActions } from "vuex";
-import { BPopover } from "bootstrap-vue";
+import Vue from 'vue'
+import { BPopover } from 'bootstrap-vue'
 
-
-import BoxWrapper from "@/components/BoxWrapper";
-import CommentEditor from "@/components/editor/backlog/CommentEditor";
-import EmptyColumnPlaceholder from "@/components/posts/EmptyColumnPlaceholder";
+import BoxWrapper from '@/components/BoxWrapper'
+import CommentEditor from '@/components/editor/backlog/CommentEditor'
+import EmptyColumnPlaceholder from '@/components/posts/EmptyColumnPlaceholder'
 import ErrorHandler from '@/mixins/ErrorHandler'
-import PostsSelection from "@/components/editor/backlog/PostsSelection";
-import PostWrapper from "@/components/PostWrapper";
+import PostsSelection from '@/components/editor/backlog/PostsSelection'
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: "NewspaperBacklogBox",
-
-  mixins: [ErrorHandler],
+  name: 'NewspaperBacklogBox',
 
   components: {
     EmptyColumnPlaceholder,
@@ -243,6 +239,8 @@ export default {
     BPopover,
   },
 
+  mixins: [ErrorHandler],
+
   props: {
     newspaper: Object,
     post: Object,
@@ -252,7 +250,7 @@ export default {
     index: Number
   },
 
-  data() {
+  data () {
     return {
       mobileControls: false,
       editedColumn: null,
@@ -261,22 +259,22 @@ export default {
   },
 
   computed: {
-    columnIcons() {
-      if (this.post.type !== "box") {
-        return [];
+    columnIcons () {
+      if (this.post.type !== 'box') {
+        return []
       }
-      if (this.post.css === "cols-1-1-1") {
-        return ["menu-left-col", "menu-middle-col", "menu-right-col"];
+      if (this.post.css === 'cols-1-1-1') {
+        return ['menu-left-col', 'menu-middle-col', 'menu-right-col']
       }
-      return ["menu-left-col", "menu-right-col"];
+      return ['menu-left-col', 'menu-right-col']
     },
 
     postSelection: {
-      get() {
+      get () {
         return this.$store.state.backlog.selection[this.post.id]
       },
 
-      set(value) {
+      set (value) {
         if (value) {
           this.$store.commit('backlog/select', this.post.id)
         } else {
@@ -285,138 +283,151 @@ export default {
       }
     },
 
-    isAdmin() {
-      const { user } = this.$store.state.auth;
-      return user.isAdmin;
+    isAdmin () {
+      const { user } = this.$store.state.auth
+      return user.isAdmin
     }
   },
 
+  mounted () {
+    this._onSelectionOpen = postId => {
+      if (this.post.id !== postId) {
+        this.closePostSelection()
+      }
+    }
+    this.$root.$on('post-selection-open', this._onSelectionOpen)
+  },
+
+  beforeDestroy () {
+    this.$root.$off('post-selection-open', this._onSelectionOpen)
+  },
+
   methods: {
-    toggleMobileControls() {
-      this.mobileControls = !this.mobileControls;
+    toggleMobileControls () {
+      this.mobileControls = !this.mobileControls
     },
 
-    addToColumn({ post, source, columnIndex = null }) {
-      const columns = [...this.post.columns];
+    addToColumn ({ post, source, columnIndex = null }) {
+      const columns = [...this.post.columns]
       if (columnIndex === null) {
-        columnIndex = this.editedColumn;
+        columnIndex = this.editedColumn
       }
-      columns[columnIndex].posts.push({ id: post.id, type: "post" });
+      columns[columnIndex].posts.push({ id: post.id, type: 'post' })
       this.setBacklogItem({
         ...this.post,
         columns
-      });
+      })
       if (source) {
-        this.$store.commit("backlog/remove", {
+        this.$store.commit('backlog/remove', {
           newspaper: this.newspaper,
           source,
           postId: post.id
-        });
+        })
       }
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    removeFromColumn({ post, source, index = 0 }) {
-      const columns = [];
+    removeFromColumn ({ post, source, index = 0 }) {
+      const columns = []
       this.post.columns.forEach(col => {
         columns.push({
           ...col,
           posts: col.posts.filter(p => p.id !== post.id)
-        });
-      });
+        })
+      })
       this.setBacklogItem({
         ...this.post,
         columns
-      });
-      this.$store.commit("backlog/splice", {
+      })
+      this.$store.commit('backlog/splice', {
         newspaper: this.newspaper,
         target: source,
-        items: [{ id: post.id, type: "post" }],
+        items: [{ id: post.id, type: 'post' }],
         index,
         deleteCount: 0
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    editComment(postId) {
-      Vue.set(this.typeOverride, postId, CommentEditor);
+    editComment (postId) {
+      Vue.set(this.typeOverride, postId, CommentEditor)
     },
 
-    closeEditor(postId) {
-      Vue.delete(this.typeOverride, postId);
+    closeEditor (postId) {
+      Vue.delete(this.typeOverride, postId)
     },
 
-    moveUpInColumn(columnIndex, postIndex) {
+    moveUpInColumn (columnIndex, postIndex) {
       const columns = this.post.columns.map((col, idx) => {
         col = {
           ...col,
-          posts: col.posts.map(p => ({ id: p.id, type: "post" }))
-        };
-        if (idx === columnIndex) {
-          const post = col.posts[postIndex];
-          col.posts[postIndex] = col.posts[postIndex - 1];
-          col.posts[postIndex - 1] = post;
+          posts: col.posts.map(p => ({ id: p.id, type: 'post' }))
         }
-        return col;
-      });
+        if (idx === columnIndex) {
+          const post = col.posts[postIndex]
+          col.posts[postIndex] = col.posts[postIndex - 1]
+          col.posts[postIndex - 1] = post
+        }
+        return col
+      })
       this.setBacklogItem({
         ...this.post,
         columns
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    moveDownInColumn(columnIndex, postIndex) {
+    moveDownInColumn (columnIndex, postIndex) {
       const columns = this.post.columns.map((col, idx) => {
         col = {
           ...col,
-          posts: col.posts.map(p => ({ id: p.id, type: "post" }))
-        };
-        if (idx === columnIndex) {
-          const post = col.posts[postIndex];
-          col.posts[postIndex] = col.posts[postIndex + 1];
-          col.posts[postIndex + 1] = post;
+          posts: col.posts.map(p => ({ id: p.id, type: 'post' }))
         }
-        return col;
-      });
+        if (idx === columnIndex) {
+          const post = col.posts[postIndex]
+          col.posts[postIndex] = col.posts[postIndex + 1]
+          col.posts[postIndex + 1] = post
+        }
+        return col
+      })
       this.setBacklogItem({
         ...this.post,
         columns
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    openPostSelection(idx) {
-      this.$root.$emit("post-selection-open", this.post.id);
+    openPostSelection (idx) {
+      this.$root.$emit('post-selection-open', this.post.id)
       Vue.nextTick(() => {
         // make this in next tick and let old dialog close first
         // this cause that PostSelection component will destroyed and recreated immediatelly
         // causing initialPosts property reinitilzed - fixes #506
-        this.editedColumn = idx;
+        this.editedColumn = idx
       })
     },
 
-    closePostSelection() {
-      this.editedColumn = null;
+    closePostSelection () {
+      this.editedColumn = null
     },
 
-    async writeComment(columnIndex) {
+    async writeComment (columnIndex) {
       const data = {
-        type: "comment",
-        title: "",
-        content: ""
-      };
-      const { post } = await this.$axios.$post(`/drafts`, data);
-      this.$store.commit("backlog/registerPost", {
+        type: 'comment',
+        title: '',
+        content: ''
+      }
+      const { post } = await this.$axios.$post('/drafts', data)
+      this.$store.commit('backlog/registerPost', {
         newspaper: this.newspaper,
         post
-      });
-      this.addToColumn({ post, columnIndex });
-      this.editComment(post.id);
+      })
+      this.addToColumn({ post, columnIndex })
+      this.editComment(post.id)
     },
 
-    async addExternalLink(columnIndex) {
-      let url = window.prompt("URL")
+    async addExternalLink (columnIndex) {
+      const url = window.prompt('URL')
       if (url === null) {
         return
       }
@@ -426,7 +437,7 @@ export default {
           newspaper: this.newspaper,
           target: this.source,
           index: this.index,
-          columnIndex: columnIndex,
+          columnIndex,
           url
         })
       } catch (err) {
@@ -434,7 +445,7 @@ export default {
       }
     },
 
-    toggleEditorialStyle(columnIdx) {
+    toggleEditorialStyle (columnIdx) {
       this.setBacklogItem({
         ...this.post,
         columns: this.post.columns.map((col, idx) => {
@@ -442,123 +453,109 @@ export default {
             ...col,
             css:
               columnIdx === idx
-                ? col.css === "editorial"
-                  ? ""
-                  : "editorial"
+                ? col.css === 'editorial'
+                  ? ''
+                  : 'editorial'
                 : col.css
-          };
+          }
         })
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    moveUp(target = null) {
-      this.$store.commit("backlog/moveUp", {
+    moveUp (target = null) {
+      this.$store.commit('backlog/moveUp', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index,
         target
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    moveDown(target = null) {
-      this.$store.commit("backlog/moveDown", {
+    moveDown (target = null) {
+      this.$store.commit('backlog/moveDown', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index,
         target
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    removePost() {
-      this.$store.commit("backlog/remove", {
+    removePost () {
+      this.$store.commit('backlog/remove', {
         newspaper: this.newspaper,
         source: this.source,
         index: this.index
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    setBacklogItem(item) {
-      this.$store.commit("backlog/setBacklogItem", {
+    setBacklogItem (item) {
+      this.$store.commit('backlog/setBacklogItem', {
         newspaper: this.newspaper,
         target: this.source,
         index: this.index,
         item
-      });
+      })
     },
 
-    makeBox(layout, columnsStyle) {
+    makeBox (layout, columnsStyle) {
       this.setBacklogItem({
-        //id: this.post.id, // keep same id to keep same NewspaperBacklogBox, NOT GOOD idea as long as post can be removed
+        // id: this.post.id, // keep same id to keep same NewspaperBacklogBox, NOT GOOD idea as long as post can be removed
         id: Math.random()
           .toString(36)
           .substring(2),
-        type: "box",
+        type: 'box',
         css: layout,
         columns: columnsStyle.map((css, idx) => {
           return {
             css,
-            posts: idx === 0 ? [{ id: this.post.id, type: "post" }] : []
-          };
+            posts: idx === 0 ? [{ id: this.post.id, type: 'post' }] : []
+          }
         })
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    splitColumns() {
-      this.closePostSelection();
-      const posts = [];
+    splitColumns () {
+      this.closePostSelection()
+      const posts = []
       this.post.columns.forEach(col =>
-        col.posts.forEach(p => posts.push({ id: p.id, type: "post" }))
-      );
-      this.$store.commit("backlog/splice", {
+        col.posts.forEach(p => posts.push({ id: p.id, type: 'post' }))
+      )
+      this.$store.commit('backlog/splice', {
         newspaper: this.newspaper,
         target: this.source,
         index: this.index,
         items: posts,
         deleteCount: 1
-      });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     },
 
-    reverseColumns() {
-      const columns = [...this.post.columns];
-      columns.reverse();
-      let css = null;
-      if (this.post.css === "cols-2-1") {
-        css = "cols-1-2";
-      } else if (this.post.css === "cols-1-2") {
-        css = "cols-2-1";
+    reverseColumns () {
+      const columns = [...this.post.columns]
+      columns.reverse()
+      let css = null
+      if (this.post.css === 'cols-2-1') {
+        css = 'cols-1-2'
+      } else if (this.post.css === 'cols-1-2') {
+        css = 'cols-2-1'
       } else {
-        css = this.post.css;
+        css = this.post.css
       }
-      this.setBacklogItem({ ...this.post, css, columns });
-      this.$store.dispatch("backlog/save", { newspaper: this.newspaper });
+      this.setBacklogItem({ ...this.post, css, columns })
+      this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
     }
-  },
-
-  mounted() {
-    this._onSelectionOpen = postId => {
-      if (this.post.id !== postId) {
-        this.closePostSelection();
-      }
-    };
-    this.$root.$on("post-selection-open", this._onSelectionOpen);
-  },
-
-  beforeDestroy() {
-    this.$root.$off("post-selection-open", this._onSelectionOpen);
   }
-};
+}
 </script>
 
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
-
 
 //- Backlog controls
 .newspaper-backlog-controls
@@ -630,7 +627,6 @@ export default {
     position: sticky
     left: calc(100vw - (#{$baseline} * 2))
     top: $baseline * 2
-
 
   //- button add editorial
   .change-layout

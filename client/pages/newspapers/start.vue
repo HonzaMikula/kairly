@@ -5,19 +5,17 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperSettings from '@/components/editor/NewspaperSettings'
 
 export default {
-  name: "NewspaperSettingsPage",
+  name: 'NewspaperSettingsPage',
 
   components: {
     AppLayout,
     NewspaperSettings
   }
-};
+}
 </script>
 
 <style lang="sass">

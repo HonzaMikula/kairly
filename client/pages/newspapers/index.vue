@@ -1,8 +1,10 @@
 <template>
   <AppLayout :name="$t('Manage newspapers')">
     <div class="newspaper-editor-view">
-      <div class="newspaper-editor--empty"
-        v-if="newspapers.length === 0">
+      <div
+        v-if="newspapers.length === 0"
+        class="newspaper-editor--empty"
+      >
 
         <h1>{{ $t('Start your first newspaper!') }}</h1>
 
@@ -18,28 +20,32 @@
           <div class="title">
             <h1
               v-if="selectedNewspaper"
-              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen">
+              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen"
+            >
               {{ selectedNewspaper.title }}
             </h1>
 
             <button-icon
               v-if="selectedNewspaper"
-              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen"
               class="dropdown"
               role="button"
-              tabindex="0" >
-            </button-icon>
+              tabindex="0"
+              @click="isSelectNewspaperOpen = !isSelectNewspaperOpen"
+            />
 
-            <div class="newspaper-editor--header--dropdown"
+            <div
               v-if="isSelectNewspaperOpen"
-              v-on-clickaway="() => isSelectNewspaperOpen = false">
+              v-on-clickaway="() => isSelectNewspaperOpen = false"
+              class="newspaper-editor--header--dropdown"
+            >
               <div
                 v-for="newspaper in newspapers"
                 :key="newspaper.fullName"
                 :class="{'is-selected': selectedNewspaper && selectedNewspaper.fullName == newspaper.fullName}"
-                @click="selectNewspaper(newspaper)">
-                <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title"/>
-                <div v-else class="image-placeholder"></div>
+                @click="selectNewspaper(newspaper)"
+              >
+                <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title">
+                <div v-else class="image-placeholder" />
                 <h3>{{ newspaper.title }}</h3>
                 <p>
                   <strong>#{{ newspaper.issues + 1 }}</strong> {{ $t('is releasing in') }}
@@ -50,20 +56,20 @@
             </div>
           </div>
 
-          <div class="newspaper-controls" v-if="selectedNewspaper">
+          <div v-if="selectedNewspaper" class="newspaper-controls">
             <nuxt-link
+              v-b-tooltip
               class="detail"
               :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
               :title="$t('Go to newspaper detail')"
-              v-b-tooltip
             />
 
             <nuxt-link
               v-if="selectedNewspaper.editor.id === user.id"
+              v-b-tooltip
               class="settings"
               :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
               :title="$t('Edit newspaper')"
-              v-b-tooltip
             />
           </div>
 
@@ -74,13 +80,14 @@
               role="button"
               :class="{'is-active': isMobileMenuOpen}"
               aria-label="Context menu"
-              @click="isMobileMenuOpen = !isMobileMenuOpen">
-            </button-icon>
+              @click="isMobileMenuOpen = !isMobileMenuOpen"
+            />
 
             <div
-              class="mobile-menu--dropdown"
               v-if="isMobileMenuOpen"
-              v-on-clickaway="() => isMobileMenuOpen = false">
+              v-on-clickaway="() => isMobileMenuOpen = false"
+              class="mobile-menu--dropdown"
+            >
               <ul>
                 <li>
                   <nuxt-link
@@ -114,41 +121,40 @@
   </AppLayout>
 </template>
 
-
 <script>
-import Vue from 'vue'
 import moment from 'moment'
 
-import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapActions, mapState } from 'vuex'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import AppLayout from '@/components/layout/AppLayout'
-import NewspaperWidget from '@/components/widgets/NewspaperWidget'
 import NewspaperBacklog from '@/components/editor/backlog/NewspaperBacklog'
 import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
   name: 'Newspapers',
 
-  head() {
-    return {
-      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newsletters – Kairly'
-    }
-  },
-
   components: {
     AppLayout,
-    NewspaperWidget,
     NewspaperBacklog
   },
-
-  mixins: [ErrorHandler],
 
   directives: {
     onClickaway
   },
 
-  data() {
+  mixins: [ErrorHandler],
+
+  async fetch ({ store, redirect }) {
+    const { user } = store.state.auth
+
+    await store.dispatch('backlog/loadUserBacklog')
+
+    const newspaperIds = user.newspapers.map(newspaper => newspaper.fullName)
+    await store.dispatch('getNewspapers', newspaperIds)
+  },
+
+  data () {
     return {
       isSelectNewspaperOpen: false,
       isMobileMenuOpen: false,
@@ -159,20 +165,20 @@ export default {
   },
 
   computed: {
-    isAdmin() {
+    isAdmin () {
       const { user } = this.$store.state.auth
       return user.isAdmin
     },
 
-    newspapers() {
+    newspapers () {
       const ids = this.$store.state.auth.user.newspapers.map(newspaper => newspaper.fullName)
       const newspapers = ids.map(id => this.$store.getters['entities/getNewspaper'](id))
-      newspapers.sort(({nextRelease: a}, {nextRelease: b}) => a < b ? -1 : (a > b ? 1 : 0))
+      newspapers.sort(({ nextRelease: a }, { nextRelease: b }) => a < b ? -1 : (a > b ? 1 : 0))
       return newspapers
     },
 
-    selectedNewspaper() {
-      if (!this.selectedFullName || !this.newspapers) return null
+    selectedNewspaper () {
+      if (!this.selectedFullName || !this.newspapers) { return null }
       return this.newspapers.find(n => n.fullName === this.selectedFullName)
     },
 
@@ -182,12 +188,22 @@ export default {
     })
   },
 
+  mounted () {
+    // do select in mounted() to do it only on client side (no SSR)
+    if (this.newspapers.length) {
+      let selectedNewspaper = null
+      const selectedFullName = window.localStorage.getItem('manageNewspapers.selected')
+      selectedNewspaper = this.newspapers.find(n => n.fullName === selectedFullName)
+      this.selectNewspaper(selectedNewspaper || this.newspapers[0])
+    }
+  },
+
   methods: {
-    timeFrom(dt) {
+    timeFrom (dt) {
       return moment(dt).from()
     },
 
-    publishedPostCount(newspaper) {
+    publishedPostCount (newspaper) {
       let count = 0
       Object.keys(this.backlog).forEach(postId => {
         if (this.backlog[postId][newspaper.fullName] === 'P') {
@@ -197,7 +213,7 @@ export default {
       return count
     },
 
-    async selectNewspaper(newspaper) {
+    async selectNewspaper (newspaper) {
       this.isSelectNewspaperOpen = false
 
       if (!newspaper) {
@@ -218,11 +234,11 @@ export default {
       }
     },
 
-    closeModal() {
+    closeModal () {
       this.isCreateNewspaperOpen = false
     },
 
-    newNewspaperCreated(newspaper) {
+    newNewspaperCreated (newspaper) {
       this.selectNewspaper(newspaper)
     },
 
@@ -233,24 +249,11 @@ export default {
     }),
   },
 
-  async fetch({ store, redirect }) {
-    const { user } = store.state.auth
-
-    await store.dispatch('backlog/loadUserBacklog')
-
-    const newspaperIds = user.newspapers.map(newspaper => newspaper.fullName)
-    await store.dispatch('getNewspapers', newspaperIds)
-  },
-
-  mounted() {
-    // do select in mounted() to do it only on client side (no SSR)
-    if (this.newspapers.length) {
-      let selectedNewspaper = null
-      let selectedFullName = window.localStorage.getItem('manageNewspapers.selected')
-      selectedNewspaper = this.newspapers.find(n => n.fullName === selectedFullName)
-      this.selectNewspaper(selectedNewspaper || this.newspapers[0])
+  head () {
+    return {
+      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newsletters – Kairly'
     }
-  },
+  }
 }
 </script>
 
@@ -267,7 +270,6 @@ export default {
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4
-
 
   //- Header
   .newspaper-editor--header
@@ -286,7 +288,6 @@ export default {
       padding: $baseline/2 0
 
       text-align: left
-
 
     //- Newspaper Title
     .title
@@ -310,7 +311,6 @@ export default {
 
         a
           color: #000
-
 
       > button-icon
         display: inline-block
@@ -375,7 +375,6 @@ export default {
     .mobile-menu
       display: none
       align-self: center
-
 
       @media (max-width: 800px)
         display: block
@@ -510,7 +509,6 @@ export default {
     color: #777
 
     font-size: $fs--1
-
 
 //- Mobile switcher (upcoming release, considered posts)
 .newspaper-editor--mobile-switcher

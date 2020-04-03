@@ -87,11 +87,11 @@ export default {
   },
 
   computed: {
-    cost() {
+    cost () {
       return parseFloat(this.currentMonth.priorIssuesCost) + this.currentIssueCost
     },
 
-    profit() {
+    profit () {
       return parseFloat(this.newspaper.price) - this.cost
     }
   },

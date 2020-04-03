@@ -1,18 +1,18 @@
 <template>
   <div class="timeline-loader-view">
-    <div class="timeline-loader--time-slot"></div>
-    <div class="timeline-loader--newsletter-heading"></div>
+    <div class="timeline-loader--time-slot" />
+    <div class="timeline-loader--newsletter-heading" />
     <div class="timeline-loader--newsletter-info">
-      <div class="timeline-loader--newsletter-info--img"></div>
+      <div class="timeline-loader--newsletter-info--img" />
     </div>
 
-    <div class="timeline-loader--post" v-for="x in 2" :key="x">
+    <div v-for="x in 2" :key="x" class="timeline-loader--post">
       <div class="timeline-loader--post--header">
-        <div class="timeline-loader--post--header--img"></div>
+        <div class="timeline-loader--post--header--img" />
       </div>
-      <div class="timeline-loader--post--heading"></div>
+      <div class="timeline-loader--post--heading" />
       <div class="timeline-loader--post--content">
-        <div class="text-lines" v-for="y in 26" :key="y"/>
+        <div v-for="y in 26" :key="y" class="text-lines" />
       </div>
     </div>
   </div>
@@ -32,7 +32,7 @@ export default {
   height: $baseline * 1.5
 
   &::before
-    height: $baseline * 1.25 
+    height: $baseline * 1.25
     width: 200px
 
     animation: pulse-darker 1s infinite ease-in-out
@@ -46,9 +46,9 @@ export default {
   justify-content: center
   height: $baseline * 1.25
   margin: $baseline 0 $baseline/4
-  
+
   &::before
-    height: $baseline * 1 
+    height: $baseline * 1
     width: 300px
 
     animation: pulse-darker 1s infinite ease-in-out
@@ -65,7 +65,7 @@ export default {
   justify-content: center
   height: $baseline
   margin-bottom: $baseline
-  
+
   &::after
     height: $baseline * 0.6
     width: 400px
@@ -86,8 +86,6 @@ export default {
 
   animation: pulse-darker 1s infinite ease-in-out
   background: #ddd
-
-  
 
 .timeline-loader--post
   margin-bottom: $baseline / 2
@@ -176,7 +174,7 @@ export default {
   @keyframes pulse
     0%
       background-color: #eee
-    50% 
+    50%
       background-color: #e5e5e5
     100%
       background-color: #eee
@@ -184,7 +182,7 @@ export default {
   @keyframes pulse-darker
     0%
       background-color: #ddd
-    50% 
+    50%
       background-color: #d5d5d5
     100%
       background-color: #ddd

@@ -1,20 +1,23 @@
 <template>
   <div class="tweet-attachment-gallery" :class="'gallery-'+ items.length">
     <a
-      :href="`${item.src}:large`"
       v-for="item in items"
       :key="item.id"
-      target="_blank">
-      <img :src="`${item.src}:small`" :width="item.sizes.small.w" :height="item.sizes.small.h" />
+      :href="`${item.src}:large`"
+      target="_blank"
+    >
+      <img :src="`${item.src}:small`" :width="item.sizes.small.w" :height="item.sizes.small.h">
     </a>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'tweet-attachment-photo',
+  name: 'TweetAttachmentPhoto',
 
-  props: ["items"]
+  props: {
+    items: Array
+  }
 }
 </script>
 
@@ -67,7 +70,7 @@ export default {
   &.gallery-3
     grid-template-columns: 50% 50%
     grid-template-rows: minmax(auto, 191.5px) minmax(auto, 191.5px)
-    
+
     .cols-2-1 .box-column:nth-of-type(2) &,
     .cols-1-2 .box-column:nth-of-type(1) &,
     .cols-1-1-1 &

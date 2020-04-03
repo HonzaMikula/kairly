@@ -8,7 +8,7 @@ export default {
   },
 
   methods: {
-    closeModal(event) {
+    closeModal (event) {
       this.$emit('close')
       this.$emit('update:active', false)
     }

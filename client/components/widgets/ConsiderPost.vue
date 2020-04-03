@@ -1,12 +1,13 @@
 <template>
-  <div class="consider-post-view" v-on-clickaway="closeDialog">
+  <div v-on-clickaway="closeDialog" class="consider-post-view">
     <header>
       <h4>{{ $t('For which newspaper?') }}</h4>
       <strong
-        class="consider-post--price"
         v-b-tooltip
-        :title="$t('Article cost')">
-        <MoneyFormat :value="post.price" currency="Kč"/>
+        class="consider-post--price"
+        :title="$t('Article cost')"
+      >
+        <MoneyFormat :value="post.price" currency="Kč" />
       </strong>
     </header>
 
@@ -29,16 +30,16 @@ import MoneyFormat from '@/components/widgets/MoneyFormat'
 export default {
   name: 'ConsiderPost',
 
-  props: {
-    post: Object
-  },
-
   directives: {
     onClickaway
   },
 
   components: {
     MoneyFormat
+  },
+
+  props: {
+    post: Object
   },
 
   computed: {
@@ -48,17 +49,17 @@ export default {
 
     ...mapGetters(['userNewspapers']),
 
-    postBacklog() {
-      return this.backlog ? ( this.backlog[this.post.id] || {} ) : {}
+    postBacklog () {
+      return this.backlog ? (this.backlog[this.post.id] || {}) : {}
     }
   },
 
   methods: {
-    closeDialog() {
+    closeDialog () {
       this.$emit('closeConsiderPostDialog')
     },
 
-    toggle(newspaper, ev) {
+    toggle (newspaper, ev) {
       const backlogName = this.postBacklog[newspaper.fullName]
       if (backlogName) {
         this.removeFromBacklog({

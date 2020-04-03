@@ -1,11 +1,8 @@
-const fs = require('fs')
-const path = require('path')
-
 module.exports = {
   /*
   ** Headers of the page
   */
-  head: function() {
+  head () {
     const h = {
       title: 'Kairly – Read only what you care about',
       meta: [
@@ -25,7 +22,7 @@ module.exports = {
     }
     // this.$route is not present in spa mode
     if (this.$route) {
-      h.link.push({ rel: 'canonical', href: 'https://kairly.com'+ this.$route.path })
+      h.link.push({ rel: 'canonical', href: 'https://kairly.com' + this.$route.path })
     }
     return h
   },
@@ -38,13 +35,19 @@ module.exports = {
   plugins: [
     '~/plugins/ignored-elements',
     '~/plugins/portal-vue',
-    { src: '~/plugins/vue-infinite-scroll', ssr: false},
+    { src: '~/plugins/vue-infinite-scroll', ssr: false },
     { src: '~/plugins/rich-editor', ssr: false },
     '~/plugins/vue-moment',
     '~/plugins/vue-uid',
     '~/plugins/axios',
     '~/plugins/i18n.js',
   ],
+
+  buildModules: [
+    // Doc: https://github.com/nuxt-community/eslint-module
+    '@nuxtjs/eslint-module'
+  ],
+
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth',
@@ -66,8 +69,8 @@ module.exports = {
     bootstrapVueCSS: false,
     directivePlugins: ['VBTooltipPlugin'],
     config: {
-      'BTooltip': {
-        'delay': { 'show': 500, 'hide': 0 }
+      BTooltip: {
+        delay: { show: 500, hide: 0 }
       }
     }
   },
@@ -85,15 +88,15 @@ module.exports = {
     */
     extend (config, { isDev }) {
       // fix stuck on 91% additional chunk assets processing when buildin again stable Nuxt
-      //config.plugins = config.plugins.filter((plugin) => plugin.constructor.name !== 'UglifyJsPlugin')
-      if (isDev && process.client) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
+      // config.plugins = config.plugins.filter((plugin) => plugin.constructor.name !== 'UglifyJsPlugin')
+      // if (isDev && process.client) {
+      //   config.module.rules.push({
+      //     enforce: 'pre',
+      //     test: /\.(js|vue)$/,
+      //     loader: 'eslint-loader',
+      //     exclude: /(node_modules)/
+      //   })
+      // }
     }
   },
 
@@ -140,9 +143,9 @@ module.exports = {
         chunkName: 'pages/index'
       })
 
-      const exploreWithDate = { ...exploreRoute.children.find(r => r.path === ':tab')}
-      exploreWithDate.path = ":tab/:date(\\d{4}-\\d{2}-\\d{2})"
-      exploreWithDate.name = "explore-tab-date"
+      const exploreWithDate = { ...exploreRoute.children.find(r => r.path === ':tab') }
+      exploreWithDate.path = ':tab/:date(\\d{4}-\\d{2}-\\d{2})'
+      exploreWithDate.name = 'explore-tab-date'
       exploreRoute.children.unshift(exploreWithDate)
 
       routes.push({

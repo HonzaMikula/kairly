@@ -13,12 +13,12 @@
             </ul>
           </section>
 
-          <SignUpForm></SignUpForm>
+          <SignUpForm />
         </div>
       </section>
 
       <Faq>
-        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly">
       </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
@@ -35,15 +35,14 @@
           different from the current not very successful attempts.
         </p>
         -->
-        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík">
         <strong>Marek Zouzalík</strong>
         <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
       </Quote>
 
-
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-26.jpg" />
+          <img src="~assets/microsite/kairly-random-26.jpg">
         </picture>
 
         <div>
@@ -86,13 +85,13 @@
             koupili noviny a četli si je autobuse měla něco do sebe.
           </p> -->
 
-        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
+        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula">
         <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
       </Quote>
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-35.jpg" />
+          <img src="~assets/microsite/kairly-random-35.jpg">
         </picture>
 
         <div>
@@ -133,7 +132,7 @@
             Tato vysoká personalizace obsahu je klíč k úspěšněmu modelu placeného obsahu.
           </p> -->
 
-        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
+        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík">
         <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
       </Quote>
 
@@ -156,7 +155,7 @@ import Footer from '@/components/microsite/Footer'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import Faq from '@/components/microsite/Faq'
 
-import ogImage from '@/assets/microsite/kairly-random-25.jpg';
+import ogImage from '@/assets/microsite/kairly-random-25.jpg'
 
 export default {
   name: 'Readers',
@@ -173,8 +172,8 @@ export default {
     SignUpForm
   },
 
-  head() {
-    const metaTitle = this.$t('RSS reader that prevents distraction') +' – Kairly'
+  head () {
+    const metaTitle = this.$t('RSS reader that prevents distraction') + ' – Kairly'
     const metaDescription = this.$t('Our RSS reader allows people to choose when they want to read what. That leads to a healthy reading habits.')
     const metaUrl = 'https://kairly.com/rss-reader'
     const baseUrl = 'https://kairly.com'
@@ -245,7 +244,7 @@ export default {
     padding: 0
     padding-bottom: $baseline / 2
 
-  > div  
+  > div
     display: grid
     grid-template-columns: 2fr 1fr
     max-width: 900px
@@ -267,7 +266,6 @@ export default {
     @media (max-width: $mobile)
       margin: $baseline $baseline/2
       width: 100%
-
 
   > p
     font-size: $fs-0
@@ -382,7 +380,6 @@ export default {
         @media (max-width: $mobile)
           content: none
 
-
 //- Benefits
 .journalists--benefits
   display: grid
@@ -404,7 +401,6 @@ export default {
       margin-bottom: $baseline
 
       font-size: $fs-1
-
 
     li
       margin-left: $baseline / 2

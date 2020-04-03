@@ -1,6 +1,6 @@
 export default {
   methods: {
-    getDayOfWeekLabel(dow) {
+    getDayOfWeekLabel (dow) {
       const $t = this.$t.bind(this)
 
       const DAYS_OF_WEEK = [
@@ -11,7 +11,7 @@ export default {
       return DAYS_OF_WEEK[dow - 1]
     },
 
-    getPeriodicityLabel({ frequency, time, dow }) {
+    getPeriodicityLabel ({ frequency, time, dow }) {
       const $t = this.$t.bind(this)
 
       if (frequency === '3x_per_day') {
@@ -21,7 +21,7 @@ export default {
         return $t('Daily every 3 hours')
       }
       if (frequency === 'daily') {
-        return $t('Daily at {at}', {at: time})
+        return $t('Daily at {at}', { at: time })
       }
       if (frequency === 'weekly') {
         return $t('Every {dow} at {at}', {

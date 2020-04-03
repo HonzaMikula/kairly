@@ -8,11 +8,11 @@
 
     <main>
       <div class="posts-selection--external">
-        <input type="url" :placeholder="$t('Paste URL')" />
+        <input type="url" :placeholder="$t('Paste URL')">
         <button>Add post</button>
       </div>
       <!-- work with raw post in add / remove event -->
-      <PostWrapper v-for="{post, source} in posts" :post="post" :key="post.id">
+      <PostWrapper v-for="{post, source} in posts" :key="post.id" :post="post">
         <template #global-controls>&nbsp;</template>
         <template #page-controls>
           <button v-if="selected.indexOf(post.id) === -1" class="add" @click="add(post, source)" />
@@ -24,13 +24,10 @@
 </template>
 
 <script>
-import Vue from "vue";
-
-import { mapActions, mapMutations } from "vuex";
-import PostWrapper from "@/components/PostWrapper";
+import PostWrapper from '@/components/PostWrapper'
 
 export default {
-  name: "PostsSelection",
+  name: 'PostsSelection',
 
   components: {
     PostWrapper
@@ -41,37 +38,37 @@ export default {
     selected: Array
   },
 
-  data() {
+  data () {
     const {
       considered,
       next,
       upcoming,
       $posts
-    } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName];
+    } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
     const posts = [];
     [considered, next, upcoming].forEach(bl => {
       bl.layout
-        .filter(post => post.type === "post")
+        .filter(post => post.type === 'post')
         .map(post =>
-          this.$store.getters["entities/denormalize"]($posts[post.id], "Post")
+          this.$store.getters['entities/denormalize']($posts[post.id], 'Post')
         )
-        //.filter(post => post.type === 'tweet')
-        .forEach(post => posts.push({ post, source: bl.name }));
-    });
+        // .filter(post => post.type === 'tweet')
+        .forEach(post => posts.push({ post, source: bl.name }))
+    })
 
     return {
       initialPosts: posts
-    };
+    }
   },
 
   computed: {
-    posts() {
-      const ids = {};
-      const posts = [];
+    posts () {
+      const ids = {}
+      const posts = []
       this.initialPosts.forEach(p => {
-        ids[p.post.id] = true;
-        posts.push(p);
-      });
+        ids[p.post.id] = true
+        posts.push(p)
+      })
 
       // do not remove from tweets when tweet is moved from baclog to editorial
       // but add tweet to list when moved from editoril back to backlog
@@ -83,27 +80,27 @@ export default {
       } = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName];
       [considered, next, upcoming].forEach(bl => {
         bl.layout
-          .filter(post => post.type === "post" && !ids[post.id])
+          .filter(post => post.type === 'post' && !ids[post.id])
           .map(post =>
-            this.$store.getters["entities/denormalize"]($posts[post.id], "Post")
+            this.$store.getters['entities/denormalize']($posts[post.id], 'Post')
           )
-          //.filter(post => post.type === 'tweet')
-          .forEach(post => posts.push({ post, source: bl.name }));
-      });
-      return posts;
+          // .filter(post => post.type === 'tweet')
+          .forEach(post => posts.push({ post, source: bl.name }))
+      })
+      return posts
     }
   },
 
   methods: {
-    add(post, source) {
-      this.$emit("add", { post, source });
+    add (post, source) {
+      this.$emit('add', { post, source })
     },
 
-    remove(post, source) {
-      this.$emit("remove", { post, source });
+    remove (post, source) {
+      this.$emit('remove', { post, source })
     }
   }
-};
+}
 </script>
 
 <style lang="sass">
@@ -120,7 +117,7 @@ export default {
   max-height: 90vh
   overflow: auto
   width: 900px
-  
+
   background: #fff
 
   @media (max-width: $mobile)
@@ -180,7 +177,7 @@ export default {
   @media (max-width: $mobile)
     margin: 0
     border-bottom: 1px solid #eee
-    
+
   input
     box-sizing: border-box
     height: $baseline * 1.25
@@ -210,6 +207,5 @@ export default {
     &:focus
       background: #ddd
       color: #000
-
 
 </style>

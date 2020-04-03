@@ -22,11 +22,14 @@
 import AppLayout from '@/components/layout/AppLayout'
 
 export default {
-  props: ['error'],
 
   components: {
     AppLayout
   },
+
+  props: {
+    error: Object
+  }
 }
 </script>
 

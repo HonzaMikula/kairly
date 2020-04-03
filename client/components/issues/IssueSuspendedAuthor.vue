@@ -23,7 +23,6 @@
       </p>
     </header>
 
-
     <article>
       {{ $t('Your susbscription were suspended.') }}
     </article>
@@ -37,21 +36,23 @@ import AuthorPopup from '@/components/widgets/AuthorPopup'
 
 export default {
   name: 'IssueSuspendedAuthor',
-  props: ['issue'],
 
   components: {
     AuthorPicture,
     AuthorPopup,
   },
+  props: {
+    issue: Object
+  },
 
   methods: {
-    localizedTitle() {
+    localizedTitle () {
       // each constant must be wrapped to $t
       const { title } = this.issue
-      if (title === '6× per day') return this.$t('6× per day')
-      if (title === '3× per day') return this.$t('3× per day')
-      if (title === 'Daily summary') return this.$t('Daily summary')
-      if (title === 'Weekly summary') return this.$t('Weekly summary')
+      if (title === '6× per day') { return this.$t('6× per day') }
+      if (title === '3× per day') { return this.$t('3× per day') }
+      if (title === 'Daily summary') { return this.$t('Daily summary') }
+      if (title === 'Weekly summary') { return this.$t('Weekly summary') }
       return title // should never happen
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
-    <div class="timeline-view" v-if="loggedIn">
-      <WelcomePage v-if="showWelcome"/>
+    <div v-if="loggedIn" class="timeline-view">
+      <WelcomePage v-if="showWelcome" />
 
       <TimelineLoader v-else-if="loading" />
 
@@ -10,16 +10,16 @@
           class="timeline--header"
         >
           <nuxt-link
-            :to="{name: 'timeline-date', params: {date: links.prev}}"
             v-b-tooltip
+            :to="{name: 'timeline-date', params: {date: links.prev}}"
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
           />
 
           <nuxt-link
             v-if="links.next"
-            :to="{name: 'timeline-date', params: {date: links.next}}"
             v-b-tooltip
+            :to="{name: 'timeline-date', params: {date: links.next}}"
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
           />
@@ -30,7 +30,7 @@
             <JumpMenu
               :key="timeSlot.time"
               :datetime="timeSlot.time"
-              :timeSlots="timeSlots"
+              :time-slots="timeSlots"
             />
 
             <IssueWrapper
@@ -66,16 +66,16 @@
           <p>{{ $t("That's it. You read the entire day.") }}</p>
 
           <nuxt-link
-            :to="{name: 'timeline-date', params: {date: links.prev}}"
             v-b-tooltip
+            :to="{name: 'timeline-date', params: {date: links.prev}}"
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
           />
 
           <nuxt-link
             v-if="links.next"
-            :to="{name: 'timeline-date', params: {date: links.next}}"
             v-b-tooltip
+            :to="{name: 'timeline-date', params: {date: links.next}}"
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
           />
@@ -83,13 +83,13 @@
       </template>
     </div>
 
-    <HomePage v-else/>
+    <HomePage v-else />
   </AppLayout>
 </template>
 
 <script>
 import Vue from 'vue'
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 
 import HomePage from '@/components/HomePage'
@@ -105,15 +105,6 @@ export default {
   // Homepage component is displayed when user is not logged
   auth: false,
 
-  head() {
-    return {
-      title: 'Kairly',
-      meta: [
-        { hid: 'description', name: 'description', content: 'Timeline showing you latest issues of newspapers you subscribed to.' },
-      ]
-    }
-  },
-
   components: {
     AppLayout,
     HomePage,
@@ -123,95 +114,7 @@ export default {
     TimelineLoader
   },
 
-  computed: {
-    ...mapState({
-      loggedIn: state => state.auth.loggedIn,
-      expandedIssues: state => state.timeline.expandedIssues
-    }),
-
-    ...mapGetters({
-      denormalize: 'entities/denormalize',
-    }),
-
-    loading() {
-      return !this.showWelcome && this.timeline === null
-    },
-
-    timeSlots() {
-      if (this.loading) { return [] }
-
-      const { issues } = this.timeline
-      const timeSlots = []
-      let slot = null
-
-      issues.forEach(issue => {
-        if (slot === null || slot.time !== issue.time) {
-          slot = { time: issue.time, issues: []}
-          timeSlots.push(slot)
-        }
-
-        slot.issues.push(this.denormalize(issue, 'Issue'))
-      })
-
-      return timeSlots
-    },
-
-    links() {
-      if (this.loading) {
-        return {}
-      }
-      return this.timeline.links
-    },
-
-    dayTitle() {
-      const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
-      const dt = moment(this.date)
-      const today = moment().format(format);
-      const day = dt.format(format)
-      const wod =  day === today ? this.$t('Today') : dt.format("dddd")
-      return `${wod} ${day}`
-    },
-  },
-
-  watch: {
-    loggedIn(value) {
-      if (value) {
-        this.loadTimeline()
-        this.$store.dispatch('backlog/loadUserBacklog')
-      } else {
-        this.date = null
-        this.timeline = null
-        this.showWelcome = false
-      }
-    },
-
-    date(value, oldValue) {
-      if (process.client && oldValue === null && value !== null && history.state.scrollY) {
-        // timeline was loased asynchronously and scroll position was recorded
-        Vue.nextTick(() => {
-          window.scrollTo(0, history.state.scrollY)
-        })
-      }
-    }
-  },
-
-  methods: {
-    async loadTimeline() {
-      if (this.loggedIn && !this.$store.state.timeline.hasNoActiveSubscriptions) {
-        // TODO load timeline and backlog in parallel
-        const { date } = this.$route.params
-        const timeline  = await this.$store.dispatch('timeline/load', { date })
-        if (timeline === null) {
-          this.showWelcome = true
-        } else {
-          this.date = timeline.date
-          this.timeline = timeline
-        }
-      }
-    }
-  },
-
-  async asyncData({ store, params }) {
+  async asyncData ({ store, params }) {
     const { state } = store
     const { date } = params
 
@@ -244,12 +147,84 @@ export default {
 
     return {
       showWelcome: false,
-      date: timeline ? timeline.date: null,
-      timeline: timeline
+      date: timeline ? timeline.date : null,
+      timeline
     }
   },
 
-  mounted() {
+  computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn,
+      expandedIssues: state => state.timeline.expandedIssues
+    }),
+
+    ...mapGetters({
+      denormalize: 'entities/denormalize',
+    }),
+
+    loading () {
+      return !this.showWelcome && this.timeline === null
+    },
+
+    timeSlots () {
+      if (this.loading) { return [] }
+
+      const { issues } = this.timeline
+      const timeSlots = []
+      let slot = null
+
+      issues.forEach(issue => {
+        if (slot === null || slot.time !== issue.time) {
+          slot = { time: issue.time, issues: [] }
+          timeSlots.push(slot)
+        }
+
+        slot.issues.push(this.denormalize(issue, 'Issue'))
+      })
+
+      return timeSlots
+    },
+
+    links () {
+      if (this.loading) {
+        return {}
+      }
+      return this.timeline.links
+    },
+
+    dayTitle () {
+      const format = this.$i18n.locale === 'cs' ? 'D.M.' : 'M/D'
+      const dt = moment(this.date)
+      const today = moment().format(format)
+      const day = dt.format(format)
+      const wod = day === today ? this.$t('Today') : dt.format('dddd')
+      return `${wod} ${day}`
+    },
+  },
+
+  watch: {
+    loggedIn (value) {
+      if (value) {
+        this.loadTimeline()
+        this.$store.dispatch('backlog/loadUserBacklog')
+      } else {
+        this.date = null
+        this.timeline = null
+        this.showWelcome = false
+      }
+    },
+
+    date (value, oldValue) {
+      if (process.client && oldValue === null && value !== null && history.state.scrollY) {
+        // timeline was loased asynchronously and scroll position was recorded
+        Vue.nextTick(() => {
+          window.scrollTo(0, history.state.scrollY)
+        })
+      }
+    }
+  },
+
+  mounted () {
     if (this.date === null) {
       this.loadTimeline()
     }
@@ -258,16 +233,41 @@ export default {
     }
   },
 
-  beforeRouteLeave(to, from, next) {
+  methods: {
+    async loadTimeline () {
+      if (this.loggedIn && !this.$store.state.timeline.hasNoActiveSubscriptions) {
+        // TODO load timeline and backlog in parallel
+        const { date } = this.$route.params
+        const timeline = await this.$store.dispatch('timeline/load', { date })
+        if (timeline === null) {
+          this.showWelcome = true
+        } else {
+          this.date = timeline.date
+          this.timeline = timeline
+        }
+      }
+    }
+  },
+
+  beforeRouteLeave (to, from, next) {
     try {
       if (this.loggedIn) {
         const { history, location } = window
-        history.replaceState({...history.state, scrollY: window.scrollY}, document.title, location.pathname)
+        history.replaceState({ ...history.state, scrollY: window.scrollY }, document.title, location.pathname)
       }
     } finally {
       next()
     }
   },
+
+  head () {
+    return {
+      title: 'Kairly',
+      meta: [
+        { hid: 'description', name: 'description', content: 'Timeline showing you latest issues of newspapers you subscribed to.' },
+      ]
+    }
+  }
 }
 </script>
 

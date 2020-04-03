@@ -1,6 +1,6 @@
 <template>
   <span>
-    {{ forceSign && numValue > 0 ? '+' : ''}}{{ formatted }} {{ currency ? currency : ''}}
+    {{ forceSign && numValue > 0 ? '+' : '' }}{{ formatted }} {{ currency ? currency : '' }}
   </span>
 </template>
 
@@ -11,19 +11,19 @@ export default {
   props: {
     value: [Number, String],
     currency: String,
-    short: {type: Boolean, default: false},
-    forceSign: {type: Boolean, default: false}
+    short: { type: Boolean, default: false },
+    forceSign: { type: Boolean, default: false }
   },
 
   computed: {
-    numValue() {
+    numValue () {
       if (typeof this.value.toFixed === 'function') {
         return this.value
       }
       return parseFloat(this.value)
     },
 
-    formatted() {
+    formatted () {
       let { value } = this
       if (value === null) {
         return ''

@@ -3,16 +3,19 @@
     <video :poster="item.src" :width="item.sizes.small.w" muted loop autoplay>
       <source
         :src="item.video_info.variants[0].url"
-        :type="item.video_info.variants[0].content_type" />
+        :type="item.video_info.variants[0].content_type"
+      >
     </video>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'tweet-attachment-gif',
+  name: 'TweetAttachmentGif',
 
-  props: ["item"],
+  props: {
+    item: Object
+  }
 }
 </script>
 

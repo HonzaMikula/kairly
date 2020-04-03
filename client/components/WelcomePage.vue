@@ -1,6 +1,6 @@
 <template>
   <div class="welcome-view">
-    
+
     <section class="welcome-intro">
       <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
@@ -16,7 +16,7 @@
             <li><nuxt-link to="/import">{{ $t('Import your RSS feed') }}</nuxt-link></li>
             <li>
               <nuxt-link to="/explore/news">{{ $t('Explore') }}</nuxt-link>
-              {{ $t('or') }} 
+              {{ $t('or') }}
               <nuxt-link to="/search">{{ $t('search') }}</nuxt-link>
             </li>
           </ul>
@@ -52,10 +52,11 @@
 
     <nav class="welcome--explore-tabs">
       <ul>
-        <li 
-          v-for="tab in tabs" 
+        <li
+          v-for="tab in tabs"
           :key="tab.slug"
-          :class="{'is-active': tab == currentTab}">
+          :class="{'is-active': tab == currentTab}"
+        >
           <a href @click.prevent="switchTab(tab)">
             {{ tab[$i18n.locale] || tab.en }}
           </a>
@@ -63,7 +64,7 @@
       </ul>
     </nav>
 
-    <ExploreTimeline id="explore-timeline" disableControls :category="currentTab" />
+    <ExploreTimeline id="explore-timeline" disable-controls :category="currentTab" />
 
   </div>
 </template>
@@ -79,7 +80,7 @@ export default {
     ExploreTimeline
   },
 
-  data() {
+  data () {
     return {
       tabs: TABS,
       currentTab: TABS.find(t => t.slug === 'news')
@@ -87,7 +88,7 @@ export default {
   },
 
   methods: {
-    switchTab(tab) {
+    switchTab (tab) {
       this.currentTab = tab
 
       this.$ga.event({
@@ -125,7 +126,6 @@ export default {
     line-height: $baseline * 2
     text-align: center
 
-
 //- Roles
 .welcome-intro--roles
   display: grid
@@ -162,7 +162,7 @@ export default {
   ul,
   ol
     margin-top: $baseline
-    
+
     @media (max-width: $mobile)
       margin-top: $baseline / 2
 
@@ -215,7 +215,7 @@ export default {
     &:last-of-type
       margin-right: 0
 
-    &.is-active 
+    &.is-active
       font-weight: 600
 
     a

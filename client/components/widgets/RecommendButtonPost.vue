@@ -2,9 +2,9 @@
   <a
     :class="{'recommend-button': true, recommended}"
     href="#"
+    :aria-label="$t('Recommend')"
     @click.prevent="recommend"
-    :aria-label="$t('Recommend')">
-  </a>
+  />
 </template>
 
 <script>
@@ -13,15 +13,15 @@ import ErrorHandler from '@/mixins/ErrorHandler'
 export default {
   name: 'RecommnendButtonPost',
 
+  mixins: [ErrorHandler],
+
   props: {
     post: Object,
     recommended: Boolean,
   },
 
-  mixins: [ErrorHandler],
-
   methods: {
-    async recommend() {
+    async recommend () {
       const { author, slug } = this.post
 
       try {

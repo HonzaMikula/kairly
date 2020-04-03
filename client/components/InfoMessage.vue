@@ -1,6 +1,6 @@
 <template>
   <div class="info-message-view" :class="type">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 export default {
   name: 'InfoMessage',
   props: {
-    'type': String
+    type: String
   }
 }
 </script>

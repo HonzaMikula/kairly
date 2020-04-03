@@ -7,38 +7,34 @@
       @close-editor="p => $emit('close-editor', p)"
     >
       <template #author>
-        <slot name="author"></slot>
+        <slot name="author" />
       </template>
 
       <template #global-controls>
-        <slot name="global-controls" :post="post"></slot>
+        <slot name="global-controls" :post="post" />
       </template>
 
       <template #page-controls>
-        <slot name="page-controls" :post="post"></slot>
+        <slot name="page-controls" :post="post" />
       </template>
     </component>
 
-    <slot name="aside"></slot>
+    <slot name="aside" />
   </section>
 </template>
 
 <script>
-import PostArticle from "@/components/posts/PostArticle";
-import PostComment from "@/components/posts/PostComment";
-import PostHeader from "@/components/posts/PostHeader";
-import PostLink from "@/components/posts/PostLink";
-import PostTweet from "@/components/posts/PostTweet";
-import PostPicture from "@/components/posts/PostPicture";
-import PostVideo from "@/components/posts/PostVideo";
-import PostRecommendations from "@/components/posts/PostRecommendations";
+import PostArticle from '@/components/posts/PostArticle'
+import PostComment from '@/components/posts/PostComment'
+import PostHeader from '@/components/posts/PostHeader'
+import PostLink from '@/components/posts/PostLink'
+import PostTweet from '@/components/posts/PostTweet'
+import PostPicture from '@/components/posts/PostPicture'
+import PostVideo from '@/components/posts/PostVideo'
+import PostRecommendations from '@/components/posts/PostRecommendations'
 
 export default {
-  name: "PostWrapper",
-  props: {
-    post: Object,
-    typeOverride: Object // override component type is set, value is map {id: component}
-  },
+  name: 'PostWrapper',
 
   components: {
     PostArticle,
@@ -50,23 +46,27 @@ export default {
     PostVideo,
     PostRecommendations
   },
+  props: {
+    post: Object,
+    typeOverride: Object // override component type is set, value is map {id: component}
+  },
 
   computed: {
-    postType() {
+    postType () {
       if (this.typeOverride) {
-        const component = this.typeOverride[this.post.id];
+        const component = this.typeOverride[this.post.id]
         if (component) {
-          return component;
+          return component
         }
       }
-      if (this.post.type === "newspaper") {
-        return "post-article";
+      if (this.post.type === 'newspaper') {
+        return 'post-article'
       } else {
-        return "post-" + this.post.type;
+        return 'post-' + this.post.type
       }
     }
   }
-};
+}
 </script>
 
 <style lang="sass">
@@ -92,11 +92,10 @@ export default {
 
   .editorial-post-editor--content input
     background: #fff
-  
+
   .newspaper-backlog-controls
     @media (max-width: $mobile)
       position: absolute
       top: 30%
       width: calc(100vw - (#{$baseline} * 0.5))
 </style>
-

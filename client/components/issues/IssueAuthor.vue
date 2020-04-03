@@ -27,8 +27,8 @@
 
     <PostIssue
       v-for="item in issue.issues"
-      :post="item"
       :key="item.id"
+      :post="item"
     />
   </div>
 </template>
@@ -40,24 +40,24 @@ import PostIssue from '@/components/posts/PostIssue'
 
 export default {
   name: 'IssueAuthor',
-  props: {
-    issue: Object
-  },
 
   components: {
     AuthorPicture,
     AuthorPopup,
     PostIssue,
   },
+  props: {
+    issue: Object
+  },
 
   methods: {
-    localizedTitle() {
+    localizedTitle () {
       // each constant must be wrapped to $t
       const { title } = this.issue
-      if (title === '6× per day') return this.$t('6× per day')
-      if (title === '3× per day') return this.$t('3× per day')
-      if (title === 'Daily summary') return this.$t('Daily summary')
-      if (title === 'Weekly summary') return this.$t('Weekly summary')
+      if (title === '6× per day') { return this.$t('6× per day') }
+      if (title === '3× per day') { return this.$t('3× per day') }
+      if (title === 'Daily summary') { return this.$t('Daily summary') }
+      if (title === 'Weekly summary') { return this.$t('Weekly summary') }
       return title // should never happen
     }
   }

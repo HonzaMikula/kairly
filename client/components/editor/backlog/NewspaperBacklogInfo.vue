@@ -3,9 +3,10 @@
     <div>
       <p class="newspaper-backlog--info--profit">
         <strong
-          @click="openProfitDropdown = !openProfitDropdown"
           v-b-tooltip
-          :title="$t('Revenue - Cost = Profit')">
+          :title="$t('Revenue - Cost = Profit')"
+          @click="openProfitDropdown = !openProfitDropdown"
+        >
           <MoneyFormat :value="revenuePerIssue" />
           -
           <MoneyFormat :value="currentIssueCost" />
@@ -16,12 +17,12 @@
 
       <ProfitDropdown
         v-if="openProfitDropdown"
+        v-on-clickaway="() => openProfitDropdown = false"
         :newspaper="newspaper"
         :current-month="currentMonth"
         :revenue-per-issue="revenuePerIssue"
         :current-issue-cost="currentIssueCost"
         :profit-per-issue="profitPerIssue"
-        v-on-clickaway="() => openProfitDropdown = false"
       />
     </div>
   </div>
@@ -49,33 +50,33 @@ export default {
   props: {
     newspaper: Object,
     currentMonth: Object,
-    //backlogLength: Number,
+    // backlogLength: Number,
     published: Array,
   },
 
-  data() {
+  data () {
     return {
       openProfitDropdown: false
     }
   },
 
   computed: {
-    currentIssueCost() {
+    currentIssueCost () {
       return this.published.map(item => item.price).reduce((prev, next) => parseFloat(prev) + parseFloat(next), 0)
     },
 
-    revenuePerIssue() {
+    revenuePerIssue () {
       const totalIssues = this.currentMonth.priorIssues + this.currentMonth.upcomingIssues
       return parseFloat(this.newspaper.price) / totalIssues
     },
 
-    profitPerIssue() {
+    profitPerIssue () {
       return this.revenuePerIssue - this.currentIssueCost
     }
   },
 
   methods: {
-    timeFrom(dt) {
+    timeFrom (dt) {
       return moment(dt).from()
     },
   }

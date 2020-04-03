@@ -3,32 +3,34 @@
     :is="componentName"
     :key="issue.id"
     :issue="issue"
-    :hideDate="hideDate">
+    :hide-date="hideDate"
+  >
 
     <template #newspaper-title>
-      <slot name="newspaper-title"/>
+      <slot name="newspaper-title" />
     </template>
 
     <component
-      v-for="(post, idx) in headPosts"
       :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
+      v-for="(post, idx) in headPosts"
       :key="`head-${idx}`"
       :post="post"
     />
 
     <component
-      v-for="(post, idx) in tailPosts"
       :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
+      v-for="(post, idx) in tailPosts"
       :key="`tail-${idx}`"
       :post="post"
     />
 
     <footer class="issue--footer">
       <button
-        class="show-more"
         v-if="(tailPostsCount > 0 && !expanded)"
-        @click.prevent="expandIssue">
-        {{ $t('Show more') }} ({{tailPostsCount}})
+        class="show-more"
+        @click.prevent="expandIssue"
+      >
+        {{ $t('Show more') }} ({{ tailPostsCount }})
       </button>
 
       <RecommendButtonIssue
@@ -41,8 +43,7 @@
         :title="$t('Share')"
         :aria-label="$t('Share')"
         @click="openShareModal()"
-       >
-      </button>
+      />
     </footer>
 
     <ShareModal
@@ -72,15 +73,6 @@ const POST_LIMIT = 5
 export default {
   name: 'IssueWrapper',
 
-  props: {
-    issue: Object,
-    subscription: Boolean,
-    hideDate: Boolean,
-    showTail: Boolean
-  },
-
-  mixins: [PostObjectMixin],
-
   components: {
     IssueAuthor,
     IssueNewspaper,
@@ -93,7 +85,16 @@ export default {
     ShareModal
   },
 
-  data() {
+  mixins: [PostObjectMixin],
+
+  props: {
+    issue: Object,
+    subscription: Boolean,
+    hideDate: Boolean,
+    showTail: Boolean
+  },
+
+  data () {
     return {
       showAllPosts: false,
       isShareModalOpen: false,
@@ -105,15 +106,14 @@ export default {
       loggedIn: state => state.auth.loggedIn
     }),
 
-    componentName() {
+    componentName () {
       return 'issue-' + this.issue.type
     },
 
-    expanded() {
+    expanded () {
       if (this.showTail) {
         return true
-      }
-      else {
+      } else {
         return !!this.$store.state.timeline.expandedIssues[this.issue.id]
       }
     },
@@ -122,26 +122,26 @@ export default {
     //   return keyBy(this.issue.posts, 'id')
     // },
 
-    headPosts() {
+    headPosts () {
       return this.issue.layout.slice(0, POST_LIMIT).map(item => this.getPostObject(item))
     },
 
-    tailPosts() {
+    tailPosts () {
       return this.expanded ? this.issue.layout.slice(POST_LIMIT).map(item => this.getPostObject(item)) : []
     },
 
-    tailPostsCount() {
+    tailPostsCount () {
       return Math.max(0, this.issue.layout.length - POST_LIMIT)
     }
 
   },
 
   methods: {
-    expandIssue() {
+    expandIssue () {
       this.$store.dispatch('timeline/expandIssue', this.issue.id)
     },
 
-    openShareModal() {
+    openShareModal () {
       this.isShareModalOpen = true
       this.$ga.event({
         eventCategory: 'Share',

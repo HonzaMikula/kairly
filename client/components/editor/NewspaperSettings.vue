@@ -1,7 +1,7 @@
 <template>
   <div class="newspaper-settings-view">
     <h1>
-      {{ this.newspaper ? $t('Newspaper settings') : $t('Start a newspaper') }}
+      {{ newspaper ? $t('Newspaper settings') : $t('Start a newspaper') }}
     </h1>
 
     <main>
@@ -12,7 +12,7 @@
           <input
             id="name"
             v-model="title"
-          />
+          >
         </div>
 
         <div>
@@ -80,9 +80,9 @@
               height="120"
               accept="image/jpeg, image/png"
               size="10"
-              buttonClass="btn"
-              :prefill="this.newspaper && this.newspaper.picture"
-              :customStrings="{
+              button-class="btn"
+              :prefill="newspaper && newspaper.picture"
+              :custom-strings="{
                 drag: $t('Upload image')
               }"
               @change="onPictureChange"
@@ -118,7 +118,7 @@
               type="search"
               :placeholder="$t('Type username slug')"
               @keyup.enter="addCoEditor"
-            />
+            >
             <button
               :disabled="coEditorSlug === ''"
               @click="addCoEditor"
@@ -129,16 +129,17 @@
     </main>
 
     <footer>
-      <button @click="submit">{{ this.newspaper ? $t('Save') : $t('Create newspaper') }}</button>
+      <button @click="submit">{{ newspaper ? $t('Save') : $t('Create newspaper') }}</button>
     </footer>
 
-    <section class="newspaper-settings--delete" v-if="this.newspaper">
+    <section v-if="newspaper" class="newspaper-settings--delete">
       <div>
         <h2>{{ $t('Delete this newspaper') }}</h2>
         <p>{{ $t('Once you delete it, there is no way back. Be careful.') }}</p>
       </div>
       <button
-        @click.prevent="confirmDeleteNewspaper">
+        @click.prevent="confirmDeleteNewspaper"
+      >
         {{ $t('Delete newspaper') }}
       </button>
     </section>
@@ -146,20 +147,17 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex"
+import { mapActions, mapState } from 'vuex'
 
-import AppLayout from '@/components/layout/AppLayout'
 import EditorCard from '@/components/editor/EditorCard'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
 
-
 export default {
-  name: "NewspaperSettings",
+  name: 'NewspaperSettings',
 
   components: {
-    AppLayout,
     EditorCard,
     PeriodWidget,
     PictureInput,
@@ -171,10 +169,10 @@ export default {
     newspaper: Object
   },
 
-  data() {
+  data () {
     return {
-      title: this.newspaper ? this.newspaper.title : "",
-      description: this.newspaper ? this.newspaper.description : "",
+      title: this.newspaper ? this.newspaper.title : '',
+      description: this.newspaper ? this.newspaper.description : '',
       periodicity: this.newspaper ? this.newspaper.periodicity : null,
       price: this.newspaper ? ~~this.newspaper.price : 25,
       coEditors: this.newspaper ? [...this.newspaper.coEditors] : [],
@@ -189,90 +187,89 @@ export default {
       user: state => state.auth.user,
     }),
 
-    editor() { return this.newspaper ? this.newspaper.editor : this.user }
+    editor () { return this.newspaper ? this.newspaper.editor : this.user }
   },
 
   methods: {
-    onPictureChange(image) {
-      this.image = image;
+    onPictureChange (image) {
+      this.image = image
     },
 
-    changePeriodicity(frequency, dow, time) {
+    changePeriodicity (frequency, dow, time) {
       this.showPeriodicityWidget = false
 
       this.periodicity = {
-        "frequency": frequency,
-        "dow": dow,
-        "time": time
+        frequency,
+        dow,
+        time
       }
     },
 
-    updateComponentData({ title, description, price }) {
+    updateComponentData ({ title, description, price }) {
       this.title = title
       this.description = description
       this.price = ~~price
     },
 
-    async addCoEditor() {
+    async addCoEditor () {
       const slug = this.coEditorSlug.trim()
       if (slug === '') {
         return
       }
 
       try {
-        let { author: editor } = await this.$store.dispatch("getAuthor", slug)
+        const { author: editor } = await this.$store.dispatch('getAuthor', slug)
 
-        if (editor.id != this.editor.id && !this.coEditors.find(item => item.id === editor.id)) {
+        if (editor.id !== this.editor.id && !this.coEditors.find(item => item.id === editor.id)) {
           this.coEditors.push(editor)
         }
         this.coEditorSlug = ''
       } catch (e) {
-        console.log(e)
-        return
+        console.error(e)
       }
     },
 
-    async submit() {
-      const errors = [];
-      let fullName = null;
+    async submit () {
+      const errors = []
+      let fullName = null
 
-      if (this.title.trim() === "") {
-        errors.push(this.$t("Title is empty"));
+      if (this.title.trim() === '') {
+        errors.push(this.$t('Title is empty'))
       }
 
-      if (this.description.trim() === "") {
-        errors.push(this.$t("Editorial is empty"));
+      if (this.description.trim() === '') {
+        errors.push(this.$t('Editorial is empty'))
       }
 
       if (this.periodicity === null) {
-        errors.push(this.$t("Periodicity is not selected"));
+        errors.push(this.$t('Periodicity is not selected'))
       }
 
       if (errors.length) {
         // TODO show validation in form
-        alert(errors.join("\n"));
-        return;
+        alert(errors.join('\n'))
+        return
       }
 
       if (this.newspaper) {
-        const fields = {};
+        const fields = {}
         fullName = this.newspaper.fullName
 
         if (this.title !== this.newspaper.title) {
-          fields.title = this.title;
+          fields.title = this.title
         }
         if (this.description !== this.newspaper.description) {
-          fields.description = this.description;
+          fields.description = this.description
         }
-        if (this.price != this.newspaper.price) {
-          fields.price = this.price;
+        if (this.price !== this.newspaper.price) {
+          fields.price = this.price
         }
         if (this.periodicity) {
-          //TODO compare periodicity
-          fields.periodicity = this.periodicity;
+          // TODO compare periodicity
+          fields.periodicity = this.periodicity
         }
         if (this.image) {
-          fields.image = this.image;
+          fields.image = this.image
         }
         const actualCoEditors = this.newspaper.coEditors.map(editor => editor.id)
         const newCoEditors = this.coEditors.map(editor => editor.id)
@@ -283,7 +280,7 @@ export default {
         await this.updateNewspaper({
           fullName,
           fields
-        });
+        })
       } else {
         const created = await this.startNewspaper({
           authorId: this.user.id,
@@ -295,7 +292,7 @@ export default {
             image: this.image,
             coEditors: this.coEditors.map(editor => editor.id),
           }
-        });
+        })
         fullName = created.fullName
       }
 
@@ -303,7 +300,7 @@ export default {
       this.$router.push('/newspapers')
     },
 
-    confirmDeleteNewspaper() {
+    confirmDeleteNewspaper () {
       if (window.confirm(this.$t('Do you really want to delete this newspaper?'))) {
         this.deleteNewspaper(this.newspaper)
         window.localStorage.setItem('manageNewspapers.selected', null)
@@ -313,7 +310,7 @@ export default {
 
     ...mapActions(['deleteNewspaper', 'startNewspaper', 'updateNewspaper'])
   }
-};
+}
 </script>
 
 <style lang="sass">
@@ -366,7 +363,6 @@ export default {
   .newspaper-settings--side
     grid-area: newspaper-settings-side
 
-
   section
     margin-bottom: $baseline
 
@@ -392,7 +388,6 @@ export default {
       font-family: $ff-sans
       font-size: $fs--1
 
-
     //- textarea
     textarea
       box-sizing: border-box
@@ -408,7 +403,6 @@ export default {
       @media (max-width: $mobile)
         width: 80%
 
-
     //- select
     select
       box-sizing: border-box
@@ -420,7 +414,6 @@ export default {
 
       font-family: $ff-sans
       font-size: $fs--1
-
 
     //- help
     p
@@ -438,7 +431,6 @@ export default {
         &:hover,
         &:focus
           text-decoration: none
-
 
   //- periodicity
   .periodicity
@@ -460,7 +452,6 @@ export default {
 
       &::after
         left: 70px
-
 
   //- picture
   .picture
@@ -490,12 +481,10 @@ export default {
     button
       +button(primary, large)
 
-
 //- Editors
 .newspaper-settings--editors
   > h3
     font-weight: 600
-
 
 //- Add editor form
 .newspaper-settings--editors--add-editor
@@ -510,7 +499,6 @@ export default {
 
     border-radius: 0 5px 5px 0
     padding: 0 $baseline/2
-
 
 //- Delete newspapers
 .newspaper-settings--delete

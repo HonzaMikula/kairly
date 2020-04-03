@@ -1,32 +1,34 @@
 <template>
   <AppLayout :name="$t('Article')">
     <div class="post-detail-view" role="article">
-      <div class="post-detail--back-button"
-        :title="$t('Back')"
+      <div
         v-b-tooltip
-        @click="$router.go(-1)">
-      </div>
+        class="post-detail--back-button"
+        :title="$t('Back')"
+        @click="$router.go(-1)"
+      />
 
       <main itemscope itemtype="https://schema.org/NewsArticle">
         <header class="post-detail--header">
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
             <AuthorPicture :author="post.author" />
-            {{post.author.name}}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+            {{ post.author.name }}<span v-if="post.author.medium">, {{ post.author.medium }}</span>
           </nuxt-link>
 
-          <a v-if="post.source" :href="post.source" class="external-link" :aria-label="$t('Original article')"></a>
+          <a v-if="post.source" :href="post.source" class="external-link" :aria-label="$t('Original article')" />
         </header>
 
-        <div class="post-detail--title" id="start">
-          <h1 itemprop="name headline mainEntityOfPage">{{post.content.title}}</h1>
+        <div id="start" class="post-detail--title">
+          <h1 itemprop="name headline mainEntityOfPage">{{ post.content.title }}</h1>
         </div>
 
-        <div class="post-detail--content" v-html="post.content.perex" itemprop="articleBody" />
+        <div class="post-detail--content" itemprop="articleBody" v-html="post.content.perex" />
 
         <no-ssr>
-          <div class="post-detail--continue-reading"
+          <div
             v-if="post.content.content && showContinueReading"
             id="continue"
+            class="post-detail--continue-reading"
           >
             {{ $t('continue reading') }}
           </div>
@@ -39,7 +41,8 @@
         </div>
 
         <div v-else>
-          <div class="post-detail--content"
+          <div
+            class="post-detail--content"
             itemprop="articleBody"
             v-html="post.content.content"
           />
@@ -75,7 +78,9 @@
         <div
           class="post-detail--author"
           itemprop="author"
-          itemscope itemtype="https://schema.org/Person">
+          itemscope
+          itemtype="https://schema.org/Person"
+        >
           <picture>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
               <AuthorPicture itemprop="image" :author="post.author" />
@@ -84,13 +89,13 @@
 
           <h3>
             <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
-              <span itemprop="name">{{post.author.name}}</span><span v-if="post.author.medium">, {{post.author.medium}}</span>
+              <span itemprop="name">{{ post.author.name }}</span><span v-if="post.author.medium">, {{ post.author.medium }}</span>
             </nuxt-link>
           </h3>
 
-          <p itemprop="description">{{post.author.bio}}</p>
+          <p itemprop="description">{{ post.author.bio }}</p>
 
-          <div class="post-detail--author--subscription" v-if="loggedIn">
+          <div v-if="loggedIn" class="post-detail--author--subscription">
             <AuthorSubscriptionButton :author="post.author" />
           </div>
         </div>
@@ -111,10 +116,10 @@
               <aside>
                 {{ $t('Originally published in') }}
                 <nuxt-link
-                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
                   :id="`post-editorial-newspaper-${index}`"
+                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
                 >
-                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY') }})
                 </nuxt-link>
               </aside>
 
@@ -135,10 +140,10 @@
               <aside>
                 {{ $t('Originally published in') }}
                 <nuxt-link
-                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
                   :id="`post-editorial-newspaper-${index}`"
+                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
                 >
-                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY')}})
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY') }})
                 </nuxt-link>
               </aside>
               <PostTweet
@@ -164,8 +169,8 @@
 </template>
 
 <script>
-import { errorToParams } from '@/utils/errors'
 import { mapGetters, mapState } from 'vuex'
+import { errorToParams } from '@/utils/errors'
 
 import AppLayout from '@/components/layout/AppLayout'
 import AuthorPicture from '@/components/widgets/AuthorPicture'
@@ -177,7 +182,6 @@ import NewspaperPopup from '@/components/widgets/NewspaperPopup'
 import PostTweet from '@/components/posts/PostTweet'
 import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
 
-
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
 
@@ -185,40 +189,6 @@ export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
 
   auth: false,
-
-  head() {
-    const { title, perex }  = this.post.content
-    const { author, id, time } = this.post
-    const description = perex ? perex.replace(ELEMENTS_REGEXP, ' ').substring(0,350) : ''
-
-    const meta = [
-      { hid: 'description', name: 'description', content: description},
-      { hid: `og:title`, property: 'og:title', content: `${title} – ${author.name} – Kairly`},
-      { hid: `og:description`, property: 'og:description', content: description},
-      { hid: `og:article:published_time`, property: 'og:article:published_time', content: time},
-
-      { hid: `og:type`, property: 'og:type', content: 'article'},
-      { hid: `og:url`, property: 'og:url', content: `https://www.kairly.com/${id}`},
-      { hid: `twitter:card`, property: 'twitter:card', content: 'summary'},
-      { hid: `twitter:site`, property: 'twitter:site', content: '@kairlynews'},
-      { hid: `twitter:title`, property: 'twitter:title', content: `${title} – ${author.name} – Kairly`},
-      { hid: `twitter:description`, property: 'twitter:description', content: description},
-      { hid: 'author', name: 'author', content: author.name},
-    ]
-
-    const matches =  IMG_REGEXP.exec(perex)
-    if (matches) {
-      const image = matches[1]
-      meta.push({ hid: `og:image`, property: 'og:image', content: image})
-      meta.push({ hid: `og:image:alt`, property: 'og:image:alt', content: title})
-      meta.push({ hid: `twitter:image`, property: 'twitter:image', content: image})
-    }
-
-    return {
-      title: `${title} – ${author.name} – Kairly`,
-      meta
-    }
-  },
 
   components: {
     AppLayout,
@@ -232,35 +202,7 @@ export default {
     RecommendButtonPost,
   },
 
-  data() {
-    return {
-      showContinueReading: false,
-      showConsiderPost: false,
-      scrollCounter: 0
-    }
-  },
-
-  methods: {
-    closeConsiderPost() {
-      this.showConsiderPost = false
-    },
-
-    openConsiderPost() {
-      this.showConsiderPost = true
-    }
-  },
-
-  computed: {
-    ...mapState({
-      loggedIn: state => state.auth.loggedIn
-    }),
-
-    ...mapGetters({
-      userNewspapers: 'userNewspapers',
-    }),
-  },
-
-  async asyncData({ store, params, error }) {
+  async asyncData ({ store, params, error }) {
     const { author, post: postSlug } = params
     try {
       if (store.state.auth.loggedIn) {
@@ -274,27 +216,89 @@ export default {
     }
   },
 
-  async created() {
-    if(this.$route.hash == '#continue') {
+  data () {
+    return {
+      showContinueReading: false,
+      showConsiderPost: false,
+      scrollCounter: 0
+    }
+  },
+
+  computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
+    ...mapGetters({
+      userNewspapers: 'userNewspapers',
+    }),
+  },
+
+  created () {
+    if (this.$route.hash === '#continue') {
       this.showContinueReading = true
     }
   },
 
-  async mounted() {
+  async mounted () {
     if (this.loggedIn) {
       await this.$store.dispatch('backlog/loadUserBacklog')
     }
   },
 
-  updated() {
+  updated () {
     // TODO dangerous if more component properties exists and updated called more
     // then once
-    if (process.client && this.$route.hash && this.scrollCounter == 0) {
+    if (this.$route.hash && this.scrollCounter === 0) {
       const anchor = document.querySelector(this.$route.hash)
       if (anchor) {
         anchor.scrollIntoView(true)
         this.scrollCounter++
       }
+    }
+  },
+
+  methods: {
+    closeConsiderPost () {
+      this.showConsiderPost = false
+    },
+
+    openConsiderPost () {
+      this.showConsiderPost = true
+    }
+  },
+
+  head () {
+    const { title, perex } = this.post.content
+    const { author, id, time } = this.post
+    const description = perex ? perex.replace(ELEMENTS_REGEXP, ' ').substring(0, 350) : ''
+
+    const meta = [
+      { hid: 'description', name: 'description', content: description },
+      { hid: 'og:title', property: 'og:title', content: `${title} – ${author.name} – Kairly` },
+      { hid: 'og:description', property: 'og:description', content: description },
+      { hid: 'og:article:published_time', property: 'og:article:published_time', content: time },
+
+      { hid: 'og:type', property: 'og:type', content: 'article' },
+      { hid: 'og:url', property: 'og:url', content: `https://www.kairly.com/${id}` },
+      { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
+      { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
+      { hid: 'twitter:title', property: 'twitter:title', content: `${title} – ${author.name} – Kairly` },
+      { hid: 'twitter:description', property: 'twitter:description', content: description },
+      { hid: 'author', name: 'author', content: author.name },
+    ]
+
+    const matches = IMG_REGEXP.exec(perex)
+    if (matches) {
+      const image = matches[1]
+      meta.push({ hid: 'og:image', property: 'og:image', content: image })
+      meta.push({ hid: 'og:image:alt', property: 'og:image:alt', content: title })
+      meta.push({ hid: 'twitter:image', property: 'twitter:image', content: image })
+    }
+
+    return {
+      title: `${title} – ${author.name} – Kairly`,
+      meta
     }
   }
 }
@@ -321,7 +325,6 @@ export default {
   main
     margin: 0 auto
     max-width: 700px
-
 
 //- Back Button
 .post-detail--back-button
@@ -357,7 +360,6 @@ export default {
 
   @media (max-width: $mobile)
     position: static
-
 
 //- Header
 .post-detail--header
@@ -406,7 +408,6 @@ export default {
     font-size: $fs-2
     line-height: 1.58
 
-
 //- Continue Reading
 .post-detail--continue-reading
   position: relative
@@ -444,7 +445,6 @@ export default {
 
   &::after
     right: 0
-
 
 //- Content
 .post-detail--content,
@@ -493,7 +493,6 @@ export default {
   .share-twitter
     +button-icon($fa-var-twitter, icon, brand)
 
-
   a.read-full-article
     +button(primary, large)
 
@@ -515,7 +514,6 @@ export default {
         left: $baseline * 0.75
         right: inherit
 
-
 //- Post Author
 .post-detail--author
   display: grid
@@ -532,7 +530,6 @@ export default {
     grid-template-areas: "post-detail-author-image post-detail-author-name" "post-detail-author-image post-detail-author-subscription" "post-detail-author-image post-detail-author-bio"
     grid-template-columns: $baseline*3 1fr
     grid-template-rows: auto auto
-
 
   //- picture
   picture
@@ -582,7 +579,6 @@ export default {
     button.to-subscribe,
     button.is-canceled
       +button(secondary, small)
-
 
 //- Editorial Comments
 .post-detail--editorial-comments

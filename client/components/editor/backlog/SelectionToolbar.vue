@@ -5,46 +5,45 @@
       <span>
         {{ $t('selected posts') }}
       </span>
-      <button 
-        class="cancel" 
-        @keydown="cleanSelection"
-        tabindex="0"
-        @click="cleanSelection"
+      <button
         v-b-tooltip
+        class="cancel"
+        tabindex="0"
         :title="$t('Cancel selection (ESC)')"
+        @click="cleanSelection"
       />
     </div>
 
     <nav class="selection-toolbar--navigation">
-      <button 
-        class="up" 
-        tabindex="0"
+      <button
         v-b-tooltip
+        class="up"
+        tabindex="0"
         :title="$t('Move up (⬆)')"
-        @click="moveUp()" 
-      />
-
-      <button 
-        class="down"
-        @click="moveDown()" 
-        tabindex="0"
-        v-b-tooltip
-        :title="$t('Move down (⬇)')"
+        @click="moveUp()"
       />
 
       <button
-        class="upcoming-issue" 
+        v-b-tooltip
+        class="down"
+        tabindex="0"
+        :title="$t('Move down (⬇)')"
+        @click="moveDown()"
+      />
+
+      <button
         id="upcomingIssue"
+        class="upcoming-issue"
         @click="moveToUpcomingBottom()"
       >
         <span>{{ $t('Upcoming issue') }}</span>
       </button>
 
-      <button 
-        class="backlog"
-        @click="moveDown('considered')"
+      <button
         v-b-tooltip
+        class="backlog"
         :title="$t('Move up (B)')"
+        @click="moveDown('considered')"
       >
         <span>{{ $t('Backlog') }}</span>
       </button>
@@ -59,11 +58,10 @@
       </button>
 
       <button
-        class="delete"
         v-b-tooltip
+        class="delete"
         :title="$t('Remove post(s) (Del)')"
         @click="remove()"
-        @keydown.delete="remove()"
       />
 
       <b-popover
@@ -73,17 +71,17 @@
         @click.stop
       >
         <ul>
-          <li tabindex="0" v-show="selection.length === 2" @click="makeBox('cols-2-1', ['', 'editorial'])">
+          <li v-show="selection.length === 2" tabindex="0" @click="makeBox('cols-2-1', ['', 'editorial'])">
             <h6>{{ $t('Layout 2-1') }}</h6>
             <p>{{ $t('One main article, one smaller column') }}</p>
           </li>
 
-          <li tabindex="1" v-show="selection.length === 2" @click="makeBox('cols-1-1', ['', ''])">
+          <li v-show="selection.length === 2" tabindex="1" @click="makeBox('cols-1-1', ['', ''])">
             <h6>{{ $t('Layout 1-1') }}</h6>
             <p>{{ $t('Two equal sections') }}</p>
           </li>
 
-          <li tabindex="2" v-show="selection.length === 3" @click="makeBox('cols-1-1-1', ['', '', ''])">
+          <li v-show="selection.length === 3" tabindex="2" @click="makeBox('cols-1-1-1', ['', '', ''])">
             <h6>{{ $t('Layout 1-1-1') }}</h6>
             <p>{{ $t('Three equal sections') }}</p>
           </li>
@@ -109,13 +107,10 @@
 </template>
 
 <script>
-import { BPopover } from "bootstrap-vue"
-
-const UPPERMOST_BACKLOG = 'upcoming'
-const BOTTOMMOST_BACKLOG = 'considered'
+import { BPopover } from 'bootstrap-vue'
 
 export default {
-  name: "SelectionToolbar",
+  name: 'SelectionToolbar',
 
   components: {
     BPopover
@@ -126,11 +121,11 @@ export default {
   },
 
   computed: {
-    selection() {
+    selection () {
       return this.$store.getters['backlog/getSelection']
     },
 
-    containsOnlyPosts() {
+    containsOnlyPosts () {
       const selectedBoxes = this.$store.getters['backlog/getSelectedBoxes'](this.newspaper)
       for (let i = 0; i < selectedBoxes.length; i++) {
         if (selectedBoxes[i].box.type !== 'post') {
@@ -142,42 +137,42 @@ export default {
   },
 
   methods: {
-    cleanSelection() {
+    cleanSelection () {
       this.$store.commit('backlog/cleanSelection')
     },
 
-    moveToUpcomingTop() {
+    moveToUpcomingTop () {
       this.$store.dispatch('backlog/moveSelectionToUpcomingTop', {
         newspaper: this.newspaper
       })
     },
 
-    moveToUpcomingBottom() {
+    moveToUpcomingBottom () {
       this.$store.dispatch('backlog/moveSelectionToUpcomingBottom', {
         newspaper: this.newspaper
       })
     },
 
-    moveUp() {
+    moveUp () {
       this.$store.dispatch('backlog/moveSelectionUp', {
         newspaper: this.newspaper
       })
     },
 
-    moveDown(target=null) {
+    moveDown (target = null) {
       this.$store.dispatch('backlog/moveSelectionDown', {
         newspaper: this.newspaper,
         target
       })
     },
 
-    remove() {
+    remove () {
       this.$store.dispatch('backlog/removeSelectedBox', {
         newspaper: this.newspaper
       })
     },
 
-    makeBox(layout, columnsStyle) {
+    makeBox (layout, columnsStyle) {
       this.$store.dispatch('backlog/makeBoxFromSelection', {
         newspaper: this.newspaper,
         layout,
@@ -256,7 +251,6 @@ export default {
 
       content: fa-content($fa-var-times)
 
-
 .selection-toolbar--navigation
   display: grid
   flex: 1
@@ -319,7 +313,7 @@ export default {
       +fa-icon()
       @extend .fas
 
-      content: fa-content($fa-var-rocket)    
+      content: fa-content($fa-var-rocket)
 
   .backlog
     &::before
@@ -342,6 +336,5 @@ export default {
       margin-right: 0
 
       content: fa-content($fa-var-trash-alt)
-
 
 </style>

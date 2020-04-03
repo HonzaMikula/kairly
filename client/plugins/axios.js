@@ -1,7 +1,6 @@
-import axiosRetry from 'axios-retry';
-import jwtDecode from 'jwt-decode';
+import jwtDecode from 'jwt-decode'
 
-export default function({ app, $axios, store, redirect }) {
+export default function ({ app, $axios, store, redirect }) {
   $axios.onResponse(({ data }) => {
     if (data.$authors) {
       Object.values(data.$authors).forEach(author => store.commit('entities/author', { author }))
@@ -44,12 +43,12 @@ export default function({ app, $axios, store, redirect }) {
           }
 
           if (remaining < 7 * 86400) {
-              const resp = await $axios.$get('/refresh-token')
-              const newToken = 'Bearer ' + resp.token
+            const resp = await $axios.$get('/refresh-token')
+            const newToken = 'Bearer ' + resp.token
 
-              await app.$auth.setStrategy('local')
-              app.$auth.setToken('local', newToken)
-              app.$auth.strategy._setToken(newToken)
+            await app.$auth.setStrategy('local')
+            app.$auth.setToken('local', newToken)
+            app.$auth.strategy._setToken(newToken)
           }
         }
       }

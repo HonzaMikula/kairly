@@ -2,7 +2,7 @@
 export default {
   auth: false,
 
-  async fetch({ redirect }) {
+  fetch ({ redirect }) {
     redirect('/explore/news')
   }
 }

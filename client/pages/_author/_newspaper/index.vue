@@ -5,7 +5,8 @@
         <div>
           <h1 itemprop="name">
             <nuxt-link
-              :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}">
+              :to="{name: 'author-newspaper', params: {author: newspaper.editor.id, newspaper: newspaper.name}}"
+            >
               {{ newspaper.title }}
             </nuxt-link>
           </h1>
@@ -16,8 +17,8 @@
               v-if="newspaper.picture"
               :src="newspaper.picture"
               :alt="newspaper.title"
-            />
-            <div v-else class="image-placeholder"></div>
+            >
+            <div v-else class="image-placeholder" />
           </picture>
 
           <div
@@ -39,16 +40,16 @@
           >
             <nuxt-link
               v-if="links.prev"
-              :to="links.prev"
               v-b-tooltip
+              :to="links.prev"
               :title="$t('Previous issue')"
               class="previous"
             />
 
             <nuxt-link
               v-if="links.next"
-              :to="links.next"
               v-b-tooltip
+              :to="links.next"
               :title="$t('Next issue')"
               class="next"
             />
@@ -58,12 +59,12 @@
             <IssueWrapper
               :issue="issue"
               :subscription="newspaper.subscription"
-              hideDate
-              showTail
+              hide-date
+              show-tail
             >
               <template #newspaper-title>
                 {{ $t('Issue from') }}
-                <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY')}}</time>
+                <time itemprop="datePublished">{{ issue.time | moment('D. M. YYYY') }}</time>
               </template>
             </IssueWrapper>
 
@@ -74,16 +75,16 @@
               >
                 <nuxt-link
                   v-if="links.prev"
-                  :to="links.prev"
                   v-b-tooltip
+                  :to="links.prev"
                   :title="$t('Previous issue')"
                   class="previous"
                 />
 
                 <nuxt-link
                   v-if="links.next"
-                  :to="links.next"
                   v-b-tooltip
+                  :to="links.next"
                   :title="$t('Next issue')"
                   class="next"
                 />
@@ -94,17 +95,18 @@
           </div>
 
           <footer
-            class="newspaper-detail--newsletter-subscription">
+            class="newspaper-detail--newsletter-subscription"
+          >
             <h2>{{ $t('Subscribe to newsletter') }}</h2>
             <ul>
               <li>
                 {{ $t('Read the best content selected by') }}
 
                 <nuxt-link
-                  :to="{name: 'author', params: {author: newspaper.editor.id}}"
                   :id="`issue-newspaper-author-${$_uid}`"
+                  :to="{name: 'author', params: {author: newspaper.editor.id}}"
                 >
-                  <img :src="newspaper.editor.pictures.small" :alt="newspaper.editor.name" />
+                  <img :src="newspaper.editor.pictures.small" :alt="newspaper.editor.name">
                   <strong>{{ newspaper.editor.name }}</strong>
                 </nuxt-link>.
               </li>
@@ -112,11 +114,11 @@
               <li>
                 {{ $t('You can also subscribe using') }}
                 <a
+                  v-b-tooltip
                   :href="`https://kairly.com/${newspaper.editor.id}/${newspaper.name}/rss`"
                   target="_blank"
                   class="rss"
                   :aria-label="$t('Subscribe RSS')"
-                  v-b-tooltip
                   :title="$t('Subscribe RSS')"
                   @click="$ga.event({
                     eventCategory: 'Subscribe RSS newspaper',
@@ -131,13 +133,29 @@
               v-if="newspaper.newsletterSubscriptionUrl"
               id="mc_embed_signup"
             >
-              <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+              <form
+                id="mc-embedded-subscribe-form"
+                action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=7c7468a76d"
+                method="post"
+                name="mc-embedded-subscribe-form"
+                class="validate"
+                target="_blank"
+                novalidate
+              >
                 <div id="mc_embed_signup_scroll">
-                  <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" :placeholder="$t('email address')" required>
+                  <input
+                    id="mce-EMAIL"
+                    type="email"
+                    value=""
+                    name="EMAIL"
+                    class="email"
+                    :placeholder="$t('email address')"
+                    required
+                  >
                   <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signupss -->
                   <div style="position: absolute; left: -5000px;" aria-hidden="true">
                     <input type="text" name="b_0aa8c0b091d21d477832fbe62_7c7468a76d" tabindex="-1" value="">
-                    <input type="checkbox" :value="newspaper.newsletterSubscriptionUrl" :name="`group[84705][${newspaper.newsletterSubscriptionUrl}]`" checked />
+                    <input type="checkbox" :value="newspaper.newsletterSubscriptionUrl" :name="`group[84705][${newspaper.newsletterSubscriptionUrl}]`" checked>
                   </div>
                   <div class="clear">
                     <input
@@ -151,7 +169,7 @@
                         eventAction: newspaper.name,
                         eventLabel: newspaper.editor.id
                       })"
-                    />
+                    >
                   </div>
                 </div>
               </form>
@@ -184,7 +202,7 @@
   /:author/:newspaper/:issue is also routed to this page
 */
 
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 import { errorToParams } from '@/utils/errors'
 import { flattenPosts } from '@/utils/layout'
@@ -196,8 +214,6 @@ import IssueWrapper from '@/components/IssueWrapper'
 import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscriptionButton'
 import KairlyPromo from '@/components/KairlyPromo'
 import FooterLinks from '@/components/microsite/FooterLinks'
-import RecommendButtonIssue from '@/components/widgets/RecommendButtonIssue'
-import MoneyFormat from '@/components/widgets/MoneyFormat'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 
@@ -206,8 +222,68 @@ export default {
 
   auth: false,
 
-  head() {
-    const { title, name, description, picture, editor} = this.newspaper
+  components: {
+    AppLayout,
+    IssueWrapper,
+    NewspaperSubscriptionButton,
+    KairlyPromo,
+    FooterLinks
+  },
+
+  mixins: [PeriodicityMixin, PostObjectMixin],
+
+  async asyncData ({ store, params, error }) {
+    const fullName = `${params.author}/${params.newspaper}`
+
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
+    }
+    try {
+      const { newspaper, issue, links } = await store.dispatch('getNewspaperDetail', {
+        newspaperId: fullName,
+        issue: params.issue
+      })
+      return { newspaper, issue, links }
+    } catch (err) {
+      error(errorToParams(err))
+    }
+  },
+
+  computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
+    isEditor () {
+      if (this.newspaper) {
+        const author = this.newspaper.editor
+        return this.user.id === author.id
+      } else {
+        return false
+      }
+    },
+
+    periodicity () {
+      return this.getPeriodicityLabel(this.newspaper.periodicity)
+    },
+
+    posts () {
+      return this.issue.layout.map(item => this.getPostObject(item))
+    },
+
+    ...mapState({
+      user: state => state.auth.user
+    })
+  },
+
+  async mounted () {
+    if (this.loggedIn) {
+      await this.$store.dispatch('backlog/loadUserBacklog')
+    }
+  },
+
+  head () {
+    const { title, name, description, picture, editor } = this.newspaper
 
     let firstPostTitle = ''
     let metaTitle
@@ -216,21 +292,21 @@ export default {
     let metaPicture
     let images
 
-    function shortTilte(post) {
+    function shortTilte (post) {
       const { content } = post
       let short = ''
       if (content.title) {
         short = content.title
       } else if (content.content) {
-        short = content.content.replace(/(<([^>]+)>)/ig,"")
+        short = content.content.replace(/(<([^>]+)>)/ig, '')
       } else if (content.perex) {
-        short = content.perex.replace(/(<([^>]+)>)/ig,"")
+        short = content.perex.replace(/(<([^>]+)>)/ig, '')
       }
-      return short.length > 60 ? short.slice(0, 60 - 1) + "…" : short
+      return short.length > 60 ? short.slice(0, 60 - 1) + '…' : short
     }
 
     if (this.$route.params.issue) {
-      //- act as an issue detail
+      // - act as an issue detail
 
       const posts = flattenPosts(this.posts)
       if (posts.length) {
@@ -246,13 +322,13 @@ export default {
 
       metaUrl = `https://kairly.com/${editor.id}/${name}/${this.issue.number}`
     } else {
-      //- act as a newspaper detail
+      // - act as a newspaper detail
       metaTitle = `${title} – Kairly`
       metaDescription = description
       metaUrl = `https://kairly.com/${editor.id}/${name}`
     }
 
-    //- newspaper image
+    // - newspaper image
     if (this.$route.params.issue) {
       images = this.issue.posts
         .map((post) => IMG_REGEXP.exec(post.content.perex))
@@ -280,82 +356,24 @@ export default {
         { hid: 'twitter:title', property: 'twitter:title', content: metaTitle },
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
         { hid: 'twitter:image', property: 'twitter:image', content: metaPicture },
-        { hid: 'author', name: 'author', content: editor.name},
+        { hid: 'author', name: 'author', content: editor.name },
       ],
       link: [
-        { rel: 'alternate', type: 'application/rss+xml', title:`${title} - RSS feed`,
-          href: `https://kairly.com/${editor.id}/${name}/rss` }
+        {
+          rel: 'alternate',
+          type: 'application/rss+xml',
+          title: `${title} - RSS feed`,
+          href: `https://kairly.com/${editor.id}/${name}/rss`
+        }
       ]
     }
 
     if (this.issue) {
-      head.meta.push({ hid: `og:article:published_time`, property: 'og:article:published_time', content: this.issue.time})
+      head.meta.push({ hid: 'og:article:published_time', property: 'og:article:published_time', content: this.issue.time })
     }
 
     return head
-  },
-
-  components: {
-    AppLayout,
-    IssueWrapper,
-    NewspaperSubscriptionButton,
-    KairlyPromo,
-    FooterLinks,
-    RecommendButtonIssue,
-    MoneyFormat,
-  },
-
-  mixins: [PeriodicityMixin, PostObjectMixin],
-
-  computed: {
-    ...mapState({
-      loggedIn: state => state.auth.loggedIn
-    }),
-
-    isEditor() {
-      if (this.newspaper) {
-        const author = this.newspaper.editor
-        return this.user.id === author.id
-      } else {
-        return false
-      }
-    },
-
-    periodicity() {
-      return this.getPeriodicityLabel(this.newspaper.periodicity)
-    },
-
-    posts() {
-      return this.issue.layout.map(item => this.getPostObject(item))
-    },
-
-    ...mapState({
-      user: state => state.auth.user
-    })
-  },
-
-  async asyncData({ store, params, error }) {
-    const fullName = `${params.author}/${params.newspaper}`
-
-    if (store.state.auth.loggedIn) {
-      await store.dispatch('getSubscriptions')
-    }
-    try {
-      const { newspaper, issue, links } = await store.dispatch('getNewspaperDetail', {
-        newspaperId: fullName,
-        issue: params.issue
-      })
-      return { newspaper, issue, links }
-    } catch (err) {
-      error(errorToParams(err))
-    }
-  },
-
-  async mounted() {
-    if (this.loggedIn) {
-      await this.$store.dispatch('backlog/loadUserBacklog')
-    }
-  },
+  }
 }
 </script>
 
@@ -370,7 +388,6 @@ export default {
   main
     max-width: 900px
     margin: 0 auto
-
 
 //- Header
 .newspaper-detail--header
@@ -454,7 +471,6 @@ export default {
         width: 100%
 
         object-fit: cover
-
 
 //- Subscribe
 .newspaper-detail--subscribe
@@ -570,7 +586,6 @@ export default {
       &::before
         content: fa-content($fa-var-arrow-right)
 
-
 //- Issue
 .newspaper-detail--issue
   display: block
@@ -587,7 +602,6 @@ export default {
     font-weight: 600
     line-height: 1.42
     text-align: center
-
 
 //- Footer subscribe to newsletter
 .newspaper-detail--newsletter-subscription
@@ -634,7 +648,6 @@ export default {
 
     margin-right: $baseline / 8
 
-
   //- author's image
   li img
     height: $baseline * 0.75
@@ -655,7 +668,6 @@ export default {
       @media (max-width: $mobile)
         align-items: center
         flex-direction: column
-
 
     input[type=email]
       box-sizing: border-box
@@ -720,9 +732,6 @@ export default {
     min-height: 0px
     padding-bottom: 0px
 
-
-
-
 //- Footer with social buttons
 .newspaper-detail--social-sharing
   display: flex
@@ -742,8 +751,6 @@ export default {
 
   a.rss
     +button-icon($fa-var-rss-square, icon)
-
-
 
 //- When newspaper is empty
 .newspaper-detail--empty-newspaper

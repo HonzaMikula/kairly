@@ -18,8 +18,8 @@
 
       <PostWrapper
         v-for="post in posts"
-        :post="post"
         :key="post.id"
+        :post="post"
       />
     </section>
 
@@ -42,18 +42,18 @@ export default {
     PostWrapper
   },
 
-  head() {
-    return {
-      title: this.$t('Most Recent – Explore – Kairly')
-    }
-  },
-
-  async asyncData({ store }) {
+  async asyncData ({ store }) {
     const [issues, posts] = await Promise.all([
       store.dispatch('getRecentIssues', 3),
       store.dispatch('getRecentPosts')
     ])
     return { issues, posts }
+  },
+
+  head () {
+    return {
+      title: this.$t('Most Recent – Explore – Kairly')
+    }
   }
 }
 </script>

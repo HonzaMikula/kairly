@@ -1,8 +1,10 @@
 <template>
   <div class="myauthors-view">
     <template>
-      <div class="my-authors--empty"
-        v-if="!subscriptionExists">
+      <div
+        v-if="!subscriptionExists"
+        class="my-authors--empty"
+      >
         <h1>{{ $t('No authors') }}</h1>
         <p>{{ $t("You haven't subscribe to any author yet. On Explore page you can find authors you might like.") }}</p>
         <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
@@ -58,30 +60,26 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-
 import AuthorWidget from '@/components/widgets/AuthorWidget'
 
-function sortAuthors(a, b) {
-  const aName = a.name.toLowerCase(), bName = b.name.toLowerCase()
+function sortAuthors (a, b) {
+  const aName = a.name.toLowerCase(); const bName = b.name.toLowerCase()
   return aName < bName ? -1 : (aName > bName ? 1 : 0)
 }
 
 export default {
   name: 'MyAuthors',
 
-  head() {
-    return {
-      title: this.$t('Authors – My Subscription – Kairly')
-    }
-  },
-
   components: {
     AuthorWidget
   },
 
+  async fetch ({ store }) {
+    await store.dispatch('getSubscriptions')
+  },
+
   computed: {
-    subscriptions() {
+    subscriptions () {
       const { authors } = this.$store.state.subscriptions
       return Object.values(authors).map(s => {
         return {
@@ -91,17 +89,17 @@ export default {
       })
     },
 
-    subscriptionExists() {
+    subscriptionExists () {
       return this.subscriptions.length > 0
     },
 
-    sections() {
+    sections () {
       const sections = {
-        'suspended': [],
+        suspended: [],
         '6x_per_day': [],
         '3x_per_day': [],
-        'daily': [],
-        'weekly': []
+        daily: [],
+        weekly: []
       }
       this.subscriptions.forEach(subscription => {
         if (subscription.state === 'suspended') {
@@ -120,8 +118,10 @@ export default {
     }
   },
 
-  async fetch({ store }) {
-    await store.dispatch('getSubscriptions')
+  head () {
+    return {
+      title: this.$t('Authors – My Subscription – Kairly')
+    }
   }
 }
 </script>

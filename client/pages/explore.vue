@@ -17,7 +17,7 @@
         </nav>
       </header>
 
-      <nuxt-child/>
+      <nuxt-child />
     </div>
   </AppLayout>
 </template>
@@ -34,16 +34,15 @@ export default {
     AppLayout
   },
 
-  data() {
-    return {
-      tabs: TABS,
+  async fetch ({ store }) {
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
     }
   },
 
-  async fetch({ store }) {
-
-    if (store.state.auth.loggedIn) {
-      await store.dispatch('getSubscriptions')
+  data () {
+    return {
+      tabs: TABS,
     }
   }
 }

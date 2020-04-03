@@ -1,6 +1,6 @@
 <template>
   <div class="empty-post-placeholder-view">
-    <h2><slot></slot></h2>
+    <h2><slot /></h2>
 
     <div class="empty-post-placeholder--instructions">
       <section>
@@ -36,7 +36,6 @@
   </div>
 </template>
 
-
 <script>
 
 export default {
@@ -59,7 +58,7 @@ export default {
 
   text-align: center
 
-  h2 
+  h2
     margin-bottom: $baseline * 1.5
 
     font-size: $fs-3
@@ -96,7 +95,7 @@ export default {
   ul,
   ol
     margin-top: $baseline
-    
+
     @media (max-width: $mobile)
       margin-top: $baseline / 2
 

@@ -5,11 +5,10 @@
 
       <p>
         {{ $t('Stop be distracted.') }}
-        <br />
+        <br>
         {{ $t('Grow healthy reading habits.') }}
       </p>
 
-      
     </div>
   </footer>
 </template>

@@ -13,14 +13,14 @@
             </ul>
           </section>
 
-          <SignUpForm></SignUpForm>
+          <SignUpForm />
         </div>
       </section>
 
       <ExploreNewspapers />
 
       <Faq>
-        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly">
       </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
@@ -37,15 +37,14 @@
           different from the current not very successful attempts.
         </p>
         -->
-        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík">
         <strong>Marek Zouzalík</strong>
         <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
       </Quote>
 
-
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-26.jpg" />
+          <img src="~assets/microsite/kairly-random-26.jpg">
         </picture>
 
         <div>
@@ -88,13 +87,13 @@
             koupili noviny a četli si je autobuse měla něco do sebe.
           </p> -->
 
-        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
+        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula">
         <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
       </Quote>
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-random-35.jpg" />
+          <img src="~assets/microsite/kairly-random-35.jpg">
         </picture>
 
         <div>
@@ -135,7 +134,7 @@
             Tato vysoká personalizace obsahu je klíč k úspěšněmu modelu placeného obsahu.
           </p> -->
 
-        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
+        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík">
         <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
       </Quote>
 
@@ -150,8 +149,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
@@ -177,14 +174,15 @@ export default {
     ExploreNewspapers
   },
 
-  head() {
+  head () {
     return {
-      title: this.$t('Media platform for readers') +' – Kairly',
+      title: this.$t('Media platform for readers') + ' – Kairly',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.$t('Kairly is a media platform for pleasant reading without distraction and endless scrolling.') },
+          content: this.$t('Kairly is a media platform for pleasant reading without distraction and endless scrolling.')
+        },
       ]
     }
   }
@@ -236,7 +234,7 @@ export default {
     padding: 0
     padding-bottom: $baseline / 2
 
-  > div  
+  > div
     display: grid
     grid-template-columns: 2fr 1fr
     max-width: 900px
@@ -258,7 +256,6 @@ export default {
     @media (max-width: $mobile)
       margin: $baseline $baseline/2
       width: 100%
-
 
   > p
     font-size: $fs-0
@@ -373,7 +370,6 @@ export default {
         @media (max-width: $mobile)
           content: none
 
-
 //- Benefits
 .journalists--benefits
   display: grid
@@ -395,7 +391,6 @@ export default {
       margin-bottom: $baseline
 
       font-size: $fs-1
-
 
     li
       margin-left: $baseline / 2

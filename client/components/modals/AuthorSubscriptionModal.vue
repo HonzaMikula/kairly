@@ -41,7 +41,7 @@
     <section class="author-subscription--donations">
       <h2>{{ $t('Support the author and donate more') }}</h2>
       <div>
-        <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000"/>
+        <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000">
         {{ $t('Kč per month') }}
       </div>
     </section>
@@ -49,8 +49,8 @@
     <template #footer>
       <template v-if="!state">
         <div
-          :title="!canPay && $t('You don\'t have enough credit')"
           v-b-tooltip
+          :title="!canPay && $t('You don\'t have enough credit')"
         >
           <button
             class="confirm"
@@ -127,10 +127,6 @@ import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 export default {
   name: 'AuthorSubscriptionModal',
 
-  props: {
-    author: Object,
-  },
-
   components: {
     AuthorPicture,
     DialogWindow,
@@ -140,12 +136,16 @@ export default {
 
   mixins: [ModalMixin, PeriodicityMixin],
 
-  data() {
+  props: {
+    author: Object,
+  },
+
+  data () {
     const subscription = this.$store.getters.getAuthorSubscription(this.author)
     return {
-      subscription: subscription,
+      subscription,
       donation: subscription ? parseInt(subscription.donation) : 0,
-      periodicity: (subscription && subscription.periodicity) || {frequency: '6x_per_day'},
+      periodicity: (subscription && subscription.periodicity) || { frequency: '6x_per_day' },
       showChangePeriodicityDialog: false
     }
   },
@@ -155,40 +155,40 @@ export default {
       user: state => state.auth.user
     }),
 
-    state() {
+    state () {
       return this.subscription ? this.subscription.state : null
     },
 
-    periodicityLabel() {
+    periodicityLabel () {
       return this.getPeriodicityLabel(this.periodicity)
     },
 
-    canPay() {
+    canPay () {
       if (this.user) {
         const price = this.author.price.split('.').map(v => ~~v)
         const credits = this.user.credits.split('.').map(v => ~~v)
-        return credits[0] > price[0] || (credits[0] == price[0] && credits[1] >= price[1])
+        return credits[0] > price[0] || (credits[0] === price[0] && credits[1] >= price[1])
       }
       return false
     }
   },
 
   methods: {
-    changePeriodicity(frequency, dow, time) {
+    changePeriodicity (frequency, dow, time) {
       this.showChangePeriodicityDialog = false
 
       this.periodicity = {
-        "frequency": frequency,
-        "dow": dow,
-        "time": time
+        frequency,
+        dow,
+        time
       }
     },
 
-    closeChangePeriodicityDialog()  {
+    closeChangePeriodicityDialog () {
       this.showChangePeriodicityDialog = false
     },
 
-    subscribe() {
+    subscribe () {
       this.$store.dispatch('subscribeAuthor', {
         author: this.author,
         periodicity: this.periodicity,
@@ -197,7 +197,7 @@ export default {
       this.closeModal()
     },
 
-    async unsubscribe() {
+    async unsubscribe () {
       this.subscription = await this.$store.dispatch('unsubscribeAuthor', {
         author: this.author,
       })
@@ -273,7 +273,6 @@ export default {
     position: absolute
     right: $baseline / 2
     width: 280px
-
 
   //- Donate More
   .author-subscription--donations

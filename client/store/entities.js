@@ -4,7 +4,7 @@ import isString from 'lodash/isString'
 
 import Vue from 'vue'
 
-function getNextRelease({ frequency, time, dow }) {
+function getNextRelease ({ frequency, time, dow }) {
   const now = Vue.moment()
   const m = Vue.moment()
   if (frequency === '3x_per_day' || frequency === '6x_per_day') {
@@ -48,23 +48,23 @@ export const state = () => {
 }
 
 export const mutations = {
-  resetState(state) {
+  resetState (state) {
     state.newspapers = {}
     state.authors = {}
   },
 
-  newspaper(state, { newspaper }) {
+  newspaper (state, { newspaper }) {
     newspaper.nextRelease = getNextRelease(newspaper.periodicity)
     state.newspapers[newspaper.fullName] = newspaper
   },
 
-  author(state, { author }) {
+  author (state, { author }) {
     state.authors[author.id] = author
   },
 }
 
 const schemas = {
-  'Post': (post) => {
+  Post: (post) => {
     if (post.type === 'recommendation-issue') {
       return {
         author: 'Author',
@@ -81,33 +81,33 @@ const schemas = {
       author: 'Author'
     }
   },
-  'EditorialRef': {
+  EditorialRef: {
     author: 'Author',
     tweets: 'Post',
     issue: 'IssueRef',
   },
-  'IssueRef': {
+  IssueRef: {
     newspaper: 'Newspaper',
   },
 
-  'Issue': {
+  Issue: {
     author: 'Author',
     newspaper: 'Newspaper',
     posts: 'Post',
   },
-  'PostEditorial': {
+  PostEditorial: {
     post: 'Post',
     editorial: 'Editorial'
   },
-  'Editorial': {
+  Editorial: {
     author: 'Author',
     tweets: 'Post'
   },
-  'Transaction': {
+  Transaction: {
     source: 'TransactionParty',
     target: 'TransactionParty'
   },
-  'TransactionParty': {
+  TransactionParty: {
     newspaper: 'Newspaper',
     author: 'Author',
     user: 'Author'
@@ -163,7 +163,7 @@ export const getters = {
       schema = schema(obj)
     }
 
-    obj = {...obj}
+    obj = { ...obj }
     Object.entries(schema).forEach(([prop, t]) => {
       if (obj[prop] !== undefined) {
         obj[prop] = getters.denormalize(obj[prop], t)

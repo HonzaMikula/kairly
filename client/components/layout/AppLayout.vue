@@ -2,11 +2,11 @@
   <div>
     <AppHeader
       v-if="loggedIn"
-      :pageTitle="name"
+      :page-title="name"
     />
     <AppHeaderPublic v-else />
 
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
@@ -32,11 +32,10 @@ export default {
     loggedIn: state => state.auth.loggedIn
   }),
 
-  mounted() {
+  mounted () {
     if (this.loggedIn) {
       this.$ga.set('dimension1', 'yes')
-    }
-    else {
+    } else {
       this.$ga.set('dimension1', 'no')
     }
   },

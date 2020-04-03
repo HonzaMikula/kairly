@@ -12,14 +12,14 @@
             </ul>
           </section>
 
-          <SignUpForm></SignUpForm>
+          <SignUpForm />
         </div>
       </section>
 
       <ExploreNewspapers />
 
       <Faq>
-        <img src="~assets/microsite/kairly-independent-journalist-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/kairly-independent-journalist-1.jpg" alt="Kairly">
       </Faq>
 
       <Quote :heading="$t('Was said about us.')" :quote="$t('@homepage/quote/zouzalik')">
@@ -36,23 +36,21 @@
           different from the current not very successful attempts.
         </p>
         -->
-        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík" />
+        <img src="~assets/profiles/marek-zouzalik.jpg" alt="Marek Zouzalík">
         <strong>Marek Zouzalík</strong>
         <a href="https://www.sncr-praha.cz/" target="_blank">{{ $t('chairman of the Prague Syndicate of Journalists') }}</a>
       </Quote>
 
-
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-independent-journalist-2.jpg" />
+          <img src="~assets/microsite/kairly-independent-journalist-2.jpg">
         </picture>
 
         <div>
           <h2>{{ $t('Publish on a modern platform that you do not have to worry about.') }}</h2>
 
-          <div v-html="$t('@independent-journalists/modern-platform')">
-          </div>
-            <!-- <p>
+          <div v-html="$t('@independent-journalists/modern-platform')" />
+          <!-- <p>
               Tvoříme pro vás moderní digitální platformu, která je šita na míru novinářům a publicistům.
               Čtenářům nabízíme prostor pro nerušené čtení, ať už používají počítač, mobil, tablet či v budoucnu elektronickou čtečku.
             </p>
@@ -80,20 +78,20 @@
             koupili noviny a četli si je autobuse měla něco do sebe.
           </p> -->
 
-        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula" />
+        <img src="~assets/profiles/jan-mikula.jpg" alt="Jan Mikula">
         <strong>Jan Mikula</strong> {{ $t('founder of Kairly') }}
       </Quote>
 
       <section class="microsite--section">
         <picture>
-          <img src="~assets/microsite/kairly-independent-journalist-5.jpg" />
+          <img src="~assets/microsite/kairly-independent-journalist-5.jpg">
         </picture>
 
         <div>
           <h2>{{ $t('Start monetizing your content and become a truly independent author.') }}</h2>
 
-          <div v-html="$t('@independent-journalists/monetizing-content')"></div>
-            <!-- <p>
+          <div v-html="$t('@independent-journalists/monetizing-content')" />
+          <!-- <p>
               Reklama kvalitní obsah nezaplatí. Čtenáře musíme naučit opět platit za kvalitní obsah.
               Musíme na to chytře. Zapojte se do našeho unikátního systému placeného obsahu.
             </p>
@@ -123,7 +121,7 @@
             Tato vysoká personalizace obsahu je klíč k úspěšněmu modelu placeného obsahu.
           </p> -->
 
-        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík" />
+        <img src="~assets/profiles/roman-krejcik.jpg" alt="Roman Krejčík">
         <strong>Roman Krejčík</strong> {{ $t('founder of Kairly') }}
       </Quote>
 
@@ -138,8 +136,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import SignUpForm from '@/components/microsite/SignUpForm'
 import AppLayout from '@/components/layout/AppLayout'
 import Quote from '@/components/microsite/Quote'
@@ -165,14 +161,15 @@ export default {
     ExploreNewspapers
   },
 
-  head() {
+  head () {
     return {
-      title: this.$t('Digital Publishing Platform for Journalists and Bloggers') +' – Kairly',
+      title: this.$t('Digital Publishing Platform for Journalists and Bloggers') + ' – Kairly',
       meta: [
         {
           hid: 'description',
           name: 'description',
-          content: this.$t('Kairly is a digital publishing platform for independent journalists and bloggers who wants to start earning money for writing good content.') },
+          content: this.$t('Kairly is a digital publishing platform for independent journalists and bloggers who wants to start earning money for writing good content.')
+        },
       ]
     }
   }
@@ -224,7 +221,7 @@ export default {
     padding: 0
     padding-bottom: $baseline / 2
 
-  > div  
+  > div
     display: grid
     grid-template-columns: 2fr 1fr
     max-width: 900px
@@ -246,7 +243,6 @@ export default {
     @media (max-width: $mobile)
       margin: $baseline $baseline/2
       width: 100%
-
 
   > p
     font-size: $fs-0
@@ -361,7 +357,6 @@ export default {
         @media (max-width: $mobile)
           content: none
 
-
 //- Benefits
 .journalists--benefits
   display: grid
@@ -383,7 +378,6 @@ export default {
       margin-bottom: $baseline
 
       font-size: $fs-1
-
 
     li
       margin-left: $baseline / 2

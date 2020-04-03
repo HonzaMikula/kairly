@@ -12,12 +12,12 @@
           class="post-video--content--player"
         >
           <a :href="post.source" target="_blank">
-            <img :src="poster.src" />
+            <img :src="poster.src">
           </a>
         </div>
 
         <div class="post-video--content--perex">
-          <div v-html="post.content.perex"></div>
+          <div v-html="post.content.perex" />
 
           <div class="post-video--content--perex--watch-video">
             <a :href="post.source" target="_blank">
@@ -28,32 +28,31 @@
       </div>
     </div>
 
-    <template #page-controls><slot name="page-controls"></slot></template>
-    <template #global-controls><slot name="global-controls"></slot></template>
+    <template #page-controls><slot name="page-controls" /></template>
+    <template #global-controls><slot name="global-controls" /></template>
   </PostBase>
 </template>
 
 <script>
-import PostBase from './PostBase';
+import PostBase from './PostBase'
 
 export default {
   name: 'PostVideo',
-
-  props: {
-    post: Object,
-  },
 
   components: {
     PostBase
   },
 
-  computed: {
-    poster() {
-      if (this.post.content.attachments) {
-        const posterAttachments = this.post.content.attachments.filter(attachment => attachment.type == 'video-poster')
+  props: {
+    post: Object,
+  },
 
-        if (posterAttachments.length > 0)
-          return posterAttachments[0]
+  computed: {
+    poster () {
+      if (this.post.content.attachments) {
+        const posterAttachments = this.post.content.attachments.filter(attachment => attachment.type === 'video-poster')
+
+        if (posterAttachments.length > 0) { return posterAttachments[0] }
       }
       return null
     },

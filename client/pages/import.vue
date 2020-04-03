@@ -3,11 +3,11 @@
     <div class="import-rss-view">
       <section class="import-rss--add-source">
         <input
-          type="text"
           v-model="rssSource"
+          type="text"
           :placeholder="$t('Paste URL e.g. https://example.con/feeds/')"
           @keyup.enter="addRssSource"
-        />
+        >
         <button @click="addRssSource">{{ $t('Add RSS feed') }}</button>
       </section>
 
@@ -19,7 +19,7 @@
         <div>
           <h2>{{ $t('Add single RSS/Atom feed') }}</h2>
           <p>{{ $t('Paste URL of the feed to the field above.') }}</p>
-          <img src="~/assets/import/kairly-copy-rss.png" :alt="$t('Copy RSS source')"/>
+          <img src="~/assets/import/kairly-copy-rss.png" :alt="$t('Copy RSS source')">
         </div>
 
         <div>
@@ -30,7 +30,7 @@
             <a href="https://feedly.com/">Feedly</a>, go to Settings ->
             <a href="https://feedly.com/i/opml">OPML Export</a> and download the OPML file.
           </p>
-          <img src="~/assets/import/kairly-export-opml.png" :alt="$t('Export OPML from feedly')"/>
+          <img src="~/assets/import/kairly-export-opml.png" :alt="$t('Export OPML from feedly')">
         </div>
       </section>
 
@@ -43,7 +43,7 @@
         <table>
           <thead>
             <tr>
-              <th><input type="checkbox" checked name="" @change="selectAll($event)" /></th>
+              <th><input type="checkbox" checked name="" @change="selectAll($event)"></th>
               <th>{{ $t('Name') }}</th>
               <th>{{ $t('When to display new posts?') }}</th>
             </tr>
@@ -58,7 +58,7 @@
                   v-model="source.selected"
                   type="checkbox"
                   name=""
-                />
+                >
               </td>
               <th @click="selectSource(index)">
                 {{ source.title }}
@@ -77,8 +77,8 @@
                 </template>
                 <ChangePeriodicity
                   v-if="changePerodicityTarget === source"
-                  @changePeriodicity="changePeriodicity"
                   v-on-clickaway="closePeriodicityWidget"
+                  @changePeriodicity="changePeriodicity"
                 />
               </td>
             </tr>
@@ -87,13 +87,14 @@
 
         <footer class="import-rss--footer">
           <button
-            @click="submit"
             :disabled="importing || !sources.filter(s => s.selected).length"
-            :class="{'loading': importing}">
+            :class="{'loading': importing}"
+            @click="submit"
+          >
             {{ importing ? $t('Importing feeds') : $t('Import feeds') }}
           </button>
           <template v-if="importing">
-            <progress :value="progress" :max="progressTotal"></progress>
+            <progress :value="progress" :max="progressTotal" />
             <span>{{ progress }} / {{ progressTotal }}</span>
           </template>
         </footer>
@@ -103,7 +104,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 import { Sema } from 'async-sema'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
@@ -127,13 +128,7 @@ export default {
 
   mixins: [PeriodicityMixin],
 
-  head() {
-    return {
-      title: this.$t('Import RSS feeds – Kairly')
-    }
-  },
-
-  data() {
+  data () {
     return {
       importing: false,
       progress: null,
@@ -147,7 +142,7 @@ export default {
   methods: {
     ...mapActions(['subscribeAuthor', 'subscribeNewspaper']),
 
-    appendItem(title, url) {
+    appendItem (title, url) {
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
         return
       }
@@ -159,18 +154,18 @@ export default {
         url,
         newspaper,
         selected: true,
-        periodicity: newspaper ? null : {frequency: '6x_per_day'}
+        periodicity: newspaper ? null : { frequency: '6x_per_day' }
       })
     },
 
-    addRssSource() {
+    addRssSource () {
       const url = this.rssSource.trim()
       if (url === '') {
-          return
+        return
       }
 
       const existing = {}
-      this.sources.forEach(source => existing[source.url] = true)
+      this.sources.forEach(source => { existing[source.url] = true })
 
       if (!existing[url]) {
         const title = url.replace('http://', '').replace('https://', '')
@@ -180,9 +175,9 @@ export default {
       this.rssSource = ''
     },
 
-    addOpml(items) {
+    addOpml (items) {
       const existing = {}
-      this.sources.forEach(source => existing[source.url] = true)
+      this.sources.forEach(source => { existing[source.url] = true })
 
       items.forEach(source => {
         if (!existing[source.url]) {
@@ -191,7 +186,7 @@ export default {
       })
     },
 
-    clickChangePeriodicity(source, index) {
+    clickChangePeriodicity (source, index) {
       if (this.changePerodicityTarget === source) {
         this.changePerodicityTarget = null
       } else {
@@ -201,38 +196,35 @@ export default {
       this.$forceUpdate()
     },
 
-    selectAll(ev) {
+    selectAll (ev) {
       const value = ev.target.checked
-      this.sources.forEach(s => s.selected = value)
+      this.sources.forEach(s => { s.selected = value })
       this.$forceUpdate()
     },
 
-    selectSource(index) {
-      if (this.sources[index].selected)
-        this.sources[index].selected = false
-      else
-        this.sources[index].selected = true
+    selectSource (index) {
+      if (this.sources[index].selected) { this.sources[index].selected = false } else { this.sources[index].selected = true }
       this.$forceUpdate()
     },
 
-    changePeriodicity(frequency, dow, time) {
+    changePeriodicity (frequency, dow, time) {
       this.changePerodicityTarget.periodicity = {
-        "frequency": frequency,
-        "dow": dow,
-        "time": time
+        frequency,
+        dow,
+        time
       }
       this.changePerodicityTarget = null
     },
 
-    closePeriodicityWidget() {
+    closePeriodicityWidget () {
       this.changePerodicityTarget = null
     },
 
-    isKairlyNewspaper(url) {
+    isKairlyNewspaper (url) {
       return !!url.match('://kairly\\.com/[^/]+/[^/]+/rss$')
     },
 
-    async submit() {
+    async submit () {
       const sources = this.sources
         .filter(s => s.selected)
 
@@ -254,14 +246,14 @@ export default {
 
       this.importing = true
       this.progress = 0
-      this.progressTotal = sources.length + 1  // +1 for subscribe
+      this.progressTotal = sources.length + 1 // +1 for subscribe
 
       const s = new Sema(2)
 
       const importSource = async (source) => {
         await s.acquire()
         try {
-          const data = await this.$axios.$post(`/import-rss`, {url: source.url}, { progress: false })
+          const data = await this.$axios.$post('/import-rss', { url: source.url }, { progress: false })
           this.progress += 1
 
           if (data.type === 'newspaper') {
@@ -275,21 +267,27 @@ export default {
             })
           }
         } catch (e) {
-          console.log(e)
+          console.error(e)
         } finally {
-          s.release();
+          s.release()
         }
       }
 
-      await Promise.all(sources.map(importSource));
+      await Promise.all(sources.map(importSource))
 
-      const { credits } = await this.$axios.$post(`/subscribe-rss`, subscribeData, { progress: false })
+      const { credits } = await this.$axios.$post('/subscribe-rss', subscribeData, { progress: false })
       this.progress += 1
 
       this.$store.commit('updateCredits', credits)
       this.$store.commit('timeline/invalidate')
       this.$store.commit('invalidateSubscriptions')
-      this.$router.push("/")
+      this.$router.push('/')
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Import RSS feeds – Kairly')
     }
   }
 }
@@ -306,7 +304,6 @@ export default {
 
   @media (max-width: $mobile)
     padding: 0 $baseline / 2
-
 
 //- Import RSS Empty view
 .import-rss-empty-view
@@ -484,7 +481,6 @@ export default {
     &::-moz-progress-bar
       background: $c-base
 
-
   // Submit Button
   > button
     +button
@@ -518,6 +514,5 @@ export default {
   .change-periodicity-view
     position: absolute
     z-index: 5
-
 
 </style>

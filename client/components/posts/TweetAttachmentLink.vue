@@ -9,9 +9,11 @@
 
 <script>
 export default {
-  name: 'tweet-attachment-link',
+  name: 'TweetAttachmentLink',
 
-  props: ["item"]
+  props: {
+    item: Object
+  }
 }
 </script>
 
@@ -41,6 +43,5 @@ export default {
       color: #999
 
       font-size: $fs--1
-
 
 </style>

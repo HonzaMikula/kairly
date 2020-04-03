@@ -8,14 +8,20 @@ module.exports = {
     parser: 'babel-eslint'
   },
   extends: [
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    'plugin:vue/essential'
-  ],
-  // required to lint *.vue files
-  plugins: [
-    'vue'
+    '@nuxtjs',
+    'plugin:nuxt/recommended'
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'comma-dangle': 'off',
+    'arrow-parens': 'off',
+    'no-console': ['warn', { 'allow': ["warn", "error"] }],
+    'standard/no-callback-literal': 'off',
+    'nuxt/no-cjs-in-config': 'off',
+    'vue/no-v-html': 'off',
+    'vue/singleline-html-element-content-newline': 'off',
+    'vue/multiline-html-element-content-newline': 'off',
+    'vue/no-template-shadow': 'off',
+    'vue/require-default-prop': 'off' // TODO enable it
+  }
 }

@@ -29,9 +29,9 @@ export default {
     SignUpForm
   },
 
-  head() {
+  head () {
     return {
-      title: this.$t('Sign Up') +' – Kairly',
+      title: this.$t('Sign Up') + ' – Kairly',
       meta: [
         { hid: 'description', name: 'description', content: this.$t('Kairly is platform which aims to improve environment for journalism. Sign up for beta version.') },
       ]
@@ -53,16 +53,15 @@ export default {
   grid-template-columns: auto
   grid-row-gap: $baseline
 
-
 .signup-why
   align-self: center
-  
+
   > h2
     margin-bottom: $baseline / 2
 
     font-size: $fs-3
     font-weight: 600
-  
+
   ul
     padding: 0 $baseline 0 0
 

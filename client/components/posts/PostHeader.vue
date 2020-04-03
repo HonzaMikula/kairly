@@ -1,14 +1,14 @@
 <template>
   <div class="box-header">
     <h2 v-if="post.title">{{ post.title }}</h2>
-    <hr v-else />
+    <hr v-else>
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'post-header',
+  name: 'PostHeader',
 
   props: {
     post: Object,
@@ -38,7 +38,6 @@ export default {
       padding: 0 $baseline/2
 
       background: #fafafa
-
 
     &::after,
     &::before

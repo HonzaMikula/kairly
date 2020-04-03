@@ -14,8 +14,8 @@
     <section class="newspaper-subscription--newspaper">
       <h3>{{ newspaper.title }}</h3>
       <picture>
-        <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title" />
-        <div v-else class="image-placeholder"/>
+        <img v-if="newspaper.picture" :src="newspaper.picture" :alt="newspaper.title">
+        <div v-else class="image-placeholder" />
       </picture>
       <time>{{ getPeriodicityLabel(newspaper.periodicity) }}</time>
     </section>
@@ -32,7 +32,7 @@
     <section class="newspaper-subscription--donations">
       <h2>{{ $t('Support the newspaper and donate more') }}</h2>
       <div>
-        <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000"/>
+        <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000">
         {{ $t('Kč per month') }}
       </div>
     </section>
@@ -40,12 +40,13 @@
     <template #footer>
       <template v-if="!state">
         <div
+          v-b-tooltip
           :title="!canPay && $t('You don\'t have enough credit')"
-          v-b-tooltip>
+        >
           <button
-            @click="subscribe()"
             :disabled="!canPay"
             class="confirm"
+            @click="subscribe()"
           >
             {{ $t('Subscribe newspaper') }}
           </button>
@@ -54,7 +55,7 @@
       </template>
 
       <template v-else-if="state === 'active'">
-        <button @click="subscribe()" class="confirm">
+        <button class="confirm" @click="subscribe()">
           {{ $t('Update donation') }}
         </button>
 
@@ -76,7 +77,7 @@
       </template>
 
       <template v-else-if="state === 'suspended'">
-        <button class="confirm" v-if="canPay" @click="subscribe()">
+        <button v-if="canPay" class="confirm" @click="subscribe()">
           {{ $t('Renew subscription') }}
         </button>
         <nuxt-link v-else to="/user/add-credits">
@@ -99,20 +100,20 @@ import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 export default {
   name: 'NewspaperSubscriptionModal',
 
-  props: {
-    newspaper: Object,
-  },
-
   components: {
     DialogWindow
   },
 
   mixins: [ModalMixin, PeriodicityMixin],
 
-  data() {
+  props: {
+    newspaper: Object,
+  },
+
+  data () {
     const subscription = this.$store.getters.getNewspaperSubscription(this.newspaper)
     return {
-      subscription: subscription,
+      subscription,
       donation: subscription ? parseInt(subscription.donation) : 0
     }
   },
@@ -122,22 +123,22 @@ export default {
       user: state => state.auth.user
     }),
 
-    state() {
+    state () {
       return this.subscription ? this.subscription.state : null
     },
 
-    canPay() {
+    canPay () {
       if (this.user) {
         const price = this.newspaper.price.split('.').map(v => ~~v)
         const credits = this.user.credits.split('.').map(v => ~~v)
-        return credits[0] > price[0] || (credits[0] == price[0] && credits[1] >= price[1])
+        return credits[0] > price[0] || (credits[0] === price[0] && credits[1] >= price[1])
       }
       return false
     }
   },
 
   methods: {
-    subscribe() {
+    subscribe () {
       this.$store.dispatch('subscribeNewspaper', {
         fullName: this.newspaper.fullName,
         donation: this.donation ? this.donation : null
@@ -145,11 +146,10 @@ export default {
       this.closeModal()
     },
 
-    async unsubscribe() {
+    async unsubscribe () {
       this.subscription = await this.$store.dispatch('unsubscribeNewspaper', {
         fullName: this.newspaper.fullName
       })
-      console.log(this.subscription)
     }
   }
 }
@@ -204,7 +204,6 @@ export default {
       font-weight: 600
       line-height: $baseline * 0.8
 
-
   //- Price
   .newspaper-subscription--price
     margin: $baseline/2 0
@@ -214,7 +213,6 @@ export default {
     p
       font-size: $fs-1
       font-weight: 600
-
 
   //- Donate More
   .newspaper-subscription--donations

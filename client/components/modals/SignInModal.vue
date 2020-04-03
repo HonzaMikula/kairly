@@ -2,7 +2,7 @@
   <DialogWindow
     v-if="active"
     custom-class="sign-in"
-    ignoreBackgroundClick
+    ignore-background-click
     @close="closeModal"
   >
     <template #header>
@@ -12,17 +12,17 @@
     <form @submit.prevent="login">
       <div>
         <label for="username">{{ $t('Username') }}</label>
-        <input name="username" id="username" v-model="username" />
+        <input id="username" v-model="username" name="username">
       </div>
 
       <div>
         <label for="password">{{ $t('Password') }}</label>
-        <input name="password" id="password" type="password" v-model="password" />
+        <input id="password" v-model="password" name="password" type="password">
       </div>
 
       <button type="submit">{{ $t('Sign in') }}</button>
 
-      <div class="login--error-message" v-if="invalidCredentials">
+      <div v-if="invalidCredentials" class="login--error-message">
         {{ $t('Wrong username or password') }}
       </div>
     </form>
@@ -37,7 +37,6 @@
   </DialogWindow>
 </template>
 
-
 <script>
 import DialogWindow from '@/components/modals/DialogWindow'
 import ModalMixin from '@/mixins/ModalMixin'
@@ -51,7 +50,7 @@ export default {
 
   mixins: [ModalMixin],
 
-  data() {
+  data () {
     return {
       invalidCredentials: false,
       username: null,
@@ -61,7 +60,7 @@ export default {
   },
 
   methods: {
-    async login() {
+    async login () {
       this.invalidCredentials = false
       const { username, password } = this
 
@@ -69,7 +68,7 @@ export default {
         await this.$auth.loginWith('local', {
           data: { username, password }
         })
-        this.$router.push("/")
+        this.$router.push('/')
         this.$ga.event({
           eventCategory: 'Authentication',
           eventAction: 'Sign in',
@@ -77,7 +76,6 @@ export default {
         })
 
         this.$ga.set('dimension1', 'yes')
-
       } catch (e) {
         this.invalidCredentials = true
         this.$ga.event({
@@ -119,7 +117,6 @@ export default {
 
     font-size: $fs-0
     font-family: $ff-sans
-
 
   form button
     border-radius: 5px

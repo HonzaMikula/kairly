@@ -2,7 +2,7 @@
   <DialogWindow
     v-if="active"
     custom-class="share-modal"
-    ignoreBackgroundClick
+    ignore-background-click
     @close="closeModal"
   >
     <template #header>
@@ -23,10 +23,10 @@
           </template>
 
           <template v-else>
-            {{ post.author.name }}: <span v-html="post.content.content"></span>
+            {{ post.author.name }}: <span v-html="post.content.content" />
           </template>
-          
-          <button @click="removeItem(post.id)" class="remove"></button>
+
+          <button class="remove" @click="removeItem(post.id)" />
         </li>
       </ul>
 
@@ -36,8 +36,9 @@
     <div class="share--show-more">
       <button
         v-if="(tailPostsCount() > 0 && !isExpanded)"
-        @click.prevent="isExpanded = true">
-        {{ $t('Show more') }} ({{tailPostsCount()}})
+        @click.prevent="isExpanded = true"
+      >
+        {{ $t('Show more') }} ({{ tailPostsCount() }})
       </button>
     </div>
 
@@ -64,11 +65,13 @@ export default {
     DialogWindow
   },
 
+  mixins: [ModalMixin],
+
   props: {
     issue: Object
   },
 
-  data() {
+  data () {
     return {
       posts: this.issue.posts,
       isExpanded: false
@@ -76,28 +79,25 @@ export default {
   },
 
   computed: {
-    title() {
+    title () {
       return `${this.issue.newspaper.title} #${this.issue.number}`
     },
 
-    url() {
+    url () {
       return `https://kairly.com/${this.issue.newspaper.fullName}/${this.issue.number}`
     }
   },
 
-  mixins: [ModalMixin],
-
   methods: {
-    content() {
+    content () {
       let content = ''
       this.posts.forEach(function (post) {
         if (post.content.title) {
           content += `• ${post.content.title} \n`
-        }
-        else {
-          var div = document.createElement("div") // striping HTML
+        } else {
+          const div = document.createElement('div') // striping HTML
           div.innerHTML = post.content.content
-          var text = div.textContent || div.innerText || ""
+          const text = div.textContent || div.textContent || ''
           content += `• ${post.author.name}: ${text} \n`
         }
       })
@@ -105,31 +105,27 @@ export default {
       return content
     },
 
-    encodedContent(){
+    encodedContent () {
       return encodeURIComponent(this.content())
     },
 
-    tailPostsCount() {
+    tailPostsCount () {
       return Math.max(0, this.posts.length - POST_LIMIT)
     },
 
-    listOfPosts() {
-      console.log(this.posts)
-      if (!this.isExpanded)
-        return this.posts.slice(0, POST_LIMIT)
-      else
-        return this.posts
+    listOfPosts () {
+      if (!this.isExpanded) { return this.posts.slice(0, POST_LIMIT) } else { return this.posts }
     },
 
-    removeItem(id) {
-      this.posts.splice(this.posts.findIndex(function(i){
-          return i.id === id
+    removeItem (id) {
+      this.posts.splice(this.posts.findIndex(function (i) {
+        return i.id === id
       }), 1)
     },
 
-    async copyToClipboard() {
+    async copyToClipboard () {
       try {
-        const textToShare = this.title + '\n'+ this.content() + this.url
+        const textToShare = this.title + '\n' + this.content() + this.url
         await this.$copyText(textToShare)
       } catch (e) {
         console.error(e)
@@ -171,7 +167,7 @@ export default {
 
     li
       position: relative
-      
+
       margin-bottom: $baseline / 4
       padding: 0 $baseline 0 $baseline/2
 
@@ -189,7 +185,6 @@ export default {
 
         color: darken($c-base, 20%)
 
-      
       &:hover button
         display: inline-block
 
@@ -213,7 +208,7 @@ export default {
           +fa-icon()
           @extend .fas
           content: fa-content($fa-var-times)
-  
+
   .share--url
     overflow: auto
 
@@ -231,8 +226,7 @@ export default {
       &:hover,
       &:focus
         background: #ddd
-        color: #000 
-
+        color: #000
 
   //- Footer
   footer
@@ -266,7 +260,7 @@ export default {
         @extend .fas
         content: fa-content($fa-var-copy)
         display: block
-      
+
       &.facebook::before
         +fa-icon()
         @extend .fab
@@ -290,6 +284,5 @@ export default {
         @extend .fas
         content: fa-content($fa-var-at)
         display: block
-
 
 </style>

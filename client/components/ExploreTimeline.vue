@@ -1,7 +1,10 @@
 <template>
   <main>
     <div class="explore-timeline-view">
-      <header class="explore--controls" v-if="!disableControls">
+      <header
+        v-if="!disableControls"
+        class="explore--controls"
+      >
         <nuxt-link :to="`/explore/${category.slug}/newspapers-authors`">
           {{ $t('See all authors') }}
         </nuxt-link>
@@ -10,13 +13,13 @@
           <label for="onlyNewspapers">{{ $t('Only newsletters') }}</label>
           <label class="switch">
             <input
-              type="checkbox"
+              id="onlyNewspapers"
               v-model="mode"
+              type="checkbox"
               true-value="newspapers"
               false-value="all"
-              id="onlyNewspapers"
-            />
-            <span class="slider round"></span>
+            >
+            <span class="slider round" />
           </label>
         </div>
       </header>
@@ -26,16 +29,16 @@
       <template v-else>
         <header class="timeline--header">
           <nuxt-link
-            :to="`/explore/${category.slug}/${links.prev}`"
             v-b-tooltip
+            :to="`/explore/${category.slug}/${links.prev}`"
             :title="'Previous day ('+ links.prev +')'"
             class="previous"
           />
 
           <nuxt-link
             v-if="links.next"
-            :to="`/explore/${category.slug}/${links.next}`"
             v-b-tooltip
+            :to="`/explore/${category.slug}/${links.next}`"
             :title="'Next day ('+ links.next +')'"
             :class="['next', {'is-disabled': !links.next}]"
           />
@@ -45,7 +48,7 @@
           <JumpMenu
             :key="timeSlot.time"
             :datetime="timeSlot.time"
-            :timeSlots="timeSlots"
+            :time-slots="timeSlots"
           />
 
           <IssueWrapper
@@ -82,7 +85,7 @@ export default {
     period: String
   },
 
-  data() {
+  data () {
     return {
       loading: true,
       timeline: null,
@@ -95,14 +98,14 @@ export default {
       denormalize: 'entities/denormalize',
     }),
 
-    links() {
+    links () {
       if (this.loading) {
         return {}
       }
       return this.timeline.links
     },
 
-    timeSlots() {
+    timeSlots () {
       if (this.loading) { return [] }
 
       const { mode } = this
@@ -115,7 +118,7 @@ export default {
           return
         }
         if (slot === null || slot.time !== issue.time) {
-          slot = { time: issue.time, issues: []}
+          slot = { time: issue.time, issues: [] }
           timeSlots.push(slot)
         }
 
@@ -126,31 +129,31 @@ export default {
     },
   },
 
-  watch:{
-    category: function() {
+  watch: {
+    category () {
       this.loadTimeline()
     },
 
-    period: function() {
+    period () {
       this.loadTimeline()
     }
   },
 
+  mounted () {
+    this.loadTimeline()
+  },
+
   methods: {
-    async loadTimeline() {
+    async loadTimeline () {
       this.loading = true
 
       // TODO support historical timelines
       const { date } = this.$route.params
       const endpoint = `/explore-timeline/${this.category.slug}`
-      const timeline  = await this.$store.dispatch('timeline/load', { endpoint, date })
+      const timeline = await this.$store.dispatch('timeline/load', { endpoint, date })
       this.timeline = timeline
       this.loading = false
     }
-  },
-
-  mounted() {
-    this.loadTimeline()
   }
 }
 </script>
@@ -167,7 +170,6 @@ export default {
 
   @media (max-width: $mobile)
     padding: $baseline/2 0 0 0
-
 
 //- Controls
 .explore--controls
@@ -192,7 +194,6 @@ export default {
     &:hover
       background: #ddd
       color: #000
-
 
   //- Toggle
   .switch

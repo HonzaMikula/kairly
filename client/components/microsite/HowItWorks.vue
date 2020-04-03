@@ -3,7 +3,7 @@
     <h2>{{ $t('How the platform works?') }}</h2>
 
     <picture>
-      <img src="~assets/homepage/kairly-howitworks.jpg" />
+      <img src="~assets/homepage/kairly-howitworks.jpg">
     </picture>
   </section>
 </template>

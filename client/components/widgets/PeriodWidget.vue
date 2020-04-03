@@ -13,7 +13,7 @@
     <section v-else-if="frequency === 'weekly' && dow === null">
       <header>
         {{ $t('Which day?') }}
-        <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" @click="goOneStepBack()" />
       </header>
       <ul>
         <li><a href="" @click.prevent="selectWhatDay('1', $event)">{{ $t('Monday') }}</a></li>
@@ -29,7 +29,7 @@
     <section v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
         {{ $t('What time?') }}
-        <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" @click="goOneStepBack()" />
       </header>
       <ul>
         <li><a href="" @click.prevent="selectWhatTime('6:00', $event)">{{ $t('Early morning (6:00)') }}</a></li>
@@ -51,7 +51,7 @@ export default {
     onSelect: Function
   },
 
-  data() {
+  data () {
     return {
       frequency: null,
       dow: null,
@@ -60,7 +60,7 @@ export default {
   },
 
   methods: {
-    goOneStepBack() {
+    goOneStepBack () {
       if (this.dow !== null) {
         this.dow = null
       } else {
@@ -68,26 +68,26 @@ export default {
       }
     },
 
-    submit() {
+    submit () {
       this.$emit('changePeriodicity', this.frequency, this.dow, this.time)
     },
 
-    selectHowOften(frequency, ev) {
+    selectHowOften (frequency, ev) {
       document.activeElement.blur()
       this.frequency = frequency
 
-      if (frequency == '3x_per_day' || frequency == '6x_per_day') {
+      if (frequency === '3x_per_day' || frequency === '6x_per_day') {
         this.submit()
       }
     },
 
-    selectWhatTime(time, ev) {
+    selectWhatTime (time, ev) {
       document.activeElement.blur()
       this.time = time
       this.submit()
     },
 
-    selectWhatDay(dow, ev) {
+    selectWhatDay (dow, ev) {
       document.activeElement.blur()
       this.dow = dow
     }
@@ -126,7 +126,6 @@ export default {
     border-width: 15px
     margin-left: -15px
 
-
   //- header
   header
     position: relative
@@ -160,8 +159,6 @@ export default {
 
       &::before
         content: fa-content($fa-var-arrow-left)
-
-
 
   //- steps
   section

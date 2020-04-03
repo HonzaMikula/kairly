@@ -3,32 +3,34 @@
     <main class="search-view">
 
       <header class="search--search-box">
-        <input type="search" @keyup.enter="search()" v-model="query" autofocus />
+        <input v-model="query" type="search" autofocus @keyup.enter="search()">
         <button @click="search()">{{ $t('Search') }}</button>
       </header>
-      <aside 
+      <aside
+        v-if="totalResults > 0"
         class="search--total-results"
-        v-if="totalResults > 0">
+      >
         {{ totalResults }} results
       </aside>
 
       <template v-if="totalResults > 0">
         <div
-          class="search-item"
           v-for="result in results"
-          :key="result.cacheId">
+          :key="result.cacheId"
+          class="search-item"
+        >
           <h2>
-            <nuxt-link 
+            <nuxt-link
               :to="result.link.replace('https://kairly.com/', '')"
-              v-html="result.htmlTitle.replace('– Kairly', '')">
-            </nuxt-link>
+              v-html="result.htmlTitle.replace('– Kairly', '')"
+            />
           </h2>
-          
-          <img 
+
+          <img
             v-if="result.pagemap.metatags[0]['og:image']"
-            :src="result.pagemap.metatags[0]['og:image']" 
+            :src="result.pagemap.metatags[0]['og:image']"
             :alt="result.pagemap.metatags.og_image_alt"
-          />
+          >
 
           <div class="search-item--label">
             <template v-if="result.pagemap.newspaper">
@@ -47,8 +49,8 @@
               <time>{{ result.pagemap.newsarticle[0].datepublished | moment('calendar') }}</time>
             </template>
           </div>
-          <p v-html="result.htmlSnippet"></p>
-          
+          <p v-html="result.htmlSnippet" />
+
         </div>
       </template>
 
@@ -59,15 +61,16 @@
       </template>
 
       <footer
-        class="search--pagination"
         v-if="numberOfPages > 0"
+        class="search--pagination"
       >
         <ul>
-          <li 
+          <li
             v-for="page in numberOfPages"
             :key="page"
+            :class="{'is-active': page == currentPage}"
             @click="pagination(page)"
-            :class="{'is-active': page == currentPage}">{{page}}</li>
+          >{{ page }}</li>
         </ul>
       </footer>
     </main>
@@ -75,7 +78,7 @@
 </template>
 
 <script>
-import AppLayout from "@/components/layout/AppLayout"
+import AppLayout from '@/components/layout/AppLayout'
 import ErrorHandler from '@/mixins/ErrorHandler'
 
 export default {
@@ -87,13 +90,7 @@ export default {
 
   mixins: [ErrorHandler],
 
-  head() {
-    return {
-      title: this.$t('Search – Kairly')
-    }
-  },
-
-  data() {
+  data () {
     return {
       query: null,
       results: null,
@@ -105,14 +102,14 @@ export default {
   },
 
   methods: {
-    async search() {
+    async search () {
       if (this.query) {
         try {
           const adapter = this.$axios.create({
-            baseURL: `https://www.googleapis.com/`,
+            baseURL: 'https://www.googleapis.com/',
           })
-          delete adapter.defaults.headers.common["Authorization"]
-          const searchResults = await adapter.$get(`customsearch/v1`, { 
+          delete adapter.defaults.headers.common.Authorization
+          const searchResults = await adapter.$get('customsearch/v1', {
             params: {
               key: 'AIzaSyBbkq4m8pQym-r2hFYmTwStzXCNWzmom1Y',
               cx: '006213174493429117077:jze2yfipbxo',
@@ -142,12 +139,18 @@ export default {
       }
     },
 
-    pagination(page) {
+    pagination (page) {
       this.startResult = page * 10 + 1
       this.currentPage = page
 
       this.search()
       window.scrollTo(0, 0)
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Search – Kairly')
     }
   }
 }
@@ -192,7 +195,7 @@ export default {
 
       font-family: $ff-sans
       font-size: $fs-1
-      
+
       cursor: pointer
 
       &:hover,
@@ -205,9 +208,8 @@ export default {
 
     font-size: $fs--2
 
-
   //- Search Results
-  .search-item 
+  .search-item
     display: grid
     grid-template-columns: $baseline*5 1fr
     grid-column-gap: $baseline/2
@@ -258,14 +260,14 @@ export default {
 
     p br
       display: none
-  
+
   //- Label - newspaper, issue, author, article
   .search-item--label
     grid-column: 2
 
     @media (max-width: $mobile)
       grid-area: auto
-    
+
     color: #555
 
     font-size: $fs--2
@@ -294,7 +296,7 @@ export default {
       flex-wrap: wrap
 
     li
-      
+
       border-radius: 100%
       margin-right: $baseline / 4
       margin-bottom: $baseline / 2
@@ -319,6 +321,6 @@ export default {
   //- When there is no results find
   .search-no-results
     margin-top: $baseline
-    
+
     text-align: center
 </style>

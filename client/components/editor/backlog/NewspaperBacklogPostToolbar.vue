@@ -2,7 +2,7 @@
   <div
     class="newspaper-backlog-post-toolbar-view"
     :class="{'is-shown': show}"
-    >
+  >
     <nav>
       <button
         class="paste"
@@ -39,8 +39,8 @@
       </button>
 
       <button
-        class="layout"
         :id="`layout-${backlog.name}-${index}`"
+        class="layout"
       >
         {{ $t('Special layout') }}
       </button>
@@ -74,15 +74,17 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { BPopover } from 'bootstrap-vue'
 import ErrorHandler from '@/mixins/ErrorHandler'
-import { BPopover } from "bootstrap-vue";
 
 export default {
-  name: "NewspaperBacklogPostToolbar",
+  name: 'NewspaperBacklogPostToolbar',
 
   components: {
     BPopover,
   },
+
+  mixins: [ErrorHandler],
 
   props: {
     index: Number,
@@ -91,16 +93,13 @@ export default {
     show: Boolean
   },
 
-  mixins: [ErrorHandler],
-
   methods: {
     ...mapActions({
       addLinkToBacklog: 'backlog/addLink'
     }),
 
-
-    async addExternalLink() {
-      let url = window.prompt("URL")
+    async addExternalLink () {
+      const url = window.prompt('URL')
       if (url === null) {
         return
       }
@@ -117,17 +116,17 @@ export default {
       }
     },
 
-    addBox(layout, columnsStyle) {
+    addBox (layout, columnsStyle) {
       const newspaper = this.newspaper
       const item = {
         id: Math.random().toString(36).substring(2),
-        type: "box",
+        type: 'box',
         css: layout,
         columns: columnsStyle.map((css, idx) => {
           return {
             css,
             posts: []
-          };
+          }
         })
       }
       this.$store.commit('backlog/splice', {
@@ -137,31 +136,31 @@ export default {
         index: this.index,
         deleteCount: 0
       })
-      this.$store.dispatch("backlog/save", { newspaper });
+      this.$store.dispatch('backlog/save', { newspaper })
     },
 
-    async addComment() {
+    async addComment () {
       const data = {
         type: 'comment',
         title: '',
         content: ''
       }
-      const { post } = await this.$axios.$post(`/drafts`, data)
+      const { post } = await this.$axios.$post('/drafts', data)
       const newspaper = this.newspaper
 
       this.$store.commit('backlog/registerPost', { newspaper, post })
       this.$store.commit('backlog/splice', {
-        newspaper: newspaper,
+        newspaper,
         target: this.backlog.name,
-        items: [{id: post.id, type: 'post'}],
+        items: [{ id: post.id, type: 'post' }],
         index: this.index,
         deleteCount: 0
       })
       this.$store.dispatch('backlog/save', { newspaper })
     },
 
-    addHeader() {
-      let title = window.prompt("Title")
+    addHeader () {
+      let title = window.prompt('Title')
       if (title === null) {
         return
       }
@@ -169,19 +168,19 @@ export default {
       this.addHeaderItem(title === '' ? null : title)
     },
 
-    addHR() {
+    addHR () {
       this.addHeaderItem(null)
     },
 
-    addHeaderItem(title) {
+    addHeaderItem (title) {
       const newspaper = this.newspaper
       const item = {
         id: Math.random().toString(36).substring(2),
         type: 'header',
-        title: title
+        title
       }
       this.$store.commit('backlog/splice', {
-        newspaper: newspaper,
+        newspaper,
         target: this.backlog.name,
         items: [item],
         index: this.index,
@@ -253,7 +252,7 @@ export default {
       display: block
       margin-bottom: $baseline / 4
 
-    &.paste::before  
+    &.paste::before
       content: fa-content($fa-var-paste)
 
     &.posts::before

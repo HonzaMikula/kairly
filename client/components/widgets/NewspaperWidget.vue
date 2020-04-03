@@ -6,7 +6,7 @@
           v-if="newspaper.picture"
           :src="newspaper.picture"
           :alt="newspaper.title"
-        />
+        >
         <div
           v-else
           class="image-placeholder"
@@ -29,7 +29,7 @@
       <nuxt-link :to="{name: 'author', params: {author: newspaper.editor.id}}">{{ newspaper.editor.name }}</nuxt-link>
     </div>
 
-    <div class="newspaper-widget--subscribe" v-if="loggedIn">
+    <div v-if="loggedIn" class="newspaper-widget--subscribe">
       <NewspaperSubscriptionButton :newspaper="newspaper" />
 
       <p>
@@ -49,10 +49,6 @@ import NewspaperSubscriptionButton from '@/components/widgets/NewspaperSubscript
 export default {
   name: 'NewspaperWidget',
 
-  props: {
-    newspaper: Object
-  },
-
   components: {
     AuthorPicture,
     NewspaperSubscriptionButton
@@ -60,12 +56,16 @@ export default {
 
   mixins: [PeriodicityMixin],
 
+  props: {
+    newspaper: Object
+  },
+
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn
     }),
 
-    periodicity() {
+    periodicity () {
       return this.getPeriodicityLabel(this.newspaper.periodicity)
     }
   }
@@ -89,7 +89,6 @@ export default {
 
   text-align: left
 
-
   //- header picture
   picture
     order: 1
@@ -108,7 +107,6 @@ export default {
     .image-placeholder
       height: 100%
       background-image: radial-gradient(#fafafa, #aaa)
-
 
   //- title
   > h2
@@ -160,7 +158,6 @@ export default {
   a
     color: #000
 
-
 //- Subscribe Newspaper
 .newspaper-widget--subscribe
   display: block
@@ -175,7 +172,6 @@ export default {
   button
     height: $baseline !important
     line-height: $baseline !important
-
 
   //- info
   p

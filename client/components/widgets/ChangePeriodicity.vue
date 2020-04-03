@@ -21,7 +21,7 @@
     <template v-else-if="frequency === 'weekly' && dow === null">
       <header>
         {{ $t('Which day?') }}
-        <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" @click="goOneStepBack()" />
       </header>
 
       <section>
@@ -40,7 +40,7 @@
     <template v-else-if="(frequency === 'weekly' || frequency === 'daily') && time === null">
       <header>
         {{ $t('What time?') }}
-        <button-icon role="button" tabindex="0" @click="goOneStepBack()"></button-icon>
+        <button-icon role="button" tabindex="0" @click="goOneStepBack()" />
       </header>
 
       <section>
@@ -58,16 +58,15 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
-
 
 export default {
   name: 'ChangePeriodicity',
 
   mixins: [PeriodicityMixin],
 
-  data() {
+  data () {
     return {
       frequency: null,
       dow: null,
@@ -80,11 +79,11 @@ export default {
       showError: 'messages/error',
     }),
 
-    changePeriodicity() {
+    changePeriodicity () {
       this.$emit('changePeriodicity', this.frequency, this.dow, this.time)
     },
 
-    goOneStepBack() {
+    goOneStepBack () {
       if (this.dow !== null) {
         this.dow = null
       } else {
@@ -92,27 +91,27 @@ export default {
       }
     },
 
-    selectHowOften(frequency, ev) {
+    selectHowOften (frequency, ev) {
       document.activeElement.blur()
       this.frequency = frequency
 
-      if (frequency == '3x_per_day' || frequency == '6x_per_day') {
+      if (frequency === '3x_per_day' || frequency === '6x_per_day') {
         this.changePeriodicity()
       }
     },
 
-    selectWhatTime(time, ev) {
+    selectWhatTime (time, ev) {
       document.activeElement.blur()
       this.time = time
       this.changePeriodicity()
     },
 
-    selectWhatDay(dow, ev) {
+    selectWhatDay (dow, ev) {
       document.activeElement.blur()
       this.dow = dow
     },
 
-    editSubscription(ev) {
+    editSubscription (ev) {
       document.activeElement.blur()
       this.frequency = null
     }
@@ -217,6 +216,5 @@ export default {
 
           &::after
             opacity: 0.5
-
 
 </style>

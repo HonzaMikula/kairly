@@ -13,24 +13,23 @@
     <section class="publish-post--price">
       <h2>{{ $t('Set price of the article for editors') }}</h2>
       <div>
-        <input v-model="postPrice" step="0.01" type="number" min="0.00" max="100000.00"/>
+        <input v-model="postPrice" step="0.01" type="number" min="0.00" max="100000.00">
         {{ $t('Kč per subscriber') }}
       </div>
-      <p v-html="$t('You will recieve <strong>{price} Kč</strong> from each subscriber from newspaper where your post will appear.', { price: postPrice })">
-      </p>
+      <p v-html="$t('You will recieve <strong>{price} Kč</strong> from each subscriber from newspaper where your post will appear.', { price: postPrice })" />
     </section>
 
-    <section class="publish-post--scheduling" v-if="showSchedule">
+    <section v-if="showSchedule" class="publish-post--scheduling">
       <h2>{{ $t('Schedule a time to publish') }}</h2>
-      <input type="datetime-local" />
+      <input type="datetime-local">
     </section>
 
     <template #footer>
-      <button @click="submit" class="publish-now">
+      <button class="publish-now" @click="submit">
         {{ showSchedule ? $t('Schedule post') : $t('Publish now') }}
       </button>
 
-        <!--button class="schedule" @click="showSchedule = !showSchedule">
+      <!--button class="schedule" @click="showSchedule = !showSchedule">
           {{ showSchedule ? $t('Cancel scheduling') : $t('Schedule for later') }}
         </button-->
     </template>
@@ -38,8 +37,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import DialogWindow from '@/components/modals/DialogWindow'
 import ModalMixin from '@/mixins/ModalMixin'
 
@@ -50,14 +47,14 @@ export default {
     DialogWindow
   },
 
+  mixins: [ModalMixin],
+
   props: {
     post: Object,
     price: String
   },
 
-  mixins: [ModalMixin],
-
-  data() {
+  data () {
     return {
       postPrice: this.price ? this.price : '0.00',
       showSchedule: null
@@ -65,7 +62,7 @@ export default {
   },
 
   methods: {
-    submit() {
+    submit () {
       this.$emit('publish', this.price)
       this.closeModal()
     }

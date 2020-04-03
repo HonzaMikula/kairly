@@ -11,7 +11,7 @@
         @click.stop
       >
         <header>
-          <slot name="header"/>
+          <slot name="header" />
           <div
             class="button-close"
             tabindex="0"
@@ -21,11 +21,11 @@
         </header>
 
         <main>
-          <slot/>
+          <slot />
         </main>
 
         <footer v-if="!!this.$slots['footer']">
-          <slot name="footer"/>
+          <slot name="footer" />
         </footer>
       </div>
     </div>
@@ -42,30 +42,30 @@ export default {
     ignoreBackgroundClick: Boolean
   },
 
+  beforeMount () {
+    window.addEventListener('keyup', this.onKeyUp)
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('keyup', this.onKeyUp)
+  },
+
   methods: {
-    close() {
+    close () {
       this.$emit('close')
     },
 
-    onBackgroundClick(event) {
+    onBackgroundClick (event) {
       if (!this.ignoreBackgroundClick) {
         this.close()
       }
     },
 
-    onKeyUp(event) {
+    onKeyUp (event) {
       if (event.which === 27) {
         this.close()
       }
     },
-  },
-
-  beforeMount() {
-    window.addEventListener('keyup', this.onKeyUp);
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('keyup', this.onKeyUp)
   },
 }
 </script>
@@ -141,7 +141,6 @@ export default {
       &:focus,
       &:hover
         opacity: 1
-
 
       &::before
         +fa-icon()

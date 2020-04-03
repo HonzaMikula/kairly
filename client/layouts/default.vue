@@ -1,9 +1,9 @@
 <template>
   <div class="app-view">
     <template>
-      <nuxt></nuxt>
+      <nuxt />
 
-      <portal-target name="modal" slim></portal-target>
+      <portal-target name="modal" slim />
 
       <InfoMessage v-if="errorMessage" type="error">{{ errorMessage }}</InfoMessage>
       <InfoMessage v-if="successMessage" type="success">{{ successMessage }}</InfoMessage>
@@ -31,7 +31,7 @@ import InfoMessage from '@/components/InfoMessage'
 import NewspaperSubscriptionModal from '@/components/modals/NewspaperSubscriptionModal'
 
 export default {
-  name: 'app',
+  name: 'App',
 
   middleware: ['auth'],
 
@@ -48,14 +48,6 @@ export default {
     currentLocale: state => state.locale || 'en'
   }),
 
-  head() {
-    return {
-      htmlAttrs: {
-        lang: this.currentLocale,
-      }
-    }
-  },
-
   watch: {
     '$route' (to, from) {
       this.clearMessages()
@@ -64,7 +56,15 @@ export default {
 
   methods: mapMutations({
     clearMessages: 'messages/clear',
-  })
+  }),
+
+  head () {
+    return {
+      htmlAttrs: {
+        lang: this.currentLocale,
+      }
+    }
+  }
 }
 </script>
 

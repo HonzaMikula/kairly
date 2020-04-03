@@ -1,8 +1,6 @@
 <template>
   <section class="microsite-faq">
-    <div v-html="$t('@independent-journalists/faq')">
-
-    </div>
+    <div v-html="$t('@independent-journalists/faq')" />
     <!-- <h2>Co je Kairly?</h2>
       <p>
         Kairly je vznikající platforma pro novináře a jejich čtenáře, která nabízí <strong>unikátní koncept placeného obsahu</strong>.
@@ -24,7 +22,7 @@
 
     <picture>
       <slot>
-        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly" />
+        <img src="~assets/microsite/publishers-1.jpg" alt="Kairly">
       </slot>
     </picture>
   </section>
@@ -60,7 +58,6 @@ export default {
 
     &:last-of-type
       margin-bottom: 0
-
 
   @media (max-width: 950px)
     picture

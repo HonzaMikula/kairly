@@ -1,11 +1,11 @@
 <template>
   <button
-    :class="{'recommend-button-issue': true, 'recommended': recommended}"
-    @click="recommend"
     v-b-tooltip
+    :class="{'recommend-button-issue': true, 'recommended': recommended}"
     :title="$t('Recommend')"
-    :aria-label="$t('Recommend')">
-  </button>
+    :aria-label="$t('Recommend')"
+    @click="recommend"
+  />
 </template>
 
 <script>
@@ -16,14 +16,14 @@ import ErrorHandler from '@/mixins/ErrorHandler'
 export default {
   name: 'RecommnendButtonIssue',
 
+  mixins: [ErrorHandler],
+
   props: {
     issue: Object,
   },
 
-  mixins: [ErrorHandler],
-
   computed: {
-    recommended() {
+    recommended () {
       return this.$store.state.recommendedIssues[this.issue.id] || false
     }
   },
@@ -31,15 +31,15 @@ export default {
   methods: {
     ...mapMutations(['recommendedIssue']),
 
-    async recommend() {
+    async recommend () {
       try {
         const { id } = this.issue
         if (this.recommended) {
           await this.$axios.delete(`/recommendation/issue/${id}`)
-          this.recommendedIssue({id, value: false})
+          this.recommendedIssue({ id, value: false })
         } else {
           await this.$axios.post(`/recommendation/issue/${id}`)
-          this.recommendedIssue({id, value: true})
+          this.recommendedIssue({ id, value: true })
         }
       } catch (err) {
         this.handleError(err)

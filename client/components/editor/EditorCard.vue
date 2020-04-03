@@ -10,10 +10,10 @@
 
     <button
       v-if="canDelete"
-      @click="$emit('delete')"
       v-b-tooltip
       :title="$t('Remove co-editor')"
-    ></button>
+      @click="$emit('delete')"
+    />
   </li>
 </template>
 
@@ -21,18 +21,18 @@
 import AuthorPicture from '@/components/widgets/AuthorPicture'
 
 export default {
-  name: "EditorCard",
+  name: 'EditorCard',
+
+  components: {
+    AuthorPicture
+  },
 
   props: {
     editor: Object,
     role: String,
     canDelete: Boolean
   },
-
-  components: {
-    AuthorPicture
-  },
-};
+}
 </script>
 
 <style lang="sass">

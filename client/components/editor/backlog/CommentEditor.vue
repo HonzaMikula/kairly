@@ -7,7 +7,7 @@
         v-model="title"
         type="text"
         :placeholder="$t('Title')"
-      />
+      >
       <rich-editor
         v-model="content"
         :options="options"
@@ -19,7 +19,7 @@
         @click="saveComment"
       >{{ $t('Save') }}</button>
     </template>
-    <template #global-controls><slot name="global-controls"></slot></template>
+    <template #global-controls><slot name="global-controls" /></template>
   </PostBase>
 </template>
 
@@ -29,27 +29,27 @@ import PostBase from '@/components/posts/PostBase'
 export default {
   name: 'CommentEditor',
 
-  props: {
-    post: Object,
-  },
-
   components: {
     PostBase
   },
 
-  data() {
+  props: {
+    post: Object,
+  },
+
+  data () {
     return {
       title: this.post.content.title,
       content: this.post.content.content,
       options: {
         placeholder: this.$t('Editorial'),
       },
-      //editor: this.editorial ? this.editorial.author : this.$store.state.auth.user
+      // editor: this.editorial ? this.editorial.author : this.$store.state.auth.user
     }
   },
 
   methods: {
-    async saveComment() {
+    async saveComment () {
       const { post } = await this.$axios.$patch(`/drafts/${this.post.id}`, {
         type: this.post.type,
         title: this.title,
@@ -100,7 +100,6 @@ export default {
     font-size: $fs-1
     font-weight: 600
     line-height: 1.58
-
 
   //- medium editor
   .medium-editor-wrapper

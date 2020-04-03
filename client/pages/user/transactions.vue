@@ -31,7 +31,7 @@
       </nav>
 
       <main>
-        <nuxt-child/>
+        <nuxt-child />
       </main>
     </div>
   </AppLayout>
@@ -40,10 +40,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-
 import AppLayout from '@/components/layout/AppLayout'
 import MoneyFormat from '@/components/widgets/MoneyFormat'
-
 
 export default {
   name: 'Transactions',

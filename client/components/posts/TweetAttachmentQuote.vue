@@ -1,15 +1,17 @@
 <template>
   <div class="tweet-attachment-quote-view">
     <h4><a :href="item.user.url">{{ item.user.name }}</a></h4>
-    <p v-html="item.content"></p>
+    <p v-html="item.content" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'tweet-attachment-quote',
+  name: 'TweetAttachmentQuote',
 
-  props: ["item"]
+  props: {
+    item: Object
+  }
 }
 </script>
 
@@ -27,7 +29,7 @@ export default {
   a
     color: $c-base
 
-  h4   
+  h4
     font-family: $ff-sans
     font-size: $fs--1
     font-weight: 600
@@ -38,8 +40,5 @@ export default {
   p
     font-size: $fs--1
     line-height: 1.58
-
-
-
 
 </style>

@@ -6,15 +6,31 @@
 
     <!-- Begin Mailchimp Signup Form -->
     <div id="mc_embed_signup">
-      <form action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=aed6875343" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+      <form
+        id="mc-embedded-subscribe-form"
+        action="https://honzamikula.us8.list-manage.com/subscribe/post?u=0aa8c0b091d21d477832fbe62&amp;id=aed6875343"
+        method="post"
+        name="mc-embedded-subscribe-form"
+        class="validate"
+        target="_blank"
+        novalidate
+      >
         <div id="mc_embed_signup_scroll">
-          <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email" required>
+          <input
+            id="mce-EMAIL"
+            type="email"
+            value=""
+            name="EMAIL"
+            class="email"
+            placeholder="email"
+            required
+          >
           <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
           <div style="position: absolute; left: -5000px;" aria-hidden="true">
             <input type="text" name="b_0aa8c0b091d21d477832fbe62_aed6875343" tabindex="-1" value="">
-            <input type="checkbox" value="1" name="group[84725]" checked />
+            <input type="checkbox" value="1" name="group[84725]" checked>
           </div>
-          <div class="clear"><input type="submit" :value="$t('Request to join')" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+          <div class="clear"><input id="mc-embedded-subscribe" type="submit" :value="$t('Request to join')" name="subscribe" class="button"></div>
         </div>
       </form>
     </div>
@@ -58,7 +74,6 @@ export default {
     @media (max-width: $mobile)
       font-size: $fs-5
 
-
   //- Mailchimp
   #mc_embed_signup
     margin-top: $baseline
@@ -91,7 +106,6 @@ export default {
 
       @media (max-width: $mobile)
         border-radius: 5px
-
 
       &:focus
         opacity: 1

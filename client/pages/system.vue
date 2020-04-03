@@ -24,13 +24,13 @@
           <tr v-for="t in transactions" :key="t.created">
             <td>{{ t.created | moment('calendar') }}</td>
             <td>
-              <MoneyFormat :value="t.credits" currency="Kč" :force-sign="true"/>
+              <MoneyFormat :value="t.credits" currency="Kč" :force-sign="true" />
             </td>
 
             <td v-if="t.source.newspaper">
               <!-- Monthly reward for newspaper editor -->
-              <img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name" />
-              {{ t.source.newspaper.name}}
+              <img :src="t.source.newspaper.picture" :alt="t.source.newspaper.name">
+              {{ t.source.newspaper.name }}
             </td>
             <td v-else-if="t.source.author">
               <!-- Monthly reward for author -->
@@ -53,8 +53,6 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-
 import AppLayout from '@/components/layout/AppLayout'
 import AuthorPicture from '@/components/widgets/AuthorPicture'
 import MoneyFormat from '@/components/widgets/MoneyFormat'
@@ -62,28 +60,27 @@ import MoneyFormat from '@/components/widgets/MoneyFormat'
 export default {
   name: 'Settings',
 
-  head() {
-    return {
-      title: this.$t('System Reports')
-    }
-  },
-
   components: {
     AppLayout,
     AuthorPicture,
     MoneyFormat,
   },
 
-  async fetch ({ store, redirect }) {
+  fetch ({ store, redirect }) {
     if (!store.state.auth.user.isAdmin) {
       redirect('/')
-      return
     }
   },
 
-  async asyncData({ store, params }) {
-    const { credits, transactions } = await store.dispatch(`getPlatformTransactions`)
+  async asyncData ({ store, params }) {
+    const { credits, transactions } = await store.dispatch('getPlatformTransactions')
     return { credits, transactions }
+  },
+
+  head () {
+    return {
+      title: this.$t('System Reports')
+    }
   },
 }
 </script>
@@ -93,7 +90,6 @@ export default {
   margin-bottom: $baseline
 
   font-size: $fs-1
-
 
 .system-transactions--table
   width: 100%

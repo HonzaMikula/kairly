@@ -2,24 +2,24 @@
   <div class="kairly-promo">
     <div>
       <section>
-          <h1>
-            <nuxt-link to="/">
-              {{ $t('Modern news platform')}}
-              <br />
-              {{ $t('for demanding readers') }}
-            </nuxt-link>
-          </h1>
+        <h1>
+          <nuxt-link to="/">
+            {{ $t('Modern news platform') }}
+            <br>
+            {{ $t('for demanding readers') }}
+          </nuxt-link>
+        </h1>
 
-          <p>{{ $t('Subscribe to thematic newsletters prepared by professional editors.') }}</p>
+        <p>{{ $t('Subscribe to thematic newsletters prepared by professional editors.') }}</p>
 
-          <ul>
-            <li>{{ $t('Read your newsletters at regular time you want. E.g. every day at 9am.') }}</li>
-            <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
-            <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
-          </ul>
-        </section>
+        <ul>
+          <li>{{ $t('Read your newsletters at regular time you want. E.g. every day at 9am.') }}</li>
+          <li>{{ $t('We update your timeline only every 3 hours. Because that\'s sane.') }}</li>
+          <li>{{ $t('No notifications. No endless scrolling. No addiction and FOMO.') }}</li>
+        </ul>
+      </section>
 
-      <SignUpForm></SignUpForm>
+      <SignUpForm />
     </div>
   </div>
 </template>
@@ -62,7 +62,7 @@ export default {
 
     @media (max-width: $mobile)
       grid-template-columns: auto
-      grid-row-gap: $baseline 
+      grid-row-gap: $baseline
 
   section
     display: flex
@@ -74,7 +74,7 @@ export default {
       font-size: $fs-4
       font-weight: 900
       line-height: 1.42
-        
+
       padding: 0
       margin-bottom: $baseline
 
@@ -140,6 +140,5 @@ export default {
 
         counter-increment: benefits
         content: counter(benefits)
-
 
 </style>

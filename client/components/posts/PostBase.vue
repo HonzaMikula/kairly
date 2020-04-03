@@ -1,8 +1,9 @@
 <template>
-  <article class="post"
+  <article
+    :id="`post-${post.id}`"
+    class="post"
     role="article"
     :class="post.type"
-    :id="`post-${post.id}`"
   >
     <header @mouseleave="closeAuthorWidget">
       <slot name="author">
@@ -26,13 +27,13 @@
             </template>
             <template v-else>
               <nuxt-link :to="{name: 'author', params: {author: post.author.id}}">
-                {{ post.author.name }}<span v-if="post.author.medium">, {{post.author.medium}}</span>
+                {{ post.author.name }}<span v-if="post.author.medium">, {{ post.author.medium }}</span>
               </nuxt-link>
             </template>
           </h3>
 
           <AuthorPopup
-          v-if="post.author.kind != 'external'"
+            v-if="post.author.kind != 'external'"
             :target="`post-author-${post.id}`"
             :author="post.author"
           />
@@ -42,22 +43,22 @@
       </slot>
 
       <section>
-        <slot name="global-controls"/>
+        <slot name="global-controls" />
         <slot name="page-controls">
           <span>
             <button
               v-if="user && post.author && post.author.id == user.id"
-              class="edit"
               v-b-tooltip
+              class="edit"
               :title="$t('Edit post')"
               @click.prevent="$router.push(`/posts/${post.id}`)"
             />
             <button
               v-if="userNewspapers.length > 0 && post.type !== 'comment'"
+              v-b-tooltip
               class="consider-post"
               tabindex="0"
               :aria-label="$t('Consider for newspaper')"
-              v-b-tooltip
               :title="$t('Consider for newspaper')"
               @click.stop.prevent="showConsiderPost = true"
             />
@@ -68,14 +69,14 @@
 
     </header>
 
-    <slot/>
-    <slot name="buttons"/>
+    <slot />
+    <slot name="buttons" />
   </article>
 </template>
 
 <script>
-import { directive as onClickaway } from '@/lib/vue-clickaway'
 import { mapState, mapGetters } from 'vuex'
+import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import AuthorPicture from '@/components/widgets/AuthorPicture'
 import AuthorPopup from '@/components/widgets/AuthorPopup'
@@ -83,10 +84,6 @@ import ConsiderPost from '@/components/widgets/ConsiderPost'
 
 export default {
   name: 'PostDetail',
-
-  props: {
-    post: Object,
-  },
 
   components: {
     AuthorPicture,
@@ -98,7 +95,11 @@ export default {
     onClickaway
   },
 
-  data: function () {
+  props: {
+    post: Object,
+  },
+
+  data () {
     return {
       isAuthorWidgetOpen: false,
       timer: null,
@@ -115,14 +116,14 @@ export default {
   },
 
   methods: {
-    openAuthorWidget() {
+    openAuthorWidget () {
       this.timer = setTimeout(() => {
-        this.isAuthorWidgetOpen = true;
-        this.$forceUpdate();
-      }, 500);
+        this.isAuthorWidgetOpen = true
+        this.$forceUpdate()
+      }, 500)
     },
 
-    closeAuthorWidget() {
+    closeAuthorWidget () {
       clearTimeout(this.timer)
       if (this.isAuthorWidgetOpen) {
         this.isAuthorWidgetOpen = false
@@ -130,7 +131,7 @@ export default {
       }
     },
 
-    closeConsiderPost() {
+    closeConsiderPost () {
       this.showConsiderPost = false
     }
   }
@@ -158,7 +159,6 @@ export default {
   @media (max-width: $mobile)
     padding: $baseline / 4
 
-
 //- Post header
 .post > header
   position: relative
@@ -180,7 +180,6 @@ export default {
 
     object-fit: cover
 
-
   //-- author
   h3
     overflow: hidden
@@ -197,7 +196,6 @@ export default {
 
     a
       color: #555
-
 
   //-- date of publication
   time
@@ -297,7 +295,6 @@ export default {
       &::before
         font-size: $fs--1
         line-height: $baseline
-
 
 //- Popover TODO: maybe move it somewhere else
 .popover-body

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import * as actions from './actions'
+import * as actions from './actions'  // eslint-disable-line
 
 export const state = () => {
   return {
@@ -11,20 +11,20 @@ export const state = () => {
 }
 
 export const mutations = {
-  resetState(state) {
+  resetState (state) {
     state.subscriptions = null
     state.recommendedIssues = {}
   },
-  updateCredits(state, credits) {
+  updateCredits (state, credits) {
     state.auth.user.credits = credits
   },
-  subscriptions(state, subscriptions) {
+  subscriptions (state, subscriptions) {
     state.subscriptions = subscriptions
   },
-  invalidateSubscriptions(state) {
+  invalidateSubscriptions (state) {
     state.subscriptions = null
   },
-  newspaperSubscription(state, {subscription, fullName}) {
+  newspaperSubscription (state, { subscription, fullName }) {
     if (state.subscriptions) {
       if (subscription) {
         Vue.set(state.subscriptions.newspapers, fullName, subscription)
@@ -33,7 +33,7 @@ export const mutations = {
       }
     }
   },
-  authorSubscription(state, { subscription, authorId}) {
+  authorSubscription (state, { subscription, authorId }) {
     if (state.subscriptions) {
       if (subscription) {
         Vue.set(state.subscriptions.authors, authorId, subscription)
@@ -42,12 +42,12 @@ export const mutations = {
       }
     }
   },
-  appendOwnedNewspaper(state, { newspaper }) {
+  appendOwnedNewspaper (state, { newspaper }) {
     state.auth.user.newspapers.push(newspaper)
   },
-  removeNewspaper(state, { newspaper }) {
+  removeNewspaper (state, { newspaper }) {
     // remove from owned
-    let idx = state.auth.user.newspapers.findIndex(n => n.fullName === newspaper.fullName)
+    const idx = state.auth.user.newspapers.findIndex(n => n.fullName === newspaper.fullName)
     if (idx !== -1) {
       state.auth.user.newspapers.splice(idx, 1)
     }
@@ -56,7 +56,7 @@ export const mutations = {
       Vue.delete(state.subscriptions.newspapers, newspaper.fullName)
     }
   },
-  recommendedIssue(state, { id, value }) {
+  recommendedIssue (state, { id, value }) {
     Vue.set(state.recommendedIssues, id, value)
   },
   setLang (state, locale) {
@@ -93,7 +93,7 @@ export const getters = {
       }
     })
     const mod = cents % 100
-    return ~~(cents / 100) + "." + (mod < 10 ? "0" : "") + mod
+    return ~~(cents / 100) + '.' + (mod < 10 ? '0' : '') + mod
   },
   hasSuspendedSubscription: state => {
     if (!state.subscriptions) {

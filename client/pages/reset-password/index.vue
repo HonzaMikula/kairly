@@ -9,21 +9,22 @@
       </ol>
       <template v-if="step === 'form'">
         <form
-           v-if="step === 'form'"
-          @submit.prevent="submit">
+          v-if="step === 'form'"
+          @submit.prevent="submit"
+        >
           <label for="email">{{ $t('Your email') }}</label>
           <div>
             <input
-              type="email"
               id="email"
               v-model="email"
+              type="email"
               placeholder="@"
-            />
+            >
             <button type="submit">{{ $t('Request reset') }}</button>
           </div>
         </form>
       </template>
-      <div class="reset-password--message" v-else>
+      <div v-else class="reset-password--message">
         <h3>{{ $t('Password reset requested') }}</h3>
         <p>{{ $t('Check your inbox for email with the reset link.') }}</p>
       </div>
@@ -46,29 +47,29 @@ export default {
 
   mixins: [ErrorHandler],
 
-  head() {
+  data () {
     return {
-      title: this.$t('Reset password') +' – Kairly',
-    }
-  },
-
-  data() {
-    return {
-      'step': 'form',
-      'email': '',
+      step: 'form',
+      email: '',
     }
   },
 
   methods: {
-    async submit() {
+    async submit () {
       try {
-        const res = await this.$axios.post('/reset-password', {
+        await this.$axios.post('/reset-password', {
           email: this.email
         })
         this.step = 'submit'
       } catch (err) {
         this.handleError(err)
       }
+    }
+  },
+
+  head () {
+    return {
+      title: this.$t('Reset password') + ' – Kairly',
     }
   }
 }
@@ -110,7 +111,6 @@ export default {
 
     > div
       display: flex
-
 
     input
       box-sizing: border-box
