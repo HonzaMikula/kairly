@@ -20,7 +20,7 @@ export default {
   components: { PostBase },
 
   props: {
-    post: Object,
+    post: { type: Object, required: true },
   }
 }
 </script>

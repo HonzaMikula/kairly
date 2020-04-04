@@ -81,8 +81,8 @@ export default {
 
   props: {
     disableControls: Boolean,
-    category: Object,
-    period: String
+    category: { type: Object, required: true },
+    period: { type: String, required: true }
   },
 
   data () {

@@ -19,9 +19,10 @@
 
 export default {
   name: 'Quote',
+
   props: {
-    heading: String,
-    quote: String
+    heading: { type: String, required: true },
+    quote: { type: String, required: true }
   }
 }
 </script>

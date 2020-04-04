@@ -34,11 +34,8 @@ export default {
   },
 
   props: {
-    value: [String],
-    options: {
-      type: [Object],
-      default: () => {}
-    }
+    value: { type: String, default: '' },
+    options: { type: [Object], default: () => {} }
   },
 
   data () {

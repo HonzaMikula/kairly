@@ -8,8 +8,9 @@
 
 export default {
   name: 'InfoMessage',
+
   props: {
-    type: String
+    type: { type: String, required: true }
   }
 }
 </script>

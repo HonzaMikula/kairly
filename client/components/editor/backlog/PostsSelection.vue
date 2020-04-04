@@ -34,8 +34,8 @@ export default {
   },
 
   props: {
-    newspaper: Object,
-    selected: Array
+    newspaper: { type: Object, required: true },
+    selected: { type: Array, required: true }
   },
 
   data () {

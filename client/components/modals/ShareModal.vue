@@ -68,7 +68,7 @@ export default {
   mixins: [ModalMixin],
 
   props: {
-    issue: Object
+    issue: { type: Object, required: true }
   },
 
   data () {

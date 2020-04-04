@@ -47,8 +47,8 @@ export default {
     PostRecommendations
   },
   props: {
-    post: Object,
-    typeOverride: Object // override component type is set, value is map {id: component}
+    post: { type: Object, required: true },
+    typeOverride: { type: Object, default: null } // override component type is set, value is map {id: component}
   },
 
   computed: {

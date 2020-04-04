@@ -87,9 +87,9 @@ export default {
   mixins: [ErrorHandler],
 
   props: {
-    index: Number,
-    newspaper: Object,
-    backlog: Object,
+    index: { type: Number, required: true },
+    newspaper: { type: Object, required: true },
+    backlog: { type: Object, required: true },
     show: Boolean
   },
 

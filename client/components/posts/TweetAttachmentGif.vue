@@ -14,7 +14,7 @@ export default {
   name: 'TweetAttachmentGif',
 
   props: {
-    item: Object
+    item: { type: Object, required: true }
   }
 }
 </script>

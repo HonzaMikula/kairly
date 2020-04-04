@@ -53,8 +53,8 @@ export default {
   name: 'EditArticle',
 
   props: {
-    post: Object,
-    buttonTitle: String
+    post: { type: Object, required: true },
+    buttonTitle: { type: String, required: true }
   },
 
   data () {

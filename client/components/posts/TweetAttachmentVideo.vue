@@ -26,7 +26,7 @@ export default {
   name: 'TweetAttachmentVideo',
 
   props: {
-    item: Object
+    item: { type: Object, required: true }
   },
 
   computed: {

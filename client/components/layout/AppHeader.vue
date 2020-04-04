@@ -235,7 +235,7 @@ export default {
   },
 
   props: {
-    pageTitle: String
+    pageTitle: { type: String, default: null }
   },
 
   data () {

@@ -51,8 +51,8 @@ export default {
   },
 
   props: {
-    target: String,
-    author: Object
+    target: { type: String, required: true },
+    author: { type: Object, required: true }
   },
 
   computed: mapState({

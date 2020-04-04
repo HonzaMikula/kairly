@@ -137,7 +137,7 @@ export default {
   mixins: [ModalMixin, PeriodicityMixin],
 
   props: {
-    author: Object,
+    author: { type: Object, required: true }
   },
 
   data () {

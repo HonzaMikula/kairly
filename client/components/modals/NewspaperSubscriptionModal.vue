@@ -107,7 +107,7 @@ export default {
   mixins: [ModalMixin, PeriodicityMixin],
 
   props: {
-    newspaper: Object,
+    newspaper: { type: Object, required: true },
   },
 
   data () {

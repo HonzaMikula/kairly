@@ -50,8 +50,8 @@ export default {
   mixins: [ModalMixin],
 
   props: {
-    post: Object,
-    price: String
+    post: { type: Object, required: true },
+    price: { type: String, required: true }
   },
 
   data () {

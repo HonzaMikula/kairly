@@ -16,7 +16,7 @@ export default {
   name: 'TweetAttachmentPhoto',
 
   props: {
-    items: Array
+    items: { type: Array, required: true }
   }
 }
 </script>

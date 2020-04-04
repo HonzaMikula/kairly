@@ -16,7 +16,7 @@ export default {
   mixins: [ErrorHandler],
 
   props: {
-    post: Object,
+    post: { type: Object, required: true },
     recommended: Boolean,
   },
 

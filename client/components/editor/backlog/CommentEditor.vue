@@ -34,7 +34,7 @@ export default {
   },
 
   props: {
-    post: Object,
+    post: { type: Object, required: true }
   },
 
   data () {

@@ -47,7 +47,7 @@ export default {
     PostIssue,
   },
   props: {
-    issue: Object
+    issue: { type: Object, required: true }
   },
 
   methods: {

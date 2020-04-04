@@ -19,7 +19,7 @@ export default {
   mixins: [ErrorHandler],
 
   props: {
-    issue: Object,
+    issue: { type: Object, required: true },
   },
 
   computed: {

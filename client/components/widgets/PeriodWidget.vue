@@ -47,10 +47,6 @@
 export default {
   name: 'PeriodWidget',
 
-  props: {
-    onSelect: Function
-  },
-
   data () {
     return {
       frequency: null,

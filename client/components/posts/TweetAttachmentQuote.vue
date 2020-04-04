@@ -10,7 +10,7 @@ export default {
   name: 'TweetAttachmentQuote',
 
   props: {
-    item: Object
+    item: { type: Object, required: true }
   }
 }
 </script>

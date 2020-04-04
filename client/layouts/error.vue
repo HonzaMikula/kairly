@@ -28,7 +28,7 @@ export default {
   },
 
   props: {
-    error: Object
+    error: { type: Object, required: true }
   }
 }
 </script>

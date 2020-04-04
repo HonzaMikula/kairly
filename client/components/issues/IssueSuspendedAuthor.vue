@@ -41,7 +41,7 @@ export default {
     AuthorPopup,
   },
   props: {
-    issue: Object
+    issue: { type: Object, required: true }
   },
 
   methods: {

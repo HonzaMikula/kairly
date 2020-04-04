@@ -25,7 +25,7 @@ export default {
   },
 
   props: {
-    name: String
+    name: { type: String, default: null }
   },
 
   computed: mapState({

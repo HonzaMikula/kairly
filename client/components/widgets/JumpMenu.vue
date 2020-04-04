@@ -48,8 +48,8 @@ export default {
   },
 
   props: {
-    datetime: String,
-    timeSlots: Array
+    datetime: { type: String, required: true },
+    timeSlots: { type: Array, required: true }
   },
 
   data () {

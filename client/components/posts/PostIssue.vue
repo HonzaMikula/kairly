@@ -18,7 +18,7 @@ export default {
   name: 'PostIssue',
 
   props: {
-    post: Object
+    post: { type: Object, required: true }
   }
 }
 </script>

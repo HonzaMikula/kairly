@@ -28,8 +28,8 @@ export default {
   },
 
   props: {
-    editor: Object,
-    role: String,
+    editor: { type: Object, required: true },
+    role: { type: String, required: true },
     canDelete: Boolean
   },
 }

@@ -40,6 +40,7 @@
           </template>
         </transition-group>
       </draggable>
+
       <NewspaperBacklogPostToolbar
         :index="items.length"
         :newspaper="newspaper"
@@ -70,7 +71,7 @@ export default {
   props: {
     newspaper: { type: Object, required: true },
     title: { type: String, required: true },
-    description: String,
+    description: { type: String, default: null },
     backlog: { type: Object, required: true },
     posts: { type: Object, required: true }
   },

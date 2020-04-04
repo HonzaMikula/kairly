@@ -116,7 +116,7 @@ export default {
   },
 
   props: {
-    newspaper: Object
+    newspaper: { type: Object, required: true }
   },
 
   computed: {

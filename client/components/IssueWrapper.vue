@@ -87,7 +87,7 @@ export default {
   mixins: [PostObjectMixin],
 
   props: {
-    issue: Object,
+    issue: { type: Object, required: true },
     subscription: Boolean,
     hideDate: Boolean,
     showTail: Boolean
@@ -116,10 +116,6 @@ export default {
         return !!this.$store.state.timeline.expandedIssues[this.issue.id]
       }
     },
-
-    // postsById() {
-    //   return keyBy(this.issue.posts, 'id')
-    // },
 
     headPosts () {
       return this.issue.layout.slice(0, POST_LIMIT).map(item => this.getPostObject(item))

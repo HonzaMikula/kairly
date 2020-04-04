@@ -32,8 +32,8 @@ export default {
   mixins: [ModalMixin],
 
   props: {
-    category: Object,
-    limit: Number
+    category: { type: Object, required: true },
+    limit: { type: Number, required: true }
   },
 
   head () {

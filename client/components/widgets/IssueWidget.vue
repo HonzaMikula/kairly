@@ -51,7 +51,7 @@ export default {
   },
 
   props: {
-    issue: Object
+    issue: { type: Object, required: true }
   },
 
   computed: {

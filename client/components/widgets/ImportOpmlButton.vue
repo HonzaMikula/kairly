@@ -12,8 +12,9 @@ import { mapMutations } from 'vuex'
 
 export default {
   name: 'ImportOpmlButton',
+
   props: {
-    text: String
+    text: { type: String, required: true }
   },
 
   methods: {

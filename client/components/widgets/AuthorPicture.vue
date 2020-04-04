@@ -13,7 +13,7 @@ export default {
   props: {
     author: { type: Object, required: true },
     size: { type: String, default: () => 'small' },
-    itemprop: String
+    itemprop: { type: String, default: null }
   }
 }
 </script>

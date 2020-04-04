@@ -57,7 +57,7 @@ export default {
   mixins: [PeriodicityMixin],
 
   props: {
-    newspaper: Object
+    newspaper: { type: Object, required: true }
   },
 
   computed: {

@@ -249,12 +249,12 @@ export default {
   mixins: [ErrorHandler],
 
   props: {
-    newspaper: Object,
-    post: Object,
+    newspaper: { type: Object, required: true },
+    post: { type: Object, required: true },
     canMoveUp: Boolean,
     canMoveDown: Boolean,
-    source: String,
-    index: Number
+    source: { type: String, required: true },
+    index: { type: Number, required: true }
   },
 
   data () {

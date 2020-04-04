@@ -1,6 +1,6 @@
 <template>
   <span>
-    {{ forceSign && numValue > 0 ? '+' : '' }}{{ formatted }} {{ currency ? currency : '' }}
+    {{ forceSign && numValue > 0 ? '+' : '' }}{{ formatted }} {{ currency }}
   </span>
 </template>
 
@@ -9,8 +9,8 @@ export default {
   name: 'MoneyFormat',
 
   props: {
-    value: [Number, String],
-    currency: String,
+    value: { type: [Number, String], required: true },
+    currency: { type: String, default: '' },
     short: { type: Boolean, default: false },
     forceSign: { type: Boolean, default: false }
   },

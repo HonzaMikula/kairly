@@ -32,7 +32,7 @@ export default {
   name: 'AuthorSubscriptionButton',
 
   props: {
-    author: Object
+    author: { type: Object, required: true }
   },
 
   computed: {

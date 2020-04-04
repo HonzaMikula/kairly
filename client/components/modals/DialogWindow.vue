@@ -38,7 +38,7 @@ export default {
   name: 'DialogWindow',
 
   props: {
-    customClass: String,
+    customClass: { type: String, required: true },
     ignoreBackgroundClick: Boolean
   },
 
