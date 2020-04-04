@@ -8,7 +8,6 @@
           :newspaper="newspaper"
         />
       </div>
-
     </div>
 
     <section v-for="(category, index) in categories" :key="index" :class="`explore-${index}`">
@@ -34,7 +33,6 @@
       :category="modalCategory"
       :limit="LIMIT"
     />
-
   </main>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
   <AppLayout :name="$t('Search')">
     <main class="search-view">
-
       <header class="search--search-box">
         <input v-model="query" type="search" autofocus @keyup.enter="search()">
         <button @click="search()">{{ $t('Search') }}</button>
@@ -50,7 +49,6 @@
             </template>
           </div>
           <p v-html="result.htmlSnippet" />
-
         </div>
       </template>
 
@@ -70,7 +68,9 @@
             :key="page"
             :class="{'is-active': page == currentPage}"
             @click="pagination(page)"
-          >{{ page }}</li>
+          >
+            {{ page }}
+          </li>
         </ul>
       </footer>
     </main>

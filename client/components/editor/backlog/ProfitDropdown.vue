@@ -1,6 +1,5 @@
 <template>
   <div class="newspaper-backlog--info--profit-dropdown">
-
     <table>
       <thead>
         <tr>

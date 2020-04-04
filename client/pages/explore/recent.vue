@@ -10,7 +10,6 @@
           :issue="issue"
         />
       </div>
-
     </div>
 
     <section class="explore-recent">
@@ -24,7 +23,6 @@
     </section>
 
     <portal to="explore-header">{{ $t('Most Recent') }}</portal>
-
   </main>
 </template>
 

@@ -102,7 +102,6 @@
         </ul>
       </b-popover>
     </nav>
-
   </div>
 </template>
 

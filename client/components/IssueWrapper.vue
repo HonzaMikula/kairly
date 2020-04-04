@@ -5,7 +5,6 @@
     :issue="issue"
     :hide-date="hideDate"
   >
-
     <template #newspaper-title>
       <slot name="newspaper-title" />
     </template>

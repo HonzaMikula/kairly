@@ -47,7 +47,6 @@
         <NewspaperSubscriptionButton :newspaper="newspaper" />
         <p>{{ periodicity }}</p>
       </div>
-
     </div>
   </section>
 </template>

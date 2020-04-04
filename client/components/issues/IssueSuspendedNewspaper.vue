@@ -38,7 +38,6 @@
     <article>
       {{ $t('Your susbscription were suspended.') }}
     </article>
-
   </div>
 </template>
 

@@ -1,6 +1,5 @@
 <template>
   <div class="newspaper-backlog-view">
-
     <NewspaperBacklogPosts
       v-if="upcoming"
       :title="$t('Issue #') + (newspaper.issues + 1)"

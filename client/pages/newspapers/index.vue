@@ -5,7 +5,6 @@
         v-if="newspapers.length === 0"
         class="newspaper-editor--empty"
       >
-
         <h1>{{ $t('Start your first newspaper!') }}</h1>
 
         <p>
@@ -99,7 +98,9 @@
                 <li v-if="selectedNewspaper.editor.id === user.id">
                   <nuxt-link
                     :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
-                  >{{ $t('Edit newspaper') }}</nuxt-link>
+                  >
+                    {{ $t('Edit newspaper') }}
+                  </nuxt-link>
                 </li>
               </ul>
             </div>

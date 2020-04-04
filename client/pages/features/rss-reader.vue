@@ -141,7 +141,6 @@
       <Footer />
 
       <FooterLinks />
-
     </div>
   </AppLayout>
 </template>

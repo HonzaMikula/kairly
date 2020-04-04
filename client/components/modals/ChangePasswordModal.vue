@@ -38,7 +38,6 @@
     <template #footer>
       <button @click="submit">{{ $t('Change password') }}</button>
     </template>
-
   </DialogWindow>
 </template>
 

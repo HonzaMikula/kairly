@@ -175,7 +175,6 @@
               </form>
             </div>
             <!--End mc_embed_signup -->
-
           </footer>
         </template>
 

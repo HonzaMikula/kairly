@@ -55,7 +55,6 @@
 
             <nuxt-link to="/subscription">{{ $t('Subscriptions') }}</nuxt-link>
             <nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link>
-
           </div>
         </template>
 

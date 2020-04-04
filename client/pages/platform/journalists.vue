@@ -61,7 +61,6 @@
             </p>
 
             <p>Na platformě můžete publikovat zdarma. Ve chvíli, kdy vám čtenáři začnou platit, budeme si účtovat 15 % z ceny předplatného.</p> -->
-
         </div>
       </section>
 
@@ -130,7 +129,6 @@
       <Footer />
 
       <FooterLinks />
-
     </div>
   </AppLayout>
 </template>

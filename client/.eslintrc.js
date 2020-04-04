@@ -20,7 +20,6 @@ module.exports = {
     'nuxt/no-cjs-in-config': 'off',
     'vue/no-v-html': 'off',
     'vue/singleline-html-element-content-newline': 'off',
-    'vue/multiline-html-element-content-newline': 'off',
     'vue/no-template-shadow': 'off',
     'vue/require-default-prop': 'off' // TODO enable it
   }

@@ -44,7 +44,9 @@
         <button
           v-if="newspapers.length > 3"
           @click="toggleNewspapers()"
-        >{{ !showAllNewspapers ? this.$t('Show all newsletters') : this.$t('Hide newsletters') }}</button>
+        >
+          {{ !showAllNewspapers ? this.$t('Show all newsletters') : this.$t('Hide newsletters') }}
+        </button>
       </div>
 
       <div v-if="posts.length" class="author-detail--posts">

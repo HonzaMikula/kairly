@@ -33,7 +33,6 @@
         {{ issue.newspaper.likes }} {{ $t('subscribers') }}
       </p>
     </div>
-
   </div>
 </template>
 

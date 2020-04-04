@@ -66,7 +66,6 @@
           </span>
         </slot>
       </section>
-
     </header>
 
     <slot />

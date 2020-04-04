@@ -42,7 +42,6 @@
         @click.prevent="setLang('en')"
       >
         English</a>
-
     </div>
   </footer>
 </template>

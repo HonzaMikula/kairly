@@ -54,7 +54,6 @@
           :author="author"
         />
       </template>
-
     </template>
   </div>
 </template>

@@ -1,6 +1,5 @@
 <template>
   <div class="homepage-view" itemscope itemtype="http://schema.org/WebPage">
-
     <section class="homepage--cover">
       <div>
         <section>

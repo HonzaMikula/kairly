@@ -38,7 +38,6 @@
     <article>
       {{ $t('We are very sorry, but {editor} didn\'t prepare a new release for you.', {editor: newspaper.editor.name}) }}
     </article>
-
   </div>
 </template>
 

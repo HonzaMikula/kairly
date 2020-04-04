@@ -30,7 +30,6 @@
                 role="button"
                 @click.prevent="deletePost(post)"
               />
-
             </template>
           </PostWrapper>
         </div>

@@ -1,6 +1,5 @@
 <template>
   <div class="welcome-view">
-
     <section class="welcome-intro">
       <h1>{{ $t('Welcome to Kairly!') }}</h1>
 
@@ -65,7 +64,6 @@
     </nav>
 
     <ExploreTimeline id="explore-timeline" disable-controls :category="currentTab" />
-
   </div>
 </template>
 

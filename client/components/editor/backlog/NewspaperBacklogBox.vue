@@ -11,19 +11,27 @@
         <button
           class="add-posts"
           @click="openPostSelection(columnIndex)"
-        >{{ $t('Posts') }}</button>
+        >
+          {{ $t('Posts') }}
+        </button>
         <button
           class="add-comment"
           @click="writeComment(columnIndex)"
-        >{{ $t('Comment') }}</button>
+        >
+          {{ $t('Comment') }}
+        </button>
         <button
           class="add-external"
           @click="addExternalLink(columnIndex)"
-        >{{ $t('External post') }}</button>
+        >
+          {{ $t('External post') }}
+        </button>
         <button
           class="toggle-editorial"
           @click="toggleEditorialStyle(columnIndex)"
-        >{{ $t('Toggle editorial') }}</button>
+        >
+          {{ $t('Toggle editorial') }}
+        </button>
       </EmptyColumnPlaceholder>
     </template>
 
@@ -72,7 +80,6 @@
     <template #aside>
       <div :class="{'newspaper-backlog-controls': true, 'hide-mobile-controls': mobileControls}">
         <div class="newspaper-backlog-controls--arrows">
-
           <div class="newspaper-backlog-controls--arrows--checkbox">
             <input v-model="postSelection" type="checkbox">
           </div>

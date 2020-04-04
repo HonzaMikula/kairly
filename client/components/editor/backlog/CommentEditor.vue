@@ -15,9 +15,9 @@
     </div>
 
     <template #page-controls>
-      <button
-        @click="saveComment"
-      >{{ $t('Save') }}</button>
+      <button @click="saveComment">
+        {{ $t('Save') }}
+      </button>
     </template>
     <template #global-controls><slot name="global-controls" /></template>
   </PostBase>

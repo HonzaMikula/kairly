@@ -51,7 +51,6 @@
           <h2>{{ $t('Publish your ideas on a modern platform and reach out to new audiences.') }}</h2>
 
           <div v-html="$t('@think-tanks/modern-platform')" />
-
         </div>
       </section>
 
@@ -122,7 +121,6 @@
       <Footer />
 
       <FooterLinks />
-
     </div>
   </AppLayout>
 </template>

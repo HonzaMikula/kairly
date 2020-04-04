@@ -122,7 +122,9 @@
             <button
               :disabled="coEditorSlug === ''"
               @click="addCoEditor"
-            >{{ $t('Add co-editor') }}</button>
+            >
+              {{ $t('Add co-editor') }}
+            </button>
           </div>
         </div>
       </section>

@@ -143,7 +143,6 @@
         <p>
           Data zpracováváme výhradně v Evropské unii nebo v zemích, které zajišťují
           odpovídající úroveň ochrany na základě rozhodnutí Evropské komise.
-
         </p><h2>Vaše práva v souvislosti s ochranou osobních údajů</h2>
 
         <p>

@@ -194,7 +194,6 @@
           <button @click="openRequestSolutionModal()">{{ $t('Request solution') }}</button>
           <a href="/downloads/kairly-brozura.pdf" download @click="downloadPDF()">{{ $t('Download PDF brochure') }}</a>
         </div>
-
       </section>
 
       <FooterLinks />
@@ -202,7 +201,6 @@
       <RequestSolutionModal
         :active.sync="isRequestSolutionModalOpen"
       />
-
     </div>
   </AppLayout>
 </template>

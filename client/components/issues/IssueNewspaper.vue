@@ -33,7 +33,6 @@
         :target="`issue-newspaper-author-${$_uid}`"
         :author="newspaper.editor"
       />
-
     </header>
     <slot />
   </div>
