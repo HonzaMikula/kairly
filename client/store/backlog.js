@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import isString from 'lodash/isString'
 import keyBy from 'lodash/keyBy'
+import debounce from 'lodash/debounce'
 
 let reorderPostScheduled = false
 const UPPERMOST_BACKLOG = 'upcoming'
@@ -12,7 +13,7 @@ export const state = () => ({
   selection: {} // newspaper editor selection
 })
 
-function getItemPostIds (item) {
+const getItemPostIds = (item) => {
   const postIds = []
   if (item.type === 'box') {
     item.columns.forEach(col => col.posts.forEach(p => postIds.push(p.id)))
@@ -22,6 +23,11 @@ function getItemPostIds (item) {
   }
   return postIds
 }
+
+// TODO flush on page change
+const deboundedSave = debounce(($axios, fullName, data) => {
+  $axios.$post(`/newspapers/${fullName}/backlog`, data, { progress: false })
+}, 500)
 
 export const actions = {
   async loadUserBacklog ({ commit, state }) {
@@ -68,8 +74,9 @@ export const actions = {
     })
   },
 
-  async save ({ state }, { newspaper }) {
+  save ({ state }, { newspaper }) {
     const { fullName } = newspaper
+
     function serialize (layout) {
       return layout.map(item => {
         if (item.type === 'post') { return { post: item.id } }
@@ -91,11 +98,13 @@ export const actions = {
     }
 
     const backlog = state.newspaperBacklog[fullName]
-    await this.$axios.$post(`/newspapers/${fullName}/backlog`, {
+    const data = {
       upcoming: serialize(backlog.upcoming.layout),
       next: serialize(backlog.next.layout),
       considered: serialize(backlog.considered.layout)
-    }, { progress: false })
+    }
+
+    deboundedSave(this.$axios, fullName, data)
   },
 
   reorder ({ commit, dispatch }, { newspaper, target, ordering }) {
@@ -120,7 +129,7 @@ export const actions = {
       index: 0,
       deleteCount: 0
     })
-    await dispatch('save', { newspaper })
+    dispatch('save', { newspaper })
 
     this.$ga.event({
       eventCategory: 'Consider for newspaper',
@@ -137,7 +146,7 @@ export const actions = {
       source,
       postId: post.id,
     })
-    await dispatch('save', { newspaper })
+    dispatch('save', { newspaper })
 
     this.$ga.event({
       eventCategory: 'Stop considering for newspaper',
@@ -155,6 +164,7 @@ export const actions = {
         index: item.index
       })
     })
+
     dispatch('save', { newspaper })
   },
 
@@ -188,7 +198,7 @@ export const actions = {
           }
         })
       }
-      await dispatch('save', { newspaper })
+      dispatch('save', { newspaper })
 
       this.$ga.event({
         eventCategory: 'Add external article',
@@ -247,6 +257,11 @@ export const actions = {
         index: item.index
       })
     })
+
+    if (target) {
+      commit('cleanSelection')
+    }
+
     dispatch('save', { newspaper })
   },
 
@@ -269,6 +284,7 @@ export const actions = {
 
       selectedBefore++
     })
+    commit('cleanSelection')
     dispatch('save', { newspaper })
   },
 
@@ -289,6 +305,8 @@ export const actions = {
 
       selectedBefore++
     })
+
+    commit('cleanSelection')
     dispatch('save', { newspaper })
   },
 

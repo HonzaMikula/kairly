@@ -200,7 +200,7 @@
                 </li>
 
                 <li tabindex="1" @click="splitColumns">
-                  <h6>{{ $t('Cancel columns') }}</h6>
+                  <h6>{{ $t('Split columns') }}</h6>
                   <p>{{ $t('Posts will be bellow each other') }}</p>
                 </li>
               </ul>

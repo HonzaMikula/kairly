@@ -46,10 +46,10 @@
     "vuedraggable": "^2.23.2"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@nuxtjs/eslint-config": "^2.0.2",
     "@nuxtjs/eslint-module": "^1.1.0",
     "@nuxtjs/style-resources": "^1.0.0",
-    "@fortawesome/fontawesome-free": "^5.13.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.0",
@@ -58,6 +58,6 @@
     "node-reset-scss": "^1.0.1",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
-    "xgettext-template": "^4.0.3"
+    "xgettext-template": "^3.4.2"
   }
 }

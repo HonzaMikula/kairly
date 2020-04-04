@@ -93,49 +93,10 @@ export default {
     }
   },
 
-  mounted () {
-    window.addEventListener('keyup', this.onKeyUp)
-  },
-
-  beforeDestroy () {
-    window.removeEventListener('keyup', this.onKeyUp)
-  },
-
   methods: {
     timeFrom (dt) {
       return moment(dt).from()
-    },
-
-    onKeyUp (event) {
-      if (this.$store.getters['backlog/getSelection'].length) {
-        if (event.which === 27) { // esc
-          this.$store.commit('backlog/cleanSelection')
-        } else if (event.which === 38) { // arrow up
-          this.$store.dispatch('backlog/moveSelectionUp', {
-            newspaper: this.newspaper,
-            target: null
-          })
-        } else if (event.which === 40) { // arrow down
-          this.$store.dispatch('backlog/moveSelectionDown', {
-            newspaper: this.newspaper,
-            target: null
-          })
-        } else if (event.which === 46) { // del
-          this.$store.dispatch('backlog/removeSelectedBox', {
-            newspaper: this.newspaper
-          })
-        } else if (event.which === 84) { // t
-          this.$store.dispatch('backlog/moveSelectionToUpcomingTop', {
-            newspaper: this.newspaper
-          })
-        } else if (event.which === 66) { // b
-          this.$store.dispatch('backlog/moveSelectionDown', {
-            newspaper: this.newspaper,
-            target: 'considered'
-          })
-        }
-      }
-    },
+    }
   },
 }
 </script>

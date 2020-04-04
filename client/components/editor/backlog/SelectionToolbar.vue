@@ -42,7 +42,7 @@
       <button
         v-b-tooltip
         class="backlog"
-        :title="$t('Move up (B)')"
+        :title="$t('Move to backlog (X)')"
         @click="moveDown('considered')"
       >
         <span>{{ $t('Backlog') }}</span>
@@ -99,6 +99,10 @@
             <h6>{{ $t('Top') }}</h6>
             <p>{{ $t('Make it headline (T)') }}</p>
           </li>
+          <li tabindex="1" @click="moveToUpcomingBottom()">
+            <h6>{{ $t('Bottom') }}</h6>
+            <p>{{ $t('Append to the issue (B)') }}</p>
+          </li>
         </ul>
       </b-popover>
     </nav>
@@ -133,6 +137,14 @@ export default {
       }
       return true
     }
+  },
+
+  mounted () {
+    window.addEventListener('keydown', this.onKeyDown)
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('keydown', this.onKeyDown)
   },
 
   methods: {
@@ -177,6 +189,40 @@ export default {
         layout,
         columnsStyle
       })
+    },
+
+    onKeyDown (ev) {
+      if (this.selection.length) {
+        const { newspaper } = this
+        const handler = {
+          27: () => { // ESC
+            this.$store.commit('backlog/cleanSelection')
+          },
+          38: () => { // arrow UP
+            this.$store.dispatch('backlog/moveSelectionUp', { newspaper, target: null })
+          },
+          40: () => { // arrow DOWN
+            this.$store.dispatch('backlog/moveSelectionDown', { newspaper, target: null })
+          },
+          46: () => { // DEL
+            this.$store.dispatch('backlog/removeSelectedBox', { newspaper })
+          },
+          84: () => { // T
+            this.$store.dispatch('backlog/moveSelectionToUpcomingTop', { newspaper })
+          },
+          66: () => { // B
+            this.$store.dispatch('backlog/moveSelectionToUpcomingBottom', { newspaper })
+          },
+          88: () => { // X
+            this.$store.dispatch('backlog/moveSelectionDown', { newspaper, target: 'considered' })
+          }
+        }[ev.which]
+        if (handler) {
+          handler()
+          ev.preventDefault()
+          ev.stopPropagation()
+        }
+      }
     },
   }
 }
