@@ -290,12 +290,15 @@ export const actions = {
 
   moveSelectionToUpcomingBottom ({ commit, dispatch, getters }, { newspaper }) {
     const sources = getters.getSelectedBoxes(newspaper)
+    let prevSource = null
     let selectedBefore = 0
     sources.forEach(item => {
-      let index = item.index
-      if (item.source === UPPERMOST_BACKLOG) {
-        index -= selectedBefore
+      if (prevSource !== item.source) {
+        selectedBefore = 0
+        prevSource = item.source
       }
+
+      const index = item.index - selectedBefore
       commit('moveUp', {
         newspaper,
         source: item.source,
