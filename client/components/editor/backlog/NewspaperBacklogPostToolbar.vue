@@ -6,6 +6,8 @@
     <nav>
       <button
         class="paste"
+        :disabled="!selection.length"
+        @click.prevent="pasteSelection"
       >
         {{ $t('Paste here') }}
       </button>
@@ -73,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { BPopover } from 'bootstrap-vue'
 import ErrorHandler from '@/mixins/ErrorHandler'
 
@@ -93,10 +95,27 @@ export default {
     show: Boolean
   },
 
+  computed: mapGetters({
+    selection: 'backlog/getSelection'
+  }),
+
   methods: {
     ...mapActions({
       addLinkToBacklog: 'backlog/addLink'
     }),
+
+    pasteSelection () {
+      if (!this.selection.length) {
+        return
+      }
+      const newspaper = this.newspaper
+      this.$store.dispatch('backlog/pasteSelection', {
+        newspaper,
+        target: this.backlog.name,
+        index: this.index
+      })
+      this.$store.dispatch('backlog/save', { newspaper })
+    },
 
     async addExternalLink () {
       const url = window.prompt('URL')
@@ -251,6 +270,11 @@ export default {
 
       display: block
       margin-bottom: $baseline / 4
+
+    &:disabled
+      opacity: 0.5
+
+      cursor: default
 
     &.paste::before
       content: fa-content($fa-var-paste)

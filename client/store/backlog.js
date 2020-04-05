@@ -209,6 +209,41 @@ export const actions = {
     }
   },
 
+  pasteSelection ({ commit, dispatch, getters }, { newspaper, target, index }) {
+    const sources = getters.getSelectedBoxes(newspaper)
+    let prevSource = null
+    let selectedBefore = 0
+    let removedBeforeTarget = 0
+    sources.forEach(item => {
+      if (prevSource !== item.source) {
+        prevSource = item.source
+        selectedBefore = 0
+      }
+      if (target === item.source && item.index < index) {
+        removedBeforeTarget++
+      }
+      const itemIndex = item.index - selectedBefore
+      commit('splice', {
+        newspaper,
+        target: item.source,
+        index: itemIndex,
+        items: [],
+        deleteCount: 1
+      })
+
+      selectedBefore++
+    })
+
+    commit('splice', {
+      newspaper,
+      target,
+      items: sources.map(item => item.box),
+      index: index - removedBeforeTarget,
+      deleteCount: 0
+    })
+    commit('cleanSelection')
+  },
+
   moveSelectionUp ({ commit, dispatch, getters }, { newspaper }) {
     const sources = getters.getSelectedBoxes(newspaper)
     let prevSource = null
