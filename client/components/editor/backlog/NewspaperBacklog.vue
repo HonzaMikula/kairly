@@ -28,7 +28,7 @@
     />
 
     <SelectionToolbar
-      v-show="selectionSize > 0"
+      v-show="selection.length"
       :newspaper="newspaper"
     />
   </div>
@@ -66,11 +66,8 @@ export default {
   computed: {
     ...mapGetters({
       denormalize: 'entities/denormalize',
+      selection: 'backlog/getSelection'
     }),
-
-    selectionSize () {
-      return Object.keys(this.$store.state.backlog.selection).length
-    },
 
     backlogs () {
       return this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName]
@@ -93,10 +90,56 @@ export default {
     }
   },
 
+  mounted () {
+    window.addEventListener('keydown', this.onKeyDown)
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('keydown', this.onKeyDown)
+  },
+
   methods: {
     timeFrom (dt) {
       return moment(dt).from()
-    }
+    },
+
+    onKeyDown (ev) {
+      const { newspaper } = this
+      let handler = null
+      if (this.selection.length) {
+        handler = {
+          27: () => { // ESC
+            this.$store.commit('backlog/cleanSelection')
+          },
+          38: () => { // arrow UP
+            this.$store.dispatch('backlog/moveSelectionUp', { newspaper, target: null })
+          },
+          40: () => { // arrow DOWN
+            this.$store.dispatch('backlog/moveSelectionDown', { newspaper, target: null })
+          },
+          46: () => { // DEL
+            this.$store.dispatch('backlog/removeSelectedBox', { newspaper })
+          },
+          84: () => { // T
+            this.$store.dispatch('backlog/moveSelectionToUpcomingTop', { newspaper })
+          },
+          66: () => { // B
+            this.$store.dispatch('backlog/moveSelectionToUpcomingBottom', { newspaper })
+          },
+          88: () => { // X
+            this.$store.dispatch('backlog/moveSelectionDown', { newspaper, target: 'considered' })
+          }
+        }[ev.which]
+      } else if (ev.which === 27) {
+        handler = () => { this.$store.commit('backlog/restoreSelection') }
+      }
+
+      if (handler) {
+        handler()
+        ev.preventDefault()
+        ev.stopPropagation()
+      }
+    },
   },
 }
 </script>

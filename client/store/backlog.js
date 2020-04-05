@@ -10,7 +10,8 @@ const BOTTOMMOST_BACKLOG = 'considered'
 export const state = () => ({
   userBacklog: null,
   newspaperBacklog: {},
-  selection: {} // newspaper editor selection
+  selection: {}, // newspaper editor selection
+  canceledSelection: null
 })
 
 const getItemPostIds = (item) => {
@@ -541,15 +542,25 @@ export const mutations = {
 
   select (state, id) {
     Vue.set(state.selection, id, true)
+    state.canceledSelection = null
   },
 
   unselect (state, id) {
     Vue.delete(state.selection, id)
+    state.canceledSelection = null
   },
 
   cleanSelection (state) {
+    state.canceledSelection = state.selection
     state.selection = {}
   },
+
+  restoreSelection (state) {
+    if (state.canceledSelection !== null) {
+      state.selection = state.canceledSelection
+      state.canceledSelection = null
+    }
+  }
 }
 
 export const getters = {

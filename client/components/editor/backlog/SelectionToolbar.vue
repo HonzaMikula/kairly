@@ -139,14 +139,6 @@ export default {
     }
   },
 
-  mounted () {
-    window.addEventListener('keydown', this.onKeyDown)
-  },
-
-  beforeDestroy () {
-    window.removeEventListener('keydown', this.onKeyDown)
-  },
-
   methods: {
     cleanSelection () {
       this.$store.commit('backlog/cleanSelection')
@@ -189,41 +181,7 @@ export default {
         layout,
         columnsStyle
       })
-    },
-
-    onKeyDown (ev) {
-      if (this.selection.length) {
-        const { newspaper } = this
-        const handler = {
-          27: () => { // ESC
-            this.$store.commit('backlog/cleanSelection')
-          },
-          38: () => { // arrow UP
-            this.$store.dispatch('backlog/moveSelectionUp', { newspaper, target: null })
-          },
-          40: () => { // arrow DOWN
-            this.$store.dispatch('backlog/moveSelectionDown', { newspaper, target: null })
-          },
-          46: () => { // DEL
-            this.$store.dispatch('backlog/removeSelectedBox', { newspaper })
-          },
-          84: () => { // T
-            this.$store.dispatch('backlog/moveSelectionToUpcomingTop', { newspaper })
-          },
-          66: () => { // B
-            this.$store.dispatch('backlog/moveSelectionToUpcomingBottom', { newspaper })
-          },
-          88: () => { // X
-            this.$store.dispatch('backlog/moveSelectionDown', { newspaper, target: 'considered' })
-          }
-        }[ev.which]
-        if (handler) {
-          handler()
-          ev.preventDefault()
-          ev.stopPropagation()
-        }
-      }
-    },
+    }
   }
 }
 </script>
