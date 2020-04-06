@@ -1,5 +1,6 @@
-import io
 import html
+import io
+import re
 from datetime import datetime
 from decimal import ConversionSyntax, Decimal
 from operator import attrgetter
@@ -39,7 +40,7 @@ from .signals import post_publish
 AUTOR_POSTS_PAGE_SIZE = 20
 
 SUBSCRIPTIONS_CACHE_KEY = 'subscriptions-{}'
-
+RE_ID_SLUG = re.compile(r'id:(\d+)')
 
 @ajax_login_required
 @entities_json_response
@@ -976,7 +977,13 @@ def media_proxy(request):
     if size != 'timeline':
         return HttpResponseBadRequest("Invalid size")
 
-    cache_key = f'media-{slug}-{src}-{size}'
+    m = RE_ID_SLUG.fullmatch(slug)
+    if m:
+        post_id = int(m.group(1))
+        cache_key = f'media-{slug}-{src}-{size}'
+    else:
+        post_id = None
+        cache_key = f'media-{slug}-{src}-{size}'
 
     cached = cache.get(cache_key)
     if cached:
@@ -984,7 +991,11 @@ def media_proxy(request):
             return HttpResponseNotFound()
         return HttpResponse(cached['content'], content_type=cached['content-type'])
 
-    perex, source = Post.objects.filter(slug=slug).values_list('perex', 'source')[0]
+    if post_id:
+        perex, source = Post.objects.filter(id=post_id).values_list('perex', 'source')[0]
+    else:
+        perex, source = Post.objects.filter(slug=slug).values_list('perex', 'source')[0]
+
     perex_unespaced = html.unescape(perex)
     norm_src = src.replace('http://', '').replace('https://', '')
 
@@ -1026,6 +1037,6 @@ def media_proxy(request):
             'content-type': content_type,
             'content': content,
             'size': f'{image.width}x{image.height}'
-        }, 14 * 86400)
+        }, 3600 if post_id else 14 * 86400)
 
     return HttpResponse(content, status=resp.status_code, content_type=content_type)

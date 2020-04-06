@@ -59,11 +59,12 @@ export default {
         URL = window.URL
       }
 
+      const slug = this.post.slug ? encodeURIComponent(this.post.slug) : `id:${this.post.id}`
       const replaceUrl = (src, callback) => {
         // universal URL can't parse url without protocol
         const url = new URL(src.startsWith('//') ? `http:${src}` : src)
         if (url.hostname !== 'kairly.com') {
-          callback(`${baseURL}/p?post=${encodeURIComponent(this.post.slug)}&size=timeline&src=${encodeURIComponent(src)}`)
+          callback(`${baseURL}/p?post=${slug}&size=timeline&src=${encodeURIComponent(src)}`)
         }
       }
 
