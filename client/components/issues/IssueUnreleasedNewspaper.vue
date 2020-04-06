@@ -57,7 +57,7 @@ export default {
 
   props: {
     issue: { type: Object, required: true },
-    hideDate: { type: Object, required: true }
+    hideDate: Boolean
   },
 
   computed: {
