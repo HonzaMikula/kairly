@@ -1,5 +1,5 @@
 <template>
-  <section class="post-wrapper">
+  <section class="post-wrapper" :class="{'selected': selected}">
     <component
       :is="postType"
       class="post-content"
@@ -47,6 +47,7 @@ export default {
     PostRecommendations
   },
   props: {
+    selected: Boolean,
     post: { type: Object, required: true },
     typeOverride: { type: Object, default: null } // override component type is set, value is map {id: component}
   },
@@ -98,4 +99,8 @@ export default {
       position: absolute
       top: 30%
       width: calc(100vw - (#{$baseline} * 0.5))
+
+.post-wrapper.selected
+  > article
+    box-shadow: 2px 2px 4px #708090, -2px -2px 4px #fff
 </style>

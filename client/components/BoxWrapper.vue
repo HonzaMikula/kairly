@@ -1,5 +1,5 @@
 <template>
-  <div :class="`box-wrapper ${post.css}`">
+  <div :class="`box-wrapper ${post.css}${selected ? ' selected' : ''}`">
     <div v-for="(col, colIndex) in post.columns" :key="colIndex" :class="`box-column ${col.css}`">
       <template v-if="col.posts.length > 0 && col.posts[0] != null">
         <PostWrapper
@@ -42,6 +42,7 @@ export default {
   },
 
   props: {
+    selected: Boolean,
     post: { type: Object, required: true },
     typeOverride: { type: Object, default: null } // override component type is set, value is map {id: component}
   }
@@ -58,6 +59,9 @@ export default {
   background: #fff
   border: 1px solid #eee
   box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
+
+  &.selected
+    box-shadow: 2px 2px 6px #708090, -2px -2px 4px #fff
 
   //- in backlog the margin is done by the toolbar
   .newspaper-backlog-post-toolbar-view + &

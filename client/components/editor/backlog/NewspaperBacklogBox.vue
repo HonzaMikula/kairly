@@ -2,6 +2,7 @@
   <compotent
     :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
     :post="post"
+    :selected="selected"
     :type-override="typeOverride"
     @click.native="toggleMobileControls"
     @close-editor="closeEditor"
@@ -81,10 +82,10 @@
       <div :class="{'newspaper-backlog-controls': true, 'hide-mobile-controls': mobileControls}">
         <div class="newspaper-backlog-controls--arrows">
           <div class="newspaper-backlog-controls--arrows--checkbox">
-            <input v-model="postSelection" type="checkbox">
+            <input v-model="selected" type="checkbox">
           </div>
 
-          <div v-if="postSelection" class="newspaper-backlog-controls--arrows--controls">
+          <div v-if="selected" class="newspaper-backlog-controls--arrows--controls">
             <button
               :id="`backlog-controls-up-${post.id}`"
               class="up"
@@ -276,7 +277,7 @@ export default {
       return ['menu-left-col', 'menu-right-col']
     },
 
-    postSelection: {
+    selected: {
       get () {
         return this.$store.state.backlog.selection[this.post.id]
       },
