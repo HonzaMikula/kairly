@@ -123,7 +123,7 @@ export default {
           84: () => { // T
             this.$store.dispatch('backlog/moveSelectionToUpcomingTop', { newspaper })
           },
-          66: () => { // B
+          71: () => { // B
             this.$store.dispatch('backlog/moveSelectionToUpcomingBottom', { newspaper })
           },
           88: () => { // X

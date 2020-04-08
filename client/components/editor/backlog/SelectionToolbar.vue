@@ -101,7 +101,7 @@
           </li>
           <li tabindex="1" @click="moveToUpcomingBottom()">
             <h6>{{ $t('Bottom') }}</h6>
-            <p>{{ $t('Append to the issue (B)') }}</p>
+            <p>{{ $t('Append to the issue (G)') }}</p>
           </li>
         </ul>
       </b-popover>
