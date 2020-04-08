@@ -21,15 +21,16 @@
           tag="div"
           :name="!drag ? 'flip-list' : null"
         >
-          <template v-for="(post, idx) in items">
+          <div
+            v-for="(post, idx) in items"
+            :key="post.id"
+          >
             <NewspaperBacklogPostToolbar
-              :key="`${post.id}-toolbar`"
               :index="idx"
               :newspaper="newspaper"
               :backlog="backlog"
             />
             <NewspaperBacklogBox
-              :key="post.id"
               :newspaper="newspaper"
               :post="post"
               :can-move-up="idx > 0 || backlog.name !== 'upcoming'"
@@ -37,7 +38,7 @@
               :source="backlog.name"
               :index="idx"
             />
-          </template>
+          </div>
         </transition-group>
       </draggable>
 
@@ -45,7 +46,7 @@
         :index="items.length"
         :newspaper="newspaper"
         :backlog="backlog"
-        :show="true"
+        always-visible
       />
     </div>
   </div>
@@ -93,7 +94,7 @@ export default {
         this.backlogReorder({
           newspaper: this.newspaper,
           target: this.backlog.name,
-          ordering: value.map(p => p.id),
+          ordering: value.filter(p => p).map(p => p.id),
         })
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <div
     class="newspaper-backlog-post-toolbar-view"
-    :class="{'is-shown': show}"
+    :class="{'is-shown': alwaysVisible}"
   >
     <nav>
       <button
@@ -92,7 +92,7 @@ export default {
     index: { type: Number, required: true },
     newspaper: { type: Object, required: true },
     backlog: { type: Object, required: true },
-    show: Boolean
+    alwaysVisible: Boolean
   },
 
   computed: mapGetters({
