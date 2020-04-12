@@ -1,10 +1,10 @@
 import re
 from functools import partial
 
-RE_THEREADERAPP = re.compile(r'https://threadreaderapp.com/thread/(\d+).html(\?.*)?')
+RE_THREAD_READER_APP = re.compile(r'https://threadreaderapp.com/thread/(\d+).html(\?.*)?')
 
 
-def extend_thereaderapp_link(guid, post_args, htmltree):
+def extend_thread_reader_link(guid, post_args, htmltree):
     post_args['guid'] = guid
     post_args['title'] = None
     try:
@@ -27,13 +27,13 @@ def extend_thereaderapp_link(guid, post_args, htmltree):
     return post_args
 
 
-class TheReaderAppImporter:
+class ThreadReaderAppImporter:
     DOMAIN = 'thereaderapp.com'
 
     def match(self, url):
-        m = RE_THEREADERAPP.fullmatch(url)
+        m = RE_THREAD_READER_APP.fullmatch(url)
         if m:
             thread_id = m.group(1)
-            guid = f'thereaderapp|{thread_id}'
-            extend_callback = partial(extend_thereaderapp_link, guid)
+            guid = f'threadreaderapp|{thread_id}'
+            extend_callback = partial(extend_thread_reader_link, guid)
             return (url, guid, extend_callback)

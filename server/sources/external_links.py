@@ -9,10 +9,10 @@ from utils.url import fetch_url
 from .parser.og import parse_og_tags
 from .domains.facebook import FacebookImporter
 from .domains.twitter import TwitterImporter
-from .domains.thereaderapp import TheReaderAppImporter
+from .domains.threadreaderapp import ThreadReaderAppImporter
 from .domains.medium import MediumImporter
 
-IMPORTERS = {cls.DOMAIN: cls() for cls in (TwitterImporter, FacebookImporter, TheReaderAppImporter, MediumImporter)}
+IMPORTERS = {cls.DOMAIN: cls() for cls in (TwitterImporter, FacebookImporter, ThreadReaderAppImporter, MediumImporter)}
 IGNORED_QUERY = set([
     'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_brand',
     'fbclid', 'sessionId'])
