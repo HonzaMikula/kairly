@@ -98,7 +98,7 @@ class Post(models.Model):
                 return p
 
     def __str__(self):
-        return self.title
+        return self.title or str(self.id)
 
     def save(self, *args, **kwargs):
         recalculate_weight = kwargs.pop('recalculate_weight', False)
