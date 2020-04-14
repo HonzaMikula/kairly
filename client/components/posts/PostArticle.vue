@@ -75,7 +75,7 @@ export default {
         const $ = cheerio.load(perex)
         $('img').each(function (i, img) {
           replaceUrl($(img).attr('src'), src => {
-            $(img).attr('src', src)
+            $(img).attr('src', src).attr('loading', 'lazy')
           })
         })
         return $.html()

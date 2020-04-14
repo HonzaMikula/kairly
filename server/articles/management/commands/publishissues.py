@@ -5,6 +5,7 @@ import time
 
 import pytz
 
+from django.core.cache import cache
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.db import transaction
@@ -13,6 +14,8 @@ from django.utils.timezone import now as timezone_now
 
 from articles.models import Newspaper, Issue, Backlog, BacklogPost, IssuePost, Post
 from articles.period import PeriodMixin
+from articles.timeline import NewspaperTimelineIssue
+from utils.json import Entities
 
 
 class Command(BaseCommand):
@@ -39,7 +42,7 @@ class Command(BaseCommand):
         )
 
     @transaction.atomic
-    def create_issue(self, newspaper, now, verbosity, dry_run):
+    def create_issue(self, newspaper, now, verbosity, dry_run, entities, save_to_cache):
         mx_num = Issue.objects.filter(newspaper=newspaper)\
             .aggregate(Max('number'))['number__max']
         number = 1 if mx_num is None else mx_num + 1
@@ -61,6 +64,12 @@ class Command(BaseCommand):
 
         if not dry_run:
             issue.save()
+
+            ti = NewspaperTimelineIssue(issue.id, newspaper.id, number, now)
+            entities.track_references = set()
+            ti.json = issue.to_json(entities)
+            save_to_cache[ti.cache_key] = (entities.track_references, ti.json)
+            entities.track_references = None
 
         refs = []
         post_ids = []
@@ -116,6 +125,9 @@ class Command(BaseCommand):
             .select_related('editor')\
             .distinct()
 
+        entities = Entities(user=None, tzinfo=pytz.timezone('Europe/Prague'))
+        save_to_cache = {}
+
         for newspaper in query:
             try:
                 editor_tz = pytz.timezone(newspaper.editor.timezone)
@@ -135,11 +147,14 @@ class Command(BaseCommand):
                         if now.isoweekday() != newspaper.period_dow:
                             continue
 
-                self.create_issue(newspaper, now, verbosity, dry_run)
+                self.create_issue(newspaper, now, verbosity, dry_run, entities, save_to_cache)
                 counter_issues += 1
             except Exception:
                 self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while handling {}".format(timezone.now(), newspaper))
                 traceback.print_exc()
+
+        if save_to_cache:
+            cache.set_many(save_to_cache)
 
         counter_end = time.perf_counter()
         self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: publishissues finished in {} / {} issues published".format(

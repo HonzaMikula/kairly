@@ -70,8 +70,8 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
         guid=guid,
         protected=False,
         hidden=hidden,
-        title=og.get('title', title),
-        perex='<p>' + escape(og.get('description', description)) + '</p>',
+        title=og.get('title', title).strip(),
+        perex='<p>' + escape(og.get('description', description).strip()) + '</p>',
         attachments=attachments,  # keep it as dist for extend callback
         author=user,
         price=0,
