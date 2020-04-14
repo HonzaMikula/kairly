@@ -58,6 +58,24 @@
             :subscription="true"
           />
         </template>
+        <footer class="timeline--footer">
+          <p>{{ $t("That's it. You read the entire day.") }}</p>
+
+          <nuxt-link
+            v-b-tooltip
+            :to="`/explore/${category.slug}/${links.prev}`"
+            :title="'Previous day ('+ links.prev +')'"
+            class="previous"
+          />
+
+          <nuxt-link
+            v-if="links.next"
+            v-b-tooltip
+            :to="`/explore/${category.slug}/${links.next}`"
+            :title="'Next day ('+ links.next +')'"
+            :class="['next', {'is-disabled': !links.next}]"
+          />
+        </footer>
       </template>
     </div>
   </main>
