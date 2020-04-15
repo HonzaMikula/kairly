@@ -1,4 +1,5 @@
 import time
+from collections import defaultdict
 from datetime import datetime, date, timedelta
 from datetime import tzinfo as t_tzinfo
 from itertools import chain
@@ -165,24 +166,28 @@ class BaseTimelineView(View):
         if not missing_author_issues:
             return
 
-        q = None
-        for author_id, issues in missing_author_issues.items():
-            i = None
-            for ti in issues:
-                if i is None:
-                    i = [ti.interval.start, ti.interval.end]
-                else:
-                    i[0] = min(i[0], ti.interval.start)
-                    i[1] = max(i[1], ti.interval.end)
+        authors = defaultdict(list)
 
-            q_item = Q(author_id=author_id, published__gte=i[0], published__lt=i[1])
+        for author_id, issues in missing_author_issues.items():
+            start = issues[0].interval.start
+            end = issues[-1].interval.end
+            authors[(start, end)].append(author_id)
+
+        q = None
+        for interval, ids in authors.items():
+            start, end = interval
+            q_item = Q(author_id__in=ids, published__gte=start, published__lt=end)
             q = q_item if q is None else q | q_item
 
-        posts_query = Post.objects.filter(Q(draft=False, hidden=False), q)
-        posts = list(posts_query.order_by('published'))
+        posts_query = Post.objects.filter(Q(draft=False, hidden=False), q).order_by('published')
+        posts = defaultdict(list)
+        for p in posts_query:
+            posts[p.author_id].append(p)
 
         for author_id, issues in missing_author_issues.items():
-            loaded_posts = peekable(p for p in posts if p.author_id == author_id)
+            author_ref = entities.make_ref(User, author_id)
+            loaded_posts = peekable(posts[author_id])
+
             for ti in issues:
                 issue_posts = []
                 try:
@@ -194,7 +199,6 @@ class BaseTimelineView(View):
                 if issue_posts:
                     entities.track_references = set()
                     isodate = datetime_isoformat_ecma262(ti.interval.end)
-                    author_ref = entities.make_ref(User, author_id)
                     ti.json = {
                         'id': MappedRef(author_ref, f'{{}}/${ti.subscription.period}/{int(ti.published.timestamp())}'),
                         'type': 'author',

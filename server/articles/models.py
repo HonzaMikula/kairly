@@ -58,8 +58,6 @@ class Post(models.Model):
         (VIDEO, _('Video')),
     )
 
-    READ_TIME_CACHE_KEY = 'read_time_{id}'
-
     class Meta:
         ordering = ('-published',)
 
@@ -170,19 +168,11 @@ class Post(models.Model):
 
     @property
     def read_time(self):
-        if self.kind != Post.NEWSPAPER or not self.content:
+        if self.kind != Post.NEWSPAPER or not self.weight:
             return None
-        cache_key = Post.READ_TIME_CACHE_KEY.format(id=self.id)
-        value = cache.get(cache_key)
-        if value is None:
-            soup = BeautifulSoup(self.content, "lxml")
-            for script in soup(["script", "style"]):
-                script.extract()
 
-            text = soup.get_text()
-            words = len(text.split())
-            value = math.ceil(words / 275)
-            cache.set(cache_key, value, None)
+        words_equiv = self.weight / 9
+        value = math.ceil(words_equiv / 275)
         return '{} min'.format(max(1, value))
 
     def to_json(self, entities, short=False):
@@ -555,8 +545,3 @@ class SubscriptionToAuthor(models.Model, PeriodMixin):
             'donation': str(self.donation) if self.donation != 0 else None,
         }
 
-
-@receiver(post_save, sender=Post)
-def clear_post_cache(sender, instance, **kwargs):
-    cache_key = Post.READ_TIME_CACHE_KEY.format(id=instance.id)
-    cache.delete(cache_key)
