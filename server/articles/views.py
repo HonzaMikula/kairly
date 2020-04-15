@@ -288,7 +288,8 @@ def author_detail(request, entities, username):
     author = get_object_or_404(User, username=username)
 
     newspapers = list(Newspaper.objects.filter(editor=author, archived=False))
-    newspapers.sort(key=attrgetter('likes'), reverse=True)
+    # newspapers.sort(key=attrgetter('likes'), reverse=True)
+    newspapers.sort(key=attrgetter('last_issue'), reverse=True)
 
     resp = {
         'author': entities.make_ref(User, author),
