@@ -30,7 +30,7 @@
       <NewspaperSubscriptionButton :newspaper="issue.newspaper" />
 
       <p>
-        {{ issue.newspaper.likes }} {{ $t('subscribers') }}
+        &nbsp; <!-- {{ issue.newspaper.likes }} {{ $t('subscribers') }} -->
       </p>
     </div>
   </div>

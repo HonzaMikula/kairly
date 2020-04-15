@@ -44,7 +44,7 @@
         />
 
         <p>
-          {{ newspaper.likes }} {{ $t('subscribers') }}
+          &nbsp; <!-- {{ newspaper.likes }} {{ $t('subscribers') }} -->
         </p>
       </div>
     </div>

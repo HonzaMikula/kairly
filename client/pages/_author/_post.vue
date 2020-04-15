@@ -34,7 +34,7 @@
           </div>
         </no-ssr>
 
-        <div v-if="post.content.protected && post.source">
+        <div v-if="post.content.protected && post.source && (!loggedIn || !post.content.content)">
           <footer class="post-detail--footer">
             <a :href="post.source" class="read-full-article">{{ $t('Read full article') }}</a>
           </footer>

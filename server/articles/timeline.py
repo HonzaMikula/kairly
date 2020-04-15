@@ -125,60 +125,8 @@ class BaseTimelineView(View):
                     missing_author_issues.setdefault(ti.subscription.author_id, []).append(ti)
 
         save_to_cache = {}
-
-        if missing_newspaper_issues:
-            query = Issue.objects.filter(id__in=list(missing_newspaper_issues.keys()))
-            for issue in query:
-                ti = missing_newspaper_issues[issue.id]
-                entities.track_references = set()
-                ti.json = issue.to_json(entities)
-                save_to_cache[ti.cache_key] = (entities.track_references, ti.json)
-                entities.track_references = None
-
-        if missing_author_issues:
-            q = None
-            for author_id, issues in missing_author_issues.items():
-                i = None
-                for ti in issues:
-                    if i is None:
-                        i = [ti.interval.start, ti.interval.end]
-                    else:
-                        i[0] = min(i[0], ti.interval.start)
-                        i[1] = max(i[1], ti.interval.end)
-
-                q_item = Q(author_id=author_id, published__gte=i[0], published__lt=i[1])
-                q = q_item if q is None else q | q_item
-
-            posts_query = Post.objects.filter(Q(draft=False, hidden=False), q)
-            posts = list(posts_query.order_by('published'))
-
-            for author_id, issues in missing_author_issues.items():
-                loaded_posts = peekable(p for p in posts if p.author_id == author_id)
-                for ti in issues:
-                    issue_posts = []
-                    try:
-                        while loaded_posts.peek().published < ti.interval.end:
-                            issue_posts.append(next(loaded_posts))
-                    except StopIteration:
-                        pass
-
-                    if issue_posts:
-                        entities.track_references = set()
-                        isodate = datetime_isoformat_ecma262(ti.interval.end)
-                        author_ref = entities.make_ref(User, author_id)
-                        ti.json = {
-                            'id': MappedRef(author_ref, f'{{}}/${ti.subscription.period}/{int(ti.published.timestamp())}'),
-                            'type': 'author',
-                            'title': ti.interval.title,
-                            'time': isodate,
-                            'author': author_ref,
-                            'posts': [post.to_json(entities, short=True) for post in issue_posts],
-                            'layout': [{'post': post.id} for post in issue_posts]
-                        }
-                        save_to_cache[ti.cache_key] = (entities.track_references, ti.json)
-                        entities.track_references = None
-                    else:
-                        save_to_cache[ti.cache_key] = ([], None)
+        self.load_missing_newspapers(missing_newspaper_issues, entities, save_to_cache)
+        self.load_missing_authors(missing_author_issues, entities, save_to_cache)
 
         if save_to_cache:
             cache.set_many(save_to_cache, period.timeout)
@@ -200,6 +148,66 @@ class BaseTimelineView(View):
             'validTo': period.cache_valid_to,
             'recommended': recommended_public_ids,
         }
+
+    def load_missing_newspapers(self, missing_newspaper_issues, entities, save_to_cache):
+        if not missing_newspaper_issues:
+            return
+
+        query = Issue.objects.filter(id__in=list(missing_newspaper_issues.keys()))
+        for issue in query:
+            ti = missing_newspaper_issues[issue.id]
+            entities.track_references = set()
+            ti.json = issue.to_json(entities)
+            save_to_cache[ti.cache_key] = (entities.track_references, ti.json)
+            entities.track_references = None
+
+    def load_missing_authors(self, missing_author_issues, entities, save_to_cache):
+        if not missing_author_issues:
+            return
+
+        q = None
+        for author_id, issues in missing_author_issues.items():
+            i = None
+            for ti in issues:
+                if i is None:
+                    i = [ti.interval.start, ti.interval.end]
+                else:
+                    i[0] = min(i[0], ti.interval.start)
+                    i[1] = max(i[1], ti.interval.end)
+
+            q_item = Q(author_id=author_id, published__gte=i[0], published__lt=i[1])
+            q = q_item if q is None else q | q_item
+
+        posts_query = Post.objects.filter(Q(draft=False, hidden=False), q)
+        posts = list(posts_query.order_by('published'))
+
+        for author_id, issues in missing_author_issues.items():
+            loaded_posts = peekable(p for p in posts if p.author_id == author_id)
+            for ti in issues:
+                issue_posts = []
+                try:
+                    while loaded_posts.peek().published < ti.interval.end:
+                        issue_posts.append(next(loaded_posts))
+                except StopIteration:
+                    pass
+
+                if issue_posts:
+                    entities.track_references = set()
+                    isodate = datetime_isoformat_ecma262(ti.interval.end)
+                    author_ref = entities.make_ref(User, author_id)
+                    ti.json = {
+                        'id': MappedRef(author_ref, f'{{}}/${ti.subscription.period}/{int(ti.published.timestamp())}'),
+                        'type': 'author',
+                        'title': ti.interval.title,
+                        'time': isodate,
+                        'author': author_ref,
+                        'posts': [post.to_json(entities, short=True) for post in issue_posts],
+                        'layout': [{'post': post.id} for post in issue_posts]
+                    }
+                    save_to_cache[ti.cache_key] = (entities.track_references, ti.json)
+                    entities.track_references = None
+                else:
+                    save_to_cache[ti.cache_key] = ([], None)
 
     def get_newspaper_subscriptions(self, request, timeline_ctx, now):
         raise NotImplementedError

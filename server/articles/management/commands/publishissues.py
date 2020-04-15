@@ -15,7 +15,7 @@ from django.utils.timezone import now as timezone_now
 from articles.models import Newspaper, Issue, Backlog, BacklogPost, IssuePost, Post
 from articles.period import PeriodMixin
 from articles.timeline import NewspaperTimelineIssue
-from utils.json import Entities
+from utils.json import Entities, Ref
 
 
 class Command(BaseCommand):
@@ -43,9 +43,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def create_issue(self, newspaper, now, verbosity, dry_run, entities, save_to_cache):
-        mx_num = Issue.objects.filter(newspaper=newspaper)\
-            .aggregate(Max('number'))['number__max']
-        number = 1 if mx_num is None else mx_num + 1
+        number = 1 if newspaper.last_issue is None else newspaper.last_issue + 1
 
         backlog = Backlog.objects.get(newspaper=newspaper, name='upcoming')
         if (backlog.layout == '[]'):
@@ -64,12 +62,7 @@ class Command(BaseCommand):
 
         if not dry_run:
             issue.save()
-
-            ti = NewspaperTimelineIssue(issue.id, newspaper.id, number, now)
-            entities.track_references = set()
-            ti.json = issue.to_json(entities)
-            save_to_cache[ti.cache_key] = (entities.track_references, ti.json)
-            entities.track_references = None
+            Newspaper.objects.filter(id=newspaper.id).update(last_issue=number)
 
         refs = []
         post_ids = []
@@ -85,6 +78,12 @@ class Command(BaseCommand):
             Post.objects.filter(id__in=post_ids, kind=Post.COMMENT).update(draft=False, published=timezone_now())
             backlog.delete()
             Backlog.objects.filter(newspaper=newspaper, name='next').update(name='upcoming')
+
+            ti = NewspaperTimelineIssue(issue.id, newspaper.id, number, now)
+            entities.track_references = set()
+            ti.json = issue.to_json(entities)
+            save_to_cache[ti.cache_key] = (entities.track_references, ti.json)
+            entities.track_references = None
 
     def get_now(self, hour=None):
         now = timezone.now().replace(minute=0, second=0, microsecond=0)
@@ -127,6 +126,7 @@ class Command(BaseCommand):
 
         entities = Entities(user=None, tzinfo=pytz.timezone('Europe/Prague'))
         save_to_cache = {}
+        delete_from_cache = []
 
         for newspaper in query:
             try:
@@ -149,10 +149,14 @@ class Command(BaseCommand):
 
                 self.create_issue(newspaper, now, verbosity, dry_run, entities, save_to_cache)
                 counter_issues += 1
+                if not dry_run:
+                    delete_from_cache.append(Ref(Newspaper, newspaper.id).cache_key)
             except Exception:
                 self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while handling {}".format(timezone.now(), newspaper))
                 traceback.print_exc()
 
+        if delete_from_cache:
+            cache.delete_many(delete_from_cache)
         if save_to_cache:
             cache.set_many(save_to_cache)
 

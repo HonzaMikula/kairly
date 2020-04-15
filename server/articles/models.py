@@ -242,22 +242,14 @@ class Post(models.Model):
             if attachments:
                 result['content']['attachments'] = attachments
         elif self.kind == Post.NEWSPAPER:
-            if entities.user.is_anonymous and self.protected:
-                result['timeRead'] = self.read_time
-                result['content'] = {
-                    'title': self.title,
-                    'perex': self.perex,
-                    'protected': True
-                }
-            else:
-                result['timeRead'] = self.read_time
-                result['content'] = {
-                    'title': self.title,
-                    'perex': self.perex,
-                    'protected': False
-                }
-                if not short:
-                    result['content']['content'] = self.content
+            result['timeRead'] = self.read_time
+            result['content'] = {
+                'title': self.title,
+                'perex': self.perex,
+                'protected': self.protected
+            }
+            if not short:
+                result['content']['content'] = self.content
         elif self.kind == Post.COMMENT:
             result['content'] = {
                 'title': self.title,
@@ -312,29 +304,13 @@ class Newspaper(models.Model, PeriodMixin):
 
     newsletter_subscription_url = models.CharField(_('Mailchimp subscribe form URL'), max_length=160, null=True, blank=True)
     archived = models.BooleanField(_('Archived'), default=False)
+    last_issue = models.PositiveIntegerField(null=True)
 
     class Meta:
         unique_together = (("slug", "editor"),)
 
     def __str__(self):
         return self.title
-
-    @property
-    def issues(self):
-        # TODO what about making attribute from it or caching it
-        if not hasattr(self, '_issues'):
-            self._issues = Issue.objects.filter(newspaper=self).count()
-        return self._issues
-
-    @property
-    def likes(self):
-        # TODO what about making attribute from it or caching it
-        if not hasattr(self, '_likes'):
-            now = timezone_now()
-            self._likes = Subscription.objects.filter(
-                newspaper=self,
-                valid_from__lte=now, valid_to__gt=now).count()
-        return self._likes
 
     @property
     def next_release(self):
@@ -384,9 +360,8 @@ class Newspaper(models.Model, PeriodMixin):
             "description": self.description,
             "editor": entities.make_ref(User, self.editor_id),
             "periodicity": periodicity_to_json(self),
-            "issues": self.issues,
-            "likes": self.likes,
             "price": str(self.price),
+            "issues": self.last_issue or 0
         }
 
         if self.newsletter_subscription_url:
