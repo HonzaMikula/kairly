@@ -1,8 +1,8 @@
 <template>
   <div class="tweet-attachment-gallery" :class="'gallery-'+ items.length">
     <a
-      v-for="item in items"
-      :key="item.id"
+      v-for="(item, idx) in items"
+      :key="idx"
       :href="`${item.src}:large`"
       target="_blank"
     >
