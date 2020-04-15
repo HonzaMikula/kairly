@@ -83,6 +83,7 @@ export default {
         const fragment = document.createElement('div')
         fragment.innerHTML = perex
         fragment.querySelectorAll('img').forEach(img => {
+          img.loading = 'lazy'
           replaceUrl(img.src, src => { img.src = src })
         })
         // post.content.perex
