@@ -328,7 +328,7 @@ class BaseTimelineView(View):
                             'posts': [],
                             'layout': []
                         }
-                        return
+                        break
 
                     dt = interval.end
                 else:
