@@ -9,7 +9,7 @@
       <div class="post-body--content">
         <div v-html="perex" />
         <div v-if="post.timeRead && !post.draft" class="timeline-post--continue-reading">
-          <template v-if="post.content.protected">
+          <template v-if="post.content.protected && !loggedIn">
             <a :href="post.source" target="_blank">{{ $t('Read the article') }}</a>
             ({{ post.timeRead }} {{ $t('read') }})
           </template>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import PostBase from './PostBase'
 
 export default {
@@ -48,6 +49,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
     perex () {
       const { baseURL } = this.$axios.defaults
       const { perex } = this.post.content
