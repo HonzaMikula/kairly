@@ -10,16 +10,20 @@
     </template>
 
     <div>
+      {{ posts }}
       <h1>{{ title }}</h1>
       <ul>
         <li v-for="post in listOfPosts()" :key="post.id">
-          <template v-if="post.content.title && post.type == 'link'">
+          <template v-if="post.content && post.content.title && post.type == 'link'">
             <a :href="post.source">{{ post.content.title }}</a>
           </template>
-          <template v-else-if="post.content.title">
+          <template v-else-if="post.content && post.content.title">
             <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">
               {{ post.content.title }}
             </nuxt-link>
+          </template>
+          <template v-else-if="post.title">
+            {{ post.title }}
           </template>
 
           <template v-else>
@@ -55,6 +59,8 @@
 <script>
 import DialogWindow from '@/components/modals/DialogWindow'
 import ModalMixin from '@/mixins/ModalMixin'
+import { flattenPosts } from '@/utils/layout'
+import PostObjectMixin from '@/mixins/PostObjectMixin'
 
 const POST_LIMIT = 5
 
@@ -65,7 +71,7 @@ export default {
     DialogWindow
   },
 
-  mixins: [ModalMixin],
+  mixins: [ModalMixin, PostObjectMixin],
 
   props: {
     issue: { type: Object, required: true }
@@ -73,7 +79,6 @@ export default {
 
   data () {
     return {
-      posts: this.issue.posts,
       isExpanded: false
     }
   },
@@ -85,15 +90,22 @@ export default {
 
     url () {
       return `https://kairly.com/${this.issue.newspaper.fullName}/${this.issue.number}`
-    }
+    },
+
+    posts () {
+      const posts = this.issue.layout.map(item => this.getPostObject(item))
+      return flattenPosts(posts, true)
+    },
   },
 
   methods: {
     content () {
       let content = ''
       this.posts.forEach(function (post) {
-        if (post.content.title) {
+        if (post.content && post.content.title) {
           content += `• ${post.content.title} \n`
+        } else if (post.title) {
+          content += `• ${post.title} \n`
         } else {
           const div = document.createElement('div') // striping HTML
           div.innerHTML = post.content.content

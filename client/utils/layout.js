@@ -1,5 +1,5 @@
 
-export function flattenPosts (layout) {
+export function flattenPosts (layout, includeHeader = false) {
   const posts = []
   layout.forEach(item => {
     if (item.type === 'box') {
@@ -7,6 +7,8 @@ export function flattenPosts (layout) {
         col.posts.forEach(p => posts.push(p))
       })
     } else if (item.type !== 'header') {
+      posts.push(item)
+    } else if (includeHeader && item.title) {
       posts.push(item)
     }
   })

@@ -291,7 +291,7 @@ export default {
     let metaPicture
     let images
 
-    function shortTilte (post) {
+    function shortTitle (post) {
       const { content } = post
       let short = ''
       if (content.title) {
@@ -307,14 +307,15 @@ export default {
     if (this.$route.params.issue) {
       // - act as an issue detail
 
+      console.log(this.posts)
       const posts = flattenPosts(this.posts)
       if (posts.length) {
-        firstPostTitle = shortTilte(posts[0])
+        firstPostTitle = shortTitle(posts[0])
       }
 
       metaTitle = `${title} #${this.issue.number}: ${firstPostTitle} – Kairly`
       metaDescription = posts
-        .map(post => shortTilte(post))
+        .map(post => shortTitle(post))
         .filter(title => title && title.length > 0)
         .join(' • ')
         .slice(0, 280)
