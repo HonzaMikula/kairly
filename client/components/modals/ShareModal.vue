@@ -10,40 +10,33 @@
     </template>
 
     <div>
-      {{ posts }}
       <h1>{{ title }}</h1>
-      <ul>
-        <li v-for="post in listOfPosts()" :key="post.id">
-          <template v-if="post.content && post.content.title && post.type == 'link'">
-            <a :href="post.source">{{ post.content.title }}</a>
-          </template>
-          <template v-else-if="post.content && post.content.title">
-            <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">
-              {{ post.content.title }}
-            </nuxt-link>
-          </template>
-          <template v-else-if="post.title">
-            {{ post.title }}
-          </template>
 
-          <template v-else>
-            {{ post.author.name }}: <span v-html="post.content.content" />
-          </template>
+      <template v-for="section in sections">
+        <h2 v-if="section.type == 'header'" :key="section.id">{{ section.title }}</h2>
+        <ul :key="section.id">
+          <li v-for="post in section.posts" :key="post.id">
+            <template v-if="post.content && post.content.title && post.type == 'link'">
+              <a :href="post.source">{{ post.content.title }}</a>
+            </template>
+            <template v-else-if="post.content && post.content.title">
+              <nuxt-link :to="{ name: 'author-post', params: { author: post.author.id, post: post.slug }}">
+                {{ post.content.title }}
+              </nuxt-link>
+            </template>
+            <template v-else-if="post.title">
+              {{ post.title }}
+            </template>
 
-          <button class="remove" @click="removeItem(post.id)" />
-        </li>
-      </ul>
-
+            <template v-else>
+              <a :href="post.source">
+                {{ post.author.name }}: <span v-html="post.content.content" />
+              </a>
+            </template>
+          </li>
+        </ul>
+      </template>
       <p class="share--url">{{ url }}</p>
-    </div>
-
-    <div class="share--show-more">
-      <button
-        v-if="(tailPostsCount() > 0 && !isExpanded)"
-        @click.prevent="isExpanded = true"
-      >
-        {{ $t('Show more') }} ({{ tailPostsCount() }})
-      </button>
     </div>
 
     <template #footer>
@@ -61,8 +54,6 @@ import DialogWindow from '@/components/modals/DialogWindow'
 import ModalMixin from '@/mixins/ModalMixin'
 import { flattenPosts } from '@/utils/layout'
 import PostObjectMixin from '@/mixins/PostObjectMixin'
-
-const POST_LIMIT = 5
 
 export default {
   name: 'ShareModal',
@@ -92,26 +83,50 @@ export default {
       return `https://kairly.com/${this.issue.newspaper.fullName}/${this.issue.number}`
     },
 
-    posts () {
-      const posts = this.issue.layout.map(item => this.getPostObject(item))
-      return flattenPosts(posts, true)
+    sections () {
+      let posts = this.issue.layout.map(item => this.getPostObject(item))
+      posts = flattenPosts(posts, true)
+      const sections = []
+      posts.forEach((post) => {
+        if (post.type === 'header') {
+          sections.push(post)
+        } else {
+          if (sections.length === 0) {
+            sections[0] = {}
+            sections[0].type = 'empty'
+            sections[0].id = Math.random().toString(36).substring(2)
+          }
+
+          if (!sections[sections.length - 1].posts) {
+            sections[sections.length - 1].posts = []
+          }
+          sections[sections.length - 1].posts.push(post)
+        }
+      })
+      return sections
     },
   },
 
   methods: {
     content () {
       let content = ''
-      this.posts.forEach(function (post) {
-        if (post.content && post.content.title) {
-          content += `• ${post.content.title} \n`
-        } else if (post.title) {
-          content += `• ${post.title} \n`
-        } else {
-          const div = document.createElement('div') // striping HTML
-          div.innerHTML = post.content.content
-          const text = div.textContent || div.textContent || ''
-          content += `• ${post.author.name}: ${text} \n`
+      this.sections.forEach((section) => {
+        if (section.type === 'header') {
+          content += `\n${section.title} \n`
         }
+
+        section.posts.forEach((post) => {
+          if (post.content && post.content.title) {
+            content += `• ${post.content.title} \n`
+          } else if (post.title) {
+            content += `• ${post.title} \n`
+          } else {
+            const div = document.createElement('div') // striping HTML
+            div.innerHTML = post.content.content
+            const text = div.textContent || div.textContent || ''
+            content += `• ${post.author.name}: ${text} \n`
+          }
+        })
       })
 
       return content
@@ -119,20 +134,6 @@ export default {
 
     encodedContent () {
       return encodeURIComponent(this.content())
-    },
-
-    tailPostsCount () {
-      return Math.max(0, this.posts.length - POST_LIMIT)
-    },
-
-    listOfPosts () {
-      if (!this.isExpanded) { return this.posts.slice(0, POST_LIMIT) } else { return this.posts }
-    },
-
-    removeItem (id) {
-      this.posts.splice(this.posts.findIndex(function (i) {
-        return i.id === id
-      }), 1)
     },
 
     async copyToClipboard () {
@@ -176,6 +177,11 @@ export default {
 
       font-weight: 600
       font-size: $fs-1
+
+    h2
+      margin-top: $baseline / 2
+
+      font-weight: 600
 
     li
       position: relative

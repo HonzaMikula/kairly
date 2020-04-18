@@ -306,8 +306,6 @@ export default {
 
     if (this.$route.params.issue) {
       // - act as an issue detail
-
-      console.log(this.posts)
       const posts = flattenPosts(this.posts)
       if (posts.length) {
         firstPostTitle = shortTitle(posts[0])
