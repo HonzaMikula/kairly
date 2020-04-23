@@ -182,8 +182,6 @@ class NewspaperFeed(Feed):
 
     def item_description(self, item):
         description = self.get_post_titles(item)
-        description.pop(0)
-
         return ' • '.join(description)
 
     def get_post_titles(self, item):
