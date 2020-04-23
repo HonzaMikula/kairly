@@ -171,7 +171,11 @@ class NewspaperFeed(Feed):
 
     def item_title(self, item):
         titles = self.get_post_titles(item)
-        return f"{item.newspaper.title} #{item.issue.number}: {titles[0]}"
+        if titles:
+            title = f": {titles[0]}"
+        else:
+            title = ""
+        return f"{item.newspaper.title} #{item.issue.number}{title}"
 
     def item_pubdate(self, item):
         return item.issue.published
@@ -199,9 +203,7 @@ class NewspaperFeed(Feed):
                     title = get_post_title(post)
                     if title:
                         titles.append(title)
-        
         return titles
-      
 
     def item_content_encoded(self, item):
         template = loader.get_template('articles/feed-content.html')
