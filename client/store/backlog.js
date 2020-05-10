@@ -166,6 +166,7 @@ export const actions = {
       })
     })
 
+    commit('cleanSelection')
     dispatch('save', { newspaper })
   },
 
@@ -397,6 +398,7 @@ export const actions = {
     }
 
     commit('cleanSelection')
+    commit('select', boxItem.id)
     dispatch('save', { newspaper })
   }
 }
