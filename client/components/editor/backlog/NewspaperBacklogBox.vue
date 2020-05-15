@@ -4,7 +4,6 @@
     :post="post"
     :selected="selected"
     :type-override="typeOverride"
-    @click.native="toggleMobileControls"
     @close-editor="closeEditor"
   >
     <template #empty-box="{ columnIndex }">
@@ -79,13 +78,11 @@
     </template>
 
     <template #aside>
-      <div :class="{'newspaper-backlog-controls': true, 'hide-mobile-controls': mobileControls}">
-        <div class="newspaper-backlog-controls--arrows">
-          <div class="newspaper-backlog-controls--arrows--checkbox">
-            <input v-model="selected" type="checkbox">
-          </div>
+      <div class="newspaper-backlog-controls">
+        <div :class="{'newspaper-backlog-controls--arrows': true, 'is-selected': selected}">
+          <input v-model="selected" type="checkbox">
 
-          <div v-if="selected" class="newspaper-backlog-controls--arrows--controls">
+          <template v-if="selected">
             <button
               :id="`backlog-controls-up-${post.id}`"
               class="up"
@@ -99,7 +96,7 @@
               :disabled="!canMoveDown"
               @click.stop="moveDown()"
             />
-          </div>
+          </template>
         </div>
 
         <div class="newspaper-backlog-controls--options">
@@ -260,7 +257,6 @@ export default {
 
   data () {
     return {
-      mobileControls: false,
       editedColumn: null,
       typeOverride: {},
     }
@@ -311,10 +307,6 @@ export default {
   },
 
   methods: {
-    toggleMobileControls () {
-      this.mobileControls = !this.mobileControls
-    },
-
     addToColumn ({ post, source, columnIndex = null }) {
       const columns = [...this.post.columns]
       if (columnIndex === null) {
@@ -573,18 +565,18 @@ export default {
   @media (max-width: $mobile)
     z-index: 5
 
-.newspaper-backlog-controls.hide-mobile-controls
-  @media (max-width: $mobile)
-    display: none
-
 .newspaper-backlog-controls--arrows
   position: absolute
   left: (-$baseline * 1.5)
   top: 0
+  z-index: 100
 
   display: grid
-  grid-template-rows: auto auto
+  grid-template-columns: repeat(3, auto)
   grid-row-gap: $baseline / 4
+  border-radius: $baseline / 4
+
+  color: #333
 
   @media (max-width: $mobile)
     position: sticky
@@ -594,17 +586,42 @@ export default {
     height: $baseline * 5
     width: $baseline * 2
 
+  &.is-selected
+    background: #eee
+    border: 1px solid #aaa
+    box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
+
+  button
+    height: $baseline * 1.25
+    padding: 0 $baseline/2
+
+    background: transparent
+    border: 0
+
+    cursor: pointer
+    font-size: $fs-0
+    white-space: nowrap
+    text-align: center
+
+    &:hover,
+    &:focus
+      background: #ddd
+
   //- button up
   .up
-    +button-icon($fa-var-arrow-up)
+    &::before
+      +fa-icon()
+      @extend .fas
+
+      content: fa-content($fa-var-arrow-up)
 
   //- button down
   .down
-    +button-icon($fa-var-arrow-down)
+    &::before
+      +fa-icon()
+      @extend .fas
 
-  //- button down
-  .remove
-    +button-icon($fa-var-times)
+      content: fa-content($fa-var-arrow-down)
 
 .box-header + div > .newspaper-backlog-controls--arrows
   grid-template-rows: 1fr

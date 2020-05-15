@@ -319,6 +319,42 @@ export default {
         .slice(0, 280)
 
       metaUrl = `https://kairly.com/${editor.id}/${name}/${this.issue.number}`
+
+      // - newspaper image
+      let originalIndex
+
+      images = posts
+        .map((post) => IMG_REGEXP.exec(post.content.perex))
+        .filter((item, index) => {
+          if (item) {
+            originalIndex = index
+          }
+
+          return item
+        })
+
+      console.log(images)
+
+      if (images.length > 0) {
+        let URL
+        const { baseURL } = this.$axios.defaults
+
+        if (process.server) {
+          URL = require('universal-url').URL
+        } else {
+          URL = window.URL
+        }
+
+        const src = images[0][1]
+        const slug = posts[originalIndex].slug ? encodeURIComponent(posts[originalIndex].slug) : `id:${posts[originalIndex].id}`
+        console.log(posts[originalIndex].slug)
+        console.log(posts[originalIndex].id)
+        // universal URL can't parse url without protocol
+        const url = new URL(src.startsWith('//') ? `http:${src}` : src)
+        if (url.hostname !== 'kairly.com') {
+          metaPicture = `${baseURL}/p?post=${slug}&size=timeline&src=${encodeURIComponent(src)}`
+        }
+      }
     } else {
       // - act as a newspaper detail
       metaTitle = `${title} – Kairly`
@@ -326,16 +362,7 @@ export default {
       metaUrl = `https://kairly.com/${editor.id}/${name}`
     }
 
-    // - newspaper image
-    if (this.$route.params.issue) {
-      images = this.issue.posts
-        .map((post) => IMG_REGEXP.exec(post.content.perex))
-        .filter(x => x)
-    }
-
-    if (images && images.length) {
-      metaPicture = images[0][1]
-    } else {
+    if (!metaPicture) {
       metaPicture = picture
     }
 
