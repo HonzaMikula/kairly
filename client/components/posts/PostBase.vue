@@ -57,6 +57,7 @@
               v-if="userNewspapers.length > 0 && post.type !== 'comment'"
               v-b-tooltip
               class="consider-post"
+              :class="{'is-active': isConsidered}"
               tabindex="0"
               :aria-label="$t('Consider for newspaper')"
               :title="$t('Consider for newspaper')"
@@ -108,10 +109,17 @@ export default {
 
   computed: {
     ...mapState({
-      user: state => state.auth.user
+      user: state => state.auth.user,
+      backlog: state => state.backlog.userBacklog
     }),
 
     ...mapGetters(['userNewspapers']),
+
+    isConsidered () {
+      const backlog = this.backlog ? (this.backlog[this.post.id] || {}) : {}
+
+      return Object.keys(backlog).length > 0
+    }
   },
 
   methods: {
@@ -290,6 +298,9 @@ export default {
 
       height: $baseline
       width: $baseline
+
+      &.is-active
+        background: lighten($c-base, 20%)
 
       &::before
         font-size: $fs--1

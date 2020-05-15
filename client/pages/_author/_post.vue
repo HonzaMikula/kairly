@@ -62,6 +62,7 @@
                 role="button"
                 tabindex="0"
                 class="consider-post"
+                :class="{'is-active': isConsidered}"
                 :aria-label="$t('Consider for newspaper')"
                 @click.stop.prevent="openConsiderPost()"
               />
@@ -226,12 +227,19 @@ export default {
 
   computed: {
     ...mapState({
-      loggedIn: state => state.auth.loggedIn
+      loggedIn: state => state.auth.loggedIn,
+      backlog: state => state.backlog.userBacklog
     }),
 
     ...mapGetters({
       userNewspapers: 'userNewspapers',
     }),
+
+    isConsidered () {
+      const backlog = this.backlog ? (this.backlog[this.post.id] || {}) : {}
+
+      return Object.keys(backlog).length > 0
+    }
   },
 
   created () {
@@ -484,6 +492,9 @@ export default {
 
   .consider-post
     +button-icon($fa-var-newspaper, icon-text)
+
+    &.is-active
+      background: lighten($c-base, 20%)
 
   //- share FB button
   .share-fb
