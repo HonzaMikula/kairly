@@ -333,8 +333,6 @@ export default {
           return item
         })
 
-      console.log(images)
-
       if (images.length > 0) {
         let URL
         const { baseURL } = this.$axios.defaults
@@ -347,8 +345,6 @@ export default {
 
         const src = images[0][1]
         const slug = posts[originalIndex].slug ? encodeURIComponent(posts[originalIndex].slug) : `id:${posts[originalIndex].id}`
-        console.log(posts[originalIndex].slug)
-        console.log(posts[originalIndex].id)
         // universal URL can't parse url without protocol
         const url = new URL(src.startsWith('//') ? `http:${src}` : src)
         if (url.hostname !== 'kairly.com') {
