@@ -40,9 +40,8 @@
       </button>
 
       <button
-        v-b-tooltip
+        id="backlog"
         class="backlog"
-        :title="$t('Move to backlog (X)')"
         @click="moveDown('considered')"
       >
         <span>{{ $t('Backlog') }}</span>
@@ -63,6 +62,8 @@
         :title="$t('Remove post(s) (Del)')"
         @click="remove()"
       />
+
+      <!-- <button @click="renameHeading()">test</button> -->
 
       <b-popover
         target="specialLayout"
@@ -99,9 +100,36 @@
             <h6>{{ $t('Top') }}</h6>
             <p>{{ $t('Make it headline (T)') }}</p>
           </li>
-          <li tabindex="1" @click="moveToUpcomingBottom()">
+          <li
+            v-for="section in upcomingIssueSections"
+            :key="section.index"
+            @click="pasteSelection('upcoming', section.index)">
+            {{ section.title }}
+          </li>
+          <li tabindex="0" @click="moveToUpcomingBottom()">
             <h6>{{ $t('Bottom') }}</h6>
             <p>{{ $t('Append to the issue (G)') }}</p>
+          </li>
+        </ul>
+      </b-popover>
+
+      <b-popover
+        target="backlog"
+        placement="top"
+        triggers="hover blur"
+        @click.stop
+        v-if="backlogSections.length > 0"
+      >
+        <ul>
+          <li>
+            <h6>{{ $t('Move to backlog') }}</h6>
+            <p>{{ $t('Keyboard shortcut (X)') }}</p>
+          </li>
+          <li
+            v-for="section in backlogSections"
+            :key="section.index"
+            @click="pasteSelection('considered', section.index)">
+            {{ section.title }}
           </li>
         </ul>
       </b-popover>
@@ -136,7 +164,29 @@ export default {
         }
       }
       return true
-    }
+    },
+
+    backlogSections () {
+      const posts = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName].considered.layout
+      const sections = []
+      posts.forEach((item, index) => {
+        if (item.type === 'header') {
+          sections.push({ title: item.title, index })
+        }
+      })
+      return sections
+    },
+
+    upcomingIssueSections () {
+      const posts = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName].upcoming.layout
+      const sections = []
+      posts.forEach((item, index) => {
+        if (item.type === 'header') {
+          sections.push({ title: item.title, index })
+        }
+      })
+      return sections
+    },
   },
 
   methods: {
@@ -181,6 +231,21 @@ export default {
         layout,
         columnsStyle
       })
+    },
+
+    pasteSelection (target, index) {
+      const newspaper = this.newspaper
+      this.$store.dispatch('backlog/pasteSelection', {
+        newspaper,
+        target,
+        index: index + 1
+      })
+      this.$store.dispatch('backlog/save', { newspaper })
+    },
+
+    renameHeading () {
+      console.log(this.$store.getters['backlog/getSelectedBoxes'](this.newspaper))
+      this.$store.commit('backlog/updateHeading', {})
     }
   }
 }
