@@ -583,8 +583,11 @@ export default {
     left: $baseline/4
     top: $baseline * 2
 
-    height: $baseline * 5
-    width: $baseline * 2
+    display: table
+
+    .up,
+    .down
+      display: none
 
   &.is-selected
     background: #eee
@@ -632,7 +635,6 @@ export default {
     grid-template-rows: 1fr 1fr
     grid-column-gap: $baseline / 4
     grid-template-columns: $baseline*1.25 1fr $baseline*1.25
-    width: calc(100vw - (#{$baseline} * 0.75))
 
 .newspaper-backlog-controls--arrows--checkbox
   input

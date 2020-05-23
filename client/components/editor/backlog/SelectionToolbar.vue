@@ -58,12 +58,18 @@
 
       <button
         v-b-tooltip
+        class="rename"
+        :disabled="!isOnlyHeading"
+        :title="$t('Rename')"
+        @click="renameHeading()"
+      />
+
+      <button
+        v-b-tooltip
         class="delete"
         :title="$t('Remove post(s) (Del)')"
         @click="remove()"
       />
-
-      <!-- <button @click="renameHeading()">test</button> -->
 
       <b-popover
         target="specialLayout"
@@ -103,7 +109,8 @@
           <li
             v-for="section in upcomingIssueSections"
             :key="section.index"
-            @click="pasteSelection('upcoming', section.index)">
+            @click="pasteSelection('upcoming', section.index)"
+          >
             {{ section.title }}
           </li>
           <li tabindex="0" @click="moveToUpcomingBottom()">
@@ -114,11 +121,11 @@
       </b-popover>
 
       <b-popover
+        v-if="backlogSections.length > 0"
         target="backlog"
         placement="top"
         triggers="hover blur"
         @click.stop
-        v-if="backlogSections.length > 0"
       >
         <ul>
           <li>
@@ -128,7 +135,8 @@
           <li
             v-for="section in backlogSections"
             :key="section.index"
-            @click="pasteSelection('considered', section.index)">
+            @click="pasteSelection('considered', section.index)"
+          >
             {{ section.title }}
           </li>
         </ul>
@@ -164,6 +172,17 @@ export default {
         }
       }
       return true
+    },
+
+    isOnlyHeading () {
+      const selectedBoxes = this.$store.getters['backlog/getSelectedBoxes'](this.newspaper)
+      if (selectedBoxes.length > 1) {
+        return false
+      }
+      if (selectedBoxes[0] && selectedBoxes[0].box && selectedBoxes[0].box.type === 'header') {
+        return true
+      }
+      return false
     },
 
     backlogSections () {
@@ -244,8 +263,12 @@ export default {
     },
 
     renameHeading () {
-      console.log(this.$store.getters['backlog/getSelectedBoxes'](this.newspaper))
-      this.$store.commit('backlog/updateHeading', {})
+      const title = window.prompt('Title')
+      if (title === null) {
+        return
+      }
+      const newspaper = this.newspaper
+      this.$store.dispatch('backlog/updateHeading', { newspaper, title })
     }
   }
 }
@@ -322,11 +345,11 @@ export default {
 .selection-toolbar--navigation
   display: grid
   flex: 1
-  grid-template-columns: repeat(6, min-content)
+  grid-template-columns: repeat(7, min-content)
   grid-template-rows: auto
 
   @media (max-width: $mobile)
-    grid-template-columns: repeat(6, min-content)
+    grid-template-columns: repeat(7, min-content)
 
   button
     height: $baseline * 1.5
@@ -396,6 +419,14 @@ export default {
       @extend .fas
 
       content: fa-content($fa-var-columns)
+
+  .rename
+    &::before
+      +fa-icon()
+      @extend .fas
+      margin-right: 0
+
+      content: fa-content($fa-var-edit)
 
   .delete
     &::before
