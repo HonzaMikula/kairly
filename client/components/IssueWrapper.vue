@@ -10,14 +10,14 @@
     </template>
 
     <component
-      :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
+      :is="post && post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
       v-for="(post, idx) in headPosts"
       :key="`head-${idx}`"
       :post="post"
     />
 
     <component
-      :is="post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
+      :is="post && post.type === 'box' ? 'BoxWrapper' : 'PostWrapper'"
       v-for="(post, idx) in tailPosts"
       :key="`tail-${idx}`"
       :post="post"
@@ -118,11 +118,12 @@ export default {
     },
 
     headPosts () {
-      return this.issue.layout.slice(0, POST_LIMIT).map(item => this.getPostObject(item))
+      // - Recommendation post cause troubles -> that's why filter() function
+      return this.issue.layout.slice(0, POST_LIMIT).map(item => this.getPostObject(item)).filter(x => x)
     },
 
     tailPosts () {
-      return this.expanded ? this.issue.layout.slice(POST_LIMIT).map(item => this.getPostObject(item)) : []
+      return this.expanded ? this.issue.layout.slice(POST_LIMIT).map(item => this.getPostObject(item)).filter(x => x) : []
     },
 
     tailPostsCount () {

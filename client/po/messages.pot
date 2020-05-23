@@ -535,6 +535,23 @@ msgstr ""
 msgid "Request solution"
 msgstr ""
 
+#: components/posts/PostArticle.vue:13
+msgid "Read the article"
+msgstr ""
+
+#: components/posts/PostArticle.vue:14
+#: components/posts/PostArticle.vue:25
+msgid "read"
+msgstr ""
+
+#: components/posts/PostArticle.vue:19
+msgid "Continue reading"
+msgstr ""
+
+#: components/posts/PostArticle.vue:23
+msgid "Subscribe newspaper to continue reading"
+msgstr ""
+
 #: components/modals/PublishPostModal.vue:8
 msgid "Publish post"
 msgstr ""
@@ -573,23 +590,6 @@ msgstr ""
 msgid "Schedule for later"
 msgstr ""
 
-#: components/posts/PostArticle.vue:13
-msgid "Read the article"
-msgstr ""
-
-#: components/posts/PostArticle.vue:14
-#: components/posts/PostArticle.vue:25
-msgid "read"
-msgstr ""
-
-#: components/posts/PostArticle.vue:19
-msgid "Continue reading"
-msgstr ""
-
-#: components/posts/PostArticle.vue:23
-msgid "Subscribe newspaper to continue reading"
-msgstr ""
-
 #: components/posts/PostTweet.vue:30
 msgid "Original tweet"
 msgstr ""
@@ -600,10 +600,6 @@ msgstr ""
 
 #: components/posts/PostVideo.vue:24
 msgid "Watch video"
-msgstr ""
-
-#: components/posts/PostLink.vue:31
-msgid "Read article"
 msgstr ""
 
 #: components/posts/PostRecommendations.vue:4
@@ -696,6 +692,10 @@ msgstr ""
 msgid "Publish it & pitch it to editors"
 msgstr ""
 
+#: components/posts/PostLink.vue:31
+msgid "Read article"
+msgstr ""
+
 #: components/microsite/ExploreNewspapers.vue:5
 msgid "We believe in human editors."
 msgstr ""
@@ -716,6 +716,23 @@ msgstr ""
 msgid "Next issue"
 msgstr ""
 
+#: components/microsite/SignUpForm.vue:3
+msgid "@signupform/heading"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:11
+msgid "Email"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:17
+msgid "At least 8 characters"
+msgstr ""
+
+#: components/microsite/SignUpForm.vue:20
+#: pages/signup.vue:34
+msgid "Sign Up"
+msgstr ""
+
 #: components/microsite/Faq.vue:3
 msgid "@independent-journalists/faq"
 msgstr ""
@@ -728,6 +745,14 @@ msgstr ""
 #: pages/features/rss-reader.vue:40
 #: pages/platform/publishers.vue:171
 msgid "chairman of the Prague Syndicate of Journalists"
+msgstr ""
+
+#: components/microsite/Footer.vue:7
+msgid "Stop be distracted."
+msgstr ""
+
+#: components/microsite/Footer.vue:9
+msgid "Grow healthy reading habits."
 msgstr ""
 
 #: components/microsite/OfficialStart.vue:3
@@ -746,14 +771,6 @@ msgstr ""
 
 #: components/microsite/OfficialStart.vue:33
 msgid "Request to join"
-msgstr ""
-
-#: components/microsite/Footer.vue:7
-msgid "Stop be distracted."
-msgstr ""
-
-#: components/microsite/Footer.vue:9
-msgid "Grow healthy reading habits."
 msgstr ""
 
 #: components/microsite/HowItWorks.vue:3
@@ -807,23 +824,6 @@ msgstr ""
 #: components/issues/IssueSuspendedAuthor.vue:54
 #: components/issues/IssueAuthor.vue:60
 msgid "Weekly summary"
-msgstr ""
-
-#: components/microsite/SignUpForm.vue:3
-msgid "@signupform/heading"
-msgstr ""
-
-#: components/microsite/SignUpForm.vue:11
-msgid "Email"
-msgstr ""
-
-#: components/microsite/SignUpForm.vue:17
-msgid "At least 8 characters"
-msgstr ""
-
-#: components/microsite/SignUpForm.vue:20
-#: pages/signup.vue:34
-msgid "Sign Up"
 msgstr ""
 
 #: components/issues/IssueUnreleasedNewspaper.vue:39
@@ -928,37 +928,37 @@ msgid "Special layout"
 msgstr ""
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:58
-#: components/editor/backlog/SelectionToolbar.vue:76
+#: components/editor/backlog/SelectionToolbar.vue:81
 #: components/editor/backlog/NewspaperBacklogBox.vue:120
 msgid "Layout 2-1"
 msgstr ""
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:59
-#: components/editor/backlog/SelectionToolbar.vue:77
+#: components/editor/backlog/SelectionToolbar.vue:82
 #: components/editor/backlog/NewspaperBacklogBox.vue:121
 msgid "One main article, one smaller column"
 msgstr ""
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:63
-#: components/editor/backlog/SelectionToolbar.vue:81
+#: components/editor/backlog/SelectionToolbar.vue:86
 #: components/editor/backlog/NewspaperBacklogBox.vue:125
 msgid "Layout 1-1"
 msgstr ""
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:64
-#: components/editor/backlog/SelectionToolbar.vue:82
+#: components/editor/backlog/SelectionToolbar.vue:87
 #: components/editor/backlog/NewspaperBacklogBox.vue:126
 msgid "Two equal sections"
 msgstr ""
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:68
-#: components/editor/backlog/SelectionToolbar.vue:86
+#: components/editor/backlog/SelectionToolbar.vue:91
 #: components/editor/backlog/NewspaperBacklogBox.vue:130
 msgid "Layout 1-1-1"
 msgstr ""
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:69
-#: components/editor/backlog/SelectionToolbar.vue:87
+#: components/editor/backlog/SelectionToolbar.vue:92
 #: components/editor/backlog/NewspaperBacklogBox.vue:131
 msgid "Three equal sections"
 msgstr ""
@@ -1145,46 +1145,6 @@ msgstr ""
 msgid "Published Posts – Kairly"
 msgstr ""
 
-#: pages/search.vue:2
-#: pages/search.vue:6
-#: components/layout/AppHeader.vue:169
-msgid "Search"
-msgstr ""
-
-#: pages/search.vue:36
-msgid "Newspaper"
-msgstr ""
-
-#: pages/search.vue:37
-#: pages/search.vue:47
-msgid "by"
-msgstr ""
-
-#: pages/search.vue:42
-msgid "Author"
-msgstr ""
-
-#: pages/search.vue:46
-#: pages/_author/_post.vue:2
-msgid "Article"
-msgstr ""
-
-#: pages/search.vue:57
-msgid "No results were found for"
-msgstr ""
-
-#: pages/search.vue:153
-msgid "Search – Kairly"
-msgstr ""
-
-#: pages/posts/_postId.vue:2
-msgid "Edit a post"
-msgstr ""
-
-#: pages/posts/_postId.vue:43
-msgid "My Posts – Kairly"
-msgstr ""
-
 #: pages/subscription.vue:2
 #: components/layout/AppHeader.vue:24
 #: components/layout/AppHeader.vue:66
@@ -1261,6 +1221,38 @@ msgstr ""
 
 #: pages/subscription.vue:65
 msgid "Explore more content"
+msgstr ""
+
+#: pages/search.vue:2
+#: pages/search.vue:6
+#: components/layout/AppHeader.vue:169
+msgid "Search"
+msgstr ""
+
+#: pages/search.vue:36
+msgid "Newspaper"
+msgstr ""
+
+#: pages/search.vue:37
+#: pages/search.vue:47
+msgid "by"
+msgstr ""
+
+#: pages/search.vue:42
+msgid "Author"
+msgstr ""
+
+#: pages/search.vue:46
+#: pages/_author/_post.vue:2
+msgid "Article"
+msgstr ""
+
+#: pages/search.vue:57
+msgid "No results were found for"
+msgstr ""
+
+#: pages/search.vue:153
+msgid "Search – Kairly"
 msgstr ""
 
 #: pages/user/transactions.vue:5
@@ -1396,8 +1388,20 @@ msgstr ""
 msgid "Account Settings – Kairly"
 msgstr ""
 
+#: pages/posts/_postId.vue:2
+msgid "Edit a post"
+msgstr ""
+
+#: pages/posts/_postId.vue:43
+msgid "My Posts – Kairly"
+msgstr ""
+
 #: pages/newspapers/start.vue:2
 msgid "Start newspaper"
+msgstr ""
+
+#: pages/reset-password/_token.vue:84
+msgid "Reset Password"
 msgstr ""
 
 #: pages/reset-password/index.vue:4
@@ -1431,10 +1435,6 @@ msgstr ""
 
 #: pages/reset-password/index.vue:29
 msgid "Check your inbox for email with the reset link."
-msgstr ""
-
-#: pages/reset-password/_token.vue:84
-msgid "Reset Password"
 msgstr ""
 
 #: mixins/PeriodicityMixin.js:18
@@ -1594,30 +1594,34 @@ msgid "Backlog"
 msgstr ""
 
 #: components/editor/backlog/SelectionToolbar.vue:62
+msgid "Rename"
+msgstr ""
+
+#: components/editor/backlog/SelectionToolbar.vue:69
 msgid "Remove post(s) (Del)"
 msgstr ""
 
-#: components/editor/backlog/SelectionToolbar.vue:100
+#: components/editor/backlog/SelectionToolbar.vue:105
 msgid "Top"
 msgstr ""
 
-#: components/editor/backlog/SelectionToolbar.vue:101
+#: components/editor/backlog/SelectionToolbar.vue:106
 msgid "Make it headline (T)"
 msgstr ""
 
-#: components/editor/backlog/SelectionToolbar.vue:110
+#: components/editor/backlog/SelectionToolbar.vue:116
 msgid "Bottom"
 msgstr ""
 
-#: components/editor/backlog/SelectionToolbar.vue:111
+#: components/editor/backlog/SelectionToolbar.vue:117
 msgid "Append to the issue (G)"
 msgstr ""
 
-#: components/editor/backlog/SelectionToolbar.vue:125
+#: components/editor/backlog/SelectionToolbar.vue:131
 msgid "Move to backlog"
 msgstr ""
 
-#: components/editor/backlog/SelectionToolbar.vue:126
+#: components/editor/backlog/SelectionToolbar.vue:132
 msgid "Keyboard shortcut (X)"
 msgstr ""
 

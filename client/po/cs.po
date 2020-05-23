@@ -519,6 +519,22 @@ msgstr "Změna hesla - Kairly"
 msgid "Request solution"
 msgstr "Poptat řešení"
 
+#: components/posts/PostArticle.vue:13
+msgid "Read the article"
+msgstr "Číst článek"
+
+#: components/posts/PostArticle.vue:14 components/posts/PostArticle.vue:25
+msgid "read"
+msgstr "čtení"
+
+#: components/posts/PostArticle.vue:19
+msgid "Continue reading"
+msgstr "Pokračovat ve čtení"
+
+#: components/posts/PostArticle.vue:23
+msgid "Subscribe newspaper to continue reading"
+msgstr "Abyste si mohli přečíst celý článek, přihlaste se k odběru novin."
+
 #: components/modals/PublishPostModal.vue:8
 msgid "Publish post"
 msgstr "Publikovat příspěvek"
@@ -559,22 +575,6 @@ msgstr "Zrušit plánování"
 msgid "Schedule for later"
 msgstr "Naplánuj na později"
 
-#: components/posts/PostArticle.vue:13
-msgid "Read the article"
-msgstr "Číst článek"
-
-#: components/posts/PostArticle.vue:14 components/posts/PostArticle.vue:25
-msgid "read"
-msgstr "čtení"
-
-#: components/posts/PostArticle.vue:19
-msgid "Continue reading"
-msgstr "Pokračovat ve čtení"
-
-#: components/posts/PostArticle.vue:23
-msgid "Subscribe newspaper to continue reading"
-msgstr "Abyste si mohli přečíst celý článek, přihlaste se k odběru novin."
-
 #: components/posts/PostTweet.vue:30
 msgid "Original tweet"
 msgstr "Originální tweet"
@@ -586,10 +586,6 @@ msgstr "Dostupné akce"
 #: components/posts/PostVideo.vue:24
 msgid "Watch video"
 msgstr "Přehrát video"
-
-#: components/posts/PostLink.vue:31
-msgid "Read article"
-msgstr "Číst článek"
 
 #: components/posts/PostRecommendations.vue:4
 msgid "Recommended issues"
@@ -677,6 +673,10 @@ msgstr "Určete cenu vašeho příspěvku"
 msgid "Publish it & pitch it to editors"
 msgstr "Publikujte příspěvek"
 
+#: components/posts/PostLink.vue:31
+msgid "Read article"
+msgstr "Číst článek"
+
 #: components/microsite/ExploreNewspapers.vue:5
 msgid "We believe in human editors."
 msgstr "Editoři novin by měli být lidé."
@@ -694,6 +694,22 @@ msgstr "Přechozí vydání"
 #: pages/_author/_newspaper/index.vue:53 pages/_author/_newspaper/index.vue:88
 msgid "Next issue"
 msgstr "Následující vydání"
+
+#: components/microsite/SignUpForm.vue:3
+msgid "@signupform/heading"
+msgstr "Zaregistrujte se"
+
+#: components/microsite/SignUpForm.vue:11
+msgid "Email"
+msgstr "Email"
+
+#: components/microsite/SignUpForm.vue:17
+msgid "At least 8 characters"
+msgstr "Alespoň 8 znaků"
+
+#: components/microsite/SignUpForm.vue:20 pages/signup.vue:34
+msgid "Sign Up"
+msgstr "Zaregistrovat se"
 
 #: components/microsite/Faq.vue:3
 msgid "@independent-journalists/faq"
@@ -726,6 +742,14 @@ msgstr ""
 msgid "chairman of the Prague Syndicate of Journalists"
 msgstr "předseda Syndikátu novinářů Prahy a Středočeského kraje"
 
+#: components/microsite/Footer.vue:7
+msgid "Stop be distracted."
+msgstr "Nenechte se rozptylovat."
+
+#: components/microsite/Footer.vue:9
+msgid "Grow healthy reading habits."
+msgstr "Vytvořte si dobré návyky při čtení."
+
 #: components/microsite/OfficialStart.vue:3
 msgid "We start officially"
 msgstr "Oficiálně startujeme"
@@ -745,14 +769,6 @@ msgstr ""
 #: components/microsite/OfficialStart.vue:33
 msgid "Request to join"
 msgstr "Zažádat o pozvánku"
-
-#: components/microsite/Footer.vue:7
-msgid "Stop be distracted."
-msgstr "Nenechte se rozptylovat."
-
-#: components/microsite/Footer.vue:9
-msgid "Grow healthy reading habits."
-msgstr "Vytvořte si dobré návyky při čtení."
 
 #: components/microsite/HowItWorks.vue:3
 msgid "How the platform works?"
@@ -804,22 +820,6 @@ msgstr "Denní přehled"
 #: components/issues/IssueAuthor.vue:60
 msgid "Weekly summary"
 msgstr "Týdenní přehled"
-
-#: components/microsite/SignUpForm.vue:3
-msgid "@signupform/heading"
-msgstr "Zaregistrujte se"
-
-#: components/microsite/SignUpForm.vue:11
-msgid "Email"
-msgstr "Email"
-
-#: components/microsite/SignUpForm.vue:17
-msgid "At least 8 characters"
-msgstr "Alespoň 8 znaků"
-
-#: components/microsite/SignUpForm.vue:20 pages/signup.vue:34
-msgid "Sign Up"
-msgstr "Zaregistrovat se"
 
 #: components/issues/IssueUnreleasedNewspaper.vue:39
 msgid "We are very sorry, but {editor} didn't prepare a new release for you."
@@ -923,37 +923,37 @@ msgid "Special layout"
 msgstr "Speciální rozložení"
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:58
-#: components/editor/backlog/SelectionToolbar.vue:76
+#: components/editor/backlog/SelectionToolbar.vue:81
 #: components/editor/backlog/NewspaperBacklogBox.vue:120
 msgid "Layout 2-1"
 msgstr "Rozložení 2-1"
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:59
-#: components/editor/backlog/SelectionToolbar.vue:77
+#: components/editor/backlog/SelectionToolbar.vue:82
 #: components/editor/backlog/NewspaperBacklogBox.vue:121
 msgid "One main article, one smaller column"
 msgstr "Jeden hlavní článek, jeden menší sloupec"
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:63
-#: components/editor/backlog/SelectionToolbar.vue:81
+#: components/editor/backlog/SelectionToolbar.vue:86
 #: components/editor/backlog/NewspaperBacklogBox.vue:125
 msgid "Layout 1-1"
 msgstr "Rozložení 1-1"
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:64
-#: components/editor/backlog/SelectionToolbar.vue:82
+#: components/editor/backlog/SelectionToolbar.vue:87
 #: components/editor/backlog/NewspaperBacklogBox.vue:126
 msgid "Two equal sections"
 msgstr "Dva stejné sloupce"
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:68
-#: components/editor/backlog/SelectionToolbar.vue:86
+#: components/editor/backlog/SelectionToolbar.vue:91
 #: components/editor/backlog/NewspaperBacklogBox.vue:130
 msgid "Layout 1-1-1"
 msgstr "Rozložení 1-1-1"
 
 #: components/editor/backlog/NewspaperBacklogPostToolbar.vue:69
-#: components/editor/backlog/SelectionToolbar.vue:87
+#: components/editor/backlog/SelectionToolbar.vue:92
 #: components/editor/backlog/NewspaperBacklogBox.vue:131
 msgid "Three equal sections"
 msgstr "Tři stejné sloupce"
@@ -1142,42 +1142,6 @@ msgstr "Zatím jste nezveřejnili žádný příspěvek."
 msgid "Published Posts – Kairly"
 msgstr "Publikované příspěvky - Kairly"
 
-#: pages/search.vue:2 pages/search.vue:6 components/layout/AppHeader.vue:169
-msgid "Search"
-msgstr "Hledat"
-
-#: pages/search.vue:36
-msgid "Newspaper"
-msgstr "Noviny"
-
-#: pages/search.vue:37 pages/search.vue:47
-msgid "by"
-msgstr "od"
-
-#: pages/search.vue:42
-msgid "Author"
-msgstr "Autor"
-
-#: pages/search.vue:46 pages/_author/_post.vue:2
-msgid "Article"
-msgstr "Článek"
-
-#: pages/search.vue:57
-msgid "No results were found for"
-msgstr "Nebyly nalezeny žádné výsledky pro"
-
-#: pages/search.vue:153
-msgid "Search – Kairly"
-msgstr "Hledat – Kairly"
-
-#: pages/posts/_postId.vue:2
-msgid "Edit a post"
-msgstr "Editovat příspěvek"
-
-#: pages/posts/_postId.vue:43
-msgid "My Posts – Kairly"
-msgstr "Moje příspěvky – Kairly"
-
 #: pages/subscription.vue:2 components/layout/AppHeader.vue:24
 #: components/layout/AppHeader.vue:66 pages/index.vue:56
 msgid "Subscriptions"
@@ -1245,6 +1209,34 @@ msgstr "Další newslettery a autory naleznete na stránce Objevujte."
 #: pages/subscription.vue:65
 msgid "Explore more content"
 msgstr "Objevujte více obsahu"
+
+#: pages/search.vue:2 pages/search.vue:6 components/layout/AppHeader.vue:169
+msgid "Search"
+msgstr "Hledat"
+
+#: pages/search.vue:36
+msgid "Newspaper"
+msgstr "Noviny"
+
+#: pages/search.vue:37 pages/search.vue:47
+msgid "by"
+msgstr "od"
+
+#: pages/search.vue:42
+msgid "Author"
+msgstr "Autor"
+
+#: pages/search.vue:46 pages/_author/_post.vue:2
+msgid "Article"
+msgstr "Článek"
+
+#: pages/search.vue:57
+msgid "No results were found for"
+msgstr "Nebyly nalezeny žádné výsledky pro"
+
+#: pages/search.vue:153
+msgid "Search – Kairly"
+msgstr "Hledat – Kairly"
 
 #: pages/user/transactions.vue:5
 msgid "Credit balance"
@@ -1379,9 +1371,21 @@ msgstr "Uložit"
 msgid "Account Settings – Kairly"
 msgstr "Nastavení účtu – Kairly"
 
+#: pages/posts/_postId.vue:2
+msgid "Edit a post"
+msgstr "Editovat příspěvek"
+
+#: pages/posts/_postId.vue:43
+msgid "My Posts – Kairly"
+msgstr "Moje příspěvky – Kairly"
+
 #: pages/newspapers/start.vue:2
 msgid "Start newspaper"
 msgstr "Začněte noviny"
+
+#: pages/reset-password/_token.vue:84
+msgid "Reset Password"
+msgstr "Obnovit heslo"
 
 #: pages/reset-password/index.vue:4 pages/reset-password/index.vue:72
 msgid "Reset password"
@@ -1414,10 +1418,6 @@ msgstr "Zažádal jste o obnovení hesla"
 #: pages/reset-password/index.vue:29
 msgid "Check your inbox for email with the reset link."
 msgstr "Zkontrolujte svůj email."
-
-#: pages/reset-password/_token.vue:84
-msgid "Reset Password"
-msgstr "Obnovit heslo"
 
 #: mixins/PeriodicityMixin.js:18
 msgid "Daily at 6:00, 12:00 and 18:00"
@@ -1641,30 +1641,34 @@ msgid "Backlog"
 msgstr "Backlog"
 
 #: components/editor/backlog/SelectionToolbar.vue:62
+msgid "Rename"
+msgstr "Přejmenovat"
+
+#: components/editor/backlog/SelectionToolbar.vue:69
 msgid "Remove post(s) (Del)"
 msgstr "Odstranit příspěvek (Del)"
 
-#: components/editor/backlog/SelectionToolbar.vue:100
+#: components/editor/backlog/SelectionToolbar.vue:105
 msgid "Top"
 msgstr "Nahoru"
 
-#: components/editor/backlog/SelectionToolbar.vue:101
+#: components/editor/backlog/SelectionToolbar.vue:106
 msgid "Make it headline (T)"
 msgstr "Posuňte příspěvek zcela nahoru (T)"
 
-#: components/editor/backlog/SelectionToolbar.vue:110
+#: components/editor/backlog/SelectionToolbar.vue:116
 msgid "Bottom"
 msgstr "Dolů"
 
-#: components/editor/backlog/SelectionToolbar.vue:111
+#: components/editor/backlog/SelectionToolbar.vue:117
 msgid "Append to the issue (G)"
 msgstr "Připojit k vydání (G)"
 
-#: components/editor/backlog/SelectionToolbar.vue:125
+#: components/editor/backlog/SelectionToolbar.vue:131
 msgid "Move to backlog"
 msgstr "Přesunout do backlogu"
 
-#: components/editor/backlog/SelectionToolbar.vue:126
+#: components/editor/backlog/SelectionToolbar.vue:132
 msgid "Keyboard shortcut (X)"
 msgstr "Klávesová zkratka (X)"
 

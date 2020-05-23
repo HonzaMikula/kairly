@@ -400,7 +400,22 @@ export const actions = {
     commit('cleanSelection')
     commit('select', boxItem.id)
     dispatch('save', { newspaper })
-  }
+  },
+
+  updateHeading ({ state, getters, commit }, { newspaper, title }) {
+    const selectedBox = getters.getSelectedBoxes(newspaper)[0]
+
+    commit('setBacklogItem', {
+      newspaper,
+      target: selectedBox.source,
+      index: selectedBox.index,
+      item: {
+        id: selectedBox.box.id,
+        title,
+        type: selectedBox.box.type
+      }
+    })
+  },
 }
 
 export const mutations = {
