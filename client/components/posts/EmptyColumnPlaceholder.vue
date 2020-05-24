@@ -53,6 +53,10 @@ export default {
       color: #000
       background: #eee
 
+    &.is-active
+      background:#fff
+      color: #000
+
     &::before
       +fa-icon()
       @extend .fas

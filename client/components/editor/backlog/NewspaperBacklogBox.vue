@@ -10,6 +10,7 @@
       <EmptyColumnPlaceholder>
         <button
           class="add-posts"
+          :class="{'is-active': isPostSelectionOpened}"
           @click="openPostSelection(columnIndex)"
         >
           {{ $t('Posts') }}
@@ -259,6 +260,7 @@ export default {
     return {
       editedColumn: null,
       typeOverride: {},
+      isPostSelectionOpened: false
     }
   },
 
@@ -284,6 +286,14 @@ export default {
         } else {
           this.$store.commit('backlog/unselect', this.post.id)
         }
+      }
+    },
+
+    selectedPost () {
+      if (this.post.columns[this.editedColumn].length > 0) {
+        return this.post.columns[this.editedColumn].posts.map(p => p.id)
+      } else {
+        return []
       }
     },
 
@@ -399,6 +409,8 @@ export default {
 
     openPostSelection (idx) {
       this.$root.$emit('post-selection-open', this.post.id)
+      this.isPostSelectionOpened = true
+
       Vue.nextTick(() => {
         // make this in next tick and let old dialog close first
         // this cause that PostSelection component will destroyed and recreated immediatelly
@@ -409,6 +421,7 @@ export default {
 
     closePostSelection () {
       this.editedColumn = null
+      this.isPostSelectionOpened = false
     },
 
     async writeComment (columnIndex) {
