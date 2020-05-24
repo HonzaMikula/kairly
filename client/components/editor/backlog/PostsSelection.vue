@@ -1,7 +1,22 @@
 <template>
   <div class="posts-selection-view">
     <header>
-      <h2>{{ $t('Select tweets') }}</h2>
+      <h2>{{ $t('Select posts') }}</h2>
+
+      <div class="post-selection--search">
+        <input v-model.lazy="search" type="text" :placeholder="$t('Search post')">
+      </div>
+
+      <div class="post-selection--filter">
+        <label>
+          <input v-model="selectedSources" type="checkbox" value="upcoming">
+          {{ $t('Upcoming') }}
+        </label>
+        <label>
+          <input v-model="selectedSources" type="checkbox" value="considered">
+          {{ $t('Backlog') }}
+        </label>
+      </div>
 
       <button @click="$emit('done')">{{ $t('Done') }}</button>
     </header>
@@ -57,14 +72,16 @@ export default {
     })
 
     return {
-      initialPosts: posts
+      initialPosts: posts,
+      search: '',
+      selectedSources: ['considered', 'upcoming']
     }
   },
 
   computed: {
     posts () {
       const ids = {}
-      const posts = []
+      let posts = []
       this.initialPosts.forEach(p => {
         ids[p.post.id] = true
         posts.push(p)
@@ -87,6 +104,30 @@ export default {
           // .filter(post => post.type === 'tweet')
           .forEach(post => posts.push({ post, source: bl.name }))
       })
+
+      // - filtering by source
+      if (this.selectedSources.length > 0) {
+        posts = posts.filter((post) => {
+          return this.selectedSources.includes(post.source)
+        })
+      }
+
+      // - filtering by search
+      posts = posts.filter((post) => {
+        if (this.search !== '') {
+          const search = this.search.toLowerCase()
+          if (post.post.content.title && post.post.content.title.toLowerCase().includes(search)) {
+            return true
+          } else if (post.post.author.name.toLowerCase().includes(search)) {
+            return true
+          } else if (post.post.author.id.includes(search)) {
+            return true
+          }
+          return false
+        }
+        return true
+      })
+
       return posts
     }
   },
@@ -135,14 +176,31 @@ export default {
   //- Header
   > header
     display: grid
-    grid-template-columns: auto min-content
+    grid-template-columns: max-content min-content auto max-content
+    grid-column-gap: $baseline / 2
+    align-items: center
     padding: $baseline/4 $baseline/2
 
     border-bottom: 1px solid #eee
 
+    @media (max-width: $mobile)
+      background: #eee
+
     //- heading
     h2
       font-weight: 600
+
+    //- search
+    .post-selection--search input
+      border: 1px solid #ddd
+
+      font-size: $fs-0
+      line-height: $baseline
+
+    //- checboxes
+    .post-selection--filter
+      @media (max-width: $mobile)
+        display: none
 
     //- done button
     button
