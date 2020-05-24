@@ -147,6 +147,7 @@
 
 <script>
 import { BPopover } from 'bootstrap-vue'
+import PostObjectMixin from '@/mixins/PostObjectMixin'
 
 export default {
   name: 'SelectionToolbar',
@@ -154,6 +155,8 @@ export default {
   components: {
     BPopover
   },
+
+  mixins: [PostObjectMixin],
 
   props: {
     newspaper: { type: Object, required: true }
@@ -239,9 +242,46 @@ export default {
     },
 
     remove () {
-      this.$store.dispatch('backlog/removeSelectedBox', {
-        newspaper: this.newspaper
-      })
+      const selectedBoxes = this.$store.getters['backlog/getSelectedBoxes'](this.newspaper)
+      let proceed = true
+      // console.log(selectedBoxes)
+      if (selectedBoxes.length > 1) {
+        let text = 'You\'re going to delete following posts:\n'
+        const posts = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName].$posts
+
+        selectedBoxes.forEach((item) => {
+          if (item.box.title) {
+            text += `• ${item.box.title} \n`
+          } else if (item.box.type === 'post') {
+            const title = posts[item.box.id].content.title ? posts[item.box.id].content.title : posts[item.box.id].content.content.slice(0, 100)
+            text += `• ${title} \n`
+          } else {
+            item.box.columns.forEach((column) => {
+              if (column.posts.length > 0) {
+                column.posts.forEach((post) => {
+                  if (posts[post.id]) {
+                    let title
+
+                    if (posts[post.id] && posts[post.id].content.title) {
+                      title = posts[post.id].content.title
+                    } else if (posts[post.id] && posts[post.id].content) {
+                      title = posts[post.id].content.content.slice(0, 100)
+                    }
+                    text += `• ${title} \n`
+                  }
+                })
+              }
+            })
+          }
+        })
+        proceed = window.confirm(text)
+      }
+
+      if (proceed) {
+        this.$store.dispatch('backlog/removeSelectedBox', {
+          newspaper: this.newspaper
+        })
+      }
     },
 
     makeBox (layout, columnsStyle) {

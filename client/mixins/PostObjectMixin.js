@@ -8,7 +8,7 @@ export default {
     },
   },
   methods: {
-    getPostObject (item, idx) {
+    getPostObject (item) {
       if (Array.isArray(item)) {
         const id = Math.random().toString(36).substring(2)
         const css = isString(item[0]) ? item[0] : null
