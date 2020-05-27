@@ -188,7 +188,7 @@ export default {
     object-fit: cover
 
   //-- author
-  h3
+  > h3
     overflow: hidden
 
     color: #555
