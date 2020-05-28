@@ -104,7 +104,10 @@ class Command(BaseCommand):
             newspaper = None
             if channel.newspaper:
                 username, slug = channel.newspaper.split('/')
-                newspaper = Newspaper.objects.get(slug=slug, editor__username=username)
+                try:
+                    newspaper = Newspaper.objects.get(slug=slug, editor__username=username)
+                except Newspaper.DoesNotExist:
+                    self.stdout.write(f'Newspaper {channel.newspaper} referenced from channel {channel.id} {channel.name} does not exist')
 
             for entry in channel.parse_rss().entries:
                 try:

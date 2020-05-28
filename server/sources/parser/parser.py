@@ -21,6 +21,7 @@ class ArticleParser:
 
     def __init__(self, rules):
         self.rules = rules
+        self.props = None
 
     def parse(self, htmltree):
         """Returns list of fragments (etree Elements)"""
