@@ -22,42 +22,77 @@
     <section v-else-if="step === 'step-2'" class="consider-post--step-2">
       <div class="consider-post--step-2--content">
         <h3>Upcoming issue</h3>
-        <p>Will be release in ...</p>
+        <p>Will be released {{ nextRelease }}</p>
 
         <label>
-          <input v-model="acbd" name="position" type="radio"> To the top
+          <input
+            v-model="position"
+            name="position"
+            type="radio"
+            value="['upcoming', 0]"
+          > To the top
         </label>
 
         <label v-for="section in upcomingIssueSections" :key="section.index">
-          <input v-model="acbd" name="position" type="radio" :value="section.index"> {{ section.title }}
+          <input
+            v-model="position"
+            name="position"
+            type="radio"
+            :value="['upcoming', section.index]"
+          >
+          {{ section.title }}
         </label>
 
         <label>
-          <input v-model="acbd" name="position" type="radio"> To the bottom
+          <input
+            v-model="position"
+            name="position"
+            type="radio"
+            value="['upcoming', 0]"
+          >
+          To the bottom
         </label>
 
         <h3>Backlog</h3>
         <label>
-          <input v-model="acbd" name="position" type="radio"> To the top
+          <input
+            v-model="position"
+            name="position"
+            type="radio"
+            value="['considered', 0]"
+          >
+          To the top
         </label>
 
         <label v-for="section in backlogSections" :key="section.index">
-          <input v-model="acbd" name="position" type="radio" :value="section.index"> {{ section.title }}
+          <input
+            v-model="position"
+            name="position"
+            type="radio"
+            :value="['considered', section.index]"
+          >
+          {{ section.title }}
         </label>
 
         <label>
-          <input v-model="acbd" name="position" type="radio"> To the bottom
+          <input
+            v-model="position"
+            name="position"
+            type="radio"
+            value="['considered', 0]"
+          >
+          To the bottom
         </label>
       </div>
 
       <div class="consider-post--step-2--footer">
         <div>
-          <button>Save</button>
+          <button @click="save()">Save</button>
         </div>
 
-        <div>
+        <!-- <div>
           Save and add comment
-        </div>
+        </div> -->
       </div>
     </section>
 
@@ -68,6 +103,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters, mapState, mapActions } from 'vuex'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
@@ -90,6 +126,7 @@ export default {
 
   data () {
     return {
+      position: [],
       step: 0,
       selectedNewspaper: null
     }
@@ -104,6 +141,10 @@ export default {
 
     postBacklog () {
       return this.backlog ? (this.backlog[this.post.id] || {}) : {}
+    },
+
+    nextRelease () {
+      return moment(this.$store.getters['entities/getNewspaper'](this.selectedNewspaper.fullName).nextRelease).from()
     },
 
     backlogSections () {
@@ -151,11 +192,11 @@ export default {
           post: this.post
         })
       } else {
-        this.addToBacklog({
-          newspaper,
-          target: 'considered',
-          post: this.post
-        })
+        // this.addToBacklog({
+        //   newspaper,
+        //   target: 'considered',
+        //   post: this.post
+        // })
         this.step = 'step-2'
         this.selectedNewspaper = newspaper
       }
@@ -163,9 +204,24 @@ export default {
       document.activeElement.blur()
     },
 
+    save () {
+      const newspaper = this.selectedNewspaper
+      const target = this.position[0]
+      const index = this.position[1] + 1
+
+      console.log(target + 'considered')
+
+      this.addToBacklog({
+        newspaper,
+        target,
+        post: this.post,
+        index
+      })
+    },
+
     ...mapActions({
       addToBacklog: 'backlog/add',
-      removeFromBacklog: 'backlog/remove'
+      removeFromBacklog: 'backlog/remove',
     })
   }
 }
@@ -222,7 +278,7 @@ export default {
     font-weight: 600
 
   h3 + p
-    margin-bottom: $baseline / 2
+    font-size: $fs--1
 
   label
     display: block
@@ -235,16 +291,17 @@ export default {
 
 // TODO
 // Step 2
-// - when it will be released
-// - save it
+// - make the save work for the top and the bottom
+
+// Other
+// - deal when multiple newspapers are considered
+// - mobile version -> modal
+// - maybe use vue bootstrap popover
+// - translations
 
 // Step - Add comment
 // - step add comment - style it up
 // - save comment
 // - save only when you have one newspaper
 
-// Other
-// - mobile version -> modal
-// - maybe use vue bootstrap popover
-// - translations
 </style>

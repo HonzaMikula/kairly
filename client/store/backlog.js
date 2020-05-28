@@ -119,15 +119,16 @@ export const actions = {
     }
   },
 
-  async add ({ state, commit, dispatch }, { newspaper, post, target }) {
+  async add ({ state, commit, dispatch }, { newspaper, post, target, index }) {
     if (!state.newspaperBacklog[newspaper.fullName]) {
       await dispatch('loadNewspaperBacklog', newspaper.fullName)
     }
+
     commit('splice', {
       newspaper,
       target,
       items: [{ id: post.id, type: 'post' }],
-      index: 0,
+      index,
       deleteCount: 0
     })
     dispatch('save', { newspaper })
@@ -215,6 +216,7 @@ export const actions = {
     let prevSource = null
     let selectedBefore = 0
     let removedBeforeTarget = 0
+    console.log(sources)
     sources.forEach(item => {
       if (prevSource !== item.source) {
         prevSource = item.source
