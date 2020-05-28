@@ -49,6 +49,9 @@ def create_post_link(url, user, hidden=False, published=None, guid=None):
     if post:
         return post
 
+    if html.startswith('<?xml version="1.0" encoding="utf-8"?>'):
+        html = html[len('<?xml version="1.0" encoding="utf-8"?>'):]
+
     htmltree = lxml.html.fromstring(html)
     try:
         title = htmltree.cssselect('head title')[0].text

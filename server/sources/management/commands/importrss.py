@@ -3,6 +3,8 @@ import re
 import time
 import traceback
 import lxml.html
+import lxml.etree
+import requests
 from datetime import timedelta
 
 import dateutil.parser
@@ -135,9 +137,15 @@ class Command(BaseCommand):
                         except Backlog.DoesNotExist:
                             backlog = Backlog(newspaper=newspaper, name='upcoming', layout='[]')
                         backlog.append_item({'post': post.id})
-                except Exception:
-                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {}".format(timezone.now(), getattr(entry, 'link', ''), channel.rss))
-                    traceback.print_exc()
+                except Exception as e:
+                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {} (channel {} {} by {})".format(
+                        timezone.now(), getattr(entry, 'link', ''), channel.rss, channel.id, channel.name, channel.author_id))
+                    if isinstance(e, requests.exceptions.HTTPError):
+                        self.stdout.write(str(e))
+                    elif isinstance(e, lxml.etree.ParserError):
+                        self.stdout.write(str(e))
+                    else:
+                        traceback.print_exc(file=self.stdout)
 
                 if not options.get('nosleep'):
                     time.sleep(0.01)
@@ -165,7 +173,8 @@ def get_entry_publish_date(entry):
 
 def _import_feed_entry(channel, entry, stdout=None, verbosity=0, force=False, only_url=None, draft=False):
     if not hasattr(entry, 'link'):
-        stdout and stdout.write("Entry {} is missing link attribute".format(entry))
+        if stdout is not None:
+            stdout.write(f"Entry {entry} is missing link attribute")
         return None, None
 
     if not channel.is_url_valid(entry.link):
@@ -174,7 +183,8 @@ def _import_feed_entry(channel, entry, stdout=None, verbosity=0, force=False, on
     try:
         return _import_post(channel, entry, stdout, verbosity, force, only_url, draft)
     except EntryHasNoContentException:
-        stdout and stdout.write("Entry {} is missing content/description attribute".format(entry))
+        if stdout is not None:
+            stdout.write(f"Entry {entry} is missing content/description attribute")
 
 
 def _get_title_from_entry(entry):
@@ -208,12 +218,12 @@ def _import_post(channel, entry, stdout, verbosity, force, only_url, draft):
         post = None
 
     if post and not force:
-        if verbosity > 1:
-            stdout and stdout.write('Skipping {} with guid {}. Already imported'.format(url, guid))
+        if verbosity > 1 and stdout is not None:
+            stdout.write(f'Skipping {url} with guid {guid}. Already imported')
         return post, False
 
-    if verbosity > 0:
-        stdout and stdout.write('Importing {}'.format(url))
+    if verbosity > 0 and stdout is not None:
+        stdout.write(f'Importing {url}')
 
     published = get_entry_publish_date(entry)
 

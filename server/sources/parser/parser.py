@@ -118,14 +118,18 @@ class ArticleParser:
         if el.tag == 'img':
             preserve = {'title', 'src', 'alt', 'srcset', 'sizes'}
             try:
-                if int(el.attrib['width']) < 200:
+                w = round(float(el.attrib['width']))
+                if w < 200:
                     preserve.add('width')
-            except (KeyError, TypeError):
+                    el.attrib['width'] = str(w) # replace with rounded value
+            except (KeyError, TypeError, ValueError):
                 pass
             try:
-                if int(el.attrib['height']) < 200:
+                h = round(float(el.attrib['height']))
+                if h < 200:
                     preserve.add('height')
-            except (KeyError, TypeError):
+                    el.attrib['height'] = str(h) # replace with rounded value
+            except (KeyError, TypeError, ValueError):
                 pass
         elif el.tag == 'a':
             preserve = {'title', 'href'}
