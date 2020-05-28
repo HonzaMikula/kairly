@@ -105,7 +105,7 @@ class Command(BaseCommand):
             if channel.newspaper:
                 username, slug = channel.newspaper.split('/')
                 try:
-                    newspaper = Newspaper.objects.get(slug=slug, editor__username=username)
+                    newspaper = Newspaper.objects.get(slug=slug, editor__username=username, archived=False)
                 except Newspaper.DoesNotExist:
                     self.stdout.write(f'Newspaper {channel.newspaper} referenced from channel {channel.id} {channel.name} does not exist')
 
