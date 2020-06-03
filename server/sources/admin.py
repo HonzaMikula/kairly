@@ -64,7 +64,7 @@ class ChannelAdmin(admin.ModelAdmin):
             else:
                 headers['User-Agent'] = settings.DEFAULT_USER_AGENT
 
-            resp = requests.get(channel.rss, headers=headers)
+            resp = requests.get(channel.rss, headers=headers, verify=False)
             resp.raise_for_status()
 
             # strip whitespaces because eg. https://www.foliomag.com/feed/

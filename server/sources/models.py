@@ -64,10 +64,14 @@ class Channel(models.Model):
         super().save(*args, **kwargs)
 
     def parse_rss(self):
-        kwargs = {}
+        headers = {}
         if self.user_agent:
-            kwargs['agent'] = self.user_agent
-        return feedparser.parse(self.rss, **kwargs)
+            headers['User-Agent'] = self.user_agent
+        else:
+            headers['User-Agent'] = settings.DEFAULT_USER_AGENT
+
+        resp = requests.get(self.rss, headers=headers, verify=False)
+        return feedparser.parse(resp.text)
 
     def parse_entry(self, entry, *, usecache=False):
         htmltree, resolved_url = self.parse_html_root(entry, usecache=usecache)
