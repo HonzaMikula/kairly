@@ -40,7 +40,7 @@ def fetch_url(url, *, usecache=False, user_agent=None):
         else:
             headers['User-Agent'] = settings.DEFAULT_USER_AGENT
 
-        resp = requests.get(url, headers=headers, timeout=10)
+        resp = requests.get(url, headers=headers, timeout=10, vefiry=False)
         resp.raise_for_status()
 
         if resp.encoding == 'ISO-8859-1':
