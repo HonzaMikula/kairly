@@ -10,6 +10,9 @@ from articles.signals import post_publish
 from users.models import User
 from sources.twitter_api import get_api_connection, get_post_guid, status_to_post_args
 
+import warnings
+warnings.filterwarnings("ignore")
+
 
 class Command(BaseCommand):
     help = 'Import tweets'

@@ -18,6 +18,9 @@ from sources.models import Channel, EntryHasNoContentException
 from articles.models import SubscriptionToAuthor
 from users.models import User
 
+import warnings
+warnings.filterwarnings("ignore")
+
 
 # additional timezones which are not recognized byt dateutil.parser by default
 TZ_INFOS = {
@@ -108,50 +111,54 @@ class Command(BaseCommand):
                     newspaper = Newspaper.objects.get(slug=slug, editor__username=username, archived=False)
                 except Newspaper.DoesNotExist:
                     self.stdout.write(f'Newspaper {channel.newspaper} referenced from channel {channel.id} {channel.name} does not exist')
+            try:
+                for entry in channel.parse_rss().entries:
+                    try:
+                        post, imported = _import_feed_entry(
+                            channel, entry, self.stdout,
+                            verbosity=options.get('verbosity'),
+                            force=options.get('force'),
+                            only_url=options.get('url'),
+                            draft=options.get('draft'),
+                        )
 
-            for entry in channel.parse_rss().entries:
-                try:
-                    post, imported = _import_feed_entry(
-                        channel, entry, self.stdout,
-                        verbosity=options.get('verbosity'),
-                        force=options.get('force'),
-                        only_url=options.get('url'),
-                        draft=options.get('draft'),
-                    )
-
-                    if post is None:
-                        continue
-
-                    if imported:
-                        counter_posts += 1
-
-                    if newspaper and post.kind not in [Post.RECOMMENDATION, Post.REFERENCE, Post.LINK]:
-                        if IssuePost.objects.filter(issue__newspaper=newspaper, post=post).exists():
+                        if post is None:
                             continue
 
-                        if BacklogPost.objects.filter(backlog__newspaper=newspaper, post=post).exists():
-                            continue
+                        if imported:
+                            counter_posts += 1
 
-                        if verbosity > 1:
-                            self.stdout.write('Publishing {} in {}'.format(post.guid, channel.newspaper))
+                        if newspaper and post.kind not in [Post.RECOMMENDATION, Post.REFERENCE, Post.LINK]:
+                            if IssuePost.objects.filter(issue__newspaper=newspaper, post=post).exists():
+                                continue
 
-                        try:
-                            backlog = Backlog.objects.get(newspaper=newspaper, name='upcoming')
-                        except Backlog.DoesNotExist:
-                            backlog = Backlog(newspaper=newspaper, name='upcoming', layout='[]')
-                        backlog.append_item({'post': post.id})
-                except Exception as e:
-                    self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {} (channel {} {} by {})".format(
-                        timezone.now(), getattr(entry, 'link', ''), channel.rss, channel.id, channel.name, channel.author_id))
-                    if isinstance(e, requests.exceptions.HTTPError):
-                        self.stdout.write(str(e))
-                    elif isinstance(e, lxml.etree.ParserError):
-                        self.stdout.write(str(e))
-                    else:
-                        traceback.print_exc(file=self.stdout)
+                            if BacklogPost.objects.filter(backlog__newspaper=newspaper, post=post).exists():
+                                continue
 
-                if not options.get('nosleep'):
-                    time.sleep(0.01)
+                            if verbosity > 1:
+                                self.stdout.write('Publishing {} in {}'.format(post.guid, channel.newspaper))
+
+                            try:
+                                backlog = Backlog.objects.get(newspaper=newspaper, name='upcoming')
+                            except Backlog.DoesNotExist:
+                                backlog = Backlog(newspaper=newspaper, name='upcoming', layout='[]')
+                            backlog.append_item({'post': post.id})
+                    except Exception as e:
+                        self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while fetching {} from feed {} (channel {} {} by {})".format(
+                            timezone.now(), getattr(entry, 'link', ''), channel.rss, channel.id, channel.name, channel.author_id))
+                        if isinstance(e, requests.exceptions.HTTPError):
+                            self.stdout.write(str(e))
+                        elif isinstance(e, lxml.etree.ParserError):
+                            self.stdout.write(str(e))
+                        else:
+                            traceback.print_exc(file=self.stdout)
+
+                    if not options.get('nosleep'):
+                        time.sleep(0.01)
+            except Exception as ex:
+                self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: exception occured while parsing feed {} (channel {} {} by {})".format(
+                                  timezone.now(), channel.rss, channel.id, channel.name, channel.author_id))
+                traceback.print_exc(file=self.stdout)
 
         counter_end = time.perf_counter()
         self.stdout.write("{:%Y-%m-%d %H:%M:%S %z}: importtrss finished in {} / {} channels / {} posts imported".format(
