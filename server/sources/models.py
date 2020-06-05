@@ -65,20 +65,25 @@ class Channel(models.Model):
         super().save(*args, **kwargs)
 
     def parse_rss(self):
-        headers = {}
+        # unicode fix doesn't work
+
+        # headers = {}
+        # if self.user_agent:
+        #     headers['User-Agent'] = self.user_agent
+        # else:
+        #     headers['User-Agent'] = settings.DEFAULT_USER_AGENT
+        # resp = requests.get(self.rss, headers=headers, verify=False)
+        # content = None
+        # if resp.encoding == 'ISO-8859-1':
+        #     ud = UnicodeDammit(resp.content)
+        #     if ud.unicode_markup:
+        #         content = ud.unicode_markup
+        # return feedparser.parse(content or resp.text)
+
+        kwargs = {}
         if self.user_agent:
-            headers['User-Agent'] = self.user_agent
-        else:
-            headers['User-Agent'] = settings.DEFAULT_USER_AGENT
-
-        resp = requests.get(self.rss, headers=headers, verify=False)
-        content = None
-        if resp.encoding == 'ISO-8859-1':
-            ud = UnicodeDammit(resp.content)
-            if ud.unicode_markup:
-                content = ud.unicode_markup
-
-        return feedparser.parse(content or resp.text)
+            kwargs['agent'] = self.user_agent
+        return feedparser.parse(self.rss, **kwargs)
 
     def parse_entry(self, entry, *, usecache=False):
         htmltree, resolved_url = self.parse_html_root(entry, usecache=usecache)
