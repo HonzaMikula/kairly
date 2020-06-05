@@ -5,6 +5,7 @@ import orjson as json
 import feedparser
 import requests
 import lxml.html
+from bs4 import UnicodeDammit
 
 
 from django.db import models
@@ -71,7 +72,13 @@ class Channel(models.Model):
             headers['User-Agent'] = settings.DEFAULT_USER_AGENT
 
         resp = requests.get(self.rss, headers=headers, verify=False)
-        return feedparser.parse(resp.text)
+        content = None
+        if resp.encoding == 'ISO-8859-1':
+            ud = UnicodeDammit(resp.content)
+            if ud.unicode_markup:
+                content = ud.unicode_markup
+
+        return feedparser.parse(content or resp.text)
 
     def parse_entry(self, entry, *, usecache=False):
         htmltree, resolved_url = self.parse_html_root(entry, usecache=usecache)
