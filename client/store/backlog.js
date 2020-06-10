@@ -211,12 +211,12 @@ export const actions = {
     }
   },
 
-  pasteSelection ({ commit, dispatch, getters }, { newspaper, target, index }) {
+  pasteSelection ({ commit, getters }, { newspaper, target, index }) {
     const sources = getters.getSelectedBoxes(newspaper)
     let prevSource = null
     let selectedBefore = 0
     let removedBeforeTarget = 0
-    console.log(sources)
+
     sources.forEach(item => {
       if (prevSource !== item.source) {
         prevSource = item.source
@@ -524,6 +524,10 @@ export const mutations = {
     const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
     const { layout } = newspaperBacklog[target]
+
+    if (index < 0) {
+      index = layout.length + 1 + index
+    }
 
     const removedItems = layout.splice(index, deleteCount, ...items)
     removedItems.forEach(item => {

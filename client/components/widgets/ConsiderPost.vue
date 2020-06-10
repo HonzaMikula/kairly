@@ -29,7 +29,7 @@
             v-model="position"
             name="position"
             type="radio"
-            value="['upcoming', 0]"
+            :value="['upcoming', 0]"
           > To the top
         </label>
 
@@ -38,7 +38,7 @@
             v-model="position"
             name="position"
             type="radio"
-            :value="['upcoming', section.index]"
+            :value="['upcoming', section.index + 1]"
           >
           {{ section.title }}
         </label>
@@ -48,7 +48,7 @@
             v-model="position"
             name="position"
             type="radio"
-            value="['upcoming', 0]"
+            :value="['upcoming', -1]"
           >
           To the bottom
         </label>
@@ -59,7 +59,7 @@
             v-model="position"
             name="position"
             type="radio"
-            value="['considered', 0]"
+            :value="['considered', 0]"
           >
           To the top
         </label>
@@ -69,7 +69,7 @@
             v-model="position"
             name="position"
             type="radio"
-            :value="['considered', section.index]"
+            :value="['considered', section.index + 1]"
           >
           {{ section.title }}
         </label>
@@ -79,7 +79,7 @@
             v-model="position"
             name="position"
             type="radio"
-            value="['considered', 0]"
+            :value="['considered', -1]"
           >
           To the bottom
         </label>
@@ -183,7 +183,7 @@ export default {
       this.$emit('closeConsiderPostDialog')
     },
 
-    toggle (newspaper, ev) {
+    async toggle (newspaper, ev) {
       const backlogName = this.postBacklog[newspaper.fullName]
       if (backlogName) {
         this.removeFromBacklog({
@@ -192,11 +192,7 @@ export default {
           post: this.post
         })
       } else {
-        // this.addToBacklog({
-        //   newspaper,
-        //   target: 'considered',
-        //   post: this.post
-        // })
+        await this.loadNewspaperBacklog(newspaper.fullName)
         this.step = 'step-2'
         this.selectedNewspaper = newspaper
       }
@@ -207,9 +203,7 @@ export default {
     save () {
       const newspaper = this.selectedNewspaper
       const target = this.position[0]
-      const index = this.position[1] + 1
-
-      console.log(target + 'considered')
+      const index = this.position[1]
 
       this.addToBacklog({
         newspaper,
@@ -217,11 +211,14 @@ export default {
         post: this.post,
         index
       })
+
+      this.closeDialog()
     },
 
     ...mapActions({
       addToBacklog: 'backlog/add',
       removeFromBacklog: 'backlog/remove',
+      loadNewspaperBacklog: 'backlog/loadNewspaperBacklog',
     })
   }
 }
