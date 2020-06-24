@@ -194,7 +194,8 @@ class NewspaperFeed(Feed):
             else:
                 if post.title:
                     return post.title
-
+                    
+        item.boxes.pop(0)
         for box in item.boxes:
             for col in box.columns:
                 for post in col.posts:
