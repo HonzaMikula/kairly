@@ -314,7 +314,6 @@ export default {
       metaTitle = `${title} #${this.issue.number}: ${firstPostTitle} – Kairly`
       metaDescription = posts
         .map(post => shortTitle(post))
-        .slice(1)
         .filter(title => title && title.length > 0)
         .join(' • ')
         .slice(0, 280)
