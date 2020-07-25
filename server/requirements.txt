@@ -1,4 +1,4 @@
-#dataclasses==0.7
+dataclasses==0.7
 Django==3.0.2
 django-autocomplete-light==3.5.0
 django-cors-headers==3.2.1
