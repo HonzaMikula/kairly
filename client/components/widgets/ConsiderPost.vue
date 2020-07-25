@@ -1,14 +1,21 @@
 <template>
   <div v-on-clickaway="closeDialog" class="consider-post-view">
     <header>
-      <h2>{{ $t('For which newspaper?') }}</h2>
-      <strong
-        v-b-tooltip
-        class="consider-post--price"
-        :title="$t('Article cost')"
-      >
-        <MoneyFormat :value="post.price" currency="Kč" />
-      </strong>
+      <template v-if="step === 'step-1'">
+        <h2>{{ $t('For which newspaper?') }}</h2>
+        <strong
+          v-b-tooltip
+          class="consider-post--price"
+          :title="$t('Article cost')"
+        >
+          <MoneyFormat :value="post.price" currency="Kč" />
+        </strong>
+      </template>
+
+      <template v-else-if="step === 'step-2'">
+        <button class="back" @click="goBack()" />
+        <h2>{{ selectedNewspaper.title }}</h2>
+      </template>
     </header>
 
     <section v-if="step === 'step-1'" class="consider-post--step-1">
@@ -21,8 +28,8 @@
 
     <section v-else-if="step === 'step-2'" class="consider-post--step-2">
       <div class="consider-post--step-2--content">
-        <h3>Upcoming issue</h3>
-        <p>Will be released {{ nextRelease }}</p>
+        <h3>{{ $t('Upcoming issue') }}</h3>
+        <p>{{ $t('Will be released') }} {{ nextRelease }}.</p>
 
         <label>
           <input
@@ -30,7 +37,8 @@
             name="position"
             type="radio"
             :value="['upcoming', 0]"
-          > To the top
+          >
+          {{ $t('To the top') }}
         </label>
 
         <label v-for="section in upcomingIssueSections" :key="section.index">
@@ -50,10 +58,10 @@
             type="radio"
             :value="['upcoming', -1]"
           >
-          To the bottom
+          {{ $t('To the bottom') }}
         </label>
 
-        <h3>Backlog</h3>
+        <h3>{{ $t('Considered posts') }}</h3>
         <label>
           <input
             v-model="position"
@@ -61,7 +69,7 @@
             type="radio"
             :value="['considered', 0]"
           >
-          To the top
+          {{ $t('To the top') }}
         </label>
 
         <label v-for="section in backlogSections" :key="section.index">
@@ -81,13 +89,13 @@
             type="radio"
             :value="['considered', -1]"
           >
-          To the bottom
+          {{ $t('To the bottom') }}
         </label>
       </div>
 
       <div class="consider-post--step-2--footer">
         <div>
-          <button @click="save()">Save</button>
+          <button @click="save()">{{ $t('Save') }}</button>
         </div>
 
         <!-- <div>
@@ -96,9 +104,9 @@
       </div>
     </section>
 
-    <section v-else-if="step === 'add-comment'" class="consider-post--add-comment">
+    <!-- <section v-else-if="step === 'add-comment'" class="consider-post--add-comment">
       add comments
-    </section>
+    </section> -->
   </div>
 </template>
 
@@ -183,6 +191,11 @@ export default {
       this.$emit('closeConsiderPostDialog')
     },
 
+    goBack () {
+      this.step = 'step-1'
+      this.selectedNewspaper = null
+    },
+
     async toggle (newspaper, ev) {
       const backlogName = this.postBacklog[newspaper.fullName]
       if (backlogName) {
@@ -226,6 +239,7 @@ export default {
 
 <style lang="sass">
 @import './styles/components/context-menu'
+@import './styles/components/buttons'
 
 .consider-post-view
   +context-menu
@@ -252,6 +266,27 @@ export default {
     h2
       margin-right: auto
 
+    //- back button
+    .back
+      margin-left: (-$baseline/2)
+      // margin-right: $baseline/4
+      padding: 0 $baseline/2
+
+      border: 0
+      background: transparent
+
+      cursor: pointer
+
+      &:hover,
+      &:focus
+        background: lighten($c-base, 15%)
+
+      &::before
+        +fa-icon()
+        @extend .fas
+
+        content: fa-content($fa-var-arrow-left)
+
   //- list
   li
     a::after
@@ -276,6 +311,9 @@ export default {
 
   h3 + p
     font-size: $fs--1
+    line-height: 1.42
+
+    color: #555
 
   label
     display: block
@@ -284,21 +322,8 @@ export default {
 .consider-post--step-2--footer
 
   button
+    +button(primary, small)
+
     width: 100%
-
-// TODO
-// Step 2
-// - make the save work for the top and the bottom
-
-// Other
-// - deal when multiple newspapers are considered
-// - mobile version -> modal
-// - maybe use vue bootstrap popover
-// - translations
-
-// Step - Add comment
-// - step add comment - style it up
-// - save comment
-// - save only when you have one newspaper
 
 </style>

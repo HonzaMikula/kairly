@@ -277,7 +277,7 @@ export default {
         &.is-active
           background: $c-base
 
-    button
+    > button
       +button(primary, small)
       margin-left: $baseline / 4
 
