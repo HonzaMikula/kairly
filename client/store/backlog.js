@@ -119,15 +119,16 @@ export const actions = {
     }
   },
 
-  async add ({ state, commit, dispatch }, { newspaper, post, target }) {
+  async add ({ state, commit, dispatch }, { newspaper, post, target, index }) {
     if (!state.newspaperBacklog[newspaper.fullName]) {
       await dispatch('loadNewspaperBacklog', newspaper.fullName)
     }
+
     commit('splice', {
       newspaper,
       target,
       items: [{ id: post.id, type: 'post' }],
-      index: 0,
+      index,
       deleteCount: 0
     })
     dispatch('save', { newspaper })
@@ -210,11 +211,12 @@ export const actions = {
     }
   },
 
-  pasteSelection ({ commit, dispatch, getters }, { newspaper, target, index }) {
+  pasteSelection ({ commit, getters }, { newspaper, target, index }) {
     const sources = getters.getSelectedBoxes(newspaper)
     let prevSource = null
     let selectedBefore = 0
     let removedBeforeTarget = 0
+
     sources.forEach(item => {
       if (prevSource !== item.source) {
         prevSource = item.source
@@ -522,6 +524,10 @@ export const mutations = {
     const { fullName } = newspaper
     const newspaperBacklog = state.newspaperBacklog[fullName]
     const { layout } = newspaperBacklog[target]
+
+    if (index < 0) {
+      index = layout.length + 1 + index
+    }
 
     const removedItems = layout.splice(index, deleteCount, ...items)
     removedItems.forEach(item => {
