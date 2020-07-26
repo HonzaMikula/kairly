@@ -1,5 +1,5 @@
 <template>
-  <section class="post-wrapper" :class="{'selected': selected}">
+  <section class="post-wrapper" :class="{'is-selected': selected}">
     <component
       :is="postType"
       class="post-content"
@@ -100,7 +100,7 @@ export default {
       top: 30%
       width: calc(100vw - (#{$baseline} * 0.5))
 
-.post-wrapper.selected
+.post-wrapper.is-selected
   > article
-    box-shadow: 2px 2px 4px #708090, -2px -2px 4px #fff
+    box-shadow: 0 0 6px $c-base
 </style>
