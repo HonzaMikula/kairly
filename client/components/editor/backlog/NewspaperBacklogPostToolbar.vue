@@ -5,47 +5,47 @@
   >
     <nav>
       <button
+        v-b-tooltip
         class="paste"
         :disabled="!selection.length"
+        :title="$t('Paste here')"
         @click.prevent="pasteSelection"
-      >
-        {{ $t('Paste here') }}
-      </button>
+      />
 
       <button
+        v-b-tooltip
         class="comment"
+        :title="$t('Comment')"
         @click.prevent="addComment"
-      >
-        {{ $t('Comment') }}
-      </button>
+      />
 
       <button
+        v-b-tooltip
         class="heading"
+        :title="$t('Heading')"
         @click.prevent="addHeader"
-      >
-        {{ $t('Heading') }}
-      </button>
+      />
 
       <button
+        v-b-tooltip
         class="divider"
+        :title="$t('Divider')"
         @click.prevent="addHR"
-      >
-        {{ $t('Divider') }}
-      </button>
+      />
 
       <button
+        v-b-tooltip
         class="external-article"
+        :title="$t('External post')"
         @click.prevent="addExternalLink"
-      >
-        {{ $t('External post') }}
-      </button>
+      />
 
       <button
         :id="`layout-${backlog.name}-${index}`"
+        v-b-tooltip
         class="layout"
-      >
-        {{ $t('Special layout') }}
-      </button>
+        :title="$t('Special layout')"
+      />
 
       <b-popover
         :target="`layout-${backlog.name}-${index}`"
@@ -59,12 +59,17 @@
             <p>{{ $t('One main article, one smaller column') }}</p>
           </li>
 
-          <li tabindex="1" @click="addBox('cols-1-1', ['', ''])">
+          <li tabindex="1" @click="addBox('cols-1-2', ['', 'editorial'])">
+            <h6>{{ $t('Layout 2-1') }}</h6>
+            <p>{{ $t('One smaller column, one main article') }}</p>
+          </li>
+
+          <li tabindex="2" @click="addBox('cols-1-1', ['', ''])">
             <h6>{{ $t('Layout 1-1') }}</h6>
             <p>{{ $t('Two equal sections') }}</p>
           </li>
 
-          <li tabindex="2" @click="addBox('cols-1-1-1', ['', '', ''])">
+          <li tabindex="3" @click="addBox('cols-1-1-1', ['', '', ''])">
             <h6>{{ $t('Layout 1-1-1') }}</h6>
             <p>{{ $t('Three equal sections') }}</p>
           </li>
@@ -246,30 +251,36 @@ export default {
     opacity: 0
 
   button
-    background: transparent
+    margin: 0 $baseline/2
+    padding: 0
     border: 0
-    border-radius: 3px
-    padding: $baseline / 4
-    margin: 0 $baseline/4
-    width: $baseline * 4
-
-    background: #f5f5f5
-    box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
-    color: #555
+    background: transparent
 
     cursor: pointer
 
-    &:hover,
-    &:focus
+    @media (max-width: $mobile)
+      margin: 0 $baseline/4 $baseline/4 $baseline/4
+
+    &:hover::before,
+    &:focus::before
       color: #000
-      background: #eee
+      background: #ddd
 
     &::before
       +fa-icon()
       @extend .fas
 
       display: block
-      margin-bottom: $baseline / 4
+      border-radius: 100%
+      border: 1px solid #ddd
+      height: $baseline * 1.5
+      width: $baseline * 1.5
+      line-height: $baseline * 1.5
+      text-align: center
+
+      background: #eee
+      box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
+      color: #000
 
     &:disabled
       opacity: 0.5

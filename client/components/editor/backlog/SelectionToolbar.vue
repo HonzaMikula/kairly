@@ -83,6 +83,11 @@
             <p>{{ $t('One main article, one smaller column') }}</p>
           </li>
 
+          <li v-show="selection.length === 2" tabindex="0" @click="makeBox('cols-1-2', ['', 'editorial'])">
+            <h6>{{ $t('Layout 1-2') }}</h6>
+            <p>{{ $t('One smaller column, one main article') }}</p>
+          </li>
+
           <li v-show="selection.length === 2" tabindex="1" @click="makeBox('cols-1-1', ['', ''])">
             <h6>{{ $t('Layout 1-1') }}</h6>
             <p>{{ $t('Two equal sections') }}</p>
@@ -328,9 +333,14 @@ export default {
   line-height: $baseline * 1.5
   border-radius: $baseline / 4
 
-  background: #eee
-  border: 1px solid #aaa
-  box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
+  background: rgba(255, 255, 255, 0.7)
+  backdrop-filter: blur(10px)
+
+  @supports not (backdrop-filter: blur(10px))
+    background: #fff
+
+  border: 1px solid rgba(170, 170, 170, 0.5)
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
   color: #333
 
   @media (max-width: $mobile)
@@ -341,7 +351,8 @@ export default {
 
     border: 0
     border-radius: 0
-    border: 1px solid #aaa
+    border-top: 1px solid rgba(200, 200, 200, 0.5)
+    box-shadow: none
 
     transform: none
 
@@ -350,7 +361,7 @@ export default {
   display: flex
   align-items: center
   padding: 0 $baseline / 2
-  border-right: 1px solid #aaa
+  border-right: 1px solid rgba(200, 200, 200, 0.5)
 
   strong
     margin-right: $baseline / 4

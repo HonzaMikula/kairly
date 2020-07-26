@@ -5,34 +5,38 @@
     :selected="selected"
     :type-override="typeOverride"
     @close-editor="closeEditor"
+    @click.native="selectBox()"
   >
     <template #empty-box="{ columnIndex }">
       <EmptyColumnPlaceholder>
         <button
+          v-b-tooltip
           class="add-posts"
           :class="{'is-active': isPostSelectionOpened}"
+          :title="$t('Posts')"
           @click="openPostSelection(columnIndex)"
-        >
-          {{ $t('Posts') }}
-        </button>
+        />
+
         <button
+          v-b-tooltip
           class="add-comment"
+          :title="$t('Comment')"
           @click="writeComment(columnIndex)"
-        >
-          {{ $t('Comment') }}
-        </button>
+        />
+
         <button
+          v-b-tooltip
           class="add-external"
+          :title="$t('External post')"
           @click="addExternalLink(columnIndex)"
-        >
-          {{ $t('External post') }}
-        </button>
+        />
+
         <button
+          v-b-tooltip
           class="toggle-editorial"
+          :title="$t('Toggle editorial')"
           @click="toggleEditorialStyle(columnIndex)"
-        >
-          {{ $t('Toggle editorial') }}
-        </button>
+        />
       </EmptyColumnPlaceholder>
     </template>
 
@@ -40,172 +44,145 @@
       <span v-if="post.type === 'newspaper'" class="price">{{ post.price }} Kč</span>
       <template v-else>&nbsp;</template>
 
-      <button-icon
+      <button
         v-if="post.draft"
+        v-b-tooltip
         class="edit"
-        role="button"
         :title="$t('Edit comment')"
         @click="editComment(post.id)"
       />
 
-      <template v-if="column">
-        <button-icon
-          v-if="postIndex > 0"
-          v-b-tooltip
-          class="up"
-          tabindex="0"
-          role="button"
-          :title="$t('Move tweet up')"
-          @click="moveUpInColumn(columnIndex, postIndex)"
-        />
-        <button-icon
-          v-if="postIndex < column.posts.length - 1"
-          v-b-tooltip
-          class="down"
-          tabindex="0"
-          role="button"
-          :title="$t('Move tweet down')"
-          @click="moveDownInColumn(columnIndex, postIndex)"
-        />
-        <button-icon
-          v-b-tooltip
-          class="level-up"
-          tabindex="0"
-          role="button"
-          :title="$t('Remove from column')"
-          @click="removeFromColumn({ post, source, index: index + 1 })"
-        />
-      </template>
+      <button
+        :id="`post-options-${post.id}`"
+        v-b-tooltip
+        class="post-options"
+        :title="$t('Post options')"
+      />
+
+      <b-popover
+        :target="`post-options-${post.id}`"
+        placement="bottomleft"
+        triggers="click hover blur"
+        @click.stop
+      >
+        <ul>
+          <template v-if="!columnIcons.length">
+            <li v-if="canMoveUp" class="icon-up" tabindex="0" @click="moveUp()">
+              <h6>{{ $t('Move up') }}</h6>
+            </li>
+
+            <li v-if="canMoveDown" class="icon-down" tabindex="0" @click="moveDown()">
+              <h6>{{ $t('Move down') }}</h6>
+            </li>
+
+            <template v-if="post.type !== 'box' && post.type !== 'header'">
+              <li class="icon-remove" tabindex="0" @click="removePost()">
+                <h6>{{ $t('Remove') }}</h6>
+              </li>
+
+              <li class="multiple-options">
+                <h6>{{ $t('Change layout') }}</h6>
+                <div>
+                  <button @click="makeBox('cols-1-2', ['editorial', ''])">1-2</button>
+                  <button @click="makeBox('cols-2-1', ['', 'editorial'])">2-1</button>
+                  <button @click="makeBox('cols-1-1', ['', ''])">1-1</button>
+                  <button @click="makeBox('cols-1-1-1', ['', '', ''])">1-1-1</button>
+                </div>
+              </li>
+            </template>
+          </template>
+
+          <template v-if="columnIcons.length">
+            <li
+              v-if="postIndex > 0"
+              class="icon-up"
+              tabindex="0"
+              @click="moveUpInColumn(columnIndex, postIndex)"
+            >
+              <h6>{{ $t('Move up') }}</h6>
+            </li>
+
+            <li
+              v-if="postIndex < column.posts.length - 1"
+              class="icon-down"
+              tabindex="0"
+              @click="moveDownInColumn(columnIndex, postIndex)"
+            >
+              <h6>{{ $t('Move down') }}</h6>
+            </li>
+
+            <li
+              class="icon-cancel"
+              @click="removeFromColumn({ post, source, index: index + 1 })"
+            >
+              <h6>{{ $t('Remove from column') }}</h6>
+            </li>
+          </template>
+        </ul>
+      </b-popover>
     </template>
 
     <template #aside>
-      <div class="newspaper-backlog-controls">
-        <div :class="{'newspaper-backlog-controls--arrows': true, 'is-selected': selected}">
-          <input v-model="selected" type="checkbox">
+      <div v-if="post.type === 'box' || post.type === 'header'" class="newspaper-backlog-controls">
+        <template>
+          <button
+            :id="`block-controls-${post.id}`"
+            v-b-tooltip
+            class="block-controls"
+            :title="$t('Options')"
+            @click.stop
+          />
 
-          <template v-if="selected">
-            <button
-              :id="`backlog-controls-up-${post.id}`"
-              class="up"
-              :disabled="!canMoveUp"
-              @click.stop="moveUp()"
-            />
+          <b-popover
+            :target="`block-controls-${post.id}`"
+            placement="bottomleft"
+            triggers="click hover blur"
+            @click.stop
+          >
+            <ul>
+              <li v-if="canMoveUp" class="icon-up" tabindex="0" @click="moveUp()">
+                <h6>{{ $t('Move up') }}</h6>
+              </li>
 
-            <button
-              :id="`backlog-controls-down-${post.id}`"
-              class="down"
-              :disabled="!canMoveDown"
-              @click.stop="moveDown()"
-            />
-          </template>
-        </div>
+              <li v-if="canMoveDown" class="icon-down" tabindex="0" @click="moveDown()">
+                <h6>{{ $t('Move down') }}</h6>
+              </li>
 
-        <div class="newspaper-backlog-controls--options">
-          <template v-if="post.type !== 'box' && post.type !== 'header'">
-            <button
-              :id="`change-layout-${post.id}`"
-              v-b-tooltip
-              class="change-layout"
-              :title="$t('Change layout')"
-              @click.stop
-            />
-
-            <b-popover
-              :target="`change-layout-${post.id}`"
-              placement="bottomleft"
-              triggers="click blur"
-              @click.stop
-            >
-              <ul>
-                <li tabindex="0" @click="makeBox('cols-2-1', ['', 'editorial'])">
-                  <h6>{{ $t('Layout 2-1') }}</h6>
-                  <p>{{ $t('One main article, one smaller column') }}</p>
-                </li>
-
-                <li tabindex="1" @click="makeBox('cols-1-1', ['', ''])">
-                  <h6>{{ $t('Layout 1-1') }}</h6>
-                  <p>{{ $t('Two equal sections') }}</p>
-                </li>
-
-                <li tabindex="2" @click="makeBox('cols-1-1-1', ['', '', ''])">
-                  <h6>{{ $t('Layout 1-1-1') }}</h6>
-                  <p>{{ $t('Three equal sections') }}</p>
-                </li>
-              </ul>
-            </b-popover>
-          </template>
-          <template v-else-if="post.type === 'box'">
-            <div class="newspaper-backlog-controls--options--columns">
-              <template v-for="(icon, colIndex) in columnIcons">
-                <button
-                  :id="`backlog-controls-column-options-${post.id}-${colIndex}`"
-                  :key="`btn-${colIndex}`"
-                  v-b-tooltip
-                  :class="icon"
-                  :title="$t('Column') + ' ' + (colIndex + 1)"
-                  @click.stop
-                />
-
-                <b-popover
-                  :key="`btn-popover-${colIndex}`"
-                  :target="`backlog-controls-column-options-${post.id}-${colIndex}`"
-                  placement="bottomleft"
-                  triggers="click blur"
-                  @click.stop
-                >
-                  <ul>
-                    <li tabindex="0" @click="openPostSelection(colIndex)">
-                      <h6>{{ $t('Select posts') }}</h6>
-                      <p>{{ $t('Move posts to the column') }}</p>
-                    </li>
-
-                    <li tabindex="1" @click="writeComment(colIndex)">
-                      <h6>{{ $t('Add comment') }}</h6>
-                      <p>{{ $t('Write short comment to the topic') }}</p>
-                    </li>
-
-                    <li tabindex="1" @click="addExternalLink(colIndex)">
-                      <h6>{{ $t('Add external post') }}</h6>
-                      <p>{{ $t('Add article directly') }}</p>
-                    </li>
-
-                    <li tabindex="2" @click="toggleEditorialStyle(colIndex)">
-                      <h6>{{ $t('Toggle editorial style') }}</h6>
-                      <p>{{ $t('Change column background') }}</p>
-                    </li>
-                  </ul>
-                </b-popover>
-              </template>
-            </div>
-
-            <button
-              :id="`backlog-controls-layout-options-${post.id}`"
-              v-b-tooltip
-              class="menu"
-              :title="$t('Options')"
-              @click.stop
-            />
-
-            <b-popover
-              :target="`backlog-controls-layout-options-${post.id}`"
-              placement="bottomleft"
-              triggers="click blur"
-              @click.stop
-            >
-              <ul>
-                <li tabindex="0" @click="reverseColumns">
+              <template v-if="post.type === 'box'">
+                <li class="icon-swap" tabindex="0" @click="reverseColumns">
                   <h6>{{ $t('Swap columns') }}</h6>
-                  <p>{{ $t('Change positions of columns') }}</p>
                 </li>
 
-                <li tabindex="1" @click="splitColumns">
-                  <h6>{{ $t('Split columns') }}</h6>
-                  <p>{{ $t('Posts will be bellow each other') }}</p>
+                <li class="icon-cancel" tabindex="0" @click="splitColumns">
+                  <h6>{{ $t('Cancel special layout') }}</h6>
                 </li>
-              </ul>
-            </b-popover>
-          </template>
-        </div>
+
+                <li class="multiple-options">
+                  <h6>{{ $t('Toggle editorial') }}</h6>
+                  <div>
+                    <button
+                      v-for="(column, colIndex) in columnIcons"
+                      :key="`btn-${colIndex}`"
+                      @click="toggleEditorialStyle(colIndex)"
+                    >
+                      {{ $t('Column') }} {{ colIndex + 1 }}
+                    </button>
+                  </div>
+                </li>
+              </template>
+
+              <template v-else-if="post.type === 'header'">
+                <li class="icon-edit" tabindex="0" @click="renameHeading()">
+                  <h6>{{ $t('Rename') }}</h6>
+                </li>
+
+                <li class="icon-remove" tabindex="0" @click="removePost()">
+                  <h6>{{ $t('Remove') }}</h6>
+                </li>
+              </template>
+            </ul>
+          </b-popover>
+        </template>
       </div>
 
       <portal to="modal">
@@ -317,6 +294,28 @@ export default {
   },
 
   methods: {
+    selectBox () {
+      this.selected = !this.selected
+    },
+
+    renameHeading () {
+      const title = window.prompt('Title')
+      if (title === null) {
+        return
+      }
+
+      this.$store.commit('backlog/setBacklogItem', {
+        newspaper: this.newspaper,
+        target: this.source,
+        index: this.index,
+        item: {
+          id: this.post.id,
+          title,
+          type: 'header'
+        }
+      })
+    },
+
     addToColumn ({ post, source, columnIndex = null }) {
       const columns = [...this.post.columns]
       if (columnIndex === null) {
@@ -572,95 +571,10 @@ export default {
 
 //- Backlog controls
 .newspaper-backlog-controls
-  grid-row: 1 / span 1
-  grid-column: 1 / span 3
-
-  @media (max-width: $mobile)
-    z-index: 5
-
-.newspaper-backlog-controls--arrows
-  position: absolute
-  left: (-$baseline * 1.5)
-  top: 0
-  z-index: 100
-
-  display: grid
-  grid-template-columns: repeat(3, auto)
-  grid-row-gap: $baseline / 4
-  border-radius: $baseline / 4
-
-  color: #333
-
-  @media (max-width: $mobile)
-    position: sticky
-    left: $baseline/4
-    top: $baseline * 2
-
-    display: table
-
-    .up,
-    .down
-      display: none
-
-  &.is-selected
-    background: #eee
-    border: 1px solid #aaa
-    box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
-
-  button
-    height: $baseline * 1.25
-    padding: 0 $baseline/2
-
-    background: transparent
-    border: 0
-
-    cursor: pointer
-    font-size: $fs-0
-    white-space: nowrap
-    text-align: center
-
-    &:hover,
-    &:focus
-      background: #ddd
-
-  //- button up
-  .up
-    &::before
-      +fa-icon()
-      @extend .fas
-
-      content: fa-content($fa-var-arrow-up)
-
-  //- button down
-  .down
-    &::before
-      +fa-icon()
-      @extend .fas
-
-      content: fa-content($fa-var-arrow-down)
-
-.box-header + div > .newspaper-backlog-controls--arrows
-  grid-template-rows: 1fr
-  grid-column-gap: $baseline / 4
-  grid-template-columns: auto auto auto
-
-  @media (max-width: $mobile)
-    grid-template-rows: 1fr 1fr
-    grid-column-gap: $baseline / 4
-    grid-template-columns: $baseline*1.25 1fr $baseline*1.25
-
-.newspaper-backlog-controls--arrows--checkbox
-  input
-    transform: scale(1.6)
-
-.newspaper-backlog-controls--options
   position: absolute
   right: (-$baseline * 1.5)
   top: 0
 
-  display: grid
-  grid-template-rows: auto auto
-  grid-row-gap: $baseline / 4
   width: $baseline * 1.25
 
   @media (max-width: $mobile)
@@ -669,41 +583,12 @@ export default {
     top: $baseline * 2
 
   //- button add editorial
-  .change-layout
-    +button-icon($fa-var-columns)
+  .block-controls
+    +button-icon($fa-var-ellipsis-v)
 
   //- button add comment
   .edit-comment
     +button-icon($fa-var-pencil-alt)
-
-  //- button menu
-  .menu-left-col
-    +button-icon($fa-var-align-left)
-
-  .menu-middle-col
-    +button-icon($fa-var-align-center)
-
-  .menu-right-col
-    +button-icon($fa-var-align-right)
-
-  //- options menu
-  .menu
-    +button-icon($fa-var-ellipsis-v)
-
-//- icons for columns
-.newspaper-backlog-controls--options--columns
-  white-space: nowrap
-
-  @media (max-width: $mobile)
-    display: grid
-    grid-template-rows: auto
-    grid-row-gap: $baseline / 4
-
-  > button
-    margin-right: $baseline / 8
-
-    &:last-of-type
-      margin-right: 0
 
 .sortable-drag
   .newspaper-backlog-controls

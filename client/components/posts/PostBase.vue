@@ -43,7 +43,6 @@
       </slot>
 
       <section>
-        <slot name="global-controls" />
         <slot name="page-controls">
           <span>
             <button
@@ -66,6 +65,7 @@
             <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
           </span>
         </slot>
+        <slot name="global-controls" />
       </section>
     </header>
 
@@ -249,6 +249,9 @@ export default {
       &.edit
         +button-icon($fa-var-pencil-alt, icon, solid, small)
 
+      &.post-options
+        +button-icon($fa-var-ellipsis-v, icon, solid, small)
+
       &.up
         +button-icon($fa-var-arrow-up, icon, solid, small)
 
@@ -305,31 +308,4 @@ export default {
       &::before
         font-size: $fs--1
         line-height: $baseline
-
-//- Popover TODO: maybe move it somewhere else
-.popover-body
-  padding: 0
-
-  font-family: $ff-sans
-  font-size: $fs-0
-
-  li
-    padding: $baseline/4 $baseline/2
-
-    border-bottom: 1px solid #eee
-
-    cursor: pointer
-
-    &:last-of-type
-      border-bottom: 0
-
-    &:hover,
-    &:focus
-      background: #eee
-
-    h6
-      font-weight: 600
-
-    p
-      font-size: $fs--1
 </style>

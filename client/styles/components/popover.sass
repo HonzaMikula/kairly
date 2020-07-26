@@ -1,0 +1,104 @@
+//- POPOVER -//
+
+.popover
+  background: rgba(255, 255, 255, 0.7)
+  backdrop-filter: blur(10px)
+
+  @supports not (backdrop-filter: blur(10px))
+    background: #fff
+    
+
+.popover-body
+  padding: 0
+  min-width: 200px
+
+  font-family: $ff-sans
+  font-size: $fs-0
+
+  li
+    padding: $baseline/4 $baseline/2
+
+    border-bottom: 1px solid rgba(200, 200, 200, 0.5)
+
+    cursor: pointer
+
+    &:last-of-type
+      border-bottom: 0
+
+    &:hover,
+    &:focus
+      background: rgba(220, 220, 220, 0.5)
+
+    h6
+      font-weight: 600
+      white-space: nowrap
+
+    p
+      font-size: $fs--1
+
+    //- With Icons
+    &[class^="icon-"]
+      &::before
+        +fa-icon()
+        @extend .fas
+
+        display: block
+        float: left
+        height: $baseline
+        margin-left: (-$baseline/2)
+        width: $baseline*1.5
+
+        line-height: $baseline
+        text-align: center
+
+    &.icon-up::before
+      content: fa-content($fa-var-arrow-up)
+
+    &.icon-down::before
+      content: fa-content($fa-var-arrow-down)
+
+    &.icon-remove::before
+      content: fa-content($fa-var-times)
+
+    &.icon-swap::before
+      content: fa-content($fa-var-exchange-alt)
+
+    &.icon-cancel::before
+      content: fa-content($fa-var-ban)
+
+    &.icon-edit::before
+      content: fa-content($fa-var-edit)
+
+    //- Multiple Options
+    &.multiple-options
+      &:hover,
+      &:focus
+        background: transparent
+
+      h6
+        font-size: $fs--1
+        font-weight: 400
+        text-align: center
+
+      > div
+        display: flex
+        margin: 0 (-$baseline/2)
+
+        button
+          flex: 1
+          height: $baseline * 1.5
+
+          background: transparent
+          border: 0
+
+          font-size: $fs-0
+          font-family: $ff-sans
+          font-weight: 600
+          line-height: $baseline * 1.5
+          white-space: nowrap
+
+          cursor: pointer
+
+          &:hover,
+          &:focus
+            background: rgba(220, 220, 220, 0.5)

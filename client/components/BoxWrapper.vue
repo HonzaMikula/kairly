@@ -1,6 +1,10 @@
 <template>
-  <div :class="`box-wrapper ${post.css}${selected ? ' selected' : ''}`">
-    <div v-for="(col, colIndex) in post.columns" :key="colIndex" :class="`box-column ${col.css}`">
+  <div :class="`box-wrapper ${post.css}${selected ? ' is-selected' : ''}`">
+    <div
+      v-for="(col, colIndex) in post.columns"
+      :key="colIndex"
+      :class="[`box-column ${col.css}`, {'is-empty': !col.posts.length}]"
+    >
       <template v-if="col.posts.length > 0 && col.posts[0] != null">
         <PostWrapper
           v-for="(post, postIndex) in col.posts"
@@ -22,7 +26,6 @@
       </template>
 
       <slot
-        v-else
         name="empty-box"
         :column="col"
         :columnIndex="colIndex"
@@ -60,8 +63,8 @@ export default {
   border: 1px solid #eee
   box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 
-  &.selected
-    box-shadow: 2px 2px 6px #708090, -2px -2px 4px #fff
+  &.is-selected
+    box-shadow: 0 0 6px $c-base
 
   //- in backlog the margin is done by the toolbar
   .newspaper-backlog-post-toolbar-view + &

@@ -1,6 +1,5 @@
 <template>
   <div class="empty-column-placeholder-view">
-    <h2>{{ $t('Available actions') }}</h2>
     <nav>
       <slot />
     </nav>
@@ -18,51 +17,44 @@ export default {
 
 .empty-column-placeholder-view
 
-  h2
-    padding: $baseline 0
-
-    font-weight: 600
-    text-align: center
+  .is-empty &
+    padding-top: $baseline
 
   nav
     display: flex
     align-items: stretch
     flex-wrap: wrap
     justify-content: center
-    padding: 0 $baseline $baseline $baseline
+    padding: 0 $baseline/2 $baseline/2 $baseline/2
 
   button
-    background: transparent
+    margin: 0 $baseline/2
+    padding: 0
     border: 0
-    border-radius: 3px
-    padding: $baseline / 4
-    margin: 0 $baseline/4 $baseline/2 $baseline/4
-    width: $baseline * 4
-
-    background: #f5f5f5
-    box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
-    color: #555
+    background: transparent
 
     cursor: pointer
 
-    @media (max-width: $mobile)
-      width: $baseline * 4
-
-    &:hover,
-    &:focus
+    &:hover::before,
+    &:focus::before
       color: #000
-      background: #eee
-
-    &.is-active
-      background:#fff
-      color: #000
+      background: #ddd
 
     &::before
       +fa-icon()
       @extend .fas
 
       display: block
-      margin-bottom: $baseline / 4
+      border-radius: 100%
+      border: 1px solid #ddd
+      height: $baseline * 1.5
+      width: $baseline * 1.5
+      line-height: $baseline * 1.5
+      text-align: center
+
+      background: #eee
+      box-shadow: 2px 2px 4px #ddd, -2px -2px 4px #fff
+      color: #000
 
     &.add-posts::before
       content: fa-content($fa-var-newspaper)
