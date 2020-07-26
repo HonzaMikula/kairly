@@ -22,7 +22,7 @@ export default {
     border-bottom: 1px solid #ddd
     margin: $baseline/2 0 $baseline 0
 
-  .is-selected &
+  .is-selected & h2
     background: lighten($c-base, 40%)
     box-shadow: 0 0 6px $c-base
 
