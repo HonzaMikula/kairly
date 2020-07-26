@@ -1,6 +1,6 @@
 <template>
   <AppLayout :name="$t('Manage newspapers')">
-    <div class="newspaper-editor-view">
+    <div class="newspaper-editor-view" @click="clearSelection()">
       <div
         v-if="newspapers.length === 0"
         class="newspaper-editor--empty"
@@ -126,7 +126,6 @@
 import moment from 'moment'
 
 import { mapActions, mapState } from 'vuex'
-import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import AppLayout from '@/components/layout/AppLayout'
 import NewspaperBacklog from '@/components/editor/backlog/NewspaperBacklog'
@@ -138,10 +137,6 @@ export default {
   components: {
     AppLayout,
     NewspaperBacklog
-  },
-
-  directives: {
-    onClickaway
   },
 
   mixins: [ErrorHandler],
@@ -202,6 +197,10 @@ export default {
   methods: {
     timeFrom (dt) {
       return moment(dt).from()
+    },
+
+    clearSelection () {
+      this.$store.commit('backlog/cleanSelection')
     },
 
     publishedPostCount (newspaper) {

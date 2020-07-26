@@ -94,12 +94,6 @@ export default {
   .editorial-post-editor--content input
     background: #fff
 
-  .newspaper-backlog-controls
-    @media (max-width: $mobile)
-      position: absolute
-      top: 30%
-      width: calc(100vw - (#{$baseline} * 0.5))
-
 .post-wrapper.is-selected
   > article
     box-shadow: 0 0 6px $c-base

@@ -5,7 +5,7 @@
     :selected="selected"
     :type-override="typeOverride"
     @close-editor="closeEditor"
-    @click.native="selectBox()"
+    @click.native.stop="selectBox()"
   >
     <template #empty-box="{ columnIndex }">
       <EmptyColumnPlaceholder>
@@ -578,9 +578,7 @@ export default {
   width: $baseline * 1.25
 
   @media (max-width: $mobile)
-    position: sticky
-    left: calc(100vw - (#{$baseline} * 2))
-    top: $baseline * 2
+    display: none
 
   //- button add editorial
   .block-controls
