@@ -152,7 +152,7 @@ export default {
     grid-area: subscription-explore
 
     @media (max-width: 800px)
-      display: none
+      padding: $baseline
 
     //- add credits
     button

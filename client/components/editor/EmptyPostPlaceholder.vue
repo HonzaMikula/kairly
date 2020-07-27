@@ -14,6 +14,11 @@
           <li>{{ $t('Set a price and publish the post.') }}</li>
           <li>{{ $t('Share it on social media.') }}</li>
         </ul>
+
+        <div class="empty-post-placeholder--buttons">
+          <nuxt-link to="/posts/create/article">{{ $t('Write an article') }}</nuxt-link>
+          <nuxt-link to="/posts/create/tweet">{{ $t('Write a tweet') }}</nuxt-link>
+        </div>
       </section>
 
       <section>
@@ -27,11 +32,6 @@
           <li>{{ $t('Get fair share from newsletters\' subscription revenues where your post appears.') }}</li>
         </ul>
       </section>
-    </div>
-
-    <div class="empty-post-placeholder--buttons">
-      <nuxt-link to="/posts/create/article">{{ $t('Write an article') }}</nuxt-link>
-      <nuxt-link to="/posts/create/tweet">{{ $t('Write a tweet') }}</nuxt-link>
     </div>
   </div>
 </template>
@@ -120,15 +120,11 @@ export default {
 
 .empty-post-placeholder--buttons
   display: flex
-  justify-content: center
+  margin-left: $baseline / 2
+  margin-top: $baseline / 2
 
   a
-    +button(primary, medium)
+    +button(primary, small)
+    margin: 0 $baseline/4
 
-    margin: 0 $baseline
-
-    @media (max-width: $mobile)
-      margin: 0 $baseline/4
-
-      +button(primary, small)
 </style>

@@ -5,9 +5,26 @@
         v-if="!subscriptionExists"
         class="my-authors--empty"
       >
-        <h1>{{ $t('No authors') }}</h1>
-        <p>{{ $t("You haven't subscribe to any author yet. On Explore page you can find authors you might like.") }}</p>
-        <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
+        <h1>{{ $t('No subscribed authors') }}</h1>
+        <p>{{ $t('You haven\'t subscribed to any authors yet.') }}</p>
+
+        <section>
+          <h3>{{ $t('Explore interesting content') }}</h3>
+
+          <ul>
+            <li>{{ $t('Go to Explore page.') }}</li>
+            <li>{{ $t('Subscribe newsletters or authors that caught your interest.') }}</li>
+          </ul>
+          <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
+        </section>
+        <section>
+          <h3>{{ $t('Import RSS feeds') }}</h3>
+          <ul>
+            <li>{{ $t('Add RSS/Atom source.') }}</li>
+            <li>{{ $t('Or import OPML file with feeds.') }}</li>
+          </ul>
+          <nuxt-link to="/import">{{ $t('Import RSS') }}</nuxt-link>
+        </section>
       </div>
 
       <template v-if="sections['suspended'].length">
@@ -147,21 +164,58 @@ export default {
   display: block
   padding: $baseline
 
-  background: #eee
-  border: 1px dashed #ccc
-
-  text-align: center
+  background: #fff
+  border: 1px solid #eee
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 
   h1
     margin-bottom: $baseline
 
     font-size: $fs-3
     font-weight: 600
+    text-align: center
 
-  p
+  h1 + p
+    margin-bottom: $baseline
+    text-align: center
+
+  section:first-of-type
     margin-bottom: $baseline
 
+  h3
+    margin-bottom: $baseline / 4
+    font-size: $fs-1
+    font-weight: 600
+
+    @media (max-width: $mobile)
+      margin-bottom: 0
+
+  h3 + p
+    margin-bottom: auto
+
+  ul,
+  ol
+
+    li
+      list-style: disc outside
+      margin-bottom: $baseline / 4
+      margin-left: $baseline * 0.75
+
+      line-height: 1.42
+
+      a
+        color: darken($c-base, 10%)
+
+        font-weight: 600
+
+        &:hover,
+        &:focus
+          color: darken($c-base, 20%)
+
+  ol li
+    list-style: decimal outside
+
   a
-    +button(primary, large)
+    +button(primary, small)
 
 </style>
