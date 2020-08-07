@@ -2,7 +2,7 @@
   <div v-on-clickaway="closeDialog" class="consider-post-view">
     <header>
       <template v-if="step === 'step-1'">
-        <h2>{{ $t('For which newspaper?') }}</h2>
+        <h2>{{ $t('For which newsletter?') }}</h2>
         <strong
           v-b-tooltip
           class="consider-post--price"

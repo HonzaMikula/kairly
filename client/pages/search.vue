@@ -33,7 +33,7 @@
 
           <div class="search-item--label">
             <template v-if="result.pagemap.newspaper">
-              <span class="label">{{ $t('Newspaper') }}</span>
+              <span class="label">{{ $t('Newsletter') }}</span>
               <span class="author">{{ $t('by') }} {{ result.pagemap.metatags[0].author }}</span>
               <time>{{ result.pagemap.newspaper[0].datepublished | moment('calendar') }}</time>
             </template>

@@ -16,7 +16,7 @@
         <input v-model="postPrice" step="0.01" type="number" min="0.00" max="100000.00">
         {{ $t('Kč per subscriber') }}
       </div>
-      <p v-html="$t('You will recieve <strong>{price} Kč</strong> from each subscriber from newspaper where your post will appear.', { price: postPrice })" />
+      <p v-html="$t('You will recieve <strong>{price} Kč</strong> from each subscriber from newsletter where your post will appear.', { price: postPrice })" />
     </section>
 
     <section v-if="showSchedule" class="publish-post--scheduling">

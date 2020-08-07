@@ -5,7 +5,7 @@
     @close="closeModal"
   >
     <template #header>
-      <h1 v-if="!state">{{ $t('Subscribe newspaper') }}</h1>
+      <h1 v-if="!state">{{ $t('Subscribe newsletter') }}</h1>
       <h1 v-else-if="state === 'active'">{{ $t('Change or cancel subscription') }}</h1>
       <h1 v-else-if="state === 'canceled'">{{ $t('Renew subscription') }}</h1>
       <h1 v-else-if="state === 'suspended'">{{ $t('Resolve suspended subscription') }}</h1>
@@ -30,7 +30,7 @@
     </section>
 
     <section class="newspaper-subscription--donations">
-      <h2>{{ $t('Support the newspaper and donate more') }}</h2>
+      <h2>{{ $t('Support the newsletter and donate more') }}</h2>
       <div>
         <input v-model="donation" type="number" :placeholder="$t('Your donation')" min="0" max="100000">
         {{ $t('Kč per month') }}
@@ -48,7 +48,7 @@
             class="confirm"
             @click="subscribe()"
           >
-            {{ $t('Subscribe newspaper') }}
+            {{ $t('Subscribe newsletter') }}
           </button>
           <p>{{ $t('* You can cancel subscription any time') }}</p>
         </div>
@@ -72,7 +72,7 @@
         <p>
           {{ $t('You cancled the subscription. It expires on') }}
           <strong>{{ subscription.to|moment('calendar') }}</strong>.
-          {{ $t('Till then you will still see the newspaper on the timeline.') }}
+          {{ $t('Till then you will still see the newsletter on the timeline.') }}
         </p>
       </template>
 

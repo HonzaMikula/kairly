@@ -545,6 +545,7 @@ export default {
         deleteCount: 1
       })
       this.$store.dispatch('backlog/save', { newspaper: this.newspaper })
+      this.$store.commit('backlog/cleanSelection')
     },
 
     reverseColumns () {

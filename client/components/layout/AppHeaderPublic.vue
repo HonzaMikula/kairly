@@ -8,7 +8,7 @@
           <li><nuxt-link to="/platform/readers">{{ $t('About') }}</nuxt-link></li>
           <li><nuxt-link to="/features/rss-reader">{{ $t('Features') }}</nuxt-link></li>
           <li><nuxt-link to="/explore/news">{{ $t('Explore') }}</nuxt-link></li>
-          <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newspaper (blog)') }}</nuxt-link></li>
+          <li><nuxt-link to="/janmikula/kairly">{{ $t('Our newsletter (blog)') }}</nuxt-link></li>
         </ul>
       </nav>
 

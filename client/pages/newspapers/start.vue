@@ -1,5 +1,5 @@
 <template>
-  <AppLayout :name="$t('Start newspaper')">
+  <AppLayout :name="$t('Start newsletter')">
     <NewspaperSettings />
   </AppLayout>
 </template>

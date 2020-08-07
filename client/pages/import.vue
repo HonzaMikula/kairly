@@ -65,7 +65,7 @@
               </th>
               <td class="import-rss--change-periodicity">
                 <template v-if="source.newspaper">
-                  {{ $t('Subscribe to the newspaper') }}
+                  {{ $t('Subscribe to the newsletter') }}
                 </template>
                 <template v-else>
                   <a
