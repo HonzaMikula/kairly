@@ -8,7 +8,7 @@
         <h1>{{ $t('Start your first newsletter!') }}</h1>
 
         <p>
-          {{ $t("Are you interested in specific topic? Found a newsletter and start providing selection of best articles and tweets to others. Here is some inspirations:") }}
+          {{ $t("Are you interested in specific topic? Found a newsletter and start providing selection of best articles and tweets to others. Here is some inspiration:") }}
 
           <nuxt-link to="/janmikula/malostranskenoviny">Malostranský deník</nuxt-link>,
           <nuxt-link to="/janmikula/tydenik-skola-hrou">Týdeník škola hrou</nuxt-link> or
@@ -17,49 +17,38 @@
 
         <div class="newspaper-editor--empty--columns">
           <section>
-            <h3>How to found a newsletter?</h3>
+            <h3>{{ $t('How to found a newsletter?') }}</h3>
             <ul>
-              <li>Give it a name and description.</li>
-              <li>Choose when and how often newsletter will be published.</li>
+              <li>{{ $t('Give it a name and description.') }}</li>
+              <li>{{ $t('Choose when and how often newsletter will be published.') }}</li>
             </ul>
-            <button>Start a here</button>
 
-            <h3>What's your layout options?</h3>
+            <h3>{{ $t('What\'s your layout options?') }}</h3>
             <ul>
-              <li>Newsletter can be split into sections.</li>
-              <li>You can use two or three column layouts.</li>
+              <li>{{ $t('Newsletter can be split into sections.') }}</li>
+              <li>{{ $t('You can use two or three column layouts.') }}</li>
             </ul>
 
             <picture>
               <img src="~assets/onboarding/manage-newsletter-3.png" alt="Illustration">
             </picture>
-
-            <!-- <picture>
-              <img src="~assets/onboarding/manage-newsletter-1.jpg" alt="Illustration">
-            </picture> -->
           </section>
 
           <section>
-            <h3>How to add content to newsletter?</h3>
+            <h3>{{ $t('How to add content to newsletter?') }}</h3>
             <ul>
-              <li>Subscribe to authors and other newsletter.</li>
-              <li>Use [n] Consider button.</li>
-              <li>Or add external articles or tweets simply by pasting URL.</li>
+              <li>{{ $t('Subscribe to authors and other newsletters.') }}</li>
+              <li v-html="$t('Use <span class=\'fake-button\'></span> Consider button.')" />
+              <li>{{ $t('Or add external articles or tweets simply by pasting URL.') }}</li>
             </ul>
 
             <picture>
               <img src="~assets/onboarding/manage-newsletter-2.png" alt="Illustration">
             </picture>
           </section>
-
-          <!-- <section>
-            <picture>
-              <img src="~assets/onboarding/manage-newsletter-3.jpg" alt="Illustration">
-            </picture>
-          </section> -->
         </div>
 
-        <nuxt-link to="/newspapers/start">{{ $t('Start a newsletter') }}</nuxt-link>
+        <nuxt-link to="/newspapers/start">{{ $t('Start newsletter') }}</nuxt-link>
       </div>
 
       <template v-else>
@@ -503,6 +492,8 @@ export default {
 
   section
     img
+      border: 1px solid #eee
+      box-shadow: 0 0 $baseline/2 #ccc
       max-width: 100%
 
   h3
@@ -518,6 +509,7 @@ export default {
 
   ul,
   ol
+    margin-bottom: $baseline
 
     li
       list-style: disc outside
@@ -538,13 +530,24 @@ export default {
   ol li
     list-style: decimal outside
 
-  a
-    // +button(primary, small)
+  .fake-button
+    +button-icon($fa-var-newspaper)
+
+    cursor: auto
+
+  //- Start a newsletter button
+  > a
+    +button(primary, large)
+    margin: $baseline auto 0 auto
+    display: table
 
 .newspaper-editor--empty--columns
   display: grid
-  grid-template-columns: 2fr 3fr
+  grid-template-columns: 1fr 1fr
   grid-column-gap: $baseline
+
+  @media (max-width: $mobile)
+    grid-template-columns: auto
 
 .newspaper-editor--header--dropdown
   position: absolute
