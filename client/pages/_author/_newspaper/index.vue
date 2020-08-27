@@ -1,5 +1,5 @@
 <template>
-  <AppLayout :name="$t('Newspaper detail')">
+  <AppLayout :name="$t('Newsletter detail')">
     <div class="newspaper-detail" itemtype="https://schema.org/Newspaper" itemscope>
       <header class="newspaper-detail--header">
         <div>
@@ -184,7 +184,7 @@
         >
           <h2>{{ $t('No issue yet') }}</h2>
           <p>
-            {{ $t('Subscribe the newspaper and once it\'s published, we will show you on your timeline.') }}
+            {{ $t('Subscribe the newsletter and once it\'s published, we will show you on your timeline.') }}
           </p>
         </div>
       </main>

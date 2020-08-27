@@ -6,9 +6,9 @@
 
     <main>
       <section class="newspaper-settings--general">
-        <h2>General</h2>
+        <h2>{{ $t('General') }}</h2>
         <div>
-          <label for="name">{{ $t('Newspaper name') }}</label>
+          <label for="name">{{ $t('Newsletter name') }}</label>
           <input
             id="name"
             v-model="title"
@@ -20,7 +20,7 @@
           <textarea
             id="description"
             v-model="description"
-            :placeholder="$t('What this newspaper is about?')"
+            :placeholder="$t('What is this newsletter about?')"
           />
           <p>{{ $t('Maximum 160 characters.') }}</p>
         </div>
@@ -42,9 +42,6 @@
           >
             <template v-if="periodicity.frequency == '3x_per_day'">{{ $t('At 6:00, 12:00 and 18:00') }}</template>
             <template v-else-if="periodicity.frequency == '6x_per_day'">{{ $t('Every 3 hours') }}</template>
-            <template v-else-if="periodicity.frequency == '6x_per_day'">
-              {{ $t('Continously every 3 hours.') }}
-            </template>
             <template v-else>
               {{ periodicity.frequency }} {{ getDayOfWeekLabel(periodicity.dow) }} {{ periodicity.time }}
             </template>
@@ -131,18 +128,18 @@
     </main>
 
     <footer>
-      <button @click="submit">{{ newspaper ? $t('Save') : $t('Create newspaper') }}</button>
+      <button @click="submit">{{ newspaper ? $t('Save') : $t('Create newsletter') }}</button>
     </footer>
 
     <section v-if="newspaper" class="newspaper-settings--delete">
       <div>
-        <h2>{{ $t('Delete this newspaper') }}</h2>
+        <h2>{{ $t('Delete this newsletter') }}</h2>
         <p>{{ $t('Once you delete it, there is no way back. Be careful.') }}</p>
       </div>
       <button
         @click.prevent="confirmDeleteNewspaper"
       >
-        {{ $t('Delete newspaper') }}
+        {{ $t('Delete newsletter') }}
       </button>
     </section>
   </div>

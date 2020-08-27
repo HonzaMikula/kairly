@@ -58,8 +58,8 @@
               class="consider-post"
               :class="{'is-active': isConsidered}"
               tabindex="0"
-              :aria-label="$t('Consider for newspaper')"
-              :title="$t('Consider for newspaper')"
+              :aria-label="$t('Consider for newsletter')"
+              :title="$t('Consider for newsletter')"
               @click.stop.prevent="showConsiderPost = true"
             />
             <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />

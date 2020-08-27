@@ -39,7 +39,7 @@
         <section>
           <h2><nuxt-link to="/explore">{{ $t('Explore') }}</nuxt-link></h2>
 
-          <h3>{{ $t('Recent newspaper issue') }}</h3>
+          <h3>{{ $t('Recent newsletter issue') }}</h3>
           <ul>
             <li
               v-for="issue in issues"

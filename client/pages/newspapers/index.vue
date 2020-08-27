@@ -1,17 +1,54 @@
 <template>
-  <AppLayout :name="$t('Manage newspapers')">
+  <AppLayout :name="$t('Manage newsletters')">
     <div class="newspaper-editor-view" @click="clearSelection()">
       <div
         v-if="newspapers.length === 0"
         class="newspaper-editor--empty"
       >
-        <h1>{{ $t('Start your first newspaper!') }}</h1>
+        <h1>{{ $t('Start your first newsletter!') }}</h1>
 
         <p>
-          {{ $t("Are you interested in specific topic? Found a newspaper and start providing selection of best articles and tweets to others.") }}
+          {{ $t("Are you interested in specific topic? Found a newsletter and start providing selection of best articles and tweets to others. Here is some inspiration:") }}
+
+          <nuxt-link to="/janmikula/malostranskenoviny">Malostranský deník</nuxt-link>,
+          <nuxt-link to="/janmikula/tydenik-skola-hrou">Týdeník škola hrou</nuxt-link> or
+          <nuxt-link to="/janmikula/product-design-weekly">Product Design Newsletter</nuxt-link>.
         </p>
 
-        <nuxt-link to="/newspapers/start">{{ $t('Start a newspaper') }}</nuxt-link>
+        <div class="newspaper-editor--empty--columns">
+          <section>
+            <h3>{{ $t('How to found a newsletter?') }}</h3>
+            <ul>
+              <li>{{ $t('Give it a name and description.') }}</li>
+              <li>{{ $t('Choose when and how often newsletter will be published.') }}</li>
+            </ul>
+
+            <h3>{{ $t('What\'s your layout options?') }}</h3>
+            <ul>
+              <li>{{ $t('Newsletter can be split into sections.') }}</li>
+              <li>{{ $t('You can use two or three column layouts.') }}</li>
+            </ul>
+
+            <picture>
+              <img src="~assets/onboarding/manage-newsletter-3.png" alt="Illustration">
+            </picture>
+          </section>
+
+          <section>
+            <h3>{{ $t('How to add content to newsletter?') }}</h3>
+            <ul>
+              <li>{{ $t('Subscribe to authors and other newsletters.') }}</li>
+              <li v-html="$t('Use <span class=\'fake-button\'></span> Consider button.')" />
+              <li>{{ $t('Or add external articles or tweets simply by pasting URL.') }}</li>
+            </ul>
+
+            <picture>
+              <img src="~assets/onboarding/manage-newsletter-2.png" alt="Illustration">
+            </picture>
+          </section>
+        </div>
+
+        <nuxt-link to="/newspapers/start">{{ $t('Start newsletter') }}</nuxt-link>
       </div>
 
       <template v-else>
@@ -60,7 +97,7 @@
               v-b-tooltip
               class="detail"
               :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
-              :title="$t('Go to newspaper detail')"
+              :title="$t('Go to newsletter detail')"
             />
 
             <nuxt-link
@@ -68,7 +105,7 @@
               v-b-tooltip
               class="settings"
               :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
-              :title="$t('Edit newspaper')"
+              :title="$t('Edit newsletter')"
             />
           </div>
 
@@ -92,14 +129,14 @@
                   <nuxt-link
                     :to="{name: 'author-newspaper', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
                   >
-                    {{ $t('Newspaper detail') }}
+                    {{ $t('Newsletter detail') }}
                   </nuxt-link>
                 </li>
                 <li v-if="selectedNewspaper.editor.id === user.id">
                   <nuxt-link
                     :to="{name: 'author-newspaper-settings', params: {author: selectedNewspaper.editor.id, newspaper: selectedNewspaper.name}}"
                   >
-                    {{ $t('Edit newspaper') }}
+                    {{ $t('Edit newsletter') }}
                   </nuxt-link>
                 </li>
               </ul>
@@ -421,26 +458,96 @@ export default {
 //- When there is no posts
 .newspaper-editor--empty
   display: block
-  max-width: 600px
+  max-width: 900px
   margin: $baseline auto
   padding: $baseline
 
-  background: #eee
-  border: 1px dashed #ccc
+  background: #fff
+  border: 1px solid #eee
+  box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 
-  text-align: center
-
-  > h1
+  h1
     margin-bottom: $baseline
 
     font-size: $fs-3
     font-weight: 600
+    text-align: center
 
-  > p
+  h1 + p,
+  h1 + p + p
     margin-bottom: $baseline
 
+    a
+      color: $c-base
+
+      font-weight: 600
+      text-decoration: underline
+
+      &:hover,
+      &:focus
+        text-decoration: none
+
+  section:first-of-type
+    margin-bottom: $baseline
+
+  section
+    img
+      border: 1px solid #eee
+      box-shadow: 0 0 $baseline/2 #ccc
+      max-width: 100%
+
+  h3
+    margin-bottom: $baseline / 4
+    font-size: $fs-1
+    font-weight: 600
+
+    @media (max-width: $mobile)
+      margin-bottom: 0
+
+  h3 + p
+    margin-bottom: auto
+
+  ul,
+  ol
+    margin-bottom: $baseline
+
+    li
+      list-style: disc outside
+      margin-bottom: $baseline / 4
+      margin-left: $baseline * 0.75
+
+      line-height: 1.42
+
+      a
+        color: darken($c-base, 10%)
+
+        font-weight: 600
+
+        &:hover,
+        &:focus
+          color: darken($c-base, 20%)
+
+  ol li
+    list-style: decimal outside
+
+  .fake-button
+    +button-icon($fa-var-newspaper)
+
+    cursor: auto
+
+  //- Start a newsletter button
   > a
     +button(primary, large)
+    margin: $baseline auto 0 auto
+    display: table
+
+.newspaper-editor--empty--columns
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-column-gap: $baseline
+
+  @media (max-width: $mobile)
+    grid-template-columns: auto
 
 .newspaper-editor--header--dropdown
   position: absolute

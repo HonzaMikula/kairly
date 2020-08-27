@@ -3,7 +3,7 @@
     <NewspaperBacklogPosts
       v-if="upcoming"
       :title="$t('Issue #') + (newspaper.issues + 1)"
-      :description="$t('Issue will be published ') + timeFrom(newspaper.nextRelease)"
+      :description="$t('Issue will be automatically published ') + timeFrom(newspaper.nextRelease)"
       :newspaper="newspaper"
       :backlog="upcoming"
       :posts="posts"
