@@ -1,6 +1,11 @@
 <template>
-  <div v-on-clickaway="closeDialog" class="consider-post-view">
-    <header>
+  <DialogWindow
+    v-if="active"
+    custom-class="consider-post-dialog"
+    ignore-background-click
+    @close="closeModal"
+  >
+    <template #header>
       <template v-if="step === 'step-1'">
         <h2>{{ $t('For which newsletter?') }}</h2>
         <strong
@@ -16,98 +21,91 @@
         <button class="back" @click="goBack()" />
         <h2>{{ selectedNewspaper.title }}</h2>
       </template>
-    </header>
+    </template>
 
-    <section v-if="step === 'step-1'" class="consider-post--step-1">
-      <ul>
-        <li v-for="ed in userNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in postBacklog}">
-          <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
-        </li>
-      </ul>
-    </section>
+    <div v-on-clickaway="closeDialog" class="consider-post-view">
+      <section v-if="step === 'step-1'" class="consider-post--step-1">
+        <ul>
+          <li v-for="ed in userNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in postBacklog}">
+            <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
+          </li>
+        </ul>
+      </section>
 
-    <section v-else-if="step === 'step-2'" class="consider-post--step-2">
-      <div class="consider-post--step-2--content">
-        <h3>{{ $t('Upcoming issue') }}</h3>
-        <p>{{ $t('Will be released') }} {{ nextRelease }}.</p>
+      <section v-else-if="step === 'step-2'" class="consider-post--step-2">
+        <div class="consider-post--step-2--content">
+          <h3>{{ $t('Upcoming issue') }}</h3>
+          <p>{{ $t('Will be released') }} {{ nextRelease }}.</p>
 
-        <label>
-          <input
-            v-model="position"
-            name="position"
-            type="radio"
-            :value="['upcoming', 0]"
-          >
-          {{ $t('To the top') }}
-        </label>
+          <label>
+            <input
+              v-model="position"
+              name="position"
+              type="radio"
+              :value="['upcoming', 0]"
+            >
+            {{ $t('To the top') }}
+          </label>
 
-        <label v-for="section in upcomingIssueSections" :key="section.index">
-          <input
-            v-model="position"
-            name="position"
-            type="radio"
-            :value="['upcoming', section.index + 1]"
-          >
-          {{ section.title }}
-        </label>
+          <label v-for="section in upcomingIssueSections" :key="section.index">
+            <input
+              v-model="position"
+              name="position"
+              type="radio"
+              :value="['upcoming', section.index + 1]"
+            >
+            {{ section.title }}
+          </label>
 
-        <label>
-          <input
-            v-model="position"
-            name="position"
-            type="radio"
-            :value="['upcoming', -1]"
-          >
-          {{ $t('To the bottom') }}
-        </label>
+          <label>
+            <input
+              v-model="position"
+              name="position"
+              type="radio"
+              :value="['upcoming', -1]"
+            >
+            {{ $t('To the bottom') }}
+          </label>
 
-        <h3>{{ $t('Considered posts') }}</h3>
-        <label>
-          <input
-            v-model="position"
-            name="position"
-            type="radio"
-            :value="['considered', 0]"
-          >
-          {{ $t('To the top') }}
-        </label>
+          <h3>{{ $t('Considered posts') }}</h3>
+          <label>
+            <input
+              v-model="position"
+              name="position"
+              type="radio"
+              :value="['considered', 0]"
+            >
+            {{ $t('To the top') }}
+          </label>
 
-        <label v-for="section in backlogSections" :key="section.index">
-          <input
-            v-model="position"
-            name="position"
-            type="radio"
-            :value="['considered', section.index + 1]"
-          >
-          {{ section.title }}
-        </label>
+          <label v-for="section in backlogSections" :key="section.index">
+            <input
+              v-model="position"
+              name="position"
+              type="radio"
+              :value="['considered', section.index + 1]"
+            >
+            {{ section.title }}
+          </label>
 
-        <label>
-          <input
-            v-model="position"
-            name="position"
-            type="radio"
-            :value="['considered', -1]"
-          >
-          {{ $t('To the bottom') }}
-        </label>
-      </div>
-
-      <div class="consider-post--step-2--footer">
-        <div>
-          <button @click="save()">{{ $t('Save') }}</button>
+          <label>
+            <input
+              v-model="position"
+              name="position"
+              type="radio"
+              :value="['considered', -1]"
+            >
+            {{ $t('To the bottom') }}
+          </label>
         </div>
-
-        <!-- <div>
-          Save and add comment
-        </div> -->
+      </section>
+    </div>
+    <template #footer>
+      <div>
+        <button @click="save()">{{ $t('Save') }}</button>
       </div>
-    </section>
-
-    <!-- <section v-else-if="step === 'add-comment'" class="consider-post--add-comment">
-      add comments
-    </section> -->
-  </div>
+    </template>
+  </DialogWindow>
 </template>
 
 <script>
@@ -116,6 +114,8 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 import { directive as onClickaway } from '@/lib/vue-clickaway'
 
 import MoneyFormat from '@/components/widgets/MoneyFormat'
+import DialogWindow from '@/components/modals/DialogWindow'
+import ModalMixin from '@/mixins/ModalMixin'
 
 export default {
   name: 'ConsiderPost',
@@ -125,8 +125,11 @@ export default {
   },
 
   components: {
-    MoneyFormat
+    MoneyFormat,
+    DialogWindow
   },
+
+  mixins: [ModalMixin],
 
   props: {
     post: { type: Object, required: true }
@@ -241,23 +244,10 @@ export default {
 @import './styles/components/context-menu'
 @import './styles/components/buttons'
 
+.consider-post-dialog
+  max-width: 640px
+
 .consider-post-view
-  +context-menu
-
-  position: absolute
-  left: 50%
-
-  top: 50px
-  z-index: 10
-
-  @media (max-width: 1120px)
-    left: inherit
-    right: -$baseline/4
-
-    &::after
-      left: inherit
-      right: 5px
-
   //- header
   header
     display: flex
