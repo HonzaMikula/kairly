@@ -67,7 +67,7 @@
                 @click.stop.prevent="openConsiderPost()"
               />
 
-              <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
+              <ConsiderPost :active.sync="showConsiderPost" :post="post" />
             </span>
 
             <time :title="post.time" :datetime="post.time" itemprop="datePublished dateModified">

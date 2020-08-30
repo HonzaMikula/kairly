@@ -122,12 +122,40 @@ export default {
     line-height: $baseline * 2
 
     //- Dialog title
-    h1
+    > h1,
+    > div
       text-align: center
       grid-column: 2 / span 1
 
+    //- Back buton
+    .back
+      grid-column: 1 / span 1
+
+      height: $baseline * 2
+      width: $baseline * 2
+
+      border: 0
+      opacity: 0.5
+
+      cursor: pointer
+      text-align: center
+
+      transition: 0.15s opacity
+
+      &:focus,
+      &:hover
+        opacity: 1
+
+      &::before
+        +fa-icon()
+        @extend .fas
+
+        content: fa-content($fa-var-arrow-left)
+
     //- Close button
     .button-close
+      grid-column: 3 / span 1
+
       height: $baseline * 2
       width: $baseline * 2
 

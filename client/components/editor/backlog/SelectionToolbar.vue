@@ -249,7 +249,6 @@ export default {
     remove () {
       const selectedBoxes = this.$store.getters['backlog/getSelectedBoxes'](this.newspaper)
       let proceed = true
-      // console.log(selectedBoxes)
       if (selectedBoxes.length > 1) {
         let text = 'You\'re going to delete following posts:\n'
         const posts = this.$store.state.backlog.newspaperBacklog[this.newspaper.fullName].$posts
