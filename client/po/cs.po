@@ -76,47 +76,9 @@ msgstr "Ráno"
 msgid "Early morning"
 msgstr "Brzo ráno"
 
-#: components/widgets/ConsiderPost.vue:5
-msgid "For which newsletter?"
-msgstr "Pro který newsletter?"
-
-#: components/widgets/ConsiderPost.vue:9
-msgid "Article cost"
-msgstr "Cena článku"
-
-#: components/widgets/ConsiderPost.vue:31
-#: components/editor/backlog/SelectionToolbar.vue:39
-msgid "Upcoming issue"
-msgstr "Nadcházející vydání"
-
-#: components/widgets/ConsiderPost.vue:32
-msgid "Will be released"
-msgstr "Vydaní bude publikováno"
-
-#: components/widgets/ConsiderPost.vue:41
-#: components/widgets/ConsiderPost.vue:72
-msgid "To the top"
-msgstr "Nahoru"
-
-#: components/widgets/ConsiderPost.vue:61
-#: components/widgets/ConsiderPost.vue:92
-msgid "To the bottom"
-msgstr "Dolu"
-
-#: components/widgets/ConsiderPost.vue:64
-#: components/editor/backlog/NewspaperBacklog.vue:23
-msgid "Considered posts"
-msgstr "Vybrané články"
-
-#: components/widgets/ConsiderPost.vue:98
-#: components/editor/backlog/CommentEditor.vue:19 pages/posts/_postId.vue:4
-#: pages/posts/_postId.vue:5 components/editor/NewspaperSettings.vue:131
-msgid "Save"
-msgstr "Uložit"
-
 #: components/widgets/NewspaperWidget.vue:36
-#: components/widgets/IssueWidget.vue:33
 #: components/widgets/NewspaperPopup.vue:47
+#: components/widgets/IssueWidget.vue:33
 msgid "subscribers"
 msgstr "čtenáři"
 
@@ -131,8 +93,9 @@ msgid "Every 3 hours"
 msgstr "Každé 3 hodiny"
 
 #: components/widgets/ChangePeriodicity.vue:14
+#: components/issues/IssueNewspaper.vue:68
 #: components/issues/IssueSuspendedAuthor.vue:52
-#: components/issues/IssueNewspaper.vue:68 components/issues/IssueAuthor.vue:58
+#: components/issues/IssueAuthor.vue:58
 #: components/issues/IssueSuspendedNewspaper.vue:71
 #: components/issues/IssueUnreleasedNewspaper.vue:71
 msgid "3× per day"
@@ -607,13 +570,17 @@ msgstr "Pokračovat ve čtení"
 msgid "Subscribe newspaper to continue reading"
 msgstr "Abyste si mohli přečíst celý článek, přihlaste se k odběru novin"
 
+#: components/posts/PostTweet.vue:30
+msgid "Original tweet"
+msgstr "Originální tweet"
+
 #: components/posts/PostVideo.vue:24
 msgid "Watch video"
 msgstr "Přehrát video"
 
-#: components/posts/PostTweet.vue:30
-msgid "Original tweet"
-msgstr "Originální tweet"
+#: components/posts/PostLink.vue:31
+msgid "Read article"
+msgstr "Číst článek"
 
 #: components/posts/PostRecommendations.vue:4
 msgid "Recommended issues"
@@ -622,10 +589,6 @@ msgstr "Doporučená vydání"
 #: components/posts/PostRecommendations.vue:27
 msgid "Recommended posts"
 msgstr "Doporučené články"
-
-#: components/posts/PostLink.vue:31
-msgid "Read article"
-msgstr "Číst článek"
 
 #: components/posts/PostBase.vue:52 pages/posts/index.vue:19
 #: pages/posts/published.vue:13
@@ -825,17 +788,18 @@ msgstr "Přepnout jazyk"
 msgid "Show more"
 msgstr "Zobrazit více"
 
-#: components/issues/IssueSuspendedAuthor.vue:27
-#: components/issues/IssueSuspendedNewspaper.vue:39
-msgid "Your susbscription were suspended."
-msgstr "Vaše předplatné bylo pozastaveno."
-
+#: components/issues/IssueNewspaper.vue:67
 #: components/issues/IssueSuspendedAuthor.vue:51
-#: components/issues/IssueNewspaper.vue:67 components/issues/IssueAuthor.vue:57
+#: components/issues/IssueAuthor.vue:57
 #: components/issues/IssueSuspendedNewspaper.vue:70
 #: components/issues/IssueUnreleasedNewspaper.vue:70
 msgid "6× per day"
 msgstr "6x denně"
+
+#: components/issues/IssueSuspendedAuthor.vue:27
+#: components/issues/IssueSuspendedNewspaper.vue:39
+msgid "Your susbscription were suspended."
+msgstr "Vaše předplatné bylo pozastaveno."
 
 #: components/issues/IssueSuspendedAuthor.vue:53
 #: components/issues/IssueAuthor.vue:59
@@ -912,6 +876,12 @@ msgstr ""
 msgid "Title"
 msgstr "Titulek"
 
+#: components/editor/backlog/CommentEditor.vue:19 pages/posts/_postId.vue:4
+#: pages/posts/_postId.vue:5 components/widgets/ConsiderPost.vue:139
+#: components/editor/NewspaperSettings.vue:131
+msgid "Save"
+msgstr "Uložit"
+
 #: components/editor/backlog/CommentEditor.vue:45
 msgid "Editorial"
 msgstr "Komentář"
@@ -979,6 +949,19 @@ msgstr "Rozložení 1-1-1"
 msgid "Three equal sections"
 msgstr "Tři stejné sloupce"
 
+#: components/editor/backlog/NewspaperBacklog.vue:14
+#: components/editor/backlog/NewspaperBacklog.vue:5
+msgid "Issue #"
+msgstr "Vydání #"
+
+#: components/editor/backlog/NewspaperBacklog.vue:6
+msgid "Issue will be automatically published "
+msgstr "Vydání bude automaticky publikováno "
+
+#: components/editor/backlog/NewspaperBacklog.vue:23
+msgid "Considered posts"
+msgstr "Vybrané články"
+
 #: components/editor/backlog/PostsSelection.vue:4
 msgid "Select posts"
 msgstr "Vyberte příspěvky"
@@ -992,6 +975,7 @@ msgid "Upcoming"
 msgstr "Nadcházející"
 
 #: components/editor/backlog/PostsSelection.vue:17
+#: components/widgets/ConsiderPost.vue:35
 #: components/editor/backlog/SelectionToolbar.vue:47
 msgid "Backlog"
 msgstr "Backlog"
@@ -1004,14 +988,13 @@ msgstr "Hotovo"
 msgid "Paste URL"
 msgstr "Vložte URL"
 
-#: components/editor/backlog/NewspaperBacklog.vue:14
-#: components/editor/backlog/NewspaperBacklog.vue:5
-msgid "Issue #"
-msgstr "Vydání #"
+#: components/editor/EditArticle.vue:18
+msgid "Normal view"
+msgstr "Normální pohled"
 
-#: components/editor/backlog/NewspaperBacklog.vue:6
-msgid "Issue will be automatically published "
-msgstr "Vydání bude automaticky publikováno "
+#: components/editor/EditArticle.vue:27
+msgid "Column view"
+msgstr "Sloupcový pohled"
 
 #: components/editor/EditorCard.vue:14
 msgid "Remove co-editor"
@@ -1020,14 +1003,6 @@ msgstr "Odstranit editora"
 #: components/editor/EditTweet.vue:9
 msgid "Tweet Content"
 msgstr "Tweet"
-
-#: components/editor/EditArticle.vue:18
-msgid "Normal view"
-msgstr "Normální pohled"
-
-#: components/editor/EditArticle.vue:27
-msgid "Column view"
-msgstr "Sloupcový pohled"
 
 #: pages/system.vue:2
 msgid "Transactions"
@@ -1193,14 +1168,6 @@ msgstr "Zatím jste nezveřejnili žádný příspěvek."
 msgid "Published Posts – Kairly"
 msgstr "Publikované příspěvky - Kairly"
 
-#: pages/posts/_postId.vue:2
-msgid "Edit a post"
-msgstr "Editovat příspěvek"
-
-#: pages/posts/_postId.vue:43
-msgid "My Posts – Kairly"
-msgstr "Moje příspěvky – Kairly"
-
 #: pages/subscription.vue:2 components/layout/AppHeader.vue:24
 #: components/layout/AppHeader.vue:66 pages/index.vue:56
 msgid "Subscriptions"
@@ -1265,6 +1232,14 @@ msgstr "Další newslettery a autory naleznete na stránce Objevujte."
 msgid "Explore more content"
 msgstr "Objevujte více obsahu"
 
+#: pages/posts/_postId.vue:2
+msgid "Edit a post"
+msgstr "Editovat příspěvek"
+
+#: pages/posts/_postId.vue:43
+msgid "My Posts – Kairly"
+msgstr "Moje příspěvky – Kairly"
+
 #: pages/search.vue:2 pages/search.vue:6 components/layout/AppHeader.vue:169
 msgid "Search"
 msgstr "Hledat"
@@ -1317,6 +1292,14 @@ msgstr "Datum a čas"
 msgid "Credit balance – Kairly"
 msgstr "Stav kreditů – Kairly"
 
+#: pages/user/transactions/upcoming.vue:5
+msgid "Newspaper / Author"
+msgstr "Noviny / Autor"
+
+#: pages/user/transactions/upcoming.vue:6
+msgid "Date of upcoming payment"
+msgstr "Datum nadcházející platby"
+
 #: pages/user/add-credits.vue:7
 msgid ""
 "Kairly is currently in beta. You will receive free credit automatically "
@@ -1343,14 +1326,6 @@ msgstr "Prosím, dejte mi více"
 #: pages/user/add-credits.vue:62
 msgid "Don't be greedy."
 msgstr "Nebuďte chamtivý."
-
-#: pages/user/transactions/upcoming.vue:5
-msgid "Newspaper / Author"
-msgstr "Noviny / Autor"
-
-#: pages/user/transactions/upcoming.vue:6
-msgid "Date of upcoming payment"
-msgstr "Datum nadcházející platby"
 
 #: pages/user/settings.vue:2 pages/user/settings.vue:4
 msgid "Account Settings"
@@ -1481,6 +1456,38 @@ msgstr "Denně v {at}"
 #: mixins/PeriodicityMixin.js:27
 msgid "Every {dow} at {at}"
 msgstr "Každá {dow} v {at}"
+
+#: components/widgets/ConsiderPost.vue:10
+msgid "For which newsletter?"
+msgstr "Pro který newsletter?"
+
+#: components/widgets/ConsiderPost.vue:36
+msgid "Post that are considered."
+msgstr "Zvažované příspěvky."
+
+#: components/widgets/ConsiderPost.vue:46
+#: components/widgets/ConsiderPost.vue:97
+msgid "To the top"
+msgstr "Nahoru"
+
+#: components/widgets/ConsiderPost.vue:125
+#: components/widgets/ConsiderPost.vue:74
+msgid "To the bottom"
+msgstr "Dolu"
+
+#: components/widgets/ConsiderPost.vue:132
+#: components/widgets/ConsiderPost.vue:81
+msgid "Add section"
+msgstr "Přidat sekci"
+
+#: components/widgets/ConsiderPost.vue:86
+#: components/editor/backlog/SelectionToolbar.vue:39
+msgid "Upcoming issue"
+msgstr "Nadcházející vydání"
+
+#: components/widgets/ConsiderPost.vue:87
+msgid "Will be released"
+msgstr "Vydaní bude publikováno"
 
 #: components/layout/AppHeader.vue:124 components/layout/AppHeader.vue:43
 #: components/layout/AppHeader.vue:78 components/layout/AppHeader.vue:98
@@ -2579,6 +2586,9 @@ msgstr "Komentáře editorů novin"
 #: pages/_author/_post.vue:118 pages/_author/_post.vue:142
 msgid "Originally published in"
 msgstr "Původně komentář vyšel v"
+
+#~ msgid "Article cost"
+#~ msgstr "Cena článku"
 
 #~ msgid "Use <span class=\"fake-button\" /> Consider button."
 #~ msgstr ""

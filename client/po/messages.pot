@@ -71,49 +71,9 @@ msgstr ""
 msgid "Early morning"
 msgstr ""
 
-#: components/widgets/ConsiderPost.vue:5
-msgid "For which newsletter?"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:9
-msgid "Article cost"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:31
-#: components/editor/backlog/SelectionToolbar.vue:39
-msgid "Upcoming issue"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:32
-msgid "Will be released"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:41
-#: components/widgets/ConsiderPost.vue:72
-msgid "To the top"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:61
-#: components/widgets/ConsiderPost.vue:92
-msgid "To the bottom"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:64
-#: components/editor/backlog/NewspaperBacklog.vue:23
-msgid "Considered posts"
-msgstr ""
-
-#: components/widgets/ConsiderPost.vue:98
-#: components/editor/backlog/CommentEditor.vue:19
-#: pages/posts/_postId.vue:4
-#: pages/posts/_postId.vue:5
-#: components/editor/NewspaperSettings.vue:131
-msgid "Save"
-msgstr ""
-
 #: components/widgets/NewspaperWidget.vue:36
-#: components/widgets/IssueWidget.vue:33
 #: components/widgets/NewspaperPopup.vue:47
+#: components/widgets/IssueWidget.vue:33
 msgid "subscribers"
 msgstr ""
 
@@ -129,8 +89,8 @@ msgid "Every 3 hours"
 msgstr ""
 
 #: components/widgets/ChangePeriodicity.vue:14
-#: components/issues/IssueSuspendedAuthor.vue:52
 #: components/issues/IssueNewspaper.vue:68
+#: components/issues/IssueSuspendedAuthor.vue:52
 #: components/issues/IssueAuthor.vue:58
 #: components/issues/IssueSuspendedNewspaper.vue:71
 #: components/issues/IssueUnreleasedNewspaper.vue:71
@@ -625,12 +585,16 @@ msgstr ""
 msgid "Subscribe newspaper to continue reading"
 msgstr ""
 
+#: components/posts/PostTweet.vue:30
+msgid "Original tweet"
+msgstr ""
+
 #: components/posts/PostVideo.vue:24
 msgid "Watch video"
 msgstr ""
 
-#: components/posts/PostTweet.vue:30
-msgid "Original tweet"
+#: components/posts/PostLink.vue:31
+msgid "Read article"
 msgstr ""
 
 #: components/posts/PostRecommendations.vue:4
@@ -639,10 +603,6 @@ msgstr ""
 
 #: components/posts/PostRecommendations.vue:27
 msgid "Recommended posts"
-msgstr ""
-
-#: components/posts/PostLink.vue:31
-msgid "Read article"
 msgstr ""
 
 #: components/posts/PostBase.vue:52
@@ -833,17 +793,17 @@ msgstr ""
 msgid "Show more"
 msgstr ""
 
-#: components/issues/IssueSuspendedAuthor.vue:27
-#: components/issues/IssueSuspendedNewspaper.vue:39
-msgid "Your susbscription were suspended."
-msgstr ""
-
-#: components/issues/IssueSuspendedAuthor.vue:51
 #: components/issues/IssueNewspaper.vue:67
+#: components/issues/IssueSuspendedAuthor.vue:51
 #: components/issues/IssueAuthor.vue:57
 #: components/issues/IssueSuspendedNewspaper.vue:70
 #: components/issues/IssueUnreleasedNewspaper.vue:70
 msgid "6× per day"
+msgstr ""
+
+#: components/issues/IssueSuspendedAuthor.vue:27
+#: components/issues/IssueSuspendedNewspaper.vue:39
+msgid "Your susbscription were suspended."
 msgstr ""
 
 #: components/issues/IssueSuspendedAuthor.vue:53
@@ -919,6 +879,14 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+#: components/editor/backlog/CommentEditor.vue:19
+#: pages/posts/_postId.vue:4
+#: pages/posts/_postId.vue:5
+#: components/widgets/ConsiderPost.vue:139
+#: components/editor/NewspaperSettings.vue:131
+msgid "Save"
+msgstr ""
+
 #: components/editor/backlog/CommentEditor.vue:45
 msgid "Editorial"
 msgstr ""
@@ -986,6 +954,19 @@ msgstr ""
 msgid "Three equal sections"
 msgstr ""
 
+#: components/editor/backlog/NewspaperBacklog.vue:14
+#: components/editor/backlog/NewspaperBacklog.vue:5
+msgid "Issue #"
+msgstr ""
+
+#: components/editor/backlog/NewspaperBacklog.vue:6
+msgid "Issue will be automatically published "
+msgstr ""
+
+#: components/editor/backlog/NewspaperBacklog.vue:23
+msgid "Considered posts"
+msgstr ""
+
 #: components/editor/backlog/PostsSelection.vue:4
 msgid "Select posts"
 msgstr ""
@@ -999,6 +980,7 @@ msgid "Upcoming"
 msgstr ""
 
 #: components/editor/backlog/PostsSelection.vue:17
+#: components/widgets/ConsiderPost.vue:35
 #: components/editor/backlog/SelectionToolbar.vue:47
 msgid "Backlog"
 msgstr ""
@@ -1011,13 +993,12 @@ msgstr ""
 msgid "Paste URL"
 msgstr ""
 
-#: components/editor/backlog/NewspaperBacklog.vue:14
-#: components/editor/backlog/NewspaperBacklog.vue:5
-msgid "Issue #"
+#: components/editor/EditArticle.vue:18
+msgid "Normal view"
 msgstr ""
 
-#: components/editor/backlog/NewspaperBacklog.vue:6
-msgid "Issue will be automatically published "
+#: components/editor/EditArticle.vue:27
+msgid "Column view"
 msgstr ""
 
 #: components/editor/EditorCard.vue:14
@@ -1026,14 +1007,6 @@ msgstr ""
 
 #: components/editor/EditTweet.vue:9
 msgid "Tweet Content"
-msgstr ""
-
-#: components/editor/EditArticle.vue:18
-msgid "Normal view"
-msgstr ""
-
-#: components/editor/EditArticle.vue:27
-msgid "Column view"
 msgstr ""
 
 #: pages/system.vue:2
@@ -1209,14 +1182,6 @@ msgstr ""
 msgid "Published Posts – Kairly"
 msgstr ""
 
-#: pages/posts/_postId.vue:2
-msgid "Edit a post"
-msgstr ""
-
-#: pages/posts/_postId.vue:43
-msgid "My Posts – Kairly"
-msgstr ""
-
 #: pages/subscription.vue:2
 #: components/layout/AppHeader.vue:24
 #: components/layout/AppHeader.vue:66
@@ -1290,6 +1255,14 @@ msgstr ""
 msgid "Explore more content"
 msgstr ""
 
+#: pages/posts/_postId.vue:2
+msgid "Edit a post"
+msgstr ""
+
+#: pages/posts/_postId.vue:43
+msgid "My Posts – Kairly"
+msgstr ""
+
 #: pages/search.vue:2
 #: pages/search.vue:6
 #: components/layout/AppHeader.vue:169
@@ -1347,6 +1320,14 @@ msgstr ""
 msgid "Credit balance – Kairly"
 msgstr ""
 
+#: pages/user/transactions/upcoming.vue:5
+msgid "Newspaper / Author"
+msgstr ""
+
+#: pages/user/transactions/upcoming.vue:6
+msgid "Date of upcoming payment"
+msgstr ""
+
 #: pages/user/add-credits.vue:7
 msgid ""
 "Kairly is currently in beta. You will receive free credit automatically "
@@ -1369,14 +1350,6 @@ msgstr ""
 
 #: pages/user/add-credits.vue:62
 msgid "Don't be greedy."
-msgstr ""
-
-#: pages/user/transactions/upcoming.vue:5
-msgid "Newspaper / Author"
-msgstr ""
-
-#: pages/user/transactions/upcoming.vue:6
-msgid "Date of upcoming payment"
 msgstr ""
 
 #: pages/user/settings.vue:2
@@ -1511,6 +1484,38 @@ msgstr ""
 
 #: mixins/PeriodicityMixin.js:27
 msgid "Every {dow} at {at}"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:10
+msgid "For which newsletter?"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:36
+msgid "Post that are considered."
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:46
+#: components/widgets/ConsiderPost.vue:97
+msgid "To the top"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:125
+#: components/widgets/ConsiderPost.vue:74
+msgid "To the bottom"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:132
+#: components/widgets/ConsiderPost.vue:81
+msgid "Add section"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:86
+#: components/editor/backlog/SelectionToolbar.vue:39
+msgid "Upcoming issue"
+msgstr ""
+
+#: components/widgets/ConsiderPost.vue:87
+msgid "Will be released"
 msgstr ""
 
 #: components/layout/AppHeader.vue:124

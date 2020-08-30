@@ -7,24 +7,21 @@
   >
     <template #header>
       <template v-if="step === 'step-1'">
-        <h2>{{ $t('For which newsletter?') }}</h2>
-        <strong
-          v-b-tooltip
-          class="consider-post--price"
-          :title="$t('Article cost')"
-        >
-          <MoneyFormat :value="post.price" currency="Kč" />
-        </strong>
+        <h1>{{ $t('For which newsletter?') }}</h1>
       </template>
 
       <template v-else-if="step === 'step-2'">
         <button class="back" @click="goBack()" />
-        <h2>{{ selectedNewspaper.title }}</h2>
+        <h1>{{ selectedNewspaper.title }}</h1>
       </template>
     </template>
 
-    <div v-on-clickaway="closeDialog" class="consider-post-view">
-      <section v-if="step === 'step-1'" class="consider-post--step-1">
+    <div class="consider-post-view">
+      <section
+        v-if="step === 'step-1'"
+        class="consider-post--step-1"
+        :class="{'two-columns': userNewspapers.length > 5}"
+      >
         <ul>
           <li v-for="ed in userNewspapers" :key="ed.fullName" :class="{'is-selected': ed.fullName in postBacklog}">
             <a href="#" @click.prevent="toggle(ed, $event)">{{ ed.title }}</a>
@@ -34,76 +31,112 @@
 
       <section v-else-if="step === 'step-2'" class="consider-post--step-2">
         <div class="consider-post--step-2--content">
-          <h3>{{ $t('Upcoming issue') }}</h3>
-          <p>{{ $t('Will be released') }} {{ nextRelease }}.</p>
+          <section>
+            <h3>{{ $t('Backlog') }}</h3>
+            <p>{{ $t('Post that are considered.') }}</p>
 
-          <label>
-            <input
-              v-model="position"
-              name="position"
-              type="radio"
-              :value="['upcoming', 0]"
-            >
-            {{ $t('To the top') }}
-          </label>
+            <div class="consider-post--step2--sections">
+              <label>
+                <input
+                  v-model="position"
+                  name="position"
+                  type="radio"
+                  :value="['considered', 0]"
+                >
+                {{ $t('To the top') }}
+              </label>
+            </div>
 
-          <label v-for="section in upcomingIssueSections" :key="section.index">
-            <input
-              v-model="position"
-              name="position"
-              type="radio"
-              :value="['upcoming', section.index + 1]"
+            <div
+              v-for="section in backlogSections"
+              :key="section.index"
+              class="consider-post--step2--sections"
             >
-            {{ section.title }}
-          </label>
+              <label>
+                <input
+                  v-model="position"
+                  name="position"
+                  type="radio"
+                  :value="['considered', section.index + 1]"
+                >
+                {{ section.title }}
+              </label>
+            </div>
 
-          <label>
-            <input
-              v-model="position"
-              name="position"
-              type="radio"
-              :value="['upcoming', -1]"
+            <div class="consider-post--step2--sections">
+              <label>
+                <input
+                  v-model="position"
+                  name="position"
+                  type="radio"
+                  :value="['considered', -1]"
+                >
+                {{ $t('To the bottom') }}
+              </label>
+            </div>
+            <button
+              class="consider-post--step2--add-section"
+              @click="addHeading('considered')"
             >
-            {{ $t('To the bottom') }}
-          </label>
+              {{ $t('Add section') }}
+            </button>
+          </section>
 
-          <h3>{{ $t('Considered posts') }}</h3>
-          <label>
-            <input
-              v-model="position"
-              name="position"
-              type="radio"
-              :value="['considered', 0]"
-            >
-            {{ $t('To the top') }}
-          </label>
+          <section>
+            <h3>{{ $t('Upcoming issue') }}</h3>
+            <p>{{ $t('Will be released') }} {{ nextRelease }}.</p>
 
-          <label v-for="section in backlogSections" :key="section.index">
-            <input
-              v-model="position"
-              name="position"
-              type="radio"
-              :value="['considered', section.index + 1]"
-            >
-            {{ section.title }}
-          </label>
+            <div class="consider-post--step2--sections">
+              <label>
+                <input
+                  v-model="position"
+                  name="position"
+                  type="radio"
+                  :value="['upcoming', 0]"
+                >
+                {{ $t('To the top') }}
+              </label>
+            </div>
 
-          <label>
-            <input
-              v-model="position"
-              name="position"
-              type="radio"
-              :value="['considered', -1]"
+            <div
+              v-for="section in upcomingIssueSections"
+              :key="section.index"
+              class="consider-post--step2--sections"
             >
-            {{ $t('To the bottom') }}
-          </label>
+              <label>
+                <input
+                  v-model="position"
+                  name="position"
+                  type="radio"
+                  :value="['upcoming', section.index + 1]"
+                >
+                {{ section.title }}
+              </label>
+            </div>
+
+            <div class="consider-post--step2--sections">
+              <label>
+                <input
+                  v-model="position"
+                  name="position"
+                  type="radio"
+                  :value="['upcoming', -1]"
+                >
+                {{ $t('To the bottom') }}
+              </label>
+            </div>
+            <button
+              class="consider-post--step2--add-section"
+              @click="addHeading('upcoming')"
+            >
+              {{ $t('Add section') }}
+            </button>
+          </section>
         </div>
       </section>
     </div>
-    <template #footer>
-      <div>
-        <button @click="save()">{{ $t('Save') }}</button>
-      </div>
+    <template v-if="step === 'step-2'" #footer>
+      <button @click="save()">{{ $t('Save') }}</button>
     </template>
   </DialogWindow>
 </template>
@@ -111,21 +144,14 @@
 <script>
 import moment from 'moment'
 import { mapGetters, mapState, mapActions } from 'vuex'
-import { directive as onClickaway } from '@/lib/vue-clickaway'
 
-import MoneyFormat from '@/components/widgets/MoneyFormat'
 import DialogWindow from '@/components/modals/DialogWindow'
 import ModalMixin from '@/mixins/ModalMixin'
 
 export default {
   name: 'ConsiderPost',
 
-  directives: {
-    onClickaway
-  },
-
   components: {
-    MoneyFormat,
     DialogWindow
   },
 
@@ -190,8 +216,26 @@ export default {
   },
 
   methods: {
-    closeDialog () {
-      this.$emit('closeConsiderPostDialog')
+    addHeading (target) {
+      let title = window.prompt('Title')
+      if (title === null) {
+        return
+      }
+      title = title.trim()
+      const newspaper = this.selectedNewspaper
+      const item = {
+        id: Math.random().toString(36).substring(2),
+        type: 'header',
+        title
+      }
+      this.$store.commit('backlog/splice', {
+        newspaper,
+        target,
+        items: [item],
+        index: -1,
+        deleteCount: 0
+      })
+      this.$store.dispatch('backlog/save', { newspaper })
     },
 
     goBack () {
@@ -228,7 +272,9 @@ export default {
         index
       })
 
-      this.closeDialog()
+      this.closeModal()
+      this.step = 'step-1'
+      this.selectedNewspaper = null
     },
 
     ...mapActions({
@@ -245,61 +291,65 @@ export default {
 @import './styles/components/buttons'
 
 .consider-post-dialog
-  max-width: 640px
+  width: 480px
 
-.consider-post-view
-  //- header
-  header
-    display: flex
-    padding: 0 $baseline/2
+.consider-post--step-1
+  padding: $baseline / 2
 
-    h2
-      margin-right: auto
+  &.two-columns
+    columns: 2
 
-    //- back button
-    .back
-      margin-left: (-$baseline/2)
-      // margin-right: $baseline/4
-      padding: 0 $baseline/2
+    @media (max-width: $mobile)
+      columns: 1
 
-      border: 0
-      background: transparent
-
-      cursor: pointer
-
-      &:hover,
-      &:focus
-        background: lighten($c-base, 15%)
+  li
+    a
+      color: #000
 
       &::before
-        +fa-icon()
-        @extend .fas
+        opacity: 0.5
 
-        content: fa-content($fa-var-arrow-left)
+      &:hover::before,
+      &:focus::before
+        opacity: 1
 
-  //- list
-  li
-    a::after
-      content: fa-content($fa-var-check)
-      transition: 0.15s opacity
+    a::before
+      display: inline-block
+      height: 10px
+      width: 10px
 
-    &.is-selected a::after
-      opacity: 1 !important
+      background: #555
+      border-radius: 100%
 
-      font-size: $fs-0
-      content: fa-content($fa-var-check-circle)
-      transition: 0.15s opacity
+      margin-right: $baseline / 2
+
+      content: ''
+
+    &.is-selected
+      a
+        font-weight: 600
+      a::before
+        background: $c-base
+        opacity: 1
 
 //- Step 2
 .consider-post--step-2
   padding: $baseline / 2
 
 .consider-post--step-2--content
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-column-gap: $baseline
+
+  @media (max-width: $mobile)
+    grid-template-columns: 1fr
 
   h3
     font-weight: 600
 
   h3 + p
+    margin-bottom: $baseline / 4
+
     font-size: $fs--1
     line-height: 1.42
 
@@ -308,6 +358,34 @@ export default {
   label
     display: block
     margin-bottom: $baseline / 4
+
+  > section:first-of-type
+    margin-bottom: $baseline / 2
+
+.consider-post--step2--sections
+  display: flex
+
+  > label
+    flex: 1
+
+.consider-post--step2--add-section
+  padding: 0
+
+  background: transparent
+  border: 0
+  color: $c-base
+
+  line-height: $baseline
+  font-family: $ff-sans
+  font-size: $fs-0
+
+  &::before
+    +fa-icon()
+    @extend .fas
+
+    margin: 0 $baseline / 4
+
+    content: fa-content($fa-var-plus)
 
 .consider-post--step-2--footer
 

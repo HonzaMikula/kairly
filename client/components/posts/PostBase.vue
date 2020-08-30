@@ -62,7 +62,7 @@
               :title="$t('Consider for newsletter')"
               @click.stop.prevent="showConsiderPost = true"
             />
-            <ConsiderPost v-if="showConsiderPost" :post="post" @closeConsiderPostDialog="closeConsiderPost" />
+            <ConsiderPost :active.sync="showConsiderPost" :post="post" />
           </span>
         </slot>
         <slot name="global-controls" />
