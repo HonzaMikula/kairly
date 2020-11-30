@@ -60,6 +60,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Upcoming payments') + ' – Kairly'
+    }
+  },
+
   computed: {
     authorSubscriptions () {
       const { authors } = this.$store.state.subscriptions
@@ -108,12 +114,6 @@ export default {
     fmtTime (datetime) {
       const format = this.$i18n.locale === 'cs' ? 'D.M.YYYY' : 'M/D/YYYY'
       return moment(datetime).format(format)
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Upcoming payments') + ' – Kairly'
     }
   }
 }

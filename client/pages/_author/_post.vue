@@ -8,6 +8,8 @@
         @click="$router.go(-1)"
       />
 
+      <div class="post-detail--background" />
+
       <main itemscope itemtype="https://schema.org/NewsArticle">
         <header class="post-detail--header">
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
@@ -225,6 +227,40 @@ export default {
     }
   },
 
+  head () {
+    const { title, perex } = this.post.content
+    const { author, id, time } = this.post
+    const description = perex ? perex.replace(ELEMENTS_REGEXP, ' ').substring(0, 350) : ''
+
+    const meta = [
+      { hid: 'description', name: 'description', content: description },
+      { hid: 'og:title', property: 'og:title', content: `${title} – ${author.name} – Kairly` },
+      { hid: 'og:description', property: 'og:description', content: description },
+      { hid: 'og:article:published_time', property: 'og:article:published_time', content: time },
+
+      { hid: 'og:type', property: 'og:type', content: 'article' },
+      { hid: 'og:url', property: 'og:url', content: `https://www.kairly.com/${id}` },
+      { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
+      { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
+      { hid: 'twitter:title', property: 'twitter:title', content: `${title} – ${author.name} – Kairly` },
+      { hid: 'twitter:description', property: 'twitter:description', content: description },
+      { hid: 'author', name: 'author', content: author.name },
+    ]
+
+    const matches = IMG_REGEXP.exec(perex)
+    if (matches) {
+      const image = matches[1]
+      meta.push({ hid: 'og:image', property: 'og:image', content: image })
+      meta.push({ hid: 'og:image:alt', property: 'og:image:alt', content: title })
+      meta.push({ hid: 'twitter:image', property: 'twitter:image', content: image })
+    }
+
+    return {
+      title: `${title} – ${author.name} – Kairly`,
+      meta
+    }
+  },
+
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn,
@@ -274,40 +310,6 @@ export default {
     openConsiderPost () {
       this.showConsiderPost = true
     }
-  },
-
-  head () {
-    const { title, perex } = this.post.content
-    const { author, id, time } = this.post
-    const description = perex ? perex.replace(ELEMENTS_REGEXP, ' ').substring(0, 350) : ''
-
-    const meta = [
-      { hid: 'description', name: 'description', content: description },
-      { hid: 'og:title', property: 'og:title', content: `${title} – ${author.name} – Kairly` },
-      { hid: 'og:description', property: 'og:description', content: description },
-      { hid: 'og:article:published_time', property: 'og:article:published_time', content: time },
-
-      { hid: 'og:type', property: 'og:type', content: 'article' },
-      { hid: 'og:url', property: 'og:url', content: `https://www.kairly.com/${id}` },
-      { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
-      { hid: 'twitter:site', property: 'twitter:site', content: '@kairlynews' },
-      { hid: 'twitter:title', property: 'twitter:title', content: `${title} – ${author.name} – Kairly` },
-      { hid: 'twitter:description', property: 'twitter:description', content: description },
-      { hid: 'author', name: 'author', content: author.name },
-    ]
-
-    const matches = IMG_REGEXP.exec(perex)
-    if (matches) {
-      const image = matches[1]
-      meta.push({ hid: 'og:image', property: 'og:image', content: image })
-      meta.push({ hid: 'og:image:alt', property: 'og:image:alt', content: title })
-      meta.push({ hid: 'twitter:image', property: 'twitter:image', content: image })
-    }
-
-    return {
-      title: `${title} – ${author.name} – Kairly`,
-      meta
-    }
   }
 }
 </script>
@@ -325,14 +327,30 @@ export default {
   padding: $baseline $baseline/2 $baseline $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
 
-  background: #fff
+  .post-detail--background
+    position: absolute
+    top: 0
+    left: 0
+
+    height: 100%
+    width: 100%
+
+    background: #fafafa url('~assets/article/paper-noise.jpg') fixed
+    background-size: cover
+    filter: blur(10px) brightness(108%)
 
   @media (max-width: $mobile)
     padding: $mBaseline/2 $mBaseline $mBaseline $mBaseline
 
   main
+    position: relative
+    z-index: 1
+
     margin: 0 auto
+    padding: $baseline
     max-width: 700px
+
+    background: #fff
 
 //- Back Button
 .post-detail--back-button

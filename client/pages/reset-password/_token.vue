@@ -54,6 +54,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Reset Password') + ' – Kairly',
+    }
+  },
+
   methods: {
     ...mapMutations({
       showError: 'messages/error',
@@ -76,12 +82,6 @@ export default {
       } catch (err) {
         this.handleError(err)
       }
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Reset Password') + ' – Kairly',
     }
   }
 }

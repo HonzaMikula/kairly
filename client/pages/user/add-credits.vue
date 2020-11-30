@@ -38,6 +38,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Buy credits') + ' – Kairly'
+    }
+  },
+
   computed: mapState({
     user: state => state.auth.user,
   }),
@@ -61,12 +67,6 @@ export default {
       } else {
         alert(this.$t("Don't be greedy."))
       }
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Buy credits') + ' – Kairly'
     }
   }
 }

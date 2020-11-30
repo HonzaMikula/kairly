@@ -248,39 +248,6 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState({
-      loggedIn: state => state.auth.loggedIn
-    }),
-
-    isEditor () {
-      if (this.newspaper) {
-        const author = this.newspaper.editor
-        return this.user.id === author.id
-      } else {
-        return false
-      }
-    },
-
-    periodicity () {
-      return this.getPeriodicityLabel(this.newspaper.periodicity)
-    },
-
-    posts () {
-      return this.issue.layout.map(item => this.getPostObject(item))
-    },
-
-    ...mapState({
-      user: state => state.auth.user
-    })
-  },
-
-  async mounted () {
-    if (this.loggedIn) {
-      await this.$store.dispatch('backlog/loadUserBacklog')
-    }
-  },
-
   head () {
     const { title, name, description, picture, editor } = this.newspaper
 
@@ -394,7 +361,41 @@ export default {
     }
 
     return head
-  }
+  },
+
+  computed: {
+    ...mapState({
+      loggedIn: state => state.auth.loggedIn
+    }),
+
+    isEditor () {
+      if (this.newspaper) {
+        const author = this.newspaper.editor
+        return this.user.id === author.id
+      } else {
+        return false
+      }
+    },
+
+    periodicity () {
+      return this.getPeriodicityLabel(this.newspaper.periodicity)
+    },
+
+    posts () {
+      return this.issue.layout.map(item => this.getPostObject(item))
+    },
+
+    ...mapState({
+      user: state => state.auth.user
+    })
+  },
+
+  async mounted () {
+    if (this.loggedIn) {
+      await this.$store.dispatch('backlog/loadUserBacklog')
+    }
+  },
+
 }
 </script>
 

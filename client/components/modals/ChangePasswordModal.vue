@@ -64,6 +64,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Change password - Kairly')
+    }
+  },
+
   methods: {
     ...mapMutations({
       showError: 'messages/error',
@@ -90,11 +96,6 @@ export default {
     }
   },
 
-  head () {
-    return {
-      title: this.$t('Change password - Kairly')
-    }
-  }
 }
 </script>
 

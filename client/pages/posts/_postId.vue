@@ -27,6 +27,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('My Posts – Kairly')
+    }
+  },
+
   methods: {
     async savePost (data) {
       const { post } = await this.$axios.$patch(`/drafts/${this.post.id}`, data)
@@ -35,12 +41,6 @@ export default {
       } else {
         this.$router.push('/posts/published')
       }
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('My Posts – Kairly')
     }
   }
 }

@@ -113,6 +113,17 @@ export default {
     TimelineLoader
   },
 
+  beforeRouteLeave (to, from, next) {
+    try {
+      if (this.loggedIn) {
+        const { history, location } = window
+        history.replaceState({ ...history.state, scrollY: window.scrollY }, document.title, location.pathname)
+      }
+    } finally {
+      next()
+    }
+  },
+
   async asyncData ({ store, params }) {
     const { state } = store
     const { date } = params
@@ -148,6 +159,15 @@ export default {
       showWelcome: false,
       date: timeline ? timeline.date : null,
       timeline
+    }
+  },
+
+  head () {
+    return {
+      title: 'Kairly',
+      meta: [
+        { hid: 'description', name: 'description', content: 'Timeline showing you latest issues of newspapers you subscribed to.' },
+      ]
     }
   },
 
@@ -245,26 +265,6 @@ export default {
           this.timeline = timeline
         }
       }
-    }
-  },
-
-  beforeRouteLeave (to, from, next) {
-    try {
-      if (this.loggedIn) {
-        const { history, location } = window
-        history.replaceState({ ...history.state, scrollY: window.scrollY }, document.title, location.pathname)
-      }
-    } finally {
-      next()
-    }
-  },
-
-  head () {
-    return {
-      title: 'Kairly',
-      meta: [
-        { hid: 'description', name: 'description', content: 'Timeline showing you latest issues of newspapers you subscribed to.' },
-      ]
     }
   }
 }

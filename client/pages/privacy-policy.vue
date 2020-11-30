@@ -252,12 +252,6 @@ export default {
     FooterLinks
   },
 
-  computed: {
-    ...mapState({
-      currentLocale: state => state.locale || 'en'
-    })
-  },
-
   head () {
     const metaTitle = this.$t('Privacy policy') + ' – Kairly'
     const metaDescription = this.$t('Our Privacy policy on Kairly.')
@@ -277,6 +271,12 @@ export default {
         { hid: 'twitter:description', property: 'twitter:description', content: metaDescription },
       ]
     }
+  },
+
+  computed: {
+    ...mapState({
+      currentLocale: state => state.locale || 'en'
+    })
   }
 }
 </script>

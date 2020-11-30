@@ -1,25 +1,23 @@
 <template>
   <div class="app-view">
-    <template>
-      <nuxt />
+    <nuxt />
 
-      <portal-target name="modal" slim />
+    <portal-target name="modal" slim />
 
-      <InfoMessage v-if="errorMessage" type="error">{{ errorMessage }}</InfoMessage>
-      <InfoMessage v-if="successMessage" type="success">{{ successMessage }}</InfoMessage>
+    <InfoMessage v-if="errorMessage" type="error">{{ errorMessage }}</InfoMessage>
+    <InfoMessage v-if="successMessage" type="success">{{ successMessage }}</InfoMessage>
 
-      <AuthorSubscriptionModal
-        v-if="$store.state.modals.authorSubscription !== null"
-        :author="$store.state.modals.authorSubscription"
-        @close="$store.commit('modals/authorSubscription', null)"
-      />
+    <AuthorSubscriptionModal
+      v-if="$store.state.modals.authorSubscription !== null"
+      :author="$store.state.modals.authorSubscription"
+      @close="$store.commit('modals/authorSubscription', null)"
+    />
 
-      <NewspaperSubscriptionModal
-        v-if="$store.state.modals.newspaperSubscription !== null"
-        :newspaper="$store.state.modals.newspaperSubscription"
-        @close="$store.commit('modals/newspaperSubscription', null)"
-      />
-    </template>
+    <NewspaperSubscriptionModal
+      v-if="$store.state.modals.newspaperSubscription !== null"
+      :newspaper="$store.state.modals.newspaperSubscription"
+      @close="$store.commit('modals/newspaperSubscription', null)"
+    />
   </div>
 </template>
 
@@ -33,12 +31,20 @@ import NewspaperSubscriptionModal from '@/components/modals/NewspaperSubscriptio
 export default {
   name: 'App',
 
-  middleware: ['auth'],
-
   components: {
     AuthorSubscriptionModal,
     InfoMessage,
     NewspaperSubscriptionModal
+  },
+
+  middleware: ['auth'],
+
+  head () {
+    return {
+      htmlAttrs: {
+        lang: this.currentLocale,
+      }
+    }
   },
 
   computed: mapState({
@@ -58,13 +64,6 @@ export default {
     clearMessages: 'messages/clear',
   }),
 
-  head () {
-    return {
-      htmlAttrs: {
-        lang: this.currentLocale,
-      }
-    }
-  }
 }
 </script>
 

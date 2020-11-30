@@ -15,7 +15,7 @@ module.exports = {
   rules: {
     'comma-dangle': 'off',
     'arrow-parens': 'off',
-    'no-console': ['warn', { 'allow': ["warn", "error"] }],
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
     'standard/no-callback-literal': 'off',
     'nuxt/no-cjs-in-config': 'off',
     'vue/no-v-html': 'off',

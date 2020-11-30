@@ -54,6 +54,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Reset password') + ' – Kairly',
+    }
+  },
+
   methods: {
     async submit () {
       try {
@@ -64,12 +70,6 @@ export default {
       } catch (err) {
         this.handleError(err)
       }
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Reset password') + ' – Kairly',
     }
   }
 }

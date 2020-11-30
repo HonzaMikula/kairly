@@ -139,6 +139,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Import RSS feeds – Kairly')
+    }
+  },
+
   methods: {
     ...mapActions(['subscribeAuthor', 'subscribeNewspaper']),
 
@@ -282,12 +288,6 @@ export default {
       this.$store.commit('timeline/invalidate')
       this.$store.commit('invalidateSubscriptions')
       this.$router.push('/')
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Import RSS feeds – Kairly')
     }
   }
 }

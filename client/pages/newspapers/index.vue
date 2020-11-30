@@ -178,6 +178,16 @@ export default {
 
   mixins: [ErrorHandler],
 
+  data () {
+    return {
+      isSelectNewspaperOpen: false,
+      isMobileMenuOpen: false,
+      externalLink: null,
+      selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
+      isBacklogLoaded: false,
+    }
+  },
+
   async fetch ({ store, redirect }) {
     const { user } = store.state.auth
 
@@ -187,13 +197,9 @@ export default {
     await store.dispatch('getNewspapers', newspaperIds)
   },
 
-  data () {
+  head () {
     return {
-      isSelectNewspaperOpen: false,
-      isMobileMenuOpen: false,
-      externalLink: null,
-      selectedFullName: null, // keep just fullName instead fill object to get fresh data on change
-      isBacklogLoaded: false,
+      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newsletters – Kairly'
     }
   },
 
@@ -284,12 +290,6 @@ export default {
       loadNewspaperBacklog: 'backlog/loadNewspaperBacklog',
       addToBacklog: 'backlog/add',
     }),
-  },
-
-  head () {
-    return {
-      title: this.selectedNewspaper ? this.selectedNewspaper.title : 'My Newsletters – Kairly'
-    }
   }
 }
 </script>
