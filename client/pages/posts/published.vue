@@ -49,6 +49,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Published Posts – Kairly')
+    }
+  },
+
   computed: {
     ...mapState({
       user: state => state.auth.user
@@ -76,12 +82,6 @@ export default {
       posts.forEach(post => this.posts.push(post))
       this.cursor = cursor
       this.loadingPosts = false
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Published Posts – Kairly')
     }
   }
 }

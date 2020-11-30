@@ -124,65 +124,63 @@
 
     <template #aside>
       <div v-if="post.type === 'box' || post.type === 'header'" class="newspaper-backlog-controls">
-        <template>
-          <button
-            :id="`block-controls-${post.id}`"
-            v-b-tooltip
-            class="block-controls"
-            :title="$t('Options')"
-            @click.stop
-          />
+        <button
+          :id="`block-controls-${post.id}`"
+          v-b-tooltip
+          class="block-controls"
+          :title="$t('Options')"
+          @click.stop
+        />
 
-          <b-popover
-            :target="`block-controls-${post.id}`"
-            placement="bottomleft"
-            triggers="click hover blur"
-            @click.stop
-          >
-            <ul>
-              <li v-if="canMoveUp" class="icon-up" tabindex="0" @click="moveUp()">
-                <h6>{{ $t('Move up') }}</h6>
+        <b-popover
+          :target="`block-controls-${post.id}`"
+          placement="bottomleft"
+          triggers="click hover blur"
+          @click.stop
+        >
+          <ul>
+            <li v-if="canMoveUp" class="icon-up" tabindex="0" @click="moveUp()">
+              <h6>{{ $t('Move up') }}</h6>
+            </li>
+
+            <li v-if="canMoveDown" class="icon-down" tabindex="0" @click="moveDown()">
+              <h6>{{ $t('Move down') }}</h6>
+            </li>
+
+            <template v-if="post.type === 'box'">
+              <li class="icon-swap" tabindex="0" @click="reverseColumns">
+                <h6>{{ $t('Swap columns') }}</h6>
               </li>
 
-              <li v-if="canMoveDown" class="icon-down" tabindex="0" @click="moveDown()">
-                <h6>{{ $t('Move down') }}</h6>
+              <li class="icon-cancel" tabindex="0" @click="splitColumns">
+                <h6>{{ $t('Cancel special layout') }}</h6>
               </li>
 
-              <template v-if="post.type === 'box'">
-                <li class="icon-swap" tabindex="0" @click="reverseColumns">
-                  <h6>{{ $t('Swap columns') }}</h6>
-                </li>
+              <li class="multiple-options">
+                <h6>{{ $t('Toggle editorial') }}</h6>
+                <div>
+                  <button
+                    v-for="(column, colIndex) in columnIcons"
+                    :key="`btn-${colIndex}`"
+                    @click="toggleEditorialStyle(colIndex)"
+                  >
+                    {{ $t('Column') }} {{ colIndex + 1 }}
+                  </button>
+                </div>
+              </li>
+            </template>
 
-                <li class="icon-cancel" tabindex="0" @click="splitColumns">
-                  <h6>{{ $t('Cancel special layout') }}</h6>
-                </li>
+            <template v-else-if="post.type === 'header'">
+              <li class="icon-edit" tabindex="0" @click="renameHeading()">
+                <h6>{{ $t('Rename') }}</h6>
+              </li>
 
-                <li class="multiple-options">
-                  <h6>{{ $t('Toggle editorial') }}</h6>
-                  <div>
-                    <button
-                      v-for="(column, colIndex) in columnIcons"
-                      :key="`btn-${colIndex}`"
-                      @click="toggleEditorialStyle(colIndex)"
-                    >
-                      {{ $t('Column') }} {{ colIndex + 1 }}
-                    </button>
-                  </div>
-                </li>
-              </template>
-
-              <template v-else-if="post.type === 'header'">
-                <li class="icon-edit" tabindex="0" @click="renameHeading()">
-                  <h6>{{ $t('Rename') }}</h6>
-                </li>
-
-                <li class="icon-remove" tabindex="0" @click="removePost()">
-                  <h6>{{ $t('Remove') }}</h6>
-                </li>
-              </template>
-            </ul>
-          </b-popover>
-        </template>
+              <li class="icon-remove" tabindex="0" @click="removePost()">
+                <h6>{{ $t('Remove') }}</h6>
+              </li>
+            </template>
+          </ul>
+        </b-popover>
       </div>
 
       <portal to="modal">
@@ -466,8 +464,8 @@ export default {
             css:
               columnIdx === idx
                 ? col.css === 'editorial'
-                  ? ''
-                  : 'editorial'
+                    ? ''
+                    : 'editorial'
                 : col.css
           }
         })

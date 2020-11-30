@@ -118,6 +118,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Account Settings – Kairly')
+    }
+  },
+
   computed: {
     ...mapState({
       user: state => state.auth.user,
@@ -165,12 +171,6 @@ export default {
     ...mapMutations({
       showSuccess: 'messages/success'
     })
-  },
-
-  head () {
-    return {
-      title: this.$t('Account Settings – Kairly')
-    }
   }
 }
 </script>

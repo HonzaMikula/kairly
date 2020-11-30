@@ -1,23 +1,23 @@
 <template>
   <div class="microsite-signup-form">
-    <h2>{{ $t('@signupform/heading') }}</h2>
+    <h2>{{ $t("@signupform/heading") }}</h2>
     <div v-if="error" class="error">{{ error }}</div>
 
     <div>
-      <label>{{ $t('Username') }}</label>
+      <label>{{ $t("Username") }}</label>
       <input v-model="username">
     </div>
     <div>
-      <label>{{ $t('Email') }}</label>
+      <label>{{ $t("Email") }}</label>
       <input v-model="email" placeholder="@">
     </div>
     <div>
-      <label>{{ $t('Password') }}</label>
+      <label>{{ $t("Password") }}</label>
       <input v-model="password" type="password">
-      <p>{{ $t('At least 8 characters') }}</p>
+      <p>{{ $t("At least 8 characters") }}</p>
     </div>
 
-    <button @click="submit">{{ $t('Sign Up') }}</button>
+    <button @click="submit">{{ $t("Sign Up") }}</button>
   </div>
 </template>
 
@@ -25,18 +25,18 @@
 export default {
   name: 'SignUpForm',
 
-  fetch ({ store, redirect }) {
-    if (store.state.auth.loggedIn) {
-      redirect('/')
-    }
-  },
-
   data () {
     return {
       username: '',
       email: '',
       password: '',
-      error: null
+      error: null,
+    }
+  },
+
+  fetch ({ store, redirect }) {
+    if (store.state.auth.loggedIn) {
+      redirect('/')
     }
   },
 
@@ -46,16 +46,17 @@ export default {
 
       try {
         const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        await this.$axios.post('/signup',
+        await this.$axios.post(
+          '/signup',
           { username, email, password },
           { headers: { 'X-Timezone': timeZone } }
         )
         await this.$auth.loginWith('local', {
-          data: { username, password }
+          data: { username, password },
         })
         this.$ga.event({
           eventCategory: 'Sign up',
-          eventAction: 'Successful'
+          eventAction: 'Successful',
         })
         this.$ga.set('dimension2', 'new-user')
         this.$router.push('/')
@@ -68,11 +69,11 @@ export default {
         this.$ga.event({
           eventCategory: 'Sign up',
           eventAction: 'Error',
-          eventLabel: this.error
+          eventLabel: this.error,
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -153,5 +154,4 @@ export default {
     list-style: disc
 
     text-align: left
-
 </style>

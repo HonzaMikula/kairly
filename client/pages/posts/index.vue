@@ -80,6 +80,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Draft Posts – Kairly')
+    }
+  },
+
   computed: {
     ...mapState({
       user: state => state.auth.user
@@ -115,13 +121,7 @@ export default {
         this.handleError(err)
       }
     }
-  },
-
-  head () {
-    return {
-      title: this.$t('Draft Posts – Kairly')
-    }
-  },
+  }
 }
 </script>
 

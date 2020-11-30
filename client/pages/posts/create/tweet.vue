@@ -18,16 +18,16 @@ export default {
     EditTweet
   },
 
+  head () {
+    return {
+      title: this.$t('Write a Tweet – Kairly')
+    }
+  },
+
   methods: {
     async createPost (data) {
       await this.$axios.$post('/drafts', data)
       this.$router.push('/posts')
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Write a Tweet – Kairly')
     }
   }
 }

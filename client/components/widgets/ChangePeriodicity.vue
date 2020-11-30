@@ -80,7 +80,7 @@ export default {
     }),
 
     changePeriodicity () {
-      this.$emit('changePeriodicity', this.frequency, this.dow, this.time)
+      this.$emit('change-periodicity', this.frequency, this.dow, this.time)
     },
 
     goOneStepBack () {

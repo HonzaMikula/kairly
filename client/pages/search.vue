@@ -101,6 +101,12 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Search – Kairly')
+    }
+  },
+
   methods: {
     async search () {
       if (this.query) {
@@ -145,12 +151,6 @@ export default {
 
       this.search()
       window.scrollTo(0, 0)
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Search – Kairly')
     }
   }
 }

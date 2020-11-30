@@ -66,27 +66,27 @@ export default {
     MoneyFormat
   },
 
+  async asyncData ({ app, store, params }) {
+    const { transactions } = await store.dispatch('getTransactions')
+    return { transactions }
+  },
+
   async fetch ({ store }) {
     if (store.state.auth.loggedIn) {
       await store.dispatch('getSubscriptions')
     }
   },
 
-  async asyncData ({ app, store, params }) {
-    const { transactions } = await store.dispatch('getTransactions')
-    return { transactions }
+  head () {
+    return {
+      title: this.$t('Credit balance – Kairly')
+    }
   },
 
   methods: {
     fmtTime (datetime) {
       const format = this.$i18n.locale === 'cs' ? 'D.M.YYYY HH:mm' : 'M/D/YYYY HH:mm'
       return moment(datetime).format(format)
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Credit balance – Kairly')
     }
   }
 }

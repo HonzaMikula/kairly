@@ -65,16 +65,16 @@ export default {
       }
 
       const slug = this.post.slug ? encodeURIComponent(this.post.slug) : `id:${this.post.id}`
-      const replaceUrl = (src, callback) => {
+      const replaceUrl = (src, callbackFce) => {
         // universal URL can't parse url without protocol
         try {
           const url = new URL(src.startsWith('//') ? `http:${src}` : src)
           if (url.hostname !== 'kairly.com') {
-            callback(`${baseURL}/p?post=${slug}&size=timeline&src=${encodeURIComponent(src)}`)
+            callbackFce(`${baseURL}/p?post=${slug}&size=timeline&src=${encodeURIComponent(src)}`)
           }
         } catch (e) {
           console.warn('URL parsing error for post ' + this.post.id, e)
-          callback('#')
+          callbackFce('#')
         }
       }
 

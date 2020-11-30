@@ -129,6 +129,43 @@ export default {
     }
   },
 
+  head () {
+    const { id, name, bio, picture } = this.author
+    return {
+      title: `${name} – Kairly`,
+      meta: [
+        { hid: 'description', name: 'description', content: bio },
+        { hid: 'og:title', property: 'og:title', content: `${name} – Kairly` },
+        { hid: 'og:description', property: 'og:description', content: bio },
+        { hid: 'og:image', property: 'og:image', content: picture },
+        { hid: 'og:image:alt', property: 'og:image:alt', content: name },
+        { hid: 'og:type', property: 'og:type', content: 'profile' },
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: `https://kairly.com/${id}`
+        },
+        { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
+        {
+          hid: 'twitter:site',
+          property: 'twitter:site',
+          content: '@kairlynews'
+        },
+        {
+          hid: 'twitter:title',
+          property: 'twitter:title',
+          content: `${name} – Kairly`
+        },
+        {
+          hid: 'twitter:description',
+          property: 'twitter:description',
+          content: bio
+        },
+        { hid: 'twitter:image', property: 'twitter:image', content: picture }
+      ]
+    }
+  },
+
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn,
@@ -213,43 +250,6 @@ export default {
         delete this._notMobileShowAllValue
       }
       this._isMobile = isMobile
-    }
-  },
-
-  head () {
-    const { id, name, bio, picture } = this.author
-    return {
-      title: `${name} – Kairly`,
-      meta: [
-        { hid: 'description', name: 'description', content: bio },
-        { hid: 'og:title', property: 'og:title', content: `${name} – Kairly` },
-        { hid: 'og:description', property: 'og:description', content: bio },
-        { hid: 'og:image', property: 'og:image', content: picture },
-        { hid: 'og:image:alt', property: 'og:image:alt', content: name },
-        { hid: 'og:type', property: 'og:type', content: 'profile' },
-        {
-          hid: 'og:url',
-          property: 'og:url',
-          content: `https://kairly.com/${id}`
-        },
-        { hid: 'twitter:card', property: 'twitter:card', content: 'summary' },
-        {
-          hid: 'twitter:site',
-          property: 'twitter:site',
-          content: '@kairlynews'
-        },
-        {
-          hid: 'twitter:title',
-          property: 'twitter:title',
-          content: `${name} – Kairly`
-        },
-        {
-          hid: 'twitter:description',
-          property: 'twitter:description',
-          content: bio
-        },
-        { hid: 'twitter:image', property: 'twitter:image', content: picture }
-      ]
     }
   }
 }

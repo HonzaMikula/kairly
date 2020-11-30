@@ -34,15 +34,15 @@ export default {
     AppLayout
   },
 
-  async fetch ({ store }) {
-    if (store.state.auth.loggedIn) {
-      await store.dispatch('getSubscriptions')
-    }
-  },
-
   data () {
     return {
       tabs: TABS,
+    }
+  },
+
+  async fetch ({ store }) {
+    if (store.state.auth.loggedIn) {
+      await store.dispatch('getSubscriptions')
     }
   }
 }

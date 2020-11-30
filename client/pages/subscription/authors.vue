@@ -1,76 +1,74 @@
 <template>
   <div class="myauthors-view">
-    <template>
-      <div
-        v-if="!subscriptionExists"
-        class="my-authors--empty"
-      >
-        <h1>{{ $t('No subscribed authors') }}</h1>
-        <p>{{ $t('You haven\'t subscribed to any authors yet.') }}</p>
+    <div
+      v-if="!subscriptionExists"
+      class="my-authors--empty"
+    >
+      <h1>{{ $t('No subscribed authors') }}</h1>
+      <p>{{ $t('You haven\'t subscribed to any authors yet.') }}</p>
 
-        <section>
-          <h3>{{ $t('Explore interesting content') }}</h3>
+      <section>
+        <h3>{{ $t('Explore interesting content') }}</h3>
 
-          <ul>
-            <li>{{ $t('Go to Explore page.') }}</li>
-            <li>{{ $t('Subscribe newsletters or authors that caught your interest.') }}</li>
-          </ul>
-          <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
-        </section>
-        <section>
-          <h3>{{ $t('Import RSS feeds') }}</h3>
-          <ul>
-            <li>{{ $t('Add RSS/Atom source.') }}</li>
-            <li>{{ $t('Or import OPML file with feeds.') }}</li>
-          </ul>
-          <nuxt-link to="/import">{{ $t('Import RSS') }}</nuxt-link>
-        </section>
-      </div>
+        <ul>
+          <li>{{ $t('Go to Explore page.') }}</li>
+          <li>{{ $t('Subscribe newsletters or authors that caught your interest.') }}</li>
+        </ul>
+        <nuxt-link to="/explore">{{ $t('Explore authors') }}</nuxt-link>
+      </section>
+      <section>
+        <h3>{{ $t('Import RSS feeds') }}</h3>
+        <ul>
+          <li>{{ $t('Add RSS/Atom source.') }}</li>
+          <li>{{ $t('Or import OPML file with feeds.') }}</li>
+        </ul>
+        <nuxt-link to="/import">{{ $t('Import RSS') }}</nuxt-link>
+      </section>
+    </div>
 
-      <template v-if="sections['suspended'].length">
-        <h2>{{ $t('Suspended') }}</h2>
-        <AuthorWidget
-          v-for="author in sections['suspended']"
-          :key="author.slug"
-          :author="author"
-        />
-      </template>
+    <template v-if="sections['suspended'].length">
+      <h2>{{ $t('Suspended') }}</h2>
+      <AuthorWidget
+        v-for="author in sections['suspended']"
+        :key="author.slug"
+        :author="author"
+      />
+    </template>
 
-      <template v-if="sections['6x_per_day'].length">
-        <h2>{{ $t('Every 3 hours') }}</h2>
-        <AuthorWidget
-          v-for="author in sections['6x_per_day']"
-          :key="author.slug"
-          :author="author"
-        />
-      </template>
+    <template v-if="sections['6x_per_day'].length">
+      <h2>{{ $t('Every 3 hours') }}</h2>
+      <AuthorWidget
+        v-for="author in sections['6x_per_day']"
+        :key="author.slug"
+        :author="author"
+      />
+    </template>
 
-      <template v-if="sections['3x_per_day'].length">
-        <h2>{{ $t('3x per day') }}</h2>
-        <AuthorWidget
-          v-for="author in sections['3x_per_day']"
-          :key="author.slug"
-          :author="author"
-        />
-      </template>
+    <template v-if="sections['3x_per_day'].length">
+      <h2>{{ $t('3x per day') }}</h2>
+      <AuthorWidget
+        v-for="author in sections['3x_per_day']"
+        :key="author.slug"
+        :author="author"
+      />
+    </template>
 
-      <template v-if="sections['daily'].length">
-        <h2>{{ $t('Daily') }}</h2>
-        <AuthorWidget
-          v-for="author in sections['daily']"
-          :key="author.slug"
-          :author="author"
-        />
-      </template>
+    <template v-if="sections['daily'].length">
+      <h2>{{ $t('Daily') }}</h2>
+      <AuthorWidget
+        v-for="author in sections['daily']"
+        :key="author.slug"
+        :author="author"
+      />
+    </template>
 
-      <template v-if="sections['weekly'].length">
-        <h2>{{ $t('Weekly') }}</h2>
-        <AuthorWidget
-          v-for="author in sections['weekly']"
-          :key="author.slug"
-          :author="author"
-        />
-      </template>
+    <template v-if="sections['weekly'].length">
+      <h2>{{ $t('Weekly') }}</h2>
+      <AuthorWidget
+        v-for="author in sections['weekly']"
+        :key="author.slug"
+        :author="author"
+      />
     </template>
   </div>
 </template>
@@ -92,6 +90,12 @@ export default {
 
   async fetch ({ store }) {
     await store.dispatch('getSubscriptions')
+  },
+
+  head () {
+    return {
+      title: this.$t('Authors – My Subscription – Kairly')
+    }
   },
 
   computed: {
@@ -131,12 +135,6 @@ export default {
       })
 
       return sections
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Authors – My Subscription – Kairly')
     }
   }
 }

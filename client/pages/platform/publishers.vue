@@ -231,6 +231,19 @@ export default {
     }
   },
 
+  head () {
+    return {
+      title: this.$t('Digital Publishing Platform for Publishers') + ' – Kairly',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.$t('Kairly is a digital publishing platform for publishers that offers a unique concept of paid content.')
+        },
+      ]
+    }
+  },
+
   methods: {
     openRequestSolutionModal () {
       this.isRequestSolutionModalOpen = true
@@ -246,19 +259,6 @@ export default {
         eventCategory: 'Download PDF brochure',
         eventAction: 'Publisher'
       })
-    }
-  },
-
-  head () {
-    return {
-      title: this.$t('Digital Publishing Platform for Publishers') + ' – Kairly',
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content: this.$t('Kairly is a digital publishing platform for publishers that offers a unique concept of paid content.')
-        },
-      ]
     }
   }
 }

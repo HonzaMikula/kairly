@@ -86,17 +86,17 @@ export default {
     }
   },
 
-  methods: {
-    openCategoryModal (category) {
-      this.modalCategory = category
-      this.isModalOpen = true
-    }
-  },
-
   head () {
     const title = this.tab[this.$i18n.locale || 'en']
     return {
       title: `${title} – Explore – Kairly`
+    }
+  },
+
+  methods: {
+    openCategoryModal (category) {
+      this.modalCategory = category
+      this.isModalOpen = true
     }
   }
 }

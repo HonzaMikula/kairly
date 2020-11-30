@@ -66,15 +66,15 @@ export default {
     MoneyFormat,
   },
 
+  async asyncData ({ store, params }) {
+    const { credits, transactions } = await store.dispatch('getPlatformTransactions')
+    return { credits, transactions }
+  },
+
   fetch ({ store, redirect }) {
     if (!store.state.auth.user.isAdmin) {
       redirect('/')
     }
-  },
-
-  async asyncData ({ store, params }) {
-    const { credits, transactions } = await store.dispatch('getPlatformTransactions')
-    return { credits, transactions }
   },
 
   head () {
