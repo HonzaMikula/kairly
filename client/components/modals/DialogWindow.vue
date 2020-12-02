@@ -94,6 +94,10 @@ export default {
   @supports not (backdrop-filter: blur(10px))
     background: rgba(0, 0, 0, 0.3)
 
+  @media (max-width: $mobile)
+    align-items: flex-end
+    padding: 0
+
 //- Dialog Window
 .modal-dialog
   position: relative
@@ -107,6 +111,12 @@ export default {
 
   background: #fff
   +box-shadow
+
+  @media (max-width: $mobile)
+    border-radius: $baseline/2 $baseline/2 0 0
+    max-height: 60vh
+    width: 100%
+    max-width: 100%
 
   //- Header
   > header
