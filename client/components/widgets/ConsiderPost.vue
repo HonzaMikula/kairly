@@ -293,6 +293,9 @@ export default {
 .consider-post-dialog
   width: 480px
 
+  @media (max-width: $mobile)
+    max-width: 100%
+
 .consider-post--step-1
   padding: $baseline / 2
 

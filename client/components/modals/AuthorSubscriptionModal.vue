@@ -215,6 +215,10 @@ export default {
   display: block
   max-width: 360px
 
+  @media (max-width: $mobile)
+    max-width: 100%
+    width: 100%
+
   main
     padding: $baseline/2 $baseline/2 0 $baseline/2
 

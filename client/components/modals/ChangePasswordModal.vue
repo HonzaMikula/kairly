@@ -105,6 +105,7 @@ export default {
 
 //- CHANGE PASSWORD VIEW -//
 .change-password-dialog
+
   header
     h1
       padding: 0 $baseline
