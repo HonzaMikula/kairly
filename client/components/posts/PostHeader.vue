@@ -19,7 +19,6 @@ export default {
 <style lang="sass">
 .box-header
   @media (max-width: $mobile)
-    border-bottom: 1px solid #ddd
     margin: $baseline/2 0 $baseline 0
 
   .is-selected & h2
@@ -28,32 +27,27 @@ export default {
 
   h2
     position: relative
+    display: grid
+    align-items: center
+    grid-template-columns: 1fr auto 1fr
+
     margin: $baseline 0 $baseline/2 0
+
     font-family: $ff-serif
     font-size: $fs-1
     text-align: center
 
-    @media (max-width: $mobile)
-      position: relative
-      top: $baseline / 2
-
-      display: table
-      margin: 0 auto
-      padding: 0 $baseline/2
-
-      background: #fafafa
-
     &::after,
     &::before
-      position: absolute
-      left: $baseline * 2
-      top: $baseline / 2
-      width: 25%
-      border-top: 1px solid #ddd
+      height: 1px
+      margin: 0 $baseline
+
+      background: #ddd
+
       content: ''
 
       @media (max-width: $mobile)
-        display: none
+        margin: 0 $baseline/2
 
     &::after
       right: $baseline * 2

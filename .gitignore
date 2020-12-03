@@ -3,3 +3,4 @@
 /.vscode
 .pytest_cache
 kairly.sql.gz*
+client/.eslintcache

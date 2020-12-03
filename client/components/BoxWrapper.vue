@@ -59,7 +59,7 @@ export default {
   align-items: stretch
   margin-bottom: $baseline / 2
 
-  background: #fff
+  //background: #fff
   border: 1px solid #eee
   box-shadow: 2px 2px 4px #eee, -2px -2px 4px #fff
 
@@ -92,6 +92,8 @@ export default {
 
   .box-column
     z-index: 1
+
+    background: #fff
 
   &.cols-2-1
     grid-template-columns: 2fr 1fr

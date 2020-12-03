@@ -8,8 +8,6 @@
         @click="$router.go(-1)"
       />
 
-      <div class="post-detail--background" />
-
       <main itemscope itemtype="https://schema.org/NewsArticle">
         <header class="post-detail--header">
           <nuxt-link :to="{name: 'author', params: {author: post.author.id}}" rel="author">
@@ -327,18 +325,6 @@ export default {
   padding: $baseline $baseline/2 $baseline $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
 
-  .post-detail--background
-    position: absolute
-    top: 0
-    left: 0
-
-    height: 100%
-    width: 100%
-
-    background: #fafafa url('~assets/article/paper-noise.jpg') fixed
-    background-size: cover
-    filter: blur(10px) brightness(108%)
-
   @media (max-width: $mobile)
     padding: $mBaseline/2 $mBaseline $mBaseline $mBaseline
 
@@ -350,7 +336,8 @@ export default {
     padding: $baseline
     max-width: 700px
 
-    background: #fff
+    @media (max-width: $mobile)
+      padding: 0
 
 //- Back Button
 .post-detail--back-button

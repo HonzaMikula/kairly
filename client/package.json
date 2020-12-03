@@ -29,11 +29,11 @@
     "@nuxtjs/google-analytics": "^2.4.0",
     "@nuxtjs/redirect-module": "^0.3.1",
     "async-sema": "^3.1.0",
-    "bootstrap-vue": "^2.19.0",
+    "bootstrap-vue": "^2.20.1",
     "cheerio": "^1.0.0-rc.3",
     "install": "^0.13.0",
     "jwt-decode": "^3.1.2",
-    "nuxt": "^2.14.7",
+    "nuxt": "^2.14.9",
     "nuxt-clipboard2": "^0.2.1",
     "portal-vue": "^2.1.7",
     "universal-url": "^2.0.0",
@@ -56,7 +56,7 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "gettext-vue": "^0.4.1",
     "node-reset-scss": "^1.0.1",
-    "node-sass": "^5.0.0",
+    "node-sass": "^4.14.1",
     "sass-loader": "^10.0.1",
     "xgettext-template": "^3.4.2"
   }
