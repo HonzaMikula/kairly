@@ -139,31 +139,8 @@ export default {
   transition: transform 0.25s
 
 .newspaper-editor-backlog-section
-  margin-bottom: $baseline * 2
   max-width: 900px
   padding: 0 $baseline / 2
-
-  background: url('~assets/noise-background.png')
-
-  &.upcoming
-    grid-column: 1 / span 2
-    grid-row: 1 / span 1
-    z-index: 1
-
-    padding-right: $baseline * 2
-    box-shadow: 10px 0 5px -5px #ccc
-
-  &.next
-    grid-column: 1 / span 2
-    grid-row: 2 / span 1
-    z-index: 1
-
-    padding-right: $baseline * 2
-
-  &.considered
-    grid-column: 2 / span 2
-    grid-row: 1 / span 2
-    justify-self: flex-end
 
 .newspaper-editor-backlog--heading
   display: grid

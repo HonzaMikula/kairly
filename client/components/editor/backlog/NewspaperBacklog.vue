@@ -1,31 +1,35 @@
 <template>
   <div class="newspaper-backlog-view">
-    <NewspaperBacklogPosts
-      v-if="upcoming"
-      :title="$t('Issue #') + (newspaper.issues + 1)"
-      :description="$t('Issue will be automatically published ') + timeFrom(newspaper.nextRelease)"
-      :newspaper="newspaper"
-      :backlog="upcoming"
-      :posts="posts"
-      source="upcoming"
-    />
+    <div class="newspaper-backlog--left-column">
+      <NewspaperBacklogPosts
+        v-if="upcoming"
+        :title="$t('Issue #') + (newspaper.issues + 1)"
+        :description="$t('Issue will be automatically published ') + timeFrom(newspaper.nextRelease)"
+        :newspaper="newspaper"
+        :backlog="upcoming"
+        :posts="posts"
+        source="upcoming"
+      />
 
-    <NewspaperBacklogPosts
-      :title="$t('Issue #') + (newspaper.issues + 2)"
-      :newspaper="newspaper"
-      :backlog="next"
-      :posts="posts"
-      source="next"
-    />
+      <NewspaperBacklogPosts
+        :title="$t('Issue #') + (newspaper.issues + 2)"
+        :newspaper="newspaper"
+        :backlog="next"
+        :posts="posts"
+        source="next"
+      />
+    </div>
 
-    <NewspaperBacklogPosts
-      v-if="considered"
-      :title="$t('Considered posts')"
-      :newspaper="newspaper"
-      :backlog="considered"
-      :posts="posts"
-      source="considered"
-    />
+    <div class="newspaper-backlog--right-column">
+      <NewspaperBacklogPosts
+        v-if="considered"
+        :title="$t('Considered posts')"
+        :newspaper="newspaper"
+        :backlog="considered"
+        :posts="posts"
+        source="considered"
+      />
+    </div>
 
     <SelectionToolbar
       v-show="selection.length"
@@ -151,8 +155,33 @@ export default {
 .newspaper-backlog-view
   display: grid
   grid-template-columns: auto auto auto
-  grid-template-rows: auto 1fr
-  justify-items: stretch
+  max-height: calc(100vh - 300px)
+  background: yellow
+
+.newspaper-backlog--left-column
+    grid-column: 1 / span 2
+    grid-row: 1 / span 1
+    z-index: 1
+
+    padding-right: $baseline * 1.5
+    box-shadow: 10px 0 5px -5px #ccc
+    height: calc(100vh - 170px)
+    overflow-y: auto
+    max-width: 900px
+
+    background: url('~assets/noise-background.png')
+
+.newspaper-backlog--right-column
+    grid-column: 2 / span 2
+    grid-row: 1 / span 1
+    justify-self: end
+
+    height: calc(100vh - 170px)
+    overflow-y: auto
+    max-width: 900px
+    padding-right: $baseline * 1.5
+
+    background: url('~assets/noise-background.png')
 
 p.newspaper-backlog--info--profit
   strong
