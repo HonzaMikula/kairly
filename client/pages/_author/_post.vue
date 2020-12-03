@@ -322,7 +322,7 @@ export default {
   position: relative
 
   display: block
-  padding: $baseline $baseline/2 $baseline $baseline/2
+  padding: $baseline $baseline/2
   min-height: calc(100vh - (#{$baseline} * 2))
 
   @media (max-width: $mobile)
@@ -333,7 +333,7 @@ export default {
     z-index: 1
 
     margin: 0 auto
-    padding: $baseline
+    padding: $baseline/2 $baseline $baseline $baseline
     max-width: 700px
 
     @media (max-width: $mobile)
@@ -347,14 +347,14 @@ export default {
 
   display: inline-block
   border-radius: 100%
-  height: $baseline * 2
-  width: $baseline * 2
+  height: $baseline * 1.5
+  width: $baseline * 1.5
 
-  background: #eee
+  background: #fff
 
   cursor: pointer
   font-size: $fs-1
-  line-height: $baseline * 2
+  line-height: $baseline * 1.5
   text-align: center
 
   @media (max-width: $mobile)

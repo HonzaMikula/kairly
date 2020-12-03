@@ -344,9 +344,6 @@ export default {
   grid-template-columns: 1fr 1fr
   grid-column-gap: $baseline
 
-  @media (max-width: $mobile)
-    grid-template-columns: 1fr
-
   h3
     font-weight: 600
 
@@ -361,6 +358,10 @@ export default {
   label
     display: block
     margin-bottom: $baseline / 4
+
+    white-space: nowrap
+    text-overflow: ellipsis
+    overflow: hidden
 
   > section:first-of-type
     margin-bottom: $baseline / 2
