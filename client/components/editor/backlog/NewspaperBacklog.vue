@@ -148,6 +148,12 @@ export default {
 @import './styles/components/buttons'
 @import './styles/components/mixins'
 
+.newspaper-backlog-view
+  display: grid
+  grid-template-columns: auto auto auto
+  grid-template-rows: auto 1fr
+  justify-items: stretch
+
 p.newspaper-backlog--info--profit
   strong
     margin-right: $baseline / 2
