@@ -1,6 +1,10 @@
 <template>
   <div class="newspaper-backlog-view">
-    <div class="newspaper-backlog--left-column">
+    <div
+      class="newspaper-backlog--left-column"
+      :class="{'is-active': upcomingIssueActive}"
+      @click="upcomingIssueActive = true"
+    >
       <NewspaperBacklogPosts
         v-if="upcoming"
         :title="$t('Issue #') + (newspaper.issues + 1)"
@@ -20,7 +24,11 @@
       />
     </div>
 
-    <div class="newspaper-backlog--right-column">
+    <div
+      class="newspaper-backlog--right-column"
+      :class="{'is-active': !upcomingIssueActive}"
+      @click="upcomingIssueActive = false"
+    >
       <NewspaperBacklogPosts
         v-if="considered"
         :title="$t('Considered posts')"
@@ -64,6 +72,7 @@ export default {
   data () {
     return {
       externalLink: null,
+      upcomingIssueActive: true
     }
   },
 
@@ -103,6 +112,10 @@ export default {
   },
 
   methods: {
+    togglePanels () {
+
+    },
+
     timeFrom (dt) {
       return moment(dt).from()
     },
@@ -151,25 +164,32 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
+@import './styles/mixins/scrollbars'
 
 .newspaper-backlog-view
   display: grid
   grid-template-columns: auto auto auto
   max-height: calc(100vh - 300px)
-  background: yellow
 
 .newspaper-backlog--left-column
     grid-column: 1 / span 2
     grid-row: 1 / span 1
-    z-index: 1
 
     padding-right: $baseline * 1.5
-    box-shadow: 10px 0 5px -5px #ccc
     height: calc(100vh - 170px)
     overflow-y: auto
-    max-width: 900px
+    width: 900px
 
     background: url('~assets/noise-background.png')
+    box-shadow: 10px 0 5px -5px #ccc
+
+    +scrollbar
+
+    @media (min-width: 1800px)
+      box-shadow: none
+
+    &.is-active
+      z-index: 10
 
 .newspaper-backlog--right-column
     grid-column: 2 / span 2
@@ -178,10 +198,19 @@ export default {
 
     height: calc(100vh - 170px)
     overflow-y: auto
-    max-width: 900px
+    width: 900px
     padding-right: $baseline * 1.5
 
     background: url('~assets/noise-background.png')
+    box-shadow: -10px 0 5px -5px #ccc
+
+    +scrollbar
+
+    @media (min-width: 1800px)
+      box-shadow: none
+
+    &.is-active
+      z-index: 10
 
 p.newspaper-backlog--info--profit
   strong
