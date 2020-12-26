@@ -303,7 +303,6 @@ export default {
   position: relative
 
   display: block
-  padding: 0 $baseline
 
   @media (max-width: $mobile)
     padding: 0 $baseline/4
@@ -644,9 +643,7 @@ export default {
         color: #000
 
 .editor-newspapers--board
-  max-width: 900px
-  margin-left: $baseline
-
-  @media (max-width: 1260px)
-    margin-left: 0
+  padding: 0
+  width: 100%
+  box-sizing: border-box
 </style>

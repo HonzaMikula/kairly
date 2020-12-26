@@ -1,5 +1,5 @@
 <template>
-  <div class="newspaper-editor-backlog-section">
+  <div class="newspaper-editor-backlog-section" :class="backlog.name">
     <header class="newspaper-editor-backlog--heading">
       <h2>{{ title }}</h2>
 
@@ -139,7 +139,11 @@ export default {
   transition: transform 0.25s
 
 .newspaper-editor-backlog-section
-  margin-bottom: $baseline * 2
+  max-width: 900px
+  padding: 0 $baseline / 2
+
+  @media (max-width: 1400px)
+    padding: 0
 
 .newspaper-editor-backlog--heading
   display: grid

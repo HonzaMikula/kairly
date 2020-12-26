@@ -1,31 +1,43 @@
 <template>
   <div class="newspaper-backlog-view">
-    <NewspaperBacklogPosts
-      v-if="upcoming"
-      :title="$t('Issue #') + (newspaper.issues + 1)"
-      :description="$t('Issue will be automatically published ') + timeFrom(newspaper.nextRelease)"
-      :newspaper="newspaper"
-      :backlog="upcoming"
-      :posts="posts"
-      source="upcoming"
-    />
+    <div
+      class="newspaper-backlog--left-column"
+      :class="{'is-active': upcomingIssueActive}"
+      @click="upcomingIssueActive = true"
+    >
+      <NewspaperBacklogPosts
+        v-if="upcoming"
+        :title="$t('Issue #') + (newspaper.issues + 1)"
+        :description="$t('Issue will be automatically published ') + timeFrom(newspaper.nextRelease)"
+        :newspaper="newspaper"
+        :backlog="upcoming"
+        :posts="posts"
+        source="upcoming"
+      />
 
-    <NewspaperBacklogPosts
-      :title="$t('Issue #') + (newspaper.issues + 2)"
-      :newspaper="newspaper"
-      :backlog="next"
-      :posts="posts"
-      source="next"
-    />
+      <NewspaperBacklogPosts
+        :title="$t('Issue #') + (newspaper.issues + 2)"
+        :newspaper="newspaper"
+        :backlog="next"
+        :posts="posts"
+        source="next"
+      />
+    </div>
 
-    <NewspaperBacklogPosts
-      v-if="considered"
-      :title="$t('Considered posts')"
-      :newspaper="newspaper"
-      :backlog="considered"
-      :posts="posts"
-      source="considered"
-    />
+    <div
+      class="newspaper-backlog--right-column"
+      :class="{'is-active': !upcomingIssueActive}"
+      @click="upcomingIssueActive = false"
+    >
+      <NewspaperBacklogPosts
+        v-if="considered"
+        :title="$t('Considered posts')"
+        :newspaper="newspaper"
+        :backlog="considered"
+        :posts="posts"
+        source="considered"
+      />
+    </div>
 
     <SelectionToolbar
       v-show="selection.length"
@@ -60,6 +72,7 @@ export default {
   data () {
     return {
       externalLink: null,
+      upcomingIssueActive: true
     }
   },
 
@@ -99,6 +112,10 @@ export default {
   },
 
   methods: {
+    togglePanels () {
+
+    },
+
     timeFrom (dt) {
       return moment(dt).from()
     },
@@ -147,6 +164,80 @@ export default {
 <style lang="sass">
 @import './styles/components/buttons'
 @import './styles/components/mixins'
+@import './styles/mixins/scrollbars'
+
+.newspaper-backlog-view
+  display: grid
+  grid-template-columns: auto auto auto
+  max-height: calc(100vh - 300px)
+
+  @media (max-width: 1400px)
+    grid-template-columns: auto
+    grid-template-rows: auto auto
+    max-height: none
+
+.newspaper-backlog--left-column
+    grid-column: 1 / span 2
+    grid-row: 1 / span 1
+
+    padding-right: $baseline * 1.5
+    height: calc(100vh - 170px)
+    overflow-y: auto
+    width: 900px
+
+    background: url('~assets/noise-background.png')
+    box-shadow: 10px 0 5px -5px #ccc
+
+    +scrollbar
+
+    @media (min-width: 1800px)
+      box-shadow: none
+
+    @media (max-width: 1400px)
+      grid-column: 1 / span 1
+      grid-row: 1 / span 1
+
+      box-shadow: none
+      height: auto
+      justify-self: center
+      max-width: 900px
+      width: 100%
+      padding: 0
+
+    &.is-active
+      z-index: 10
+
+.newspaper-backlog--right-column
+    grid-column: 2 / span 2
+    grid-row: 1 / span 1
+    justify-self: end
+
+    height: calc(100vh - 170px)
+    overflow-y: auto
+    width: 900px
+    padding-right: $baseline * 1.5
+
+    background: url('~assets/noise-background.png')
+    box-shadow: -10px 0 5px -5px #ccc
+
+    +scrollbar
+
+    @media (min-width: 1800px)
+      box-shadow: none
+
+    @media (max-width: 1400px)
+      grid-column: 1 / span 1
+      grid-row: 2 / span 1
+
+      box-shadow: none
+      justify-self: center
+      height: auto
+      padding: 0
+      max-width: 900px
+      width: 100%
+
+    &.is-active
+      z-index: 10
 
 p.newspaper-backlog--info--profit
   strong
