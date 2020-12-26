@@ -142,6 +142,9 @@ export default {
   max-width: 900px
   padding: 0 $baseline / 2
 
+  @media (max-width: 1400px)
+    padding: 0
+
 .newspaper-editor-backlog--heading
   display: grid
   grid-template-columns: $baseline*1.25 1fr auto 1fr $baseline*1.25

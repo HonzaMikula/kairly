@@ -171,6 +171,11 @@ export default {
   grid-template-columns: auto auto auto
   max-height: calc(100vh - 300px)
 
+  @media (max-width: 1400px)
+    grid-template-columns: auto
+    grid-template-rows: auto auto
+    max-height: none
+
 .newspaper-backlog--left-column
     grid-column: 1 / span 2
     grid-row: 1 / span 1
@@ -187,6 +192,17 @@ export default {
 
     @media (min-width: 1800px)
       box-shadow: none
+
+    @media (max-width: 1400px)
+      grid-column: 1 / span 1
+      grid-row: 1 / span 1
+
+      box-shadow: none
+      height: auto
+      justify-self: center
+      max-width: 900px
+      width: 100%
+      padding: 0
 
     &.is-active
       z-index: 10
@@ -208,6 +224,17 @@ export default {
 
     @media (min-width: 1800px)
       box-shadow: none
+
+    @media (max-width: 1400px)
+      grid-column: 1 / span 1
+      grid-row: 2 / span 1
+
+      box-shadow: none
+      justify-self: center
+      height: auto
+      padding: 0
+      max-width: 900px
+      width: 100%
 
     &.is-active
       z-index: 10
