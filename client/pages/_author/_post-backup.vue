@@ -101,43 +101,64 @@
           </div>
         </div>
 
-        <section class="post-detail--conversations">
-          <h2>Interesting conversations</h2>
+        <section
+          v-if="editorials.length"
+          class="post-detail--editorial-comments"
+        >
+          <h2>{{ $t('Comments by editors') }}</h2>
 
-          <div
-            v-for="comment in conversations"
-            :key="comment"
-            class="post-detail--comment"
-          >
-            <article class="post post-content" :class="comment.type">
-              <header>
-                <picture>
-                  <img :src="comment.author.picture">
-                </picture>
-                <h3>{{ comment.author.name }}</h3>
-                <time>{{ comment.date }}</time>
-                <section class="post-pins">
-                  {{ comment.pin }}
-                </section>
-              </header>
+          <template v-for="(editorial, index) in editorials">
+            <div
+              v-if="editorial.type == 'article'"
+              :key="'article-' + index"
+              class="post-detail--editorial-comments--post"
+            >
+              <h3>{{ editorial.title }}</h3>
+              <aside>
+                {{ $t('Originally published in') }}
+                <nuxt-link
+                  :id="`post-editorial-newspaper-${index}`"
+                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
+                >
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY') }})
+                </nuxt-link>
+              </aside>
 
-              <div v-if="comment.content.title" class="post-body">
-                <h2>{{ comment.content.title }}</h2>
-                <div class="post-body--content" v-html="comment.content.perex" />
-              </div>
+              <div v-html="editorial.content" />
 
-              <div v-else class="timeline-post--tweet">
-                <div class="tweet-content" v-html="comment.content.content" />
-              </div>
-
-              <div class="post-replies">
-                <template v-for="reply in comment.replies">
-                  <img :key="reply" :src="reply">
-                </template>
-                {{ comment.numberOfReplies }} replies
-              </div>
-            </article>
-          </div>
+              <footer>
+                <nuxt-link :to="{name: 'author', params: {author: editorial.author.id}}" rel="author">
+                  <AuthorPicture :author="editorial.author" />
+                  {{ editorial.author.name }}
+                </nuxt-link>
+              </footer>
+            </div>
+            <div
+              v-if="editorial.type == 'tweets'"
+              :key="'tweets-' + index"
+              class="post-detail--editorial-comments--tweets"
+            >
+              <aside>
+                {{ $t('Originally published in') }}
+                <nuxt-link
+                  :id="`post-editorial-newspaper-${index}`"
+                  :to="{name: 'author-newspaper-issue', params: {author: editorial.issue.newspaper.editor.id, newspaper: editorial.issue.newspaper.name, issue: editorial.issue.number}}"
+                >
+                  {{ editorial.issue.newspaper.title }} ({{ editorial.issue.time | moment('DD. MM. YYYY') }})
+                </nuxt-link>
+              </aside>
+              <PostTweet
+                v-for="tweet in editorial.tweets"
+                :key="tweet.id"
+                :post="tweet"
+              />
+            </div>
+            <NewspaperPopup
+              :key="'newspaper-popup-' + index"
+              :target="`post-editorial-newspaper-${index}`"
+              :newspaper="editorial.issue.newspaper"
+            />
+          </template>
         </section>
       </main>
     </div>
@@ -158,70 +179,12 @@ import AuthorSubscriptionButton from '@/components/widgets/AuthorSubscriptionBut
 import ConsiderPost from '@/components/widgets/ConsiderPost'
 import FooterLinks from '@/components/microsite/FooterLinks'
 import KairlyPromo from '@/components/KairlyPromo'
+import NewspaperPopup from '@/components/widgets/NewspaperPopup'
+import PostTweet from '@/components/posts/PostTweet'
 import RecommendButtonPost from '@/components/widgets/RecommendButtonPost'
 
 const IMG_REGEXP = /<img[^>]*src="([^"]*)"/g
 const ELEMENTS_REGEXP = /<\/?[^>]+(>|$)/g
-
-const CONVERSATIONS = [
-  {
-    id: 0,
-    author: {
-      name: 'Dan Held',
-      picture: 'https://pbs.twimg.com/profile_images/1241174712694145024/iqRlO2mD_400x400.jpg'
-    },
-    pin: 'Pinned by author',
-    numberOfReplies: 8,
-    date: '2. 1.',
-    content: {
-      title: 'A Bitcoin Supercycle',
-      perex: '<p>You probably first heard of Bitcoin in 2013 or 2017 when friends and family were talking about the wild swings in price.</p><p>Bitcoin’s market cycle is typically around 4 years and some hypothesize the cycle is induced by halvings (a reduction in new supply). The idea being a reduction in supply + increase in demand = number go up.</p><h2>Macro backdrop</h2><p>We can call this Bitcoin’s viral marketing loop. Satoshi describes it succinctly:</p><p>Note that Satoshi wrote this before Bitcoin was even worth $0.01. In the chart below, we have Bitcoin’s price, and halvings which are the dotted lines. As we can see, a bull run has occurred after each halving.</p>'
-    },
-    type: 'newspaper',
-    replies: [
-      'https://cdn.kairly.com/media/cache/c6/10/c6104beb022924f3795ce04e660b2f65.jpg',
-      'https://pbs.twimg.com/profile_images/1241174712694145024/iqRlO2mD_400x400.jpg',
-      'https://cdn.kairly.com/media/cache/3d/52/3d5216c69a9ad0b1e00495a3d4e79965.png'
-    ]
-  },
-  {
-    id: 1,
-    author: {
-      name: 'Alistair Milne',
-      picture: 'https://pbs.twimg.com/profile_images/1344745257418838017/IhJbUet2_400x400.jpg'
-    },
-    pin: 'Pinned by author',
-    numberOfReplies: 2,
-    date: '2. 1.',
-    content: {
-      content: '<p>I\'m not going to pretend to know exactly where, but #Bitcoin is going to blow off quite soon and it will be devastating to everyone on leverage.</p><p>Trade with caution, take profits, stack Sats. This is just the beginning. Marathon not a sprint, etc.</p>'
-    },
-    type: 'twitter',
-    replies: [
-      'https://pbs.twimg.com/profile_images/1344745257418838017/IhJbUet2_400x400.jpg',
-      'https://pbs.twimg.com/profile_images/1241174712694145024/iqRlO2mD_400x400.jpg',
-    ]
-  },
-  {
-    id: 2,
-    author: {
-      name: 'Dan Held',
-      picture: 'https://pbs.twimg.com/profile_images/1241174712694145024/iqRlO2mD_400x400.jpg'
-    },
-    pin: 'Pinned by editor of Malostranské noviny',
-    numberOfReplies: 5,
-    date: '2. 1.',
-    content: {
-      content: '<p>Bitcoin $30,000!</p>'
-    },
-    type: 'twitter',
-    replies: [
-      'https://cdn.kairly.com/media/cache/3d/52/3d5216c69a9ad0b1e00495a3d4e79965.png',
-      'https://cdn.kairly.com/media/cache/c6/10/c6104beb022924f3795ce04e660b2f65.jpg',
-      'https://pbs.twimg.com/profile_images/1241174712694145024/iqRlO2mD_400x400.jpg',
-    ]
-  }
-]
 
 export default {
   name: 'PostDetailPage', // can't use PostDetail because post-detail is already used
@@ -234,7 +197,9 @@ export default {
     AuthorSubscriptionButton,
     ConsiderPost,
     FooterLinks,
+    NewspaperPopup,
     KairlyPromo,
+    PostTweet,
     RecommendButtonPost,
   },
 
@@ -256,8 +221,7 @@ export default {
     return {
       showContinueReading: false,
       showConsiderPost: false,
-      scrollCounter: 0,
-      conversations: CONVERSATIONS
+      scrollCounter: 0
     }
   },
 
@@ -298,8 +262,7 @@ export default {
   computed: {
     ...mapState({
       loggedIn: state => state.auth.loggedIn,
-      backlog: state => state.backlog.userBacklog,
-      user: state => state.auth.user,
+      backlog: state => state.backlog.userBacklog
     }),
 
     ...mapGetters({
@@ -632,92 +595,6 @@ export default {
     button.to-subscribe,
     button.is-canceled
       +button(secondary, small)
-
-//- Conversations
-.post-detail--conversations
-
-  > h2
-    margin-bottom: $baseline / 2
-
-    font-size: $fs-2
-    font-weight: 600
-    text-align: center
-
-  > h3
-      position: relative
-      display: grid
-      align-items: center
-      grid-template-columns: 1fr auto auto 1fr
-
-      margin: $baseline 0 $baseline/2 0
-
-      font-family: $ff-serif
-      font-size: $fs-1
-      text-align: center
-
-      &.normal
-        grid-template-columns: 1fr auto 1fr
-
-      strong
-        margin-left: $baseline / 4
-
-        img
-          display: inline-block
-          width: $baseline
-          height: $baseline
-          vertical-align: middle
-
-          border-radius: 100%
-
-      &::after,
-      &::before
-        height: 1px
-        margin: 0 $baseline
-
-        background: #ddd
-
-        content: ''
-
-        @media (max-width: $mobile)
-          margin: 0 $baseline/2
-
-      &::after
-        right: $baseline * 2
-        left: auto
-
-  .post > header
-    grid-template-columns: min-content minmax(auto, max-content) minmax(auto, max-content) auto
-
-.post-pins
-  font-size: $fs--1
-
-  color: #999
-
-  &::before
-    margin: 0 $baseline/4
-    content: '•'
-
-.post-replies
-  margin-top: $baseline / 2
-
-  font-size: $fs--1
-
-  color: #999
-
-  img
-    border-radius: 100%
-    height: $baseline * 0.9
-    margin-right: $baseline / 4
-    width: $baseline * 0.9
-
-    vertical-align: top
-
-  &::before
-    +fa-icon()
-    @extend .fas
-    margin-right: $baseline / 4
-
-    content: fa-content($fa-var-reply)
 
 //- Editorial Comments
 .post-detail--editorial-comments
