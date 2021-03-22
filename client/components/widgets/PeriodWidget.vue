@@ -65,7 +65,7 @@ export default {
     },
 
     submit () {
-      this.$emit('change-periodicity', this.frequency, this.dow, this.time)
+      this.$emit('periodicity', this.frequency, this.dow, this.time)
     },
 
     selectHowOften (frequency, ev) {

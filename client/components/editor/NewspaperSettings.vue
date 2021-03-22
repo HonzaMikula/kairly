@@ -49,7 +49,7 @@
 
           <PeriodWidget
             v-if="showPeriodicityWidget"
-            @changePeriodicity="changePeriodicity"
+            @periodicity="changePeriodicity"
           />
         </div>
 
@@ -165,7 +165,7 @@ export default {
   mixins: [PeriodicityMixin],
 
   props: {
-    newspaper: { type: Object, required: true }
+    newspaper: { type: Object, required: false, default: null }
   },
 
   data () {
