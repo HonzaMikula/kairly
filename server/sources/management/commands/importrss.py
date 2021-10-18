@@ -5,6 +5,7 @@ import traceback
 import lxml.html
 import lxml.etree
 import requests
+import ssl
 from datetime import timedelta
 
 import dateutil.parser
@@ -21,6 +22,7 @@ from users.models import User
 import warnings
 warnings.filterwarnings("ignore")
 
+ssl._create_default_https_context = ssl._create_unverified_context
 
 # additional timezones which are not recognized byt dateutil.parser by default
 TZ_INFOS = {
