@@ -1,4 +1,5 @@
 import time
+import ssl
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
@@ -12,6 +13,7 @@ from articles.models import Subscription, SubscriptionToAuthor
 from articles.views import SUBSCRIPTIONS_CACHE_KEY
 from credits.utils import get_user_credits, pay_author_subscription, pay_newspaper_subscription
 
+ssl._create_default_https_context = ssl._create_unverified_context
 
 class Command(BaseCommand):
     help = 'Extend subscriptions to be expired and marked for renew'

@@ -2,6 +2,7 @@ import traceback
 import datetime
 from datetime import timedelta
 import time
+import ssl
 
 import pytz
 
@@ -17,6 +18,7 @@ from articles.period import PeriodMixin
 from articles.timeline import NewspaperTimelineIssue
 from utils.json import Entities, Ref
 
+ssl._create_default_https_context = ssl._create_unverified_context
 
 class Command(BaseCommand):
     help = 'Release issues with posts marked to publish'

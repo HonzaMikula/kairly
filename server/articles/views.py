@@ -5,6 +5,7 @@ from datetime import datetime
 from decimal import ConversionSyntax, Decimal
 from operator import attrgetter
 import urllib.parse
+import ssl
 
 import requests
 import pytz
@@ -36,6 +37,8 @@ from .models import (Backlog, BacklogPost, Issue, Newspaper, CoEditor, Post, Sub
                      SubscriptionToAuthor, round_fair_price)
 from .period import parse_periodicity
 from .signals import post_publish
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 AUTOR_POSTS_PAGE_SIZE = 20
 
