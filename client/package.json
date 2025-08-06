@@ -33,7 +33,7 @@
     "cheerio": "^1.0.0-rc.3",
     "install": "^0.13.0",
     "jwt-decode": "^3.1.2",
-    "nuxt": "^2.14.9",
+    "nuxt": "^4.0.3",
     "nuxt-clipboard2": "^0.2.1",
     "portal-vue": "^2.1.7",
     "universal-url": "^2.0.0",
