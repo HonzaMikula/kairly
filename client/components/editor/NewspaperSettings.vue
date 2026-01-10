@@ -142,6 +142,8 @@
         {{ $t('Delete newsletter') }}
       </button>
     </section>
+
+    <SelectPeriodicity />
   </div>
 </template>
 
@@ -152,6 +154,7 @@ import EditorCard from '@/components/editor/EditorCard'
 import PeriodicityMixin from '@/mixins/PeriodicityMixin'
 import PictureInput from '@/lib/vue-picture-input/PictureInput'
 import PeriodWidget from '@/components/widgets/PeriodWidget'
+import SelectPeriodicity from '@/components/modals/SelectPeriodicity'
 
 export default {
   name: 'NewspaperSettings',
@@ -160,6 +163,7 @@ export default {
     EditorCard,
     PeriodWidget,
     PictureInput,
+    SelectPeriodicity,
   },
 
   mixins: [PeriodicityMixin],
